@@ -42,6 +42,9 @@ import java.util.*;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.21  2004/05/18 12:02:14  manolito
+ * getActionURL and getResourceURL must not call encodeActionURL or encodeResourceURL
+ *
  * Revision 1.20  2004/05/12 01:41:31  o_rossmueller
  * fix #951896: added state params to link URLs for ALLOW_JAVASCRIPT=false
  *
@@ -146,30 +149,26 @@ public class JspViewHandlerImpl
     public String getActionURL(FacesContext facesContext, String viewId)
     {
         String path = getViewIdPath(facesContext, viewId);
-        String url;
         if (path.length() > 0 && path.charAt(0) == '/')
         {
-            url = facesContext.getExternalContext().getRequestContextPath() + path;
+            return facesContext.getExternalContext().getRequestContextPath() + path;
         }
         else
         {
-            url = path;
+            return path;
         }
-        return facesContext.getExternalContext().encodeActionURL(url);
     }
 
     public String getResourceURL(FacesContext facesContext, String path)
     {
-        String url;
         if (path.length() > 0 && path.charAt(0) == '/')
         {
-            url = facesContext.getExternalContext().getRequestContextPath() + path;
+            return facesContext.getExternalContext().getRequestContextPath() + path;
         }
         else
         {
-            url = path;
+            return path;
         }
-        return facesContext.getExternalContext().encodeResourceURL(url);
     }
 
     public void renderView(FacesContext facesContext, UIViewRoot viewToRender)

@@ -36,8 +36,8 @@ import java.util.Set;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
- * Revision 1.4  2004/04/30 09:18:00  manolito
- * Log
+ * Revision 1.5  2004/05/18 12:02:29  manolito
+ * getActionURL and getResourceURL must not call encodeActionURL or encodeResourceURL
  *
  */
 public class DummyFormUtils
@@ -104,7 +104,9 @@ public class DummyFormUtils
         writer.writeAttribute(HTML.NAME_ATTR, DUMMY_FORM_NAME, null);
         writer.writeAttribute(HTML.STYLE_ATTR, "display:inline", null);
         writer.writeAttribute(HTML.METHOD_ATTR, "post", null);
-        writer.writeURIAttribute(HTML.ACTION_ATTR, actionURL, null);
+        writer.writeURIAttribute(HTML.ACTION_ATTR,
+                                 facesContext.getExternalContext().encodeActionURL(actionURL),
+                                 null);
         writer.flush();
 
         StateManager stateManager = facesContext.getApplication().getStateManager();

@@ -42,6 +42,9 @@ import java.util.*;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.26  2004/05/18 12:02:28  manolito
+ * getActionURL and getResourceURL must not call encodeActionURL or encodeResourceURL
+ *
  * Revision 1.25  2004/05/10 04:49:26  dave0000
  * small optimization improvements
  *
@@ -130,7 +133,7 @@ public class NavigationHandlerImpl
                 String redirectPath = viewHandler.getActionURL(facesContext, navigationCase.getToViewId());
                 try
                 {
-                    externalContext.redirect(redirectPath);
+                    externalContext.redirect(externalContext.encodeActionURL(redirectPath));
                 }
                 catch (IOException e)
                 {

@@ -37,6 +37,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/05/18 12:02:29  manolito
+ * getActionURL and getResourceURL must not call encodeActionURL or encodeResourceURL
+ *
  * Revision 1.4  2004/04/30 09:11:38  manolito
  * no message
  *
@@ -79,7 +82,9 @@ public class HtmlFormRendererBase
         writer.writeAttribute(HTML.ID_ATTR, clientId, null);
         writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
         writer.writeAttribute(HTML.METHOD_ATTR, "post", null);
-        writer.writeURIAttribute(HTML.ACTION_ATTR, actionURL, null);
+        writer.writeURIAttribute(HTML.ACTION_ATTR,
+                                 facesContext.getExternalContext().encodeActionURL(actionURL),
+                                 null);
 
         HtmlRendererUtils.renderHTMLAttributes(writer, htmlForm, HTML.FORM_PASSTHROUGH_ATTRIBUTES);
         writer.write(""); // forse start element tag to be closed

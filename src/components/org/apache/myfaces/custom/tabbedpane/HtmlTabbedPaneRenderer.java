@@ -36,6 +36,10 @@ import java.util.Map;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.2  2004/05/18 12:02:13  manolito
+ * getActionURL and getResourceURL must not call encodeActionURL or encodeResourceURL
+ *
  */
 public class HtmlTabbedPaneRenderer
         extends HtmlRenderer
@@ -228,7 +232,9 @@ public class HtmlTabbedPaneRenderer
         writer.writeAttribute(HTML.NAME_ATTR, tabbedPane.getClientId(facesContext) + AUTO_FORM_SUFFIX, null);
         writer.writeAttribute(HTML.STYLE_ATTR, "display:inline", null);
         writer.writeAttribute(HTML.METHOD_ATTR, "post", null);
-        writer.writeURIAttribute(HTML.ACTION_ATTR, actionURL, null);
+        writer.writeURIAttribute(HTML.ACTION_ATTR,
+                                 facesContext.getExternalContext().encodeActionURL(actionURL),
+                                 null);
         writer.flush();
     }
 

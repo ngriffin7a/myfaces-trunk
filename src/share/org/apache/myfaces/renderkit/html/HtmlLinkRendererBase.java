@@ -18,27 +18,30 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Iterator;
-import javax.faces.application.ViewHandler;
-import javax.faces.component.*;
-import javax.faces.component.html.HtmlCommandLink;
-import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
-import javax.faces.event.ActionEvent;
-
 import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormResponseWriter;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
 
+import javax.faces.application.ViewHandler;
+import javax.faces.component.*;
+import javax.faces.component.html.HtmlCommandLink;
+import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
+import javax.faces.event.ActionEvent;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Iterator;
+
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2004/05/18 12:02:29  manolito
+ * getActionURL and getResourceURL must not call encodeActionURL or encodeResourceURL
+ *
  * Revision 1.8  2004/05/12 01:50:47  o_rossmueller
  * fix #951896: add state params once is enough ;-)
  *
@@ -337,7 +340,9 @@ public abstract class HtmlLinkRendererBase
 
         String href = hrefBuf.toString();
         writer.startElement(HTML.ANCHOR_ELEM, component);
-        writer.writeURIAttribute(HTML.HREF_ATTR, href, null);
+        writer.writeURIAttribute(HTML.HREF_ATTR,
+                                 facesContext.getExternalContext().encodeActionURL(href),
+                                 null);
     }
 
     private void addChildParametersToHref(UIComponent linkComponent,
