@@ -12,6 +12,9 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2005/03/14 13:43:34  svieujot
+ * Close MyFaces-132 thanks to Gerhard Hofmann
+ *
  * Revision 1.4  2005/02/18 17:19:30  matzew
  * added release() to tag clazzes.
  *
@@ -74,7 +77,7 @@ public class HtmlPopupTag
         setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
         setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
         setIntegerProperty(component,"displayAtDistanceX",_displayAtDistanceX);
-        setIntegerProperty(component,"displayAtDistancey",_displayAtDistanceY);
+        setIntegerProperty(component,"displayAtDistanceY",_displayAtDistanceY);
         setBooleanProperty(component,"closePopupOnExitingElement",_closePopupOnExitingElement);
         setBooleanProperty(component,"closePopupOnExitingPopup",_closePopupOnExitingPopup);
     }
