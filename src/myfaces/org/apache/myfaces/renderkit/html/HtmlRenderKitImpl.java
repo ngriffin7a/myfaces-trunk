@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.html.state.HTMLResponseStateManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -54,7 +53,7 @@ public class HtmlRenderKitImpl
     public HtmlRenderKitImpl()
     {
         _renderers = new HashMap();
-        _responseStateManager = new HTMLResponseStateManager();
+        _responseStateManager = new HtmlResponseStateManager();
     }
 
     //~ Methods ------------------------------------------------------------------------------------

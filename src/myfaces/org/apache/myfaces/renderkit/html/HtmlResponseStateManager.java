@@ -16,10 +16,9 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.html.state;
+package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.MyfacesResponseStateManager;
-import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.util.Base64;
 import net.sourceforge.myfaces.util.MyFacesObjectInputStream;
 import org.apache.commons.logging.Log;
@@ -39,10 +38,10 @@ import java.util.zip.GZIPOutputStream;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class HTMLResponseStateManager
+public class HtmlResponseStateManager
         extends MyfacesResponseStateManager
 {
-    private static final Log log = LogFactory.getLog(HTMLResponseStateManager.class);
+    private static final Log log = LogFactory.getLog(HtmlResponseStateManager.class);
 
     private static final String TREE_PARAM = "jsf_tree";
     private static final String STATE_PARAM = "jsf_state";
