@@ -36,6 +36,12 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.16  2004/12/14 14:12:33  mmarinschek
+ * PR:
+ * Obtained from:
+ * Submitted by:	
+ * Reviewed by:
+ *
  * Revision 1.15  2004/12/09 12:18:43  mmarinschek
  * changes in Calendar-Renderer to check for submitted-value first
  *
@@ -373,7 +379,9 @@ public class RendererUtils
                     if (!(value instanceof SelectItem))
                     {
                         FacesContext facesContext = FacesContext.getCurrentInstance();
-                        throw new IllegalArgumentException("Value binding of UISelectItem with id " + child.getClientId(facesContext) + " does not reference an Object of type SelectItem");
+                        ValueBinding binding = ((UISelectItem) child).getValueBinding("value");
+                        throw new IllegalArgumentException("Value binding '"+(binding==null?null:binding.getExpressionString())
+                                +"' of UISelectItem with id " + child.getClientId(facesContext) + " does not reference an Object of type SelectItem");
                     }
                     list.add(value);
                 }
@@ -395,7 +403,10 @@ public class RendererUtils
             }
             else if (child instanceof UISelectItems)
             {
-                Object value = ((UISelectItems)child).getValue();
+                UISelectItems items = ((UISelectItems) child);
+
+                Object value = items.getValue();
+
                 if (value instanceof SelectItem)
                 {
                     list.add(value);
@@ -415,7 +426,9 @@ public class RendererUtils
                         if (!(item instanceof SelectItem))
                         {
                             FacesContext facesContext = FacesContext.getCurrentInstance();
-                            throw new IllegalArgumentException("Collection referenced by UISelectItems with id " + child.getClientId(facesContext) + " does not contain Objects of type SelectItem");
+                            ValueBinding binding = items.getValueBinding("value");
+                            throw new IllegalArgumentException("Collection referenced by UISelectItems with binding '"+
+                                    binding.getExpressionString()+"' and id " + child.getClientId(facesContext) + " does not contain Objects of type SelectItem");
                         }
                         list.add(item);
                     }
@@ -430,8 +443,10 @@ public class RendererUtils
                 }
                 else
                 {
+                    ValueBinding binding = items.getValueBinding("value");
                     FacesContext facesContext = FacesContext.getCurrentInstance();
-                    throw new IllegalArgumentException("Value binding of UISelectItems with id " + child.getClientId(facesContext) + " does not reference an Object of type SelectItem, SelectItem[], Collection or Map but of type : "+((value==null)?null:value.getClass().getName()));
+                    throw new IllegalArgumentException("Value binding '"+
+                            (binding==null?null:binding.getExpressionString())+"'of UISelectItems with id " + child.getClientId(facesContext) + " does not reference an Object of type SelectItem, SelectItem[], Collection or Map but of type : "+((value==null)?null:value.getClass().getName()));
                 }
             }
             else
