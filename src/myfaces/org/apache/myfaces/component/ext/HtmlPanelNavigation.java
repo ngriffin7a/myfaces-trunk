@@ -22,9 +22,14 @@ import net.sourceforge.myfaces.util.DebugUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIViewRoot;
 import javax.faces.component.html.HtmlPanelGroup;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Panel, that includes navigation items ({@link HtmlCommandNavigation}) and separators
@@ -37,6 +42,9 @@ public class HtmlPanelNavigation
         extends HtmlPanelGroup
 {
     private static final Log log = LogFactory.getLog(HtmlPanelNavigation.class);
+
+    private static final String PREVIOUS_VIEW_ROOT = HtmlPanelNavigation.class.getName() + ".PREVIOUS_VIEW_ROOT";
+    private boolean _itemOpenActiveStatesRestored = false;
 
     private String _itemClass;
     private String _openItemClass;
@@ -180,4 +188,60 @@ public class HtmlPanelNavigation
         DebugUtils.assertFatal(i == ATTRIBUTE_COUNT, log, "Number of attributes to restore differs!");
     }
 
+    public void decode(FacesContext context)
+    {
+        super.decode(context);    //To change body of overridden methods use File | Settings | File Templates.
+        
+        //Save the current view root for later reference...
+        context.getExternalContext().getRequestMap().put(PREVIOUS_VIEW_ROOT, context.getViewRoot());
+        //...and remember that this instance needs NO special treatment on rendering:
+        _itemOpenActiveStatesRestored = true;
+    }
+
+    public void encodeBegin(FacesContext context) throws IOException
+    {
+        if (!_itemOpenActiveStatesRestored && getChildCount() > 0)
+        {
+            UIViewRoot previousRoot = (UIViewRoot)context.getExternalContext().getRequestMap().get(PREVIOUS_VIEW_ROOT);
+            if (previousRoot != null)
+            {
+                restoreOpenActiveStates(context, previousRoot, getChildren());
+            }
+            else
+            {
+                //no previous root, means no decode was done
+                //--> a new request
+            }
+        }
+        
+        super.encodeBegin(context);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+    
+    public void restoreOpenActiveStates(FacesContext facesContext,
+                                        UIViewRoot previousRoot,
+                                        List children)
+    {
+        for (Iterator it = children.iterator(); it.hasNext(); )
+        {
+            UIComponent child = (UIComponent)it.next();
+            if (child instanceof HtmlCommandNavigation)
+            {
+                HtmlCommandNavigation previousItem = (HtmlCommandNavigation)previousRoot.findComponent(child.getClientId(facesContext));
+                if (previousItem != null)
+                {
+                    ((HtmlCommandNavigation)child).setOpen(previousItem.isOpen());
+                    ((HtmlCommandNavigation)child).setActive(previousItem.isActive());
+                }
+                else
+                {
+                    log.error("Navigation item " + child.getClientId(facesContext) + " not found in previous view.");
+                }
+                if (child.getChildCount() > 0)
+                {
+                    restoreOpenActiveStates(facesContext, previousRoot, child.getChildren());
+                }
+            }
+        }
+    }
+    
 }

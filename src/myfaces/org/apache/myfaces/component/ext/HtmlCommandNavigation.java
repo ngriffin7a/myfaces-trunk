@@ -28,6 +28,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
+import javax.faces.event.PhaseId;
 import java.util.Iterator;
 
 /**
@@ -200,9 +201,12 @@ public class HtmlCommandNavigation
     {
         public void processAction(ActionEvent actionEvent) throws AbortProcessingException
         {
-            HtmlCommandNavigation navItem = (HtmlCommandNavigation)actionEvent.getComponent();
-            navItem.toggleOpen();
-            FacesContext.getCurrentInstance().renderResponse();
+            if (actionEvent.getPhaseId() == PhaseId.APPLY_REQUEST_VALUES)
+            {
+                HtmlCommandNavigation navItem = (HtmlCommandNavigation)actionEvent.getComponent();
+                navItem.toggleOpen();
+                FacesContext.getCurrentInstance().renderResponse();
+            }
         }
 
         public Object saveState(FacesContext facescontext)
