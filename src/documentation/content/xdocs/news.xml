@@ -10,6 +10,7 @@
       <p>Improvements in Release 1.0.8 beta:</p>
       <ul>
         <li>Added a div component</li>
+        <li>Added an aliasBean component</li>
       </ul>
     </section>
 

@@ -13,6 +13,7 @@ Changes in Release 1.0.8 beta
   - myfaces-impl.jar contains the standard jsf implementation
   - myfaces-extensions.jar contains the myfaces extensions
   - myfaces.jar containes all the myfaces code, and can be used in place of the 3 above
+* add an x:aliasBean component
 ----------------------------------------------------------------------
 Changes in Release 1.0.7 beta
 * new custom component: HtmlPanelStack
