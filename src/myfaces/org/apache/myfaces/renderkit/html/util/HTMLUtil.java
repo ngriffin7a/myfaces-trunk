@@ -248,7 +248,7 @@ public class HTMLUtil
             writer, uiComponent,
             selectMany ? JSFAttr.SELECT_MANY_CLASS_ATTR : JSFAttr.SELECT_ONE_CLASS_ATTR);
         renderHTMLAttributes(writer, uiComponent, HTML.SELECT_PASSTHROUGH_ATTRIBUTES);
-        HTMLUtil.renderDisabledOnUserRole(facesContext, uiComponent);
+        renderDisabledOnUserRole(facesContext, uiComponent);
 
         if (selectMany)
         {

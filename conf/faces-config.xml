@@ -514,6 +514,12 @@
       </renderer>
 
       <renderer>
+          <renderer-type>Radio</renderer-type>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.RadioRenderer</renderer-class>
+          <component-type>SelectOne</component-type>
+      </renderer>
+
+      <renderer>
           <renderer-type>Message</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.MessageRenderer</renderer-class>
           <attribute>

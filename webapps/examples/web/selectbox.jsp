@@ -73,8 +73,12 @@ managed beans used:
                         <h:output_text value="" />
                         <h:panel_group >
                             <br>
-                            <h:selectboolean_checkbox id="cb1" valueRef="carconf.discount"></h:selectboolean_checkbox>
-                            <h:output_label for="cb1" key="discount_1" bundle="example_messages"></h:output_label>
+                            <h:selectone_radio id="r1" valueRef="carconf.discount" layout="PAGE_DIRECTION"  >
+                                <h:selectitem value="0" key="discount_0" bundle="example_messages" selected="true" />
+                                <h:selectitem value="1" key="discount_1" bundle="example_messages"  />
+                                <h:selectitem value="2" key="discount_2" bundle="example_messages"  />
+                            </h:selectone_radio>
+                            <!-- h:output_label for="cb1" key="discount_1" bundle="example_messages"> /h:output_label> -->
                         </h:panel_group>
 
                         <h:output_text value="" />

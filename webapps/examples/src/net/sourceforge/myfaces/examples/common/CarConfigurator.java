@@ -44,7 +44,7 @@ public class CarConfigurator
     private List _extrasList;
     private BigDecimal _price = new BigDecimal(0);
     private String[] _extras;
-    private Boolean _discount;
+    private String _discount;
     private String _car;
     private String _color;
     private HashMap _priceList = new HashMap();
@@ -155,12 +155,12 @@ public class CarConfigurator
         _extras = extras;
     }
 
-    public Boolean getDiscount()
+    public String getDiscount()
     {
         return _discount;
     }
 
-    public void setDiscount(Boolean discount)
+    public void setDiscount(String discount)
     {
         _discount = discount;
     }
@@ -197,9 +197,21 @@ public class CarConfigurator
             }
         }
 
-        if (_discount != null && _discount.booleanValue())
+        if (_discount != null)
         {
-            _price = _price.multiply(new BigDecimal(0.95));
+            try
+            {
+                int i = Integer.parseInt(_discount);
+                switch (i)
+                {
+                    case 0: break;
+                    case 1: _price = _price.multiply(new BigDecimal(0.95)); break;
+                    case 2: _price = _price.multiply(new BigDecimal(0.91)); break;
+                }
+            }
+            catch (NumberFormatException e)
+            {
+            }
         }
     }
 

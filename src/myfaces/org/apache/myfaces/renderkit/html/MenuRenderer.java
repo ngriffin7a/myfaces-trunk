@@ -48,34 +48,6 @@ extends HTMLRenderer
         return TYPE;
     }
 
-    /*
-    public boolean supportsComponentType(String s)
-    {
-        return s.equals(UISelectMany.TYPE) ||
-               s.equals(UISelectOne.TYPE);
-    }
-
-    public boolean supportsComponentType(UIComponent uicomponent)
-    {
-        return uicomponent instanceof UISelectMany ||
-               uicomponent instanceof UISelectOne;
-    }
-
-    protected void initAttributeDescriptors()
-    {
-        addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_menu", HTML_UNIVERSAL_ATTRIBUTES);
-        addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_menu", HTML_EVENT_HANDLER_ATTRIBUTES);
-        addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_menu", HTML_SELECT_ATTRIBUTES);
-        addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_menu", SELECT_MANY_MENU_ATTRIBUTES);
-        addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_menu", USER_ROLE_ATTRIBUTES);
-
-        addAttributeDescriptors(UISelectOne.TYPE, TLD_HTML_URI, "selectone_menu", HTML_UNIVERSAL_ATTRIBUTES);
-        addAttributeDescriptors(UISelectOne.TYPE, TLD_HTML_URI, "selectone_menu", HTML_EVENT_HANDLER_ATTRIBUTES);
-        addAttributeDescriptors(UISelectOne.TYPE, TLD_HTML_URI, "selectone_menu", HTML_SELECT_ATTRIBUTES);
-        addAttributeDescriptors(UISelectOne.TYPE, TLD_HTML_URI, "selectone_menu", SELECT_ONE_MENU_ATTRIBUTES);
-        addAttributeDescriptors(UISelectOne.TYPE, TLD_HTML_URI, "selectone_menu", USER_ROLE_ATTRIBUTES);
-    }
-    */
     public void encodeBegin(FacesContext facescontext, UIComponent uicomponent)
     throws IOException
     {

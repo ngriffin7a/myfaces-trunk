@@ -161,7 +161,7 @@
             <rtexprvalue>true</rtexprvalue>
             <type>java.lang.String</type>
             <description>
-                If true, this item will be open.
+                If true, this item will be open by default.
             </description>
         </attribute>
         <attribute>
@@ -170,7 +170,7 @@
             <rtexprvalue>true</rtexprvalue>
             <type>java.lang.String</type>
             <description>
-                If true, this item will be active.
+                If true, this item will be active by default.
             </description>
         </attribute>
         &ui_component_attributes;

@@ -47,32 +47,6 @@ extends HTMLRenderer
         return TYPE;
     }
 
-    /*
-    public boolean supportsComponentType(String s)
-    {
-        return s.equals(javax.faces.component.UISelectOne.TYPE);
-    }
-
-    public boolean supportsComponentType(UIComponent uicomponent)
-    {
-        return uicomponent instanceof javax.faces.component.UISelectOne;
-    }
-
-    protected void initAttributeDescriptors()
-    {
-        addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_listbox", HTML_UNIVERSAL_ATTRIBUTES);
-        addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_listbox", HTML_EVENT_HANDLER_ATTRIBUTES);
-        addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_listbox", HTML_SELECT_ATTRIBUTES);
-        addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_listbox", SELECT_MANY_LISTBOX_ATTRIBUTES);
-        addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_listbox", USER_ROLE_ATTRIBUTES);
-
-        addAttributeDescriptors(UISelectOne.TYPE, TLD_HTML_URI, "selectone_listbox", HTML_UNIVERSAL_ATTRIBUTES);
-        addAttributeDescriptors(UISelectOne.TYPE, TLD_HTML_URI, "selectone_listbox", HTML_EVENT_HANDLER_ATTRIBUTES);
-        addAttributeDescriptors(UISelectOne.TYPE, TLD_HTML_URI, "selectone_listbox", HTML_SELECT_ATTRIBUTES);
-        addAttributeDescriptors(UISelectOne.TYPE, TLD_HTML_URI, "selectone_listbox", SELECT_ONE_LISTBOX_ATTRIBUTES);
-        addAttributeDescriptors(UISelectOne.TYPE, TLD_HTML_URI, "selectone_listbox", USER_ROLE_ATTRIBUTES);
-    }
-    */
     public void encodeBegin(FacesContext facescontext, UIComponent uicomponent)
     throws IOException
     {
