@@ -40,6 +40,9 @@ import java.util.List;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2005/01/18 20:49:48  svieujot
+ * Set default layout to lineDirection, according to Spec.
+ *
  * Revision 1.9  2004/12/23 13:03:09  mmarinschek
  * id's not rendered (or not conditionally rendered); changes in jslistener to support both ie and firefox now
  *
@@ -84,7 +87,7 @@ public class HtmlRadioRendererBase
 
         String layout = getLayout(selectOne);
 
-        boolean pageDirectionLayout = true; //TODO: Default to PAGE_DIRECTION ?
+        boolean pageDirectionLayout = false; // Defaults to LINE_DIRECTION ?
         if (layout != null)
         {
             if (layout.equals(PAGE_DIRECTION))
