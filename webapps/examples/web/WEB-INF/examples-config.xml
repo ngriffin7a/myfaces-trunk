@@ -110,4 +110,14 @@
         <managed-bean-scope>application</managed-bean-scope>
     </managed-bean>
 
+    <navigation-rule>
+        <from-tree-id>*</from-tree-id>
+
+        <navigation-case>
+            <from-outcome>jump_home</from-outcome>
+            <to-tree-id>/home.jsf</to-tree-id>
+        </navigation-case>
+
+    </navigation-rule>
+
 </faces-config>
