@@ -36,6 +36,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.29  2004/10/24 23:30:35  oros
+ * do not convert newline to <br> and space to &nbps; as this is not required by the spec
+ *
  * Revision 1.28  2004/10/13 11:51:00  matze
  * renamed packages to org.apache
  *
@@ -375,15 +378,9 @@ public class HtmlResponseWriterImpl
         {
             _writer.write(strValue);
         }
-        else if (isTextarea())
-        {
-            // For textareas we must *not* map successive spaces to &nbsp or Newlines to <br/>
-            _writer.write(HTMLEncoder.encode(strValue, false, false));
-        }
         else
         {
-            // We map successive spaces to &nbsp; and Newlines to <br/>
-            _writer.write(HTMLEncoder.encode(strValue, true, true));
+            _writer.write(HTMLEncoder.encode(strValue, false, false));
         }
     }
 
