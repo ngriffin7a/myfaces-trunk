@@ -334,9 +334,17 @@
              target="release"/>
     </target>
 
+    <target name="tiles-release"
+            description="creates the tiles examples release file myfaces-x.x.x-tiles-example.tgz (don't forget to adjust manifest.properties!)">
+        <ant dir="${project.dir}/build/tiles-webapp"
+             antfile="build.xml"
+             inheritall="false"
+             target="release"/>
+    </target>
+
 
     <target name="all"
-            depends="bin-release, src-release, examples-release"
+            depends="bin-release, src-release, examples-release, tiles-release"
             description="builds all release files">
     </target>
 
@@ -375,6 +383,7 @@
             depends="clean" >
         <ant dir="${build.dir}/cactus-webapp" antfile="build.xml" inheritall="false" target="clean"/>
         <ant dir="${build.dir}/examples-webapp" antfile="build.xml" inheritall="false" target="clean"/>
+        <ant dir="${build.dir}/tiles-webapp" antfile="build.xml" inheritall="false" target="clean"/>
         <ant dir="${build.dir}/junit" antfile="build.xml" inheritall="false" target="clean"/>
         <ant dir="${build.dir}/tagunit-webapp" antfile="build.xml" inheritall="false" target="clean"/>
         <ant dir="${build.dir}/develop" antfile="build.xml" inheritall="false" target="clean"/>
