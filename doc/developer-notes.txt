@@ -27,6 +27,15 @@ Component developer guidelines
   static one in the parsed tree) will have the same value and the property will
   not be saved.
 
+* To achieve universal usability default HTML renderers must not render any
+  client-side scripting (JavaScript) and must not depend on stylesheets.
+  - There are plans to start a parallel package "html_javascript" in the future
+    where such renderers will reside. But keep in mind that these renderers
+    must always be seen as alternative (extended) renderers.
+  - Default renderers may use style attributes to embellish visible components.
+    Despite this, the functionality of a component must never be affected when
+    displayed without style (e.g. user mode in Opera).
+
 ======================================================================
 MyFaces developers guidelines
 
@@ -36,6 +45,11 @@ MyFaces developers guidelines
   http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html
   Well as the initiators of this project we take the liberty to postulate one
   exception: Opening braces go on the next line!  ;-)
+
+* Naming is a fundamental concern. The name of a class, method or field should
+  tell as much as possible of it's meaning and usage. Avoid short names like
+  "Helper", "calc" or "check". Use "FinancialConsultance",
+  "calculateMyYearlyIncome" and "isMyIncomeTooLow" instead.
 
 * Addition special comments (see 10.5.4 in CodeConv)
   TODO: something that is not yet ready
