@@ -63,33 +63,48 @@ public abstract class HTMLEncoder
 			c = string.charAt(i);
 			switch (c)
 			{
-			    case 'ä' : app = "&auml;";  break;
-			    case 'Ä' : app = "&Auml;";  break;
-			    case 'ö' : app = "&ouml;";  break;
-			    case 'Ö' : app = "&Ouml;";  break;
-			    case 'ü' : app = "&uuml;";  break;
-			    case 'Ü' : app = "&Uuml;";  break;
-			    case 'ß' : app = "&szlig;"; break;
-				case 0x80: app = "&euro;";  break;
+                case '"': app = "&quot;"; break;    //"
+                case '&': app = "&amp;"; break;     //&
+                case '<': app = "&lt;"; break;      //<
+                case '>': app = "&gt;"; break;      //>
+                case ' ':
+                    if (encodeSubsequentBlanksToNbsp &&
+                        (i == 0 || (i - 1 >= 0 && string.charAt(i - 1) == ' ')))
+                    {
+                        //Space at beginning or after another space
+                        app = "&nbsp;";
+                    }
+                    break;
+                case '\n':
+                    if (encodeNewline)
+                    {
+                        app = "<br>";
+                    }
+                    break;
+
+                //german umlauts
+			    case '\u00E4' : app = "&auml;";  break;     //ä
+			    case '\u00C4' : app = "&Auml;";  break;     //Ä
+			    case '\u00F6' : app = "&ouml;";  break;     //ö
+			    case '\u00D6' : app = "&Ouml;";  break;     //Ö
+			    case '\u00FC' : app = "&uuml;";  break;     //ü
+			    case '\u00DC' : app = "&Uuml;";  break;     //Ü
+			    case '\u00DF' : app = "&szlig;"; break;     //ß
+
+                //misc
+                //case 0x80: app = "&euro;"; break;  sometimes euro symbol is ascii 128, should we suport it?
                 case '\u20AC': app = "&euro;";  break;
+                case '\u00AB': app = "&laquo;"; break;
                 case '\u00BB': app = "&raquo;"; break;
                 case '\u00A0': app = "&nbsp;"; break;
-				case '<' : app = "&lt;";    break;
-			    case '>' : app = "&gt;";    break;
-			    case '&' : app = "&amp;";   break;
-			    case '"' : app = "&quot;";  break;
-				case ' ' : if (encodeSubsequentBlanksToNbsp &&
-							   (i == 0 || (i - 1 >= 0 && string.charAt(i - 1) == ' ')))
-						   {
-								//Space at beginning or after another space
-								app = "&nbsp;";
-						   }
-						   break;
-				case '\n': if (encodeNewline)
-						   {
-							   app = "<br>";
-						   }
-				//TODO: List should be continued...
+
+                default:
+                    if (((int)c) >= 0x80)
+                    {
+                        //encode all non basic latin characters
+                        app = "&#" + ((int)c) + ";";
+                    }
+                    break;
 			}
 			if (app != null)
 			{
