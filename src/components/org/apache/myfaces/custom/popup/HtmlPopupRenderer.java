@@ -19,7 +19,6 @@ import org.apache.myfaces.component.html.util.AddResource;
 import org.apache.myfaces.renderkit.RendererUtils;
 import org.apache.myfaces.renderkit.html.HtmlRenderer;
 import org.apache.myfaces.renderkit.html.HTML;
-import org.apache.commons.beanutils.BeanUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -31,6 +30,9 @@ import java.util.List;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2004/12/17 22:06:32  grantsmith
+ * Jira MYFACES-57: Changed logging levels to DEBUG from INFO
+ *
  * Revision 1.8  2004/12/17 13:19:10  mmarinschek
  * new component jsValueChangeListener
  *

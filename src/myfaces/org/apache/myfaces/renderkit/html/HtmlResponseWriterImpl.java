@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,6 +36,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.30  2004/12/17 22:06:32  grantsmith
+ * Jira MYFACES-57: Changed logging levels to DEBUG from INFO
+ *
  * Revision 1.29  2004/10/24 23:30:35  oros
  * do not convert newline to <br> and space to &nbps; as this is not required by the spec
  *
@@ -115,13 +118,13 @@ public class HtmlResponseWriterImpl
         _contentType = contentType;
         if (_contentType == null)
         {
-            if (log.isInfoEnabled()) log.info("No content type given, using default content type " + DEFAULT_CONTENT_TYPE);
+            if (log.isInfoEnabled()) log.debug("No content type given, using default content type " + DEFAULT_CONTENT_TYPE);
             _contentType = DEFAULT_CONTENT_TYPE;
         }
         _characterEncoding = characterEncoding;
         if (_characterEncoding == null)
         {
-            if (log.isInfoEnabled()) log.info("No character encoding given, using default character encoding " + DEFAULT_CHARACTER_ENCODING);
+            if (log.isInfoEnabled()) log.debug("No character encoding given, using default character encoding " + DEFAULT_CHARACTER_ENCODING);
             _characterEncoding = DEFAULT_CHARACTER_ENCODING;
         }
     }
