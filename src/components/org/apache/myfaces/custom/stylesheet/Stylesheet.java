@@ -1,7 +1,4 @@
 /*
- * Created on 18.08.2004
- */
-/*
  * Copyright 2004 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,6 +27,9 @@ import org.apache.commons.logging.LogFactory;
  * @author mwessendorf (latest modification by $Author$) 
  * @version $Revision$ $Date$ 
  * $Log$
+ * Revision 1.2  2004/08/22 10:36:50  mwessendorf
+ * typo
+ *
  * Revision 1.1  2004/08/18 15:36:09  mwessendorf
  * added a new Stylesheet-Component
  * 
