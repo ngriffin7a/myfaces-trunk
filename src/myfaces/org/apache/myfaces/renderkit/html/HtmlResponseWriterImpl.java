@@ -20,6 +20,7 @@ import org.apache.myfaces.renderkit.html.util.DummyFormResponseWriter;
 import org.apache.myfaces.renderkit.html.util.DummyFormUtils;
 import org.apache.myfaces.renderkit.html.util.HTMLEncoder;
 import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
+import org.apache.myfaces.renderkit.html.util.UnicodeEncoder;
 import org.apache.myfaces.renderkit.RendererUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,6 +38,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.34  2005/01/29 10:04:25  matzew
+ * MYFACES-91 patch by Jason Hoo. Thanks
+ *
  * Revision 1.33  2005/01/19 13:18:04  mmarinschek
  * better logging of component information
  *
@@ -395,7 +399,7 @@ public class HtmlResponseWriterImpl
 
         if (isScriptOrStyle())
         {
-            _writer.write(strValue);
+            _writer.write(UnicodeEncoder.encode(strValue, false, false));
         }
         else
         {
@@ -418,7 +422,8 @@ public class HtmlResponseWriterImpl
 
         if (isScriptOrStyle())
         {
-            _writer.write(cbuf, off, len);
+            String strValue = new String(cbuf, off, len);
+            _writer.write(UnicodeEncoder.encode(strValue, false, false));
         }
         else if (isTextarea())
         {
@@ -475,7 +480,8 @@ public class HtmlResponseWriterImpl
     public void write(char cbuf[], int off, int len) throws IOException
     {
         closeStartTagIfNecessary();
-        _writer.write(cbuf, off, len);
+        String strValue = new String(cbuf, off, len);
+        _writer.write(UnicodeEncoder.encode(strValue, false, false));
     }
 
     public void write(int c) throws IOException
@@ -487,7 +493,8 @@ public class HtmlResponseWriterImpl
     public void write(char cbuf[]) throws IOException
     {
         closeStartTagIfNecessary();
-        _writer.write(cbuf);
+        String strValue = new String(cbuf);
+        _writer.write(UnicodeEncoder.encode(strValue, false, false));
     }
 
     public void write(String str) throws IOException
@@ -497,14 +504,15 @@ public class HtmlResponseWriterImpl
         // in such case, do not call down the writer chain
         if (str.length() > 0)
         {
-            _writer.write(str);
+            _writer.write(UnicodeEncoder.encode(str, false, false));
         }
     }
 
     public void write(String str, int off, int len) throws IOException
     {
         closeStartTagIfNecessary();
-        _writer.write(str, off, len);
+        String strValue = str.substring(off, len);
+        _writer.write(UnicodeEncoder.encode(strValue, false, false));
     }
 
     // DummyFormResponseWriter support
