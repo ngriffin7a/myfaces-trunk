@@ -48,6 +48,9 @@ import java.util.Map;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.34  2004/04/07 01:52:55  dave0000
+ * fix set "root" variable - was setting in the wrong scope if new var
+ *
  * Revision 1.33  2004/04/07 01:40:13  dave0000
  * fix set "root" variable bug
  *
@@ -276,7 +279,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         ExternalContext externalContext = facesContext.getExternalContext();
          
         Object obj = null;
-        Map scopeMap = null;
+        Map scopeMap;
         
       findObject: {
             // Request context
@@ -306,6 +309,8 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
             {
                 break findObject;
             }
+            
+            scopeMap = null;
         }
         
         if (scopeMap == null)
@@ -322,10 +327,10 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         try
         {
             return _expression instanceof Expression 
-                ? ((Expression) _expression).evaluate (
+                ? ((Expression) _expression).evaluate(
                     new ELVariableResolver(facesContext),
                     s_functionMapper, s_logger)
-                : ((ExpressionString) _expression).evaluate (
+                : ((ExpressionString) _expression).evaluate(
                     new ELVariableResolver(facesContext),
                     s_functionMapper, s_logger);
         }
