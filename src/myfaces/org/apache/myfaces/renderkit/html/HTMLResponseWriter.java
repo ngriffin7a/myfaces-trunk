@@ -303,7 +303,7 @@ public class HTMLResponseWriter extends ResponseWriter
     {
         if (_tagOpen)
         {
-            _writer.write(">");
+            _writer.write('>');
             _tagOpen = false;
         }
     }
