@@ -38,12 +38,14 @@ import javax.faces.el.ValueBinding;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class ValueBindingImpl extends ValueBinding {
+public class ValueBindingImpl
+extends ValueBinding
+{
     //~ Static fields/initializers ---------------------------------------------
 
-    private static final Integer ZERO_FROM_EMPTY = new Integer(0);
-    private static final Integer ZERO = new Integer(0);
-    private static final Integer ONE  = new Integer(1);
+    private static final Integer ZERO_FROM_EMPTY  = new Integer(0);
+    private static final Integer ZERO             = new Integer(0);
+    private static final Integer ONE              = new Integer(1);
 
     //~ Instance fields --------------------------------------------------------
 
@@ -53,7 +55,8 @@ public class ValueBindingImpl extends ValueBinding {
 
     //~ Constructors -----------------------------------------------------------
 
-    public ValueBindingImpl(String reference, Application application) {
+    public ValueBindingImpl(String reference, Application application)
+    {
         _application         = application;
         _reference           = reference;
         _parsedReference     = parse(
@@ -68,14 +71,18 @@ public class ValueBindingImpl extends ValueBinding {
         Object base = resolve(facesContext);
 
         if (base == null)
+        {
             throw new NullPointerException(
                 "Null bean, property: " + _reference);
+        }
 
         int maxIndex = _parsedReference.length - 1;
 
         if (maxIndex > 0)
+        {
             return isPropertyReadOnly(
                 facesContext, base, _parsedReference[maxIndex]);
+        }
 
         return true;
     }
@@ -86,14 +93,18 @@ public class ValueBindingImpl extends ValueBinding {
         Object base = resolve(facesContext);
 
         if (base == null)
+        {
             throw new NullPointerException(
                 "Null bean, property: " + _reference);
+        }
 
         int maxIndex = _parsedReference.length - 1;
 
         if (maxIndex > 0)
+        {
             return getPropertyType(
                 facesContext, base, _parsedReference[maxIndex]);
+        }
 
         return base.getClass();
     }
@@ -105,16 +116,22 @@ public class ValueBindingImpl extends ValueBinding {
         Object base = resolve(facesContext);
 
         if (base == null)
+        {
             throw new NullPointerException(
                 "Null bean, property: " + _reference);
+        }
 
         int maxIndex = _parsedReference.length - 1;
 
         if (maxIndex > 0)
+        {
             setPropertyValue(
                 facesContext, base, _parsedReference[maxIndex], newValue);
+        }
         else
+        {
             throw new EvaluationException("Cannot set base class");
+        }
     }
 
     public Object getValue(FacesContext facesContext)
@@ -123,51 +140,66 @@ public class ValueBindingImpl extends ValueBinding {
         Object base = resolve(facesContext);
 
         if (base == null)
+        {
             return null; // (see JSF 1.0, PRD2, 5.1.2.1)
+        }
 
         int maxIndex = _parsedReference.length - 1;
 
         if (maxIndex > 0)
+        {
             base =
                 getPropertyValue(
                     facesContext, base, _parsedReference[maxIndex]);
+        }
 
         return base;
     }
 
     protected boolean isPropertyReadOnly(
-        FacesContext facesContext, Object base, Object name) {
+        FacesContext facesContext, Object base, Object name)
+    {
         name = preprocessProperty(facesContext, base, name);
 
         // Map is a special case, need to use the String property
         return (name instanceof String)
-        ? _application.getPropertyResolver().isReadOnly(base, (String)name)
+        ? _application.getPropertyResolver().isReadOnly(base, (String) name)
         : _application.getPropertyResolver().isReadOnly(
-            base, ((Integer)name).intValue());
+            base,
+            ((Integer) name).intValue());
     }
 
     protected Class getPropertyType(
-        FacesContext facesContext, Object base, Object name) {
+        FacesContext facesContext, Object base, Object name)
+    {
         name = preprocessProperty(facesContext, base, name);
 
         // Map is a special case, need to use the String property
         return (name instanceof String)
-        ? _application.getPropertyResolver().getType(base, (String)name)
+        ? _application.getPropertyResolver().getType(base, (String) name)
         : _application.getPropertyResolver().getType(
-            base, ((Integer)name).intValue());
+            base,
+            ((Integer) name).intValue());
     }
 
     protected void setPropertyValue(
-        FacesContext facesContext, Object base, Object name, Object newValue) {
+        FacesContext facesContext, Object base, Object name, Object newValue)
+    {
         name = preprocessProperty(facesContext, base, name);
 
         // Map is a special case, need to use the String property
         if (name instanceof String)
+        {
             _application.getPropertyResolver().setValue(
-                base, (String)name, newValue);
+                base, (String) name, newValue);
+        }
         else
+        {
             _application.getPropertyResolver().setValue(
-                base, ((Integer)name).intValue(), newValue);
+                base,
+                ((Integer) name).intValue(),
+                newValue);
+        }
     }
 
     /**
@@ -183,34 +215,43 @@ public class ValueBindingImpl extends ValueBinding {
      * @return the value of requested property
      */
     protected Object getPropertyValue(
-        FacesContext facesContext, Object base, Object name) {
+        FacesContext facesContext, Object base, Object name)
+    {
         name = preprocessProperty(facesContext, base, name);
 
         if (name == ZERO_FROM_EMPTY)
+        {
             return null; // (see JSF 1.0, PRD2, 5.1.2.1)
+        }
 
         return (name instanceof String)
-        ? _application.getPropertyResolver().getValue(base, (String)name)
+        ? _application.getPropertyResolver().getValue(base, (String) name)
         : _application.getPropertyResolver().getValue(
-            base, ((Integer)name).intValue());
+            base,
+            ((Integer) name).intValue());
     }
 
-    protected Object resolve(FacesContext facesContext) {
+    protected Object resolve(FacesContext facesContext)
+    {
         Object base =
             _application.getVariableResolver().resolveVariable(
-                facesContext, (String)_parsedReference[0]);
+                facesContext, (String) _parsedReference[0]);
 
         return resolve(facesContext, base, 1);
     }
 
-    protected Object resolve(FacesContext facesContext, Object base, int start) {
-        for (int i = start, max = _parsedReference.length - 1; i < max; i++) {
+    protected Object resolve(FacesContext facesContext, Object base, int start)
+    {
+        for (int i = start, max = _parsedReference.length - 1; i < max; i++)
+        {
             Object curProperty = _parsedReference[i];
 
             base = getPropertyValue(facesContext, base, curProperty);
 
             if (base == null)
+            {
                 return null; // (see JSF 1.0, PRD2, 5.1.2.1)
+            }
         }
 
         return base;
@@ -233,19 +274,27 @@ public class ValueBindingImpl extends ValueBinding {
      *
      * @return the name or index of the property
      */
-    private Object coerceProperty(Object base, Object name) {
+    private Object coerceProperty(Object base, Object name)
+    {
         if ((base == null) || (name == null))
+        {
             return null; // (see JSF 1.0, PRD2, 5.1.2.1)
+        }
 
         if ((base instanceof List) || (base.getClass().isArray()))
-
+        {
             // Note: ReferenceSyntaxException would be thrown by coerceToInt(), if needed
             return coerceToInteger(name);
+        }
 
-        if (base instanceof UIComponent) {
-            try {
+        if (base instanceof UIComponent)
+        {
+            try
+            {
                 return coerceToInteger(name);
-            } catch (Throwable t) {
+            }
+            catch (Throwable t)
+            {
                 return coerceToString(name);
             }
         }
@@ -268,39 +317,55 @@ public class ValueBindingImpl extends ValueBinding {
      *
      * @throws ReferenceSyntaxException on eny error during coercion
      */
-    private Integer coerceToInteger(Object obj) {
+    private Integer coerceToInteger(Object obj)
+    {
         if (obj == null)
+        {
             return ZERO_FROM_EMPTY; // (see JSF 1.0, PRD2, 5.1.2.4)
+        }
 
-        if (obj instanceof String) {
-            String s = (String)obj;
+        if (obj instanceof String)
+        {
+            String s = (String) obj;
 
             if (s.length() == 0)
+            {
                 return ZERO_FROM_EMPTY; // (see JSF 1.0, PRD2, 5.1.2.4)
+            }
 
-            try {
+            try
+            {
                 return Integer.valueOf(s);
-            } catch (NumberFormatException e) {
+            }
+            catch (NumberFormatException e)
+            {
                 throw new ReferenceSyntaxException(e);
             }
         }
 
         if (obj instanceof Integer)
-            return (Integer)obj;
+        {
+            return (Integer) obj;
+        }
 
         if (obj instanceof Number)
-            return new Integer(((Number)obj).intValue());
+        {
+            return new Integer(((Number) obj).intValue());
+        }
 
         if (obj instanceof Character)
-
+        {
             // REVISIT: per spec, convert to Short first--what's the point of converting to Short to get an int???
             //			 (see JSF 1.0, PRD2, 5.1.2.4)
-            return new Integer(((Character)obj).charValue());
+            return new Integer(((Character) obj).charValue());
+        }
 
         // WARNING: JSF 1.0, PRD2, 5.1.2.4 requires that we throw ReferenceSyntaxException
         //   		for Boolean. The following implementation violates the spec
         if (obj instanceof Boolean)
-            return ((Boolean)obj).booleanValue() ? ONE : ZERO;
+        {
+            return ((Boolean) obj).booleanValue() ? ONE : ZERO;
+        }
 
         // JSF spec mentiones about coercion of primitive types,
         //   we do not handle the primitive numeric types here,
@@ -323,13 +388,19 @@ public class ValueBindingImpl extends ValueBinding {
      *
      * @throws ReferenceSyntaxException on eny error during coercion
      */
-    private String coerceToString(Object obj) {
+    private String coerceToString(Object obj)
+    {
         if (obj == null)
+        {
             return "";
+        }
 
-        try {
+        try
+        {
             return obj.toString();
-        } catch (Throwable t) {
+        }
+        catch (Throwable t)
+        {
             throw new ReferenceSyntaxException(
                 "Unable to coerce " + obj.getClass() + " to String", t);
         }
@@ -347,30 +418,41 @@ public class ValueBindingImpl extends ValueBinding {
      * @throws ReferenceSyntaxException if matching bracket cannot be found
      */
     private static int indexOfMatchingClosingBracket(
-        String str, int indexofOpeningBracket) {
-        int curpos = indexofOpeningBracket + 1;
+        String str, int indexofOpeningBracket)
+    {
+        int curpos       = indexofOpeningBracket + 1;
 
         int nestingDepth = 1;
         int indexofOpen  = str.indexOf('[', curpos);
         int indexofClose = str.indexOf(']', curpos);
 
-        for (int i = indexofOpeningBracket, len = str.length(); i < len;) {
+        for (int i = indexofOpeningBracket, len = str.length(); i < len;)
+        {
             if (indexofClose < 0)
+            {
                 throw new ReferenceSyntaxException(
                     "Invalid property '" + str + "'--missing ']'");
+            }
 
             // We check for '\' before the bracket to skip quoted brackets
-            if ((indexofOpen < 0) || (indexofClose < indexofOpen)) {
+            if ((indexofOpen < 0) || (indexofClose < indexofOpen))
+            {
                 if (
                     ((indexofClose == 0)
-                        || (str.charAt(indexofClose - 1) != '\\'))
-                        && (--nestingDepth == 0))
+                            || (str.charAt(indexofClose - 1) != '\\'))
+                            && (--nestingDepth == 0))
+                {
                     return indexofClose;
+                }
 
                 i = indexofClose = str.indexOf(']', indexofClose + 1);
-            } else {
+            }
+            else
+            {
                 if ((indexofOpen == 0) || (str.charAt(indexofOpen - 1) != '\\'))
+                {
                     nestingDepth++;
+                }
 
                 i = indexofOpen = str.indexOf('[', indexofOpen + 1);
             }
@@ -381,10 +463,13 @@ public class ValueBindingImpl extends ValueBinding {
     }
 
     private Object preprocessProperty(
-        FacesContext facesContext, Object base, Object name) {
+        FacesContext facesContext, Object base, Object name)
+    {
         // Map is a special case, need to force property to String
         return (name instanceof ValueBinding)
-        ? coerceProperty(base, ((ValueBinding)name).getValue(facesContext))
+        ? coerceProperty(
+            base,
+            ((ValueBinding) name).getValue(facesContext))
         : ((base instanceof Map) ? name.toString() : name);
     }
 
@@ -396,29 +481,37 @@ public class ValueBindingImpl extends ValueBinding {
      * @return the model reference, with "${" and "}" removed
      */
     private static String stripBracketsFromModelReference(
-        String modelReference) {
+        String modelReference)
+    {
         modelReference = modelReference.trim();
 
         if (modelReference.startsWith("${") && modelReference.endsWith("}"))
+        {
             return modelReference.substring(2, modelReference.length() - 1);
+        }
         else
-
+        {
             return modelReference;
+        }
     }
 
     private Object getIndex(
-        String reference, int indexofOpeningBracket, int indexofClosingBracket) {
+        String reference, int indexofOpeningBracket, int indexofClosingBracket)
+    {
         char quote = reference.charAt(indexofOpeningBracket + 1);
 
         // Case 1: index is a string literal (must be quoted with ' or ")
-        if ((quote == '"') || (quote == '\'')) {
+        if ((quote == '"') || (quote == '\''))
+        {
             // One of var["name"] or var['name']
             // check for cases a[''] and no closing quote
             if (
                 (reference.charAt(indexofClosingBracket - 1) != quote)
-                    || (indexofOpeningBracket >= (indexofClosingBracket - 3)))
+                        || (indexofOpeningBracket >= (indexofClosingBracket - 3)))
+            {
                 throw new ReferenceSyntaxException(
                     "Invalid indexed property: " + reference);
+            }
 
             return unescape(
                 reference.substring(
@@ -431,49 +524,67 @@ public class ValueBindingImpl extends ValueBinding {
 
         // Case 2: index is integer (e.g., for arrays)
         if (isUnsignedInteger(index))
+        {
             return Integer.valueOf(index);
+        }
 
         return _application.getValueBinding(index);
     }
 
-    private static boolean isUnsignedInteger(String str) {
+    private static boolean isUnsignedInteger(String str)
+    {
         int len = str.length();
 
         if (len == 0)
+        {
             return false;
+        }
 
         for (int i = 0; i < len; i++)
+        {
             if (!Character.isDigit(str.charAt(i)))
+            {
                 return false;
+            }
+        }
 
         return true;
     }
 
-    private Object[] parse(String reference) {
+    private Object[] parse(String reference)
+    {
         if ((reference == null) || (reference.length() == 0))
+        {
             throw new ReferenceSyntaxException(
                 "Invalid reference: " + reference);
+        }
 
         ArrayList parsedReference = new ArrayList();
 
-        for (int pos = 0, len = reference.length(); pos < len;) {
+        for (int pos = 0, len = reference.length(); pos < len;)
+        {
             // Process indexed property
-            if (reference.charAt(pos) == '[') {
+            if (reference.charAt(pos) == '[')
+            {
                 // check for case like 'a.b.[0]'
                 // Note: case '[0]' is ok as this may not be the first element
                 if ((pos == 0) || (reference.charAt(pos - 1) == '.'))
+                {
                     throw new ReferenceSyntaxException(
                         "Invalid indexed property '" + reference
                         + "'--'[' following '.'");
+                }
 
                 int indexofClosingBracket =
                     indexOfMatchingClosingBracket(reference, pos);
 
                 // Is index empty? (case 'a.b[]')
                 if (pos == (indexofClosingBracket - 1))
+                {
                     throw new ReferenceSyntaxException(
                         "Invalid indexed property '" + reference
                         + "'--empty index");
+                }
 
                 Object index = getIndex(reference, pos, indexofClosingBracket);
                 parsedReference.add(index);
@@ -485,31 +596,42 @@ public class ValueBindingImpl extends ValueBinding {
             // Not an indexed property, process simple nesting
             int indexofBracket = reference.indexOf('[', pos);
             int indexofDot = reference.indexOf('.', pos);
-            int newpos = len;
+            int newpos     = len;
 
             // Find the first occurrence of any delim char
             if ((indexofDot >= 0) && (indexofDot < newpos))
+            {
                 newpos = indexofDot;
-                
+            }
+
             if ((indexofBracket >= 0) && (indexofBracket < newpos))
+            {
                 newpos = indexofBracket;
+            }
 
             // newpos is the end of the property name
             if (pos == newpos)
+            {
                 if (pos == 0)
+                {
                     throw new ReferenceSyntaxException(
                         "Invalid property '" + reference + "'--starting with '"
                         + reference.charAt(pos) + "'");
-                else if (reference.charAt(pos - 1) == ']') {
+                }
+                else if (reference.charAt(pos - 1) == ']')
+                {
                     // case 'a[0].b', skip the dot
                     pos++;
 
                     continue;
-                } else
-
+                }
+                else
+                {
                     // name is empty (case 'a..b')?
                     throw new ReferenceSyntaxException(
                         "Invalid property '" + reference + "'--double '.'");
+                }
+            }
 
             parsedReference.add(reference.substring(pos, newpos));
             pos = (newpos == indexofDot) ? (newpos + 1) : newpos;
@@ -518,26 +640,33 @@ public class ValueBindingImpl extends ValueBinding {
         return parsedReference.toArray();
     }
 
-    private static String unescape(String str) {
+    private static String unescape(String str)
+    {
         int indexofBackslash = str.indexOf('\\');
 
         if (indexofBackslash < 0)
+        {
             return str; // nothing to do
+        }
 
         int          lastIndex = str.length() - 1;
         StringBuffer sb     = new StringBuffer(lastIndex);
         int          curpos = 0;
 
-        do {
+        do
+        {
             // check for ["ashklhj\"] error
             if (indexofBackslash == lastIndex)
+            {
                 throw new ReferenceSyntaxException(
                     "'\\' at the end of index string '" + str + "'");
+            }
 
             sb.append(str.substring(curpos, indexofBackslash));
             curpos               = indexofBackslash + 1;
             indexofBackslash     = str.indexOf('\\', curpos + 1);
-        } while (indexofBackslash >= 0);
+        }
+        while (indexofBackslash >= 0);
 
         return sb.append(str.substring(curpos)).toString();
     }

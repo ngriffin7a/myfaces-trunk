@@ -43,50 +43,69 @@ import javax.faces.el.PropertyResolver;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class PropertyResolverImpl extends PropertyResolver {
+public class PropertyResolverImpl
+extends PropertyResolver
+{
     //~ Static fields/initializers ---------------------------------------------
 
     private static final Object[] EMPTY_ARGS = {};
 
     //~ Methods ----------------------------------------------------------------
 
-    public static void setProperty(Object base, String name, Object newValue) {
+    public static void setProperty(Object base, String name, Object newValue)
+    {
         PropertyDescriptor propertyDescriptor =
             getPropertyDescriptor(base, name);
 
         Method             m = propertyDescriptor.getWriteMethod();
 
         if (m == null)
+        {
             throw new PropertyNotFoundException(
                 "Bean: " + base.getClass() + ", property: " + name);
+        }
 
-        try {
-            m.invoke(base, new Object[] {newValue});
-        } catch (IllegalAccessException e) {
+        try
+        {
+            m.invoke(
+                base,
+                new Object[] {newValue});
+        }
+        catch (IllegalAccessException e)
+        {
             throw new EvaluationException(
                 "Bean: " + base.getClass() + ", property: " + name, e);
-        } catch (InvocationTargetException e) {
+        }
+        catch (InvocationTargetException e)
+        {
             throw new EvaluationException(
                 "Bean: " + base.getClass() + ", property: " + name, e);
         }
     }
 
     public static PropertyDescriptor getPropertyDescriptor(
-        Object base, String name) {
+        Object base, String name)
+    {
         PropertyDescriptor propertyDescriptor;
 
-        try {
+        try
+        {
             propertyDescriptor =
                 findPropertyDescriptor(
-                    Introspector.getBeanInfo(base.getClass()), name);
-        } catch (IntrospectionException e) {
+                    Introspector.getBeanInfo(base.getClass()),
+                    name);
+        }
+        catch (IntrospectionException e)
+        {
             throw new PropertyNotFoundException(
                 "Bean: " + base.getClass() + ", property: " + name, e);
         }
 
         if (propertyDescriptor == null)
+        {
             throw new PropertyNotFoundException(
                 "Bean: " + base.getClass() + ", property: " + name);
+        }
 
         return propertyDescriptor;
     }
@@ -95,18 +114,26 @@ public class PropertyResolverImpl extends PropertyResolver {
     throws PropertyNotFoundException
     {
         if (base == null)
+        {
             throw new NullPointerException("Null bean, property: " + name);
+        }
 
         if ((name == null) || (name.length() == 0))
+        {
             throw new PropertyNotFoundException(
                 "Bean: " + base.getClass() + ", null or empty property name");
+        }
 
         // Is there any way to determine whether Map.put() will fail?
         if (base instanceof Map)
+        {
             return false;
+        }
 
         if (base instanceof UIComponent)
+        {
             return true;
+        }
 
         // If none of the special bean types, then process as normal Bean
         PropertyDescriptor propertyDescriptor =
@@ -119,14 +146,20 @@ public class PropertyResolverImpl extends PropertyResolver {
     throws PropertyNotFoundException
     {
         if (base == null)
+        {
             throw new NullPointerException("Null bean, index: " + index);
+        }
 
         // Is there any way to determine whether List.set() will be declined?
         if (base instanceof List || base.getClass().isArray())
+        {
             return false;
+        }
 
         if (base instanceof UIComponent)
+        {
             return true;
+        }
 
         throw new IllegalArgumentException(
             "Must be array or List. Bean: " + base.getClass() + ", index "
@@ -137,17 +170,25 @@ public class PropertyResolverImpl extends PropertyResolver {
     throws PropertyNotFoundException
     {
         if (base == null)
+        {
             throw new NullPointerException("Null bean, property: " + name);
+        }
 
         if ((name == null) || (name.length() == 0))
+        {
             throw new PropertyNotFoundException(
                 "Bean: " + base.getClass() + ", null or empty property name");
+        }
 
         if (base instanceof Map)
+        {
             return Object.class; // until variable datatypes are imlemented in JVM 1.5
+        }
 
         if (base instanceof UIComponent)
-            return ((UIComponent)base).findComponent(name).getClass();
+        {
+            return ((UIComponent) base).findComponent(name).getClass();
+        }
 
         // If none of the special bean types, then process as normal Bean
         PropertyDescriptor propertyDescriptor =
@@ -160,30 +201,44 @@ public class PropertyResolverImpl extends PropertyResolver {
     throws PropertyNotFoundException
     {
         if (base == null)
+        {
             throw new PropertyNotFoundException(
                 "Null bean (getting type of index " + index + ")");
+        }
 
-        try {
-            if (base instanceof List) {
+        try
+        {
+            if (base instanceof List)
+            {
                 // REVISIT: does it make sense to do this or simply return Object.class?
-                List   l = (List)base;
+                List   l = (List) base;
 
                 Object o = l.get(index);
 
                 if (o != null)
+                {
                     return o.getClass();
+                }
 
                 return Object.class; // until variable datatype in JVM 1.5 is implemented
             }
 
             if (base.getClass().isArray())
+            {
                 return base.getClass().getComponentType();
+            }
 
             if (base instanceof UIComponent)
-                return ((UIComponent)base).getChild(index).getClass();
-        } catch (IndexOutOfBoundsException e) {
+            {
+                return ((UIComponent) base).getChild(index).getClass();
+            }
+        }
+        catch (IndexOutOfBoundsException e)
+        {
             throw e;
-        } catch (Throwable t) {
+        }
+        catch (Throwable t)
+        {
             return null;
         }
 
@@ -197,22 +252,29 @@ public class PropertyResolverImpl extends PropertyResolver {
     {
         // TODO: convert newValue to property type
         if (base == null)
+        {
             throw new NullPointerException("Null bean, index: " + index);
+        }
 
         // Note: IndexOutOfBoundsException will be handled by the access methods
-        try {
-            if (base instanceof List) {
-                ((List)base).add(index, newValue);
+        try
+        {
+            if (base instanceof List)
+            {
+                ((List) base).add(index, newValue);
 
                 return;
             }
 
-            if (base.getClass().isArray()) {
+            if (base.getClass().isArray())
+            {
                 Array.set(base, index, newValue);
 
                 return;
             }
-        } catch (IndexOutOfBoundsException e) {
+        }
+        catch (IndexOutOfBoundsException e)
+        {
             throw new PropertyNotFoundException(
                 "Bean: " + base.getClass() + ", index " + index, e);
         }
@@ -227,35 +289,49 @@ public class PropertyResolverImpl extends PropertyResolver {
     {
         // TODO: convert newValue to property type
         if (base == null)
+        {
             throw new NullPointerException("Null bean, property: " + name);
+        }
 
         if ((name == null) || (name.length() == 0))
+        {
             throw new PropertyNotFoundException(
                 "Bean: " + base.getClass() + ", null or empty property name");
+        }
 
-        if (base instanceof Map) {
-            ((Map)base).put(name, newValue);
+        if (base instanceof Map)
+        {
+            ((Map) base).put(name, newValue);
 
             return;
         }
 
         if (base instanceof UIComponent)
+        {
             throw new IllegalArgumentException(
                 "Bean must not be UIComponent, property: " + name);
+        }
 
         // If none of the special bean types, then process as normal Bean
         setProperty(base, name, newValue);
     }
 
-    public Object getValue(Object base, String name) {
+    public Object getValue(Object base, String name)
+    {
         if ((base == null) || (name == null) || (name.length() == 0))
+        {
             return null; // (see JSF 1.0, PRD2, 5.1.2.1)
+        }
 
         if (base instanceof Map)
-            return ((Map)base).get(name);
+        {
+            return ((Map) base).get(name);
+        }
 
         if (base instanceof UIComponent)
-            return ((UIComponent)base).findComponent(name);
+        {
+            return ((UIComponent) base).findComponent(name);
+        }
 
         // If none of the special bean types, then process as normal Bean
         PropertyDescriptor propertyDescriptor =
@@ -264,15 +340,22 @@ public class PropertyResolverImpl extends PropertyResolver {
         Method             m = propertyDescriptor.getReadMethod();
 
         if (m == null)
+        {
             throw new PropertyNotFoundException(
                 "Bean: " + base.getClass() + ", property: " + name);
+        }
 
-        try {
+        try
+        {
             return m.invoke(base, EMPTY_ARGS);
-        } catch (IllegalAccessException e) {
+        }
+        catch (IllegalAccessException e)
+        {
             throw new EvaluationException(
                 "Bean: " + base.getClass() + ", property: " + name, e);
-        } catch (InvocationTargetException e) {
+        }
+        catch (InvocationTargetException e)
+        {
             throw new EvaluationException(
                 "Bean: " + base.getClass() + ", property: " + name, e);
         }
@@ -282,18 +365,29 @@ public class PropertyResolverImpl extends PropertyResolver {
     throws PropertyNotFoundException
     {
         if (base == null)
+        {
             return null; // (see JSF 1.0, PRD2, 5.1.2.1)
+        }
 
-        try {
+        try
+        {
             if (base instanceof List)
-                return ((List)base).get(index);
+            {
+                return ((List) base).get(index);
+            }
 
             if (base.getClass().isArray())
+            {
                 return Array.get(base, index);
+            }
 
             if (base instanceof UIComponent)
-                return ((UIComponent)base).getChild(index);
-        } catch (IndexOutOfBoundsException e) {
+            {
+                return ((UIComponent) base).getChild(index);
+            }
+        }
+        catch (IndexOutOfBoundsException e)
+        {
             // Note: ArrayIndexOutOfBoundsException also here
             return null; // (see JSF 1.0, PRD2, 5.1.2.1)
         }
@@ -304,14 +398,18 @@ public class PropertyResolverImpl extends PropertyResolver {
     }
 
     public static PropertyDescriptor findPropertyDescriptor(
-        BeanInfo beanInfo, String propertyName) {
+        BeanInfo beanInfo, String propertyName)
+    {
         PropertyDescriptor[] propDescriptors =
             beanInfo.getPropertyDescriptors();
 
         // TODO: cache this in classLoader safe way
-        for (int i = 0, len = propDescriptors.length; i < len; i++) {
+        for (int i = 0, len = propDescriptors.length; i < len; i++)
+        {
             if (propDescriptors[i].getName().equals(propertyName))
+            {
                 return propDescriptors[i];
+            }
         }
 
         return null;
