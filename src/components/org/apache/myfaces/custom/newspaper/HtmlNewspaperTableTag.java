@@ -29,6 +29,11 @@ public class HtmlNewspaperTableTag
     /** the number of newspaper columns */
     private String newspaperColumns = null;
     
+    public void release() {
+        super.release();
+        newspaperColumns = null;
+    }
+    
     public String getComponentType() {
         return HtmlNewspaperTable.COMPONENT_TYPE;
     }

@@ -23,6 +23,9 @@ import org.apache.myfaces.taglib.html.HtmlOutputTextTagBase;
  * @author mwessendorf (latest modification by $Author$) 
  * @version $Revision$ $Date$ 
  * $Log$
+ * Revision 1.3  2005/02/18 17:19:31  matzew
+ * added release() to tag clazzes.
+ *
  * Revision 1.2  2004/10/13 11:50:58  matze
  * renamed packages to org.apache
  *
@@ -54,7 +57,10 @@ public class StylesheetTag extends HtmlOutputTextTagBase {
      public void release() {
 
         super.release();
-        this._path = null;
+        _path=null;
+    	_enabledOnUserRole=null;
+    	_visibleOnUserRole=null;
+
 
     }
  

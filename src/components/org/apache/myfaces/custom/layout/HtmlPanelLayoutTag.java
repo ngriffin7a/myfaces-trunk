@@ -25,6 +25,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2005/02/18 17:19:30  matzew
+ * added release() to tag clazzes.
+ *
  * Revision 1.6  2004/10/13 11:50:57  matze
  * renamed packages to org.apache
  *
@@ -94,6 +97,33 @@ public class HtmlPanelLayoutTag
     private String _enabledOnUserRole;
     private String _visibleOnUserRole;
 
+    
+    public void release() {
+        super.release();
+        _layout=null;
+        _headerClass=null;
+        _navigationClass=null;
+        _bodyClass=null;
+        _footerClass=null;
+        _headerStyle=null;
+        _navigationStyle=null;
+        _bodyStyle=null;
+        _footerStyle=null;
+        _align=null;
+        _bgcolor=null;
+        _border=null;
+        _cellpadding=null;
+        _cellspacing=null;
+        _datafld=null;
+        _datasrc=null;
+        _dataformatas=null;
+        _frame=null;
+        _rules=null;
+        _summary=null;
+        _width=null;
+        _enabledOnUserRole=null;
+        _visibleOnUserRole=null;
+   }
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);

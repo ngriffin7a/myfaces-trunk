@@ -22,6 +22,9 @@ import org.apache.myfaces.taglib.html.HtmlComponentTagBase;
  * @author Sylvain Vieujot (latest modification by $Author$) 
  * @version $Revision$ $Date$ 
  * $Log$
+ * Revision 1.2  2005/02/18 17:19:30  matzew
+ * added release() to tag clazzes.
+ *
  * Revision 1.1  2005/01/04 15:41:06  svieujot
  * new x:buffer component.
  *
@@ -29,6 +32,11 @@ import org.apache.myfaces.taglib.html.HtmlComponentTagBase;
 public class BufferTag extends HtmlComponentTagBase {
   private String _into = null;
 
+  public void release() {
+      super.release();
+      _into = null;
+  }
+  
   public String getComponentType() {
     return Buffer.COMPONENT_TYPE;
   }

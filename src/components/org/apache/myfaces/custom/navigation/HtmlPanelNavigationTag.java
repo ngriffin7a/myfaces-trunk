@@ -69,6 +69,32 @@ public class HtmlPanelNavigationTag
     private String _rules;
     private String _summary;
     private String _width;
+    
+    public void release() {
+        super.release();
+
+        _itemClass=null;
+        _openItemClass=null;
+        _activeItemClass=null;
+        _separatorClass=null;
+        _itemStyle=null;
+        _openItemStyle=null;
+        _activeItemStyle=null;
+        _separatorStyle=null;
+        _align=null;
+        _bgcolor=null;
+        _border=null;
+        _cellpadding=null;
+        _cellspacing=null;
+        _datafld=null;
+        _datasrc=null;
+        _dataformatas=null;
+        _frame=null;
+        _rules=null;
+        _summary=null;
+        _width=null;
+
+    }
 
     // User Role support --> already handled by HtmlPanelGroupTag
 

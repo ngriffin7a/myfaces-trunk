@@ -79,6 +79,29 @@ public class HtmlInputFileUploadTag
     private String _enabledOnUserRole;
     private String _visibleOnUserRole;
 
+    
+    public void release() {
+        super.release();
+        _accesskey=null;
+        _align=null;
+        _alt=null; 
+        _datafld=null;
+        _datasrc=null;
+        _dataformatas=null;
+        _disabled=null;
+        _maxlength=null;
+        _onblur=null;
+        _onchange=null;
+        _onfocus=null;
+        _onselect=null;
+        _readonly=null;
+        _size=null;
+        _tabindex=null;
+        _accept=null;
+        _storage=null;
+        _enabledOnUserRole=null;
+        _visibleOnUserRole=null;
+    }
 
     protected void setProperties(UIComponent component)
     {

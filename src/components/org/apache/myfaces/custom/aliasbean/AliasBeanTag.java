@@ -23,6 +23,9 @@ import org.apache.myfaces.taglib.UIComponentTagBase;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2005/02/18 17:19:30  matzew
+ * added release() to tag clazzes.
+ *
  * Revision 1.4  2005/01/27 01:59:45  svieujot
  * AliasBean : Change sourceBean attribute for value.
  * Make it work with both beans references ( #{myBean} ), and fix strings as value.
@@ -42,6 +45,14 @@ public class AliasBeanTag extends UIComponentTagBase {
 
     private String _alias;
     private String _valueExpression;
+    
+    public void release() {
+        super.release();
+
+        _alias=null;
+        _valueExpression=null;
+
+    }
     
     protected void setProperties(UIComponent component) {
         super.setProperties(component);

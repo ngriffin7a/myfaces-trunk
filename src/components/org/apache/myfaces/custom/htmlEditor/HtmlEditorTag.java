@@ -24,6 +24,9 @@ import org.apache.myfaces.taglib.UIComponentTagBase;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12  2005/02/18 17:19:30  matzew
+ * added release() to tag clazzes.
+ *
  * Revision 1.11  2005/02/06 19:45:32  svieujot
  * Add allowExternalLinks attribute.
  *
@@ -76,6 +79,23 @@ public class HtmlEditorTag extends UIComponentTagBase {
     
     private String enabledOnUserRole;
     private String visibleOnUserRole;
+    
+    public void release() {
+        super.release();
+        style=null;
+        styleClass=null;
+        type=null;
+        allowEditSource=null;
+        allowExternalLinks=null;
+        addKupuLogo=null;
+        showPropertiesToolBox=null;
+        showLinksToolBox=null;
+        showImagesToolBox=null;
+        showTablesToolBox=null;
+        showDebugToolBox=null;
+        enabledOnUserRole=null;
+        visibleOnUserRole=null;
+    }
     
     protected void setProperties(UIComponent component) {
         super.setProperties(component);

@@ -24,6 +24,9 @@ import javax.faces.webapp.UIComponentTag;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12  2005/02/18 17:19:30  matzew
+ * added release() to tag clazzes.
+ *
  * Revision 1.11  2005/01/30 15:24:10  matzew
  * thanks to sean schofield for removing *legacy* attributes of MyFaces
  *
@@ -69,6 +72,17 @@ public abstract class UIComponentTagBase
     private String _converter;
     //attributes id, rendered and binding are handled by UIComponentTag
 
+    public void release() {
+        super.release();
+
+        _forceId=null;
+        //see declaration of that property
+        _forceIdIndex = "true";
+
+        _value=null;
+        _converter=null;
+    }
+    
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);

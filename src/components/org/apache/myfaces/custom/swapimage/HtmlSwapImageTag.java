@@ -23,6 +23,9 @@ import javax.faces.component.UIComponent;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.3  2005/02/18 17:19:30  matzew
+ *          added release() to tag clazzes.
+ *
  *          Revision 1.2  2005/01/09 21:56:33  tomsp
  *          added new component swapimage
  *
@@ -48,6 +51,12 @@ public class HtmlSwapImageTag
         return RENDERER_TYPE;
     }
 
+    public void release() {
+        super.release();
+        _swapImageUrl=null;
+        _activeImageUrl=null;
+    }
+    
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);

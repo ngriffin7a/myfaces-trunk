@@ -24,6 +24,9 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.11  2005/02/18 17:19:30  matzew
+ * added release() to tag clazzes.
+ *
  * Revision 1.10  2005/01/17 10:08:44  mmarinschek
  * trying to fix problem with added resources to header; css and js was not changeable by the user anymore...
  *
@@ -103,6 +106,31 @@ public class HtmlInputCalendarTag
     // User Role support
     private String _enabledOnUserRole;
     private String _visibleOnUserRole;
+    
+    public void release() {
+        super.release();
+
+        _monthYearRowClass = null;
+        _weekRowClass = null;
+        _dayCellClass = null;
+        _currentDayCellClass = null;
+        _renderAsPopup = null;
+        _addResources = null;
+        _popupDateFormat = null;
+        _popupButtonString = null;
+        _popupGotoString = null;
+        _popupTodayString = null;
+        _popupWeekString = null;
+        _popupScrollLeftMessage = null;
+        _popupScrollRightMessage = null;
+        _popupSelectMonthMessage = null;
+        _popupSelectYearMessage = null;
+        _popupSelectDateMessage = null;
+        _enabledOnUserRole = null;
+        _visibleOnUserRole = null;
+
+    }
+
 
     protected void setProperties(UIComponent component)
     {

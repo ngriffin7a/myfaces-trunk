@@ -12,6 +12,9 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2005/02/18 17:19:30  matzew
+ * added release() to tag clazzes.
+ *
  * Revision 1.3  2004/11/25 08:41:25  matzew
  * removed unused import-statements
  *
@@ -41,6 +44,18 @@ public class HtmlPopupTag
     private String _displayAtDistanceY = null;
     private String _closePopupOnExitingElement = null;
     private String _closePopupOnExitingPopup = null;
+    
+    public void release() {
+        super.release();
+
+        _enabledOnUserRole = null;
+        _visibleOnUserRole = null;
+        _displayAtDistanceX = null;
+        _displayAtDistanceY = null;
+        _closePopupOnExitingElement = null;
+        _closePopupOnExitingPopup = null;
+
+    }
 
     public String getComponentType()
     {

@@ -25,6 +25,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2005/02/18 17:19:29  matzew
+ * added release() to tag clazzes.
+ *
  * Revision 1.6  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -62,7 +65,16 @@ public abstract class HtmlInputTagBase
     private String _valueChangeListener;
     private String _readonly;
 
+    public void release() {
+        super.release();
 
+        _immediate=null;
+        _required=null;
+        _validator=null;
+        _valueChangeListener=null;
+        _readonly=null;
+    }
+    
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);

@@ -25,6 +25,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2005/02/18 17:19:29  matzew
+ * added release() to tag clazzes.
+ *
  * Revision 1.9  2005/01/22 19:47:44  mmarinschek
  * Message rendering updated - if a validation exception needs to be rendered, the id of the component is replaced with a label.
  *
@@ -74,6 +77,15 @@ public class HtmlMessageTag
     private String _visibleOnUserRole;
     private String _replaceIdWithLabel;
 
+    public void release() {
+        super.release();
+
+        _summaryFormat = null;
+        _detailFormat = null;
+        _enabledOnUserRole = null;
+        _visibleOnUserRole = null;
+        _replaceIdWithLabel = null;
+    }
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);

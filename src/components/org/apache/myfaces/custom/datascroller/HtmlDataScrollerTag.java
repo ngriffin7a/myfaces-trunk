@@ -24,6 +24,9 @@ import javax.faces.component.UIComponent;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.11  2005/02/18 17:19:30  matzew
+ * added release() to tag clazzes.
+ *
  * Revision 1.10  2005/01/04 00:28:06  svieujot
  * dataScroller, add rowsCountVar, displayedRowsCountVar, firstRowIndexVar and lastRowIndexVar attributes.
  *
@@ -114,6 +117,30 @@ public class HtmlDataScrollerTag
     private String _enabledOnUserRole;
     private String _visibleOnUserRole;
 
+    public void release() {
+        super.release();
+        _for=null;
+        _fastStep=null;
+        _pageIndexVar=null;
+        _pageCountVar=null;
+        _rowsCountVar=null;
+        _displayedRowsCountVar=null;
+        _firstRowIndexVar=null;
+        _lastRowIndexVar=null;
+        _paginator=null;
+        _styleClass=null;
+        _style=null;
+        _paginatorMaxPages=null;
+        _paginatorTableClass=null;
+        _paginatorTableStyle=null;
+        _paginatorColumnClass=null;
+        _paginatorColumnStyle=null;
+        _paginatorActiveColumnClass=null;
+        _paginatorActiveColumnStyle=null;
+        _enabledOnUserRole=null;
+        _visibleOnUserRole=null;
+    }
+    
     public String getComponentType()
     {
         return HtmlDataScroller.COMPONENT_TYPE;

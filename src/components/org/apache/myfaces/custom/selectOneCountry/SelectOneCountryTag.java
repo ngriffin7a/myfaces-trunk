@@ -23,6 +23,9 @@ import org.apache.myfaces.taglib.html.ext.HtmlSelectOneMenuTag;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2005/02/18 17:19:30  matzew
+ * added release() to tag clazzes.
+ *
  * Revision 1.1  2005/02/09 13:05:20  svieujot
  * new x:selectOneCountry component
  *
@@ -38,7 +41,12 @@ public class SelectOneCountryTag extends HtmlSelectOneMenuTag {
     }
     
     private String maxLength;
-
+    
+    public void release() {
+        super.release();
+        maxLength=null;
+    }
+    
     protected void setProperties(UIComponent component) {
         super.setProperties(component);
 

@@ -24,6 +24,9 @@ import javax.faces.component.UIComponent;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.5  2005/02/18 17:19:31  matzew
+ *          added release() to tag clazzes.
+ *
  *          Revision 1.4  2004/10/13 11:50:57  matze
  *          renamed packages to org.apache
  *
@@ -52,6 +55,16 @@ public class HtmlNavigationMenuItemTag
     // User Role support
     private String _enabledOnUserRole;
     private String _visibleOnUserRole;
+    
+    public void release() {
+        super.release();
+
+        _icon = null;
+        _action = null;
+        _split= null;
+        _enabledOnUserRole= null;
+        _visibleOnUserRole= null;
+    }
 
     public String getComponentType()
     {

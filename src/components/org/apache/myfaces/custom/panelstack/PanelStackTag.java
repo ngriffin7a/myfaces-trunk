@@ -28,6 +28,9 @@ import javax.servlet.jsp.JspException;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.4  2005/02/18 17:19:30  matzew
+ *          added release() to tag clazzes.
+ *
  *          Revision 1.3  2004/10/13 11:50:57  matze
  *          renamed packages to org.apache
  *
@@ -62,6 +65,10 @@ public class PanelStackTag
 
     private String selectedPanel;
 
+    public void release() {
+        super.release();
+        selectedPanel=null;
+    }
 
     public String getComponentType()
     {

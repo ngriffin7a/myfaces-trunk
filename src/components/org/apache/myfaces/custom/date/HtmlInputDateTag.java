@@ -52,6 +52,14 @@ public class HtmlInputDateTag extends HtmlInputTextTagBase {
     // User Role support
     private String enabledOnUserRole;
     private String visibleOnUserRole;
+    
+    public void release() {
+        super.release();
+        enabledOnUserRole=null;
+        visibleOnUserRole=null;
+        type=null;
+        popupCalendar=null;
+    }
 
     protected void setProperties(UIComponent component) {
         super.setProperties(component);

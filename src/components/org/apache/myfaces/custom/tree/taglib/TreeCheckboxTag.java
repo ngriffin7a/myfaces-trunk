@@ -59,6 +59,11 @@ public class TreeCheckboxTag extends SelectItemTagBase
         this.forAttr = forAttr;
     }
     
+    public void release() {
+        super.release();
+        this.forAttr = null;
+    }
+    
     /**
      * @see javax.faces.webapp.UIComponentTag#setProperties(javax.faces.component.UIComponent)
      */

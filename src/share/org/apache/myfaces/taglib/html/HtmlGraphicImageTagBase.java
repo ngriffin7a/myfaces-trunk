@@ -26,6 +26,9 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2005/02/18 17:19:29  matzew
+ * added release() to tag clazzes.
+ *
  * Revision 1.3  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -67,6 +70,23 @@ public abstract class HtmlGraphicImageTagBase
 
     // HtmlGraphicImage attributes
     //none so far
+    
+    public void release() {
+        super.release();
+        _align=null;  
+        _alt=null;
+        _border=null; 
+        _height=null;
+        _hspace=null; 
+        _ismap=null;
+        _longdesc=null;
+        _onblur=null;
+        _onchange=null;
+        _onfocus=null;
+        _usemap=null;
+        _vspace=null; 
+        _width=null;
+    }
 
     protected void setProperties(UIComponent component)
     {

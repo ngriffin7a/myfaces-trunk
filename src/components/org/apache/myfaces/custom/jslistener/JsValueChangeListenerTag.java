@@ -23,6 +23,9 @@ import javax.servlet.jsp.tagext.TagSupport;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2005/02/18 17:19:30  matzew
+ * added release() to tag clazzes.
+ *
  * Revision 1.4  2005/01/04 16:09:57  mmarinschek
  * ChangeListener now uses renderer
  *
@@ -54,6 +57,13 @@ public class JsValueChangeListenerTag
     private String _for;
     private String _property;
     private String _expressionValue;
+    
+    public void release() {
+        super.release();
+        _for=null;
+        _property=null;
+        _expressionValue=null;
+    }
 
     protected void setProperties(UIComponent component)
     {

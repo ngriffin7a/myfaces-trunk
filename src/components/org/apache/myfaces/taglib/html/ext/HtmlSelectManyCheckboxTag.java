@@ -26,6 +26,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2005/02/18 17:19:29  matzew
+ * added release() to tag clazzes.
+ *
  * Revision 1.5  2004/10/13 11:50:59  matze
  * renamed packages to org.apache
  *
@@ -57,7 +60,13 @@ public class HtmlSelectManyCheckboxTag
 
     private String _enabledOnUserRole;
     private String _visibleOnUserRole;
-
+    
+    public void release() {
+        super.release();
+        _enabledOnUserRole=null;
+        _visibleOnUserRole=null;
+   }
+    
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);

@@ -35,7 +35,15 @@ public class TreeTag extends UIComponentTagBase //UIComponentBodyTagBase
     private String _var;
     private String _varNodeToggler;
 
+    public void release() {
+        super.release();
 
+        _value=null;
+        _var=null;
+        _varNodeToggler=null;
+
+    }
+    
     public String getComponentType()
     {
         return "org.apache.myfaces.HtmlTree2";

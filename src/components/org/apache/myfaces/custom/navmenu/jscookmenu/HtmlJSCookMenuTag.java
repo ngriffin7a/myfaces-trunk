@@ -40,6 +40,14 @@ public class HtmlJSCookMenuTag
     private String _enabledOnUserRole;
     private String _visibleOnUserRole;
 
+    public void release() {
+        super.release();
+        _layout=null;
+        _theme=null;
+      	_enabledOnUserRole=null;
+        _visibleOnUserRole=null;
+    }
+    
     public String getComponentType()
     {
         return COMPONENT_TYPE;

@@ -26,6 +26,9 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2005/02/18 17:19:29  matzew
+ * added release() to tag clazzes.
+ *
  * Revision 1.3  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -57,6 +60,14 @@ public abstract class HtmlOutputLabelTagBase
 
     //HTMLOutputLabel attributes
     private String _for;
+    
+    public void release() {
+        super.release();
+        _accesskey=null;
+        _onblur=null;
+        _onfocus=null;
+        _for=null;
+    }
 
     protected void setProperties(UIComponent component)
     {

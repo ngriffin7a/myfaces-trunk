@@ -42,7 +42,11 @@ public class HtmlPanelTabTag
 
     // User Role support --> already handled by HtmlPanelGroupTag
 
-
+    public void release() {
+        super.release();
+        _label=null;
+    }
+    
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
