@@ -25,20 +25,20 @@ import java.io.PrintWriter;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class Field
+public class FieldDef
 {
     //private static final Log log = LogFactory.getLog(Field.class);
 
     private String _qualifiedType;
     private String _name;
     private String _defaultValue;
-    private int _fieldIndex;
     private boolean _proprietary = false;
+    private boolean _generateProperty = true;
+    private boolean _generateSetter = true;
     private boolean _saveState = true;
-    private boolean _proprietarySetter = false;
     private int _saveStateFieldIndex;
 
-    public Field(String name)
+    public FieldDef(String name)
     {
         _name = name;
     }
@@ -80,9 +80,9 @@ public class Field
 
     private static String getSimpleType(String type)
     {
-        for (int i = 0; i < Component.IMPLICIT_PACKAGES.length; i++)
+        for (int i = 0; i < ComponentDef.IMPLICIT_PACKAGES.length; i++)
         {
-            String p = Component.IMPLICIT_PACKAGES[i] + ".";
+            String p = ComponentDef.IMPLICIT_PACKAGES[i] + ".";
             if (type.startsWith(p))
             {
                 return type.substring(p.length());
@@ -111,7 +111,9 @@ public class Field
 
     public String getSaveName()
     {
-        return _name.equals("for") ? "forValue" : _name;
+        if (_name.equals("for")) return "forValue";
+        if (_name.equals("transient")) return "transientFlag";
+        return _name;
     }
 
     public String getUcaseName()
@@ -180,16 +182,6 @@ public class Field
         }
     }
 
-    public int getFieldIndex()
-    {
-        return _fieldIndex;
-    }
-
-    public void setFieldIndex(int fieldIndex)
-    {
-        _fieldIndex = fieldIndex;
-    }
-
     public String getPrimitiveValueMethod()
     {
         if (!isPrimitiveType()) throw new UnsupportedOperationException();
@@ -216,14 +208,14 @@ public class Field
         _saveState = saveState;
     }
 
-    public boolean isProprietarySetter()
+    public boolean isGenerateSetter()
     {
-        return _proprietarySetter;
+        return _generateSetter;
     }
 
-    public void setProprietarySetter(boolean proprietarySetter)
+    public void setGenerateSetter(boolean generateSetter)
     {
-        _proprietarySetter = proprietarySetter;
+        _generateSetter = generateSetter;
     }
 
     public int getSaveStateFieldIndex()
@@ -236,6 +228,15 @@ public class Field
         _saveStateFieldIndex = saveStateFieldIndex;
     }
 
+    public boolean isGenerateProperty()
+    {
+        return _generateProperty;
+    }
+
+    public void setGenerateProperty(boolean generateProperty)
+    {
+        _generateProperty = generateProperty;
+    }
 
     public boolean isWrapForSavingState()
     {
@@ -247,7 +248,8 @@ public class Field
     {
         writer.print  ("    <field");
         if (isProprietary()) writer.print(" proprietary=\"true\"");
-        if (isProprietarySetter()) writer.print(" proprietarySetter=\"true\"");
+        if (!isGenerateProperty()) writer.print(" generateProperty=\"false\"");
+        if (!isGenerateSetter()) writer.print(" generateSetter=\"false\"");
         if (!isSaveState())  writer.print(" saveState=\"false\"");
         writer.println(">");
         writer.print  ("        <name>");

@@ -36,7 +36,7 @@ public class ComponentDefinitionParser
 {
     //private static final Log log = LogFactory.getLog(ComponentDefinitionParser.class);
 
-    public Component parse(File xmlFile)
+    public ComponentDef parse(File xmlFile)
     {
         try
         {
@@ -60,7 +60,7 @@ public class ComponentDefinitionParser
     }
 
 
-    private Component parseComponent(Element componentElem)
+    private ComponentDef parseComponent(Element componentElem)
     {
         String componentClass = getChildElementText(componentElem, "component-class");
         String baseClass = getChildElementText(componentElem, "base-class");
@@ -68,9 +68,15 @@ public class ComponentDefinitionParser
         String componentFamily = getChildElementText(componentElem, "component-family");
         String rendererType = getChildElementText(componentElem, "renderer-type");
 
-        Component component = new Component(componentClass, baseClass, componentType);
+        ComponentDef component = new ComponentDef(componentClass, baseClass, componentType);
         component.setRendererType(rendererType);
         component.setComponentFamily(componentFamily);
+
+        String generateConstructor = componentElem.getAttribute("generateConstructor");
+        if (generateConstructor != null && generateConstructor.length() > 0)
+        {
+            component.setGenerateConstructor(Boolean.valueOf(generateConstructor).booleanValue());
+        }
 
         NodeList fields = componentElem.getElementsByTagName("field");
         for (int i = 0, len = fields.getLength(); i < len; i++)
@@ -83,10 +89,10 @@ public class ComponentDefinitionParser
     }
 
 
-    private Field createField(Element fieldElem)
+    private FieldDef createField(Element fieldElem)
     {
         String fieldName = getChildElementText(fieldElem, "name");
-        Field field =  new Field(fieldName);
+        FieldDef field =  new FieldDef(fieldName);
 
         String fieldType = getChildElementText(fieldElem, "type");
         field.setQualifiedType(fieldType);
@@ -95,21 +101,27 @@ public class ComponentDefinitionParser
         if (defaultValue != null) field.setDefaultValue(defaultValue);
 
         String proprietary = fieldElem.getAttribute("proprietary");
-        if (proprietary != null && proprietary.equals("true"))
+        if (proprietary != null && proprietary.length() > 0)
         {
-            field.setProprietary(true);
+            field.setProprietary(Boolean.valueOf(proprietary).booleanValue());
         }
 
-        String proprietarySetter = fieldElem.getAttribute("proprietarySetter");
-        if (proprietarySetter != null && proprietarySetter.equals("true"))
+        String generateProperty = fieldElem.getAttribute("generateProperty");
+        if (generateProperty != null && generateProperty.length() > 0)
         {
-            field.setProprietarySetter(true);
+            field.setGenerateProperty(Boolean.valueOf(generateProperty).booleanValue());
+        }
+
+        String generateSetter = fieldElem.getAttribute("generateSetter");
+        if (generateSetter != null && generateSetter.length() > 0)
+        {
+            field.setGenerateSetter(Boolean.valueOf(generateSetter).booleanValue());
         }
 
         String saveState = fieldElem.getAttribute("saveState");
-        if (saveState != null && saveState.equals("false"))
+        if (saveState != null && saveState.length() > 0)
         {
-            field.setSaveState(false);
+            field.setSaveState(Boolean.valueOf(saveState).booleanValue());
         }
 
         return field;

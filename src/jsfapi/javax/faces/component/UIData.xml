@@ -10,7 +10,7 @@
         <type>int</type>
         <default-value>0</default-value>
     </field>
-    <field proprietarySetter="true">
+    <field proprietarySetter="true" generateProperty="false">
         <name>rows</name>
         <type>int</type>
         <default-value>0</default-value>
@@ -19,20 +19,20 @@
         <name>value</name>
         <type>java.lang.Object</type>
     </field>
-    <field proprietary="true" saveState="false">
+    <field proprietary="true" generateProperty="false" saveState="false">
         <name>var</name>
         <type>java.lang.String</type>
     </field>
-    <field proprietary="true" saveState="false">
+    <field proprietary="true" generateProperty="false" saveState="false">
         <name>rowIndex</name>
         <type>int</type>
         <default-value>-1</default-value>
     </field>
-    <field proprietary="true" saveState="false">
+    <field proprietary="true" generateProperty="false" saveState="false">
         <name>footer</name>
         <type>javax.faces.component.UIComponent</type>
     </field>
-    <field proprietary="true" saveState="false">
+    <field proprietary="true" generateProperty="false" saveState="false">
         <name>header</name>
         <type>javax.faces.component.UIComponent</type>
     </field>

@@ -24,6 +24,7 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.*;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
@@ -54,7 +55,7 @@ public class ComponentInspector
         System.out.println("Inspecting " + componentClassName);
         try
         {
-            Component oldComponentDefinition = null;
+            ComponentDef oldComponentDefinition = null;
             
             File xmlFile = getDestFileFromClassName(componentClassName);
             if (xmlFile.exists())
@@ -95,7 +96,7 @@ public class ComponentInspector
     }
 
     private void inspectSingleClass(PrintWriter writer, String className,
-                                    Component oldComponentDefinition)
+                                    ComponentDef oldComponentDefinition)
     {
         try
         {
@@ -105,34 +106,45 @@ public class ComponentInspector
             try
             {
                 clazz = Class.forName(className, true, classLoader);
-                component = (UIComponent)clazz.newInstance();
             }
             catch (Exception e)
             {
                 throw new RuntimeException(e);
             }
 
-            writer.println("<component>");
-            //writer.println("    <package>" + clazz.getPackage().getName() + "</package>");
-            //writer.println("    <name>" + simpleName(clazz.getName()) + "</name>");
-            writer.println("    <component-class>" + clazz.getName() + "</component-class>");
-            writer.println("    <base-class>" + clazz.getSuperclass().getName() + "</base-class>");
-
-            java.lang.reflect.Field declaredField = getDeclaredField(clazz, "COMPONENT_TYPE");
-            if (declaredField != null)
+            try
             {
-                writer.println("    <component-type>" + (String)declaredField.get(component) + "</component-type>");
+                component = (UIComponent)clazz.newInstance();
+            }
+            catch (Exception e)
+            {
+                //abstract component?
+                e.printStackTrace();
+                component = null;
+            }
+
+            ComponentDef componentDef = new ComponentDef();
+            componentDef.setGenerateConstructor(oldComponentDefinition.isGenerateConstructor());
+            componentDef.setGenerateStateMethods(oldComponentDefinition.isGenerateStateMethods());
+
+            componentDef.setQualifiedClassName(clazz.getName());
+            componentDef.setBaseClassName(clazz.getSuperclass().getName());
+
+            Field declaredField = getDeclaredField(clazz, "COMPONENT_TYPE");
+            if (component != null && declaredField != null)
+            {
+                componentDef.setComponentType((String)declaredField.get(component));
             }
 
             declaredField = getDeclaredField(clazz, "COMPONENT_FAMILY");
-            if (declaredField != null)
+            if (component != null && declaredField != null)
             {
-                writer.println("    <component-family>" + (String)declaredField.get(component) + "</component-family>");
+                componentDef.setComponentFamily((String)declaredField.get(component));
             }
 
-            if (component.getRendererType() != null)
+            if (component != null && component.getRendererType() != null)
             {
-                writer.println("    <renderer-type>" + component.getRendererType() + "</renderer-type>");
+                componentDef.setRendererType(component.getRendererType());
             }
 
             Set baseClassProperties = new HashSet();
@@ -156,15 +168,15 @@ public class ComponentInspector
                     continue;
                 }
 
-                Field field = null;
+                FieldDef field = null;
                 if (oldComponentDefinition != null)
                 {
-                    Field oldField = oldComponentDefinition.getField(propertyDescriptor.getName());
+                    FieldDef oldField = oldComponentDefinition.getField(propertyDescriptor.getName());
                     if (oldField != null)
                     {
                         if (oldField.isProprietary())
                         {
-                            //Defined as proprietary declaredField, must not be overwriten
+                            //Defined as proprietary declaredField, must not be overwritten
                             continue;
                         }
                         else
@@ -176,26 +188,29 @@ public class ComponentInspector
 
                 if (field == null)
                 {
-                    field = new Field(propertyDescriptor.getName());
+                    field = new FieldDef(propertyDescriptor.getName());
                 }
 
                 field.setQualifiedType(propertyDescriptor.getPropertyType().getName());
 
-                Method m = propertyDescriptor.getReadMethod();
-                String defaultValue = null;
-                try
+                if (component != null)
                 {
-                    defaultValue = m.invoke(component, EMPTY_ARGS).toString();
-                }
-                catch (Exception e)
-                {
-                }
-                if (defaultValue != null)
-                {
-                    field.setDefaultValue(defaultValue);
+                    Method m = propertyDescriptor.getReadMethod();
+                    String defaultValue = null;
+                    try
+                    {
+                        defaultValue = m.invoke(component, EMPTY_ARGS).toString();
+                    }
+                    catch (Exception e)
+                    {
+                    }
+                    if (defaultValue != null)
+                    {
+                        field.setDefaultValue(defaultValue);
+                    }
                 }
 
-                field.toXml(writer);
+                componentDef.addField(field);
             }
 
             if (oldComponentDefinition != null)
@@ -203,15 +218,15 @@ public class ComponentInspector
                 Collection fields = oldComponentDefinition.getFields();
                 for (Iterator it = fields.iterator(); it.hasNext();)
                 {
-                    Field field = (Field)it.next();
+                    FieldDef field = (FieldDef)it.next();
                     if (field.isProprietary())
                     {
-                        field.toXml(writer);
+                        componentDef.addField(field);
                     }
                 }
             }
 
-            writer.println("</component>");
+            componentDef.toXml(writer);
         }
         catch (Exception e)
         {

@@ -5,7 +5,7 @@
     <component-type>javax.faces.Form</component-type>
     <component-family>javax.faces.Form</component-family>
     <renderer-type>javax.faces.Form</renderer-type>
-    <field proprietary="true" saveState="false">
+    <field proprietary="true" generateProperty="false" saveState="false">
         <name>submitted</name>
         <type>boolean</type>
         <default-value>false</default-value>

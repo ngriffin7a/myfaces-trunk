@@ -18,13 +18,15 @@
  */
 package net.sourceforge.myfaces.codegen.component;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class Component
+public class ComponentDef
 {
     //private static final Log log = LogFactory.getLog(Component.class);
 
@@ -41,16 +43,22 @@ public class Component
     private String _rendererType;
     private Map _fieldsMap;
     private boolean _generateStateMethods;
+    private boolean _generateConstructor = true;
 
-    public Component()
+    public ComponentDef()
     {
     }
 
-    public Component(String className, String baseClassName, String componentType)
+    public ComponentDef(String className, String baseClassName, String componentType)
     {
         _qualifiedClassName = className;
         _baseClassName = baseClassName;
         _componentType = componentType;
+    }
+
+    public void setQualifiedClassName(String qualifiedClassName)
+    {
+        _qualifiedClassName = qualifiedClassName;
     }
 
     public String getComponentFamily()
@@ -95,19 +103,18 @@ public class Component
         return _fieldsMap != null ? _fieldsMap.values() : Collections.EMPTY_LIST;
     }
 
-    public void addField(Field field)
+    public void addField(FieldDef field)
     {
         if (_fieldsMap == null)
         {
             _fieldsMap = new LinkedHashMap();
         }
-        field.setFieldIndex(_fieldsMap.size());
         _fieldsMap.put(field.getName(), field);
     }
 
-    public Field getField(String fieldName)
+    public FieldDef getField(String fieldName)
     {
-        return (Field)_fieldsMap.get(fieldName);
+        return (FieldDef)_fieldsMap.get(fieldName);
     }
 
 
@@ -148,13 +155,13 @@ public class Component
     }
 
 
-    public Collection getNonProprietaryFields()
+    public Collection getPropertyFields()
     {
         List lst = new ArrayList();
         for (Iterator it = getFields().iterator(); it.hasNext(); )
         {
-            Field field = (Field)it.next();
-            if (!field.isProprietary())
+            FieldDef field = (FieldDef)it.next();
+            if (field.isGenerateProperty())
             {
                 lst.add(field);
             }
@@ -168,7 +175,7 @@ public class Component
         int counter = 1;
         for (Iterator it = getFields().iterator(); it.hasNext(); )
         {
-            Field field = (Field)it.next();
+            FieldDef field = (FieldDef)it.next();
             if (field.isSaveState())
             {
                 field.setSaveStateFieldIndex(counter++);
@@ -182,4 +189,48 @@ public class Component
     {
         return getSaveStateFields().size() + 1;
     }
+
+    public boolean isGenerateConstructor()
+    {
+        return _generateConstructor;
+    }
+
+    public void setGenerateConstructor(boolean generateConstructor)
+    {
+        _generateConstructor = generateConstructor;
+    }
+
+
+    public void toXml(PrintWriter writer) throws IOException
+    {
+        writer.print  ("<component");
+        if (!isGenerateConstructor()) writer.print(" generateConstructor=\"false\"");
+        if (!isGenerateStateMethods()) writer.print(" generateStateMethods=\"false\"");
+        writer.println(">");
+        writer.println("    <component-class>" + _qualifiedClassName + "</component-class>");
+        writer.println("    <base-class>" + _baseClassName + "</base-class>");
+        if (_componentType != null)
+        {
+            writer.println("    <component-type>" + _componentType + "</component-type>");
+        }
+
+        if (_componentFamily != null)
+        {
+            writer.println("    <component-family>" + _componentFamily + "</component-family>");
+        }
+
+        if (_rendererType != null)
+        {
+            writer.println("    <renderer-type>" + _rendererType + "</renderer-type>");
+        }
+
+        Collection fields = getFields();
+        for (Iterator iterator = fields.iterator(); iterator.hasNext();)
+        {
+            FieldDef f = (FieldDef)iterator.next();
+            f.toXml(writer);
+        }
+        writer.println("</component>");
+    }
+
 }

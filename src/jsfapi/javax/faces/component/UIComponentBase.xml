@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<component generateConstructor="false" generateStateMethods="false">
+    <component-class>javax.faces.component.UIComponentBase</component-class>
+    <base-class>javax.faces.component.UIComponent</base-class>
+    <field proprietary="true" generateProperty="false" saveState="false">
+        <name>transient</name>
+        <type>boolean</type>
+    </field>
+    <field proprietary="true" generateProperty="false">
+        <name>id</name>
+        <type>java.lang.String</type>
+    </field>
+    <field proprietary="true" generateProperty="false" saveState="false">
+        <name>parent</name>
+        <type>javax.faces.component.UIComponent</type>
+    </field>
+    <field proprietary="true">
+        <name>rendered</name>
+        <type>boolean</type>
+    </field>
+    <field proprietary="true">
+        <name>rendererType</name>
+        <type>java.lang.String</type>
+    </field>
+</component>

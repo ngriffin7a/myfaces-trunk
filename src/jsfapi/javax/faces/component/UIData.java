@@ -53,7 +53,7 @@ public class UIData
     private DataModel _dataModel;
     private String _var = null;
     private transient Object[] _descendantStates;
-    private transient int _descendantComponentCount = -1;
+    private transient int _descendantEditableValueHolderCount = -1;
 
     public void setFooter(UIComponent footer)
     {
@@ -145,30 +145,41 @@ public class UIData
         }
     }
 
+    /**
+     * They descendant Component states algorithm we implement here is pretty fast
+     * but does not support modification of the components tree during the lifecycle.
+     * TODO: should we have an alternative implementation with a clientId based Map ?
+     */
     private void saveDescendantComponentStates()
     {
-        if (_descendantStates == null)
+        if (_descendantEditableValueHolderCount == -1)
         {
-            _descendantStates = new Object[getRows() + 1];
-        }
-
-        int rowIndex = getDescendantStatesRowIndex();
-
-        EditableValueHolderState[] rowState;
-        if (_descendantComponentCount == -1)
-        {
+            //This is the first time we save the descendant components state
             List list = new ArrayList();
             saveDescendantComponentStates(this, list);
-            rowState = (EditableValueHolderState[])list.toArray(new EditableValueHolder[list.size()]);
-            _descendantStates[rowIndex] = rowState;
-            _descendantComponentCount = list.size();
+            _descendantEditableValueHolderCount = list.size();
+            if (_descendantEditableValueHolderCount != 0)
+            {
+                EditableValueHolderState[] rowState
+                        = (EditableValueHolderState[])list.toArray(new EditableValueHolder[list.size()]);
+                _descendantStates = new Object[getRows() + 1];
+                int rowIndex = getDescendantStatesRowIndex();
+                _descendantStates[rowIndex] = rowState;
+            }
+        }
+        else if (_descendantEditableValueHolderCount == 0)
+        {
+            //There are no EditableValueHolder children
+            return;
         }
         else
         {
-            rowState = (EditableValueHolderState[])_descendantStates[rowIndex];
+            int rowIndex = getDescendantStatesRowIndex();
+            EditableValueHolderState[] rowState
+                    = (EditableValueHolderState[])_descendantStates[rowIndex];
             if (rowState == null)
             {
-                rowState = new EditableValueHolderState[_descendantComponentCount];
+                rowState = new EditableValueHolderState[_descendantEditableValueHolderCount];
                 _descendantStates[rowIndex] = rowState;
             }
             saveDescendantComponentStates(this, rowState, 0);
@@ -205,17 +216,21 @@ public class UIData
 
     private void restoreDescendantComponentStates()
     {
-        if (_descendantStates == null)
+        if (_descendantEditableValueHolderCount == -1)
         {
-            throw new IllegalStateException("no descendantStates?");
+            throw new IllegalStateException("saveDescendantComponentStates not called yet?");
         }
+        else if (_descendantEditableValueHolderCount > 0)
+        {
+            int rowIndex = getDescendantStatesRowIndex();
 
-        int rowIndex = getDescendantStatesRowIndex();
-
-        EditableValueHolderState[] rowState
-                = (EditableValueHolderState[])_descendantStates[rowIndex];
-
-        restoreDescendantComponentStates(this, rowState, 0);
+            EditableValueHolderState[] rowState
+                    = (EditableValueHolderState[])_descendantStates[rowIndex];
+            if (rowState != null)
+            {
+                restoreDescendantComponentStates(this, rowState, 0);
+            }
+        }
     }
 
     private static void restoreDescendantComponentStates(UIComponent component,

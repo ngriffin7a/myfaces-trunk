@@ -44,10 +44,9 @@
         <inspect basedir="${jsfapi-src.dir}"
                  includes="javax/faces/component/UI*.java,
                            javax/faces/component/html/*.java"
-                 excludes="javax/faces/component/UIComponent.java,
-                           javax/faces/component/UIComponentBase.java"
+                 excludes="javax/faces/component/UIComponent.java"
                  destdir="${jsfapi-src.dir}"
-                 overwrite="true" />
+                 overwrite="false" />
     </target>
 
     <target name="generate-components" depends="-compile" >
@@ -59,6 +58,40 @@
                             javax/faces/component/html/*.xml"
                   destdir="${jsfapi-src.dir}"
                   velocityLoaderPath="${codgen-src.dir}/net/sourceforge/myfaces/codegen/resource" />
+    </target>
+
+
+
+    <target name="inspect-single-component" depends="-compile" >
+        <taskdef name="inspect" classname="net.sourceforge.myfaces.codegen.component.ComponentInspectorTask">
+            <classpath refid="codegen.class.path"/>
+        </taskdef>
+        <inspect basedir="${jsfapi-src.dir}"
+                 includes="javax/faces/component/UIComponentBase.java"
+                 destdir="${jsfapi-src.dir}"
+                 overwrite="true" />
+    </target>
+
+    <target name="generate-single-component" depends="-compile" >
+        <taskdef name="generate" classname="net.sourceforge.myfaces.codegen.component.ComponentGeneratorTask">
+            <classpath refid="codegen.class.path"/>
+        </taskdef>
+        <generate basedir="${jsfapi-src.dir}"
+                  includes="javax/faces/component/UIComponentBase.xml"
+                  destdir="${jsfapi-src.dir}"
+                  velocityLoaderPath="${codgen-src.dir}/net/sourceforge/myfaces/codegen/resource" />
+    </target>
+
+
+
+    <target name="clean"
+        description="deletes all temporary files that were created">
+        <delete quiet="true" failonerror="false" includeEmptyDirs="true">
+            <fileset dir="${codegen-classes.dir}" />
+            <fileset dir="${jsfapi-src.dir}"
+                 includes="javax/faces/component/*.bak,
+                           javax/faces/component/html/*.bak" />
+        </delete>
     </target>
 
 

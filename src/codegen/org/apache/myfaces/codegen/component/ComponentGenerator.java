@@ -49,7 +49,7 @@ public class ComponentGenerator
     public void generate(File xmlFile)
     {
         ComponentDefinitionParser parser = new ComponentDefinitionParser();
-        Component component = parser.parse(xmlFile);
+        ComponentDef component = parser.parse(xmlFile);
         try
         {
             generateComponent(component);
@@ -60,7 +60,7 @@ public class ComponentGenerator
         }
     }
 
-    public void generateComponent(Component component) throws IOException
+    public void generateComponent(ComponentDef component) throws IOException
     {
         System.out.println("Generating component " + component.getQualifiedClassName());
         String componentClass = component.getQualifiedClassName();
@@ -126,7 +126,7 @@ public class ComponentGenerator
 
 
     public void generateComponentLines(PrintWriter printWriter,
-                                       Component component) throws IOException
+                                       ComponentDef component) throws IOException
     {
         VelocityContext vc = getVelocityContext();
         vc.put("c", component);
