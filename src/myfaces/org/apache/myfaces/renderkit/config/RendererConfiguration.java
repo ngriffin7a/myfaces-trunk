@@ -35,9 +35,9 @@ import java.util.*;
 public class RendererConfiguration
 {
     private static final String ATTRIBUTE_DESCRIPION_RESOURCE =
-            "net.sourceforge.myfaces.renderkit.config".replace('.','/') + "/AttributeDescriptor.xml";
+            "net.sourceforge.myfaces.renderkit.config.".replace('.','/') + "AttributeDescriptor.xml";
     private static final String RENDERER_RESOURCE =
-            "net.sourceforge.myfaces.renderkit.config".replace('.','/') + "/Renderer.xml";
+            "net.sourceforge.myfaces.renderkit.config.".replace('.','/') + "Renderer.xml";
 
     private static final String ELEMENT_ATTR_DESCR = "attrdesc";
     private static final String ELEMENT_COLLECTION = "collection";
