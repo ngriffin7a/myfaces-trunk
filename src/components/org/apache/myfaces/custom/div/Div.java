@@ -18,12 +18,16 @@ package org.apache.myfaces.custom.div;
 import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.apache.myfaces.component.html.util.HtmlComponentUtils;
+
 /**
  * @author bdudney (latest modification by $Author$) 
  * @version $Revision$ $Date$ 
  * $Log$
+ * Revision 1.2  2005/02/09 17:41:30  svieujot
+ * Apply Sean Schofield's patch for MYFACES-104
+ *
  * Revision 1.1  2004/11/08 03:43:20  bdudney
  * Added a div element. x:div to use, inserts a div with class or style attributes
  *
@@ -32,7 +36,7 @@ public class Div extends UIOutput {
   public static final String COMPONENT_TYPE = "org.apache.myfaces.Div";
   public static final String COMPONENT_FAMILY = "javax.faces.Output";
   private static final String DEFAULT_RENDERER_TYPE = DivRenderer.RENDERER_TYPE;
-  private static final Log log = LogFactory.getLog(Div.class);
+
   private String _style = null;
   private String _styleClass = null;
 
@@ -44,6 +48,17 @@ public class Div extends UIOutput {
   public String getFamily() {
     return COMPONENT_FAMILY;
   }
+
+  public String getClientId(FacesContext context)
+  {
+      String clientId = HtmlComponentUtils.getClientId(this, getRenderer(context), context);
+      if (clientId == null)
+      {
+          clientId = super.getClientId(context);
+      }
+
+      return clientId;
+    }
 
   public String getStyle() {
     if (_style != null)

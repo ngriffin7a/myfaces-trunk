@@ -1443,6 +1443,7 @@
 		<body-content>JSP</body-content>
 		<description>Places a div around its children</description>
 		&ui_component_attributes;
+        &ext_forceId_attribute;
 		<attribute>
 			<name>style</name>
 			<required>false</required>

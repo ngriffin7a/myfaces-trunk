@@ -16,17 +16,21 @@
 package org.apache.myfaces.custom.div;
 
 import java.io.IOException;
+
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 import org.apache.myfaces.renderkit.html.HTML;
 import org.apache.myfaces.renderkit.html.HtmlRenderer;
+import org.apache.myfaces.renderkit.html.HtmlRendererUtils;
 /**
  * @author bdudney (latest modification by $Author$) 
  * @version $Revision$ $Date$ 
  * $Log$
+ * Revision 1.4  2005/02/09 17:41:30  svieujot
+ * Apply Sean Schofield's patch for MYFACES-104
+ *
  * Revision 1.3  2004/11/27 00:00:09  svieujot
  * Remove the limitation to have a style or a styleClass attribute because sometimes, just a plain <div> can be useful.
  *
@@ -38,7 +42,6 @@ import org.apache.myfaces.renderkit.html.HtmlRenderer;
  *
  */
 public class DivRenderer extends HtmlRenderer {
-  private static final Log log = LogFactory.getLog(DivRenderer.class);
   public static final String RENDERER_TYPE = "org.apache.myfaces.DivRenderer";
 
   public void encodeBegin(FacesContext context, UIComponent component)
@@ -48,7 +51,10 @@ public class DivRenderer extends HtmlRenderer {
     }
     Div div = (Div) component;
     ResponseWriter writer = context.getResponseWriter();
-    writer.write("<" + HTML.DIV_ELEM +" ");
+    
+    writer.startElement(HTML.DIV_ELEM, component);
+    HtmlRendererUtils.writeIdIfNecessary(writer, component, context);
+    
     String styleClass = div.getStyleClass();
     String style = div.getStyle();
     if(null != styleClass && null != style) {
@@ -60,7 +66,6 @@ public class DivRenderer extends HtmlRenderer {
     if(null != style) {
       writer.write("style=\"" + style + "\"");
     }
-    writer.write(">");
   }
 
   public void encodeEnd(FacesContext context, UIComponent component)
@@ -69,6 +74,6 @@ public class DivRenderer extends HtmlRenderer {
       throw new NullPointerException();
     }
     ResponseWriter writer = context.getResponseWriter();
-    writer.write("</" + HTML.DIV_ELEM + ">");
+    writer.endElement(HTML.DIV_ELEM);
   }
 }
