@@ -12,6 +12,7 @@ Changes in Release 0.4.3
 * New configuration option "defaultLanguage" in MyFacesConfig
 * New Renderer "TabbedPane" that renderes a swing-like tabbed Pane.
 * Rudimentary support for <jsp:include>. See known issues for details.
+* fixed bug in ListRenderer: there was a bug when calculating actualRow
 
 ----------------------------------------------------------------------
 Changes in Release 0.4.2

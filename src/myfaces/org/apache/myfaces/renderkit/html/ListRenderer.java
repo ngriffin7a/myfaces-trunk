@@ -141,11 +141,11 @@ public class ListRenderer
 
         if (uicomponent.getRendererType().equals(TYPE))
         {
-            UIComponent listComponent  = popListComponent(facesContext);
+            UIComponent listComponent  = peekListComponent(facesContext);
 
             closeRow(facesContext, listComponent, uicomponent);
+            popListComponent(facesContext);
             writer.write("</table>\n");
-            //restoreRenderKit(facesContext, uicomponent);
         }
         CallbackSupport.removeCallbackRenderer(facesContext, uicomponent, this);
     }
@@ -335,45 +335,35 @@ public class ListRenderer
     protected void incrementColumnAttr(FacesContext context)
     {
         Integer value = getCurrentColumnAttr(context);
-        ServletRequest servletRequest = (ServletRequest)context.getExternalContext().getRequest();
-        servletRequest.setAttribute(ACTUAL_COLUMN_ATTR, new Integer(value.intValue() + 1));
-    }
-
-    protected void resetColumnAttr(FacesContext context)
-    {
-        ServletRequest servletRequest = (ServletRequest)context.getExternalContext().getRequest();
-        servletRequest.setAttribute(ACTUAL_COLUMN_ATTR, INITIAL_VALUE);
+        peekListComponent(context).setAttribute(ACTUAL_COLUMN_ATTR, new Integer(value.intValue() + 1));
     }
 
     protected Integer getCurrentColumnAttr(FacesContext context)
     {
-        ServletRequest servletRequest = (ServletRequest)context.getExternalContext().getRequest();
-        Integer value = (Integer)servletRequest.getAttribute(ACTUAL_COLUMN_ATTR);
+        Integer value = (Integer)peekListComponent(context).getAttribute(ACTUAL_COLUMN_ATTR);
         return value == null ? INITIAL_VALUE : new Integer(value.intValue());
     }
 
     protected int incrementRowAttr(FacesContext context)
     {
         Integer value = getCurrentRowAttr(context);
-        ServletRequest servletRequest = (ServletRequest)context.getExternalContext().getRequest();
-        servletRequest.setAttribute(ACTUAL_ROW_ATTR, new Integer(value.intValue() + 1));
+        peekListComponent(context).setAttribute(ACTUAL_ROW_ATTR, new Integer(value.intValue() + 1));
         return value.intValue() + 1;
     }
 
     protected Integer getCurrentRowAttr(FacesContext context)
     {
-        ServletRequest servletRequest = (ServletRequest)context.getExternalContext().getRequest();
-        Integer value = (Integer)servletRequest.getAttribute(ACTUAL_ROW_ATTR);
+        if (peekListComponent(context) == null)
+        {
+            System.out.println("-->");
+        }
+        Integer value = (Integer)peekListComponent(context).getAttribute(ACTUAL_ROW_ATTR);
         return value == null ? INITIAL_VALUE : new Integer(value.intValue());
     }
 
     //-------------------------------------------------------------
     // Styles
     //-------------------------------------------------------------
-
-    /**
-     * TODO: refactor see GridRenderer
-     */
     protected String calcRowStyle(FacesContext context,
                                   UIComponent rowComponent,
                                   int row,
@@ -405,9 +395,6 @@ public class ListRenderer
         return style;
     }
 
-    /**
-     * TODO: refactor see GridRenderer
-     */
     protected String calcColumnStyle(FacesContext context,
                                      UIComponent columnComponent,
                                      int column,
