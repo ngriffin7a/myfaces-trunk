@@ -22,6 +22,7 @@
 
 <faces-config xmlns="http://java.sun.com/JSF/Configuration">
 
+
   <!-- MyFaces extended standard components (in alphabetical order) -->
 
   <component>
@@ -38,6 +39,9 @@
     <component-type>net.sourceforge.myfaces.HtmlDataTable</component-type>
     <component-class>net.sourceforge.myfaces.component.html.ext.HtmlDataTable</component-class>
   </component>
+  <lifecycle>
+    <phase-listener>net.sourceforge.myfaces.component.html.ext.HtmlDataTablePhaseListener</phase-listener>
+  </lifecycle>
 
   <component>
     <component-type>net.sourceforge.myfaces.HtmlInputText</component-type>

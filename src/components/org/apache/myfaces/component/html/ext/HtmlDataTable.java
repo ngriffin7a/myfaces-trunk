@@ -18,11 +18,15 @@ package net.sourceforge.myfaces.component.html.ext;
 import net.sourceforge.myfaces.component.UserRoleAware;
 import net.sourceforge.myfaces.component.UserRoleUtils;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.model.DataModel;
+import javax.faces.render.Renderer;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.Iterator;
@@ -33,6 +37,9 @@ import java.util.List;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.11  2004/08/10 13:29:59  manolito
+ * full revision of extended HtmlDataTable so that there is no more cache problem
+ *
  * Revision 1.10  2004/07/01 21:53:05  mwessendorf
  * ASF switch
  *
@@ -59,13 +66,17 @@ import java.util.List;
  *
  */
 public class HtmlDataTable
-        extends javax.faces.component.html.HtmlDataTable
+        extends HtmlDataTableHack
         implements UserRoleAware
 {
+    private static final Log log = LogFactory.getLog(HtmlDataTable.class);
+
     private static final Class OBJECT_ARRAY_CLASS = (new Object[0]).getClass();
 
-    transient private _SerializableDataModel _restoredValue = null;
-    transient private Object _cachedValue = null;
+    private transient boolean _isDataModelRestored = false;
+    //private transient DataModel _dataModel;
+    //transient private _SerializableDataModel _restoredDataModel = null;
+    //transient private Object _cachedValue = null;
 
     //Flag to detect if component is rendered for the first time (restoreState sets it to false)
     transient private boolean _firstTimeRendered = true;
@@ -73,6 +84,7 @@ public class HtmlDataTable
     private String _sortColumn = null;
     private Boolean _sortAscending = null;
 
+    /*
     public Object getValue()
     {
         if (_cachedValue == null)
@@ -90,17 +102,27 @@ public class HtmlDataTable
         }
         return _cachedValue;
     }
+    */
 
 
+    /*
     public void setValue(Object value)
     {
         super.setValue(value);
 
         // clear the restored value
-        _restoredValue = null;
+        //_restoredDataModel = null;
 
         // and update the cached value
-        _cachedValue = value;
+        //_cachedValue = value;
+    }
+    */
+
+    public void setValue(Object value)
+    {
+        _dataModel = null;
+        _isDataModelRestored = false;
+        super.setValue(value);
     }
 
 
@@ -108,7 +130,7 @@ public class HtmlDataTable
     {
         super.processUpdates(context);
 
-        if (_restoredValue != null)
+        if (_isDataModelRestored)
         {
             updateModelFromPreservedDataModel(context);
         }
@@ -143,7 +165,7 @@ public class HtmlDataTable
         ValueBinding vb = getValueBinding("value");
         if (vb != null && !vb.isReadOnly(context))
         {
-            _SerializableDataModel dm = (_SerializableDataModel)_restoredValue;
+            _SerializableDataModel dm = (_SerializableDataModel)_dataModel;
             Class type = vb.getType(context);
             if (DataModel.class.isAssignableFrom(type))
             {
@@ -236,18 +258,39 @@ public class HtmlDataTable
     }
 
 
-    public void encodeBegin(FacesContext context) throws IOException
+    protected void refresh(FacesContext context)
     {
+        if (log.isDebugEnabled()) log.debug("Refresh for HtmlDataTable " + getClientId(context) + " was called");
+        
         if (_firstTimeRendered || isAllChildrenAndFacetsValid())
         {
             // No invalid children
-            // --> clear restored and cached value
-            _restoredValue = null;
-            _cachedValue = null;
+            // --> clear data model
+            _dataModel = null;
+            _isDataModelRestored = false;
+
+            _saveDescendantStates = false; // no need to save children states
         }
+        else
+        {
+            _saveDescendantStates = true; // save children states (valid flag, submittedValues, etc.)
+        }
+    }
+
+    
+    public void encodeBegin(FacesContext context) throws IOException
+    {
+        //refresh of _dataModel already done via refresh (called by HtmlDataTablePhaseListener)
+
         if (isRenderedIfEmpty() || getRowCount() > 0)
         {
-            super.encodeBegin(context);
+            if (context == null) throw new NullPointerException("context");
+            if (!isRendered()) return;
+            Renderer renderer = getRenderer(context);
+            if (renderer != null)
+            {
+                renderer.encodeBegin(context, this);
+            }
         }
     }
 
@@ -267,63 +310,50 @@ public class HtmlDataTable
         }
     }
 
-    // TODO: manolito still need this ?? (royalts)
     public int getFirst()
     {
-        if (_restoredValue != null)
+        if (_isDataModelRestored)
         {
-            return _restoredValue.getFirst();
+            //Rather get the currently restored DataModel attribute
+            return ((_SerializableDataModel)_dataModel).getFirst();
         }
-        return super.getFirst();
+        else
+        {
+            return super.getFirst();
+        }
     }
 
-    // TODO: manolito still need this ?? (royalts)
     public void setFirst(int first)
     {
-        if (_restoredValue != null)
+        if (_isDataModelRestored)
         {
-            _restoredValue.setFirst(first);
+            //Also change the currently restored DataModel attribute
+            ((_SerializableDataModel)_dataModel).setFirst(first);
         }
         super.setFirst(first);
     }
 
-    // TODO: manolito still need this ?? (royalts)
-    // getRows(...) without overwriting setRows might couse problems
-    // see setFirst(...)
     public int getRows()
     {
-        if (_restoredValue != null)
+        if (_isDataModelRestored)
         {
-            return _restoredValue.getRows();
+            //Rather get the currently restored DataModel attribute
+            return ((_SerializableDataModel)_dataModel).getRows();
         }
-        return super.getRows();
+        else
+        {
+            return super.getRows();
+        }
     }
 
-    public int getRowCount()
+    public void setRows(int rows)
     {
-        if (_restoredValue != null)
+        if (_isDataModelRestored)
         {
-            return _restoredValue.getRowCount();
+            //Also change the currently restored DataModel attribute
+            ((_SerializableDataModel)_dataModel).setRows(rows);
         }
-        return super.getRowCount();
-    }
-
-    public boolean isRowAvailable()
-    {
-        if (_restoredValue != null)
-        {
-            return _restoredValue.isRowAvailable();
-        }
-        return super.isRowAvailable();
-    }
-
-    public Object getRowData()
-    {
-        if (_restoredValue != null)
-        {
-            return _restoredValue.getRowData();
-        }
-        return super.getRowData();
+        super.setRows(rows);
     }
 
 
@@ -356,11 +386,13 @@ public class HtmlDataTable
         _preserveDataModel = (Boolean)values[1];
         if (isPreserveDataModel())
         {
-            _restoredValue = (_SerializableDataModel)restoreAttachedState(context, values[2]);
+            _dataModel = (_SerializableDataModel)restoreAttachedState(context, values[2]);
+            _isDataModelRestored = true;
         }
         else
         {
-            _restoredValue = null;
+            _dataModel = null;
+            _isDataModelRestored = false;
         }
         _preserveSort = (Boolean)values[3];
         _sortColumn = (String)values[4];
@@ -374,12 +406,19 @@ public class HtmlDataTable
 
     public _SerializableDataModel getSerializableDataModel()
     {
-        Object value = _restoredValue;
-        if (value == null)
+        if (_dataModel != null)
         {
-            value = getValue();
+            if (_dataModel instanceof _SerializableDataModel)
+            {
+                return (_SerializableDataModel)_dataModel;
+            }
+            else
+            {
+                return new _SerializableDataModel(getFirst(), getRows(), _dataModel);
+            }
         }
 
+        Object value = getValue();
         if (value == null)
         {
             return null;
@@ -456,6 +495,10 @@ public class HtmlDataTable
         Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
         return v != null ? v.booleanValue() : DEFAULT_SORTASCENDING;
     }
+
+
+
+
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 

@@ -83,6 +83,11 @@ class _SerializableDataModel
         return _rows;
     }
 
+    public void setRows(int rows)
+    {
+        _rows = rows;
+    }
+
     public boolean isRowAvailable()
     {
         return _rowIndex >= _first &&
