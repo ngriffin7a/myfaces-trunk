@@ -55,6 +55,9 @@ import org.apache.commons.logging.LogFactory;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.50  2004/09/28 18:29:48  dave0000
+ * fix for bug 1034332: ValueBinding.getExpressionString() not implemented
+ *
  * Revision 1.49  2004/09/20 14:35:48  dave0000
  * bug 1030875:
  * getType() should return null if type cannot be determined
@@ -180,6 +183,11 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
 
     //~ Methods ---------------------------------------------------------------
 
+    public String getExpressionString()
+    {
+        return _expressionString;
+    }
+    
     public boolean isReadOnly(FacesContext facesContext)
     {
         try

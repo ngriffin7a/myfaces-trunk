@@ -23,19 +23,7 @@ import javax.faces.context.FacesContext;
  */
 public abstract class ValueBinding
 {
-
-	// FIELDS
-
-	// CONSTRUCTORS
-	public ValueBinding()
-	{
-	}
-
-	// METHODS
-	public String getExpressionString()
-	{
-        return null;
-	}
+	abstract public String getExpressionString();
 
 	abstract public Class getType(FacesContext facesContext)
         throws EvaluationException, PropertyNotFoundException;
