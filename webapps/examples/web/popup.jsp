@@ -53,67 +53,77 @@
 
         <f:facet name="body">
 
-            <h:panelGroup id="body">
+            <h:panelGroup id="body">            
+                <x:dataTable id="data"
+                        styleClass="standardTable"
+                        headerClass="standardTable_Header"
+                        rowClasses="standardTable_Row1,standardTable_Row2"
+                        columnClasses="standardTable_Column,standardTable_ColumnCentered,standardTable_Column"
+                        var="country"
+                        value="#{countryList.countries}"
+                        preserveDataModel="true">
+                   <h:column>
+                    <h:panelGrid columns="1">
+                        <x:popup id="x"
+                            styleClass="popup"
+                            closePopupOnExitingElement="true"
+                            closePopupOnExitingPopup="true"
+                            displayAtDistanceX="10"
+                            displayAtDistanceY="10" >
+                            <h:outputText id="ox" value="This is the first textual text situation."/>
+                            <f:facet name="popup">
+                                <h:panelGroup>
+                                    <h:panelGrid columns="1" >
+                                    <h:outputText value="Popup Text 1"/>
+                                    </h:panelGrid>
+                                </h:panelGroup>
+                            </f:facet>
+                        </x:popup>
 
-                <h:panelGrid columns="1">
-                    <x:popup id="x"
-                        styleClass="popup"
-                        closePopupOnExitingElement="true"
-                        closePopupOnExitingPopup="true"
-                        displayAtDistanceX="10"
-                        displayAtDistanceY="10" >
-                        <h:outputText id="ox" value="This is the first textual text situation."/>
-                        <f:facet name="popup">
-                            <h:panelGroup>
-                                <h:panelGrid columns="1" >
-                                <h:outputText value="Popup Text 1"/>
-                                </h:panelGrid>
-                            </h:panelGroup>
-                        </f:facet>
-                    </x:popup>
+                        <x:popup
+                            styleClass="popup"
+                            closePopupOnExitingElement="true"
+                            closePopupOnExitingPopup="true"
+                            displayAtDistanceX="10"
+                            displayAtDistanceY="10" >
+                            <h:outputText value="This is the second textual text situation."/>
+                            <f:facet name="popup">
+                                <h:panelGroup>
+                                    <h:panelGrid columns="1" >
+                                    <h:outputText value="Popup Text 2"/>
+                                    </h:panelGrid>
+                                </h:panelGroup>
+                            </f:facet>
+                        </x:popup>
 
-                    <x:popup
-                        styleClass="popup"
-                        closePopupOnExitingElement="true"
-                        closePopupOnExitingPopup="true"
-                        displayAtDistanceX="10"
-                        displayAtDistanceY="10" >
-                        <h:outputText value="This is the second textual text situation."/>
-                        <f:facet name="popup">
-                            <h:panelGroup>
-                                <h:panelGrid columns="1" >
-                                <h:outputText value="Popup Text 2"/>
-                                </h:panelGrid>
-                            </h:panelGroup>
-                        </f:facet>
-                    </x:popup>
-
-                    <x:popup styleClass="popup">
-                        <h:outputText value="This is the third textual text situation."/>
-                        <f:facet name="popup">
-                            <h:panelGroup>
-                                <h:panelGrid columns="1" >
-                                <h:outputText value="Popup Text 3"/>
-                                <h:outputLink value="http://www.myfaces.org" >
-                                    <h:outputText value="MyFaces Homepage"/>
-                                </h:outputLink>
-                                <h:outputLink value="http://www.myfaces.org" >
-                                    <h:outputText value="MyFaces Homepage"/>
-                                </h:outputLink>
-                                <h:outputLink value="http://www.myfaces.org" >
-                                    <h:outputText value="MyFaces Homepage"/>
-                                </h:outputLink>
-                                <h:outputLink value="http://www.myfaces.org" >
-                                    <h:outputText value="MyFaces Homepage"/>
-                                </h:outputLink>
-                                <h:outputLink value="http://www.myfaces.org" >
-                                    <h:outputText value="MyFaces Homepage"/>
-                                </h:outputLink>
-                                </h:panelGrid>
-                            </h:panelGroup>
-                        </f:facet>
-                    </x:popup>
-                </h:panelGrid>
+                        <x:popup styleClass="popup">
+                            <h:outputText value="This is the third textual text situation."/>
+                            <f:facet name="popup">
+                                <h:panelGroup>
+                                    <h:panelGrid columns="1" >
+                                    <h:outputText value="Popup Text 3"/>
+                                    <h:outputLink value="http://www.myfaces.org" >
+                                        <h:outputText value="MyFaces Homepage"/>
+                                    </h:outputLink>
+                                    <h:outputLink value="http://www.myfaces.org" >
+                                        <h:outputText value="MyFaces Homepage"/>
+                                    </h:outputLink>
+                                    <h:outputLink value="http://www.myfaces.org" >
+                                        <h:outputText value="MyFaces Homepage"/>
+                                    </h:outputLink>
+                                    <h:outputLink value="http://www.myfaces.org" >
+                                        <h:outputText value="MyFaces Homepage"/>
+                                    </h:outputLink>
+                                    <h:outputLink value="http://www.myfaces.org" >
+                                        <h:outputText value="MyFaces Homepage"/>
+                                    </h:outputLink>
+                                    </h:panelGrid>
+                                </h:panelGroup>
+                            </f:facet>
+                        </x:popup>
+                    </h:panelGrid>
+                  </h:column>
+               </x:dataTable>
             </h:panelGroup>
         </f:facet>
 

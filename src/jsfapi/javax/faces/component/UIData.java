@@ -36,6 +36,9 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.28  2004/12/27 04:11:11  mmarinschek
+ * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
+ *
  * Revision 1.27  2004/11/26 22:04:57  svieujot
  * Make UIData work with Collection and not only List.
  * This allows component like x:dataList to work with Sets, or any type of collection data model.
@@ -215,13 +218,13 @@ public class UIData
                 rowState = new EditableValueHolderState[_descendantEditableValueHolderCount];
                 _descendantStates[rowIndex] = rowState;
             }
-            saveDescendantComponentStates(this, rowState, 0);
+            saveDescendantComponentStates(this, rowState, 0, 0);
         }
     }
 
     private void refreshDescendantDataStates() {
         List list = new ArrayList();
-        saveDescendantComponentStates(this, list);
+        saveDescendantComponentStates(this, list,0);
         _descendantEditableValueHolderCount = list.size();
         if (_descendantEditableValueHolderCount > 0)
         {
@@ -238,31 +241,47 @@ public class UIData
         }
     }
 
-    private static void saveDescendantComponentStates(UIComponent component, List list)
+    private static void saveDescendantComponentStates(UIComponent component, List list, int level)
     {
-        for (Iterator it = component.getChildren().iterator(); it.hasNext();)
+        for (Iterator it = getChildrenAndOptionalFacetsIterator(level,component); it.hasNext();)
         {
             UIComponent child = (UIComponent)it.next();
             if (child instanceof EditableValueHolder)
             {
                 list.add(new EditableValueHolderState((EditableValueHolder)child));
             }
-            saveDescendantComponentStates(child, list);
+            saveDescendantComponentStates(child, list, level+1);
         }
+    }
+
+    private static Iterator getChildrenAndOptionalFacetsIterator(int level, UIComponent component)
+    {
+        Iterator it = null;
+
+        if(level>1)
+        {
+            it = component.getFacetsAndChildren();
+        }
+        else
+        {
+            it = component.getChildren().iterator();
+        }
+        return it;
     }
 
     private static int saveDescendantComponentStates(UIComponent component,
                                                       EditableValueHolderState[] states,
-                                                      int counter)
+                                                      int counter, int level)
     {
-        for (Iterator it = component.getChildren().iterator(); it.hasNext();)
+
+        for (Iterator it = getChildrenAndOptionalFacetsIterator(level, component); it.hasNext();)
         {
             UIComponent child = (UIComponent)it.next();
             if (child instanceof EditableValueHolder)
             {
                 states[counter++] = new EditableValueHolderState((EditableValueHolder)child);
             }
-            counter = saveDescendantComponentStates(child, states, counter);
+            counter = saveDescendantComponentStates(child, states, counter,level+1);
         }
         return counter;
     }
@@ -298,28 +317,29 @@ public class UIData
                 // There is a saved state for this row, so restore these values:
                 EditableValueHolderState[] rowState =
                     (EditableValueHolderState[]) _descendantStates[zeroBasedRowIdx];
-                restoreDescendantComponentStates(this, rowState, initialStates, 0);
+                restoreDescendantComponentStates(this, rowState, initialStates, 0, 0);
             }
             else
             {
                 // No state saved yet for this row, let's restore initial values:
-                restoreDescendantComponentStates(this, initialStates, initialStates, 0);
+                restoreDescendantComponentStates(this, initialStates, initialStates, 0, 0);
             }
         }
         else
         {
             // There are no states to restore, so only recurse to set the
             // right clientIds for all descendants
-            restoreDescendantComponentStates(this, null, null, 0);
+            restoreDescendantComponentStates(this, null, null, 0, 0);
         }
     }
 
     private static int restoreDescendantComponentStates(UIComponent component,
                                                         EditableValueHolderState[] states,
                                                         EditableValueHolderState[] initialStates,
-                                                        int counter)
+                                                        int counter, int level)
     {
-        for (Iterator it = component.getChildren().iterator(); it.hasNext();)
+
+        for (Iterator it = getChildrenAndOptionalFacetsIterator(level, component); it.hasNext();)
         {
             UIComponent child = (UIComponent)it.next();
             //clear this descendant's clientId:
@@ -346,7 +366,7 @@ public class UIData
                 }
                 counter++;
             }
-            counter = restoreDescendantComponentStates(child, states, initialStates, counter);
+            counter = restoreDescendantComponentStates(child, states, initialStates, counter, level+1);
         }
         return counter;
     }

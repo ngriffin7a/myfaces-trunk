@@ -30,6 +30,9 @@ import java.util.List;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.11  2004/12/27 04:11:11  mmarinschek
+ * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
+ *
  * Revision 1.10  2004/12/20 06:13:01  mmarinschek
  * killed bugs
  *
@@ -147,12 +150,16 @@ public class HtmlPopupRenderer
         AddResource.addJavaScriptToHeader(
                 HtmlPopupRenderer.class, "JSPopup.js", false, context);
 
-        String popupId = (clientId+"Popup").replace(':','_').replaceAll("_",
-                "popupIdSeparator");
+        String popupId = (clientId+"Popup").replaceAll(":","_");
+
+        while(popupId.startsWith("_"))
+        {
+            popupId = popupId.substring(1);
+        }
 
         ResponseWriter writer = context.getResponseWriter();
         writer.startElement(HTML.SCRIPT_ELEM,null);
-        writer.writeAttribute(HTML.SCRIPT_LANGUAGE_ATTR,HTML.SCRIPT_LANGUAGE_JAVASCRIPT,null);
+        writer.writeAttribute(HTML.SCRIPT_TYPE_ATTR,HTML.SCRIPT_TYPE_TEXT_JAVASCRIPT,null);
         writer.writeText("var "+popupId+"=new orgApacheMyfacesPopup('"+clientId+"',"+
                 (displayAtDistanceX==null?-5:displayAtDistanceX.intValue())+","+
                 (displayAtDistanceY==null?-5:displayAtDistanceY.intValue())+");",null);
@@ -178,20 +185,27 @@ public class HtmlPopupRenderer
     {
         Object oldValue = uiComponent.getAttributes().get(propName);
 
+        String oldValueStr = "";
+
+        String genCommentary = "/* generated code */";
+
         if(oldValue != null)
         {
-            String oldValueStr = oldValue.toString().trim();
+            oldValueStr = oldValue.toString().trim();
 
-            //check if method call has already been added...
-            if(oldValueStr.indexOf(value)!=-1)
-                return;
+            int genCommentaryIndex;
+
+            //check if generated code has already been added...
+            if((genCommentaryIndex=oldValueStr.indexOf(genCommentary))!=-1)
+            {
+                oldValueStr = oldValueStr.substring(0,genCommentaryIndex);
+            }
 
             if(oldValueStr.length()>0 && !oldValueStr.endsWith(";"))
                 oldValueStr +=";";
-
-            value = oldValueStr + value;
-
         }
+
+        value = oldValueStr + genCommentary+value;
 
         uiComponent.getAttributes().put(propName, value);
     }

@@ -40,6 +40,9 @@ import org.apache.myfaces.util.MessageUtils;
 
 /**
  * $Log$
+ * Revision 1.14  2004/12/27 04:11:11  mmarinschek
+ * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
+ *
  * Revision 1.13  2004/12/24 13:21:51  matzew
  * organized imports
  *
@@ -231,7 +234,7 @@ public class HtmlDateRenderer extends HtmlRenderer {
                 							null);
         
         writer.startElement(HTML.SCRIPT_ELEM,null);
-        writer.writeAttribute(HTML.SCRIPT_LANGUAGE_ATTR,HTML.SCRIPT_LANGUAGE_JAVASCRIPT,null);
+        writer.writeAttribute(HTML.SCRIPT_TYPE_ATTR,HTML.SCRIPT_TYPE_TEXT_JAVASCRIPT,null);
         	writer.write(localizedLanguageScript);
         	//writer.write("if (!document.layers) {\n");
         		//writer.write("document.write(\"<input type='button' onclick='jscalendarPopUpCalendarForInputDate(\\\""+clientId+"\\\")' value='...'/>\");");

@@ -152,13 +152,13 @@ abstract class HtmlDataTableHack
                 rowState = new EditableValueHolderState[_descendantEditableValueHolderCount];
                 _descendantStates[rowIndex] = rowState;
             }
-            saveDescendantComponentStates(this, rowState, 0);
+            saveDescendantComponentStates(this, rowState, 0, 0);
         }
     }
 
     private void refreshDescendantDataStates() {
         List list = new ArrayList();
-        saveDescendantComponentStates(this, list);
+        saveDescendantComponentStates(this, list,0);
         _descendantEditableValueHolderCount = list.size();
         if (_descendantEditableValueHolderCount > 0)
         {
@@ -175,31 +175,31 @@ abstract class HtmlDataTableHack
         }
     }
 
-    private static void saveDescendantComponentStates(UIComponent component, List list)
+    private static void saveDescendantComponentStates(UIComponent component, List list, int level)
     {
-        for (Iterator it = component.getChildren().iterator(); it.hasNext();)
+        for (Iterator it=getChildrenAndOptionalFacetsIterator(level, component); it.hasNext();)
         {
             UIComponent child = (UIComponent)it.next();
             if (child instanceof EditableValueHolder)
             {
                 list.add(new EditableValueHolderState((EditableValueHolder)child));
             }
-            saveDescendantComponentStates(child, list);
+            saveDescendantComponentStates(child, list, level+1);
         }
     }
 
     private static int saveDescendantComponentStates(UIComponent component,
-                                                      EditableValueHolderState[] states,
-                                                      int counter)
+                                                     EditableValueHolderState[] states,
+                                                     int counter, int level)
     {
-        for (Iterator it = component.getChildren().iterator(); it.hasNext();)
+        for (Iterator it=getChildrenAndOptionalFacetsIterator(level, component); it.hasNext();)
         {
             UIComponent child = (UIComponent)it.next();
             if (child instanceof EditableValueHolder)
             {
                 states[counter++] = new EditableValueHolderState((EditableValueHolder)child);
             }
-            counter = saveDescendantComponentStates(child, states, counter);
+            counter = saveDescendantComponentStates(child, states, counter, level+1);
         }
         return counter;
     }
@@ -235,28 +235,28 @@ abstract class HtmlDataTableHack
                 // There is a saved state for this row, so restore these values:
                 EditableValueHolderState[] rowState =
                     (EditableValueHolderState[]) _descendantStates[zeroBasedRowIdx];
-                restoreDescendantComponentStates(this, rowState, initialStates, 0);
+                restoreDescendantComponentStates(this, rowState, initialStates, 0,0);
             }
             else
             {
                 // No state saved yet for this row, let's restore initial values:
-                restoreDescendantComponentStates(this, initialStates, initialStates, 0);
+                restoreDescendantComponentStates(this, initialStates, initialStates, 0,0);
             }
         }
         else
         {
             // There are no states to restore, so only recurse to set the
             // right clientIds for all descendants
-            restoreDescendantComponentStates(this, null, null, 0);
+            restoreDescendantComponentStates(this, null, null, 0,0);
         }
     }
 
     private static int restoreDescendantComponentStates(UIComponent component,
                                                         EditableValueHolderState[] states,
                                                         EditableValueHolderState[] initialStates,
-                                                        int counter)
+                                                        int counter, int level)
     {
-        for (Iterator it = component.getChildren().iterator(); it.hasNext();)
+        for (Iterator it=getChildrenAndOptionalFacetsIterator(level, component); it.hasNext();)
         {
             UIComponent child = (UIComponent)it.next();
             //clear this descendant's clientId:
@@ -283,9 +283,24 @@ abstract class HtmlDataTableHack
                 }
                 counter++;
             }
-            counter = restoreDescendantComponentStates(child, states, initialStates, counter);
+            counter = restoreDescendantComponentStates(child, states, initialStates, counter,level+1);
         }
         return counter;
+    }
+
+    private static Iterator getChildrenAndOptionalFacetsIterator(int level, UIComponent component)
+    {
+        Iterator it = null;
+
+        if(level>1)
+        {
+            it = component.getFacetsAndChildren();
+        }
+        else
+        {
+            it = component.getChildren().iterator();
+        }
+        return it;
     }
 
 

@@ -24,6 +24,9 @@ import org.apache.myfaces.util.ArrayUtils;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.20  2004/12/27 04:11:11  mmarinschek
+ * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
+ *
  * Revision 1.19  2004/12/04 03:22:45  svieujot
  * Bugfix for BR_ELEM
  *
@@ -464,6 +467,8 @@ public final class HTML
     public static final String THEAD_ELEM = "thead";
     public static final String STYLE_ELEM = "style";
     public static final String SCRIPT_ELEM = "script";
+    public static final String SCRIPT_TYPE_ATTR = "type";
+    public static final String SCRIPT_TYPE_TEXT_JAVASCRIPT = "text/javascript";
     public static final String SCRIPT_LANGUAGE_ATTR = "language";
     public static final String SCRIPT_LANGUAGE_JAVASCRIPT = "JavaScript";
 

@@ -30,6 +30,9 @@ import java.util.Map;
 
 /**
  * $Log$
+ * Revision 1.2  2004/12/27 04:11:11  mmarinschek
+ * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
+ *
  * Revision 1.1  2004/12/19 00:50:55  mmarinschek
  * JsValueSetTag
  *
@@ -54,7 +57,7 @@ public class HtmlJsValueSetRenderer
         ResponseWriter writer = getFacesContext().getResponseWriter();
 
         writer.startElement(HTML.SCRIPT_ELEM,null);
-        writer.writeAttribute(HTML.SCRIPT_LANGUAGE_ATTR,HTML.SCRIPT_LANGUAGE_JAVASCRIPT,null);
+        writer.writeAttribute(HTML.SCRIPT_TYPE_ATTR,HTML.SCRIPT_TYPE_TEXT_JAVASCRIPT,null);
 
         if(value instanceof String ||
                 value instanceof Number || value instanceof Boolean || value == null)

@@ -39,6 +39,9 @@ import java.util.Map;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.12  2004/12/27 04:11:11  mmarinschek
+ *          Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
+ *
  *          Revision 1.11  2004/12/24 14:49:29  svieujot
  *          Upgrade the navmenu component to use the Extensions filter.
  *
@@ -121,7 +124,7 @@ public class HtmlJSCookMenuRenderer
 
             ResponseWriter writer = context.getResponseWriter();
 
-            writer.write("\n<script language=\"JavaScript\"><!--\n" +
+            writer.write("\n<script type=\"text/javascript\"><!--\n" +
                          "var myMenu =\n[");
             encodeNavigationMenuItems(context, writer,
                                       (NavigationMenuItem[]) list.toArray(new NavigationMenuItem[list.size()]));
@@ -215,9 +218,15 @@ public class HtmlJSCookMenuRenderer
         
         ResponseWriter writer = context.getResponseWriter();
 
-        String menuId = component.getId() + "_menu";
-        writer.write("<div id=" + menuId + "></div>\n" +
-                     "<script language=\"JavaScript\"><!--\n" +
+        String menuId = component.getClientId(context).replaceAll(":","_") + "_menu";
+
+        while(menuId.startsWith("_"))
+        {
+            menuId = menuId.substring(1);
+        }
+
+        writer.write("<div id=\"" + menuId + "\"></div>\n" +
+                     "<script type=\"text/javascript\"><!--\n" +
                      "\tcmDraw ('" + menuId + "', myMenu, '" + menu.getLayout() + "', cm" + menu.getTheme() + ", '" + menu.getTheme() + "');\n" +
                      "--></script>\n");
     }

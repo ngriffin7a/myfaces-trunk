@@ -41,6 +41,9 @@ import org.apache.myfaces.renderkit.html.HTML;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.17  2004/12/27 04:11:11  mmarinschek
+ * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
+ *
  * Revision 1.16  2004/12/24 14:11:50  svieujot
  * Return resource relative mapped path when given null context.
  *
@@ -115,7 +118,7 @@ public class AddResource {
         ResponseWriter writer = context.getResponseWriter();
         
         writer.startElement(HTML.SCRIPT_ELEM,null);
-        writer.writeAttribute(HTML.SCRIPT_LANGUAGE_ATTR,HTML.SCRIPT_LANGUAGE_JAVASCRIPT,null);
+        writer.writeAttribute(HTML.SCRIPT_TYPE_ATTR,HTML.SCRIPT_TYPE_TEXT_JAVASCRIPT,null);
         writer.writeURIAttribute(HTML.SRC_ATTR,
                 getResourceMappedPath(componentClass, resourceFileName, context),
                 null);
@@ -434,7 +437,7 @@ public class AddResource {
         public String getString(HttpServletRequest request){
             switch (type) {
            case TYPE_JS:
-                    return "<script language=\"JavaScript\" "
+                    return "<script "
                         +"src=\""+getResourceMappedPath(componentName, resourceFileName, request)+"\" "
                         +(deferJS ? "defer=\"true\" " : "")
                         +"type=\"text/javascript\""

@@ -25,23 +25,23 @@
   <title>MyFaces - the free JSF Implementation</title>
 
   <!-- JSCook Menu -->
-  <script language="JavaScript" src="jscookmenu/JSCookMenu.js" type="text/javascript"></script>
-  <script language="JavaScript" src="jscookmenu/ThemeOffice/theme.js"></script>
+  <script src="jscookmenu/JSCookMenu.js" type="text/javascript"></script>
+  <script type="text/javascript" src="jscookmenu/ThemeOffice/theme.js"></script>
   <x:stylesheet path="/jscookmenu/ThemeOffice/theme.css" />
-  <script language="JavaScript" src="jscookmenu/ThemeMiniBlack/theme.js"></script>
+  <script type="text/javascript" src="jscookmenu/ThemeMiniBlack/theme.js"></script>
   <x:stylesheet path="/jscookmenu/ThemeMiniBlack/theme.css"/>
-  <script language="JavaScript" src="jscookmenu/ThemeIE/theme.js"></script>
+  <script type="text/javascript" src="jscookmenu/ThemeIE/theme.js"></script>
   <x:stylesheet path="/jscookmenu/ThemeIE/theme.css" />
-  <script language="JavaScript" src="jscookmenu/ThemePanel/theme.js"></script>
+  <script type="text/javascript" src="jscookmenu/ThemePanel/theme.js"></script>
   <x:stylesheet path="/jscookmenu/ThemePanel/theme.css" />
 
   <!-- JSCalendar -->
-  <script language="JavaScript" src="jscalendar/popcalendar.js" type="text/javascript"></script>
+  <script src="jscalendar/popcalendar.js" type="text/javascript"></script>
   <x:stylesheet path="/jscalendar/jscalendar-WH/theme.css"/>
   <x:stylesheet path="/jscalendar/jscalendar-DB/theme.css"/>
 
   <!-- JSPopup -->
-  <script language="JavaScript" src="jspopup/JSPopup.js" type="text/javascript"></script>
+  <script src="jspopup/JSPopup.js" type="text/javascript"></script>
 
 <x:stylesheet path="/css/basic.css"/>
 </head>
@@ -71,7 +71,8 @@
 
 
         <f:facet name="body"><f:verbatim>
-<h:outputText value="#{example_messages['css_msg']}"/><code>stylesheet</code>-Component<br />
+<h:outputText value="#{example_messages['css_msg']}"/><code>stylesheet</code>-Component<br />
+
 <a href='http://myfaces.org'>The MyFaces-Team</a>.
 </f:verbatim>
         </f:facet>

@@ -35,6 +35,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12  2004/12/27 04:11:11  mmarinschek
+ * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
+ *
  * Revision 1.11  2004/12/23 09:15:15  mmarinschek
  * changes to utils to handle ie better
  *
@@ -326,7 +329,7 @@ public final class JavascriptUtils
     public static void renderAutoScrollFunction(FacesContext facesContext,
                                                 ResponseWriter writer) throws IOException
     {
-        writer.write("\n<script language=\"JavaScript\">\n" +
+        writer.write("\n<script type=\"text/javascript\">\n" +
                      "<!--\n" +
                      "function " + AUTO_SCROLL_FUNCTION + " {\n" +
                      "    var x = 0; var y = 0;\n" +

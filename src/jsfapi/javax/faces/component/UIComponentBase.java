@@ -36,6 +36,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.14  2004/12/27 04:11:11  mmarinschek
+ * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
+ *
  * Revision 1.13  2004/08/27 10:45:55  manolito
  * log a warning when getClientId implicitly creates a component id
  *
@@ -103,7 +106,7 @@ public abstract class UIComponentBase
     public String getClientId(FacesContext context)
     {
         if (context == null) throw new NullPointerException("context");
-
+                 
         if (_clientId != null) return _clientId;
 
         boolean idWasNull = false;

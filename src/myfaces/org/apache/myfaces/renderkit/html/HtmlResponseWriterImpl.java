@@ -36,6 +36,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.31  2004/12/27 04:11:11  mmarinschek
+ * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
+ *
  * Revision 1.30  2004/12/17 22:06:32  grantsmith
  * Jira MYFACES-57: Changed logging levels to DEBUG from INFO
  *
@@ -172,7 +175,7 @@ public class HtmlResponseWriterImpl
         {
             if (! JavascriptUtils.isJavascriptDetected(facesContext.getExternalContext()))
             {
-                write("<script language=\"JavaScript\">\n<!--\ndocument.location.replace('" + facesContext.getApplication().getViewHandler().getResourceURL(facesContext, "/_javascriptDetector_")  + "?goto=" + facesContext.getApplication().getViewHandler().getActionURL(facesContext, facesContext.getViewRoot().getViewId()) +"');\n//-->\n</script>");
+                write("<script type=\"text/javascript\">\n<!--\ndocument.location.replace('" + facesContext.getApplication().getViewHandler().getResourceURL(facesContext, "/_javascriptDetector_")  + "?goto=" + facesContext.getApplication().getViewHandler().getActionURL(facesContext, facesContext.getViewRoot().getViewId()) +"');\n//-->\n</script>");
             }
         }
 

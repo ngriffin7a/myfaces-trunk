@@ -36,6 +36,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.16  2004/12/27 04:11:11  mmarinschek
+ * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
+ *
  * Revision 1.15  2004/12/10 02:16:26  svieujot
  * Start implementing UserRoleAware.
  *
@@ -910,7 +913,7 @@ public class HtmlEditorRenderer extends HtmlRenderer {
         String resourceBaseURL = AddResource.getResourceMappedPath(HtmlEditorRenderer.class, "", context);
         
         writer.startElement(HTML.SCRIPT_ELEM, null);
-        writer.writeAttribute(HTML.SCRIPT_LANGUAGE_ATTR, HTML.SCRIPT_LANGUAGE_JAVASCRIPT, null);
+        writer.writeAttribute(HTML.SCRIPT_TYPE_ATTR, HTML.SCRIPT_TYPE_TEXT_JAVASCRIPT, null);
         	writer.write("myFacesKupuSet(" +
         			"\""+encodedText+"\"," +
         			"\""+clientId+"\"," +
