@@ -92,7 +92,7 @@ public class HtmlRssTicker extends HtmlOutputText{
 	 */
 	private void loadNews(String string) {
 		try { 
-			URL _url = new URL(string); 
+			
 			this._channel = (Channel)_digester.parse(string); 
 		  } catch(MalformedURLException mue){ 
 			mue.printStackTrace(); 
