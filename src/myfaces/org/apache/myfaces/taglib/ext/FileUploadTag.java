@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.attr.ext.FileUploadRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.ext.FileUploadRenderer;
@@ -53,7 +54,7 @@ public class FileUploadTag
 
     public void setInputClass(String v)
     {
-        setRendererAttributeString(INPUT_CLASS_ATTR, v);
+        setRendererAttributeString(JSFAttr.INPUT_CLASS_ATTR, v);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag

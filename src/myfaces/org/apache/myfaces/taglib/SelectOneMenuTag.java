@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.renderkit.attr.MenuRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.MenuRenderer;
 
@@ -29,8 +29,7 @@ import net.sourceforge.myfaces.renderkit.html.MenuRenderer;
  * @version $Revision$ $Date$
  */
 public class SelectOneMenuTag
-    extends MyFacesTag
-    implements MenuRendererAttributes
+extends MyFacesTag
 {
     public String getComponentType()
     {
@@ -53,7 +52,7 @@ public class SelectOneMenuTag
 
     public void setSelectOneClass(String value)
     {
-        setRendererAttributeString(SELECT_ONE_CLASS_ATTR, value);
+        setRendererAttributeString(JSFAttr.SELECT_ONE_CLASS_ATTR, value);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag
@@ -106,7 +105,7 @@ public class SelectOneMenuTag
 
     public void setSize(String value)
     {
-        setRendererAttributeString(SIZE_ATTR, value);
+        setRendererAttributeString(JSFAttr.SIZE_ATTR, value);
     }
 
     // user role attributes --> already implemented in MyFacesTag

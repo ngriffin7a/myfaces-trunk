@@ -19,13 +19,9 @@
 package net.sourceforge.myfaces.renderkit.html.ext;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.ext.UINavigationItem;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
-import net.sourceforge.myfaces.renderkit.attr.ext.NavigationItemRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.attr.ext.NavigationRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HyperlinkRenderer;
@@ -54,12 +50,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class NavigationItemRenderer
-    extends HyperlinkRenderer
-    implements CommonComponentProperties,
-               CommonRendererAttributes,
-               HyperlinkRendererAttributes,
-               NavigationItemRendererAttributes,
-               UserRoleAttributes
+extends HyperlinkRenderer
 {
     public static final String TYPE = "NavigationItem";
 
@@ -85,10 +76,10 @@ public class NavigationItemRenderer
         ResponseWriter writer = facesContext.getResponseWriter();
 
         String label = null;
-        String key = (String)uiComponent.getAttribute(KEY_ATTR);
+        String key = (String)uiComponent.getAttribute(JSFAttr.KEY_ATTR);
         if (key == null)
         {
-            label = (String)uiComponent.getAttribute(LABEL_ATTR);
+            label = (String)uiComponent.getAttribute(JSFAttr.LABEL_ATTR);
         }
 
         if (label == null && key == null)
@@ -134,7 +125,7 @@ public class NavigationItemRenderer
 
         // HTML-Attributes
         // commandClass rendered by NavigationRenderer
-        HTMLUtil.renderCssClass(writer, uiComponent, COMMAND_CLASS_ATTR);
+        HTMLUtil.renderCssClass(writer, uiComponent, JSFAttr.COMMAND_CLASS_ATTR);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.ANCHOR_ATTRIBUTES);
@@ -150,10 +141,10 @@ public class NavigationItemRenderer
 
         if (key != null)
         {
-            String bundle = (String)uiComponent.getAttribute(BUNDLE_ATTR);
+            String bundle = (String)uiComponent.getAttribute(JSFAttr.BUNDLE_ATTR);
             if (bundle == null && navigationComponent != null)
             {
-                bundle = (String)navigationComponent.getAttribute(NavigationRenderer.BUNDLE_ATTR);
+                bundle = (String)navigationComponent.getAttribute(JSFAttr.BUNDLE_ATTR);
             }
             if (bundle == null)
             {

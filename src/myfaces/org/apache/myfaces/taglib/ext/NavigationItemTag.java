@@ -20,8 +20,7 @@ package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.MyFacesUICommand;
 import net.sourceforge.myfaces.component.ext.UINavigationItem;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.attr.ext.NavigationItemRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.ext.NavigationItemRenderer;
@@ -34,9 +33,7 @@ import net.sourceforge.myfaces.taglib.MyFacesTag;
  */
 public class NavigationItemTag
     extends MyFacesTag
-    implements NavigationItemRendererAttributes,
-               CommonRendererAttributes,
-               HyperlinkRendererAttributes
+    implements NavigationItemRendererAttributes
 
 {
     public String getComponentType()
@@ -84,7 +81,7 @@ public class NavigationItemTag
 
     public void setCommandClass(String v)
     {
-        setRendererAttributeString(COMMAND_CLASS_ATTR, v);
+        setRendererAttributeString(JSFAttr.COMMAND_CLASS_ATTR, v);
     }
 
     public void setAction(String v)
@@ -159,7 +156,7 @@ public class NavigationItemTag
 
     public void setHref(String v)
     {
-        setRendererAttributeString(HREF_ATTR, v);
+        setRendererAttributeString(HTML.HREF_ATTR, v);
     }
 
 

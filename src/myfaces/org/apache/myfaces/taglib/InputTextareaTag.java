@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.renderkit.attr.TextareaRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.TextareaRenderer;
 
@@ -28,8 +28,7 @@ import net.sourceforge.myfaces.renderkit.html.TextareaRenderer;
  * @version $Revision$ $Date$
  */
 public class InputTextareaTag
-    extends MyFacesTag
-    implements TextareaRendererAttributes
+extends MyFacesTag
 {
     public String getComponentType()
     {
@@ -52,7 +51,7 @@ public class InputTextareaTag
 
     public void setInputClass(String value)
     {
-        setRendererAttributeString(TextareaRenderer.INPUT_CLASS_ATTR, value);
+        setRendererAttributeString(JSFAttr.INPUT_CLASS_ATTR, value);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag

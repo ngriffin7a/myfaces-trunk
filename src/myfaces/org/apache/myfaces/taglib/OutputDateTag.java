@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.renderkit.attr.DateRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.DateRenderer;
 
 import javax.faces.component.UIComponent;
@@ -30,8 +30,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class OutputDateTag
-    extends MyFacesTag
-    implements DateRendererAttributes
+extends MyFacesTag
 {
     public String getComponentType()
     {
@@ -63,7 +62,7 @@ public class OutputDateTag
 
     public void setOutputClass(String value)
     {
-        setRendererAttributeString(OUTPUT_CLASS_ATTR, value);
+        setRendererAttributeString(JSFAttr.OUTPUT_CLASS_ATTR, value);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag
@@ -74,12 +73,12 @@ public class OutputDateTag
 
     public void setDateStyle(String value)
     {
-        setRendererAttributeString(DATE_STYLE_ATTR, value);
+        setRendererAttributeString(JSFAttr.DATE_STYLE_ATTR, value);
     }
 
     public void setTimezone(String value)
     {
-        setRendererAttributeString(TIMEZONE_ATTR, value);
+        setRendererAttributeString(JSFAttr.TIMEZONE_ATTR, value);
     }
 
     // user role attributes --> already implemented in MyFacesTag

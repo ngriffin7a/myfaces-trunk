@@ -18,9 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.attr.ext;
 
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.KeyBundleAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
+import net.sourceforge.myfaces.renderkit.html.HTML;
 
 /**
  * Constant definitions for the specified render dependent attributes of the
@@ -29,19 +28,16 @@ import net.sourceforge.myfaces.renderkit.attr.KeyBundleAttributes;
  * @version $Revision$ $Date$
  */
 public interface NavigationItemRendererAttributes
-    extends CommonRendererAttributes,
-            HyperlinkRendererAttributes,
-            KeyBundleAttributes
 {
     public static final String LABEL_ATTR = "label";
 
     public static final String[] NAVIGATION_ITEM_ATTRIBUTES = {
         LABEL_ATTR,
-        COMMAND_CLASS_ATTR,
-        COLUMN_CLASSES_ATTR,
-        HREF_ATTR,
-        KEY_ATTR,
-        BUNDLE_ATTR
+        JSFAttr.COMMAND_CLASS_ATTR,
+        JSFAttr.COLUMN_CLASSES_ATTR,
+        HTML.HREF_ATTR,
+        JSFAttr.KEY_ATTR,
+        JSFAttr.BUNDLE_ATTR
     };
 
 }

@@ -19,9 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html.ext;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.component.CommonComponentProperties;
-import net.sourceforge.myfaces.renderkit.attr.ButtonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.attr.ext.TabbedPaneRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.FormRenderer;
 import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
@@ -58,10 +56,7 @@ import java.util.Iterator;
  */
 public class TabbedPaneRenderer
     extends GroupRenderer
-    implements CommonComponentProperties,
-               CommonRendererAttributes,
-               TabbedPaneRendererAttributes,
-               ButtonRendererAttributes
+    implements TabbedPaneRendererAttributes
 {
     private static final String OLD_SELECTED_INDEX_ATTR
         = TabbedPaneRenderer.class.getName() + ".OLD_SELECTED_INDEX";
@@ -300,7 +295,7 @@ public class TabbedPaneRenderer
         uiComponent.setAttribute(HTML.BGCOLOR_ATTR, null);
 
         writer.write("<table cellspacing=\"0\"");
-        HTMLUtil.renderCssClass(writer, uiComponent, PANEL_CLASS_ATTR);
+        HTMLUtil.renderCssClass(writer, uiComponent, JSFAttr.PANEL_CLASS_ATTR);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.TABLE_ATTRIBUTES);
@@ -348,16 +343,16 @@ public class TabbedPaneRenderer
         writer.write(" value=\"");
 
         String label;
-        String key = (String)tab.getAttribute(KEY_ATTR);
+        String key = (String)tab.getAttribute(JSFAttr.KEY_ATTR);
         if (key != null)
         {
             label = BundleUtils.getString(facesContext,
-                                          (String)tab.getAttribute(BUNDLE_ATTR),
+                                          (String)tab.getAttribute(JSFAttr.BUNDLE_ATTR),
                                           key);
         }
         else
         {
-            label = (String)tab.getAttribute(LABEL_ATTR);
+            label = (String)tab.getAttribute(JSFAttr.LABEL_ATTR);
         }
         writer.write(HTMLEncoder.encode(label, false, false));
         writer.write("\"");
@@ -382,7 +377,7 @@ public class TabbedPaneRenderer
             tab.setAttribute(HTML.STYLE_ATTR, active ? style + oldStyle : style + oldStyle);
         }
 
-        HTMLUtil.renderCssClass(writer, tab, COMMAND_CLASS_ATTR);//TODO: ?
+        HTMLUtil.renderCssClass(writer, tab, JSFAttr.COMMAND_CLASS_ATTR);//TODO: ?
         HTMLUtil.renderHTMLAttributes(writer, tab, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, tab, HTML.EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, tab, HTML.BUTTON_ATTRIBUTES);

@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.renderkit.attr.TextRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.TextRenderer;
 
@@ -28,8 +28,7 @@ import net.sourceforge.myfaces.renderkit.html.TextRenderer;
  * @version $Revision$ $Date$
  */
 public class InputTextTag
-    extends MyFacesTag
-    implements TextRendererAttributes
+extends MyFacesTag
 {
     public String getComponentType()
     {
@@ -52,7 +51,7 @@ public class InputTextTag
 
     public void setInputClass(String v)
     {
-        setRendererAttributeString(INPUT_CLASS_ATTR, v);
+        setRendererAttributeString(JSFAttr.INPUT_CLASS_ATTR, v);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag
@@ -136,7 +135,7 @@ public class InputTextTag
 
     public void setMaxlength(String v)
     {
-        setRendererAttributeString(MAXLENGTH_ATTR, v);
+        setRendererAttributeString(JSFAttr.MAXLENGTH_ATTR, v);
     }
 
     // converter attribute --> already implemented in MyFacesTag

@@ -18,9 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html.ext;
 
-import net.sourceforge.myfaces.component.CommonComponentProperties;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 
 import javax.faces.component.UIComponent;
@@ -35,9 +32,6 @@ import java.io.IOException;
  */
 public class NavigationSeparatorRenderer
     extends HTMLRenderer
-    implements CommonComponentProperties,
-               CommonRendererAttributes,
-               UserRoleAttributes
 {
     public static final String TYPE = "NavigationSeparator";
 

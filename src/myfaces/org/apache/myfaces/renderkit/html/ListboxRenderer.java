@@ -18,31 +18,29 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.CommonComponentProperties;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.ListboxRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.renderkit.html.util.SelectItemUtil;
 
+import java.io.IOException;
+
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import java.io.IOException;
 
 
 /**
  * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class ListboxRenderer
-    extends HTMLRenderer
-    implements CommonComponentProperties,
-               CommonRendererAttributes,
-               ListboxRendererAttributes,
-               UserRoleAttributes
+extends HTMLRenderer
 {
+    //~ Static fields/initializers -----------------------------------------------------------------
+
     public static final String TYPE = "Listbox";
+
+    //~ Methods ------------------------------------------------------------------------------------
 
     public String getRendererType()
     {
@@ -75,22 +73,15 @@ public class ListboxRenderer
         addAttributeDescriptors(UISelectOne.TYPE, TLD_HTML_URI, "selectone_listbox", USER_ROLE_ATTRIBUTES);
     }
     */
-
-
-
     public void encodeBegin(FacesContext facescontext, UIComponent uicomponent)
-            throws IOException
+    throws IOException
     {
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
-        throws IOException
+    throws IOException
     {
         int size = SelectItemUtil.getSelectItemsCount(facesContext, uiComponent);
-        HTMLUtil.renderSelect(facesContext,
-                                      uiComponent,
-                                      TYPE,
-                                      size);
+        HTMLUtil.renderSelect(facesContext, uiComponent, TYPE, size);
     }
-
 }

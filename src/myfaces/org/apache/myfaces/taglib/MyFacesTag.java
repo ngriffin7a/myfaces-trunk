@@ -18,11 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.component.MyFacesUIOutput;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.KeyBundleAttributes;
-import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
@@ -42,11 +39,7 @@ import javax.servlet.jsp.tagext.Tag;
 public abstract class MyFacesTag
     extends UIComponentTag
     implements IterationTag,
-               MyFacesTagBaseIF,
-               CommonComponentProperties,
-               CommonRendererAttributes,
-               KeyBundleAttributes,
-               UserRoleAttributes
+               MyFacesTagBaseIF
 {
     protected MyFacesTagHelper _helper;
 
@@ -262,7 +255,7 @@ public abstract class MyFacesTag
 
     public void setConverter(Object converter)
     {
-        setRendererAttributeObject(CONVERTER_ATTR, converter);
+        setRendererAttributeObject(JSFAttr.CONVERTER_ATTR, converter);
     }
 
     public void setValueRef(String s)
@@ -362,12 +355,12 @@ public abstract class MyFacesTag
 
     public void setKey(String v)
     {
-        setRendererAttributeString(KEY_ATTR, v);
+        setRendererAttributeString(JSFAttr.KEY_ATTR, v);
     }
 
     public void setBundle(String v)
     {
-        setRendererAttributeString(BUNDLE_ATTR, v);
+        setRendererAttributeString(JSFAttr.BUNDLE_ATTR, v);
     }
 
 
@@ -376,12 +369,12 @@ public abstract class MyFacesTag
 
     public void setEnabledOnUserRole(String value)
     {
-        setRendererAttributeString(ENABLED_ON_USER_ROLE_ATTR, value);
+        setRendererAttributeString(JSFAttr.ENABLED_ON_USER_ROLE_ATTR, value);
     }
 
     public void setVisibleOnUserRole(String value)
     {
-        setRendererAttributeString(VISIBLE_ON_USER_ROLE_ATTR, value);
+        setRendererAttributeString(JSFAttr.VISIBLE_ON_USER_ROLE_ATTR, value);
     }
 
 
@@ -389,27 +382,27 @@ public abstract class MyFacesTag
     // converter attributes
     public void setDateStyle(String value)
     {
-        setRendererAttributeString(DATE_STYLE_ATTR, value);
+        setRendererAttributeString(JSFAttr.DATE_STYLE_ATTR, value);
     }
 
     public void setTimeStyle(String value)
     {
-        setRendererAttributeString(TIME_STYLE_ATTR, value);
+        setRendererAttributeString(JSFAttr.TIME_STYLE_ATTR, value);
     }
 
     public void setTimezone(String value)
     {
-        setRendererAttributeString(TIMEZONE_ATTR, value);
+        setRendererAttributeString(JSFAttr.TIMEZONE_ATTR, value);
     }
 
     public void setFormatPattern(String value)
     {
-        setRendererAttributeString(FORMAT_PATTERN_ATTR, value);
+        setRendererAttributeString(JSFAttr.FORMAT_PATTERN_ATTR, value);
     }
 
     public void setNumberStyle(String value)
     {
-        setRendererAttributeString(NUMBER_STYLE_ATTR, value);
+        setRendererAttributeString(JSFAttr.NUMBER_STYLE_ATTR, value);
     }
 
 }

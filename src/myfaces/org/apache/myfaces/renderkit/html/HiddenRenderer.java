@@ -18,29 +18,30 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.HiddenRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
+
+import java.io.IOException;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import java.io.IOException;
+
 
 /**
  * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class HiddenRenderer
-    extends HTMLRenderer
-    implements CommonRendererAttributes,
-               HiddenRendererAttributes,
-               UserRoleAttributes
+extends HTMLRenderer
 {
+    //~ Static fields/initializers -----------------------------------------------------------------
+
     public static final String TYPE = "Hidden";
+
+    //~ Methods ------------------------------------------------------------------------------------
 
     public String getRendererType()
     {
@@ -64,28 +65,28 @@ public class HiddenRenderer
         addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_hidden", USER_ROLE_ATTRIBUTES);
     }
     */
-
-
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
-        throws IOException
+    throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<input type=\"hidden\"");
+
         String coumpoundId = uiComponent.getClientId(facesContext);
         writer.write(" name=\"");
         writer.write(coumpoundId);
-        writer.write("\"");
-        writer.write(" id=\"");
+        writer.write("\" id=\"");
         writer.write(coumpoundId);
-        writer.write("\"");
-        String currentValue = getStringValue(facesContext, (UIInput)uiComponent);
+        writer.write('"');
+
+        String currentValue = getStringValue(facesContext, (UIInput) uiComponent);
+
         if (currentValue != null)
         {
             writer.write(" value=\"");
             writer.write(HTMLEncoder.encode(currentValue, false, false));
-            writer.write("\"");
+            writer.write('"');
         }
-        writer.write(">");
-    }
 
+        writer.write('>');
+    }
 }

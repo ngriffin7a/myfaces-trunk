@@ -18,10 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.CommonComponentProperties;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.HiddenRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HiddenRenderer;
 
 /**
@@ -30,11 +27,7 @@ import net.sourceforge.myfaces.renderkit.html.HiddenRenderer;
  * @version $Revision$ $Date$
  */
 public class InputHiddenTag
-    extends MyFacesTag
-    implements CommonComponentProperties,
-               CommonRendererAttributes,
-               UserRoleAttributes,
-               HiddenRendererAttributes
+extends MyFacesTag
 {
     public String getComponentType()
     {
@@ -57,7 +50,7 @@ public class InputHiddenTag
 
     public void setInputClass(String v)
     {
-        setRendererAttributeString(INPUT_CLASS_ATTR, v);
+        setRendererAttributeString(JSFAttr.INPUT_CLASS_ATTR, v);
     }
 
     // converter attribute --> already implemented in MyFacesTag

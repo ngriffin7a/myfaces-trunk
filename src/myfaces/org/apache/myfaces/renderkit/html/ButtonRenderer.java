@@ -18,48 +18,54 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.attr.ButtonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
+import net.sourceforge.myfaces.renderkit.*;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
+
+import java.io.IOException;
 
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+
 import javax.servlet.ServletRequest;
-import java.io.IOException;
+
 
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class ButtonRenderer
-    extends HTMLRenderer
-    implements CommonRendererAttributes,
-               ButtonRendererAttributes,
-               UserRoleAttributes
+extends HTMLRenderer
 {
+    //~ Static fields/initializers -----------------------------------------------------------------
+
     public static final String TYPE = "Button";
+
+    //~ Methods ------------------------------------------------------------------------------------
+
     public String getRendererType()
     {
         return TYPE;
     }
 
-    public void decode(FacesContext facesContext, UIComponent uiComponent) throws IOException
+    public void decode(FacesContext facesContext, UIComponent uiComponent)
+    throws IOException
     {
         //super.decode must not be called, because value is handled here
+        UICommand      uiCommand      = (UICommand) uiComponent;
 
-        UICommand uiCommand = (UICommand)uiComponent;
+        ServletRequest servletRequest =
+            (ServletRequest) facesContext.getExternalContext().getRequest();
 
-        ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
+        String         paramName      = uiCommand.getClientId(facesContext);
+        String         paramValue     = servletRequest.getParameter(paramName);
+        boolean        submitted      = false;
 
-        String paramName = uiCommand.getClientId(facesContext);
-        String paramValue = servletRequest.getParameter(paramName);
-        boolean submitted = false;
         if (paramValue == null)
         {
             if (servletRequest.getParameter(paramName + ".x") != null) //image button
@@ -83,64 +89,71 @@ public class ButtonRenderer
         uiCommand.setValid(true);
     }
 
-    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
+    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
+    throws IOException
     {
-        UICommand uiCommand = (UICommand)uiComponent;
+        UICommand      uiCommand = (UICommand) uiComponent;
 
         ResponseWriter writer = facesContext.getResponseWriter();
+
         //boolean hiddenParam = true;
         writer.write("<input type=");
-        String imageSrc = (String)uiComponent.getAttribute(IMAGE_ATTR);
+
+        String imageSrc = (String) uiComponent.getAttribute(JSFAttr.IMAGE_ATTR);
+
         if (imageSrc != null)
         {
             writer.write("\"image\" src=\"");
             writer.write(imageSrc);
-            writer.write("\"");
-            writer.write(" name=\"");
+            writer.write("\" name=\"");
             writer.write(uiComponent.getClientId(facesContext));
-            writer.write("\"");
+            writer.write('"');
         }
         else
         {
-            String type = (String)uiComponent.getAttribute(TYPE_ATTR);
+            String type = (String) uiComponent.getAttribute(JSFAttr.TYPE_ATTR);
+
             if (type == null)
             {
                 type = "submit";
             }
-            writer.write("\"");
+
+            writer.write('"');
             writer.write(type);
             writer.write("\" name=\"");
             writer.write(uiComponent.getClientId(facesContext));
-            writer.write("\"");
-            writer.write(" value=\"");
+            writer.write("\" value=\"");
 
             String label;
-            String key = (String)uiComponent.getAttribute(KEY_ATTR);
+            String key = (String) uiComponent.getAttribute(JSFAttr.KEY_ATTR);
+
             if (key != null)
             {
-                label = BundleUtils.getString(facesContext,
-                                              (String)uiComponent.getAttribute(BUNDLE_ATTR),
-                                              key);
+                label =
+                    BundleUtils.getString(
+                        facesContext, (String) uiComponent.getAttribute(JSFAttr.BUNDLE_ATTR), key);
             }
             else
             {
-                label = (String)uiComponent.getAttribute(LABEL_ATTR);
+                label = (String) uiComponent.getAttribute(JSFAttr.LABEL_ATTR);
             }
+
             if (label == null)
             {
                 label = uiCommand.getCommandName();
             }
+
             writer.write(HTMLEncoder.encode(label, false, false));
-            writer.write("\"");
+            writer.write('"');
         }
 
-        HTMLUtil.renderCssClass(writer, uiComponent, COMMAND_CLASS_ATTR);
+        HTMLUtil.renderCssClass(writer, uiComponent, JSFAttr.COMMAND_CLASS_ATTR);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.BUTTON_ATTRIBUTES);
         HTMLUtil.renderDisabledOnUserRole(facesContext, uiComponent);
 
-        writer.write(">");
+        writer.write('>');
 
         /*
         if (hiddenParam)
@@ -154,5 +167,4 @@ public class ButtonRenderer
         }
         */
     }
-
 }

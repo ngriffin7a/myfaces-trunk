@@ -18,33 +18,33 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.CommonComponentProperties;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.LabelRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
+import net.sourceforge.myfaces.renderkit.*;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
+
+import java.io.IOException;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import java.io.IOException;
+
 
 /**
  * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class LabelRenderer
-    extends HTMLRenderer
-    implements CommonComponentProperties,
-               CommonRendererAttributes,
-               LabelRendererAttributes,
-               UserRoleAttributes
+extends HTMLRenderer
 {
+    //~ Static fields/initializers -----------------------------------------------------------------
+
     public static final String TYPE = "Label";
+
+    //~ Methods ------------------------------------------------------------------------------------
 
     public String getRendererType()
     {
@@ -71,38 +71,37 @@ public class LabelRenderer
         addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_label", USER_ROLE_ATTRIBUTES);
     }
     */
-
-
-
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
-        throws IOException
+    throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<label");
 
-        HTMLUtil.renderCssClass(writer, uiComponent, OUTPUT_CLASS_ATTR);
+        HTMLUtil.renderCssClass(writer, uiComponent, JSFAttr.OUTPUT_CLASS_ATTR);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
 
-        writer.write(">");
+        writer.write('>');
 
         String text;
-        String key = (String)uiComponent.getAttribute(KEY_ATTR);
+        String key = (String) uiComponent.getAttribute(JSFAttr.KEY_ATTR);
+
         if (key != null)
         {
-            text = BundleUtils.getString(facesContext,
-                                            (String)uiComponent.getAttribute(BUNDLE_ATTR),
-                                            key);
+            text =
+                BundleUtils.getString(
+                    facesContext, (String) uiComponent.getAttribute(JSFAttr.BUNDLE_ATTR), key);
         }
         else
         {
-            text = getStringValue(facesContext, (UIOutput)uiComponent);
+            text = getStringValue(facesContext, (UIOutput) uiComponent);
         }
+
         writer.write(HTMLEncoder.encode(text, true, true));
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
-        throws IOException
+    throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("</label>");

@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.renderkit.attr.CheckboxRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.CheckboxRenderer;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 
@@ -29,8 +29,7 @@ import net.sourceforge.myfaces.renderkit.html.HTML;
  * @version $Revision$ $Date$
  */
 public class SelectManyCheckboxTag
-    extends MyFacesTag
-    implements CheckboxRendererAttributes
+extends MyFacesTag
 {
     public String getComponentType()
     {
@@ -53,7 +52,7 @@ public class SelectManyCheckboxTag
 
     public void setSelectManyClass(String value)
     {
-        setRendererAttributeString(SELECT_MANY_CLASS_ATTR, value);
+        setRendererAttributeString(JSFAttr.SELECT_MANY_CLASS_ATTR, value);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag
@@ -137,7 +136,7 @@ public class SelectManyCheckboxTag
 
     public void setLayout(String value)
     {
-        setRendererAttributeString(LAYOUT_ATTR, value);
+        setRendererAttributeString(JSFAttr.LAYOUT_ATTR, value);
     }
 
     // user role attributes --> already implemented in MyFacesTag

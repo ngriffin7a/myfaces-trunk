@@ -21,7 +21,8 @@ package net.sourceforge.myfaces.renderkit.html.state.client;
 import net.sourceforge.myfaces.component.*;
 import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.convert.ConverterUtils;
-import net.sourceforge.myfaces.renderkit.html.DataRenderer;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
+import net.sourceforge.myfaces.renderkit.JSFProp;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.SecretRenderer;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
@@ -89,7 +90,7 @@ public class MinimizingStateSaver
     private static final Set IGNORE_PROPERTIES = new HashSet();
     static
     {
-        IGNORE_PROPERTIES.add(CommonComponentProperties.PARENT_PROP);
+        IGNORE_PROPERTIES.add(JSFProp.PARENT_PROP);
 
         //not necessary: clientId is no property because getter has FacesContext parameter
         //IGNORE_PROPERTIES.add(CommonComponentProperties.CLIENT_ID_PROP);
@@ -255,7 +256,7 @@ public class MinimizingStateSaver
             return;
         }
 
-        if (propName.equals(CommonComponentProperties.VALID_PROP) &&
+        if (propName.equals(JSFProp.VALID_PROP) &&
             uiComponent.isValid())
         {
             //No need to save "valid" if true, because MinimizingStateRestorer
@@ -653,7 +654,7 @@ public class MinimizingStateSaver
         String rendererType = comp.getRendererType();
         if (rendererType != null && rendererType.equals(SecretRenderer.TYPE))
         {
-            Boolean redisplay = (Boolean)comp.getAttribute(SecretRenderer.REDISPLAY_ATTR);
+            Boolean redisplay = (Boolean)comp.getAttribute(JSFAttr.REDISPLAY_ATTR);
             if (redisplay == null ||   //because false is default
                 !redisplay.booleanValue())
             {
@@ -671,7 +672,7 @@ public class MinimizingStateSaver
             {
                 if (parent instanceof UIPanel)
                 {
-                    String var = (String)parent.getAttribute(DataRenderer.VAR_ATTR);
+                    String var = (String)parent.getAttribute(JSFAttr.VAR_ATTR);
                     if (var != null)
                     {
                         if (modelRef.equals(var) ||

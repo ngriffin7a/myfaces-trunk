@@ -41,7 +41,7 @@ import java.util.Locale;
  */
 public class StateUtils
 {
-    private static final Locale STATE_SAVING_LOCALE = Locale.US;
+    static final Locale STATE_SAVING_LOCALE = Locale.US;
 
     private StateUtils() {}
 

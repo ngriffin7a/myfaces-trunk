@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.renderkit.attr.GroupRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
 
 
@@ -29,8 +29,7 @@ import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
  * @version $Revision$ $Date$
  */
 public class PanelGroupTag
-    extends MyFacesTag
-    implements GroupRendererAttributes
+extends MyFacesTag
 {
     public String getComponentType()
     {
@@ -53,7 +52,7 @@ public class PanelGroupTag
 
     public void setPanelClass(String v)
     {
-        setRendererAttributeString(PANEL_CLASS_ATTR, v);
+        setRendererAttributeString(JSFAttr.PANEL_CLASS_ATTR, v);
     }
 
     // Group Renderer attributes  --> none

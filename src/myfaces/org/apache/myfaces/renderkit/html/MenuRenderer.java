@@ -18,30 +18,30 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.CommonComponentProperties;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.MenuRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
+import net.sourceforge.myfaces.renderkit.*;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
+
+import java.io.IOException;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import java.io.IOException;
+
 
 /**
  * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class MenuRenderer
-    extends HTMLRenderer
-    implements CommonComponentProperties,
-               CommonRendererAttributes,
-               MenuRendererAttributes,
-               UserRoleAttributes
+extends HTMLRenderer
 {
-    public static final String TYPE = "Menu";
-    private static final int DEFAULT_SIZE = 1;
+    //~ Static fields/initializers -----------------------------------------------------------------
+
+    public static final String TYPE         = "Menu";
+    private static final int   DEFAULT_SIZE = 1;
+
+    //~ Methods ------------------------------------------------------------------------------------
 
     public String getRendererType()
     {
@@ -76,33 +76,26 @@ public class MenuRenderer
         addAttributeDescriptors(UISelectOne.TYPE, TLD_HTML_URI, "selectone_menu", USER_ROLE_ATTRIBUTES);
     }
     */
-
-
-
-
     public void encodeBegin(FacesContext facescontext, UIComponent uicomponent)
-            throws IOException
+    throws IOException
     {
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
-        throws IOException
+    throws IOException
     {
-        String strSize = (String)uiComponent.getAttribute(SIZE_ATTR);
-        int size;
+        String strSize = (String) uiComponent.getAttribute(JSFAttr.SIZE_ATTR);
+        int    size;
+
         try
         {
-            size = strSize != null ? Integer.parseInt(strSize) : DEFAULT_SIZE;
+            size = (strSize != null) ? Integer.parseInt(strSize) : DEFAULT_SIZE;
         }
         catch (NumberFormatException e)
         {
             size = DEFAULT_SIZE;
         }
 
-        HTMLUtil.renderSelect(facesContext,
-                                      uiComponent,
-                                      TYPE,
-                                      size);
+        HTMLUtil.renderSelect(facesContext, uiComponent, TYPE, size);
     }
-
 }

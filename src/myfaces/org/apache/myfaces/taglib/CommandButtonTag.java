@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.MyFacesUICommand;
-import net.sourceforge.myfaces.renderkit.attr.ButtonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.ButtonRenderer;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 
@@ -31,7 +31,6 @@ import net.sourceforge.myfaces.renderkit.html.HTML;
  */
 public class CommandButtonTag
     extends MyFacesTag
-    implements ButtonRendererAttributes
 {
     public String getComponentType()
     {
@@ -54,7 +53,7 @@ public class CommandButtonTag
 
     public void setCommandClass(String v)
     {
-        setRendererAttributeString(COMMAND_CLASS_ATTR, v);
+        setRendererAttributeString(JSFAttr.COMMAND_CLASS_ATTR, v);
     }
 
     public void setAction(String v)
@@ -134,12 +133,12 @@ public class CommandButtonTag
 
     public void setLabel(String v)
     {
-        setRendererAttributeString(LABEL_ATTR, v);
+        setRendererAttributeString(JSFAttr.LABEL_ATTR, v);
     }
 
     public void setType(String value)
     {
-        setRendererAttributeString(TYPE_ATTR, value);
+        setRendererAttributeString(JSFAttr.TYPE_ATTR, value);
     }
 
 

@@ -18,8 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.attr.ext;
 
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.KeyBundleAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 
 /**
  * Constant definitions for the specified render dependent attributes of the
@@ -28,8 +27,6 @@ import net.sourceforge.myfaces.renderkit.attr.KeyBundleAttributes;
  * @version $Revision$ $Date$
  */
 public interface NavigationRendererAttributes
-    extends CommonRendererAttributes,
-            KeyBundleAttributes
 {
     //public static final String LEVEL_CLASSES = "levelClasses";
     public static final String OPEN_ITEM_CLASS_ATTR = "openItemClass";
@@ -38,8 +35,8 @@ public interface NavigationRendererAttributes
     public static final String SEPARATOR_CLASS = "separatorClass";
 
     public static final String[] NAVIGATION_ATTRIBUTES = {
-        PANEL_CLASS_ATTR,
-        BUNDLE_ATTR,
+        JSFAttr.PANEL_CLASS_ATTR,
+        JSFAttr.BUNDLE_ATTR,
         //LEVEL_CLASSES,
         OPEN_ITEM_CLASS_ATTR,
         ACTIVE_ITEM_CLASS_ATTR,

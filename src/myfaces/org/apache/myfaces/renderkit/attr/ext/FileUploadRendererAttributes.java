@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.attr.ext;
 
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 
 /**
  * Constant definitions for the specified render dependent attributes of the
@@ -27,14 +27,13 @@ import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
  * @version $Revision$ $Date$
  */
 public interface FileUploadRendererAttributes
-    extends CommonRendererAttributes
 {
     public static final String ACCEPT_ATTR = "accept";
     public static final String MAX_LENGTH_ATTR = "maxlength";
 
     public static final String[] FILE_UPLOAD_ATTRIBUTES =
     {
-        INPUT_CLASS_ATTR,
+        JSFAttr.INPUT_CLASS_ATTR,
         ACCEPT_ATTR,
         MAX_LENGTH_ATTR
     };

@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.renderkit.attr.ListRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.ListRenderer;
 
@@ -29,8 +29,7 @@ import net.sourceforge.myfaces.renderkit.html.ListRenderer;
  * @version $Revision$ $Date$
  */
 public class PanelListTag
-    extends MyFacesTag
-    implements ListRendererAttributes
+extends MyFacesTag
 {
     public String getComponentType()
     {
@@ -53,7 +52,7 @@ public class PanelListTag
 
     public void setPanelClass(String v)
     {
-        setRendererAttributeString(PANEL_CLASS_ATTR, v);
+        setRendererAttributeString(JSFAttr.PANEL_CLASS_ATTR, v);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag
@@ -127,22 +126,22 @@ public class PanelListTag
 
     public void setColumnClasses(String value)
     {
-        setRendererAttributeString(COLUMN_CLASSES_ATTR, value);
+        setRendererAttributeString(JSFAttr.COLUMN_CLASSES_ATTR, value);
     }
 
     public void setFooterClass(String value)
     {
-        setRendererAttributeString(FOOTER_CLASS_ATTR, value);
+        setRendererAttributeString(JSFAttr.FOOTER_CLASS_ATTR, value);
     }
 
     public void setHeaderClass(String value)
     {
-        setRendererAttributeString(HEADER_CLASS_ATTR, value);
+        setRendererAttributeString(JSFAttr.HEADER_CLASS_ATTR, value);
     }
 
     public void setRowClasses(String value)
     {
-        setRendererAttributeString(ROW_CLASSES_ATTR, value);
+        setRendererAttributeString(JSFAttr.ROW_CLASSES_ATTR, value);
     }
 
     // user role attributes --> already implemented in MyFacesTag

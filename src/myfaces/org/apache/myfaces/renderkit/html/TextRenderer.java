@@ -18,34 +18,34 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.CommonComponentProperties;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.TextRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
+import net.sourceforge.myfaces.renderkit.*;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
+
+import java.io.IOException;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import java.io.IOException;
+
 
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class TextRenderer
-    extends HTMLRenderer
-    implements CommonComponentProperties,
-               CommonRendererAttributes,
-               TextRendererAttributes,
-               UserRoleAttributes
+extends HTMLRenderer
 {
+    //~ Static fields/initializers -----------------------------------------------------------------
+
     public static final String TYPE = "Text";
+
+    //~ Methods ------------------------------------------------------------------------------------
 
     public String getRendererType()
     {
@@ -53,72 +53,75 @@ public class TextRenderer
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
-        throws IOException
+    throws IOException
     {
         if (uiComponent instanceof UIInput)
         {
-            renderInput(facesContext, (UIInput)uiComponent);
+            renderInput(facesContext, (UIInput) uiComponent);
         }
         else
         {
-            renderOutput(facesContext, (UIOutput)uiComponent);
+            renderOutput(facesContext, (UIOutput) uiComponent);
         }
     }
 
     public void renderInput(FacesContext facesContext, UIInput uiInput)
-            throws IOException
+    throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<input type=\"text\"");
+
         String coumpoundId = uiInput.getClientId(facesContext);
         writer.write(" name=\"");
         writer.write(coumpoundId);
-        writer.write("\"");
-        writer.write(" id=\"");
+        writer.write("\" id=\"");
         writer.write(coumpoundId);
-        writer.write("\"");
+        writer.write('"');
+
         String currentValue = getStringValue(facesContext, uiInput);
+
         if (currentValue != null)
         {
             writer.write(" value=\"");
             writer.write(HTMLEncoder.encode(currentValue, false, false));
-            writer.write("\"");
+            writer.write('"');
         }
 
-        HTMLUtil.renderCssClass(writer, uiInput, INPUT_CLASS_ATTR);
+        HTMLUtil.renderCssClass(writer, uiInput, JSFAttr.INPUT_CLASS_ATTR);
         HTMLUtil.renderHTMLAttributes(writer, uiInput, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiInput, HTML.EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiInput, HTML.INPUT_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttribute(writer, uiInput, MAXLENGTH_ATTR, "maxlength");
+        HTMLUtil.renderHTMLAttribute(writer, uiInput, JSFAttr.MAXLENGTH_ATTR, "maxlength");
         HTMLUtil.renderDisabledOnUserRole(facesContext, uiInput);
 
-        writer.write(">");
+        writer.write('>');
     }
 
-
     public void renderOutput(FacesContext facesContext, UIOutput uiOutput)
-        throws IOException
+    throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        StringBuffer buf = new StringBuffer();
-        HTMLUtil.renderCssClass(buf, uiOutput, OUTPUT_CLASS_ATTR);
+        StringBuffer   buf = new StringBuffer();
+        HTMLUtil.renderCssClass(buf, uiOutput, JSFAttr.OUTPUT_CLASS_ATTR);
         HTMLUtil.renderHTMLAttributes(buf, uiOutput, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(buf, uiOutput, HTML.EVENT_HANDLER_ATTRIBUTES);
+
         if (buf.length() > 0)
         {
             writer.write("<span");
             writer.write(buf.toString());
-            writer.write(">");
+            writer.write('>');
         }
 
         String text;
-        String key = (String)uiOutput.getAttribute(KEY_ATTR);
+        String key = (String) uiOutput.getAttribute(JSFAttr.KEY_ATTR);
+
         if (key != null)
         {
-            text = BundleUtils.getString(facesContext,
-                                            (String)uiOutput.getAttribute(BUNDLE_ATTR),
-                                            key);
+            text =
+                BundleUtils.getString(
+                    facesContext, (String) uiOutput.getAttribute(JSFAttr.BUNDLE_ATTR), key);
         }
         else
         {
@@ -132,5 +135,4 @@ public class TextRenderer
             writer.write("</span>");
         }
     }
-
 }

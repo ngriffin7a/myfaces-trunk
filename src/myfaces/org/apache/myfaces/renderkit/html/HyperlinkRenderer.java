@@ -19,11 +19,8 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.convert.ConverterUtils;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
+import net.sourceforge.myfaces.renderkit.*;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
@@ -60,10 +57,6 @@ import java.util.Iterator;
  */
 public class HyperlinkRenderer
     extends HTMLRenderer
-    implements CommonComponentProperties,
-               CommonRendererAttributes,
-               HyperlinkRendererAttributes,
-               UserRoleAttributes
 {
     public static final String TYPE = "Hyperlink";
 
@@ -175,7 +168,7 @@ public class HyperlinkRenderer
         }
 
         writer.write("<a href=\"");
-        String href = (String)uiComponent.getAttribute(HREF_ATTR);
+        String href = (String)uiComponent.getAttribute(HTML.HREF_ATTR);
         if (href == null)
         {
             //Modify URL for the faces servlet mapping:
@@ -224,7 +217,7 @@ public class HyperlinkRenderer
 
         writer.write("\"");
 
-        HTMLUtil.renderCssClass(writer, uiComponent, COMMAND_CLASS_ATTR);
+        HTMLUtil.renderCssClass(writer, uiComponent, JSFAttr.COMMAND_CLASS_ATTR);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.ANCHOR_ATTRIBUTES);
@@ -232,11 +225,11 @@ public class HyperlinkRenderer
         writer.write(">");
 
         //write link text
-        String key = (String)uiComponent.getAttribute(KEY_ATTR);
+        String key = (String)uiComponent.getAttribute(JSFAttr.KEY_ATTR);
         if (key != null)
         {
             String text = BundleUtils.getString(facesContext,
-                                                (String)uiComponent.getAttribute(BUNDLE_ATTR),
+                                                (String)uiComponent.getAttribute(JSFAttr.BUNDLE_ATTR),
                                                 key);
             writer.write(HTMLEncoder.encode(text, true, true));
         }

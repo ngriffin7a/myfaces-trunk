@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.attr.ext.TabbedPaneRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.ext.TabbedPaneRenderer;
@@ -32,9 +32,8 @@ import net.sourceforge.myfaces.taglib.MyFacesBodyTag;
  * @deprecated panel_group with facet should be used
  */
 public class TabbedPaneTag
-    extends MyFacesBodyTag
-    implements CommonRendererAttributes,
-               TabbedPaneRendererAttributes
+extends MyFacesBodyTag
+implements TabbedPaneRendererAttributes
 {
     public String getComponentType()
     {
@@ -57,7 +56,7 @@ public class TabbedPaneTag
 
     public void setPanelClass(String v)
     {
-        setRendererAttributeString(PANEL_CLASS_ATTR, v);
+        setRendererAttributeString(JSFAttr.PANEL_CLASS_ATTR, v);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag

@@ -21,9 +21,7 @@ package net.sourceforge.myfaces.renderkit.html.ext;
 import com.oreilly.servlet.MultipartWrapper;
 import net.sourceforge.myfaces.component.ext.UIFileUpload;
 import net.sourceforge.myfaces.component.ext.UploadedFile;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
-import net.sourceforge.myfaces.renderkit.attr.ext.FileUploadRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
@@ -44,9 +42,6 @@ import java.io.IOException;
  */
 public class FileUploadRenderer
     extends HTMLRenderer
-    implements CommonRendererAttributes,
-               FileUploadRendererAttributes,
-               UserRoleAttributes
 {
     public static final String TYPE = "FileUpload";
 
@@ -125,7 +120,7 @@ public class FileUploadRenderer
             writer.write("\"");
         }
 
-        HTMLUtil.renderCssClass(writer, uiComponent,INPUT_CLASS_ATTR);
+        HTMLUtil.renderCssClass(writer, uiComponent, JSFAttr.INPUT_CLASS_ATTR);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_ATTRIBUTES);

@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.renderkit.attr.MessageRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.MessageRenderer;
 
 
@@ -28,8 +28,7 @@ import net.sourceforge.myfaces.renderkit.html.MessageRenderer;
  * @version $Revision$ $Date$
  */
 public class OutputMessageTag
-    extends MyFacesTag
-    implements MessageRendererAttributes
+extends MyFacesTag
 {
     public String getComponentType()
     {
@@ -52,7 +51,7 @@ public class OutputMessageTag
 
     public void setOutputClass(String value)
     {
-        setRendererAttributeString(OUTPUT_CLASS_ATTR, value);
+        setRendererAttributeString(JSFAttr.OUTPUT_CLASS_ATTR, value);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag

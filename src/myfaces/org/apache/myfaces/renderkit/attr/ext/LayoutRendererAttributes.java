@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.attr.ext;
 
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 
 /**
  * Constant definitions for the specified render dependent attributes of the
@@ -27,7 +27,6 @@ import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
  * @version $Revision$ $Date$
  */
 public interface LayoutRendererAttributes
-    extends CommonRendererAttributes
 {
     public static final String HEADER_CLASS_ATTR = "headerClass";
     public static final String NAVIGATION_CLASS_ATTR = "navigationClass";
@@ -37,7 +36,7 @@ public interface LayoutRendererAttributes
     public static final String LAYOUT_REF_ATTR = "layoutRef";
 
     public static final String[] PAGE_LAYOUT_ATTRIBUTES = {
-        PANEL_CLASS_ATTR,
+        JSFAttr.PANEL_CLASS_ATTR,
         HEADER_CLASS_ATTR,
         NAVIGATION_CLASS_ATTR,
         BODY_CLASS_ATTR,

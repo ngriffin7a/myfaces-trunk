@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
+import net.sourceforge.myfaces.util.ArrayUtils;
+
 
 
 /**
@@ -30,25 +32,20 @@ public class HTML
     private HTML() {}
 
     // Common attributes
-    public static final String ACCESSKEY_ATTR   = "accesskey";
-    public static final String TABINDEX_ATTR    = "tabindex";
-    public static final String TARGET_ATTR = "target";  //used by <a> and <form>
     public static final String ALIGN_ATTR = "align";
-    public static final String ALT_ATTR = "alt";
     public static final String DATAFLD_ATTR = "datafld";
     public static final String DATASRC_ATTR = "datasrc";
     public static final String DATAFORMATAS_ATTR = "dataformatas";
-    public static final String DISABLED_ATTR = "disabled";
-    public static final String ONBLUR_ATTR = "onblur";
-    public static final String ONCHANGE_ATTR = "onchange";
-    public static final String ONFOCUS_ATTR = "onfocus";
     public static final String BORDER_ATTR = "border";
     public static final String WIDTH_ATTR = "width";
-    public static final String ONSELECT_ATTR = "onselect";
     public static final String READONLY_ATTR = "readonly";
     public static final String ACCEPT_ATTR = "accept";
 
     // Event handler attributes
+    public static final String ONFOCUS_ATTR = "onfocus";
+    public static final String ONBLUR_ATTR = "onblur";
+    public static final String ONSELECT_ATTR = "onselect";
+    public static final String ONCHANGE_ATTR = "onchange";
     public static final String ONCLICK_ATTR     = "onclick";
     public static final String ONDBLCLICK_ATTR  = "ondblclick";
     public static final String ONMOUSEDOWN_ATTR = "onmousedown";
@@ -86,9 +83,30 @@ public class HTML
         TITLE_ATTR,
     };
 
+    // common form field attributes
+    public static final String ACCESSKEY_ATTR   = "accesskey";
+    public static final String TABINDEX_ATTR    = "tabindex";
+    public static final String DISABLED_ATTR = "disabled";
+    public static final String[] COMMON_FORM_FIELD_ATTRIBUTES =
+    {
+        // commmon field
+        ACCESSKEY_ATTR,
+        TABINDEX_ATTR,
+        DISABLED_ATTR,
+    };
+    
+    // Common Attributes    
+    public static final String[] COMMON_PASSTROUGH_ATTRIBUTES = 
+        (String[])ArrayUtils.concat(
+            EVENT_HANDLER_ATTRIBUTES, 
+            UNIVERSAL_ATTRIBUTES, 
+            COMMON_FORM_FIELD_ATTRIBUTES);
+
     // <a>
+    public static final String TARGET_ATTR = "target";  //used by <a> and <form>
     public static final String CHARSET_ATTR     = "charset";
     public static final String COORDS_ATTR      = "coords";
+    public static final String HREF_ATTR    = "href";
     public static final String HREFLANG_ATTR    = "hreflang";
     public static final String REL_ATTR         = "rel";
     public static final String REV_ATTR         = "rev";
@@ -108,22 +126,6 @@ public class HTML
         TYPE_ATTR
     };
 
-    // <button>
-    public static final String[] BUTTON_ATTRIBUTES =
-    {
-        ACCESSKEY_ATTR,
-        ALIGN_ATTR,
-        ALT_ATTR,
-        DATAFLD_ATTR,
-        DATASRC_ATTR,
-        DATAFORMATAS_ATTR,
-        DISABLED_ATTR,
-        ONBLUR_ATTR,
-        ONCHANGE_ATTR,
-        ONFOCUS_ATTR,
-        TABINDEX_ATTR,
-    };
-
     // <form>
     public static final String ACCEPT_CHARSET_ATTR = "accept-charset";
     public static final String ENCTYPE_ATTR = "enctype";
@@ -140,6 +142,7 @@ public class HTML
     };
 
     // <img>
+    public static final String ALT_ATTR = "alt";
     public static final String HEIGHT_ATTR = "height";
     public static final String HSPACE_ATTR = "hspace";
     public static final String ISMAP_ATTR = "ismap";
@@ -176,6 +179,22 @@ public class HTML
         ONSELECT_ATTR,
         READONLY_ATTR,
         SIZE_ATTR,
+        TABINDEX_ATTR,
+    };
+
+    // <button>
+    public static final String[] BUTTON_ATTRIBUTES =
+    {
+        ACCESSKEY_ATTR,
+        ALIGN_ATTR,
+        ALT_ATTR,
+        DATAFLD_ATTR,
+        DATASRC_ATTR,
+        DATAFORMATAS_ATTR,
+        DISABLED_ATTR,
+        ONBLUR_ATTR,
+        ONCHANGE_ATTR,
+        ONFOCUS_ATTR,
         TABINDEX_ATTR,
     };
 
@@ -249,5 +268,4 @@ public class HTML
         ACCEPT_ATTR,
         MAX_LENGTH_ATTR
     };
-
 }

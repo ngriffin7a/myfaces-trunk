@@ -18,11 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.component.MyFacesUIOutput;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.KeyBundleAttributes;
-import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 
 import javax.faces.component.UIComponent;
@@ -44,11 +41,7 @@ import javax.servlet.jsp.tagext.Tag;
  */
 public abstract class MyFacesBodyTag
     extends UIComponentBodyTag
-    implements MyFacesTagBaseIF,
-               CommonComponentProperties,
-               CommonRendererAttributes,
-               KeyBundleAttributes,
-               UserRoleAttributes
+    implements MyFacesTagBaseIF
 {
     public static final String BODY_CONTENT_ATTR
         = MyFacesBodyTag.class.getName() + ".BODY_CONTENT";
@@ -261,7 +254,7 @@ public abstract class MyFacesBodyTag
 
     public void setConverter(Object converter)
     {
-        setRendererAttributeObject(CONVERTER_ATTR, converter);
+        setRendererAttributeObject(JSFAttr.CONVERTER_ATTR, converter);
     }
 
     public void setValueRef(String s)
@@ -361,12 +354,12 @@ public abstract class MyFacesBodyTag
 
     public void setKey(String v)
     {
-        setRendererAttributeString(KEY_ATTR, v);
+        setRendererAttributeString(JSFAttr.KEY_ATTR, v);
     }
 
     public void setBundle(String v)
     {
-        setRendererAttributeString(BUNDLE_ATTR, v);
+        setRendererAttributeString(JSFAttr.BUNDLE_ATTR, v);
     }
 
 
@@ -375,12 +368,12 @@ public abstract class MyFacesBodyTag
 
     public void setEnabledOnUserRole(String value)
     {
-        setRendererAttributeString(ENABLED_ON_USER_ROLE_ATTR, value);
+        setRendererAttributeString(JSFAttr.ENABLED_ON_USER_ROLE_ATTR, value);
     }
 
     public void setVisibleOnUserRole(String value)
     {
-        setRendererAttributeString(VISIBLE_ON_USER_ROLE_ATTR, value);
+        setRendererAttributeString(JSFAttr.VISIBLE_ON_USER_ROLE_ATTR, value);
     }
 
 }

@@ -18,8 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html.ext;
 
-import net.sourceforge.myfaces.component.CommonComponentProperties;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.attr.ext.LayoutRendererAttributes;
 import net.sourceforge.myfaces.renderkit.callback.CallbackRenderer;
 import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
@@ -41,10 +40,7 @@ import java.io.IOException;
  */
 public class LayoutRenderer
     extends HTMLRenderer
-    implements CallbackRenderer,
-               CommonComponentProperties,
-               CommonRendererAttributes,
-               LayoutRendererAttributes
+    implements CallbackRenderer, LayoutRendererAttributes
 {
     static final String HEADER = "LayoutHeader";
     static final String NAVIGATION = "LayoutNavigation";
@@ -280,7 +276,7 @@ public class LayoutRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<table");
-        String cssClass = (String)uiComponent.getAttribute(PANEL_CLASS_ATTR);
+        String cssClass = (String)uiComponent.getAttribute(JSFAttr.PANEL_CLASS_ATTR);
         if (cssClass != null)
         {
             writer.write(" class=\"" + cssClass + "\"");
@@ -306,7 +302,7 @@ public class LayoutRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<table");
-        String cssClass = (String)uiComponent.getAttribute(PANEL_CLASS_ATTR);
+        String cssClass = (String)uiComponent.getAttribute(JSFAttr.PANEL_CLASS_ATTR);
         if (cssClass != null)
         {
             writer.write(" class=\"" + cssClass + "\"");
@@ -332,7 +328,7 @@ public class LayoutRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<table");
-        String cssClass = (String)uiComponent.getAttribute(PANEL_CLASS_ATTR);
+        String cssClass = (String)uiComponent.getAttribute(JSFAttr.PANEL_CLASS_ATTR);
         if (cssClass != null)
         {
             writer.write(" class=\"" + cssClass + "\"");

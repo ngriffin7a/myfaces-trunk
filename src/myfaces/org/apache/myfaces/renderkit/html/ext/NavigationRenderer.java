@@ -18,10 +18,9 @@
  */
 package net.sourceforge.myfaces.renderkit.html.ext;
 
-import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.component.ext.UINavigation;
 import net.sourceforge.myfaces.component.ext.UINavigationItem;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.attr.ext.NavigationRendererAttributes;
 import net.sourceforge.myfaces.renderkit.callback.CallbackRenderer;
 import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
@@ -43,11 +42,7 @@ import java.io.IOException;
  */
 public class NavigationRenderer
     extends HTMLRenderer
-    implements
-    CallbackRenderer,
-        CommonComponentProperties,
-        CommonRendererAttributes,
-        NavigationRendererAttributes
+    implements CallbackRenderer, NavigationRendererAttributes
 {
 
 
@@ -66,11 +61,11 @@ public class NavigationRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<table ");
-        HTMLUtil.renderCssClass(writer, uiComponent, PANEL_CLASS_ATTR);
+        HTMLUtil.renderCssClass(writer, uiComponent, JSFAttr.PANEL_CLASS_ATTR);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.TABLE_ATTRIBUTES);
-        String panelClass = (String)uiComponent.getAttribute(PANEL_CLASS_ATTR);
+        String panelClass = (String)uiComponent.getAttribute(JSFAttr.PANEL_CLASS_ATTR);
         if (panelClass == null)
         {
             writer.write("border=\"0\"");

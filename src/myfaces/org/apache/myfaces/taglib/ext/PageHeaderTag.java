@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
 
@@ -48,6 +49,6 @@ public class PageHeaderTag
 
     public void setPanelClass(String value)
     {
-        setRendererAttributeString(PANEL_CLASS_ATTR, value);
+        setRendererAttributeString(JSFAttr.PANEL_CLASS_ATTR, value);
     }
 }

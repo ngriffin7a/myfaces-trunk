@@ -18,32 +18,36 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.ImageRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
+import net.sourceforge.myfaces.renderkit.*;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
+
+import java.io.IOException;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIGraphic;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+
 
 /**
  * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class ImageRenderer
-        extends HTMLRenderer
-        implements CommonRendererAttributes,
-                   ImageRendererAttributes,
-                   UserRoleAttributes
+extends HTMLRenderer
 {
+    //~ Static fields/initializers -----------------------------------------------------------------
+
     public static final String TYPE = "Image";
+
+    //~ Methods ------------------------------------------------------------------------------------
+
     public String getRendererType()
     {
         return TYPE;
@@ -69,45 +73,46 @@ public class ImageRenderer
         addAttributeDescriptors(UIGraphic.TYPE, TLD_HTML_URI, "graphic_image", USER_ROLE_ATTRIBUTES);
     }
     */
-
-
-
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
-        throws IOException
+    throws IOException
     {
     }
 
     public void encodeChildren(FacesContext facescontext, UIComponent uicomponent)
-        throws IOException
+    throws IOException
     {
     }
 
-    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
+    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
+    throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        String value;
+        String         value;
 
-        String key = (String)uiComponent.getAttribute(KEY_ATTR);
+        String         key = (String) uiComponent.getAttribute(JSFAttr.KEY_ATTR);
+
         if (key != null)
         {
-            value = BundleUtils.getString(facesContext,
-                                          (String)uiComponent.getAttribute(BUNDLE_ATTR),
-                                          key);
+            value =
+                BundleUtils.getString(
+                    facesContext, (String) uiComponent.getAttribute(JSFAttr.BUNDLE_ATTR), key);
         }
         else
         {
-            value = getStringValue(facesContext, (UIGraphic)uiComponent);
+            value = getStringValue(facesContext, (UIGraphic) uiComponent);
         }
 
-        if (value != null && value.length() > 0)
+        if ((value != null) && (value.length() > 0))
         {
             writer.write("<img src=\"");
 
             String src;
+
             if (value.startsWith("/"))
             {
-                HttpServletRequest request = (HttpServletRequest)facesContext.getExternalContext().getRequest();
+                HttpServletRequest request =
+                    (HttpServletRequest) facesContext.getExternalContext().getRequest();
                 src = request.getContextPath() + value;
             }
             else
@@ -121,34 +126,35 @@ public class ImageRenderer
             src = facesContext.getExternalContext().encodeResourceURL(src);
 
             writer.write(src);
-            writer.write("\"");
+            writer.write('"');
 
             String alt;
-            String altKey = (String)uiComponent.getAttribute(ALT_KEY_ATTR);
+            String altKey = (String) uiComponent.getAttribute(JSFAttr.ALT_KEY_ATTR);
+
             if (altKey != null)
             {
-                alt = BundleUtils.getString(facesContext,
-                                              (String)uiComponent.getAttribute(ALT_BUNDLE_ATTR),
-                                              altKey);
+                alt = BundleUtils.getString(
+                        facesContext, (String) uiComponent.getAttribute(JSFAttr.ALT_BUNDLE_ATTR),
+                        altKey);
             }
             else
             {
-                alt = (String)uiComponent.getAttribute(HTML.ALT_ATTR);
+                alt = (String) uiComponent.getAttribute(HTML.ALT_ATTR);
             }
-            if (alt != null && alt.length() > 0)
+
+            if ((alt != null) && (alt.length() > 0))
             {
                 writer.write(" alt=\"");
                 writer.write(HTMLEncoder.encode(alt, false, false));
-                writer.write("\"");
+                writer.write('"');
             }
 
-            HTMLUtil.renderCssClass(writer, uiComponent, GRAPHIC_CLASS_ATTR);
+            HTMLUtil.renderCssClass(writer, uiComponent, JSFAttr.GRAPHIC_CLASS_ATTR);
             HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
             HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
             HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.IMG_ATTRUBUTES);
 
-            writer.write(">");
+            writer.write('>');
         }
     }
-
 }

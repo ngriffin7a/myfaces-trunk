@@ -18,23 +18,25 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.attr.DateRendererAttributes;
 
 
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class DateRenderer
-    extends TextRenderer
-    implements DateRendererAttributes
+extends TextRenderer
 {
+    //~ Static fields/initializers -----------------------------------------------------------------
+
     public static final String TYPE = "Date";
+
+    //~ Methods ------------------------------------------------------------------------------------
 
     public String getRendererType()
     {
         return TYPE;
     }
-
 }

@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.renderkit.attr.CheckboxRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.CheckboxRenderer;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 
@@ -28,8 +28,7 @@ import net.sourceforge.myfaces.renderkit.html.HTML;
  * @version $Revision$ $Date$
  */
 public class SelectBooleanCheckboxTag
-    extends MyFacesTag
-    implements CheckboxRendererAttributes
+extends MyFacesTag
 {
     public String getComponentType()
     {
@@ -52,7 +51,7 @@ public class SelectBooleanCheckboxTag
 
     public void setSelectBooleanClass(String value)
     {
-        setRendererAttributeString(SELECT_BOOLEAN_CLASS_ATTR, value);
+        setRendererAttributeString(JSFAttr.SELECT_BOOLEAN_CLASS_ATTR, value);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag

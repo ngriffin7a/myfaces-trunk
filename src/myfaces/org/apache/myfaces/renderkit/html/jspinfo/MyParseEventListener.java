@@ -21,7 +21,7 @@ package net.sourceforge.myfaces.renderkit.html.jspinfo;
 import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.ext.UISaveState;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
@@ -447,7 +447,7 @@ public class MyParseEventListener
                     continue;
                 }
 
-                if (attrName.equals(CommonRendererAttributes.ID_ATTR))
+                if (attrName.equals(JSFAttr.ID_ATTR))
                 {
                     id = (String)attrValue;
                 }

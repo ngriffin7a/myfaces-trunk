@@ -18,33 +18,33 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.component.UIComponentUtils;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.SecretRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
+import net.sourceforge.myfaces.renderkit.*;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
+
+import java.io.IOException;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import java.io.IOException;
+
 
 /**
  * see Spec.1.0 EA - JSF.7.6.4 Renderer Types for UIInput Components
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class SecretRenderer
-    extends HTMLRenderer
-    implements CommonComponentProperties,
-               CommonRendererAttributes,
-               SecretRendererAttributes,
-               UserRoleAttributes
+extends HTMLRenderer
 {
+    //~ Static fields/initializers -----------------------------------------------------------------
+
     public static final String TYPE = "Secret";
+
+    //~ Methods ------------------------------------------------------------------------------------
 
     public String getRendererType()
     {
@@ -52,34 +52,32 @@ public class SecretRenderer
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
-        throws IOException
+    throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
-        writer.write("<input type=\"password\"");
-        writer.write(" name=\"");
+        writer.write("<input type=\"password\" name=\"");
         writer.write(uiComponent.getClientId(facesContext));
-        writer.write("\"");
-        if (UIComponentUtils.getBooleanAttribute(uiComponent,
-                                                 REDISPLAY_ATTR,
-                                                 false))
+        writer.write('"');
+
+        if (UIComponentUtils.getBooleanAttribute(uiComponent, JSFAttr.REDISPLAY_ATTR, false))
         {
-            String currentValue = getStringValue(facesContext, (UIInput)uiComponent);
+            String currentValue = getStringValue(facesContext, (UIInput) uiComponent);
+
             if (currentValue != null)
             {
                 writer.write(" value=\"");
                 writer.write(HTMLEncoder.encode(currentValue, false, false));
-                writer.write("\"");
+                writer.write('"');
             }
         }
 
-        HTMLUtil.renderCssClass(writer, uiComponent, INPUT_CLASS_ATTR);
+        HTMLUtil.renderCssClass(writer, uiComponent, JSFAttr.INPUT_CLASS_ATTR);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttribute(writer, uiComponent, MAXLENGTH_ATTR, "maxlength");
+        HTMLUtil.renderHTMLAttribute(writer, uiComponent, JSFAttr.MAXLENGTH_ATTR, "maxlength");
         HTMLUtil.renderDisabledOnUserRole(facesContext, uiComponent);
 
-        writer.write(">");
+        writer.write('>');
     }
-
 }

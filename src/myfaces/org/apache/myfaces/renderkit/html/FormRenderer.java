@@ -19,13 +19,13 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.FormRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
+import net.sourceforge.myfaces.renderkit.*;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
+
+import java.io.IOException;
 
 import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
@@ -35,77 +35,89 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+
 
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class FormRenderer
-    extends HTMLRenderer
-    implements CommonRendererAttributes,
-               FormRendererAttributes,
-               UserRoleAttributes
-
+extends HTMLRenderer
 {
+    //~ Static fields/initializers -----------------------------------------------------------------
+
     public static final String TYPE = "Form";
+
+    //~ Methods ------------------------------------------------------------------------------------
+
     public String getRendererType()
     {
         return TYPE;
     }
 
-
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
-            throws IOException
+    throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<form method=\"post\" action=\"");
         writer.write(getActionStr(facesContext));
-        writer.write("\"");
-        HTMLUtil.renderCssClass(writer, uiComponent, FORM_CLASS_ATTR);
+        writer.write('"');
+        HTMLUtil.renderCssClass(writer, uiComponent, JSFAttr.FORM_CLASS_ATTR);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.FORM_ATTRIBUTES);
-        String formName = ((UIForm)uiComponent).getFormName();
+
+        String formName = ((UIForm) uiComponent).getFormName();
+
         if (formName != null)
         {
             writer.write(" name=\"");
             writer.write(formName);
-            writer.write("\"");
+            writer.write('"');
         }
-        writer.write(">");
-    }
 
-    private String getActionStr(FacesContext facesContext)
-    {
-        HttpServletRequest request = (HttpServletRequest)facesContext.getExternalContext().getRequest();
-
-        ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
-        ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
-        ServletMapping sm = smf.getServletMapping(servletContext);
-        String treeURL = sm.encodeTreeIdForURL(facesContext, facesContext.getTree().getTreeId());
-
-        String action = request.getContextPath() + treeURL;
-
-        //Encode URL
-        action = facesContext.getExternalContext().encodeURL(action);
-
-        return action;
+        writer.write('>');
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
-            throws IOException
+    throws IOException
     {
-        RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        RenderKit renderKit = rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
-        Renderer renderer = renderKit.getRenderer(StateRenderer.TYPE);
+        RenderKitFactory rkFactory =
+            (RenderKitFactory) FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+        RenderKit        renderKit =
+            rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
+        Renderer         renderer  = renderKit.getRenderer(StateRenderer.TYPE);
         renderer.encodeChildren(facesContext, uiComponent);
 
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("</form>");
     }
 
+    private String getActionStr(FacesContext facesContext)
+    {
+        HttpServletRequest    request        =
+            (HttpServletRequest) facesContext.getExternalContext().getRequest();
+
+        ServletContext        servletContext =
+            (ServletContext) facesContext.getExternalContext().getContext();
+        ServletMappingFactory smf            =
+            MyFacesFactoryFinder.getServletMappingFactory(servletContext);
+        ServletMapping        sm             = smf.getServletMapping(servletContext);
+        String                treeURL        =
+            sm.encodeTreeIdForURL(
+                facesContext,
+                facesContext.getTree().getTreeId());
+
+        String                action         = request.getContextPath() + treeURL;
+
+        //Encode URL
+        action = facesContext.getExternalContext().encodeURL(action);
+
+        return action;
+    }
 }

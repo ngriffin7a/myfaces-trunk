@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.renderkit.attr.DataRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.DataRenderer;
 
 import javax.faces.FacesException;
@@ -32,8 +32,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class PanelDataTag
-    extends MyFacesTag
-    implements DataRendererAttributes
+extends MyFacesTag
 {
     public String getComponentType()
     {
@@ -56,14 +55,14 @@ public class PanelDataTag
 
     public void setPanelClass(String v)
     {
-        setRendererAttributeString(PANEL_CLASS_ATTR, v);
+        setRendererAttributeString(JSFAttr.PANEL_CLASS_ATTR, v);
     }
 
     // Data Renderer attributes
 
     public void setVar(String v)
     {
-        setRendererAttributeString(VAR_ATTR, v);
+        setRendererAttributeString(JSFAttr.VAR_ATTR, v);
     }
 
 
@@ -114,7 +113,7 @@ public class PanelDataTag
      */
     protected boolean hasNext()
     {
-        String varAttr = (String)getComponent().getAttribute(DataRenderer.VAR_ATTR);
+        String varAttr = (String)getComponent().getAttribute(JSFAttr.VAR_ATTR);
         try
         {
             return ((ServletRequest)getFacesContext().getExternalContext().getRequest())

@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.ext.UISortColumn;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesBodyTag;
 
@@ -53,7 +54,7 @@ public class SortColumnTag
 
     public void setCssClass(String v)
     {
-        setRendererAttributeString(SortColumnRenderer.COMMAND_CLASS_ATTR, v);
+        setRendererAttributeString(JSFAttr.COMMAND_CLASS_ATTR, v);
     }
 
 

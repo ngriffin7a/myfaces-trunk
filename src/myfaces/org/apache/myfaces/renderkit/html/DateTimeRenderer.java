@@ -18,23 +18,25 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.attr.DateTimeRendererAttributes;
 
 
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class DateTimeRenderer
-    extends TextRenderer
-    implements DateTimeRendererAttributes
+extends TextRenderer
 {
+    //~ Static fields/initializers -----------------------------------------------------------------
+
     public static final String TYPE = "DateTime";
+
+    //~ Methods ------------------------------------------------------------------------------------
 
     public String getRendererType()
     {
         return TYPE;
     }
-
 }

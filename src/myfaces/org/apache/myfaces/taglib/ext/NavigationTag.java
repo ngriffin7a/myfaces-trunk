@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.attr.ext.NavigationRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.ext.NavigationRenderer;
@@ -51,7 +52,7 @@ public class NavigationTag
 
     public void setPanelClass(String v)
     {
-        setRendererAttributeString(PANEL_CLASS_ATTR, v);
+        setRendererAttributeString(JSFAttr.PANEL_CLASS_ATTR, v);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag

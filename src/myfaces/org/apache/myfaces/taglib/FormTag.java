@@ -18,11 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.component.MyFacesUIForm;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.FormRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.FormRenderer;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 
@@ -33,11 +30,7 @@ import net.sourceforge.myfaces.renderkit.html.HTML;
  * @version $Revision$ $Date$
  */
 public class FormTag
-    extends MyFacesTag
-    implements CommonComponentProperties,
-               CommonRendererAttributes,
-               UserRoleAttributes,
-               FormRendererAttributes
+extends MyFacesTag
 {
     public String getComponentType()
     {
@@ -60,7 +53,7 @@ public class FormTag
 
     public void setFormClass(String v)
     {
-        setRendererAttributeString(FORM_CLASS_ATTR, v);
+        setRendererAttributeString(JSFAttr.FORM_CLASS_ATTR, v);
     }
 
 

@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.renderkit.attr.ErrorsRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.ErrorsRenderer;
 
 
@@ -28,8 +28,7 @@ import net.sourceforge.myfaces.renderkit.html.ErrorsRenderer;
  * @version $Revision$ $Date$
  */
 public class OutputErrorsTag
-    extends MyFacesTag
-    implements ErrorsRendererAttributes
+extends MyFacesTag
 {
     public String getComponentType()
     {
@@ -49,7 +48,7 @@ public class OutputErrorsTag
 
     public void setOutputClass(String value)
     {
-        setRendererAttributeString(OUTPUT_CLASS_ATTR, value);
+        setRendererAttributeString(JSFAttr.OUTPUT_CLASS_ATTR, value);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag
@@ -60,7 +59,7 @@ public class OutputErrorsTag
 
     public void setFor(String v)
     {
-        setRendererAttributeString(FOR_ATTR, v);
+        setRendererAttributeString(JSFAttr.FOR_ATTR, v);
     }
 
     // user role attributes --> already implemented in MyFacesTag

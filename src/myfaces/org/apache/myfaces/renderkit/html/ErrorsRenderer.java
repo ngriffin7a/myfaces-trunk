@@ -18,16 +18,19 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.CommonComponentProperties;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.ErrorsRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.LabelRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
+import net.sourceforge.myfaces.renderkit.*;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.tree.TreeUtils;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
+
+import java.io.IOException;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.faces.FactoryFinder;
 import javax.faces.application.ApplicationFactory;
@@ -36,30 +39,24 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.MessageResources;
 import javax.faces.context.ResponseWriter;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+
 
 /**
  * ErrorsRenderer as specified in JSF.7.6.5
  *
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class ErrorsRenderer
-    extends HTMLRenderer
-    implements CommonComponentProperties,
-               CommonRendererAttributes,
-               ErrorsRendererAttributes,
-               UserRoleAttributes
+extends HTMLRenderer
 {
-    public static final String TYPE = "Errors";
+    //~ Static fields/initializers -----------------------------------------------------------------
 
-    private static final String IN_FIELD_MSG
-        = ErrorsRenderer.class.getName() + ".IN_FIELD";
+    public static final String  TYPE         = "Errors";
+    private static final String IN_FIELD_MSG = ErrorsRenderer.class.getName() + ".IN_FIELD";
 
+    //~ Methods ------------------------------------------------------------------------------------
 
     public String getRendererType()
     {
@@ -85,19 +82,18 @@ public class ErrorsRenderer
         addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_errors", USER_ROLE_ATTRIBUTES);
     }
     */
-
-
     public void encodeBegin(FacesContext facescontext, UIComponent uiComponent)
-        throws IOException
+    throws IOException
     {
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
-        throws IOException
+    throws IOException
     {
-        ResponseWriter writer = facesContext.getResponseWriter();
-        Iterator it;
-        String forAttr = (String)uiComponent.getAttribute(FOR_ATTR);
+        ResponseWriter writer  = facesContext.getResponseWriter();
+        Iterator       it;
+        String         forAttr = (String) uiComponent.getAttribute(JSFAttr.FOR_ATTR);
+
         if (forAttr == null)
         {
             //All messages
@@ -114,113 +110,30 @@ public class ErrorsRenderer
         {
             //All messages for this component
             UIComponent comp = null;
+
             try
             {
                 comp = facesContext.getTree().getRoot().findComponent(forAttr);
             }
-            catch (IllegalArgumentException e) {}
+            catch (IllegalArgumentException e)
+            {
+            }
+
             if (comp != null)
             {
                 it = facesContext.getMessages(comp);
             }
             else
             {
-                LogUtil.getLogger().warning("Attribute 'for' of component '" + uiComponent.getClientId(facesContext) + "' references unknown component '" + forAttr + "'.");
+                LogUtil.getLogger().warning(
+                    "Attribute 'for' of component '" + uiComponent.getClientId(facesContext)
+                    + "' references unknown component '" + forAttr + "'.");
                 it = Collections.EMPTY_SET.iterator();
             }
+
             renderSingleComponentErrors(writer, uiComponent, it);
         }
     }
-
-
-    private void renderErrorsList(FacesContext facesContext,
-                                  ResponseWriter writer,
-                                  UIComponent uiComponent,
-                                  Iterator it)
-        throws IOException
-    {
-        if (!it.hasNext())
-        {
-            return;
-        }
-
-        Map msgCompMap = getMessageComponentMap(facesContext);
-
-        writer.write("\n<ul");
-
-        HTMLUtil.renderCssClass(writer, uiComponent, OUTPUT_CLASS_ATTR);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
-
-        writer.write(">");
-
-        ApplicationFactory af
-            = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-        MessageResources mr = af.getApplication().getMessageResources(MessageResources.FACES_IMPL_MESSAGES);
-
-        while (it.hasNext())
-        {
-            Message msg = (Message)it.next();
-            String summary = msg.getSummary();
-            String detail = msg.getDetail();
-
-            writer.write("\n\t<li>");
-
-            if (summary != null)
-            {
-                writer.write(summary);
-
-                UIComponent msgComp = (UIComponent)msgCompMap.get(msg);
-                if (msgComp != null &&
-                    msgComp.getRendererType() != null &&
-                    msgComp.getRendererType().equals(LabelRenderer.TYPE))
-                {
-                    String labelText;
-                    String key = (String)msgComp.getAttribute(LabelRendererAttributes.KEY_ATTR);
-                    if (key != null)
-                    {
-                        labelText = BundleUtils.getString(facesContext,
-                                                     (String)msgComp.getAttribute(LabelRendererAttributes.BUNDLE_ATTR),
-                                                     key);
-                    }
-                    else
-                    {
-                        if (msgComp instanceof javax.faces.component.UIOutput)
-                        {
-                            labelText = getStringValue(facesContext, (javax.faces.component.UIOutput)msgComp);
-                        }
-                        else
-                        {
-                            LogUtil.getLogger().warning("Label component " + msgComp.getClientId(facesContext) + " is no UIOutput.");
-                            labelText = "???";
-                        }
-                    }
-
-                    if (labelText != null &&
-                        labelText.length() > 0)
-                    {
-                        //special Message " in <label>"
-                        labelText = mr.getMessage(facesContext,
-                                                  IN_FIELD_MSG,
-                                                  labelText).getSummary();
-                        writer.write(HTMLEncoder.encode(labelText, false, true));
-                    }
-                }
-            }
-            if (summary != null &&
-                detail != null&&
-                summary.length() > 0 &&
-                detail.length() > 0)
-            {
-                writer.write(": ");
-            }
-            if (detail != null)
-                writer.write(detail);
-            writer.write("</li>");
-        }
-        writer.write("\n</ul>");
-    }
-
 
     /**
      * Returns a Map that maps each Message in the current FacesContext to
@@ -232,17 +145,20 @@ public class ErrorsRenderer
      */
     private Map getMessageComponentMap(FacesContext facesContext)
     {
-        Map msgMap = new HashMap();     //maps Message --> message component
-        Map labelMap = new HashMap();   //maps clientId --> label component
+        Map msgMap   = new HashMap(); //maps Message --> message component
+        Map labelMap = new HashMap(); //maps clientId --> label component
+
         for (Iterator it = TreeUtils.treeIterator(facesContext.getTree()); it.hasNext();)
         {
-            UIComponent comp = (UIComponent)it.next();
+            UIComponent comp = (UIComponent) it.next();
 
-            if (comp.getRendererType() != null &&
-                comp.getRendererType().equals(LabelRenderer.TYPE))
+            if (
+                (comp.getRendererType() != null)
+                        && comp.getRendererType().equals(LabelRenderer.TYPE))
             {
                 //map pointed clientId with this Label component
-                String forAttr = (String)comp.getAttribute(LabelRendererAttributes.FOR_ATTR);
+                String forAttr = (String) comp.getAttribute(JSFAttr.FOR_ATTR);
+
                 if (forAttr != null)
                 {
                     labelMap.put(forAttr, comp);
@@ -250,9 +166,10 @@ public class ErrorsRenderer
             }
 
             Iterator msgIt = facesContext.getMessages(comp);
+
             while (msgIt.hasNext())
             {
-                Message msg = (Message)msgIt.next();
+                Message msg = (Message) msgIt.next();
                 msgMap.put(msg, comp);
             }
         }
@@ -260,10 +177,11 @@ public class ErrorsRenderer
         //now we replace the mapped components by their associated labels
         for (Iterator it = msgMap.entrySet().iterator(); it.hasNext();)
         {
-            Map.Entry entry = (Map.Entry)it.next();
-            UIComponent msgComp = (UIComponent)entry.getValue();
-            String clientId = msgComp.getClientId(facesContext);
-            UIComponent label = (UIComponent)labelMap.get(clientId);
+            Map.Entry   entry    = (Map.Entry) it.next();
+            UIComponent msgComp  = (UIComponent) entry.getValue();
+            String      clientId = msgComp.getClientId(facesContext);
+            UIComponent label    = (UIComponent) labelMap.get(clientId);
+
             if (label != null)
             {
                 entry.setValue(label);
@@ -273,35 +191,136 @@ public class ErrorsRenderer
         return msgMap;
     }
 
+    private void renderErrorsList(
+        FacesContext facesContext, ResponseWriter writer, UIComponent uiComponent, Iterator it)
+    throws IOException
+    {
+        if (!it.hasNext())
+        {
+            return;
+        }
 
-    private void renderSingleComponentErrors(ResponseWriter writer,
-                                             UIComponent uiComponent,
-                                             Iterator it)
-        throws IOException
+        Map msgCompMap = getMessageComponentMap(facesContext);
+
+        writer.write("\n<ul");
+
+        HTMLUtil.renderCssClass(writer, uiComponent, JSFAttr.OUTPUT_CLASS_ATTR);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
+
+        writer.write('>');
+
+        ApplicationFactory af =
+            (ApplicationFactory) FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+        MessageResources   mr =
+            af.getApplication().getMessageResources(MessageResources.FACES_IMPL_MESSAGES);
+
+        while (it.hasNext())
+        {
+            Message msg     = (Message) it.next();
+            String  summary = msg.getSummary();
+            String  detail  = msg.getDetail();
+
+            writer.write("\n\t<li>");
+
+            if (summary != null)
+            {
+                writer.write(summary);
+
+                UIComponent msgComp = (UIComponent) msgCompMap.get(msg);
+
+                if (
+                    (msgComp != null) && (msgComp.getRendererType() != null)
+                            && msgComp.getRendererType().equals(LabelRenderer.TYPE))
+                {
+                    String labelText;
+                    String key = (String) msgComp.getAttribute(JSFAttr.KEY_ATTR);
+
+                    if (key != null)
+                    {
+                        labelText =
+                            BundleUtils.getString(
+                                facesContext,
+                                (String) msgComp.getAttribute(JSFAttr.BUNDLE_ATTR),
+                                key);
+                    }
+                    else
+                    {
+                        if (msgComp instanceof javax.faces.component.UIOutput)
+                        {
+                            labelText =
+                                getStringValue(
+                                    facesContext, (javax.faces.component.UIOutput) msgComp);
+                        }
+                        else
+                        {
+                            LogUtil.getLogger().warning(
+                                "Label component " + msgComp.getClientId(facesContext)
+                                + " is no UIOutput.");
+                            labelText = "???";
+                        }
+                    }
+
+                    if ((labelText != null) && (labelText.length() > 0))
+                    {
+                        //special Message " in <label>"
+                        labelText =
+                            mr.getMessage(facesContext, IN_FIELD_MSG, labelText).getSummary();
+                        writer.write(HTMLEncoder.encode(labelText, false, true));
+                    }
+                }
+            }
+
+            if (
+                (summary != null) && (detail != null) && (summary.length() > 0)
+                        && (detail.length() > 0))
+            {
+                writer.write(": ");
+            }
+
+            if (detail != null)
+            {
+                writer.write(detail);
+            }
+
+            writer.write("</li>");
+        }
+
+        writer.write("\n</ul>");
+    }
+
+    private void renderSingleComponentErrors(
+        ResponseWriter writer, UIComponent uiComponent, Iterator it)
+    throws IOException
     {
         while (it.hasNext())
         {
             writer.write("<span");
-            HTMLUtil.renderCssClass(writer, uiComponent, OUTPUT_CLASS_ATTR);
+            HTMLUtil.renderCssClass(writer, uiComponent, JSFAttr.OUTPUT_CLASS_ATTR);
             HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
             HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
-            writer.write(">");
+            writer.write('>');
 
-            Message msg = (Message)it.next();
-            String summary = msg.getSummary();
-            String detail = msg.getDetail();
+            Message msg     = (Message) it.next();
+            String  summary = msg.getSummary();
+            String  detail  = msg.getDetail();
 
             if (summary != null)
+            {
                 writer.write(summary);
-            if (summary != null &&
-                detail != null &&
-                summary.length() > 0 &&
-                detail.length() > 0)
+            }
+
+            if (
+                (summary != null) && (detail != null) && (summary.length() > 0)
+                        && (detail.length() > 0))
             {
                 writer.write(": ");
             }
+
             if (detail != null)
+            {
                 writer.write(detail);
+            }
 
             writer.write("</span>");
 
@@ -311,6 +330,4 @@ public class ErrorsRenderer
             }
         }
     }
-
-
 }

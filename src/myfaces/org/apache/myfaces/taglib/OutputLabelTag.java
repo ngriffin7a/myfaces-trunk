@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.renderkit.attr.LabelRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.LabelRenderer;
 
@@ -29,8 +29,7 @@ import net.sourceforge.myfaces.renderkit.html.LabelRenderer;
  * @version $Revision$ $Date$
  */
 public class OutputLabelTag
-    extends MyFacesTag
-    implements LabelRendererAttributes
+extends MyFacesTag
 {
     public String getComponentType()
     {
@@ -57,7 +56,7 @@ public class OutputLabelTag
 
     public void setOutputClass(String value)
     {
-        setRendererAttributeString(OUTPUT_CLASS_ATTR, value);
+        setRendererAttributeString(JSFAttr.OUTPUT_CLASS_ATTR, value);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag
@@ -85,7 +84,7 @@ public class OutputLabelTag
 
     public void setFor(String value)
     {
-        setRendererAttributeString(FOR_ATTR, value);
+        setRendererAttributeString(JSFAttr.FOR_ATTR, value);
     }
 
     // user role attributes --> already implemented in MyFacesTag

@@ -18,9 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.attr.ext;
 
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.KeyBundleAttributes;
-
 /**
  * Constant definitions for the specified render dependent attributes of the
  * "TabbedPane" renderer type.
@@ -28,7 +25,6 @@ import net.sourceforge.myfaces.renderkit.attr.KeyBundleAttributes;
  * @version $Revision$ $Date$
  */
 public interface TabbedPaneRendererAttributes
-    extends CommonRendererAttributes, KeyBundleAttributes
 {
     public static final String SELECTED_INDEX_ATTR  = "selectedIndex";
 }

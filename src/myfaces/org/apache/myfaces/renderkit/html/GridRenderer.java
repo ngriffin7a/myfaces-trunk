@@ -18,10 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.CommonComponentProperties;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.GridRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
+import net.sourceforge.myfaces.renderkit.*;
 import net.sourceforge.myfaces.renderkit.callback.CallbackRenderer;
 import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
 
@@ -39,11 +36,7 @@ import java.util.StringTokenizer;
  */
 public class GridRenderer
     extends HTMLRenderer
-    implements CallbackRenderer,
-               CommonComponentProperties,
-               CommonRendererAttributes,
-               GridRendererAttributes,
-               UserRoleAttributes
+    implements CallbackRenderer
 {
     public static final String TYPE = "Grid";
     private static final String COLUMN_COUNT_ATTR = GridRenderer.class.getName() + ".colcount";
@@ -93,7 +86,7 @@ public class GridRenderer
         UIComponent gridComponent = uiComponent.getParent();
         int actualColumn = getAttributeValue(gridComponent, COLUMN_COUNT_ATTR);
         int actualRow = getAttributeValue(gridComponent, ROW_COUNT_ATTR);
-        int columns = getAttributeValue(gridComponent, COLUMNS_ATTR);
+        int columns = getAttributeValue(gridComponent, JSFAttr.COLUMNS_ATTR);
         ResponseWriter writer = facesContext.getResponseWriter();
 
         // close row
@@ -161,7 +154,7 @@ public class GridRenderer
         ResponseWriter writer = context.getResponseWriter();
 
         writer.write("<table");
-        String style = (String)uiComponent.getAttribute(PANEL_CLASS_ATTR);
+        String style = (String)uiComponent.getAttribute(JSFAttr.PANEL_CLASS_ATTR);
         if (style != null && style.length() > 0)
         {
             writer.write(" class=\"");
@@ -195,7 +188,7 @@ public class GridRenderer
                                 boolean isLastRow)
     {
         String style = null;
-        String headerStyle = (String)gridComponent.getAttribute(HEADER_CLASS_ATTR);
+        String headerStyle = (String)gridComponent.getAttribute(JSFAttr.HEADER_CLASS_ATTR);
         boolean hasHeaderStyle = headerStyle != null;
 
         if (actualRow == 0)
@@ -204,7 +197,7 @@ public class GridRenderer
         }
         if (isLastRow && style == null)
         {
-            style = (String)gridComponent.getAttribute(FOOTER_CLASS_ATTR);
+            style = (String)gridComponent.getAttribute(JSFAttr.FOOTER_CLASS_ATTR);
         }
         if (style == null)
         {
@@ -225,7 +218,7 @@ public class GridRenderer
      */
     private String calcColumnStyle(UIComponent gridComponent,  int actualRow, int actualColumn)
     {
-        String headerStyle = (String)gridComponent.getAttribute(HEADER_CLASS_ATTR);
+        String headerStyle = (String)gridComponent.getAttribute(JSFAttr.HEADER_CLASS_ATTR);
         boolean hasHeaderStyle = headerStyle != null;
         if (actualRow == 0 && hasHeaderStyle)
         {
@@ -247,7 +240,7 @@ public class GridRenderer
         String[] rowClasses = (String[])gridComponent.getAttribute(ROW_CLASSES_ATTR_CACHE);
         if (rowClasses == null)
         {
-            rowClasses = getAttributes(gridComponent, ROW_CLASSES_ATTR);
+            rowClasses = getAttributes(gridComponent, JSFAttr.ROW_CLASSES_ATTR);
             gridComponent.setAttribute(ROW_CLASSES_ATTR_CACHE, rowClasses);
         }
         return rowClasses;
@@ -258,7 +251,7 @@ public class GridRenderer
         String[] rowClasses = (String[])gridComponent.getAttribute(COLUMN_CLASSES_ATTR_CACHE);
         if (rowClasses == null)
         {
-            rowClasses = getAttributes(gridComponent, COLUMN_CLASSES_ATTR);
+            rowClasses = getAttributes(gridComponent, JSFAttr.COLUMN_CLASSES_ATTR);
             gridComponent.setAttribute(COLUMN_CLASSES_ATTR_CACHE, rowClasses);
         }
         return rowClasses;

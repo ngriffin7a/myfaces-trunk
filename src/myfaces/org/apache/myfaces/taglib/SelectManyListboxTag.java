@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.renderkit.attr.ListboxRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.ListboxRenderer;
 
@@ -29,8 +29,7 @@ import net.sourceforge.myfaces.renderkit.html.ListboxRenderer;
  * @version $Revision$ $Date$
  */
 public class SelectManyListboxTag
-    extends MyFacesTag
-    implements ListboxRendererAttributes
+extends MyFacesTag
 {
     public String getComponentType()
     {
@@ -53,7 +52,7 @@ public class SelectManyListboxTag
 
     public void setSelectManyClass(String value)
     {
-        setRendererAttributeString(SELECT_MANY_CLASS_ATTR, value);
+        setRendererAttributeString(JSFAttr.SELECT_MANY_CLASS_ATTR, value);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag

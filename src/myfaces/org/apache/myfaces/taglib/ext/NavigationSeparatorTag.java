@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.ext.NavigationSeparatorRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
 
@@ -31,9 +31,7 @@ import javax.faces.component.UIOutput;
  * @version $Revision$ $Date$
  */
 public class NavigationSeparatorTag
-    extends MyFacesTag
-    implements CommonRendererAttributes
-
+extends MyFacesTag
 {
     public String getComponentType()
     {
@@ -67,7 +65,7 @@ public class NavigationSeparatorTag
 
     public void setOutputClass(String value)
     {
-        setRendererAttributeString(OUTPUT_CLASS_ATTR, value);
+        setRendererAttributeString(JSFAttr.OUTPUT_CLASS_ATTR, value);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag

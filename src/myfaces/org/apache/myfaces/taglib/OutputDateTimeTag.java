@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.renderkit.attr.DateTimeRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.DateTimeRenderer;
 
 import javax.faces.component.UIComponent;
@@ -30,8 +30,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class OutputDateTimeTag
-    extends MyFacesTag
-    implements DateTimeRendererAttributes
+extends MyFacesTag
 {
     public String getComponentType()
     {
@@ -63,7 +62,7 @@ public class OutputDateTimeTag
 
     public void setOutputClass(String value)
     {
-        setRendererAttributeString(OUTPUT_CLASS_ATTR, value);
+        setRendererAttributeString(JSFAttr.OUTPUT_CLASS_ATTR, value);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag
@@ -74,22 +73,22 @@ public class OutputDateTimeTag
 
     public void setDateStyle(String value)
     {
-        setRendererAttributeString(DATE_STYLE_ATTR, value);
+        setRendererAttributeString(JSFAttr.DATE_STYLE_ATTR, value);
     }
 
     public void setTimeStyle(String value)
     {
-        setRendererAttributeString(TIME_STYLE_ATTR, value);
+        setRendererAttributeString(JSFAttr.TIME_STYLE_ATTR, value);
     }
 
     public void setTimezone(String value)
     {
-        setRendererAttributeString(TIMEZONE_ATTR, value);
+        setRendererAttributeString(JSFAttr.TIMEZONE_ATTR, value);
     }
 
     public void setFormatPattern(String value)
     {
-        setRendererAttributeString(FORMAT_PATTERN_ATTR, value);
+        setRendererAttributeString(JSFAttr.FORMAT_PATTERN_ATTR, value);
     }
 
     // user role attributes --> already implemented in MyFacesTag

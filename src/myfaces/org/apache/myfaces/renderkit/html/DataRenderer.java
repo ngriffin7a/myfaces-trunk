@@ -18,10 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.component.UIComponentUtils;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.DataRendererAttributes;
+import net.sourceforge.myfaces.renderkit.*;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIPanel;
@@ -35,13 +33,11 @@ import java.util.Iterator;
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class DataRenderer
     extends HTMLRenderer
-    implements CommonComponentProperties,
-               CommonRendererAttributes,
-               DataRendererAttributes
 {
     public static final String ITERATOR_ATTR = DataRenderer.class.getName() + ".ITERATOR";
 
@@ -77,7 +73,7 @@ public class DataRenderer
         Iterator it = getIterator(facesContext, (UIPanel)uiComponent);
 
         // Set ModelValue VAR_ATTR
-        String varAttr = (String)uiComponent.getAttribute(VAR_ATTR);
+        String varAttr = (String)uiComponent.getAttribute(JSFAttr.VAR_ATTR);
         ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
         servletRequest.setAttribute(varAttr, it != null && it.hasNext() ? it.next() : null);
     }
@@ -89,7 +85,7 @@ public class DataRenderer
          uiComponent.setAttribute(ITERATOR_ATTR, null);
 
         //Reset ModelValue VAR_ATTR
-        String varAttr = (String)uiComponent.getAttribute(VAR_ATTR);
+        String varAttr = (String)uiComponent.getAttribute(JSFAttr.VAR_ATTR);
         ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
         servletRequest.setAttribute(varAttr, null);
     }

@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.attr.ext;
 
-import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
 
 /**
  * Constant definitions for the specified render dependent attributes of the
@@ -27,7 +26,6 @@ import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
  * @version $Revision$ $Date$
  */
 public interface SortColumnRendererAttributes
-    extends HyperlinkRendererAttributes
 {
     public static final String DEFAULT_ASCENDING_ATTR = "defaultAscending";
 }

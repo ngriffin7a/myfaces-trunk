@@ -18,11 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.CommonComponentProperties;
 import net.sourceforge.myfaces.component.MyFacesUIGraphic;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.ImageRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.ImageRenderer;
 
@@ -33,11 +30,7 @@ import net.sourceforge.myfaces.renderkit.html.ImageRenderer;
  * @version $Revision$ $Date$
  */
 public class GraphicImageTag
-    extends MyFacesTag
-    implements CommonComponentProperties,
-               CommonRendererAttributes,
-               UserRoleAttributes,
-               ImageRendererAttributes
+extends MyFacesTag
 {
     public String getComponentType()
     {
@@ -60,7 +53,7 @@ public class GraphicImageTag
 
     public void setGraphicClass(String v)
     {
-        setRendererAttributeString(GRAPHIC_CLASS_ATTR, v);
+        setRendererAttributeString(JSFAttr.GRAPHIC_CLASS_ATTR, v);
     }
 
     // HTML universal attributes --> already implemented in MyFacesTag
@@ -125,12 +118,12 @@ public class GraphicImageTag
 
     public void setAltKey(String value)
     {
-        setRendererAttributeString(ALT_KEY_ATTR, value);
+        setRendererAttributeString(JSFAttr.ALT_KEY_ATTR, value);
     }
 
     public void setAltBundle(String value)
     {
-        setRendererAttributeString(ALT_BUNDLE_ATTR, value);
+        setRendererAttributeString(JSFAttr.ALT_BUNDLE_ATTR, value);
     }
 
 

@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.attr.ext.LayoutRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.ext.LayoutRenderer;
@@ -53,7 +54,7 @@ public class PageLayoutTag
 
     public void setPanelClass(String v)
     {
-        setRendererAttributeString(PANEL_CLASS_ATTR, v);
+        setRendererAttributeString(JSFAttr.PANEL_CLASS_ATTR, v);
     }
 
     public void setLayout(String value)

@@ -18,10 +18,12 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import javax.faces.render.RenderKit;
-import javax.faces.render.Renderer;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.faces.render.RenderKit;
+import javax.faces.render.Renderer;
+
 
 /**
  * DOCUMENT ME!
@@ -29,13 +31,65 @@ import java.util.Map;
  * @version $Revision$ $Date$
  */
 public class RenderKitImpl
-    extends RenderKit
+extends RenderKit
 {
+    //~ Instance fields ----------------------------------------------------------------------------
+
     private Map _renderers;
+
+    //~ Constructors -------------------------------------------------------------------------------
 
     public RenderKitImpl()
     {
         _renderers = new HashMap();
+    }
+
+    //~ Methods ------------------------------------------------------------------------------------
+
+    public Renderer getRenderer(String rendererType)
+    {
+        if (_renderers == null)
+        {
+            init();
+        }
+
+        Renderer renderer = (Renderer) _renderers.get(rendererType);
+
+        if (renderer == null)
+        {
+            /*
+            if (rendererType.equals(StateRenderer.TYPE))
+            {
+                FacesContext facesContext = FacesContext.getCurrentInstance();
+                if (facesContext != null)
+                {
+                    int mode = MyFacesConfig.getStateSavingMode(((ServletContext)facesContext.getExternalContext().getContext()));
+                    renderer = new StateRenderer(mode);
+                    addRenderer(StateRenderer.TYPE, renderer);
+                    return renderer;
+                }
+            }
+            */
+            throw new IllegalArgumentException("Unsupported renderer type: " + rendererType);
+        }
+
+        return renderer;
+    }
+
+    /*
+    private void _addRenderer(HTMLRenderer r)
+    {
+        _renderers.put(r.getRendererType(), r);
+    }
+    */
+    public void addRenderer(String s, Renderer renderer)
+    {
+        if (_renderers == null)
+        {
+            init();
+        }
+
+        _renderers.put(s, renderer);
     }
 
     private void init()
@@ -72,46 +126,6 @@ public class RenderKitImpl
         _addRenderer(new FileUploadRenderer());
         */
     }
-
-    /*
-    private void _addRenderer(HTMLRenderer r)
-    {
-        _renderers.put(r.getRendererType(), r);
-    }
-    */
-
-
-    public void addRenderer(String s, Renderer renderer)
-    {
-        if (_renderers == null) init();
-        _renderers.put(s, renderer);
-    }
-
-    public Renderer getRenderer(String rendererType)
-    {
-        if (_renderers == null) init();
-        Renderer renderer = (Renderer)_renderers.get(rendererType);
-        if (renderer == null)
-        {
-            /*
-            if (rendererType.equals(StateRenderer.TYPE))
-            {
-                FacesContext facesContext = FacesContext.getCurrentInstance();
-                if (facesContext != null)
-                {
-                    int mode = MyFacesConfig.getStateSavingMode(((ServletContext)facesContext.getExternalContext().getContext()));
-                    renderer = new StateRenderer(mode);
-                    addRenderer(StateRenderer.TYPE, renderer);
-                    return renderer;
-                }
-            }
-            */
-
-            throw new IllegalArgumentException("Unsupported renderer type: " + rendererType);
-        }
-        return renderer;
-    }
-
 
     /*
     public Iterator getRendererTypes()
@@ -153,6 +167,4 @@ public class RenderKitImpl
         throw new UnsupportedOperationException();
     }
     */
-
-
 }

@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.renderkit.attr.SecretRendererAttributes;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.SecretRenderer;
 
 import javax.faces.component.UIComponent;
@@ -29,8 +29,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class InputSecretTag
-    extends InputTextTag
-    implements SecretRendererAttributes
+extends InputTextTag
 {
     public String getComponentType()
     {
@@ -40,9 +39,9 @@ public class InputSecretTag
     public void overrideProperties(UIComponent uiComponent)
     {
         super.overrideProperties(uiComponent);
-        if (uiComponent.getAttribute(SecretRenderer.REDISPLAY_ATTR) == null)
+        if (uiComponent.getAttribute(JSFAttr.REDISPLAY_ATTR) == null)
         {
-            uiComponent.setAttribute(SecretRenderer.REDISPLAY_ATTR, Boolean.FALSE); //Default (JSF.7.6.4)
+            uiComponent.setAttribute(JSFAttr.REDISPLAY_ATTR, Boolean.FALSE); //Default (JSF.7.6.4)
         }
     }
 
@@ -56,7 +55,7 @@ public class InputSecretTag
 
     public void setRedisplay(String b)
     {
-        setRendererAttributeBoolean(REDISPLAY_ATTR, b);
+        setRendererAttributeBoolean(JSFAttr.REDISPLAY_ATTR, b);
     }
 
     // converter attribute --> already implemented in MyFacesTag

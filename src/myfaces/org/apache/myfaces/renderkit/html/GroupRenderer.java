@@ -18,10 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.CommonComponentProperties;
-import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.GroupRendererAttributes;
-
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import java.io.IOException;
@@ -33,9 +29,6 @@ import java.io.IOException;
  */
 public class GroupRenderer
     extends HTMLRenderer
-    implements CommonComponentProperties,
-               CommonRendererAttributes,
-               GroupRendererAttributes
 {
     public static final String TYPE = "Group";
     public String getRendererType()
