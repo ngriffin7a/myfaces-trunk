@@ -19,185 +19,60 @@
 package net.sourceforge.myfaces.context.servlet;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+
 /**
- * Wrapper object that exposes the header values for multi-value headers on an
- * HttpServletRequest as a java.util.Map interface.
+ * HttpServletRequest header values (multi-value headers) as Map of String[].
  * 
- * @author Dimitry D'hondt
- * @author Anton Koinov
+ * @author Anton Koinov (latest modification by $Author$)
+ * @version $Revision$ $Date$
  */
-public class RequestHeaderValuesMap
-    implements Map
+public class RequestHeaderValuesMap extends AbstractAttributeMap
 {
     private final HttpServletRequest _httpServletRequest;
+    private final Map                _valueCache = new HashMap();
 
-    RequestHeaderValuesMap(HttpServletRequest req)
+    RequestHeaderValuesMap(HttpServletRequest httpServletRequest)
     {
-        _httpServletRequest = req;
+        _httpServletRequest = httpServletRequest;
     }
 
-    /**
-     * @see java.util.Map#clear()
-     */
-    public void clear()
+    protected Object getAttribute(String key)
     {
-        throw new UnsupportedOperationException(
-            "Cannot clear HTTP Servlet request headers");
-    }
-
-    /**
-     * @see java.util.Map#containsKey(java.lang.Object)
-     */
-    public boolean containsKey(Object key)
-    {
-        return _httpServletRequest.getHeader(key.toString()) != null;
-    }
-
-    /**
-     * @see java.util.Map#containsValue(java.lang.Object)
-     */
-    public boolean containsValue(Object findValue)
-    {
-        if (findValue == null)
+        Object ret = _valueCache.get(key);
+        if (ret == null)
         {
-            return false;
-        }
-
-        for (Enumeration e = _httpServletRequest.getHeaderNames(); e.hasMoreElements();)
-        {
-            Enumeration eHeaders = _httpServletRequest.getHeaders((String) e
-                .nextElement());
-
-            while (e.hasMoreElements())
-            {
-                if (findValue.equals(eHeaders.nextElement()))
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @see java.util.Map#entrySet()
-     */
-    public Set entrySet()
-    {
-        Map ret = new HashMap();
-
-        for (Enumeration e = _httpServletRequest.getHeaderNames(); e.hasMoreElements();)
-        {
-            String key = (String) e.nextElement();
-            ret.put(key, _httpServletRequest.getHeader(key));
-        }
-
-        return ret.entrySet();
-    }
-
-    /**
-     * @see java.util.Map#get(java.lang.Object)
-     */
-    public Object get(Object key)
-    {
-        return enumerationToArray(_httpServletRequest
-            .getHeaders(key.toString()));
-    }
-
-    /**
-     * @see java.util.Map#isEmpty()
-     */
-    public boolean isEmpty()
-    {
-        return !_httpServletRequest.getHeaderNames().hasMoreElements();
-    }
-
-    /**
-     * @see java.util.Map#keySet()
-     */
-    public Set keySet()
-    {
-        Set ret = new HashSet();
-
-        for (Enumeration e = _httpServletRequest.getHeaderNames(); e.hasMoreElements();)
-        {
-            ret.add(e.nextElement());
+            _valueCache.put(key, ret = toArray(_httpServletRequest
+                .getHeaders(key)));
         }
 
         return ret;
     }
 
-    /**
-     * @see java.util.Map#put(java.lang.Object, java.lang.Object)
-     */
-    public Object put(Object key, Object value)
+    protected void setAttribute(String key, Object value)
     {
         throw new UnsupportedOperationException(
-            "Cannot set HTTP Servlet request headers");
+            "Cannot set HttpServletRequest HeaderValues");
     }
 
-    /**
-     * @see java.util.Map#putAll(java.util.Map)
-     */
-    public void putAll(Map t)
+    protected void removeAttribute(String key)
     {
         throw new UnsupportedOperationException(
-            "Cannot set HTTP Servlet request headers");
+            "Cannot remove HttpServletRequest HeaderValues");
     }
 
-    /**
-     * @see java.util.Map#remove(java.lang.Object)
-     */
-    public Object remove(Object key)
+    protected Enumeration getAttributeNames()
     {
-        throw new UnsupportedOperationException(
-            "Cannot remove HTTP Servlet request headers");
+        return _httpServletRequest.getHeaderNames();
     }
 
-    /**
-     * @see java.util.Map#size()
-     */
-    public int size()
-    {
-        int ret = 0;
-
-        for (Enumeration e = _httpServletRequest.getHeaderNames(); e.hasMoreElements();)
-        {
-            ret++;
-            e.nextElement();
-        }
-
-        return ret;
-    }
-
-    /**
-     * @see java.util.Map#values()
-     */
-    public Collection values()
-    {
-        List ret = new ArrayList();
-
-        for (Enumeration e = _httpServletRequest.getHeaderNames(); e.hasMoreElements();)
-        {
-            ret.add(enumerationToArray(_httpServletRequest
-                .getHeaders((String) e.nextElement())));
-        }
-
-        return ret;
-    }
-
-    private String[] enumerationToArray(Enumeration e)
+    private String[] toArray(Enumeration e)
     {
         List ret = new ArrayList();
 
@@ -206,7 +81,6 @@ public class RequestHeaderValuesMap
             ret.add(e.nextElement());
         }
 
-        String[] ret_ = new String[ret.size()];
-        return (String[]) ret.toArray(ret_);
+        return (String[]) ret.toArray(new String[ret.size()]);
     }
 }

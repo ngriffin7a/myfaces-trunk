@@ -18,176 +18,45 @@
  */
 package net.sourceforge.myfaces.context.servlet;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.ServletContext;
 
+
 /**
- * Wrapper object that exposes the ServletContext init parameters as a
- * collections API Map interface.
+ * ServletContext init parameters as Map.
  * 
- * @author Dimitry D'hondt
- * @author Anton Koinov
+ * @author Anton Koinov (latest modification by $Author$)
+ * @version $Revision$ $Date$
  */
-public class InitParameterMap
-    implements Map
+public class InitParameterMap extends AbstractAttributeMap
 {
-    private final ServletContext _servletContext;
+    final ServletContext _servletContext;
 
     InitParameterMap(ServletContext servletContext)
     {
         _servletContext = servletContext;
     }
 
-    /**
-     * @see java.util.Map#clear()
-     */
-    public void clear()
+    protected Object getAttribute(String key)
+    {
+        return _servletContext.getInitParameter(key);
+    }
+
+    protected void setAttribute(String key, Object value)
     {
         throw new UnsupportedOperationException(
-            "Cannot clear ServletContext init parameters");
+            "Cannot set ServletContext InitParameter");
     }
 
-    /**
-     * @see java.util.Map#containsKey(java.lang.Object)
-     */
-    public boolean containsKey(Object key)
-    {
-        return _servletContext.getInitParameter(key.toString()) != null;
-    }
-
-    /**
-     * @see java.util.Map#containsValue(java.lang.Object)
-     */
-    public boolean containsValue(Object findValue)
-    {
-        if (findValue == null)
-        {
-            return false;
-        }
-
-        for (Enumeration e = _servletContext.getInitParameterNames(); e.hasMoreElements();)
-        {
-            Object value = _servletContext.getInitParameter((String) e
-                .nextElement());
-            if (findValue.equals(value))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @see java.util.Map#entrySet()
-     */
-    public Set entrySet()
-    {
-        Map ret = new HashMap();
-
-        for (Enumeration e = _servletContext.getInitParameterNames(); e.hasMoreElements();)
-        {
-            String key = (String) e.nextElement();
-            ret.put(key, _servletContext.getInitParameter(key));
-        }
-
-        return ret.entrySet();
-    }
-
-    /**
-     * @see java.util.Map#get(java.lang.Object)
-     */
-    public Object get(Object key)
-    {
-        return _servletContext.getInitParameter(key.toString());
-    }
-
-    /**
-     * @see java.util.Map#isEmpty()
-     */
-    public boolean isEmpty()
-    {
-        return !_servletContext.getInitParameterNames().hasMoreElements();
-    }
-
-    /**
-     * @see java.util.Map#keySet()
-     */
-    public Set keySet()
-    {
-        Set ret = new HashSet();
-
-        for (Enumeration e = _servletContext.getInitParameterNames(); e.hasMoreElements();)
-        {
-            ret.add(e.nextElement());
-        }
-
-        return ret;
-    }
-
-    /**
-     * @see java.util.Map#put(java.lang.Object, java.lang.Object)
-     */
-    public Object put(Object key, Object value)
+    protected void removeAttribute(String key)
     {
         throw new UnsupportedOperationException(
-            "Cannot set ServletContext init parameter");
+            "Cannot remove ServletContext InitParameter");
     }
 
-    /**
-     * @see java.util.Map#putAll(java.util.Map)
-     */
-    public void putAll(Map t)
+    protected Enumeration getAttributeNames()
     {
-        throw new UnsupportedOperationException(
-            "Cannot set ServletContext init parameter");
-    }
-
-    /**
-     * @see java.util.Map#remove(java.lang.Object)
-     */
-    public Object remove(Object key)
-    {
-        throw new UnsupportedOperationException(
-            "Cannot remove ServletContext init parameter");
-    }
-
-    /**
-     * @see java.util.Map#size()
-     */
-    public int size()
-    {
-        int ret = 0;
-
-        for (Enumeration e = _servletContext.getInitParameterNames(); e.hasMoreElements();)
-        {
-            ret++;
-            e.nextElement();
-        }
-
-        return ret;
-    }
-
-    /**
-     * @see java.util.Map#values()
-     */
-    public Collection values()
-    {
-        List ret = new ArrayList();
-
-        for (Enumeration e = _servletContext.getInitParameterNames(); e.hasMoreElements();)
-        {
-            ret.add(_servletContext.getInitParameter((String) e.nextElement()));
-        }
-
-        return ret;
+        return _servletContext.getInitParameterNames();
     }
 }

@@ -18,47 +18,33 @@
  */
 package net.sourceforge.myfaces.context.servlet;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.Enumeration;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Wrapper object that exposes the HttpServletRequest cookies as a collections
- * API Map interface.
+ * HttpServletRequest Cookies as Map.
  * 
  * @author Dimitry D'hondt
  * @author Anton Koinov
  */
-public class CookieMap
-    implements Map
+public class CookieMap extends AbstractAttributeMap
 {
 
-    private final HttpServletRequest _httpServletRequest;
+    final HttpServletRequest _httpServletRequest;
 
     CookieMap(HttpServletRequest httpServletRequest)
     {
         _httpServletRequest = httpServletRequest;
     }
 
-    /**
-     * @see java.util.Map#clear()
-     */
     public void clear()
     {
         throw new UnsupportedOperationException(
-            "Cannot clear HTTP request cookies");
+            "Cannot clear HttpRequest Cookies");
     }
 
-    /**
-     * @see java.util.Map#containsKey(java.lang.Object)
-     */
     public boolean containsKey(Object key)
     {
         Cookie[] cookies = _httpServletRequest.getCookies();
@@ -73,9 +59,6 @@ public class CookieMap
         return false;
     }
 
-    /**
-     * @see java.util.Map#containsValue(java.lang.Object)
-     */
     public boolean containsValue(Object findValue)
     {
         if (findValue == null)
@@ -95,27 +78,17 @@ public class CookieMap
         return false;
     }
 
-    /**
-     * @see java.util.Map#entrySet()
-     */
-    public Set entrySet()
+    public boolean isEmpty()
     {
-        Map ret = new HashMap();
-
-        Cookie[] cookies = _httpServletRequest.getCookies();
-        for (int i = 0, len = cookies.length; i < len; i++)
-        {
-            Cookie cookie = cookies[i];
-            ret.put(cookie.getName(), cookie.getValue());
-        }
-
-        return ret.entrySet();
+        return _httpServletRequest.getCookies().length == 0;
     }
 
-    /**
-     * @see java.util.Map#get(java.lang.Object)
-     */
-    public Object get(Object key)
+    public int size()
+    {
+        return _httpServletRequest.getCookies().length;
+    }
+
+    protected Object getAttribute(String key)
     {
         Cookie[] cookies = _httpServletRequest.getCookies();
         for (int i = 0, len = cookies.length; i < len; i++)
@@ -129,78 +102,37 @@ public class CookieMap
         return null;
     }
 
-    /**
-     * @see java.util.Map#isEmpty()
-     */
-    public boolean isEmpty()
+    protected void setAttribute(String key, Object value)
     {
-        return _httpServletRequest.getCookies().length == 0;
+        throw new UnsupportedOperationException(
+            "Cannot set HttpRequest Cookies");
     }
 
-    /**
-     * @see java.util.Map#keySet()
-     */
-    public Set keySet()
+    protected void removeAttribute(String key)
     {
-        Set ret = new HashSet();
+        throw new UnsupportedOperationException(
+            "Cannot remove HttpRequest Cookies");
+    }
 
-        Cookie[] cookies = _httpServletRequest.getCookies();
-        for (int i = 0, len = cookies.length; i < len; i++)
+    protected Enumeration getAttributeNames()
+    {
+        return new CookieNameEnumeration();
+    }
+    
+    class CookieNameEnumeration implements Enumeration
+    {
+        private final Cookie[] _cookies = _httpServletRequest.getCookies();
+        int _length = _cookies.length;
+        int _index;
+
+        public boolean hasMoreElements()
         {
-            ret.add(cookies[i].getName());
+            return _index < _length;
         }
 
-        return ret;
-    }
-
-    /**
-     * @see java.util.Map#put(java.lang.Object, java.lang.Object)
-     */
-    public Object put(Object key, Object value)
-    {
-        throw new UnsupportedOperationException(
-            "Cannot set HTTP request cookies");
-    }
-
-    /**
-     * @see java.util.Map#putAll(java.util.Map)
-     */
-    public void putAll(Map t)
-    {
-        throw new UnsupportedOperationException(
-            "Cannot set HTTP request cookies");
-    }
-
-    /**
-     * @see java.util.Map#remove(java.lang.Object)
-     */
-    public Object remove(Object key)
-    {
-        throw new UnsupportedOperationException(
-            "Cannot remove HTTP request cookies");
-    }
-
-    /**
-     * @see java.util.Map#size()
-     */
-    public int size()
-    {
-        return _httpServletRequest.getCookies().length;
-    }
-
-    /**
-     * @see java.util.Map#values()
-     */
-    public Collection values()
-    {
-        List ret = new ArrayList();
-
-        Cookie[] cookies = _httpServletRequest.getCookies();
-        for (int i = 0, len = cookies.length; i < len; i++)
+        public Object nextElement()
         {
-            ret.add(cookies[i].getValue());
+            return _cookies[_index++].getName();
         }
-
-        return ret;
     }
 }

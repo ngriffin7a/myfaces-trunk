@@ -18,28 +18,18 @@
  */
 package net.sourceforge.myfaces.context.servlet;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
- * Wrapper object that exposes HttpSession attibutes as a collections API Map
- * interface.
+ * HttpSession attibutes as Map.
  * 
- * @author Dimitry D'hondt
- * @author Anton Koinov
+ * @author Anton Koinov (latest modification by $Author$)
+ * @version $Revision$ $Date$
  */
-public class SessionMap
-    implements Map
+public class SessionMap extends AbstractAttributeMap
 {
     private final HttpServletRequest _httpRequest;
     private HttpSession _httpSession;
@@ -50,201 +40,32 @@ public class SessionMap
         _httpSession = httpRequest.getSession(false);
     }
 
-    /**
-     * @see java.util.Map#clear()
-     */
-    public void clear()
-    {
-        if (_httpSession == null)
-        {
-            return;
-        }
-
-        List names = new ArrayList();
-        for (Enumeration e = _httpSession.getAttributeNames(); e.hasMoreElements();)
-        {
-            names.add(e.nextElement());
-        }
-
-        Iterator it = names.iterator();
-        while (it.hasNext())
-        {
-            _httpSession.removeAttribute((String) it.next());
-        }
-    }
-
-    /**
-     * @see java.util.Map#containsKey(java.lang.Object)
-     */
-    public boolean containsKey(Object key)
-    {
-        return _httpSession != null
-            && _httpSession.getAttribute((String) key) != null;
-    }
-
-    /**
-     * @see java.util.Map#containsValue(java.lang.Object)
-     */
-    public boolean containsValue(Object findValue)
-    {
-        if (_httpSession == null || findValue == null)
-        {
-            return false;
-        }
-
-        for (Enumeration e = _httpSession.getAttributeNames(); e.hasMoreElements();)
-        {
-            Object value = _httpSession.getAttribute((String) e.nextElement());
-            if (findValue.equals(value))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @see java.util.Map#entrySet()
-     */
-    public Set entrySet()
-    {
-        Map ret = new HashMap();
-
-        if (_httpSession != null)
-        {
-            for (Enumeration e = _httpSession.getAttributeNames(); e.hasMoreElements();)
-            {
-                String key = (String) e.nextElement();
-                ret.put(key, _httpSession.getAttribute(key));
-            }
-        }
-
-        return ret.entrySet();
-    }
-
-    /**
-     * @see java.util.Map#get(java.lang.Object)
-     */
-    public Object get(Object key)
+    protected Object getAttribute(String key)
     {
         return _httpSession == null 
-            ? null : _httpSession.getAttribute(key.toString());
+        ? null : _httpSession.getAttribute(key.toString());
     }
 
-    /**
-     * @see java.util.Map#isEmpty()
-     */
-    public boolean isEmpty()
-    {
-        return _httpSession == null
-            || !_httpSession.getAttributeNames().hasMoreElements();
-    }
-
-    /**
-     * @see java.util.Map#keySet()
-     */
-    public Set keySet()
-    {
-        Set ret = new HashSet();
-
-        if (_httpSession != null)
-        {
-            for (Enumeration e = _httpSession.getAttributeNames(); e.hasMoreElements();)
-            {
-                ret.add(e.nextElement());
-            }
-        }
-
-        return ret;
-    }
-
-    /**
-     * @see java.util.Map#put(java.lang.Object, java.lang.Object)
-     */
-    public Object put(Object key, Object value)
+    protected void setAttribute(String key, Object value)
     {
         if (_httpSession == null)
         {
             _httpSession = _httpRequest.getSession(true);
         }
 
-        String key_ = key.toString();
-        Object retval = _httpSession.getAttribute(key_);
-        _httpSession.setAttribute(key_, value);
-        return retval;
+        _httpSession.setAttribute(key, value);
     }
 
-    /**
-     * @see java.util.Map#putAll(java.util.Map)
-     */
-    public void putAll(Map t)
+    protected void removeAttribute(String key)
     {
-        if (_httpSession == null)
-        {
-            _httpSession = _httpRequest.getSession(true);
-        }
-
-        for (Iterator it = t.entrySet().iterator(); it.hasNext();)
-        {
-            Entry entry = (Entry) it.next();
-            String key = entry.getKey().toString();
-            _httpSession.setAttribute(key, entry.getValue());
-        }
-    }
-
-    /**
-     * @see java.util.Map#remove(java.lang.Object)
-     */
-    public Object remove(Object key)
-    {
-        if (_httpSession == null)
-        {
-            return null;
-        }
-
-        String key_ = key.toString();
-        Object retval = _httpSession.getAttribute(key_);
-        _httpSession.removeAttribute(key_);
-        return retval;
-    }
-
-    /**
-     * @see java.util.Map#size()
-     */
-    public int size()
-    {
-        if (_httpSession == null)
-        {
-            return 0;
-        }
-
-        int ret = 0;
-
-        for (Enumeration e = _httpSession.getAttributeNames(); e.hasMoreElements();)
-        {
-            ret++;
-            e.nextElement();
-        }
-
-        return ret;
-    }
-
-    /**
-     * @see java.util.Map#values()
-     */
-    public Collection values()
-    {
-        List ret = new ArrayList();
-
         if (_httpSession != null)
         {
-            for (Enumeration e = _httpSession.getAttributeNames(); e.hasMoreElements();)
-            {
-                ret.add(_httpSession.getAttribute((String) e.nextElement()));
-            }
+            _httpSession.removeAttribute(key);
         }
+    }
 
-        return ret;
+    protected Enumeration getAttributeNames()
+    {
+        return _httpSession.getAttributeNames();
     }
 }

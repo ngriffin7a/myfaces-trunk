@@ -18,200 +18,43 @@
  */
 package net.sourceforge.myfaces.context.servlet;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.ServletRequest;
 
+
 /**
- * Wrapper object that exposes the ServletContext attributes as a collections
- * API Map interface.
+ * ServletRequest attributes Map.
  * 
- * @author Dimitry D'hondt
- * @author Anton Koinov
+ * @author Anton Koinov (latest modification by $Author$)
+ * @version $Revision$ $Date$
  */
-public class RequestMap
-    implements Map
+public class RequestMap extends AbstractAttributeMap
 {
-    private final ServletRequest _servletRequest;
+    final ServletRequest _servletRequest;
 
-    RequestMap(ServletRequest req)
+    RequestMap(ServletRequest servletRequest)
     {
-        _servletRequest = req;
+        _servletRequest = servletRequest;
     }
 
-
-    /**
-     * @see java.util.Map#clear()
-     */
-    public void clear()
+    protected Object getAttribute(String key)
     {
-        List names = new ArrayList();
-        for (Enumeration e = _servletRequest.getAttributeNames(); e
-            .hasMoreElements();)
-        {
-            names.add(e.nextElement());
-        }
-
-        for (Iterator it = names.iterator(); it.hasNext();)
-        {
-            _servletRequest.removeAttribute((String) it.next());
-        }
+        return _servletRequest.getAttribute(key);
     }
 
-    /**
-     * @see java.util.Map#containsKey(java.lang.Object)
-     */
-    public boolean containsKey(Object key)
+    protected void setAttribute(String key, Object value)
     {
-        return _servletRequest.getAttribute(key.toString()) != null;
+        _servletRequest.setAttribute(key, value);
     }
 
-    /**
-     * @see java.util.Map#containsValue(java.lang.Object)
-     */
-    public boolean containsValue(Object findValue)
+    protected void removeAttribute(String key)
     {
-        if (findValue == null)
-        {
-            return false;
-        }
-
-        for (Enumeration e = _servletRequest.getAttributeNames(); e
-            .hasMoreElements();)
-        {
-            Object value = _servletRequest.getAttribute((String) e
-                .nextElement());
-            if (findValue.equals(value))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        _servletRequest.removeAttribute(key);
     }
 
-    /**
-     * @see java.util.Map#entrySet()
-     */
-    public Set entrySet()
+    protected Enumeration getAttributeNames()
     {
-        Map ret = new HashMap();
-
-        for (Enumeration e = _servletRequest.getAttributeNames(); e
-            .hasMoreElements();)
-        {
-            String key = (String) e.nextElement();
-            ret.put(key, _servletRequest.getAttribute(key));
-        }
-
-        return ret.entrySet();
-    }
-
-    /**
-     * @see java.util.Map#get(java.lang.Object)
-     */
-    public Object get(Object key)
-    {
-        return _servletRequest.getAttribute(key.toString());
-    }
-
-    /**
-     * @see java.util.Map#isEmpty()
-     */
-    public boolean isEmpty()
-    {
-        return !_servletRequest.getAttributeNames().hasMoreElements();
-    }
-
-    /**
-     * @see java.util.Map#keySet()
-     */
-    public Set keySet()
-    {
-        Set ret = new HashSet();
-
-        for (Enumeration e = _servletRequest.getAttributeNames(); e
-            .hasMoreElements();)
-        {
-            ret.add(e.nextElement());
-        }
-
-        return ret;
-    }
-
-    /**
-     * @see java.util.Map#put(java.lang.Object, java.lang.Object)
-     */
-    public Object put(Object key, Object value)
-    {
-        String key_ = key.toString();
-        Object retval = _servletRequest.getAttribute(key_);
-        _servletRequest.setAttribute(key_, value);
-        return retval;
-    }
-
-    /**
-     * @see java.util.Map#putAll(java.util.Map)
-     */
-    public void putAll(Map t)
-    {
-        for (Iterator it = t.entrySet().iterator(); it.hasNext();)
-        {
-            Entry entry = (Entry) it.next();
-            String key = entry.getKey().toString();
-            _servletRequest.setAttribute(key, entry.getValue());
-        }
-    }
-
-    /**
-     * @see java.util.Map#remove(java.lang.Object)
-     */
-    public Object remove(Object key)
-    {
-        String key_ = key.toString();
-        Object retval = _servletRequest.getAttribute(key_);
-        _servletRequest.removeAttribute(key_);
-        return retval;
-    }
-
-    /**
-     * @see java.util.Map#size()
-     */
-    public int size()
-    {
-        int ret = 0;
-
-        for (Enumeration e = _servletRequest.getAttributeNames(); e
-            .hasMoreElements();)
-        {
-            ret++;
-            e.nextElement();
-        }
-
-        return ret;
-    }
-
-    /**
-     * @see java.util.Map#values()
-     */
-    public Collection values()
-    {
-        List ret = new ArrayList();
-
-        for (Enumeration e = _servletRequest.getAttributeNames(); e
-            .hasMoreElements();)
-        {
-            ret.add(_servletRequest.getAttribute((String) e.nextElement()));
-        }
-
-        return ret;
+        return _servletRequest.getAttributeNames();
     }
 }
