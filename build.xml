@@ -117,7 +117,7 @@
     <target name="all" depends="jar,examples-jar"/>
 
 
-    <target name="release" depends="clean,jar,examples-jar">
+    <target name="release" depends="makeclean,jar,examples-jar">
         <mkdir dir="${temp.dir}/api"/>
         <javadoc sourcepath="${src.dir}/myfaces"
                  destdir="${temp.dir}/api"
