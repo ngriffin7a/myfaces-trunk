@@ -119,7 +119,7 @@ public class ExtensionsFilter implements Filter {
         chain.doFilter(extendedRequest, extendedResponse);
         
         if( ! AddResource.hasAdditionalHeaderInfoToRender(extendedRequest) ){
-            response.getWriter().write( extendedResponse.toString() );
+            response.getOutputStream().write( extendedResponse.getBytes());
             return;
         }
         
