@@ -102,16 +102,14 @@ public class HtmlMessageRenderer
     {
         String pattern = RendererUtils.getStringValue(facesContext, htmlOutputMessage);
         Object[] args;
-
-        List childList = htmlOutputMessage.getChildren();
-        if (childList.isEmpty())
+        if (htmlOutputMessage.getChildCount() == 0)
         {
             args = EMPTY_ARGS;
         }
         else
         {
             List argsList = new ArrayList();
-            for (Iterator it = childList.iterator(); it.hasNext(); )
+            for (Iterator it = htmlOutputMessage.getChildren().iterator(); it.hasNext(); )
             {
                 UIComponent child = (UIComponent)it.next();
                 if (child instanceof UIParameter)

@@ -68,7 +68,7 @@ managed beans used:
                         </h:selectone_menu>
 
                         <h:output_label for="selone_menu" value="#{example_messages['label_extras']}" />
-                        <br>
+                        <f:verbatim><br></f:verbatim>
                         <h:selectmany_checkboxlist value="#{carconf.extras}" >
                             <f:selectitems value="#{carconf.extrasList}" />
                         </h:selectmany_checkboxlist>
@@ -84,7 +84,7 @@ managed beans used:
 
                         <h:output_text value="" />
                         <h:panel_group >
-                            <br>
+                            <f:verbatim><br></f:verbatim>
                             <h:selectone_radio id="r2" value="#{carconf.discount2}" layout="PAGE_DIRECTION"  >
                                 <f:selectitem itemValue="0" itemLabel="#{example_messages['discount_2_0']}" />
                                 <!-- TODO: h:output_message key="radio_hint" bundle="example_messages" -->

@@ -38,6 +38,9 @@ public class MyFacesConfig
     private static final String PARAM_allowJavascript = "myfaces_allow_javascript";
     private static final boolean DEFAULT_allowJavascript = true;
 
+    private static final String PARAM_prettyHtml = "myfaces_pretty_html";
+    private static final boolean DEFAULT_prettyHtml = true;
+
 
     private static final String PARAM_checkJspModification = "myfaces_CheckJspModification";
     private static final boolean DEFAULT_checkJspModification = true;
@@ -68,6 +71,13 @@ public class MyFacesConfig
                                        DEFAULT_allowJavascript);
     }
 
+    public static boolean isPrettyHtml(ExternalContext externalContext)
+    {
+        return getBooleanInitParameter(externalContext,
+                                       PARAM_prettyHtml,
+                                       DEFAULT_prettyHtml);
+    }
+    
     protected static boolean getBooleanInitParameter(ExternalContext externalContext,
                                                      String paramName,
                                                      boolean defaultValue)

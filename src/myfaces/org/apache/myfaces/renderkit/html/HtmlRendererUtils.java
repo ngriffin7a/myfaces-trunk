@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
+import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.application.MessageFactory;
 import net.sourceforge.myfaces.convert.ConverterUtils;
@@ -44,6 +45,8 @@ import java.util.*;
 public class HtmlRendererUtils
 {
     private static final Log log = LogFactory.getLog(HtmlRendererUtils.class);
+
+    private static final String LINE_SEPARATOR = System.getProperty("line.separator", "\r\n");
 
     private HtmlRendererUtils() {} //no instance allowed
 
@@ -422,6 +425,16 @@ public class HtmlRendererUtils
         }
 
         writer.endElement(HTML.INPUT_ELEM);
+    }
+
+
+    public static void writePrettyLineSeparator(FacesContext facesContext)
+            throws IOException
+    {
+        if (MyFacesConfig.isPrettyHtml(facesContext.getExternalContext()))
+        {
+            facesContext.getResponseWriter().write(LINE_SEPARATOR);
+        }
     }
 
 }

@@ -19,75 +19,35 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.RendererUtils;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
-import java.util.List;
+import java.util.Iterator;
 
 /**
  * DOCUMENT ME!
- * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class HtmlGridRenderer
     extends HtmlRenderer
 {
+    private static final Log log = LogFactory.getLog(HtmlGridRenderer.class);
+
     public boolean getRendersChildren()
     {
         return true;
     }
 
-    public void encodeBegin(FacesContext context, UIComponent component)
+    public void encodeBegin(FacesContext facesContext, UIComponent component)
             throws IOException
     {
-    }
-
-    public void encodeEnd(FacesContext context, UIComponent component)
-            throws IOException
-    {
-        RendererUtils.checkParamValidity(context, component,
-                HtmlPanelGrid.class);
-
-        HtmlPanelGrid grid = (HtmlPanelGrid) component;
-
-        ResponseWriter writer = context.getResponseWriter();
-
-        writer.startElement(HTML.TABLE_ELEM, grid);
-
-        List children = grid.getChildren();
-
-        int i=0;
-
-        //FIXME: render attributes...
-        for (; i < children.size(); i++)
-        {
-            if((i%grid.getColumns())==0)
-            {
-                writer.startElement(HTML.TR_ELEM, grid);
-            }
-            else if(((i+1)%grid.getColumns())==0)
-            {
-                writer.endElement(HTML.TR_ELEM);
-            }
-
-            writer.startElement(HTML.TD_ELEM, grid);
-
-            UIComponent uiComponent = (UIComponent) children.get(i);
-
-            renderChild(context, uiComponent);
-
-            writer.endElement(HTML.TD_ELEM);
-        }
-
-        if(i>0)
-            writer.endElement(HTML.TR_ELEM);
-
-        renderChild(context, component);
-        writer.endElement(HTML.TABLE_ELEM);
-
     }
 
     public void encodeChildren(FacesContext context, UIComponent component)
@@ -95,9 +55,67 @@ public class HtmlGridRenderer
     {
     }
 
-    protected void renderChild(FacesContext facesContext, UIComponent component)
+    public void encodeEnd(FacesContext facesContext, UIComponent component)
             throws IOException
     {
-        RendererUtils.renderChild(facesContext, component);
+        RendererUtils.checkParamValidity(facesContext, component, HtmlPanelGrid.class);
+
+        HtmlPanelGrid panelGrid = (HtmlPanelGrid) component;
+        int columns = panelGrid.getColumns();
+        if (log.isErrorEnabled() && columns == 0)
+        {
+            log.error("Wrong columns attribute for PanelGrid " + panelGrid.getClientId(facesContext) + ": " + columns);
+        }
+
+        int childCount = panelGrid.getChildCount();
+        if (childCount > 0)
+        {
+            ResponseWriter writer = facesContext.getResponseWriter();
+            writer.startElement(HTML.TABLE_ELEM, panelGrid);
+            HTMLUtil.renderHTMLAttributes(writer, panelGrid, HTML.TABLE_PASSTHROUGH_ATTRIBUTES);
+            writer.flush();
+            HtmlRendererUtils.writePrettyLineSeparator(facesContext);
+
+            int c = 0;
+            boolean rowStarted = false;
+            for (Iterator it = panelGrid.getChildren().iterator(); it.hasNext(); )
+            {
+                if (c == 0)
+                {
+                    if (rowStarted)
+                    {
+                        writer.endElement(HTML.TR_ELEM);
+                        HtmlRendererUtils.writePrettyLineSeparator(facesContext);
+                    }
+                    writer.startElement(HTML.TR_ELEM, panelGrid);
+                    rowStarted = true;
+                }
+
+                writer.startElement(HTML.TD_ELEM, panelGrid);
+                RendererUtils.renderChild(facesContext, (UIComponent)it.next());
+                writer.endElement(HTML.TD_ELEM);
+
+                c++;
+                if (c >= columns) c = 0;
+            }
+
+            if (rowStarted)
+            {
+                if (c > 0)
+                {
+                    if (log.isWarnEnabled()) log.warn("PanelGrid " + panelGrid.getClientId(facesContext) + " has not enough children. Child count should be a multiple of the columns attribute.");
+                    for ( ; c < columns; c++)
+                    {
+                        writer.startElement(HTML.TD_ELEM, panelGrid);
+                        writer.endElement(HTML.TD_ELEM);
+                    }
+                }
+                writer.endElement(HTML.TR_ELEM);
+                HtmlRendererUtils.writePrettyLineSeparator(facesContext);
+            }
+
+            writer.endElement(HTML.TABLE_ELEM);
+        }
     }
+
 }
