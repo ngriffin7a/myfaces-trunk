@@ -78,6 +78,24 @@
 
     </target>
 
+
+   	<target name="-set-tomcat-includes-init">
+		<condition property="tomcat.pre.5.5">
+			<istrue value="${tomcat.pre.5.5.version}"/>
+		</condition>
+	</target>
+	<target name="-set-tomcat-pre-5.5-includes" if="tomcat.pre.5.5">
+		<echo message="Setting war libraries for tomcat version &lt; to 5.5."/>
+    	<property name="tomcat.special.include" value="commons-el.jar,jsp-2.0.jar"/>
+	</target>
+   	<target name="-set-tomcat-post-5.5-includes" unless="tomcat.pre.5.5">
+		<echo message="Setting war libraries for tomcat version &gt; to 5.5."/>
+    	<property name="tomcat.special.include" value="nothingToInclude"/>
+	</target>
+   	<target name="-set-tomcat-compatibility-includes" depends="-set-tomcat-includes-init,-set-tomcat-pre-5.5-includes,-set-tomcat-post-5.5-includes">
+	</target>
+
+
     <target name="-war" depends="-compile-and-copy-libs">
         <mkdir dir="${temp.dir}" /> 
         <tstamp>
@@ -92,8 +110,8 @@
                     <attribute name="Implementation-Vendor" value="${manifest.impl.vendor}"/>
                 </section>
             </manifest>
+        	<lib dir="${project.dir}/lib" includes="${tomcat.special.include}"/>
             <lib file="${commons-codec.jar}"/>
-            <lib file="${commons-el.jar}"/>
             <lib file="${commons-logging.jar}"/>
             <lib file="${commons-beanutils.jar}"/>
             <lib file="${commons-collections.jar}"/>
