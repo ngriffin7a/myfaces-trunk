@@ -2,7 +2,7 @@
                  java.io.InputStream,
                  java.io.FileInputStream,
                  java.io.OutputStream"%>
-<%@ page session="false"%>
+<%@ page session="false" contentType="text/html;charset=utf-8"%>
 <%
 	response.setHeader("pragma", "no-cache");
 	response.setHeader("Cache-control", "no-cache, no-store, must-revalidate");

@@ -53,6 +53,7 @@ public class CarConfigurator
         _cars.add(new SelectItem("c4", "Renolt ESP", null));
         _cars.add(new SelectItem("c5", "WV Lumpo", null));
         _cars.add(new SelectItem("c6", "James Blond Car", null));
+        _cars.add(new SelectItem("c7", "Neko Bus", null));
 
         _colors.add(new LocalizedSelectItem("color_black"));
         _colors.add(new LocalizedSelectItem("color_blue"));
@@ -70,6 +71,7 @@ public class CarConfigurator
         _priceList.put("c4", new BigDecimal(25000));
         _priceList.put("c5", new BigDecimal(10000));
         _priceList.put("c6", new BigDecimal(100000000));
+        _priceList.put("c7", new BigDecimal(1000000000));
 
         _priceFactorColors.put("color_black", new BigDecimal(1.15));
         _priceFactorColors.put("color_blue", new BigDecimal(1.10));
