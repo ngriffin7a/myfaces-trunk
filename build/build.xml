@@ -5,6 +5,7 @@
 
     <!-- Constants -->
     <property name="project.dir" location="${basedir}/.."/>
+    <property name="release.dir" location="${basedir}/release"/>
     <property name="jsfapi.src" location="${project.dir}/src/jsfapi"/>
     <property name="share.src" location="${project.dir}/src/share"/>
     <property name="myfaces.src" location="${project.dir}/src/myfaces"/>
@@ -15,7 +16,8 @@
     <property name="doc.dir" location="${project.dir}/doc"/>
     <property name="build.dir" location="${project.dir}/build"/>
     <property name="nightly.dir" location="${build.dir}/nightly"/>
-
+    <property name="dist.dir" location="${build.dir}/dist"/>
+    <property name="webapp.dist.dir" location="${dist.dir}/webapp"/>
     <property name="conf.dir" location="${project.dir}/conf"/>
     <property name="apps.dir" location="${project.dir}/webapps"/>
     <property name="wml.src" location="${project.dir}/src/wml"/>
@@ -28,8 +30,9 @@
     <property file="manifest.properties"/>
 
     <property name="release.version" value="${manifest.impl.version}"/>
-    <property name="src.release.bundle" location="${project.dir}/myfaces-${release.version}-src.tgz"/>
-    <property name="bin.release.bundle" location="${project.dir}/myfaces-${release.version}.tgz"/>
+    <property name="src.release.bundle" location="${release.dir}/myfaces-${release.version}-src.tgz"/>
+    <property name="bin.release.bundle" location="${release.dir}/myfaces-${release.version}.tgz"/>
+    <property name="app.release.bundle" location="${release.dir}/myfaces-${release.version}-app.tgz"/>
 
     <!-- Temporary dir. May be overridden in build.local.properties -->
     <property name="temp.dir" location="${env.TEMP}"/>
@@ -469,7 +472,7 @@
              antfile="build.xml"
              inheritall="false"
              target="release"/>
-    </target>	
+    </target>
 	<target name="all"
             depends="bin-release, src-release, examples-release, tiles-release, blank-release, wap-release, simple-webapp"
             description="builds all release files">
@@ -508,9 +511,12 @@
 				<include name="**/*.class"/>
         	</fileset>
         </delete>
-        
+
+        <delete dir="${dist.dir}"/>
+        <delete dir="${release.dir}"/>
+
         <!-- clean up application build stuff as well -->
-        <ant antfile="build-webapps.xml" inheritall="false" target="clean"/>        
+        <ant antfile="build-webapps.xml" inheritall="false" target="clean"/>
     </target>
 
     <target name="clean-all"
@@ -723,40 +729,46 @@
             </xmlcatalog>
         </xslt>
     </target>
-    
-    <target name="app-release" depends="myfaces-jar">
 
-        <!-- build simple webapps -->        
+    <target name="app-dist" depends="myfaces-jar">
+
+        <!-- build simple webapps -->
         <copy file="${conf.dir}/web.xml" todir="${apps.dir}/simple/WEB-INF"/>
         <ant antfile="build-webapps.xml" inheritall="false" target="war">
             <property name="webapp.name" value="myfaces-simple-examples"/>
             <property name="myfaces.jar" location="${myfaces.jar}"/>
             <property name="web.dir" location="${apps.dir}/simple"/>
+            <property name="webapp.dist.dir" location="${webapp.dist.dir}"/>
         </ant>
-        
-        <!-- build example webapps -->        
+        <!-- build example webapps -->
         <copy file="${conf.dir}/web.xml" todir="${apps.dir}/examples/WEB-INF"/>
         <ant antfile="build-webapps.xml" inheritall="false" target="war">
             <property name="webapp.name" value="myfaces-examples"/>
             <property name="myfaces.jar" location="${myfaces.jar}"/>
             <property name="web.dir" location="${apps.dir}/examples"/>
+            <property name="webapp.dist.dir" location="${webapp.dist.dir}"/>
         </ant>
-        
+
     </target>
 
-    <target name="nightly" depends="src-release, bin-release"> <!-- todo: add webapps release -->
-
-        <!-- copy resulting builds to nightly directory -->
-        <copy  file="${src.release.bundle}" todir="${nightly.dir}"/>
-        <copy file="${bin.release.bundle}" todir="${nightly.dir}" flatten="true"/>
-                
+    <target name="prepare">
+        <mkdir dir="${release.dir}"/>
     </target>
 
-    <target name="release" depends="src-release, bin-release"> <!-- todo: add webapps release -->
+    <target name="app-release" depends="prepare, app-dist">
+
+        <tar destfile="${app.release.bundle}" compression="gzip" >
+            <tarfileset dir="${webapp.dist.dir}"/>
+        </tar>
+
+    </target>
+
+    <target name="release" depends="prepare, src-release, bin-release, app-release">
 
         <!-- copy resulting builds to nightly directory -->
         <copy  file="${src.release.bundle}" todir="${release.dir}"/>
-        <copy file="${bin.release.bundle}" todir="${release.dir}" flatten="true"/>
+        <copy file="${bin.release.bundle}" todir="${release.dir}"/>
+        <copy file="${app.release.bundle}" todir="${release.dir}"/>
 
     </target>
 
