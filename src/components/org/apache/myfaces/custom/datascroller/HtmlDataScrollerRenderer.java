@@ -127,13 +127,29 @@ public class HtmlDataScrollerRenderer
         ResponseWriter writer = facesContext.getResponseWriter();
 
         HtmlDataScroller scroller = (HtmlDataScroller)uiComponent;
-        renderFacet(facesContext, scroller, scroller.getFirst(), FACET_FIRST);
-        writer.write("&nbsp;");
-        renderFacet(facesContext, scroller, scroller.getPrevious(), FACET_PREVOIUS);
-        writer.write("&nbsp;");
-        renderFacet(facesContext, scroller, scroller.getNext(), FACET_NEXT);
-        writer.write("&nbsp;");
-        renderFacet(facesContext, scroller, scroller.getLast(), FACET_LAST);
+        UIComponent facetComp = scroller.getFirst();
+        if (facetComp != null)
+        {
+            renderFacet(facesContext, scroller, facetComp, FACET_FIRST);
+            writer.write("&nbsp;");
+        }
+        facetComp = scroller.getPrevious();
+        if (facetComp != null)
+        {
+            renderFacet(facesContext, scroller, facetComp, FACET_PREVOIUS);
+            writer.write("&nbsp;");
+        }
+        facetComp = scroller.getNext();
+        if (facetComp != null)
+        {
+            renderFacet(facesContext, scroller, facetComp, FACET_NEXT);
+            writer.write("&nbsp;");
+        }
+        facetComp = scroller.getLast();
+        if (facetComp != null)
+        {
+            renderFacet(facesContext, scroller, facetComp, FACET_LAST);
+        }
     }
 
     private void renderFacet(FacesContext facesContext,
@@ -142,10 +158,6 @@ public class HtmlDataScrollerRenderer
                              String facetName)
         throws IOException
     {
-        if (facetComp == null)
-        {
-            return;
-        }
         UIComponent link = getLink(facesContext, scroller, facetComp, facetName);
         link.encodeBegin(facesContext);
         facetComp.encodeBegin(facesContext);

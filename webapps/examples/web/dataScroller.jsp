@@ -56,7 +56,7 @@ managed beans used:
             <h:panelGroup id="body">
 
                 <x:dataTable id="data"
-                        styleClass="standardTable"
+                        styleClass="scrollerTable"
                         headerClass="standardTable_Header"
                         footerClass="standardTable_Header"
                         rowClasses="standardTable_Row1,standardTable_Row2"
@@ -86,7 +86,7 @@ managed beans used:
                        <h:outputText value="#{car.color}" />
                    </h:column>
 
-                    <f:facet name="footer" >
+                   <f:facet name="footer" >
                         <x:dataScroller id="scroll_1" >
                             <f:facet name="first">
                                 <h:outputText value="first" />
@@ -104,20 +104,23 @@ managed beans used:
                     </f:facet>
                 </x:dataTable>
 
-                <x:dataScroller id="scroll_2" for="data">
-                    <f:facet name="first" >
-                        <h:outputText value="first" />
-                    </f:facet>
-                    <f:facet name="previous">
-                        <h:outputText value="previous" />
-                    </f:facet>
-                    <f:facet name="next">
-                        <h:outputText value="next" />
-                    </f:facet>
-                    <f:facet name="last">
-                        <h:outputText value="last" />
-                    </f:facet>
-                </x:dataScroller>
+                <h:panelGrid columns="1" styleClass="scrollerTable2" columnClasses="standardTable_ColumnCentered" >
+                    <x:dataScroller id="scroll_2" for="data">
+                        <f:facet name="first" >
+                            <h:outputText value="first" />
+                        </f:facet>
+                        <f:facet name="last">
+                            <h:outputText value="last" />
+                        </f:facet>
+                        <f:facet name="previous">
+                            <h:outputText value="previous" />
+                        </f:facet>
+                        <f:facet name="next">
+                            <h:outputText value="next" />
+                        </f:facet>
+                    </x:dataScroller>
+                </h:panelGrid>
+
 
             </h:panelGroup>
         </f:facet>

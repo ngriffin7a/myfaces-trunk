@@ -6,6 +6,7 @@ Changes in Release 1.0.5 beta
 * new faces configurator
 * new validator (Regular Expressions)
 * new component (rdfticker)
+* new component (dataScroller)
 * modified renderers to comply with version 1.1 of the spec
 * modified dataList to support active components (comandLink, ...)
 * bug #955111	RestoreState of outputText with mixed ValueBinding attribute
@@ -15,6 +16,7 @@ Changes in Release 1.0.5 beta
 * bug #957938 	map-entries in faces-config.xml
 * bug #970747	Incorrect rendering of <select> tag
 * bug #972165	<h:selectBooleanCheckbox> and disabled attribute
+
 
 ----------------------------------------------------------------------
 Changes in Release 1.0.4 beta
