@@ -37,6 +37,9 @@ import java.util.Map;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.17  2004/12/18 16:31:21  tomsp
+ * fixed issue MYFACES-1
+ *
  * Revision 1.16  2004/10/13 11:50:57  matze
  * renamed packages to org.apache
  *
@@ -107,7 +110,7 @@ public class HtmlDataScrollerRenderer
                 int next = uiData.getFirst() + uiData.getRows() * fastStep;
                 int rowcount = uiData.getRowCount();
                 if (next > rowcount)
-                    next = rowcount - (rowcount % uiData.getRows());
+                     next = (rowcount - 1) - ((rowcount - 1) % uiData.getRows());
                 uiData.setFirst(next);
             }
             else if (param.equals(FACET_FAST_REWIND))
