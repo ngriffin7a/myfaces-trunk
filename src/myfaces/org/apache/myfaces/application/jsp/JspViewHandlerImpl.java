@@ -38,6 +38,9 @@ import java.util.*;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.23  2004/07/10 06:35:08  mwessendorf
+ * is defaultRenderKitId set in faces-config.xml ?
+ *
  * Revision 1.22  2004/07/01 22:05:20  mwessendorf
  * ASF switch
  *
@@ -98,8 +101,10 @@ public class JspViewHandlerImpl
     }
 
     public String calculateRenderKitId(FacesContext facesContext)
-    {
-        return RenderKitFactory.HTML_BASIC_RENDER_KIT;  //TODO: how to calculate from client?
+    {	
+    	String renderKitId = facesContext.getApplication().getDefaultRenderKitId();
+        return (renderKitId!=null) ? renderKitId : RenderKitFactory.HTML_BASIC_RENDER_KIT;
+        //TODO: how to calculate from client?
     }
 
     /**
