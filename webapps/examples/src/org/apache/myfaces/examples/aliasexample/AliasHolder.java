@@ -35,4 +35,10 @@ public class AliasHolder {
         log.debug("set name="+name);
         this.name = name;
     }
+    
+    public String toUpperCase(){
+        name = name.toUpperCase();
+        log.debug("toUpperCase command executed");
+        return null;
+    }
 }

@@ -41,6 +41,9 @@ import org.apache.commons.logging.LogFactory;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/11/23 04:46:40  svieujot
+ * Add an ugly "permanent" tag to x:aliasBean to handle children events.
+ *
  * Revision 1.2  2004/11/14 15:06:36  svieujot
  * Improve AliasBean to make the alias effective only within the tag body
  *
@@ -58,6 +61,8 @@ public class AliasBean extends UIInput {
     private String _sourceBeanExpression = null;
 
     private String _aliasBeanExpression = null;
+    
+    private Boolean _permanent = null;
 
     public AliasBean() {
         setRendererType(DEFAULT_RENDERER_TYPE);
@@ -69,11 +74,21 @@ public class AliasBean extends UIInput {
 
     public Object saveState(FacesContext context) {
         log.debug("saveState");
-        Object values[] = new Object[3];
+        Object values[] = new Object[4];
         values[0] = super.saveState(context);
         values[1] = _sourceBeanExpression;
         values[2] = _aliasBeanExpression;
+        values[3] = _permanent; 
         return values;
+    }
+    
+    public void restoreState(FacesContext context, Object state) {
+        log.debug("restoreState");
+        Object values[] = (Object[]) state;
+        super.restoreState(context, values[0]);
+        _sourceBeanExpression = (String) values[1];
+        _aliasBeanExpression = (String) values[2];
+        _permanent = (Boolean) values[3];
     }
 
     public Object processSaveState(FacesContext context) {
@@ -145,14 +160,6 @@ public class AliasBean extends UIInput {
         removeAlias(context);
     }
 
-    public void restoreState(FacesContext context, Object state) {
-        log.debug("restoreState");
-        Object values[] = (Object[]) state;
-        super.restoreState(context, values[0]);
-        _sourceBeanExpression = (String) values[1];
-        _aliasBeanExpression = (String) values[2];
-    }
-
     public void processValidators(FacesContext context) {
         log.debug("processValidators");
         makeAlias(context);
@@ -166,7 +173,7 @@ public class AliasBean extends UIInput {
         super.processUpdates(context);
         removeAlias(context);
     }
-
+    
     void makeAlias(FacesContext context) {
         ValueBinding sourceBeanVB;
         if (_sourceBeanExpression == null) {
@@ -192,6 +199,13 @@ public class AliasBean extends UIInput {
     }
 
     void removeAlias(FacesContext context) {
+        if( _permanent == null ){
+            _permanent = (Boolean) getAttributes().get("permanent");
+        }
+        
+        if( _permanent != null && _permanent.booleanValue() ) // permanent == true. Don't remove the alias.
+            return;
+
         log.debug("removeAlias: " + _sourceBeanExpression + " != " + _aliasBeanExpression);
 
         ValueBinding aliasVB = getValueBinding("alias");
