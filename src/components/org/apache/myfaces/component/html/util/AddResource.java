@@ -41,6 +41,9 @@ import org.apache.myfaces.renderkit.html.HTML;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2004/12/03 20:27:51  svieujot
+ * Add capability to add inline style to the header.
+ *
  * Revision 1.9  2004/12/02 22:26:23  svieujot
  * Simplify the AddResource methods
  *
@@ -106,7 +109,8 @@ public class AddResource {
      * If the script is already has already been referenced, it's added only once. 
      */
     public static void addJavaScriptToHeader(Class componentClass, String resourceFileName, FacesContext context){
-        AdditionalHeaderInfoToRender jsInfo = new AdditionalHeaderInfoToRender(AdditionalHeaderInfoToRender.TYPE_JS, componentClass, resourceFileName);
+        AdditionalHeaderInfoToRender jsInfo =
+            new AdditionalHeaderInfoToRender(AdditionalHeaderInfoToRender.TYPE_JS, componentClass, resourceFileName);
         getAdditionalHeaderInfoToRender(context).add( jsInfo );
     }
 
@@ -115,7 +119,18 @@ public class AddResource {
      * If the style sheet is already has already been referenced, it's added only once.
      */
     public static void addStyleSheet(Class componentClass, String resourceFileName, FacesContext context){
-        AdditionalHeaderInfoToRender cssInfo = new AdditionalHeaderInfoToRender(AdditionalHeaderInfoToRender.TYPE_CSS, componentClass, resourceFileName);
+        AdditionalHeaderInfoToRender cssInfo =
+            new AdditionalHeaderInfoToRender(AdditionalHeaderInfoToRender.TYPE_CSS, componentClass, resourceFileName);
+        getAdditionalHeaderInfoToRender(context).add( cssInfo );
+    }
+    
+    /**
+     * Adds the given Style Sheet to the document Header.
+     * If the style sheet is already has already been referenced, it's added only once.
+     */
+    public static void addInlineStyleToHeader(String inlineStyle, FacesContext context){
+        AdditionalHeaderInfoToRender cssInfo =
+            new AdditionalHeaderInfoToRender(AdditionalHeaderInfoToRender.TYPE_CSS_INLINE, inlineStyle);
         getAdditionalHeaderInfoToRender(context).add( cssInfo );
     }
     
@@ -315,22 +330,32 @@ public class AddResource {
     }
     
     private static class AdditionalHeaderInfoToRender{
-        public static final int TYPE_CSS = 0;
-        public static final int TYPE_JS = 1;
+        static final int TYPE_JS = 0;
+        static final int TYPE_CSS = 1;
+        static final int TYPE_CSS_INLINE = 2;
+        
+        public int type;
         public String componentName;
         public String resourceFileName;
-        public int type;
+        public String inlineText;
         
         public AdditionalHeaderInfoToRender(int infoType, String componentName, String resourceFileName) {
+            this.type = infoType;
             this.componentName = componentName;
             this.resourceFileName = resourceFileName;
-            this.type = infoType;
         }
         
         public AdditionalHeaderInfoToRender(int infoType, Class componentClass, String resourceFileName) {
+            this.type = infoType;
             this.componentName = getComponentName(componentClass);
             this.resourceFileName = resourceFileName;
+        }
+        
+        public AdditionalHeaderInfoToRender(int infoType, String inlineText) {
+            if( infoType != TYPE_CSS_INLINE )
+                log.error("This constructor only supports TYPE_CSS_INLINE");
             this.type = infoType;
+            this.inlineText = inlineText;
         }
         
         public int hashCode() {
@@ -339,13 +364,15 @@ public class AddResource {
         
         public String getString(HttpServletRequest request){
             switch (type) {
-            case TYPE_CSS:
-                return "<link rel=\"stylesheet\" "
-                	+"href=\""+getResourceMappedPath(componentName, resourceFileName, request)+"\" "
-                	+"type=\"text/css\"/>\n";
            case TYPE_JS:
                     return "<script language=\"JavaScript\" "
                         +"src=\""+getResourceMappedPath(componentName, resourceFileName, request)+"\" type=\"text/javascript\"></script>\n";
+           case TYPE_CSS:
+               return "<link rel=\"stylesheet\" "
+               	+"href=\""+getResourceMappedPath(componentName, resourceFileName, request)+"\" "
+               	+"type=\"text/css\"/>\n";
+           case TYPE_CSS_INLINE:
+               return "<style>"+inlineText+"</style>\n";
             default:
                 log.warn("Unknown type:"+type);
                 return "<link href=\""+"\"/>\n";
