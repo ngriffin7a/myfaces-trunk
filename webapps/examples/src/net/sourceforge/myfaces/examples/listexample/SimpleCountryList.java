@@ -18,13 +18,9 @@
  */
 package net.sourceforge.myfaces.examples.listexample;
 
-import javax.faces.component.UIOutput;
-import javax.faces.context.FacesContext;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * DOCUMENT ME!
@@ -33,18 +29,12 @@ import java.util.Map;
  */
 public class SimpleCountryList
 {
-    private static List _countries = new ArrayList();
+    private List _countries = new ArrayList();
     static
     {
-        _countries.add(new SimpleCountry(1, "AUSTRIA", "AT", new BigDecimal(123)));
-        _countries.add(new SimpleCountry(2, "AZERBAIJAN", "AZ", new BigDecimal(535)));
-        _countries.add(new SimpleCountry(3, "BAHAMAS", "BS", new BigDecimal(1345623)));
-        _countries.add(new SimpleCountry(4, "BAHRAIN", "BH", new BigDecimal(346)));
-        _countries.add(new SimpleCountry(5, "BANGLADESH", "BD", new BigDecimal(456)));
-        _countries.add(new SimpleCountry(6, "BARBADOS", "BB", new BigDecimal(45645)));
     }
 
-    static synchronized SimpleCountry getSimpleCountry(long id)
+    SimpleCountry getSimpleCountry(long id)
     {
         for (int i = 0; i < _countries.size(); i++)
         {
@@ -57,7 +47,7 @@ public class SimpleCountryList
         return null;
     }
 
-    private static synchronized long getNewSimpleCountryId()
+    long getNewSimpleCountryId()
     {
         long maxId = 0;
         for (int i = 0; i < _countries.size(); i++)
@@ -71,7 +61,7 @@ public class SimpleCountryList
         return maxId + 1;
     }
 
-    static synchronized void saveSimpleCountry(SimpleCountry simpleCountry)
+    void saveSimpleCountry(SimpleCountry simpleCountry)
     {
         if (simpleCountry.getId() == 0)
         {
@@ -93,7 +83,7 @@ public class SimpleCountryList
         }
     }
 
-    static synchronized void deleteSimpleCountry(SimpleCountry simpleCountry)
+    void deleteSimpleCountry(SimpleCountry simpleCountry)
     {
         for (int i = 0; i < _countries.size(); i++)
         {
@@ -107,6 +97,12 @@ public class SimpleCountryList
 
     public SimpleCountryList()
     {
+        _countries.add(new SimpleCountry(1, "AUSTRIA", "AT", new BigDecimal(123)));
+        _countries.add(new SimpleCountry(2, "AZERBAIJAN", "AZ", new BigDecimal(535)));
+        _countries.add(new SimpleCountry(3, "BAHAMAS", "BS", new BigDecimal(1345623)));
+        _countries.add(new SimpleCountry(4, "BAHRAIN", "BH", new BigDecimal(346)));
+        _countries.add(new SimpleCountry(5, "BANGLADESH", "BD", new BigDecimal(456)));
+        _countries.add(new SimpleCountry(6, "BARBADOS", "BB", new BigDecimal(45645)));
     }
 
     public List getCountries()

@@ -18,7 +18,8 @@
  */
 package net.sourceforge.myfaces.examples.listexample;
 
-
+import javax.faces.context.FacesContext;
+import javax.faces.el.PropertyResolver;
 
 
 /**
@@ -43,7 +44,7 @@ public class SimpleCountryForm
         _id = id;
         if (_id > 0)
         {
-            SimpleCountry simpleCountry = SimpleCountryList.getSimpleCountry(_id);
+            SimpleCountry simpleCountry = getList().getSimpleCountry(_id);
             if (simpleCountry == null)
             {
                 return;
@@ -80,19 +81,27 @@ public class SimpleCountryForm
 
     public String save()
     {
-        SimpleCountryList.saveSimpleCountry(getSimpleCountry());
+        getList().saveSimpleCountry(getSimpleCountry());
         return "ok_next";
     }
 
     public String delete()
     {
-        SimpleCountryList.deleteSimpleCountry(getSimpleCountry());
+        getList().deleteSimpleCountry(getSimpleCountry());
         return "ok_next";
     }
 
     public String apply()
     {
-        SimpleCountryList.saveSimpleCountry(getSimpleCountry());
+        getList().saveSimpleCountry(getSimpleCountry());
         return "ok";
+    }
+
+    private SimpleCountryList getList()
+    {
+        Object obj = FacesContext.getCurrentInstance().getApplication().getVariableResolver()
+            .resolveVariable(FacesContext.getCurrentInstance(), "countryList");
+        return (SimpleCountryList) obj;
+
     }
 }

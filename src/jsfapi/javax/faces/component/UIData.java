@@ -393,7 +393,7 @@ public class UIData
 
     private void processFacets(FacesContext context, int processAction)
     {
-        for (Iterator it = getFacets().keySet().iterator(); it.hasNext();)
+        for (Iterator it = getFacets().values().iterator(); it.hasNext();)
         {
             UIComponent facet = (UIComponent)it.next();
             process(context, facet, processAction);

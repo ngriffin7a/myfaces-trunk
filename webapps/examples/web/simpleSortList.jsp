@@ -64,6 +64,13 @@ managed beans used:
                         sortColumn="#{list.sort}"
                         sortAscending="#{list.ascending}">
 
+                    <f:facet name="header">
+                        <h:outputText value="(header table)"  />
+                    </f:facet>
+                    <f:facet name="footer">
+                        <h:outputText value="(footer table)"  />
+                    </f:facet>
+
                     <h:column>
                         <f:facet name="header">
                             <x:commandSortHeader columnName="type">
@@ -72,7 +79,7 @@ managed beans used:
                         </f:facet>
                         <h:outputText value="#{car.type}" />
                         <f:facet name="footer">
-                            <h:outputText id="ftr1" value="(footer 1)"  />
+                            <h:outputText id="ftr1" value="(footer col1)"  />
                         </f:facet>
                     </h:column>
 
@@ -84,7 +91,7 @@ managed beans used:
                         </f:facet>
                         <h:outputText value="#{car.color}" />
                         <f:facet name="footer">
-                            <h:outputText id="ftr2" value="(footer 2)"  />
+                            <h:outputText id="ftr2" value="(footer col2)"  />
                         </f:facet>
                     </h:column>
 

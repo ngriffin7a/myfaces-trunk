@@ -63,7 +63,7 @@ managed beans used:
 
                 <x:dataTable styleClass="standardTable"
                         headerClass="standardTable_Header"
-                        footerClass="standardTable_Footer"
+                        footerClass="standardTable_Header"
                         rowClasses="standardTable_Row1,standardTable_Row2"
                         columnClasses="standardTable_Column,standardTable_ColumnCentered,standardTable_Column"
                         var="country"
@@ -74,10 +74,13 @@ managed beans used:
                        <f:facet name="header">
                           <h:outputText value="#{example_messages['label_country_name']}" />
                        </f:facet>
-                       <h:commandLink actionListener="#{countryAction.initCountryForm}" action="go_country" immediate="true" >
+                       <x:commandLink action="go_country"
+                                      actionUpdateProperty="#{countryForm.id}"
+                                      actionUpdateValue="#{country.id}"
+                                      immediate="true" >
                             <h:outputText value="#{country.name}" />
                             <f:param name="id" value="#{country.id}" />
-                       </h:commandLink>
+                       </x:commandLink>
                    </h:column>
 
                    <h:column>
@@ -86,6 +89,7 @@ managed beans used:
                        </f:facet>
                        <h:outputText value="#{country.isoCode}" />
                    </h:column>
+                   <h:outputText value="#{country.isoCode}" />
 
                 </x:dataTable>
                 <f:verbatim><br></f:verbatim>

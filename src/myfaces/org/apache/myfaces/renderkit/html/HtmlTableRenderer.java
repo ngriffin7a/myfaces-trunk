@@ -56,11 +56,11 @@ public class HtmlTableRenderer
 
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        writer.write("\n");
+        HtmlRendererUtils.writePrettyLineSeparator(facesContext);
         writer.startElement(HTML.TABLE_ELEM, uiComponent);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.TABLE_PASSTHROUGH_ATTRIBUTES);
 
-        writeFacet(facesContext, uiComponent, "header");
+        renderFacet(facesContext, writer, (UIData)uiComponent, true);
     }
 
     public void encodeChildren(FacesContext facesContext, UIComponent component) throws IOException
@@ -71,6 +71,7 @@ public class HtmlTableRenderer
 
         ResponseWriter writer = facesContext.getResponseWriter();
 
+        HtmlRendererUtils.writePrettyLineSeparator(facesContext);
         writer.startElement("tbody", component);
 
         String rowClasses;
@@ -106,6 +107,7 @@ public class HtmlTableRenderer
                 return;
             }
 
+            HtmlRendererUtils.writePrettyLineSeparator(facesContext);
             writer.startElement("tr", component);
             if (styles.hasRowStyle())
             {
@@ -116,8 +118,8 @@ public class HtmlTableRenderer
             List children = component.getChildren();
             for (int j = 0, size = component.getChildCount(); j < size; j++)
             {
-                UIColumn uiColumn = (UIColumn)children.get(j);
-                if (uiColumn.isRendered())
+                UIComponent child = (UIComponent)children.get(j);
+                if (child instanceof UIColumn && ((UIColumn)child).isRendered())
                 {
                     writer.startElement("td", component);
                     if (styles.hasColumnStyle())
@@ -125,12 +127,11 @@ public class HtmlTableRenderer
                         String columnStyle = styles.getColumnStyle(j);
                         writer.writeAttribute("class", columnStyle, null);
                     }
-                    RendererUtils.renderChild(facesContext, uiColumn);
+                    RendererUtils.renderChild(facesContext, child);
                     writer.endElement("td");
                 }
             }
             writer.endElement("tr");
-            HtmlRendererUtils.writePrettyLineSeparator(facesContext);
         }
         writer.endElement("tbody");
     }
@@ -140,62 +141,128 @@ public class HtmlTableRenderer
         RendererUtils.checkParamValidity(facesContext, uiComponent, UIData.class);
 
         ResponseWriter writer = facesContext.getResponseWriter();
-        writeFacet(facesContext, uiComponent, "footer");
+        renderFacet(facesContext, writer, (UIData)uiComponent, false);
         writer.endElement(HTML.TABLE_ELEM);
+        HtmlRendererUtils.writePrettyLineSeparator(facesContext);
     }
 
-    private void writeFacet(FacesContext facesContext, UIComponent component, String facetName) throws IOException
+    private void renderFacet(FacesContext facesContext,
+                             ResponseWriter writer,
+                             UIData uiData,
+                             boolean header) throws IOException
     {
-        boolean foundFacet = false;
-        for (Iterator it = component.getChildren().iterator(); it.hasNext(); )
+        String facetName = header ? "header" : "footer";
+        int colspan = 0;
+        boolean hasColumnFacet = false;
+        for (Iterator it = uiData.getChildren().iterator(); it.hasNext(); )
         {
-            UIColumn uiColumn = (UIColumn)it.next();
-            if (uiColumn.isRendered())
+            UIComponent uiComponent = (UIComponent)it.next();
+            if (uiComponent instanceof UIColumn &&
+                ((UIColumn)uiComponent).isRendered())
             {
-                UIComponent facetComp = uiColumn.getFacet(facetName);
-                if (facetComp != null)
+                colspan++;
+                if (!hasColumnFacet && uiComponent.getFacet(facetName) != null)
                 {
-                    foundFacet =  true;
-                    break;
+                    hasColumnFacet = true;
                 }
             }
         }
-        if (foundFacet)
+
+        UIComponent facet = uiData.getFacet(facetName);
+        if (facet != null || hasColumnFacet)
         {
-            ResponseWriter writer = facesContext.getResponseWriter();
-
-            boolean isHeader = facetName.equals("header");
-            String elemName = isHeader ? "thead" : "tfoot";
-            writer.startElement(elemName, component);
-            writer.startElement("tr", component);
-            String style = isHeader ? getHeaderClass(component) : getFooterClass(component);
-            if (style != null && style.length() > 0)
-            {
-                writer.writeAttribute("class", style, null);
-            }
-            for (Iterator it = component.getChildren().iterator(); it.hasNext(); )
-            {
-                UIColumn uiColumn = (UIColumn)it.next();
-                if (uiColumn.isRendered())
-                {
-                    UIComponent facetComp = (UIComponent)uiColumn.getFacet(facetName);
-
-                    writer.startElement("td", component);
-                    if (facetComp != null)
-                    {
-                        RendererUtils.renderChild(facesContext, facetComp);
-                    }
-                    writer.endElement("td");
-                }
-            }
-            writer.endElement("tr");
+            // Header or Footer present
+            String elemName = header ? "thead" : "tfoot";
+            String columnElemName = header ? "th" : "td";
+            String style = header ? getHeaderClass(uiData) : getFooterClass(uiData);
+            
             HtmlRendererUtils.writePrettyLineSeparator(facesContext);
+            writer.startElement(elemName, uiData);
+            if (header)
+            {
+                renderTableFacet(facesContext, writer, uiData, facet, style, columnElemName, colspan);
+                renderColumnFacet(facesContext, writer, uiData, style, facetName, columnElemName, hasColumnFacet);
+            }
+            else
+            {
+                renderColumnFacet(facesContext, writer, uiData, style, facetName, columnElemName, hasColumnFacet);
+                renderTableFacet(facesContext, writer, uiData, facet, style, columnElemName, colspan);
+            }
             writer.endElement(elemName);
         }
     }
 
+    private void renderColumnFacet(FacesContext facesContext,
+                                   ResponseWriter writer,
+                                   UIData uiData,
+                                   String style,
+                                   String facetName,
+                                   String columnElemName,
+                                   boolean hasColumnFacet)
+        throws IOException
+    {
+        if (!hasColumnFacet)
+        {
+            return;
+        }
+        HtmlRendererUtils.writePrettyLineSeparator(facesContext);
+        writer.startElement("tr", uiData);
+        if (style != null)
+        {
+            writer.writeAttribute("class", style, null);
+        }
+        for (Iterator it = uiData.getChildren().iterator(); it.hasNext(); )
+        {
+            UIComponent uiComponent = (UIComponent)it.next();
+            if (uiComponent instanceof UIColumn &&
+                ((UIColumn)uiComponent).isRendered())
+            {
+                UIComponent columnFacet = uiComponent.getFacet(facetName);
+                writer.startElement(columnElemName, uiComponent);
+                renderFacet(facesContext, columnFacet);
+                writer.endElement(columnElemName);
+            }
+        }
+        writer.endElement("tr");
+    }
 
-    private static String getHeaderClass(UIComponent component)
+    private void renderTableFacet(FacesContext facesContext,
+                                  ResponseWriter writer,
+                                  UIData uiData,
+                                  UIComponent facet,
+                                  String style,
+                                  String columnElemName,
+                                  int colspan)
+        throws IOException
+    {
+        if (facet == null)
+        {
+            return;
+        }
+        HtmlRendererUtils.writePrettyLineSeparator(facesContext);
+        writer.startElement("tr", uiData);
+        if (style != null)
+        {
+            writer.writeAttribute("class", style, null);
+        }
+        writer.startElement(columnElemName, uiData);
+        writer.writeAttribute("colspan", new Integer(colspan), null);
+        renderFacet(facesContext, facet);
+        writer.endElement(columnElemName);
+        writer.endElement("tr");
+    }
+
+    private static void renderFacet(FacesContext facesContext, UIComponent facet)
+        throws IOException
+    {
+        if (facet == null)
+        {
+            return;
+        }
+        RendererUtils.renderChild(facesContext, facet);
+    }
+
+    private static String getHeaderClass(UIData component)
     {
         if (component instanceof HtmlDataTable)
         {
@@ -207,7 +274,7 @@ public class HtmlTableRenderer
         }
     }
 
-    private static String getFooterClass(UIComponent component)
+    private static String getFooterClass(UIData component)
     {
         if (component instanceof HtmlDataTable)
         {

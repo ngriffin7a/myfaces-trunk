@@ -52,7 +52,7 @@
     <managed-bean>
         <managed-bean-name>countryList</managed-bean-name>
         <managed-bean-class>net.sourceforge.myfaces.examples.listexample.SimpleCountryList</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
+        <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
 
 
