@@ -76,8 +76,6 @@ public class ELBaseTest extends MyFacesBaseTest
                 }
             });
 
-        // Setup for testNestedObjects()
-        
         _a0     = new Object[] {new Integer(0), new Integer(1), new Integer(2)};
         _a1     = new Object[] {_a0, null};
 
@@ -108,7 +106,5 @@ public class ELBaseTest extends MyFacesBaseTest
         _m.put("\\]false[", "_FALSE_");
         _m.put("f", new Boolean(false));
         _m.put("t", new Boolean(true));
-
-        // END Setup for testNestedObjects()
     }
 }

@@ -108,6 +108,16 @@ public class SetValueBindingTest extends ELBaseTest
         assertEquals("differentName", vb.getValue(_facesContext));
     }
     
+    public void testSetNullValue() 
+    {
+        ValueBinding vb;
+
+        vb = _application.createValueBinding("#{testmap.o.obj}");
+        assertNotSame(vb.getValue(_facesContext), null);
+        vb.setValue(_facesContext, null);
+        assertSame(vb.getValue(_facesContext), null);
+    }
+    
     public void testCoercion()
     {
         ValueBinding vb;
