@@ -36,7 +36,9 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 import javax.servlet.ServletRequest;
 import java.io.IOException;
-import java.util.*;
+import java.util.Iterator;
+import java.util.Stack;
+import java.util.StringTokenizer;
 
 /**
  * DOCUMENT ME!
@@ -55,7 +57,6 @@ public class ListRenderer
                UserRoleAttributes
 {
     public static final String TYPE = "List";
-    private static final String ITERATOR_ATTR = ListRenderer.class.getName() + ".iterator";
     private static final String ACTUAL_ROW_ATTR = ListRenderer.class.getName() + ".actrow";
     private static final String ACTUAL_COLUMN_ATTR = ListRenderer.class.getName() + ".actcol";
     private static final String COMPONENT_COUNT_ATTR = ListRenderer.class.getName() + ".compcount";
@@ -98,24 +99,17 @@ public class ListRenderer
             if (parentRendererType.equals(ListRenderer.TYPE) &&
                 rendererType.equals(DataRenderer.TYPE))
             {
-                Object obj = uiComponent.getAttribute(ITERATOR_ATTR);
-                if (obj == null)
+                Iterator it = DataRenderer.getIterator(facesContext, uiComponent);
+                if (it == null)
                 {
                     // first call of encodeBegin
                     incrementComponentCountAttr(facesContext);
                 }
-
-                Iterator it = getIterator(facesContext, uiComponent);
-
-                if (it.hasNext())
+                else if (it.hasNext())
                 {
                     // new row
                     closeRow(facesContext);
                     openRow(facesContext, uiComponent.getRendererType());
-                }
-                else
-                {
-                    //facesContext.setModelValue(varAttr, null);
                 }
             }
             else if (parentRendererType.equals(ListRenderer.TYPE) &&
@@ -200,37 +194,6 @@ public class ListRenderer
                 afterCloseColumn(facesContext, column -1);
             }
         }
-    }
-
-    protected Iterator getIterator(FacesContext facesContext, UIComponent uiComponent)
-    {
-        Iterator iterator = (Iterator)uiComponent.getAttribute(ITERATOR_ATTR);
-        if (iterator == null)
-        {
-            Object v = uiComponent.currentValue(facesContext);
-            if (v instanceof Iterator)
-            {
-                iterator = (Iterator)v;
-            }
-            else if (v instanceof Collection)
-            {
-                iterator = ((Collection)v).iterator();
-            }
-            else if (v instanceof Object[])
-            {
-                iterator = Arrays.asList((Object[])v).iterator();
-            }
-            else if (v instanceof Iterator)
-            {
-                iterator = (Iterator)v;
-            }
-            else
-            {
-                throw new IllegalArgumentException("Value of component " + UIComponentUtils.toString(uiComponent) + " is neither collection nor array.");
-            }
-            uiComponent.setAttribute(ITERATOR_ATTR, iterator);
-        }
-        return iterator;
     }
 
     //-------------------------------------------------------------

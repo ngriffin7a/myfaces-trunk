@@ -94,7 +94,7 @@ public class DataRenderer
     {
     }
 
-    protected Iterator getIterator(FacesContext facesContext, UIComponent uiComponent)
+    public static Iterator getIterator(FacesContext facesContext, UIComponent uiComponent)
     {
         Iterator iterator = (Iterator)uiComponent.getAttribute(ITERATOR_ATTR);
         if (iterator == null)
