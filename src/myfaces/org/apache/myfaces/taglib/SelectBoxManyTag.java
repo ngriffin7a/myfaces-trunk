@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UISelectMany;
-import net.sourceforge.myfaces.renderkit.html.SelectManyOptionRenderer;
+import net.sourceforge.myfaces.renderkit.html.MenuRenderer;
 
 import javax.faces.component.UIComponent;
 
@@ -39,7 +39,7 @@ public class SelectBoxManyTag
 
     public String getRendererType()
     {
-        return SelectManyOptionRenderer.TYPE;
+        return MenuRenderer.TYPE;
     }
 
     public void setSize(int v)

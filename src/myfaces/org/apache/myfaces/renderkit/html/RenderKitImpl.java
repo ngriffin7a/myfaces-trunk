@@ -49,8 +49,8 @@ public class RenderKitImpl
         addRenderer(new ButtonRenderer());
         addRenderer(new HyperlinkRenderer());
         addRenderer(new DataRenderer());
-        addRenderer(new SelectOneOptionRenderer());
-        addRenderer(new SelectManyOptionRenderer());
+        addRenderer(new ListboxRenderer());
+        addRenderer(new MenuRenderer());
 
         //State Handling
         if (MyFacesConfig.isStateZipping())

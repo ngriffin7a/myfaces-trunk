@@ -18,22 +18,23 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
+import net.sourceforge.myfaces.component.UISelectMany;
 import net.sourceforge.myfaces.component.UISelectOne;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import java.io.IOException;
 
-
 /**
  * TODO: description
  * @author Thomas Spiegl (latest modification by Author)
  * @version $Revision$ $Date$
  */
-public class SelectOneOptionRenderer
+public class MenuRenderer
         extends AbstractSelectOptionRenderer
 {
-    public static final String TYPE = "SelectOneOptionRenderer";
+    public static final String TYPE = "SelectManyOptionRenderer";
+    private static final int DEFAULT_SIZE = 1;
 
     public String getRendererType()
     {
@@ -42,7 +43,7 @@ public class SelectOneOptionRenderer
 
     public boolean supportsComponentType(String s)
     {
-        return s.equals(UISelectOne.TYPE);
+        return s.equals(UISelectMany.TYPE);
     }
 
     public boolean supportsComponentType(UIComponent uicomponent)
@@ -53,16 +54,21 @@ public class SelectOneOptionRenderer
     public void encodeBegin(FacesContext facescontext, UIComponent uicomponent)
             throws IOException
     {
-        if (uicomponent.getComponentType() != UISelectOne.TYPE)
+        if (uicomponent.getComponentType() != UISelectMany.TYPE &&
+            uicomponent.getComponentType() != UISelectOne.TYPE)
         {
-            throw new IllegalArgumentException("UIComponent must be of type " + UISelectOne.class.getName());
+            throw new IllegalArgumentException("UIComponent must be of type " + UISelectMany.class.getName() +
+                                               " or " + UISelectOne.class.getName());
         }
     }
 
     public void encodeEnd(FacesContext facescontext, UIComponent uicomponent)
         throws IOException
     {
-        super.encodeEnd(facescontext, uicomponent, false);
+        Integer i = (Integer)uicomponent.getAttribute(UISelectOne.SIZE_ATTR);
+        int size = i != null ? i.intValue() : DEFAULT_SIZE;
+
+        super.encodeEnd(facescontext, uicomponent, size);
     }
 
 }

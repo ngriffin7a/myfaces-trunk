@@ -16,53 +16,34 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.html;
+package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UISelectMany;
 import net.sourceforge.myfaces.component.UISelectOne;
+import net.sourceforge.myfaces.renderkit.html.ListboxRenderer;
 
 import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import java.io.IOException;
+
 
 /**
  * TODO: description
  * @author Thomas Spiegl (latest modification by Author)
  * @version $Revision$ $Date$
  */
-public class SelectManyOptionRenderer
-        extends AbstractSelectOptionRenderer
+public class ListBoxTag
+    extends MyFacesTag
 {
-    public static final String TYPE = "SelectManyOptionRenderer";
+    public UIComponent createComponent()
+    {
+        return new UISelectOne();
+    }
 
     public String getRendererType()
     {
-        return TYPE;
+        return ListboxRenderer.TYPE;
     }
 
-    public boolean supportsComponentType(String s)
+    public void setTest(int v)
     {
-        return s.equals(UISelectMany.TYPE);
+        addRequestTimeValue(UISelectOne.SIZE_ATTR, new Integer(v));
     }
-
-    public boolean supportsComponentType(UIComponent uicomponent)
-    {
-        return uicomponent instanceof UISelectOne;
-    }
-
-    public void encodeBegin(FacesContext facescontext, UIComponent uicomponent)
-            throws IOException
-    {
-        if (uicomponent.getComponentType() != UISelectMany.TYPE)
-        {
-            throw new IllegalArgumentException("UIComponent must be of type " + UISelectMany.class.getName());
-        }
-    }
-
-    public void encodeEnd(FacesContext facescontext, UIComponent uicomponent)
-        throws IOException
-    {
-        super.encodeEnd(facescontext, uicomponent, true);
-    }
-
 }

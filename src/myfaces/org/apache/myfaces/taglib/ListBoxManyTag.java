@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UISelectOne;
-import net.sourceforge.myfaces.renderkit.html.MenuRenderer;
+import net.sourceforge.myfaces.component.UISelectMany;
+import net.sourceforge.myfaces.renderkit.html.ListboxRenderer;
 
 import javax.faces.component.UIComponent;
 
@@ -29,21 +29,21 @@ import javax.faces.component.UIComponent;
  * @author Thomas Spiegl (latest modification by Author)
  * @version $Revision$ $Date$
  */
-public class SelectBoxTag
+public class ListBoxManyTag
     extends MyFacesTag
 {
     public UIComponent createComponent()
     {
-        return new UISelectOne();
+        return new UISelectMany();
     }
 
     public String getRendererType()
     {
-        return MenuRenderer.TYPE;
+        return ListboxRenderer.TYPE;
     }
 
-    public void setTest(int v)
+    public void setSize(int v)
     {
-        addRequestTimeValue(UISelectOne.SIZE_ATTR, new Integer(v));
+        addRequestTimeValue(UISelectMany.SIZE_ATTR, new Integer(v));
     }
 }

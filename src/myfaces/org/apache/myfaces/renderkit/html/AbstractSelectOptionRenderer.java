@@ -21,7 +21,6 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.component.UISelectItem;
 import net.sourceforge.myfaces.component.UISelectItems;
 import net.sourceforge.myfaces.component.UISelectMany;
-import net.sourceforge.myfaces.component.UISelectOne;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 
 import javax.faces.component.SelectItem;
@@ -47,10 +46,12 @@ public abstract class AbstractSelectOptionRenderer
     {
     }
 
-    public void encodeEnd(FacesContext facescontext, UIComponent uicomponent, boolean multipleSelect)
+    public void encodeEnd(FacesContext facescontext, UIComponent uicomponent, int size)
             throws IOException
     {
         ResponseWriter writer = facescontext.getResponseWriter();
+
+        boolean multipleSelect = uicomponent.getComponentType() == UISelectMany.TYPE ? true : false;
 
         Iterator it = getSelectItems(facescontext, uicomponent);
         if (it.hasNext())
@@ -60,19 +61,10 @@ public abstract class AbstractSelectOptionRenderer
             writer.write(uicomponent.getCompoundId());
             writer.write("\"");
 
-            Integer size = null;
-            if (uicomponent.getComponentType().equals(UISelectOne.TYPE))
-            {
-                size = (Integer)uicomponent.getAttribute(UISelectOne.SIZE_ATTR);
-            }
-            else if (uicomponent.getComponentType().equals(UISelectMany.TYPE))
-            {
-                size = (Integer)uicomponent.getAttribute(UISelectMany.SIZE_ATTR);
-            }
-            if (size != null)
+            if (size > 0)
             {
                 writer.write(" size=\"");
-                writer.write(size.toString());
+                writer.write(new Integer(size).toString());
                 writer.write("\"");
             }
 
@@ -133,62 +125,76 @@ public abstract class AbstractSelectOptionRenderer
         return false;
     }
 
-    protected static Iterator getSelectItems(FacesContext context, UIComponent component)
+    protected int getSelectItemsCount(FacesContext context, UIComponent component)
     {
-        ArrayList list = new ArrayList(component.getChildCount());
-        for(Iterator children = component.getChildren(); children.hasNext();)
+        return getSelectItemsList(context, component).size();
+    }
+
+    protected Iterator getSelectItems(FacesContext context, UIComponent component)
+    {
+        return getSelectItemsList(context, component).iterator();
+    }
+
+    private ArrayList _list = null;
+    private ArrayList getSelectItemsList(FacesContext context, UIComponent component)
+    {
+        if (_list == null)
         {
-            UIComponent child = (UIComponent)children.next();
-            if (child instanceof UISelectItem)
+            _list = new ArrayList(component.getChildCount());
+            for(Iterator children = component.getChildren(); children.hasNext();)
             {
-                UISelectItem item = (UISelectItem)child;
-                list.add(new SelectItem(item.getItemValue(),
-                                        item.getItemLabel(),
-                                        item.getItemDescription()));
-            }
-            else if (child instanceof UISelectItems)
-            {
-                Object value = child.currentValue(context);
-                if (value instanceof UISelectItem)
+                UIComponent child = (UIComponent)children.next();
+                if (child instanceof UISelectItem)
                 {
-                    list.add(value);
+                    UISelectItem item = (UISelectItem)child;
+                    _list.add(new SelectItem(item.getItemValue(),
+                                            item.getItemLabel(),
+                                            item.getItemDescription()));
                 }
-                else if (value instanceof SelectItem[])
+                else if (child instanceof UISelectItems)
                 {
-                    SelectItem items[] = (SelectItem[])value;
-                    for(int i = 0; i < items.length; i++)
+                    Object value = child.currentValue(context);
+                    if (value instanceof UISelectItem)
                     {
-                        list.add(items[i]);
+                        _list.add(value);
                     }
-                }
-                else if (value instanceof Collection)
-                {
-                    Iterator it = ((Collection)value).iterator();
-                    while (it.hasNext())
+                    else if (value instanceof SelectItem[])
                     {
-                        list.add(it.next());
-                    }
-                }
-                // TODO: add Collection / remove Map ?? (see API-Doku)
-                else if(value instanceof Map)
-                {
-                    Iterator keys = ((Map)value).keySet().iterator();
-                    while (keys.hasNext())
-                    {
-                        Object key = keys.next();
-                        if(key != null)
+                        SelectItem items[] = (SelectItem[])value;
+                        for(int i = 0; i < items.length; i++)
                         {
-                            Object label = ((Map)value).get(key);
-                            if(label != null)
+                            _list.add(items[i]);
+                        }
+                    }
+                    else if (value instanceof Collection)
+                    {
+                        Iterator it = ((Collection)value).iterator();
+                        while (it.hasNext())
+                        {
+                            _list.add(it.next());
+                        }
+                    }
+                    // TODO: add Collection / remove Map ?? (see API-Doku)
+                    else if(value instanceof Map)
+                    {
+                        Iterator keys = ((Map)value).keySet().iterator();
+                        while (keys.hasNext())
+                        {
+                            Object key = keys.next();
+                            if(key != null)
                             {
-                                SelectItem item = new SelectItem(key.toString(), label.toString(), null);
-                                list.add(item);
+                                Object label = ((Map)value).get(key);
+                                if(label != null)
+                                {
+                                    SelectItem item = new SelectItem(key.toString(), label.toString(), null);
+                                    _list.add(item);
+                                }
                             }
                         }
                     }
                 }
             }
         }
-        return list.iterator();
+        return _list;
     }
 }
