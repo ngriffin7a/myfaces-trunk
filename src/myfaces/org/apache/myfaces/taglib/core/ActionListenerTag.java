@@ -19,7 +19,8 @@
 package net.sourceforge.myfaces.taglib.core;
 
 import net.sourceforge.myfaces.component.UIComponentUtils;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
@@ -39,6 +40,8 @@ import java.lang.reflect.Method;
 public class ActionListenerTag
     extends TagSupport
 {
+    private static final Log log = LogFactory.getLog(ActionListenerTag.class);
+
     private String _type = null;
 
     public ActionListenerTag()
@@ -92,8 +95,8 @@ public class ActionListenerTag
                                                              ADD_ACTION_LISTENER_METHOD_PARAMS);
             if (method == null)
             {
-                LogUtil.getLogger().severe("Component " + UIComponentUtils.toString(uiComponent)
-                                           + " has no " + ADD_ACTION_LISTENER_METHOD_NAME + " method.");
+                log.error("Component " + UIComponentUtils.toString(uiComponent)
+                          + " has no " + ADD_ACTION_LISTENER_METHOD_NAME + " method.");
             }
             else
             {

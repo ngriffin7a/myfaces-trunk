@@ -23,7 +23,8 @@ import net.sourceforge.myfaces.renderkit.html.state.ModelValueEntry;
 import net.sourceforge.myfaces.renderkit.html.state.StateSaver;
 import net.sourceforge.myfaces.renderkit.html.state.StateUtils;
 import net.sourceforge.myfaces.tree.TreeUtils;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FactoryFinder;
 import javax.faces.application.ApplicationFactory;
@@ -46,6 +47,8 @@ import java.util.Iterator;
 public class HTTPSessionStateSaver
     implements StateSaver
 {
+    private static final Log log = LogFactory.getLog(HTTPSessionStateSaver.class);
+
     protected static final String TREE_SESSION_ATTR
         = HTTPSessionStateSaver.class.getName() + ".TREE";
     protected static final String LOCALE_SESSION_ATTR
@@ -93,7 +96,7 @@ public class HTTPSessionStateSaver
                 String modelRef = ((UISaveState)comp).getValueRef();
                 if (modelRef == null)
                 {
-                    LogUtil.getLogger().warning("UISaveState without model reference?!");
+                    log.error("UISaveState without model reference?!");
                 }
                 else
                 {

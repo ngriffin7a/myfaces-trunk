@@ -1,6 +1,7 @@
 package net.sourceforge.myfaces.webapp;
 
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
@@ -15,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 public class ServletMappingWithExtension
     implements ServletMapping
 {
+    private static final Log log = LogFactory.getLog(ServletMappingWithExtension.class);
+
     private static final String JSP_EXTENSION = ".jsp";
     private static final String FACES_EXTENSION = ".jsf";
 
@@ -26,7 +29,7 @@ public class ServletMappingWithExtension
         }
         else
         {
-            LogUtil.getLogger().warning("TreeId has invalid extension: " + treeId);
+            log.warn("TreeId has invalid extension: " + treeId);
             return treeId;
         }
     }

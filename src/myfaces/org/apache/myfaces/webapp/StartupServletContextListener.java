@@ -18,18 +18,15 @@
  */
 package net.sourceforge.myfaces.webapp;
 
-import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.config.FacesConfig;
 import net.sourceforge.myfaces.config.FacesConfigFactory;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * DOCUMENT ME!
@@ -39,6 +36,8 @@ import java.util.logging.Logger;
 public class StartupServletContextListener
         implements ServletContextListener
 {
+    private static final Log log = LogFactory.getLog(StartupServletContextListener.class);
+
     public StartupServletContextListener()
     {
     }
@@ -50,8 +49,10 @@ public class StartupServletContextListener
             ServletContext servletContext = e.getServletContext();
 
             //Set logging level
+            /*
             setLoggerLevel(LogUtil.getLogger(),
                            MyFacesConfig.getLogLevel(servletContext));
+            */
 
             FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(servletContext);
             FacesConfig facesConfig = fcf.getFacesConfig(servletContext);
@@ -61,7 +62,7 @@ public class StartupServletContextListener
         {
             ex.printStackTrace();
         }
-        LogUtil.getLogger().info("ServletContext '" + e.getServletContext().getRealPath("/") + "' initialized.");
+        log.info("ServletContext '" + e.getServletContext().getRealPath("/") + "' initialized.");
     }
 
     public void contextDestroyed(ServletContextEvent e)
@@ -69,6 +70,7 @@ public class StartupServletContextListener
     }
 
 
+    /*
     private void setLoggerLevel(Logger logger, Level logLevel)
     {
         logger.setLevel(logLevel);
@@ -79,5 +81,6 @@ public class StartupServletContextListener
             logHandlers[i].setLevel(logLevel);
         }
     }
+    */
 
 }

@@ -22,7 +22,8 @@ import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.Parser;
 import net.sourceforge.myfaces.tree.TreeImpl;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.tree.Tree;
@@ -42,6 +43,8 @@ import java.util.Stack;
  */
 public class JspTreeParser
 {
+    private static final Log log = LogFactory.getLog(JspTreeParser.class);
+
     private String _topFileEncoding = "ISO-8859-1";
     private JspCompilationContext _jspCompilationContext = null;
     private MyParseEventListener _parseEventListener = null;
@@ -100,7 +103,7 @@ public class JspTreeParser
             throw new FacesException(e);
         }
 
-        LogUtil.getLogger().fine("Parsing JSP file '" + topFileName + "'.");
+        if (log.isDebugEnabled()) log.debug("Parsing JSP file '" + topFileName + "'.");
         parseFile(topFileName, stream);
     }
 
@@ -122,7 +125,7 @@ public class JspTreeParser
     {
         if (pageName.startsWith("<%"))
         {
-            LogUtil.getLogger().fine("Cannot parse dynamically included page '" + pageName + "'.");
+            log.warn("Cannot parse dynamically included page '" + pageName + "'.");
             return;
         }
 
@@ -130,7 +133,7 @@ public class JspTreeParser
         boolean isAbsolute = pageName.startsWith("/");
         if (!isAbsolute)
         {
-            LogUtil.getLogger().warning("Relative includes with <jsp:include> are not supported yet!");
+            log.warn("Relative includes with <jsp:include> are not supported yet!");
             return;
         }
 

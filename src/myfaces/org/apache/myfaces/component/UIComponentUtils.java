@@ -21,7 +21,8 @@ package net.sourceforge.myfaces.component;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.tree.TreeUtils;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.component.*;
@@ -43,6 +44,8 @@ import java.util.List;
  */
 public class UIComponentUtils
 {
+    private static final Log log = LogFactory.getLog(UIComponentUtils.class);
+
     private UIComponentUtils() {}
 
     public static boolean getBooleanAttribute(UIComponent uiComponent,
@@ -456,10 +459,7 @@ public class UIComponentUtils
             }
             catch (ConverterException e)
             {
-                LogUtil.getLogger().severe(
-                    "Could not convert output value '" + outputValue
-                    + "' to String.");
-
+                log.error("Could not convert output value '" + outputValue + "' to String.", e);
                 return outputValue.toString();
             }
         }

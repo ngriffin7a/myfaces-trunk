@@ -25,7 +25,8 @@ import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.renderkit.html.util.SelectItemUtil;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.component.SelectItem;
@@ -47,9 +48,10 @@ public class RadioRenderer
     extends HTMLRenderer
     implements CallbackRenderer
 {
+    private static final Log log = LogFactory.getLog(RadioRenderer.class);
+
     public static final String TYPE = "Radio";
     private static final String ATTR_COUNT = RadioRenderer.class.getName() + ".COUNT";
-    private static final String ATTR_CALLBACK = RadioRenderer.class.getName() + ".CALLBACK";
 
     public String getRendererType()
     {
@@ -90,7 +92,6 @@ public class RadioRenderer
         if (uiComponent instanceof UISelectOneRadio)
         {
             CallbackSupport.addCallbackRenderer(facesContext, uiComponent, this);
-            uiComponent.setAttribute(ATTR_CALLBACK, Boolean.TRUE);
         }
         else if (uiComponent instanceof UISelectOne)
         {
@@ -106,13 +107,12 @@ public class RadioRenderer
                                true,
                                i);
                 }
-                uiComponent.setAttribute(ATTR_CALLBACK, Boolean.FALSE);
             }
         }
         else
         {
-            LogUtil.getLogger().warning("Expected UISelectOne or UISelectOneRadio when rendering input radio. " +
-                                        "component: " + uiComponent.getClientId(facesContext));
+            log.error("Expected UISelectOne or UISelectOneRadio when rendering input radio. "
+                      + "component: " + uiComponent.getClientId(facesContext));
             return;
         }
     }
@@ -121,7 +121,7 @@ public class RadioRenderer
         throws IOException
     {
         super.encodeEnd(facesContext, uiComponent);
-        if (((Boolean)uiComponent.getAttribute(ATTR_CALLBACK)).booleanValue())
+        if (uiComponent instanceof UISelectOneRadio)
         {
             CallbackSupport.removeCallbackRenderer(facesContext, uiComponent, this);
         }

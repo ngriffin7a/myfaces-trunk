@@ -27,8 +27,8 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.util.Locale;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * DOCUMENT ME!

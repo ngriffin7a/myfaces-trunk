@@ -21,7 +21,8 @@ package net.sourceforge.myfaces.el;
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.config.*;
 import net.sourceforge.myfaces.util.FacesUtils;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.application.Application;
 import javax.faces.context.FacesContext;
@@ -43,6 +44,8 @@ import java.util.List;
 public class VariableResolverImpl
     extends VariableResolver
 {
+    private static final Log log = LogFactory.getLog(VariableResolverImpl.class);
+
     public Object resolveVariable(FacesContext facesContext, String name)
     {
     	if (name == null || name.length() == 0)
@@ -112,7 +115,7 @@ public class VariableResolverImpl
             }
             else if (!scope.equals("none"))
             {
-                LogUtil.getLogger().severe("Managed bean '" + name + "' has illegal scope: " + scope);
+                log.error("Managed bean '" + name + "' has illegal scope: " + scope);
             }
 
             setManagedBeanProperties(facesContext, obj, mbc);
@@ -120,7 +123,7 @@ public class VariableResolverImpl
             return obj;
         }
 
-        LogUtil.getLogger().info("Variable '" + name + "' could not be resolved.");
+        log.warn("Variable '" + name + "' could not be resolved.");
         return null;
     }
 

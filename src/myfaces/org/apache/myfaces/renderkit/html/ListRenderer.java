@@ -18,24 +18,21 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.*;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.callback.CallbackRenderer;
 import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
-
-import java.io.IOException;
-
-import java.util.Iterator;
-import java.util.Stack;
-import java.util.StringTokenizer;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIPanel;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
-
 import javax.servlet.ServletRequest;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Stack;
+import java.util.StringTokenizer;
 
 
 /**

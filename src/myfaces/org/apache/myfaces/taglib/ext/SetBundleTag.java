@@ -18,7 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.context.FacesContext;
 import javax.servlet.jsp.JspException;
@@ -36,6 +37,8 @@ import java.util.ResourceBundle;
 public class SetBundleTag
     extends TagSupport
 {
+    private static final Log log = LogFactory.getLog(SetBundleTag.class);
+
     private String _basename;
     private String _var;
     private String _scope;
@@ -81,7 +84,7 @@ public class SetBundleTag
         }
         catch (MissingResourceException e)
         {
-            LogUtil.getLogger().severe("Resource bundle '" + _basename + "' could not be found.");
+            log.error("Resource bundle '" + _basename + "' could not be found.");
             bundle = null;
         }
 

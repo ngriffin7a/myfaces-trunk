@@ -1,18 +1,21 @@
 package net.sourceforge.myfaces.webapp;
 
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.*;
 import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.BodyContent;
 import java.io.IOException;
 import java.util.Enumeration;
 
 public class PageContextWrapper
     extends PageContext
 {
+    private static final Log log = LogFactory.getLog(PageContextWrapper.class);
+
     private PageContext _originalPageContext;
 
     public PageContextWrapper(PageContext originalPageContext)
@@ -132,15 +135,13 @@ public class PageContextWrapper
 
     public void handlePageException(Exception e) throws ServletException, IOException
     {
-        LogUtil.getLogger().throwing(_originalPageContext.getClass().getName(),
-                                     "handlePageException", e);
+        log.error("handlePageException in " + _originalPageContext.getClass().getName(), e);
         _originalPageContext.handlePageException(e);
     }
 
     public void handlePageException(Throwable throwable) throws ServletException, IOException
     {
-        LogUtil.getLogger().throwing(_originalPageContext.getClass().getName(),
-                                     "handlePageException", throwable);
+        log.error("handlePageException in " + _originalPageContext.getClass().getName(), throwable);
         _originalPageContext.handlePageException(throwable);
     }
 

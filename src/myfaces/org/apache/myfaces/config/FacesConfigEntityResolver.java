@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.config;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -25,12 +27,10 @@ import org.xml.sax.SAXException;
 import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.JarURLConnection;
+import java.net.URL;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.net.URL;
-import java.net.JarURLConnection;
-
-import net.sourceforge.myfaces.util.logging.LogUtil;
 
 /**
  * DOCUMENT ME!
@@ -40,6 +40,8 @@ import net.sourceforge.myfaces.util.logging.LogUtil;
 public class FacesConfigEntityResolver
     implements EntityResolver
 {
+    private static final Log log = LogFactory.getLog(FacesConfigEntityResolver.class);
+
     private ServletContext _servletContext = null;
     private JarFile _jarFile = null;
 
@@ -70,7 +72,7 @@ public class FacesConfigEntityResolver
             JarEntry jarEntry = conn.getJarEntry();
             if (jarEntry == null)
             {
-                LogUtil.getLogger().severe("JAR entry '" + systemId + "' not found.");
+                log.fatal("JAR entry '" + systemId + "' not found.");
             }
             stream = _jarFile.getInputStream(jarEntry);
         }
@@ -78,7 +80,7 @@ public class FacesConfigEntityResolver
         {
             if (_servletContext == null)
             {
-                LogUtil.getLogger().severe("No servletContext !?");
+                log.fatal("No servletContext !?");
             }
             stream = _servletContext.getResourceAsStream(systemId);
         }

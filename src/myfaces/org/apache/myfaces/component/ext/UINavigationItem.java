@@ -20,7 +20,8 @@ package net.sourceforge.myfaces.component.ext;
 
 import net.sourceforge.myfaces.component.MyFacesUICommand;
 import net.sourceforge.myfaces.renderkit.html.state.StateRestorer;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FactoryFinder;
 import javax.faces.application.Action;
@@ -45,6 +46,8 @@ import java.util.Iterator;
 public class UINavigationItem
     extends MyFacesUICommand
 {
+    private static final Log log = LogFactory.getLog(UINavigationItem.class);
+
     public static final String OPEN_PROP = "open";
     public static final String ACTIVE_PROP = "active";
     private boolean _open = false;
@@ -207,7 +210,7 @@ public class UINavigationItem
                 //item is an end node --> deactivate all other nodes, and then...
                 if (!(p instanceof UINavigation))
                 {
-                    LogUtil.getLogger().severe("UINavigationItem without parent UINavigation ?!");
+                    log.error("UINavigationItem without parent UINavigation ?!");
                 }
                 else
                 {

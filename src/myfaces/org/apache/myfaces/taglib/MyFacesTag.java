@@ -21,7 +21,8 @@ package net.sourceforge.myfaces.taglib;
 import net.sourceforge.myfaces.component.MyFacesUIOutput;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -41,6 +42,8 @@ public abstract class MyFacesTag
     implements IterationTag,
                MyFacesTagBaseIF
 {
+    private static final Log log = LogFactory.getLog(MyFacesTag.class);
+
     protected MyFacesTagHelper _helper;
 
     public MyFacesTag()
@@ -58,12 +61,12 @@ public abstract class MyFacesTag
         }
         catch (RuntimeException e)
         {
-            LogUtil.getLogger().throwing(this.getClass().getName(), "doStartTag", e);
+            log.error("RuntimeException in doStartTag of class " + this.getClass().getName(), e);
             throw e;
         }
         catch (JspException e)
         {
-            LogUtil.getLogger().throwing(this.getClass().getName(), "doStartTag", e);
+            log.error("JspException in doStartTag of class " + this.getClass().getName(), e);
             throw e;
         }
     }
@@ -84,12 +87,12 @@ public abstract class MyFacesTag
         }
         catch (RuntimeException e)
         {
-            LogUtil.getLogger().throwing(this.getClass().getName(), "doEndTag", e);
+            log.error("RuntimeException in doEndTag of class " + this.getClass().getName(), e);
             throw e;
         }
         catch (JspException e)
         {
-            LogUtil.getLogger().throwing(this.getClass().getName(), "doEndTag", e);
+            log.error("JspException in doEndTag of class " + this.getClass().getName(), e);
             throw e;
         }
         finally
@@ -123,12 +126,12 @@ public abstract class MyFacesTag
         }
         catch (RuntimeException e)
         {
-            LogUtil.getLogger().throwing(this.getClass().getName(), "doAfterBody", e);
+            log.error("RuntimeException in doAfterBody of class " + this.getClass().getName(), e);
             throw e;
         }
         catch (JspException e)
         {
-            LogUtil.getLogger().throwing(this.getClass().getName(), "doAfterBody", e);
+            log.error("JspException in doAfterBody of class " + this.getClass().getName(), e);
             throw e;
         }
     }
@@ -265,9 +268,9 @@ public abstract class MyFacesTag
         if (c == null)
         {
             c = super.findComponent(facesContext);
-            if (getCreated())
+            if (log.isTraceEnabled() && getCreated())
             {
-                LogUtil.getLogger().finest("Component " + getComponent() + " with id " + getComponent().getComponentId() + " was just created by UIComponentTag.");
+                log.trace("Component " + getComponent() + " with id " + getComponent().getComponentId() + " was just created by UIComponentTag.");
             }
         }
         return c;

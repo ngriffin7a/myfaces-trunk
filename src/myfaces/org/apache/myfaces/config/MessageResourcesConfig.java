@@ -18,7 +18,8 @@
  */
 package net.sourceforge.myfaces.config;
 
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.application.Message;
 import javax.faces.application.MessageImpl;
@@ -37,6 +38,8 @@ public class MessageResourcesConfig
     extends MessageResources
     implements Config
 {
+    private static final Log log = LogFactory.getLog(MessageResourcesConfig.class);
+
     private String _messageResourcesId;
     private String _messageResourcesClass;
     private Map _messageConfigMap;
@@ -76,7 +79,7 @@ public class MessageResourcesConfig
                 oldMC.getDeclaredSeverity() != null &&
                 newMC.getSeverity() != oldMC.getSeverity())
             {
-                LogUtil.getLogger().warning("Message '" + id + "' defined more than once with different severities.");
+                log.warn("Message '" + id + "' defined more than once with different severities.");
             }
             else if (newMC.getDeclaredSeverity() != null)
             {
@@ -144,7 +147,7 @@ public class MessageResourcesConfig
         MessageConfig mc = (MessageConfig)getMessageConfigMap().get(msgId);
         if (mc == null)
         {
-            LogUtil.getLogger().severe("Message with id '" + msgId + "' not found in MessageResources '" + _messageResourcesId + "'.");
+            log.error("Message with id '" + msgId + "' not found in MessageResources '" + _messageResourcesId + "'.");
             return new MessageImpl(Message.SEVERITY_ERROR,
                                    "Error " + msgId,
                                    "No detailed description for error + " + msgId);
@@ -158,7 +161,7 @@ public class MessageResourcesConfig
     {
         if (!(_messageConfigMap == null || _messageConfigMap.isEmpty()))
         {
-            LogUtil.getLogger().warning("Declared messages for MessageResources '" + _messageResourcesId + "' will be ignored, because I don't know how to add Messages to class '" + _messageResourcesClass + "'.");
+            log.warn("Declared messages for MessageResources '" + _messageResourcesId + "' will be ignored, because I don't know how to add Messages to class '" + _messageResourcesClass + "'.");
         }
         return (MessageResources)ConfigUtil.newInstance(_messageResourcesClass);
     }

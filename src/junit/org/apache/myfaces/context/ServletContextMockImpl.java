@@ -18,19 +18,20 @@
  */
 package net.sourceforge.myfaces.context;
 
-import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.TestConfig;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import javax.servlet.ServletContext;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import java.util.*;
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
 
 /**
  * DOCUMENT ME!
@@ -40,6 +41,8 @@ import java.io.FileNotFoundException;
 public class ServletContextMockImpl
     implements ServletContext
 {
+    private static final Log log = LogFactory.getLog(ServletContextMockImpl.class);
+
     private Map _attributes = new HashMap();
 
     public ServletContext getContext(String s)
@@ -84,7 +87,7 @@ public class ServletContextMockImpl
         }
         else
         {
-            LogUtil.getLogger().warning("Resource '" + s + "' cannot be resolved.");
+            log.warn("Resource '" + s + "' cannot be resolved.");
             return null;
         }
     }
@@ -106,7 +109,7 @@ public class ServletContextMockImpl
         }
         else
         {
-            LogUtil.getLogger().warning("Resource '" + s + "' cannot be resolved.");
+            log.warn("Resource '" + s + "' cannot be resolved.");
             return null;
         }
     }

@@ -18,25 +18,23 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.*;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
-import net.sourceforge.myfaces.util.logging.LogUtil;
-
-import java.io.IOException;
-
-import java.text.MessageFormat;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
 import javax.faces.component.UIParameter;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -49,6 +47,7 @@ public class MessageRenderer
 extends HTMLRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
+    private static final Log log = LogFactory.getLog(MessageRenderer.class);
 
     public static final String    TYPE         = "Message";
     private static final Object[] EMPTY_PARAMS = new Object[0];
@@ -138,7 +137,7 @@ extends HTMLRenderer
         }
         catch (Exception e)
         {
-            LogUtil.getLogger().severe(e.getMessage());
+            log.error("Error formatting message", e);
             text = pattern;
         }
 

@@ -22,7 +22,8 @@ import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.TagLibraryInfoImpl;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.TldLocationsCache;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.jsp.tagext.TagAttributeInfo;
@@ -39,6 +40,8 @@ import java.util.WeakHashMap;
  */
 public class TLDInfo
 {
+    private static final Log log = LogFactory.getLog(TLDInfo.class);
+
     private static final String TAGLIB_MAP_CONTEXT_ATTR
         = TLDInfo.class.getName() + ".TAGLIB_MAP";
     private static final Object LOCK = new Object();
@@ -125,7 +128,7 @@ public class TLDInfo
         }
         catch (JasperException e)
         {
-            LogUtil.getLogger().severe("Unable to get TagLibraryInfo for library '" + taglibURI + "': " + e.getMessage());
+            log.fatal("Unable to get TagLibraryInfo for library '" + taglibURI + "'.", e);
             throw new RuntimeException(e);
         }
     }

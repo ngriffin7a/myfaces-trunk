@@ -18,7 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.html.jspinfo;
 
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.beans.Beans;
 
@@ -29,6 +30,8 @@ import java.beans.Beans;
  */
 public class JspBeanInfo
 {
+    private static final Log log = LogFactory.getLog(JspBeanInfo.class);
+
     private String _id;
     private String _className;
     private String _beanName;
@@ -113,7 +116,7 @@ public class JspBeanInfo
             //As stated in JSP Spec. the bean object must be present in the given scope
             //if class and beanName attributes are not specified.
             //--> we cannot instantiate this bean
-            LogUtil.getLogger().severe("Cannot instantiate bean " + _id + " without class or beanName.");
+            log.fatal("Cannot instantiate bean " + _id + " without class or beanName.");
             return null;
         }
     }

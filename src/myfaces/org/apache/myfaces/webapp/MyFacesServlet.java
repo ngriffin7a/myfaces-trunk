@@ -18,8 +18,9 @@
  */
 package net.sourceforge.myfaces.webapp;
 
-import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.MyFacesConfig;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.webapp.FacesServlet;
 import javax.servlet.*;
@@ -36,6 +37,7 @@ import java.io.PrintStream;
 public class MyFacesServlet
     implements Servlet
 {
+    private static final Log log = LogFactory.getLog(MyFacesServlet.class);
 
     private final FacesServlet _facesServlet = new FacesServlet();
 
@@ -73,7 +75,7 @@ public class MyFacesServlet
             }
         }
 
-        LogUtil.getLogger().info("MyFacesServlet for context '" + servletConfig.getServletContext().getRealPath("/") + "' initialized.");
+        log.info("MyFacesServlet for context '" + servletConfig.getServletContext().getRealPath("/") + "' initialized.");
     }
 
     public void service(ServletRequest request, ServletResponse response)

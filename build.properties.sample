@@ -6,6 +6,9 @@ servlet.jar = ${project.dir}/lib/servlet.jar
 # File path to com.oreilly.servlet package
 cos.jar = ${project.dir}/lib/cos.jar
 
+# File path to commons logging package
+commons-logging.jar = ${project.dir}/lib/commons-logging.jar
+
 # File path to JavaServer Faces API archive version 1.0 EA3
 # (not included, please download from http://java.sun.com/j2ee/javaserverfaces/download.html)
 jsf-api.jar = ${project.dir}/lib/jsf-api.jar

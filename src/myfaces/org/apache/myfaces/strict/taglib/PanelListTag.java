@@ -18,10 +18,10 @@
  */
 package net.sourceforge.myfaces.strict.taglib;
 
+import net.sourceforge.myfaces.strict.renderkit.html.ListRenderer;
+
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTag;
-
-import net.sourceforge.myfaces.strict.renderkit.html.ListRenderer;
 
 
 /**

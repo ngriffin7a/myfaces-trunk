@@ -22,9 +22,10 @@ import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.tree.TreeImpl;
 import net.sourceforge.myfaces.util.MyFacesObjectInputStream;
-import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
@@ -51,6 +52,8 @@ import java.util.*;
  */
 public class JspInfo
 {
+    private static final Log log = LogFactory.getLog(JspInfo.class);
+
     public static final String CREATOR_TAG_CLASS_ATTR = JspInfo.class.getName() + ".CREATOR_TAG_CLASS";
     public static final String JSP_POSITION_ATTR = JspInfo.class.getName() + ".JSP_POSITION";
     public static final String HARDCODED_ID_ATTR = JspInfo.class.getName() + ".HARDCODED_ID";
@@ -87,7 +90,7 @@ public class JspInfo
             }
             catch (IOException e)
             {
-                LogUtil.getLogger().severe(e.getMessage());
+                log.fatal("IOException", e);
                 throw new RuntimeException(e);
             }
             _serializedTree = baos.toByteArray();
@@ -101,12 +104,12 @@ public class JspInfo
         }
         catch (IOException e)
         {
-            LogUtil.getLogger().severe(e.getMessage());
+            log.fatal("IOException", e);
             throw new RuntimeException(e);
         }
         catch (ClassNotFoundException e)
         {
-            LogUtil.getLogger().severe(e.getMessage());
+            log.fatal("ClassNotFoundException", e);
             throw new RuntimeException(e);
         }
     }
@@ -258,7 +261,7 @@ public class JspInfo
             MyFacesConfig.isCheckJspModification(servletContext) &&
             jspInfo.isModified(servletContext))
         {
-            LogUtil.getLogger().info("JSP file '" + jspInfo.getFilePath(servletContext) + "' was modified, reparsing.");
+            log.info("JSP file '" + jspInfo.getFilePath(servletContext) + "' was modified, reparsing.");
             jspInfo = null;
         }
 
@@ -266,7 +269,7 @@ public class JspInfo
         {
             if (MyFacesConfig.isDisableJspParser(servletContext))
             {
-                LogUtil.getLogger().info("JSP parsing is disabled, JspInfo cannot be applied.");
+                log.warn("JSP parsing is disabled, JspInfo cannot be applied.");
                 jspInfo = new JspInfo(new TreeImpl(treeId));
             }
             else

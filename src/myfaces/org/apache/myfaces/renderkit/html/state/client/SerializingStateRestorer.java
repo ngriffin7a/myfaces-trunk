@@ -22,7 +22,8 @@ import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfoUtils;
 import net.sourceforge.myfaces.renderkit.html.state.ModelValueEntry;
 import net.sourceforge.myfaces.util.Base64;
 import net.sourceforge.myfaces.util.MyFacesObjectInputStream;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FactoryFinder;
 import javax.faces.application.ApplicationFactory;
@@ -49,6 +50,8 @@ import java.util.zip.GZIPInputStream;
 public class SerializingStateRestorer
     extends ClientStateRestorer
 {
+    private static final Log log = LogFactory.getLog(SerializingStateRestorer.class);
+
     protected static final String RESTORED_TREE_CONTEXT_ATTR
         = SerializingStateSaver.class.getName() + ".RESTORED_TREE";
 
@@ -88,7 +91,7 @@ public class SerializingStateRestorer
                     .getAttribute(SerializingStateSaver.CURRENT_LOCALE_ATTR);
         if (savedlocale == null)
         {
-            LogUtil.getLogger().warning("No locale in saved tree?!");
+            log.warn("No locale in saved tree?!");
         }
         else
         {

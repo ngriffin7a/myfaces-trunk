@@ -18,7 +18,8 @@
  */
 package net.sourceforge.myfaces.config;
 
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.render.Renderer;
 import java.util.*;
@@ -31,6 +32,8 @@ import java.util.*;
 public class RendererConfig
     implements Config
 {
+    private static final Log log = LogFactory.getLog(RendererConfig.class);
+
     private String _rendererType = null;
     private String _rendererClass = null;
     private Map _attributeConfigMap = null;
@@ -121,7 +124,7 @@ public class RendererConfig
         }
         catch (ClassNotFoundException e)
         {
-            LogUtil.getLogger().severe("Error in faces-config.xml - Class not found: " + componentClassName);
+            log.error("Error in faces-config.xml - Class not found: " + componentClassName);
         }
     }
 

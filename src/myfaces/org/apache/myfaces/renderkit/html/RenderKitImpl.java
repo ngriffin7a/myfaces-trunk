@@ -18,11 +18,10 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.faces.render.RenderKit;
 import javax.faces.render.Renderer;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**

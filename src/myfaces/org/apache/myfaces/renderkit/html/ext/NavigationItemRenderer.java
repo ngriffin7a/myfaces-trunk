@@ -29,9 +29,10 @@ import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
-import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
@@ -52,6 +53,8 @@ import java.io.IOException;
 public class NavigationItemRenderer
 extends HyperlinkRenderer
 {
+    private static final Log log = LogFactory.getLog(NavigationItemRenderer.class);
+
     public static final String TYPE = "NavigationItem";
 
     protected RenderKitFactory _rkFactory;
@@ -148,7 +151,7 @@ extends HyperlinkRenderer
             }
             if (bundle == null)
             {
-                LogUtil.getLogger().warning("No bundle defined for component " + UIComponentUtils.toString(uiComponent));
+                log.error("No bundle defined for component " + UIComponentUtils.toString(uiComponent));
                 label = key;
             }
             else

@@ -19,7 +19,8 @@
 package net.sourceforge.myfaces.config;
 
 import net.sourceforge.myfaces.renderkit.html.jspinfo.TLDInfo;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.xml.sax.EntityResolver;
 
 import javax.faces.FacesException;
@@ -49,6 +50,8 @@ import java.util.jar.JarFile;
 public abstract class FacesConfigFactoryBase
     implements FacesConfigFactory
 {
+    private static final Log log = LogFactory.getLog(FacesConfigFactoryBase.class);
+
     protected static final String TLD_HTML_URI = "http://java.sun.com/jsf/html";
     protected static final String TLD_EXT_URI = "http://myfaces.sourceforge.net/tld/myfaces_ext_0_4.tld";
 
@@ -108,7 +111,7 @@ public abstract class FacesConfigFactoryBase
             InputStream stream = servletContext.getResourceAsStream(systemId);
             if (stream != null)
             {
-                LogUtil.getLogger().info("Reading config /WEB-INF/faces-config.xml");
+                log.info("Reading config /WEB-INF/faces-config.xml");
                 parseStreamConfig(facesConfig, stream, systemId,
                                   new FacesConfigEntityResolver(servletContext));
             }
@@ -125,7 +128,7 @@ public abstract class FacesConfigFactoryBase
                     throw new FacesException("Resource '" + systemId + "' not found!");
                 }
 
-                LogUtil.getLogger().info("Reading config " + systemId);
+                log.info("Reading config " + systemId);
 
                 parseStreamConfig(facesConfig, stream, systemId,
                                   new FacesConfigEntityResolver(servletContext));
@@ -158,7 +161,7 @@ public abstract class FacesConfigFactoryBase
                 if (name.equals("META-INF/faces-config.xml"))
                 {
                     String systemId = url + name;
-                    LogUtil.getLogger().info("Reading config " + systemId);
+                    log.info("Reading config " + systemId);
                     InputStream stream = jarFile.getInputStream(entry);
                     parseStreamConfig(facesConfig, stream, systemId,
                                       new FacesConfigEntityResolver(jarFile));
@@ -312,7 +315,7 @@ public abstract class FacesConfigFactoryBase
             }
             else if (!attrClass.equals(className))
             {
-                LogUtil.getLogger().warning("Error in faces-config.xml - inconsistency with TLD: Attribute '" + name + "' of renderer '" +  rendererConfig.getRendererType() + "' has different class in Taglib descriptor.");
+                log.warn("Error in faces-config.xml - inconsistency with TLD: Attribute '" + name + "' of renderer '" +  rendererConfig.getRendererType() + "' has different class in Taglib descriptor.");
             }
         }
     }

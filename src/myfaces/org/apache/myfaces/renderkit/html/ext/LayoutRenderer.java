@@ -23,7 +23,8 @@ import net.sourceforge.myfaces.renderkit.attr.ext.LayoutRendererAttributes;
 import net.sourceforge.myfaces.renderkit.callback.CallbackRenderer;
 import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIPanel;
@@ -42,6 +43,8 @@ public class LayoutRenderer
     extends HTMLRenderer
     implements CallbackRenderer, LayoutRendererAttributes
 {
+    private static final Log log = LogFactory.getLog(LayoutRenderer.class);
+
     static final String HEADER = "LayoutHeader";
     static final String NAVIGATION = "LayoutNavigation";
     static final String BODY = "LayoutBody";
@@ -178,7 +181,7 @@ public class LayoutRenderer
         String layout = (String)((UIPanel)uiComponent).currentValue(facesContext);
         if (layout == null)
         {
-            LogUtil.getLogger().severe("No layout attribute!");
+            log.warn("Component " + uiComponent.getClientId(facesContext) + " has no layout attribute!");
             layout = CLASSIC_LAYOUT;
         }
 
@@ -196,7 +199,7 @@ public class LayoutRenderer
         }
         else
         {
-            LogUtil.getLogger().severe("Layout '" + layout + "' not supported.");
+            log.error("Layout '" + layout + "' is not supported.");
             ResponseWriter writer = facesContext.getResponseWriter();
             bodyContent.writeOut(writer);
             return;

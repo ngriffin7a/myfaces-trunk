@@ -18,7 +18,8 @@
  */
 package net.sourceforge.myfaces.config;
 
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -42,6 +43,8 @@ import java.lang.reflect.Method;
 public class FacesConfigFactoryImpl
     extends FacesConfigFactoryBase
 {
+    private static final Log log = LogFactory.getLog(FacesConfigFactoryImpl.class);
+
     public void parseFacesConfig(FacesConfig facesConfig,
                                  InputStream in,
                                  String systemId,
@@ -389,32 +392,31 @@ public class FacesConfigFactoryImpl
         public void warning(SAXParseException exception)
             throws SAXException
         {
-            LogUtil.getLogger().warning("SAXParseException: " + getMessage(exception));
+            log.warn(getMessage(exception), exception);
         }
 
         public void error(SAXParseException exception)
             throws SAXException
         {
-            LogUtil.getLogger().severe("SAXParseException: " + getMessage(exception));
+            log.error(getMessage(exception), exception);
         }
 
         public void fatalError(SAXParseException exception)
             throws SAXException
         {
-            LogUtil.getLogger().severe("SAXParseException: " + getMessage(exception));
+            log.fatal(getMessage(exception), exception);
         }
 
         private String getMessage(SAXParseException exception)
         {
             StringBuffer buf = new StringBuffer();
-            buf.append("URI=");
+            buf.append("SAXParseException at");
+            buf.append(" URI=");
             buf.append(exception.getSystemId());
             buf.append(" Line=");
             buf.append(exception.getLineNumber());
             buf.append(" Column=");
             buf.append(exception.getColumnNumber());
-            buf.append(":");
-            buf.append(exception.getMessage());
             return buf.toString();
         }
     };

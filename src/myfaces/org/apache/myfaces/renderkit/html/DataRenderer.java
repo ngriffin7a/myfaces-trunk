@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.component.UIComponentUtils;
-import net.sourceforge.myfaces.renderkit.*;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.util.ArrayIterator;
 
 import javax.faces.component.UIComponent;

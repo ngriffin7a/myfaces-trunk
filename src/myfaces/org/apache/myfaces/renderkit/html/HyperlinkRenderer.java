@@ -20,14 +20,15 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.convert.ConverterUtils;
-import net.sourceforge.myfaces.renderkit.*;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
-import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FactoryFinder;
 import javax.faces.component.UICommand;
@@ -58,6 +59,8 @@ import java.util.Iterator;
 public class HyperlinkRenderer
     extends HTMLRenderer
 {
+    private static final Log log = LogFactory.getLog(HyperlinkRenderer.class);
+
     public static final String TYPE = "Hyperlink";
 
     //private static final String TYPE_SUFFIX = ".TYPE";
@@ -282,7 +285,7 @@ public class HyperlinkRenderer
                 }
                 catch (ConverterException e)
                 {
-                    LogUtil.getLogger().severe("Could not convert hyperlink parameter " + name + " to String.");
+                    log.error("Could not convert hyperlink parameter " + name + " to String.");
                     strValue = objValue.toString();
                 }
             }

@@ -26,11 +26,12 @@ import net.sourceforge.myfaces.renderkit.html.state.server.HTTPSessionStateResto
 import net.sourceforge.myfaces.renderkit.html.state.server.HTTPSessionStateSaver;
 import net.sourceforge.myfaces.util.FacesUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
-
 import java.io.IOException;
 
 /**
@@ -41,6 +42,8 @@ import java.io.IOException;
 public class StateRenderer
     extends HTMLRenderer
 {
+    private static final Log log = LogFactory.getLog(StateRenderer.class);
+
     public static final String TYPE = "State";
 
     protected StateSaver _stateSaver;
@@ -117,7 +120,7 @@ public class StateRenderer
     {
         if (_stateSaver == null) init(facesContext);
         _stateRestorer.restoreState(facesContext);
-        LogUtil.printTreeToConsole("Current tree after restoring state");
+        if (log.isTraceEnabled()) LogUtil.logTree(log, "Current tree after restoring state");
 
         FacesUtils.getRequestMap(facesContext).put(StateRestorer.STATE_RESTORER_REQUEST_ATTR, _stateRestorer);
     }
@@ -167,7 +170,7 @@ public class StateRenderer
     {
         if (_stateSaver == null) init(facesContext);
         _stateSaver.release(facesContext);
-        LogUtil.printTreeToConsole("Current tree after saving state");
+        if (log.isTraceEnabled()) LogUtil.logTree(log, "Current tree after saving state");
     }
 
 }

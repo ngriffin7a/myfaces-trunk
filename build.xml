@@ -21,6 +21,7 @@
         <pathelement location="${jsf-api.jar}"/>
         <pathelement location="${servlet.jar}"/>
         <pathelement location="${cos.jar}"/>
+        <pathelement location="${commons-logging.jar}"/>
     </path>
 
 
@@ -111,6 +112,8 @@
             <tarfileset file="${myfaces.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
             <tarfileset file="${cos.jar}"
+                        prefix="myfaces-${manifest.impl.version}/lib"/>
+            <tarfileset file="${commons-logging.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
         </tar>
         <delete file="${doc.dir}/web.xml.sample"/>

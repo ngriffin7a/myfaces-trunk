@@ -18,93 +18,53 @@
  */
 package net.sourceforge.myfaces.util.logging;
 
-import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.tree.TreeUtils;
+import org.apache.commons.logging.Log;
 
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Handler;
-import java.util.logging.Level;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
 
 /**
- * Utilities (shortcuts) for logging.
+ * Utilities for logging.
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class LogUtil
 {
-    private static final Handler CONSOLE_HANDER = new ConsoleHandler();
-    private static MyFacesLogger _logger = null;
-
     private LogUtil() {}
 
-    public static MyFacesLogger getLogger()
+    public static void logTree(Log log, String additionalMsg)
     {
-        if (_logger == null)
-        {
-            //_logger = Logger.getLogger(LOGGER_NAME);
-            _logger = new MyFacesLogger();
-            synchronized (_logger)
-            {
-                if (_logger.getHandlers().length == 0)
-                {
-                    _logger.addHandler(CONSOLE_HANDER);
-                }
-                _logger.setUseParentHandlers(false);
-            }
-        }
-        return _logger;
+        logTree(log, null, additionalMsg);
     }
 
-
-    public static void printTreeToConsole(String additionalMsg)
+    public static void logTree(Log log, Tree tree, String additionalMsg)
     {
-        printTreeToConsole(null, additionalMsg);
-    }
-
-    public static void printTreeToConsole(Tree tree, String additionalMsg)
-    {
-        if (getLogger().getLevel().intValue() <= Level.FINEST.intValue())
+        if (log.isTraceEnabled())
         {
             if (tree == null)
             {
                 FacesContext facesContext = FacesContext.getCurrentInstance();
                 if (facesContext == null)
                 {
-                    getLogger().info("Could not print tree to console (no FacesContext).");
+                    log.info("Could not print tree to console (no FacesContext).");
                 }
                 tree = facesContext.getTree();
             }
 
-            System.out.println("========================================");
+            log.trace("========================================");
             if (additionalMsg != null)
             {
-                System.out.println(additionalMsg);
+                log.trace(additionalMsg);
             }
-            TreeUtils.printTree(tree);
-            System.out.println("========================================");
-        }
-    }
-
-    public static void printComponentToConsole(UIComponent component)
-    {
-        printComponentToConsole(component, null);
-    }
-
-    public static void printComponentToConsole(UIComponent component, String label)
-    {
-        if (getLogger().getLevel().intValue() <= Level.FINEST.intValue())
-        {
-            if (label != null)
-            {
-                System.out.print(label);
-                System.out.print(": ");
-            }
-            System.out.println(UIComponentUtils.toString(component));
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            TreeUtils.printTree(tree, new PrintStream(baos));
+            log.trace(baos.toString());
+            log.trace("========================================");
         }
     }
 

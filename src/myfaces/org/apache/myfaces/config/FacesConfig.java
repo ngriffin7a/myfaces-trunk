@@ -18,7 +18,8 @@
  */
 package net.sourceforge.myfaces.config;
 
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -39,6 +40,8 @@ import java.util.*;
 public class FacesConfig
     implements Config
 {
+    private static final Log log = LogFactory.getLog(FacesConfig.class);
+
     private ApplicationConfig _applicationConfig;
     private Map _converterMap;
     private Map _componentClassMap;
@@ -369,7 +372,7 @@ public class FacesConfig
                 newRKC.getRenderKitClass() != null &&
                 oldRKC.getRenderKitClass().equals(newRKC.getRenderKitClass()))
             {
-                LogUtil.getLogger().warning("RenderKit '" + newRKC.getRenderKitId() + "' defined twice with different classes!");
+                log.warn("RenderKit '" + newRKC.getRenderKitId() + "' defined twice with different classes!");
             }
             else if (oldRKC.getRenderKitClass() == null)
             {

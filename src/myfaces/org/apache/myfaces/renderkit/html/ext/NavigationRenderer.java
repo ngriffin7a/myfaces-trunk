@@ -27,7 +27,8 @@ import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -44,7 +45,7 @@ public class NavigationRenderer
     extends HTMLRenderer
     implements CallbackRenderer, NavigationRendererAttributes
 {
-
+    private static final Log log = LogFactory.getLog(NavigationRenderer.class);
 
     public NavigationRenderer()
     {
@@ -98,7 +99,7 @@ public class NavigationRenderer
         }
         if (findNav == null)
         {
-            LogUtil.getLogger().severe("UINavigationItem '" + item.getClientId(FacesContext.getCurrentInstance()) + " has no UINavigation parent ?!");
+            log.error("UINavigationItem '" + item.getClientId(FacesContext.getCurrentInstance()) + " has no UINavigation parent ?!");
             return;
         }
 

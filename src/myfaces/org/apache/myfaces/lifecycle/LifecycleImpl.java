@@ -21,9 +21,10 @@ package net.sourceforge.myfaces.lifecycle;
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.context.FacesContextImpl;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
-import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -48,7 +49,6 @@ import javax.servlet.ServletRequest;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Locale;
-import java.util.logging.Level;
 
 /**
  * Implements the lifecycle as described in Spec. 1.0 PRD2 Chapter 2
@@ -58,6 +58,8 @@ import java.util.logging.Level;
 public class LifecycleImpl
         extends Lifecycle
 {
+    private static final Log log = LogFactory.getLog(LifecycleImpl.class);
+
     private ViewHandler _viewHandler = null;
 
     private TreeFactory _treeFactory;
@@ -124,7 +126,7 @@ public class LifecycleImpl
     private void reconstituteComponentTree(FacesContext facesContext)
         throws FacesException
     {
-        LogUtil.getLogger().entering();
+        if (log.isTraceEnabled()) log.trace("entering reconstituteComponentTree in " + LifecycleImpl.class.getName());
 
         //Set locale
         Locale locale = facesContext.getExternalContext().getRequestLocale();
@@ -158,7 +160,7 @@ public class LifecycleImpl
         {
             try
             {
-                LogUtil.getLogger().finest("StateRenderer found, calling decode.");
+                log.trace("StateRenderer found, calling decode.");
                 stateRenderer.decode(facesContext, null);
             }
             catch (IOException e)
@@ -170,12 +172,12 @@ public class LifecycleImpl
             Iterator msgIt = facesContext.getMessages();
             if (msgIt.hasNext())
             {
-                if (LogUtil.getLogger().getLevel().intValue() <= Level.INFO.intValue())
+                if (log.isInfoEnabled())
                 {
                     while (msgIt.hasNext())
                     {
                         Message msg = (Message)msgIt.next();
-                        LogUtil.getLogger().info("Message, added during reconstituteComponentTree: " + msg.getSummary() + " / " + msg.getDetail());
+                        log.info("Message, added during reconstituteComponentTree: " + msg.getSummary() + " / " + msg.getDetail());
                     }
                 }
 
@@ -185,13 +187,13 @@ public class LifecycleImpl
                 }
                 else
                 {
-                    LogUtil.getLogger().warning("Messages were added during reconstituteComponentTree phase, but could not be removed afterwards, because current context is not instance of FacesContextImpl.");
+                    log.warn("Messages were added during reconstituteComponentTree phase, but could not be removed afterwards, because current context is not instance of FacesContextImpl.");
                 }
             }
         }
         else
         {
-            LogUtil.getLogger().info("No StateRenderer found, cannot restore tree.");
+            log.info("No StateRenderer found, cannot restore tree.");
         }
 
         UIComponent root = facesContext.getTree().getRoot();
@@ -208,7 +210,7 @@ public class LifecycleImpl
         ActionListener actionListener = af.getApplication().getActionListener();
         traverseAndRegisterActionListener(actionListener, root);
 
-        LogUtil.getLogger().exiting();
+        if (log.isTraceEnabled()) log.trace("exiting reconstituteComponentTree in " + LifecycleImpl.class.getName());
     }
 
 
@@ -219,7 +221,7 @@ public class LifecycleImpl
     private boolean applyRequestValues(FacesContext facesContext)
         throws FacesException
     {
-        LogUtil.getLogger().entering();
+        if (log.isTraceEnabled()) log.trace("entering applyRequestValues in " + LifecycleImpl.class.getName());
 
         UIComponent root = facesContext.getTree().getRoot();
         try
@@ -235,18 +237,18 @@ public class LifecycleImpl
 
         if (FacesContextImpl.isResponseComplete(facesContext))
         {
-            LogUtil.getLogger().exiting("response complete", Level.FINE);
+            if (log.isDebugEnabled()) log.debug("exiting applyRequestValues in " + LifecycleImpl.class.getName() + " (response complete)");
             return true;
         }
 
         if (FacesContextImpl.isRenderResponse(facesContext))
         {
             renderResponse(facesContext);
-            LogUtil.getLogger().exiting("after render response", Level.FINE);
+            if (log.isDebugEnabled()) log.debug("exiting applyRequestValues in " + LifecycleImpl.class.getName() + " (after render response)");
             return true;
         }
 
-        LogUtil.getLogger().exiting();
+        if (log.isTraceEnabled()) log.trace("exiting applyRequestValues in " + LifecycleImpl.class.getName());
         return false;
     }
 
@@ -257,7 +259,7 @@ public class LifecycleImpl
      */
     private boolean processValidations(FacesContext facesContext) throws FacesException
     {
-        LogUtil.getLogger().entering();
+        if (log.isTraceEnabled()) log.trace("entering processValidations in " + LifecycleImpl.class.getName());
 
         int messageCountBefore = getMessageCount(facesContext);
 
@@ -268,25 +270,25 @@ public class LifecycleImpl
 
         if (FacesContextImpl.isResponseComplete(facesContext))
         {
-            LogUtil.getLogger().exiting("response complete", Level.FINE);
+            if (log.isDebugEnabled()) log.debug("exiting processValidations in " + LifecycleImpl.class.getName() + " (response complete)");
             return true;
         }
 
         if (FacesContextImpl.isRenderResponse(facesContext))
         {
             renderResponse(facesContext);
-            LogUtil.getLogger().exiting("after render response", Level.FINE);
+            if (log.isDebugEnabled()) log.debug("exiting processValidations in " + LifecycleImpl.class.getName() + " (after render response)");
             return true;
         }
 
         if (getMessageCount(facesContext) > messageCountBefore)
         {
             renderResponse(facesContext);
-            LogUtil.getLogger().exiting("after render response (because of messages during validation)", Level.FINE);
+            if (log.isDebugEnabled()) log.debug("exiting processValidations in " + LifecycleImpl.class.getName() + " (after render response - because of messages during validation!)");
             return true;
         }
 
-        LogUtil.getLogger().exiting();
+        if (log.isTraceEnabled()) log.trace("exiting processValidations in " + LifecycleImpl.class.getName());
         return false;
     }
 
@@ -317,7 +319,7 @@ public class LifecycleImpl
      */
     private boolean updateModelValues(FacesContext facesContext) throws FacesException
     {
-        LogUtil.getLogger().entering();
+        if (log.isTraceEnabled()) log.trace("entering updateModelValues in " + LifecycleImpl.class.getName());
 
         UIComponent root = facesContext.getTree().getRoot();
         root.processUpdates(facesContext);
@@ -326,18 +328,18 @@ public class LifecycleImpl
 
         if (FacesContextImpl.isResponseComplete(facesContext))
         {
-            LogUtil.getLogger().exiting("response complete", Level.FINE);
+            if (log.isDebugEnabled()) log.debug("exiting updateModelValues in " + LifecycleImpl.class.getName() + " (after render response)");
             return true;
         }
 
         if (FacesContextImpl.isRenderResponse(facesContext))
         {
             renderResponse(facesContext);
-            LogUtil.getLogger().exiting("after render response", Level.FINE);
+            if (log.isDebugEnabled()) log.debug("exiting updateModelValues in " + LifecycleImpl.class.getName() + " (after render response)");
             return true;
         }
 
-        LogUtil.getLogger().exiting();
+        if (log.isTraceEnabled()) log.trace("exiting updateModelValues in " + LifecycleImpl.class.getName());
         return false;
     }
 
@@ -349,17 +351,17 @@ public class LifecycleImpl
     private boolean invokeApplication(FacesContext facesContext)
         throws FacesException
     {
-        LogUtil.getLogger().entering();
+        if (log.isTraceEnabled()) log.trace("entering invokeApplication in " + LifecycleImpl.class.getName());
 
         doEventProcessing(facesContext, PhaseId.INVOKE_APPLICATION);
 
         if (FacesContextImpl.isResponseComplete(facesContext))
         {
-            LogUtil.getLogger().exiting("response complete", Level.FINE);
+            if (log.isDebugEnabled()) log.debug("exiting invokeApplication in " + LifecycleImpl.class.getName() + " (response complete)");
             return true;
         }
 
-        LogUtil.getLogger().exiting();
+        if (log.isTraceEnabled()) log.trace("exiting invokeApplication in " + LifecycleImpl.class.getName());
         return false;
     }
 
@@ -369,7 +371,7 @@ public class LifecycleImpl
     private void renderResponse(FacesContext facesContext)
         throws FacesException
     {
-        LogUtil.getLogger().entering();
+        if (log.isTraceEnabled()) log.trace("entering renderResponse in " + LifecycleImpl.class.getName());
 
         try
         {
@@ -380,7 +382,7 @@ public class LifecycleImpl
             throw new FacesException(e.getMessage(), e);
         }
 
-        LogUtil.getLogger().exiting();
+        if (log.isTraceEnabled()) log.trace("exiting renderResponse in " + LifecycleImpl.class.getName());
     }
 
 

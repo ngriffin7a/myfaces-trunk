@@ -25,16 +25,14 @@ import net.sourceforge.myfaces.util.ArrayIterator;
 import net.sourceforge.myfaces.util.FacesUtils;
 import net.sourceforge.myfaces.util.StringUtils;
 
-import java.io.IOException;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIPanel;
 import javax.faces.context.FacesContext;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
 
 
 /**

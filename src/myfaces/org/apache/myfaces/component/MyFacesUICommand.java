@@ -18,15 +18,15 @@
  */
 package net.sourceforge.myfaces.component;
 
+import javax.faces.FactoryFinder;
+import javax.faces.application.Application;
+import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.event.FacesEvent;
-import javax.faces.event.PhaseId;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
-import javax.faces.application.ApplicationFactory;
-import javax.faces.application.Application;
-import javax.faces.FactoryFinder;
+import javax.faces.event.FacesEvent;
+import javax.faces.event.PhaseId;
 import java.util.List;
 
 /**

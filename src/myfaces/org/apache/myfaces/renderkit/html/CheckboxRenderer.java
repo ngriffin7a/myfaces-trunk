@@ -18,14 +18,9 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.*;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.renderkit.html.util.SelectItemUtil;
-
-import java.io.IOException;
-
-import java.util.Iterator;
-import java.util.Set;
 
 import javax.faces.component.SelectItem;
 import javax.faces.component.UIComponent;
@@ -34,8 +29,10 @@ import javax.faces.component.UISelectMany;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.el.ValueBinding;
-
 import javax.servlet.ServletRequest;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Set;
 
 
 /**

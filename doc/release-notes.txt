@@ -10,6 +10,7 @@ Changes in Release 0.4.4
 * added RadioRenderer & selectone_radio tag (see carconfigurator example)
 * new hack to make MyFaces more compatible (tags that extend UIComponentTag
   directly should work better)
+* replaced the proprietary logging by jakarta commons logging
 
 ----------------------------------------------------------------------
 Changes in Release 0.4.3

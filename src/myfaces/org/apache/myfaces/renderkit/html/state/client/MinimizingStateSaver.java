@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.renderkit.html.state.client;
 import net.sourceforge.myfaces.component.*;
 import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.convert.ConverterUtils;
+import net.sourceforge.myfaces.lifecycle.LifecycleImpl;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.SecretRenderer;
@@ -30,8 +31,8 @@ import net.sourceforge.myfaces.renderkit.html.state.StateUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.tree.TreeUtils;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
-import net.sourceforge.myfaces.util.logging.LogUtil;
-import net.sourceforge.myfaces.lifecycle.LifecycleImpl;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -67,6 +68,8 @@ import java.util.*;
 public class MinimizingStateSaver
     extends ClientStateSaver
 {
+    private static final Log log = LogFactory.getLog(MinimizingStateSaver.class);
+
     private static final String STATE_MAP_REQUEST_ATTR = MinimizingStateSaver.class.getName() + ".STATE_MAP";
 
     protected static final String TREE_ID_REQUEST_PARAM = "_tId";
@@ -135,7 +138,7 @@ public class MinimizingStateSaver
 
     protected void saveComponents(FacesContext facesContext, Map stateMap)
     {
-        LogUtil.getLogger().entering("MinimizingStateSaver", "saveComponents");
+        if (log.isTraceEnabled()) log.trace("entering saveComponents in MinimizingStateSaver");
 
         //Remember all seen components of current tree, so that
         //we can find "missing components" later (i.e. components that are in
@@ -151,7 +154,7 @@ public class MinimizingStateSaver
                                                                       comp);
             if (parsedComp == null)
             {
-                LogUtil.getLogger().warning("Corresponding parsed component not found for component " + comp.getClientId(facesContext));
+                log.error("Corresponding parsed component not found for component " + comp.getClientId(facesContext));
             }
             saveComponentProperties(facesContext, stateMap, comp, parsedComp);
             saveComponentAttributes(facesContext, stateMap, comp, parsedComp);
@@ -162,7 +165,7 @@ public class MinimizingStateSaver
 
         saveUnrenderedComponents(facesContext, stateMap, visitedComponents);
 
-        LogUtil.getLogger().exiting("MinimizingStateSaver", "saveComponents");
+        if (log.isTraceEnabled()) log.trace("exiting saveComponents in MinimizingStateSaver");
     }
 
 
@@ -275,7 +278,7 @@ public class MinimizingStateSaver
         }
         catch (Exception e)
         {
-            LogUtil.getLogger().warning("Exception getting property '" + propName + "' of component '" + uiComponent.getClientId(facesContext) + "': " + e.getMessage());
+            log.error("Exception getting property '" + propName + "' of component '" + uiComponent.getClientId(facesContext) + "'.", e);
             return;
         }
 
@@ -332,7 +335,7 @@ public class MinimizingStateSaver
             }
             catch (ConverterException e)
             {
-                LogUtil.getLogger().severe("Value of property " + propName + " will be lost, because of converter exception saving state of component " + UIComponentUtils.toString(uiComponent) + ".");
+                log.error("Value of property " + propName + " will be lost, because of converter exception saving state of component " + UIComponentUtils.toString(uiComponent) + ".", e);
                 return;
             }
         }
@@ -347,13 +350,13 @@ public class MinimizingStateSaver
                 }
                 catch (FacesException e)
                 {
-                    LogUtil.getLogger().severe("Value of property " + propName + " of component " + UIComponentUtils.toString(uiComponent) + " will be lost, because of exception during serialization: " + e.getMessage());
+                    log.error("Value of property " + propName + " of component " + UIComponentUtils.toString(uiComponent) + " will be lost, because of exception during serialization.", e);
                     return;
                 }
             }
             else
             {
-                LogUtil.getLogger().severe("Value of property " + propName + " of component " + UIComponentUtils.toString(uiComponent) + " will be lost, because it is of non-serializable type: " + propValue.getClass().getName());
+                log.error("Value of property " + propName + " of component " + UIComponentUtils.toString(uiComponent) + " will be lost, because it is of non-serializable type: " + propValue.getClass().getName());
                 return;
             }
         }
@@ -489,7 +492,7 @@ public class MinimizingStateSaver
             }
             catch (ConverterException e)
             {
-                LogUtil.getLogger().severe("Value of attribute " + attrName + " will be lost, because of converter exception saving state of component " + UIComponentUtils.toString(uiComponent) + ".");
+                log.error("Value of attribute " + attrName + " will be lost, because of converter exception saving state of component " + UIComponentUtils.toString(uiComponent) + ".", e);
                 return;
             }
         }
@@ -504,13 +507,13 @@ public class MinimizingStateSaver
                 }
                 catch (FacesException e)
                 {
-                    LogUtil.getLogger().severe("Value of attribute " + attrName + " of component " + UIComponentUtils.toString(uiComponent) + " will be lost, because of exception during serialization: " + e.getMessage());
+                    log.error("Value of attribute " + attrName + " of component " + UIComponentUtils.toString(uiComponent) + " will be lost, because of exception during serialization.", e);
                     return;
                 }
             }
             else
             {
-                LogUtil.getLogger().severe("Value of attribute " + attrName + " of component " + UIComponentUtils.toString(uiComponent) + " will be lost, because it is of non-serializable type: " + attrValue.getClass().getName());
+                log.error("Value of attribute " + attrName + " of component " + UIComponentUtils.toString(uiComponent) + " will be lost, because it is of non-serializable type: " + attrValue.getClass().getName());
                 return;
             }
         }
@@ -587,8 +590,7 @@ public class MinimizingStateSaver
     {
         if (map.get(paramName) != null)
         {
-            //throw new IllegalStateException("Duplicate state parameter " + paramName);
-            LogUtil.getLogger().warning("Duplicate state parameter " + paramName);
+            log.warn("Duplicate state parameter " + paramName);
         }
         map.put(paramName, paramValue);
     }
@@ -775,7 +777,7 @@ public class MinimizingStateSaver
             else
             {
                 //TODO: Support for common Listeners: find "addFooListener" method via reflection...
-                LogUtil.getLogger().warning("Unsupported Listener type " + facesListener.getClass().getName());
+                log.warn("Unsupported Listener type " + facesListener.getClass().getName());
                 continue;
             }
 

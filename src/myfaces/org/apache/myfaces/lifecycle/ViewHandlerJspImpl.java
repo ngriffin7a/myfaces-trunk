@@ -20,9 +20,10 @@ package net.sourceforge.myfaces.lifecycle;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
-import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -43,6 +44,8 @@ import java.io.IOException;
 public class ViewHandlerJspImpl
         implements ViewHandler
 {
+    private static final Log log = LogFactory.getLog(ViewHandlerJspImpl.class);
+
     public void renderView(FacesContext facesContext)
         throws IOException, FacesException
     {
@@ -77,7 +80,7 @@ public class ViewHandlerJspImpl
         {
             try
             {
-                LogUtil.getLogger().finest("StateRenderer found, calling encodeBegin.");
+                log.trace("StateRenderer found, calling encodeBegin.");
                 renderer.encodeBegin(facesContext, null);
             }
             catch (IOException e)
@@ -100,12 +103,12 @@ public class ViewHandlerJspImpl
         }
         catch(IOException ioe)
         {
-            LogUtil.getLogger().throwing(this.getClass().getName(), "renderView", ioe);
+            log.error("IOException in method renderView of class " + this.getClass().getName(), ioe);
             throw new IOException(ioe.getMessage());
         }
         catch(ServletException se)
         {
-            LogUtil.getLogger().throwing(this.getClass().getName(), "renderView", se);
+            log.error("ServletException in method renderView of class " + this.getClass().getName(), se);
             throw new FacesException(se.getMessage(), se);
         }
     }

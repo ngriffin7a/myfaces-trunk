@@ -18,7 +18,8 @@
  */
 package net.sourceforge.myfaces.util.bean;
 
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -36,6 +37,8 @@ import java.util.StringTokenizer;
  */
 public class BeanUtils
 {
+    private static final Log log = LogFactory.getLog(BeanUtils.class);
+
     private static final Object[] EMPTY_ARGS = new Object[]{};
 
     private BeanUtils()
@@ -381,7 +384,7 @@ public class BeanUtils
             obj = newObj;
             if (obj == null)
             {
-                LogUtil.getLogger().warning("Nested property '" + nextProp + "' of bean " + bean + " is null.");
+                log.warn("Nested property '" + nextProp + "' of bean " + bean + " is null.");
                 return new Object[2];
             }
         }
@@ -418,7 +421,7 @@ public class BeanUtils
 
         if (obj == null)
         {
-            LogUtil.getLogger().finest("Bean object is null.");
+            if (log.isTraceEnabled()) log.trace("Bean object is null.");
             return null;
         }
 
@@ -446,7 +449,7 @@ public class BeanUtils
                     {
                         if (method != null)
                         {
-                            LogUtil.getLogger().severe("Bean class " + bean.getClass().getName() + " has more than one matching '" + methodName + "' methods!");
+                            log.error("Bean class " + bean.getClass().getName() + " has more than one matching '" + methodName + "' methods!");
                         }
                         else
                         {

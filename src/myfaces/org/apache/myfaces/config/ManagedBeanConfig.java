@@ -19,8 +19,8 @@
 package net.sourceforge.myfaces.config;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Implements the configureation class for managed beans defined with &lt;managed-bean&gt;

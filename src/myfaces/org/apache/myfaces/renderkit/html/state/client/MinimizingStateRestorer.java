@@ -28,7 +28,8 @@ import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.renderkit.html.state.StateUtils;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -57,6 +58,8 @@ import java.util.*;
 public class MinimizingStateRestorer
     extends ClientStateRestorer
 {
+    private static final Log log = LogFactory.getLog(MinimizingStateRestorer.class);
+
     private static final String STATE_MAP_REQUEST_ATTR = MinimizingStateRestorer.class.getName() + ".STATE_MAP";
 
     protected static final String PREVIOUS_TREE_REQUEST_ATTR
@@ -373,7 +376,7 @@ public class MinimizingStateRestorer
                 }
                 catch (ConverterException e)
                 {
-                    LogUtil.getLogger().severe("Value of attribute " + propName + " will be lost, because of converter exception restoring state of component " + UIComponentUtils.toString(uiComponent) + ".");
+                    log.error("Value of attribute " + propName + " will be lost, because of converter exception restoring state of component " + UIComponentUtils.toString(uiComponent) + ".", e);
                     return;
                 }
             }
@@ -387,7 +390,7 @@ public class MinimizingStateRestorer
             }
             catch (FacesException e)
             {
-                LogUtil.getLogger().severe("Value of attribute " + propName + " of component " + UIComponentUtils.toString(uiComponent) + " will be lost, because of exception during deserialization: " + e.getMessage());
+                log.error("Value of attribute " + propName + " of component " + UIComponentUtils.toString(uiComponent) + " will be lost, because of exception during deserialization.", e);
                 return;
             }
         }
@@ -436,7 +439,7 @@ public class MinimizingStateRestorer
                 }
                 catch (ConverterException e)
                 {
-                    LogUtil.getLogger().severe("Value of attribute " + attrName + " will be lost, because of converter exception restoring state of component " + UIComponentUtils.toString(uiComponent) + ".");
+                    log.error("Value of attribute " + attrName + " will be lost, because of converter exception restoring state of component " + UIComponentUtils.toString(uiComponent) + ".", e);
                     return;
                 }
             }
@@ -450,7 +453,7 @@ public class MinimizingStateRestorer
             }
             catch (FacesException e)
             {
-                LogUtil.getLogger().severe("Value of attribute " + attrName + " of component " + UIComponentUtils.toString(uiComponent) + " will be lost, because of exception during deserialization: " + e.getMessage());
+                log.error("Value of attribute " + attrName + " of component " + UIComponentUtils.toString(uiComponent) + " will be lost, because of exception during deserialization.", e);
                 return;
             }
         }
@@ -580,7 +583,7 @@ public class MinimizingStateRestorer
                     listener = (FacesListener)root.findComponent(paramValue);
                     if (listener == null)
                     {
-                        LogUtil.getLogger().severe("Could not find listener component for restored listener of type " + info.listenerType);
+                        log.error("Could not find listener component for restored listener of type " + info.listenerType);
                         continue;
                     }
                 }
@@ -588,7 +591,7 @@ public class MinimizingStateRestorer
                 UIComponent uiComponent = root.findComponent(info.clientId);
                 if (uiComponent == null)
                 {
-                    LogUtil.getLogger().severe("Could not find component " + info.clientId + " to add restored listener of type " + listener.getClass().getName());
+                    log.error("Could not find component " + info.clientId + " to add restored listener of type " + listener.getClass().getName());
                     continue;
                 }
 

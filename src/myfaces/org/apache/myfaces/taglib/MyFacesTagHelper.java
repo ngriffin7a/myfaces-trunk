@@ -23,7 +23,8 @@ import net.sourceforge.myfaces.component.UIRoot;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
@@ -39,7 +40,6 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
 import java.beans.PropertyDescriptor;
 import java.util.*;
-import java.util.logging.Level;
 
 /**
  * DOCUMENT ME!
@@ -48,6 +48,8 @@ import java.util.logging.Level;
  */
 public class MyFacesTagHelper
 {
+    private static final Log log = LogFactory.getLog(MyFacesTagHelper.class);
+
     private MyFacesTagBaseIF _tag;
     private Set _attributes = null;
     protected FacesContext _facesContext;
@@ -350,7 +352,7 @@ public class MyFacesTagHelper
             endIdx = strValue.indexOf('}', dollarIdx + 2);
             if (endIdx == -1)
             {
-                LogUtil.getLogger().warning("Illegal EL expression '" + strValue + "'.");
+                log.error("Illegal EL expression '" + strValue + "'.");
                 buf.append(strValue.substring(dollarIdx));
                 return buf.toString();
             }
@@ -470,13 +472,13 @@ public class MyFacesTagHelper
             }
             catch (Exception e)
             {
-                LogUtil.getLogger().warning("Exception in property setter of component " + UIComponentUtils.toString(uiComponent) + ": " + e.getMessage() + ". Attribute will be set directly.");
+                log.warn("Exception in property setter of component " + UIComponentUtils.toString(uiComponent) + " - attribute will be set directly.", e);
             }
         }
         else
         {
             //Component does not have a matching bean property!
-            LogUtil.getLogger().severe("Component " + UIComponentUtils.toString(uiComponent) + " does not have a valid property setter method for property '" + propertyName + "'.");
+            log.error("Component " + UIComponentUtils.toString(uiComponent) + " does not have a valid property setter method for property '" + propertyName + "'.");
         }
     }
 
@@ -504,14 +506,14 @@ public class MyFacesTagHelper
             }
             catch (Exception e)
             {
-                LogUtil.getLogger().warning("Exception in property getter or setter of component " + UIComponentUtils.toString(uiComponent) + ": " + e.getMessage() + ". Attribute will be set directly.");
+                log.warn("Exception in property getter or setter of component " + UIComponentUtils.toString(uiComponent) + " - attribute will be set directly.", e);
                 errorOccured = true;
             }
         }
         else
         {
             //Component does not have a matching bean property!
-            LogUtil.getLogger().severe("Component " + UIComponentUtils.toString(uiComponent) + " does not have valid property setter and getter methods for property '" + propertyName + "'.");
+            log.error("Component " + UIComponentUtils.toString(uiComponent) + " does not have valid property setter and getter methods for property '" + propertyName + "'.");
             errorOccured = true;
         }
 
@@ -541,7 +543,7 @@ public class MyFacesTagHelper
         catch (Exception e)
         {
             //Exception occured, perhaps model bean does not yet exist?
-            LogUtil.getLogger().warning("Exception occured getting currentValue of component " + UIComponentUtils.toString(uiComponent) + ": " + e.getMessage());
+            log.error("Exception occured getting currentValue of component " + UIComponentUtils.toString(uiComponent) + ".", e);
             currentValue = null;
         }
 
@@ -640,7 +642,7 @@ public class MyFacesTagHelper
      */
     protected String findoutComponentId()
     {
-        LogUtil.getLogger().entering(Level.FINEST);
+        if (log.isTraceEnabled()) log.trace("entering findoutComponentId in MyFacesTagHelper");
 
         FacesContext facesContext = getFacesContext();
 
@@ -687,7 +689,7 @@ public class MyFacesTagHelper
         String id = parsedChild.getComponentId();
         _tag.setId(id);
 
-        LogUtil.getLogger().exiting(Level.FINEST);
+        if (log.isTraceEnabled()) log.trace("exiting findoutComponentId in MyFacesTagHelper");
         return id;
     }
 
@@ -814,7 +816,7 @@ public class MyFacesTagHelper
                     {
                         pos = " in file '" + jspPos[0] + "' (line " + jspPos[1] + " - " + jspPos[2] + ")";
                     }
-                    LogUtil.getLogger().warning("Component " + UIComponentUtils.toString(newComponent) + pos + " is ambigous. This component must have an id when it is rendered conditional (i.e. within if-Block in JSP, or within conditional JSTL-tag).");
+                    log.warn("Component " + UIComponentUtils.toString(newComponent) + pos + " is ambigous. This component must have an id when it is rendered conditional (i.e. within if-Block in JSP, or within conditional JSTL-tag).");
                 }
             }
 
@@ -822,7 +824,7 @@ public class MyFacesTagHelper
         }
         else
         {
-            LogUtil.getLogger().exiting("Not found!", Level.FINEST);
+            if (log.isTraceEnabled()) log.trace("exiting findParsedChild in MyFacesTagHelper: not found!");
         }
 
         return foundParsedComp;
@@ -873,8 +875,11 @@ public class MyFacesTagHelper
     protected boolean equalsParsedChild(UIComponent parsedChild,
                                         UIComponent compToCompare)
     {
-        LogUtil.getLogger().entering(Level.FINEST);
-        LogUtil.printComponentToConsole(parsedChild, "parsedChild");
+        if (log.isTraceEnabled())
+        {
+            log.trace("entering equalsParsedChild in MyFacesTagHelper");
+            log.trace("parsedChild: " + UIComponentUtils.toString(parsedChild));
+        }
 
         String creatorTagClass = (String)parsedChild.getAttribute(JspInfo.CREATOR_TAG_CLASS_ATTR);
         if (!(creatorTagClass.equals(_tag.getClass().getName())))
@@ -908,7 +913,7 @@ public class MyFacesTagHelper
                 String componentId = compToCompare.getComponentId();
                 if (componentId == null || !componentId.equals(hardcodedId))
                 {
-                    LogUtil.getLogger().finest("      diff: hardcoded id / " + compToCompare.getComponentId() + " <> " + hardcodedId);
+                    if (log.isTraceEnabled()) log.trace("      diff: hardcoded id / " + compToCompare.getComponentId() + " <> " + hardcodedId);
                     return false;
                 }
             }
@@ -931,14 +936,14 @@ public class MyFacesTagHelper
                     {
                         if (actualValue != null)
                         {
-                            LogUtil.getLogger().finest("      diff: " + attrName + " / " + actualValue + " <> " + parsedValue);
+                            if (log.isTraceEnabled()) log.trace("      diff: " + attrName + " / " + actualValue + " <> " + parsedValue);
                             return false;
                         }
                     }
                     else if (actualValue == null ||
                              !parsedValue.equals(actualValue))
                     {
-                        LogUtil.getLogger().finest("      diff: " + attrName + " / " + actualValue + " <> " + parsedValue);
+                        if (log.isTraceEnabled()) log.trace("      diff: " + attrName + " / " + actualValue + " <> " + parsedValue);
                         return false;
                     }
                 }

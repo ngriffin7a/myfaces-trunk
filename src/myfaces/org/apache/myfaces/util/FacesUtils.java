@@ -18,8 +18,6 @@
  */
 package net.sourceforge.myfaces.util;
 
-import java.util.Map;
-
 import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
 import javax.faces.application.ApplicationFactory;
@@ -31,6 +29,7 @@ import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
 import javax.faces.tree.Tree;
 import javax.faces.tree.TreeFactory;
+import java.util.Map;
 
 
 /**

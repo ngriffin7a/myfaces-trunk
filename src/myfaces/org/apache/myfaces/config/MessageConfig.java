@@ -18,8 +18,9 @@
  */
 package net.sourceforge.myfaces.config;
 
-import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.MyFacesConfig;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.application.Message;
@@ -38,6 +39,8 @@ import java.util.Map;
 public class MessageConfig
     implements Config
 {
+    private static final Log log = LogFactory.getLog(MessageConfig.class);
+
     private static final String SEVERITY_INFO = "INFO";
     private static final String SEVERITY_WARN = "WARN";
     private static final String SEVERITY_ERROR = "ERROR";
@@ -132,7 +135,7 @@ public class MessageConfig
         String s = (String)getSummaryMap().get(language);
         if (s == null)
         {
-            LogUtil.getLogger().warning("No summary in language '" + language + "' for message '" + _messageId + "' defined.");
+            log.warn("No summary in language '" + language + "' for message '" + _messageId + "' defined.");
             return _messageId;
         }
         return s;
@@ -158,7 +161,7 @@ public class MessageConfig
         String s = (String)getDetailMap().get(language);
         if (s == null)
         {
-            LogUtil.getLogger().warning("No detail in language '" + language + "' for message '" + _messageId + "' defined.");
+            log.warn("No detail in language '" + language + "' for message '" + _messageId + "' defined.");
             return _messageId;
         }
         return s;

@@ -20,11 +20,11 @@ package net.sourceforge.myfaces.component.ext;
 
 import net.sourceforge.myfaces.component.MyFacesUICommand;
 
-import javax.faces.event.FacesEvent;
-import javax.faces.event.PhaseId;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
-import javax.faces.context.FacesContext;
+import javax.faces.event.FacesEvent;
+import javax.faces.event.PhaseId;
 
 /**
  * DOCUMENT ME!

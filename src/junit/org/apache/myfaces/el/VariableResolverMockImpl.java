@@ -18,12 +18,13 @@
  */
 package net.sourceforge.myfaces.el;
 
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import javax.faces.el.VariableResolver;
 import javax.faces.context.FacesContext;
-import java.util.Map;
+import javax.faces.el.VariableResolver;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * DOCUMENT ME!
@@ -33,6 +34,7 @@ import java.util.HashMap;
 public class VariableResolverMockImpl
     extends VariableResolver
 {
+    private static final Log log = LogFactory.getLog(VariableResolverMockImpl.class);
     private Map _map = new HashMap();
 
     public Object resolveVariable(FacesContext facesContext, String name)
@@ -40,7 +42,7 @@ public class VariableResolverMockImpl
         Object o = _map.get(name);
         if (o == null)
         {
-            LogUtil.getLogger().info("Variable '" + name + "' could not be resolved.");
+            log.info("Variable '" + name + "' could not be resolved.");
         }
         return o;
     }

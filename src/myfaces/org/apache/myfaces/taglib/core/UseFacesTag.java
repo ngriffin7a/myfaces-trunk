@@ -22,7 +22,8 @@ import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.state.client.ClientStateSaver;
 import net.sourceforge.myfaces.taglib.MyFacesBodyTag;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FactoryFinder;
 import javax.faces.context.FacesContext;
@@ -43,9 +44,10 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class UseFacesTag
-    //extends BodyTagSupport
     extends MyFacesBodyTag
 {
+    private static final Log log = LogFactory.getLog(UseFacesTag.class);
+
     public String getComponentType()
     {
         //Should not be called normally
@@ -100,7 +102,7 @@ public class UseFacesTag
         Renderer renderer = renderKit.getRenderer(StateRenderer.TYPE);
         if (renderer == null)
         {
-            LogUtil.getLogger().info("UseFacesTag.doAfterBody() - No StateRenderer found.");
+            if (log.isInfoEnabled()) log.info("UseFacesTag.doAfterBody() - No StateRenderer found.");
             if (mode != MyFacesConfig.STATE_SAVING_MODE__SERVER_SESSION)
             {
                 BodyContent bodyContent = getBodyContent();

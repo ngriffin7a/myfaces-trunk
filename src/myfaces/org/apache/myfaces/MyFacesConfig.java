@@ -18,7 +18,8 @@
  */
 package net.sourceforge.myfaces;
 
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.servlet.ServletContext;
 import java.util.HashMap;
@@ -32,6 +33,7 @@ import java.util.logging.Level;
  */
 public class MyFacesConfig
 {
+    private static final Log log = LogFactory.getLog(MyFacesConfig.class);
     //private static final String _PROPERTY_FILE = "myfaces.properties";
 
     private static final String PARAM_checkJspModification = "myfaces_CheckJspModification";
@@ -109,7 +111,8 @@ public class MyFacesConfig
     }
 
     /**
-     * Get the log level, that should be used by the {@link net.sourceforge.myfaces.util.logging.MyFacesLogger MyFacesLogger}.
+     * Get the log level, that should be used.
+     * @deprecated TODO: remove this method
      */
     public static Level getLogLevel(ServletContext servletContext)
     {
@@ -124,7 +127,7 @@ public class MyFacesConfig
         if (strValue == null)
         {
             level = DEFAULT_logLevel;
-            LogUtil.getLogger().info("No context init parameter '" + PARAM_logLevel + "' found, using default value " + DEFAULT_logLevel);
+            if (log.isInfoEnabled()) log.info("No context init parameter '" + PARAM_logLevel + "' found, using default value " + DEFAULT_logLevel);
         }
         else
         {
@@ -132,7 +135,7 @@ public class MyFacesConfig
             if (level == null)
             {
                 level = DEFAULT_logLevel;
-                LogUtil.getLogger().info("Wrong context init parameter '" + PARAM_logLevel + "' (='" + strValue + "'), using default value " + level);
+                if (log.isWarnEnabled()) log.warn("Wrong context init parameter '" + PARAM_logLevel + "' (='" + strValue + "'), using default value " + level);
             }
         }
 
@@ -156,7 +159,7 @@ public class MyFacesConfig
         if (strValue == null)
         {
             mode = new Integer(DEFAULT_stateSavingMode);
-            LogUtil.getLogger().info("No context init parameter '" + PARAM_stateSavingMode + "' found, using default value " + mode);
+            if (log.isInfoEnabled()) log.info("No context init parameter '" + PARAM_stateSavingMode + "' found, using default value " + mode);
         }
         else if (strValue.equalsIgnoreCase("server_session"))
         {
@@ -177,7 +180,7 @@ public class MyFacesConfig
         else
         {
             mode = new Integer(DEFAULT_stateSavingMode);
-            LogUtil.getLogger().info("Wrong context init parameter '" + PARAM_stateSavingMode + "' (='" + strValue + "'), using default value " + mode);
+            if (log.isWarnEnabled()) log.warn("Wrong context init parameter '" + PARAM_stateSavingMode + "' (='" + strValue + "'), using default value " + mode);
         }
 
         saveInitParameterInMap(servletContext, PARAM_stateSavingMode, mode);
@@ -280,7 +283,7 @@ public class MyFacesConfig
         if (paramValue == null)
         {
             paramValue = defaultValue;
-            LogUtil.getLogger().info("No context init parameter '" + paramName + "' found, using default value " + paramValue);
+            if (log.isInfoEnabled()) log.info("No context init parameter '" + paramName + "' found, using default value " + paramValue);
         }
 
         saveInitParameterInMap(servletContext, paramName, paramValue);
@@ -302,7 +305,7 @@ public class MyFacesConfig
         if (strValue == null)
         {
             bParam = defaultValue ? Boolean.TRUE : Boolean.FALSE;
-            LogUtil.getLogger().info("No context init parameter '" + paramName + "' found, using default value " + bParam);
+            if (log.isInfoEnabled()) log.info("No context init parameter '" + paramName + "' found, using default value " + bParam);
         }
         else if (strValue.equalsIgnoreCase("true"))
         {
@@ -315,7 +318,7 @@ public class MyFacesConfig
         else
         {
             bParam = defaultValue ? Boolean.TRUE : Boolean.FALSE;
-            LogUtil.getLogger().info("Wrong context init parameter '" + paramName + "' (='" + strValue + "'), using default value " + bParam);
+            if (log.isWarnEnabled()) log.warn("Wrong context init parameter '" + paramName + "' (='" + strValue + "'), using default value " + bParam);
         }
 
         saveInitParameterInMap(servletContext, paramName, bParam);

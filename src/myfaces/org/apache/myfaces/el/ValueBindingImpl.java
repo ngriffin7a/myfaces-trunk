@@ -19,11 +19,8 @@
 package net.sourceforge.myfaces.el;
 
 import net.sourceforge.myfaces.util.StringUtils;
-import net.sourceforge.myfaces.util.logging.LogUtil;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
@@ -32,6 +29,9 @@ import javax.faces.el.EvaluationException;
 import javax.faces.el.PropertyNotFoundException;
 import javax.faces.el.ReferenceSyntaxException;
 import javax.faces.el.ValueBinding;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -45,6 +45,7 @@ public class ValueBindingImpl
 extends ValueBinding
 {
     //~ Static fields/initializers -----------------------------------------------------------------
+    private static final Log log = LogFactory.getLog(ValueBindingImpl.class);
 
     private static final Integer ZERO_FROM_EMPTY  = new Integer(0);
     private static final Integer ZERO             = new Integer(0);
@@ -137,15 +138,12 @@ extends ValueBinding
         {
             if (newValue == null)
             {
-                LogUtil.getLogger().severe(
-                    "Exception setting value of reference '" + _reference + "' to null: "
-                    + ex.getMessage());
+                log.error("Exception setting value of reference '" + _reference + "' to null.", ex);
             }
             else
             {
-                LogUtil.getLogger().severe(
-                    "Exception setting value of reference '" + _reference + "' to object of type '"
-                    + newValue.getClass().getName() + "': " + ex.getMessage());
+                log.error("Exception setting value of reference '" + _reference + "' to object of type '"
+                          + newValue.getClass().getName() + "'.", ex);
             }
 
             throw ex;

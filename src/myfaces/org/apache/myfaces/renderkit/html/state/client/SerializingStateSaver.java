@@ -26,6 +26,8 @@ import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.tree.TreeUtils;
 import net.sourceforge.myfaces.util.Base64;
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FactoryFinder;
 import javax.faces.application.ApplicationFactory;
@@ -51,6 +53,8 @@ import java.util.zip.GZIPOutputStream;
 public class SerializingStateSaver
     extends ClientStateSaver
 {
+    private static final Log log = LogFactory.getLog(SerializingStateRestorer.class);
+
     protected static final String SERIALIZED_TREE_CONTEXT_ATTR
         = SerializingStateSaver.class.getName() + ".SERIALIZED_TREE";
 
@@ -69,7 +73,7 @@ public class SerializingStateSaver
         {
             Tree tree = facesContext.getTree();
 
-            LogUtil.printTreeToConsole(tree, "Tree to serialize");
+            if (log.isTraceEnabled()) LogUtil.logTree(log, tree, "Tree to serialize");
 
             //discard internal attributes ("javax.*" and "net.sourceforge.*")
             StateUtils.discardInternalAttributes(facesContext, tree);
@@ -145,7 +149,7 @@ public class SerializingStateSaver
                 String modelRef = ((UISaveState)comp).getValueRef();
                 if (modelRef == null)
                 {
-                    LogUtil.getLogger().warning("UISaveState without value reference?!");
+                    log.error("UISaveState without value reference?!");
                 }
                 else
                 {
@@ -163,7 +167,7 @@ public class SerializingStateSaver
                     }
                     else
                     {
-                        LogUtil.getLogger().warning("Value of model reference " + modelRef + " is not serializable, cannot save state of this value!");
+                        log.error("Value of model reference " + modelRef + " is not serializable, cannot save state of this value!");
                     }
                 }
             }

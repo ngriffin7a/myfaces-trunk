@@ -22,12 +22,10 @@ import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.StringUtils;
 
-import java.io.IOException;
-
-import java.util.Iterator;
-
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import java.io.IOException;
+import java.util.Iterator;
 
 
 /**

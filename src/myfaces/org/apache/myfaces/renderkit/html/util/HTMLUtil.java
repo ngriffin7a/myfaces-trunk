@@ -23,17 +23,15 @@ import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.ListboxRenderer;
 
-import java.io.IOException;
-
-import java.util.Iterator;
-import java.util.Set;
-
 import javax.faces.component.SelectItem;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.component.UISelectMany;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Set;
 
 
 /**

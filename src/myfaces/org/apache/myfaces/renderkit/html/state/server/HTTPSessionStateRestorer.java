@@ -26,21 +26,18 @@ import net.sourceforge.myfaces.renderkit.html.state.ModelValueEntry;
 import net.sourceforge.myfaces.renderkit.html.state.StateRestorer;
 import net.sourceforge.myfaces.util.FacesUtils;
 
-import java.io.IOException;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
-
 import javax.faces.FactoryFinder;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.tree.Tree;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
 
 
 /**

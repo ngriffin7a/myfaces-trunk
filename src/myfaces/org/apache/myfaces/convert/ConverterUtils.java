@@ -24,7 +24,8 @@ import net.sourceforge.myfaces.config.*;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.util.Base64;
 import net.sourceforge.myfaces.util.MyFacesObjectInputStream;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -47,6 +48,8 @@ import java.util.TimeZone;
  */
 public class ConverterUtils
 {
+    private static final Log log = LogFactory.getLog(ConverterUtils.class);
+
     private static final int DEFAULT_DATE_STYLE = DateFormat.SHORT;
     private static final int DEFAULT_TIME_STYLE = DateFormat.SHORT;
 
@@ -187,7 +190,7 @@ public class ConverterUtils
         if (rendererType == null)
         {
             //Each component must have a rendererType since Spec. 1.0 PRD2
-            LogUtil.getLogger().warning("Component " + UIComponentUtils.toString(uiComponent) + " has no renderer type!");
+            log.warn("Component " + UIComponentUtils.toString(uiComponent) + " has no renderer type!");
             return null;
         }
 
@@ -200,7 +203,7 @@ public class ConverterUtils
         AttributeConfig ac = rc.getAttributeConfig(attrName);
         if (ac == null)
         {
-            LogUtil.getLogger().info("Could not find an attribute descriptor for attribute '" + attrName + "' of component " + UIComponentUtils.toString(uiComponent) + ".");
+            log.info("Could not find an attribute descriptor for attribute '" + attrName + "' of component " + UIComponentUtils.toString(uiComponent) + ".");
             return null;
         }
         return findConverter(ac.getAttributeClass());
@@ -267,7 +270,7 @@ public class ConverterUtils
         }
 
         //As the last resort we do a toString
-        LogUtil.getLogger().warning("Cannot convert Object to String for component " + UIComponentUtils.toString(uiOutput) + ": No converter found for class " + obj.getClass().getName() + ".");
+        log.warn("Cannot convert Object to String for component " + UIComponentUtils.toString(uiOutput) + ": No converter found for class " + obj.getClass().getName() + ".");
         return obj.toString();
     }
 

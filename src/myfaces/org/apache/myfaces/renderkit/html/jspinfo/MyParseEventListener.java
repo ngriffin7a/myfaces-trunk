@@ -31,7 +31,8 @@ import net.sourceforge.myfaces.taglib.MyFacesTag;
 import net.sourceforge.myfaces.taglib.UIComponentTagHacks;
 import net.sourceforge.myfaces.taglib.core.ActionListenerTag;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.xml.sax.Attributes;
 
 import javax.faces.FacesException;
@@ -70,6 +71,8 @@ import java.util.Hashtable;
 public class MyParseEventListener
         implements ParseEventListener
 {
+    private static final Log log = LogFactory.getLog(MyParseEventListener.class);
+
     private TagLibraries _tagLibraries = new MyTagLibraries();
     private JspTreeParser _parser;
     private JspCompilationContext _ctxt;
@@ -535,7 +538,7 @@ public class MyParseEventListener
             }
             String newAutoId = AUTO_ID_PREFIX + (++_autoId);
             comp.setComponentId(newAutoId);
-            LogUtil.getLogger().finest("Tag '" + ti.getTagName() + "' has no id, assigning auto id '" + newAutoId + "' to component.");
+            if (log.isDebugEnabled()) log.debug("Tag '" + ti.getTagName() + "' has no id, assigning auto id '" + newAutoId + "' to component.");
         }
 
         String rendererType = facesTag.getRendererType();
@@ -712,7 +715,7 @@ public class MyParseEventListener
         }
         else
         {
-            LogUtil.getLogger().severe("Could not convert String '" + s + "' to target type " + targetClass.getName());
+            log.error("Could not convert String '" + s + "' to target type " + targetClass.getName());
             return s;
         }
     }
@@ -763,7 +766,7 @@ public class MyParseEventListener
             }
             else
             {
-                LogUtil.getLogger().warning("Illegal scope attribute '" + scopeValue + "'. Assuming page scope.");
+                log.warn("Illegal scope attribute '" + scopeValue + "'. Assuming page scope.");
             }
         }
 
@@ -785,13 +788,13 @@ public class MyParseEventListener
         String type = attrs.getValue(ACTION_LISTENER_TAG_TYPE_ATTR);
         if (type == null)
         {
-            LogUtil.getLogger().severe("action_listener tag has no " + ACTION_LISTENER_TAG_TYPE_ATTR + " attribute!");
+            log.error("action_listener tag has no " + ACTION_LISTENER_TAG_TYPE_ATTR + " attribute!");
             return;
         }
 
         if (!(_currentComponent instanceof UICommand))
         {
-            LogUtil.getLogger().severe("Cannot register action listener because component " + _currentComponent + " is no UICommand.");
+            log.error("Cannot register action listener because component " + _currentComponent + " is no UICommand.");
             return;
         }
 
@@ -911,7 +914,7 @@ public class MyParseEventListener
         String name = attrs.getValue(FACET_NAME_ATTR);
         if (name == null)
         {
-            LogUtil.getLogger().severe("facet tag has no " + FACET_NAME_ATTR + " attribute!");
+            log.error("facet tag has no " + FACET_NAME_ATTR + " attribute!");
             return;
         }
         _currentComponent.setAttribute(PENDING_FACET_ATTR, name);

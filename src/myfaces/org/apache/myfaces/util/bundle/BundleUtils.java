@@ -18,7 +18,8 @@
  */
 package net.sourceforge.myfaces.util.bundle;
 
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FactoryFinder;
 import javax.faces.application.ApplicationFactory;
@@ -34,6 +35,8 @@ import java.util.ResourceBundle;
  */
 public class BundleUtils
 {
+    private static final Log log = LogFactory.getLog(BundleUtils.class);
+
     private BundleUtils() {}
 
     public static ResourceBundle findResourceBundle(FacesContext facesContext,
@@ -61,7 +64,7 @@ public class BundleUtils
             }
             catch (MissingResourceException e)
             {
-                LogUtil.getLogger().warning("Resource string '" + key + "' in bundle '" + bundleName + "' could not be found.");
+                log.warn("Resource string '" + key + "' in bundle '" + bundleName + "' could not be found.");
                 return key;
             }
         }

@@ -18,19 +18,13 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.*;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.tree.TreeUtils;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
-import net.sourceforge.myfaces.util.logging.LogUtil;
-
-import java.io.IOException;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FactoryFinder;
 import javax.faces.application.ApplicationFactory;
@@ -39,6 +33,11 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.MessageResources;
 import javax.faces.context.ResponseWriter;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 
 /**
@@ -52,6 +51,7 @@ public class ErrorsRenderer
 extends HTMLRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
+    private static final Log log = LogFactory.getLog(ErrorsRenderer.class);
 
     public static final String  TYPE         = "Errors";
     private static final String IN_FIELD_MSG = ErrorsRenderer.class.getName() + ".IN_FIELD";
@@ -63,25 +63,6 @@ extends HTMLRenderer
         return TYPE;
     }
 
-    /*
-    public boolean supportsComponentType(UIComponent uiComponent)
-    {
-        return uiComponent instanceof javax.faces.component.UIOutput;
-    }
-
-    public boolean supportsComponentType(String s)
-    {
-        return s.equals(javax.faces.component.UIOutput.TYPE);
-    }
-
-    protected void initAttributeDescriptors()
-    {
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_errors", HTML_UNIVERSAL_ATTRIBUTES);
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_errors", HTML_EVENT_HANDLER_ATTRIBUTES);
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_errors", OUTPUT_ERRORS_ATTRIBUTES);
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_errors", USER_ROLE_ATTRIBUTES);
-    }
-    */
     public void encodeBegin(FacesContext facescontext, UIComponent uiComponent)
     throws IOException
     {
@@ -125,9 +106,8 @@ extends HTMLRenderer
             }
             else
             {
-                LogUtil.getLogger().warning(
-                    "Attribute 'for' of component '" + uiComponent.getClientId(facesContext)
-                    + "' references unknown component '" + forAttr + "'.");
+                log.warn("Attribute 'for' of component '" + uiComponent.getClientId(facesContext)
+                         + "' references unknown component '" + forAttr + "'.");
                 it = Collections.EMPTY_SET.iterator();
             }
 
@@ -254,9 +234,8 @@ extends HTMLRenderer
                         }
                         else
                         {
-                            LogUtil.getLogger().warning(
-                                "Label component " + msgComp.getClientId(facesContext)
-                                + " is no UIOutput.");
+                            log.warn("Label component " + msgComp.getClientId(facesContext)
+                                     + " is no UIOutput.");
                             labelText = "???";
                         }
                     }

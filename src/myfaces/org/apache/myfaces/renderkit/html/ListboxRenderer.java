@@ -21,10 +21,9 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.renderkit.html.util.SelectItemUtil;
 
-import java.io.IOException;
-
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import java.io.IOException;
 
 
 /**
