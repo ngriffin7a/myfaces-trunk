@@ -22,7 +22,7 @@
             <x:navigation_item id="nav-3-1" key="nav_Features" treeId="/features.jsf" commandClass="navigation_link"/>
         </x:navigation_item>
         <x:navigation_item id="nav-4" key="nav_Options" treeId="/options.jsf" commandClass="navigation_link" />
-        <x:navigation_item id="nav-s1" columnClass="navseparator" label=" " />
+        <x:navigation_item id="nav-s1" columnClass="navseparator" />
         <x:navigation_item id="nav-5" key="nav_Info" commandClass="navigation_link" >
             <x:navigation_item id="nav-5-1" key="nav_Contact" treeId="/contact.jsf" commandClass="navigation_link" />
             <x:navigation_item id="nav-5-2" key="nav_Copyright" treeId="/copyright.jsf" commandClass="navigation_link" />
