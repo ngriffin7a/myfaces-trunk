@@ -91,16 +91,23 @@ public class ClassUtils
     //~ Methods ------------------------------------------------------------------------------------
 
     public static Class classForName(String type)
-        throws FacesException
+            throws FacesException
     {
         try
         {
             return Class.forName(type, true, Thread.currentThread().getContextClassLoader());
         }
-        catch (ClassNotFoundException e)
+        catch (ClassNotFoundException ignore)
         {
-            log.error(e.getMessage(), e);
-            throw new FacesException(e);
+            try
+            {
+                return Class.forName(type, true, ClassUtils.class.getClassLoader());
+            }
+            catch (ClassNotFoundException e)
+            {
+                log.error(e.getMessage(), e);
+                throw new FacesException(e);
+            }
         }
         catch (ExceptionInInitializerError e)
         {

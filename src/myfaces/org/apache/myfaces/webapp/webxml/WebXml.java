@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.webapp.webxml;
 
+import net.sourceforge.myfaces.util.ClassUtils;
 import net.sourceforge.myfaces.webapp.MyFacesServlet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -77,7 +78,7 @@ public class WebXml
             String servletName = (String)entry.getKey();
             try
             {
-                Class servletClass = Class.forName((String)entry.getValue());
+                Class servletClass = ClassUtils.classForName((String)entry.getValue());
                 if (MyFacesServlet.class.isAssignableFrom(servletClass) ||
                     FacesServlet.class.isAssignableFrom(servletClass))
                 {

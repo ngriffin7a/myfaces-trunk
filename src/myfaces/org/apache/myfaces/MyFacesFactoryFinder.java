@@ -21,6 +21,7 @@ package net.sourceforge.myfaces;
 import net.sourceforge.myfaces.application.MessageFactory;
 import net.sourceforge.myfaces.config.FacesConfigFactory;
 import net.sourceforge.myfaces.config.FacesConfigFactoryImpl;
+import net.sourceforge.myfaces.util.ClassUtils;
 
 import javax.faces.FacesException;
 import javax.faces.context.ExternalContext;
@@ -74,14 +75,11 @@ public class MyFacesFactoryFinder
                 }
             }
 
+            Class c = ClassUtils.classForName(compFactClass);
+
             try
             {
-                Class c = Class.forName(compFactClass, true, Thread.currentThread().getContextClassLoader());
                 fact = c.newInstance();
-            }
-            catch (ClassNotFoundException e)
-            {
-                throw new FacesException(e);
             }
             catch (InstantiationException e)
             {

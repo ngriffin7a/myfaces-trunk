@@ -44,8 +44,6 @@ public class MyFacesObjectInputStream
     protected Class resolveClass(ObjectStreamClass desc)
         throws ClassNotFoundException
     {
-        return Class.forName(desc.getName(),
-                             true,
-                             Thread.currentThread().getContextClassLoader());
+        return ClassUtils.classForName(desc.getName());
     }
 }

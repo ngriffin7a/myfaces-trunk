@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.config;
 
+import net.sourceforge.myfaces.util.ClassUtils;
 import net.sourceforge.myfaces.util.xml.MyFacesErrorHandler;
 import net.sourceforge.myfaces.util.xml.XmlUtils;
 import org.apache.commons.logging.Log;
@@ -247,15 +248,7 @@ public class FacesConfigFactoryImpl
         {
             // Assume class name
             String type = XmlUtils.getElementText(elem);
-            Class clazz = null;
-            try
-            {
-                clazz = Class.forName(type, true, Thread.currentThread().getContextClassLoader());
-            }
-            catch (ClassNotFoundException e)
-            {
-                throw new FacesException(e);
-            }
+            Class clazz = ClassUtils.classForName(type);
             invoke(obj, propWriteMethod, instantiate(clazz));
         }
     }
