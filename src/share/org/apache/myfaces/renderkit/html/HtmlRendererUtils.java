@@ -39,6 +39,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.16  2004/07/09 02:26:19  dave0000
+ * cleanup
+ *
  * Revision 1.15  2004/07/01 22:00:57  mwessendorf
  * ASF switch
  *
@@ -100,7 +103,10 @@ public final class HtmlRendererUtils
     private static final String HIDDEN_COMMANDLINK_FIELD_NAME = "_link_hidden_";
 
 
-    private HtmlRendererUtils() {} //no instance allowed
+    private HtmlRendererUtils() 
+    {
+        // utility class, do not instantiate
+    }
 
     /**
      * X-CHECKED: tlddoc h:inputText
@@ -697,7 +703,7 @@ public final class HtmlRendererUtils
         {
             writer.startElement(HTML.INPUT_ELEM, null);
             writer.writeAttribute(HTML.TYPE_ATTR, "hidden", null);
-            writer.writeAttribute(HTML.NAME_ATTR, (String)it.next(), null);
+            writer.writeAttribute(HTML.NAME_ATTR, it.next(), null);
             writer.endElement(HTML.INPUT_ELEM);
         }
     }
