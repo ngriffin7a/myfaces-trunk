@@ -207,7 +207,7 @@ public class WebXmlParser
                 {
                     servletClass = XmlUtils.getElementText((Element)n).trim();
                 }
-                else if (n.getNodeName().equals("load-on-startup"))
+                else if (n.getNodeName().equals("description") || n.getNodeName().equals("load-on-startup"))
                 {
                     //ignore
                 }
