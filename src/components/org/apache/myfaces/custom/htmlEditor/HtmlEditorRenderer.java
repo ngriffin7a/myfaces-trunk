@@ -27,7 +27,6 @@ import javax.faces.convert.ConverterException;
 
 import org.apache.myfaces.component.UserRoleUtils;
 import org.apache.myfaces.component.html.util.AddResource;
-import org.apache.myfaces.renderkit.JSFAttr;
 import org.apache.myfaces.renderkit.RendererUtils;
 import org.apache.myfaces.renderkit.html.HTML;
 import org.apache.myfaces.renderkit.html.HtmlRenderer;
@@ -39,6 +38,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.26  2005/03/15 21:24:41  svieujot
+ * Style handling improvements.
+ *
  * Revision 1.25  2005/03/15 05:24:03  svieujot
  * Add a fallback textarea mode to the htmlEditor.
  *
@@ -1130,7 +1132,10 @@ public class HtmlEditorRenderer extends HtmlRenderer {
             }
             if( editor.getStyle()!=null ){
                 // Convert the style into an style declaration so that it doesn't preempt the Zoom works as it's relying on changing the class
-                AddResource.addInlineStyleToHeader("#kupu-editor{"+editor.getStyle()+"}",context);
+                AddResource.addInlineStyleToHeader(
+						"#kupu-editor{height: inherit;} "+
+						"div.kupu-fulleditor{"+editor.getStyle()+"}",
+						context);
             }
             writer.writeAttribute(HTML.CLASS_ATTR,
                     "kupu-editorframe"+(editor.getStyleClass()==null ? "" : " "+editor.getStyleClass()), null);
