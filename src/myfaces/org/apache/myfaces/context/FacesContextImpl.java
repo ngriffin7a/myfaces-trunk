@@ -269,7 +269,7 @@ public class FacesContextImpl
             Object obj = getModelInstance(objName);
             if (obj == null)
             {
-                FacesException e = new FacesException("ModelReference " + objName + " is NULL.");
+                FacesException e = new FacesException("ModelReference " + objName + " could not be found.");
                 LogUtil.getLogger().log(Level.SEVERE, e.getMessage());
                 throw e;
             }
