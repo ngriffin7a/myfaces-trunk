@@ -61,9 +61,10 @@ managed beans used:
 
                 <h:messages id="messageList" showSummary="true" showDetail="true" />
 
+				<h:form id="calendarForm">
                 <x:inputCalendar monthYearRowClass="yearMonthHeader" weekRowClass="weekHeader"
                     currentDayCellClass="currentDayCell" value="#{calendar.date}" />
-
+				</h:form>
                 <f:verbatim><br/><br/></f:verbatim>
 
                 <h:outputText value="#{calendar.date}" />
