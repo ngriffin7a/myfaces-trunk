@@ -35,6 +35,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.24  2005/03/09 04:13:52  svieujot
+ * htmlEditor : remove unused scripts
+ *
  * Revision 1.23  2005/03/09 04:07:22  svieujot
  * htmlEditor : Kupu 1.2rc2 update
  *
@@ -141,7 +144,6 @@ public class HtmlEditorRenderer extends HtmlRenderer {
         AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupucontentfilters.js", context);
 		AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupucleanupexpressions.js", context);
         AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupucontextmenu.js", context);
-        //AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "myFaces_kupuinit_form.js", context); // Replaces the standard kupuinit_form.js with a few fixes.
 		AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupuinit.js", context);
         AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupustart_form.js", context);
         AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "kupusourceedit.js", context);
