@@ -35,6 +35,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.21  2004/08/18 17:56:58  manolito
+ * no newline to <br/> mapping for TEXTAREA elements
+ *
  * Revision 1.20  2004/08/18 16:13:06  manolito
  * writeText method in HtmlResponseWriterImpl now encodes Newlines and successive spaces
  *
@@ -51,10 +54,10 @@ public class HtmlResponseWriterImpl
 {
     private static final Log log = LogFactory.getLog(HtmlResponseWriterImpl.class);
 
-    private static final String DEFAUL_CONTENT_TYPE = "text/html";
+    private static final String DEFAULT_CONTENT_TYPE = "text/html";
     private static final String DEFAULT_CHARACTER_ENCODING = "ISO-8859-1";
     private static final Set SUPPORTED_CONTENT_TYPES
-            = Collections.singleton(DEFAUL_CONTENT_TYPE);
+            = Collections.singleton(DEFAULT_CONTENT_TYPE);
 
     private boolean _writeDummyForm = false;
     private Set _dummyFormParams = null;
@@ -89,8 +92,8 @@ public class HtmlResponseWriterImpl
         _contentType = contentType;
         if (_contentType == null)
         {
-            if (log.isInfoEnabled()) log.info("No content type given, using default content type " + DEFAUL_CONTENT_TYPE);
-            _contentType = DEFAUL_CONTENT_TYPE;
+            if (log.isInfoEnabled()) log.info("No content type given, using default content type " + DEFAULT_CONTENT_TYPE);
+            _contentType = DEFAULT_CONTENT_TYPE;
         }
         _characterEncoding = characterEncoding;
         if (_characterEncoding == null)
@@ -318,8 +321,14 @@ public class HtmlResponseWriterImpl
         {
             _writer.write(strValue);
         }
+        else if (isTextarea())
+        {
+            // We map successive spaces to &nbsp; but we do *not* map Newlines to <br/>
+            _writer.write(HTMLEncoder.encode(strValue, false, true));
+        }
         else
         {
+            // We map successive spaces to &nbsp; and Newlines to <br/>
             _writer.write(HTMLEncoder.encode(strValue, true, true));
         }
     }
@@ -341,8 +350,16 @@ public class HtmlResponseWriterImpl
         {
             _writer.write(cbuf, off, len);
         }
+        else if (isTextarea())
+        {
+            // We map successive spaces to &nbsp; but we do *not* map Newlines to <br/>
+            // TODO: Make HTMLEncoder support char arrays directly
+            String strValue = new String(cbuf, off, len);
+            _writer.write(HTMLEncoder.encode(strValue, false, true));
+        }
         else
         {
+            // We map successive spaces to &nbsp; and Newlines to <br/>
             // TODO: Make HTMLEncoder support char arrays directly
             String strValue = new String(cbuf, off, len);
             _writer.write(HTMLEncoder.encode(strValue, true, true));
@@ -354,6 +371,12 @@ public class HtmlResponseWriterImpl
         return _startElementName != null &&
                (_startElementName.equalsIgnoreCase(HTML.SCRIPT_ELEM) ||
                 _startElementName.equalsIgnoreCase(HTML.STYLE_ELEM));
+    }
+
+    private boolean isTextarea()
+    {
+        return _startElementName != null &&
+               (_startElementName.equalsIgnoreCase(HTML.TEXTAREA_ELEM));
     }
 
 
