@@ -111,7 +111,7 @@ public class HTTPSessionStateSaver
 //                            modelValuesColl = new ArrayList();
 //                        }
 //                        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-//                        ValueBinding vb = af.getApplication().getValueBinding(modelRef);
+//                        ValueBinding vb = facesContext.getApplication().createValueBinding(modelRef);
 //                        Object v = vb.getValue(facesContext);
 //                        modelValuesColl.add(new ModelValueEntry(modelRef,
 //                                                                v,

@@ -31,6 +31,7 @@ import net.sourceforge.myfaces.taglib.legacy.MyFacesBodyTag;
 import net.sourceforge.myfaces.taglib.legacy.MyFacesTag;
 import net.sourceforge.myfaces.taglib.legacy.UIComponentTagHacks;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
+import net.sourceforge.myfaces.util.DebugUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xml.sax.Attributes;
@@ -41,6 +42,7 @@ import javax.faces.application.ApplicationFactory;
 import javax.faces.component.NamingContainer;
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionListener;
 import javax.faces.validator.Validator;
@@ -490,15 +492,11 @@ public class MyParseEventListener
 
         String componentType = UIComponentTagHacks.getComponentType(facesTag);
         ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-        //FIXME
-        //UIComponent comp = af.getApplication().getComponent(componentType);
-        UIComponent comp = null;
-        //FIXME-END
+        UIComponent comp = af.getApplication().createComponent(componentType);
 
-        /*
         if (comp == null)
         {
-            DebugUtils.getLogger().warning("Tag class " + facesTag.getClass().getName() + " did not create a component.");
+            log.warn("Tag class " + facesTag.getClass().getName() + " did not create a component.");
             //We set current component to a dummy, so that the
             //getParent in handleEndTag returns the right component:
             final UIComponent currComp = _currentComponent;
@@ -517,7 +515,6 @@ public class MyParseEventListener
             facesTag.release();
             return;
         }
-        */
 
         if (id != null)
         {

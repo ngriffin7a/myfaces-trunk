@@ -150,7 +150,7 @@ public class SerializingStateSaver
 //                        modelValuesColl = new ArrayList();
 //                    }
 //                    ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-//                    Object val = af.getApplication().getValueBinding(modelRef).getValue(facesContext);
+//                    Object val = facesContext.getApplication().createValueBinding(modelRef).getValue(facesContext);
 //                    if (val instanceof Serializable)
 //                    {
 //                        modelValuesColl.add(new ModelValueEntry(modelRef,

@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -16,33 +16,36 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.examples.listexample;
+package net.sourceforge.myfaces.taglib.html;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+
 
 /**
- * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class SimpleCountryList
+public class HtmlColumnTag
+        extends HtmlComponentBodyTag
 {
-    private List _countries = new ArrayList();
+    //private static final Log log = LogFactory.getLog(HtmlColumnTag.class);
 
-    public SimpleCountryList()
+    protected String getDefaultRendererType()
     {
-        _countries.add(new SimpleCountry("AUSTRIA", "AT", new BigDecimal(123)));
-        _countries.add(new SimpleCountry("AZERBAIJAN", "AZ", new BigDecimal(535)));
-        _countries.add(new SimpleCountry("BAHAMAS", "BS", new BigDecimal(1345623)));
-        _countries.add(new SimpleCountry("BAHRAIN", "BH", new BigDecimal(346)));
-        _countries.add(new SimpleCountry("BANGLADESH", "BD", new BigDecimal(456)));
-        _countries.add(new SimpleCountry("BARBADOS", "BB", new BigDecimal(45645)));
+        return null;
     }
 
-    public List getCountries()
+    public String getComponentType()
     {
-        return _countries;
+        return "Column";
     }
+
+    // UIComponent attributes --> already implemented in MyfacesComponentTag
+
+    // user role attributes --> already implemented in MyfacesComponentTag
+
+    // HTML universal attributes --> already implemented in HtmlComponentTag
+
+    // HTML event handler attributes --> already implemented in HtmlComponentTag
+
+    // HTML table attributes relevant for Table
 }

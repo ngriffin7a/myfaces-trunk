@@ -525,7 +525,7 @@ public class MinimizingStateSaver
 //        }
 //
 //        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-//        ValueBinding vb = af.getApplication().getValueBinding(valueRef);
+//        ValueBinding vb = af.getApplication().createValueBinding(valueRef);
 //
 //        Object propValue = vb.getValue(facesContext);
 //        if (propValue != null)
@@ -691,7 +691,7 @@ public class MinimizingStateSaver
 //                                 UIComponent parsedComp)
 //    {
 //        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-//        ActionListener actionListener = af.getApplication().getActionListener();
+//        ActionListener actionListener = facesContext.getApplication().getActionListener();
 //
 //        List[] listeners = UIComponentHacks.getListeners(uiComponent);
 //        List[] staticListeners = UIComponentHacks.getListeners(parsedComp);

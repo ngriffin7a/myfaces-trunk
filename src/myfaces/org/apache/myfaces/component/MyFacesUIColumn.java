@@ -16,33 +16,22 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.examples.listexample;
+package net.sourceforge.myfaces.component;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+
 
 /**
  * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class SimpleCountryList
+public class MyFacesUIColumn
+    extends javax.faces.component.UIColumn
 {
-    private List _countries = new ArrayList();
-
-    public SimpleCountryList()
+    public MyFacesUIColumn()
     {
-        _countries.add(new SimpleCountry("AUSTRIA", "AT", new BigDecimal(123)));
-        _countries.add(new SimpleCountry("AZERBAIJAN", "AZ", new BigDecimal(535)));
-        _countries.add(new SimpleCountry("BAHAMAS", "BS", new BigDecimal(1345623)));
-        _countries.add(new SimpleCountry("BAHRAIN", "BH", new BigDecimal(346)));
-        _countries.add(new SimpleCountry("BANGLADESH", "BD", new BigDecimal(456)));
-        _countries.add(new SimpleCountry("BARBADOS", "BB", new BigDecimal(45645)));
-    }
-
-    public List getCountries()
-    {
-        return _countries;
+        super();
     }
 }

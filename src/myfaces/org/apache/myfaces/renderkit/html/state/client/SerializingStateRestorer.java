@@ -147,7 +147,7 @@ public class SerializingStateRestorer
 //                    JspInfoUtils.checkModelInstance(facesContext, modelRef);
 //
 //                    ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-//                    ValueBinding vb = af.getApplication().getValueBinding(modelRef);
+//                    ValueBinding vb = facesContext.getApplication().createValueBinding(modelRef);
 //                    vb.setValue(facesContext, entry.getValue());
 //                }
 //            }

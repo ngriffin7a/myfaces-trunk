@@ -127,9 +127,6 @@ public class JSFAttr
     public static final String   COLUMNS_ATTR          = "columns";
     public static final String   COLSPAN_ATTR          = "colspan"; // extension
 
-    // Panel_Data Attributes
-    public static final String VAR_ATTR                = "var";
-
     // UIMessage and UIMessages attributes
     public static final String SHOW_SUMMARY_ATTR            = "showSummary";
     public static final String SHOW_DETAIL_ATTR             = "showDetail";
@@ -156,6 +153,9 @@ public class JSFAttr
     public static final String ITEM_LABEL_ATTR             = "itemLabel";
     public static final String ITEM_VALUE_ATTR             = "itemValue";
 
+    // Table attributes
+    public static final String ROWS_ATTR                   = "rows";
+    public static final String VAR_ATTR                    = "var";
 
     //~ Constructors -------------------------------------------------------------------------------
 

@@ -479,7 +479,7 @@ public class MinimizingStateRestorer
 //        */
 //
 //        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-//        ValueBinding vb = af.getApplication().getValueBinding(valueRef);
+//        ValueBinding vb = facesContext.getApplication().createValueBinding(valueRef);
 //
 //        String paramName = RequestParameterNames.getModelValueStateParameterName(valueRef);
 //        String paramValue = getStateParameter(stateMap, paramName);

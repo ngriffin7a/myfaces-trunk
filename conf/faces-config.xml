@@ -49,6 +49,11 @@
   </component>
 
   <component>
+    <component-type>Column</component-type>
+    <component-class>net.sourceforge.myfaces.component.MyFacesUIColumn</component-class>
+  </component>
+
+  <component>
     <component-type>Form</component-type>
     <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlForm</component-class>
   </component>
@@ -490,6 +495,13 @@
           <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlTextRenderer</renderer-class>
           <supported-component-type><component-type>InputText</component-type></supported-component-type>
           <supported-component-type><component-type>OutputText</component-type></supported-component-type>
+      </renderer>
+
+
+      <renderer>
+          <renderer-type>Table</renderer-type>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlTableRenderer</renderer-class>
+          <supported-component-type><component-type>DataTable</component-type></supported-component-type>
       </renderer>
 
       <!-- TODO: other renderers... -->

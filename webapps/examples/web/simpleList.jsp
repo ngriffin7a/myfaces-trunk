@@ -51,53 +51,44 @@ managed beans used:
         <f:facet name="body">
             <h:panel_group id="body">
 
-                <h:output_errors id="errors" />
-
                 <% int rows = 0, cols = 2; %>
-                <h:panel_list panelClass="standardTable"
+                <h:data_table styleClass="standardTable"
                         headerClass="standardTable_Header"
                         footerClass="standardTable_Footer"
                         rowClasses="standardTable_Row1,standardTable_Row2"
-                        columnClasses="standardTable_Column,standardTable_ColumnCentered,standardTable_Column" >
-                    <!-- HEADER -->
-                    <h:panel_group>
-                        <h:output_text id="hdr1" value="Country name" />
-                        <h:output_text id="hdr2" value="Iso-Code" />
-                        <h:output_text id="hdr3" value="Size" />
-                    </h:panel_group>
-                    <!-- DATA -->
-                    <h:panel_data var="country" valueRef="countryList.countries" >
+                        columnClasses="standardTable_Column,standardTable_ColumnCentered,standardTable_Column"
+                        var="country"
+                        value="#{countryList.countries}"
 
-                        <h:command_hyperlink>
-                            <h:output_text valueRef="country.name" />
-
-                            <f:parameter name="isoCode" valueRef="country.isoCode" />
-                            <f:parameter name="name" valueRef="country.name" />
-                            <f:parameter name="size" valueRef="country.size" />
+                   >
+                   <h:column>
+                       <f:facet name="header">
+                          <h:output_text id="hdr1" value="Country name" />
+                       </f:facet>
+                       <h:command_link>
+                            <h:output_text binding="#{country.name}" />
+                            <f:parameter name="isoCode" value="#{country.isoCode}" />
+                            <f:parameter name="name" value="#{country.name}" />
+                            <f:parameter name="size" value="#{country.size}" />
                             <f:action_listener type="net.sourceforge.myfaces.examples.listexample.SimpleCountryController" />
+                       </h:command_link>
+                   </h:column>
 
-                        </h:command_hyperlink>
+                   <h:column>
+                       <f:facet name="header">
+                          <h:output_text id="hdr2" value="Iso-Code" />
+                       </f:facet>
+                       <h:output_text id="col2" value="country.isoCode" />
+                   </h:column>
 
-                        <h:output_text id="col2" valueRef="country.isoCode" />
-                        <h:output_text id="col3" valueRef="country.size" />
-                        <% rows++; %>
+                   <h:column>
+                       <f:facet name="header">
+                          <h:output_text id="hdr3" value="Size" />
+                       </f:facet>
+                       <h:output_text id="col3" value="country.size" />
+                   </h:column>
 
-                    </h:panel_data>
-                    <!-- FOOTER -->
-                    <h:panel_group>
-                        <h:output_text value="take a look at this runtime values ..."/>
-                        <h:panel_group>
-                            <h:output_message id="rows_msg" value="{0} rows" >
-                                <f:parameter value="<%=new Integer(rows)%>"/>
-                            </h:output_message>
-                            &nbsp; / &nbsp;
-                            <h:output_message id="cols_msg" value="{0} cols" >
-                                <f:parameter value="<%=new Integer(cols)%>"/>
-                            </h:output_message>
-                        </h:panel_group>
-                        <h:output_text value=""/>
-                    </h:panel_group>
-                </h:panel_list>
+                </h:data_table>
                 <br>
 
             </h:panel_group>
