@@ -172,7 +172,9 @@ public class NavigationItemRenderer
         }
 
         boolean open = ((UINavigationItem)uiComponent).isOpen();
-        renderLabel(facesContext, writer, uiComponent, navigationComponent, label, open);
+        boolean active = ((UINavigationItem)uiComponent).isActive();
+
+        renderLabel(facesContext, writer, uiComponent, navigationComponent, label, open, active);
 
         writer.write("</a>");
 
@@ -203,13 +205,22 @@ public class NavigationItemRenderer
                                UIComponent uiComponent,
                                UIComponent navigatioComponent,
                                String label,
-                               boolean open)
+                               boolean open,
+                               boolean active)
         throws IOException
     {
         if (navigatioComponent != null)
         {
-            String style = open ? (String)navigatioComponent.getAttribute(NavigationRendererAttributes.OPEN_ITEM_CLASS_ATTR) :
-                    (String)navigatioComponent.getAttribute(NavigationRendererAttributes.ITEM_CLASS_ATTR);;
+            String style;
+            if (active)
+            {
+                style = (String)navigatioComponent.getAttribute(NavigationRendererAttributes.ACTIVE_ITEM_CLASS_ATTR);
+            }
+            else
+            {
+                style = open ? (String)navigatioComponent.getAttribute(NavigationRendererAttributes.OPEN_ITEM_CLASS_ATTR) :
+                                    (String)navigatioComponent.getAttribute(NavigationRendererAttributes.ITEM_CLASS_ATTR);;
+            }
             if (style != null)
             {
                 writer.write("<span class=\"");

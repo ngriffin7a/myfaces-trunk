@@ -33,6 +33,7 @@ public interface NavigationRendererAttributes
 {
     public static final String LEVEL_CLASSES = "levelClasses";
     public static final String OPEN_ITEM_CLASS_ATTR = "openItemClass";
+    public static final String ACTIVE_ITEM_CLASS_ATTR = "activeItemClass";
     public static final String ITEM_CLASS_ATTR = "itemClass";
     public static final String SEPARATOR_CLASS = "separatorClass";
 
@@ -41,6 +42,7 @@ public interface NavigationRendererAttributes
         BUNDLE_ATTR,
         LEVEL_CLASSES,
         OPEN_ITEM_CLASS_ATTR,
+        ACTIVE_ITEM_CLASS_ATTR,
         ITEM_CLASS_ATTR,
         SEPARATOR_CLASS
     };

@@ -8,6 +8,7 @@
                   levelClasses="navlevel1,navlevel2,navlevel3"
                   separatorClass="navseparator"
                   itemClass="navitem"
+                  activeItemClass="navitem_active"
                   openItemClass="navitem_open"   >
         <x:navigation_item id="nav_1" key="nav_Home" action="go_home" commandClass="navigation_link" />
         <x:navigation_item id="nav_2" key="nav_Examples" commandClass="navigation_link" >

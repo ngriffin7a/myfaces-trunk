@@ -131,12 +131,21 @@ a:hover
 	font-weight : bold;
 }
 
+.navitem_active {
+    color: #FFFFFF;
+    background-color: #6392C6;
+	white-space : nowrap;
+	font-weight : bold;
+}
+
 a.navigation_link {
     text-decoration : none;
 }
 
 a.navigation_link:hover,active {
-    color: #ff9000;
+    color: #FFFFFF;
+    background-color: #6392C6;
+	white-space : nowrap;
 	text-decoration: none;
 }
 
@@ -153,10 +162,8 @@ a.navigation_link:hover,active {
 }
 
 .navseparator {
-    border-bottom: 1px solid #000000;
-    width=230px;
-	font-size: 0px;
-    font-color: #9999CC;
+    line-height: 12px;
+    border-bottom: 1px solid #A2B7C5;
 }
 
 

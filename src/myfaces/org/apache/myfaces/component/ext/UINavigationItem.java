@@ -47,6 +47,7 @@ public class UINavigationItem
     public static final String OPEN_PROP = "open";
     private boolean _open = false;
     private boolean _reconstituted = false;
+    private boolean _active = false;
 
     public UINavigationItem()
     {
@@ -61,6 +62,12 @@ public class UINavigationItem
     }
 
     public boolean isOpen()
+    {
+        reconsitute();
+        return _open;
+    }
+
+    public void reconsitute()
     {
         if (!_reconstituted)
         {
@@ -81,17 +88,35 @@ public class UINavigationItem
                     if (prevNavItem != null)
                     {
                         setOpen(prevNavItem.isOpen());
+                        if (prevNavItem.isOpen() && !prevNavItem.getChildren().hasNext())
+                        {
+                            setActive(true);
+                        }
+                        else
+                        {
+                            setActive(false);
+                        }
                     }
                 }
             }
             _reconstituted = true;
         }
-        return _open;
     }
 
     public void setOpen(boolean open)
     {
         _open = open;
+    }
+
+    public boolean isActive()
+    {
+        reconsitute();
+        return _active;
+    }
+
+    public void setActive(boolean active)
+    {
+        _active = active;
     }
 
     /**
@@ -146,7 +171,7 @@ public class UINavigationItem
 
     public void toggleOpen()
     {
-        if (isOpen())
+        if (isOpen() && !isActive())
         {
             //close all children
             closeAllChildren();

@@ -135,6 +135,11 @@ public class NavigationTag
         setRendererAttributeString(OPEN_ITEM_CLASS_ATTR, s);
     }
 
+    public void setActiveItemClass(String s)
+    {
+        setRendererAttributeString(ACTIVE_ITEM_CLASS_ATTR, s);
+    }
+
     public void setItemClass(String s)
     {
         setRendererAttributeString(ITEM_CLASS_ATTR, s);

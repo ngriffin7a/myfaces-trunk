@@ -108,6 +108,14 @@
             </description>
         </attribute>
         <attribute>
+            <name>activeItemClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>
+                The CSS class of the active navigation item.
+            </description>
+        </attribute>
+        <attribute>
             <name>levelClasses</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
