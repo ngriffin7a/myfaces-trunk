@@ -156,9 +156,9 @@ public class VariableResolverImpl
      * Stores all implicit objects defined for this instance of <code>VariableResolver</code>
      * <p>
      * Can store instances of <code>ImplicitObject</code> which have the ability to
-     * dynamically resolve against FacesContext. Can also store any other abject
+     * dynamically resolve against FacesContext. Can also store any other object
      * which itself is the value for the implicit object (this in effect will be
-     * a static object)
+     * a static object).
      * </p>
      * <p>
      * WARNING: this implementation is not serialized as it is thread safe because
@@ -172,9 +172,9 @@ public class VariableResolverImpl
         _implicitObjects.putAll(s_standardImplicitObjects);
     }
 
-    protected static final Map s_scopes = new HashMap(16);
+    protected static final Map s_defaultScopes = new HashMap(16);
     static {
-        s_scopes.put(
+        s_defaultScopes.put(
             "request",
             new Scope()
             {
@@ -183,7 +183,7 @@ public class VariableResolverImpl
                     extContext.getRequestMap().put(name, obj);
                 }
             });
-        s_scopes.put(
+        s_defaultScopes.put(
             "session",
             new Scope()
             {
@@ -192,7 +192,7 @@ public class VariableResolverImpl
                     extContext.getSessionMap().put(name, obj);
                 }
             });
-        s_scopes.put(
+        s_defaultScopes.put(
             "application",
             new Scope()
             {
@@ -201,7 +201,7 @@ public class VariableResolverImpl
                     extContext.getApplicationMap().put(name, obj);
                 }
             });
-        s_scopes.put(
+        s_defaultScopes.put(
             "none",
             new Scope()
             {
@@ -216,7 +216,7 @@ public class VariableResolverImpl
      * Stores all scopes defined for this instance of <code>VariableResolver</code>
      * <p>
      * Can store instances of <code>Scope</code> which have the ability to
-     * dynamically resolve against ExterncalContext.
+     * dynamically resolve against ExternalContext for put operations.
      * </p>
      * <p>
      * WARNING: this implementation is not serialized as it is thread safe because
@@ -227,7 +227,7 @@ public class VariableResolverImpl
      */
     protected final Map _scopes = new HashMap(16);
     {
-        _scopes.putAll(s_scopes);
+        _scopes.putAll(s_defaultScopes);
     }
 
     //~ Methods ------------------------------------------------------------------------------------

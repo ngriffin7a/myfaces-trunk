@@ -27,6 +27,8 @@ import javax.faces.el.MethodNotFoundException;
 import javax.faces.el.ReferenceSyntaxException;
 import javax.servlet.jsp.el.ELException;
 
+import net.sourceforge.myfaces.el.ValueBindingImpl.NotVariableReferenceException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -77,8 +79,8 @@ public class MethodBindingImpl extends MethodBinding implements StateHolder
         }
         catch (Exception e)
         {
-            log.error("Cannot get type for expression " + _valueBinding._expressionString, e);
-            throw new EvaluationException("Expression: " + _valueBinding._expressionString, e);
+            log.error("Cannot get type for expression " + getExpressionString(), e);
+            throw new EvaluationException("Expression: " + getExpressionString(), e);
         }
     }
 
@@ -99,8 +101,8 @@ public class MethodBindingImpl extends MethodBinding implements StateHolder
         }
         catch (Exception e)
         {
-            log.error("Cannot get type for expression " + _valueBinding._expressionString, e);
-            throw new EvaluationException("Expression: " + _valueBinding._expressionString, e);
+            log.error("Cannot get type for expression " + getExpressionString(), e);
+            throw new EvaluationException("Expression: " + getExpressionString(), e);
         }
     }
 
@@ -111,16 +113,24 @@ public class MethodBindingImpl extends MethodBinding implements StateHolder
             throw new NullPointerException("facesContext");
         }
         
-        Object base = _valueBinding.resolveToBaseAndProperty(facesContext);
-        if (!(base instanceof Object[]))
+        try
         {
-            log.error("Expression not a valid method binding: " 
-                    + _valueBinding._expressionString);
-            throw new ReferenceSyntaxException("Expression not a valid method binding: " 
-                + _valueBinding._expressionString);
-        }
+            Object base = _valueBinding.resolveToBaseAndProperty(facesContext);
         
-        return (Object[]) base;
+            if (!(base instanceof Object[]))
+            {
+                String errorMessage = "Expression not a valid method binding: " 
+                    + getExpressionString(); 
+                log.error(errorMessage);
+                throw new ReferenceSyntaxException(errorMessage);
+            }
+            
+            return (Object[]) base;
+        }
+        catch (NotVariableReferenceException e)
+        {
+            throw new ReferenceSyntaxException("Expression: " + getExpressionString(), e);
+        }
     }
     
     //~ StateHolder implementation ------------------------------------------------------------------------------------

@@ -155,6 +155,12 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
                 ? _application.getPropertyResolver().isReadOnly(base, property)
                 : _application.getPropertyResolver().isReadOnly(base, index.intValue());
         }
+        catch (NotVariableReferenceException e)
+        {
+            // if it is not a variable reference (e.g., a constant literal), 
+            // we cannot write to it but can read it
+            return true;
+        }
         catch (Exception e)
         {
             log.error("Cannot determine readonly for expression " + _expressionString, e);
@@ -173,6 +179,9 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
                 Object val = _application.getVariableResolver()
                     .resolveVariable(facesContext, base_.toString());
                 
+                // Note: if val==null, then there is no variable with this name
+                //       in any scope. Therefore, we will create a new one, so 
+                //       any Object is allowed.
                 return (val == null) ? Object.class : val.getClass();
             }
             
@@ -203,8 +212,8 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
                 String name = base_.toString();
                 if (VariableResolverImpl.s_standardImplicitObjects.containsKey(name))
                 {
-                    String errorMessage = "Cannot set value of implicit object " 
-                        + name + " for expression " + _expressionString; 
+                    String errorMessage = "Cannot set value of implicit object '" 
+                        + name + "' for expression " + _expressionString; 
                     log.error(errorMessage);
                     throw new ReferenceSyntaxException(errorMessage);
                 }
@@ -305,7 +314,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
     }
     
     protected Object resolveToBaseAndProperty(FacesContext facesContext) 
-        throws ELException 
+        throws ELException, NotVariableReferenceException 
     {
         if (facesContext == null)
         {
@@ -336,10 +345,10 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         }
         
         if (!(expression instanceof ComplexValue)) {
-            // all other cases are invalid
-            throw new PropertyNotFoundException(
-                "Parsed Expression of unsupported type for this operation. Class: " 
-                + _expression.getClass().getName());
+            // all other cases are not variable references
+            throw new NotVariableReferenceException (
+                "Parsed Expression of unsupported type for this operation. Expression class: " 
+                + _expression.getClass().getName() + ". Expression: " + _expressionString);
         }
         
         ComplexValue complexValue = (ComplexValue) expression;
@@ -495,6 +504,14 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         {
             return _facesContext.getApplication().getVariableResolver()
                 .resolveVariable(_facesContext, pName);
+        }
+    }
+    
+    public static final class NotVariableReferenceException extends ReferenceSyntaxException
+    {
+        public NotVariableReferenceException(String message)
+        {
+            super(message);
         }
     }
 }
