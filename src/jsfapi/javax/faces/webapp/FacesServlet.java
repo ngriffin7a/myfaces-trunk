@@ -157,6 +157,16 @@ public class FacesServlet
         {
             logException(cause, "Root cause");
         }
+
+        if(e instanceof ServletException)
+        {
+            cause = ((ServletException) e).getRootCause();
+
+            if(cause != null && cause != e)
+            {
+                logException(cause, "Root cause of ServletException");
+            }
+        }
     }
 
 
