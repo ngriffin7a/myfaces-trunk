@@ -1,12 +1,17 @@
-Checklist for tasks related to release of a new version
-=======================================================
+Checklist for tasks to be done, when releasing of a new version
+===============================================================
 
 - change version in build/manifest.properties and examples/web/inc/page_header.jsp
 - commit everything
 - cvs tag in format "rel_1_0_3"
-- run ant "all"
+- ant "clean-all"
+- ant "all"
 - upload files to SF
 - add new release at SF
+- switch release to "active" and try downloading
+- deploy the downloaded myfaces-examples.war and test
+- send release monitor notice
+- change dynamic content on homepage
 - post news at SF
 - post news article in wiki
 - post announcement on Sun JSF forum
