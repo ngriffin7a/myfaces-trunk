@@ -19,7 +19,6 @@ import net.sourceforge.myfaces.application.MyfacesStateManager;
 import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
 import net.sourceforge.myfaces.renderkit.html.HtmlLinkRendererBase;
 import net.sourceforge.myfaces.util.LocaleUtils;
-import net.sourceforge.myfaces.MyFacesConfig;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,6 +43,9 @@ import java.util.Locale;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.15  2004/09/08 09:30:01  manolito
+ * moved javascript detection to ResponseWriter
+ *
  * Revision 1.14  2004/08/23 05:13:38  dave0000
  * Externalize String-to-Locale conversion
  *
@@ -122,10 +124,6 @@ public class ViewTag
         try
         {
             responseWriter.endDocument();
-            javax.faces.context.ExternalContext externalContext = facesContext.getExternalContext();
-            if (MyFacesConfig.isDetectJavascript(externalContext) && ! MyFacesConfig.isJavascriptDetected(externalContext)) {
-                responseWriter.write("<script language=\"JavaScript\">\n<!--\ndocument.location.replace('" + facesContext.getApplication().getViewHandler().getResourceURL(facesContext, "/_javascriptDetector_")  + "?goto=" + facesContext.getApplication().getViewHandler().getActionURL(facesContext, facesContext.getViewRoot().getViewId()) +"');\n//-->\n</script>");
-            }
         }
         catch (IOException e)
         {

@@ -15,14 +15,17 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
+import net.sourceforge.myfaces.config.MyfacesConfig;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormResponseWriter;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
+import net.sourceforge.myfaces.renderkit.html.util.JavascriptUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -34,6 +37,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.23  2004/09/08 09:30:01  manolito
+ * moved javascript detection to ResponseWriter
+ *
  * Revision 1.22  2004/08/20 00:13:55  dave0000
  * remove unused constant
  *
@@ -139,6 +145,17 @@ public class HtmlResponseWriterImpl
         {
             DummyFormUtils.writeDummyForm(this, _dummyFormParams);
         }
+
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        MyfacesConfig myfacesConfig = MyfacesConfig.getCurrentInstance(facesContext.getExternalContext());
+        if (myfacesConfig.isDetectJavascript())
+        {
+            if (! JavascriptUtils.isJavascriptDetected(facesContext.getExternalContext()))
+            {
+                write("<script language=\"JavaScript\">\n<!--\ndocument.location.replace('" + facesContext.getApplication().getViewHandler().getResourceURL(facesContext, "/_javascriptDetector_")  + "?goto=" + facesContext.getApplication().getViewHandler().getActionURL(facesContext, facesContext.getViewRoot().getViewId()) +"');\n//-->\n</script>");
+            }
+        }
+
         _writer.flush();
     }
 
