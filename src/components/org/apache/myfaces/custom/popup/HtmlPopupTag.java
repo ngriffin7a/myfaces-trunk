@@ -15,6 +15,9 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/11/23 23:24:04  mmarinschek
+ * Popup tag has now more attributes
+ *
  * Revision 1.1  2004/11/16 16:25:52  mmarinschek
  * new popup - component; not yet finished
  *
@@ -34,6 +37,10 @@ public class HtmlPopupTag
     // User Role support
     private String _enabledOnUserRole;
     private String _visibleOnUserRole;
+    private String _displayAtDistanceX = null;
+    private String _displayAtDistanceY = null;
+    private String _closePopupOnExitingElement = null;
+    private String _closePopupOnExitingPopup = null;
 
     public String getComponentType()
     {
@@ -51,6 +58,10 @@ public class HtmlPopupTag
 
         setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
         setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
+        setIntegerProperty(component,"displayAtDistanceX",_displayAtDistanceX);
+        setIntegerProperty(component,"displayAtDistancey",_displayAtDistanceY);
+        setBooleanProperty(component,"closePopupOnExitingElement",_closePopupOnExitingElement);
+        setBooleanProperty(component,"closePopupOnExitingPopup",_closePopupOnExitingPopup);
     }
 
     // userrole attributes
@@ -62,5 +73,25 @@ public class HtmlPopupTag
     public void setVisibleOnUserRole(String visibleOnUserRole)
     {
         _visibleOnUserRole = visibleOnUserRole;
+    }
+
+    public void setDisplayAtDistanceX(String displayAtDistanceX)
+    {
+        _displayAtDistanceX = displayAtDistanceX;
+    }
+
+    public void setDisplayAtDistanceY(String displayAtDistanceY)
+    {
+        _displayAtDistanceY = displayAtDistanceY;
+    }
+
+    public void setClosePopupOnExitingElement(String closePopupOnExitingElement)
+    {
+        _closePopupOnExitingElement = closePopupOnExitingElement;
+    }
+
+    public void setClosePopupOnExitingPopup(String closePopupOnExitingPopup)
+    {
+        _closePopupOnExitingPopup = closePopupOnExitingPopup;
     }
 }

@@ -55,6 +55,10 @@ public class HtmlPopup
 
     private String _style = null;
     private String _styleClass = null;
+    private Integer _displayAtDistanceX = null;
+    private Integer _displayAtDistanceY = null;
+    private Boolean _closePopupOnExitingElement = null;
+    private Boolean _closePopupOnExitingPopup = null;
 
     public HtmlPopup()
     {
@@ -90,14 +94,66 @@ public class HtmlPopup
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
+    public void setDisplayAtDistanceX(Integer displayAtDistanceX)
+    {
+        _displayAtDistanceX = displayAtDistanceX;
+    }
+
+    public Integer getDisplayAtDistanceX()
+    {
+        if (_displayAtDistanceX != null) return _displayAtDistanceX;
+        ValueBinding vb = getValueBinding("displayAtDistanceX");
+        return vb != null ? (Integer)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setDisplayAtDistanceY(Integer displayAtDistanceY)
+    {
+        _displayAtDistanceY = displayAtDistanceY;
+    }
+
+    public Integer getDisplayAtDistanceY()
+    {
+        if (_displayAtDistanceY != null) return _displayAtDistanceY;
+        ValueBinding vb = getValueBinding("displayAtDistanceY");
+        return vb != null ? (Integer)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setClosePopupOnExitingElement(Boolean closePopupOnExitingElement)
+    {
+        _closePopupOnExitingElement = closePopupOnExitingElement;
+    }
+
+    public Boolean getClosePopupOnExitingElement()
+    {
+        if (_closePopupOnExitingElement != null) return _closePopupOnExitingElement;
+        ValueBinding vb = getValueBinding("closePopupOnExitingElement");
+        return vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setClosePopupOnExitingPopup(Boolean closePopupOnExitingPopup)
+    {
+        _closePopupOnExitingPopup = closePopupOnExitingPopup;
+    }
+
+    public Boolean getClosePopupOnExitingPopup()
+    {
+        if (_closePopupOnExitingPopup != null) return _closePopupOnExitingPopup;
+        ValueBinding vb = getValueBinding("closePopupOnExitingPopup");
+        return vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+    }
+
 
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[3];
+        Object values[] = new Object[7];
         values[0] = super.saveState(context);
         values[1] = _style;
         values[2] = _styleClass;
+        values[3] = _displayAtDistanceX;
+        values[4] = _displayAtDistanceY;
+        values[5] = _closePopupOnExitingElement;
+        values[6] = _closePopupOnExitingPopup;
         return ((Object) (values));
     }
 
@@ -107,6 +163,10 @@ public class HtmlPopup
         super.restoreState(context, values[0]);
         _style = (String)values[1];
         _styleClass = (String)values[2];
+        _displayAtDistanceX = (Integer)values[3];
+        _displayAtDistanceY = (Integer)values[4];
+        _closePopupOnExitingElement = (Boolean)values[5];
+        _closePopupOnExitingPopup = (Boolean)values[6];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }

@@ -31,6 +31,9 @@ import java.lang.reflect.InvocationTargetException;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/11/23 23:24:04  mmarinschek
+ * Popup tag has now more attributes
+ *
  * Revision 1.2  2004/11/17 11:25:42  mmarinschek
  * reviewed version of popup
  *
@@ -69,11 +72,14 @@ public class HtmlPopupRenderer
         UIComponent popupFacet = popup.getPopup();
 
         String popupId = writePopupScript(
-                facesContext, popup.getClientId(facesContext));
+                facesContext, popup.getClientId(facesContext),
+                popup.getDisplayAtDistanceX(),popup.getDisplayAtDistanceY());
 
         //writeMouseOverAndOutAttribs(popupId, popupFacet.getChildren());
 
-        writeMouseOverAttribs(popupId, uiComponent.getChildren());
+        writeMouseOverAttribs(popupId, uiComponent.getChildren(),
+            popup.getClosePopupOnExitingElement()==null ||
+                    popup.getClosePopupOnExitingElement().booleanValue());
 
         RendererUtils.renderChildren(facesContext, uiComponent);
 
@@ -86,12 +92,17 @@ public class HtmlPopupRenderer
         writer.writeAttribute(HTML.CLASS_ATTR,popup.getStyleClass(),null);
         writer.writeAttribute(HTML.ID_ATTR, popup.getClientId(facesContext),null);
         writer.writeAttribute(HTML.ONMOUSEOVER_ATTR, new String(popupId+".redisplay();"),null);
-        writer.writeAttribute(HTML.ONMOUSEOUT_ATTR, new String(popupId+".hide();"),null);
+
+        Boolean closeExitPopup = popup.getClosePopupOnExitingPopup();
+
+        if(closeExitPopup==null || closeExitPopup.booleanValue())
+            writer.writeAttribute(HTML.ONMOUSEOUT_ATTR, new String(popupId+".hide();"),null);
+
         RendererUtils.renderChildren(facesContext, popupFacet);
         writer.endElement(HTML.DIV_ELEM);
     }
 
-    private void writeMouseOverAttribs(String popupId, List children)
+    private void writeMouseOverAttribs(String popupId, List children, boolean renderMouseOut)
     {
         for (int i = 0; i < children.size(); i++)
         {
@@ -99,11 +110,15 @@ public class HtmlPopupRenderer
 
             callMethod(uiComponent,"onmouseover",new String(popupId+".display(event);"));
 
-            writeMouseOverAttribs(popupId, uiComponent.getChildren());
+            if(renderMouseOut)
+                callMethod(uiComponent,"onmouseout",new String(popupId+".hide(event);"));
+
+            writeMouseOverAttribs(popupId, uiComponent.getChildren(),renderMouseOut);
         }
     }
 
-    private String writePopupScript(FacesContext context, String clientId)
+    private String writePopupScript(FacesContext context, String clientId,
+                                    Integer displayAtDistanceX, Integer displayAtDistanceY)
         throws IOException
     {
         ResponseWriter writer = context.getResponseWriter();
@@ -113,7 +128,9 @@ public class HtmlPopupRenderer
 
         writer.startElement(HTML.SCRIPT_ELEM,null);
         writer.writeAttribute(HTML.SCRIPT_LANGUAGE_ATTR,HTML.SCRIPT_LANGUAGE_JAVASCRIPT,null);
-        writer.writeText("var "+popupId+"=new orgApacheMyfacesPopup('"+clientId+"');",null);
+        writer.writeText("var "+popupId+"=new orgApacheMyfacesPopup('"+clientId+"',"+
+                (displayAtDistanceX==null?-5:displayAtDistanceX.intValue())+","+
+                (displayAtDistanceY==null?-5:displayAtDistanceY.intValue())+");",null);
         writer.endElement(HTML.SCRIPT_ELEM);
 
         return popupId;

@@ -16,4 +16,20 @@
         <name>styleClass</name>
         <type>String</type>
     </field>
+    <field>
+        <name>displayAtDistanceX</name>
+        <type>Integer</type>
+    </field>
+    <field>
+        <name>displayAtDistanceY</name>
+        <type>Integer</type>
+    </field>
+    <field>
+        <name>closePopupOnExitingElement</name>
+        <type>Boolean</type>
+    </field>
+    <field>
+        <name>closePopupOnExitingPopup</name>
+        <type>Boolean</type>
+    </field>
 </component>
