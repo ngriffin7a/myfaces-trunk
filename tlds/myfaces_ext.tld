@@ -997,11 +997,15 @@
             <rtexprvalue>false</rtexprvalue>
         </attribute>
     </tag>
+
+
+<!-- validators -->
+
     
         <!-- creditCard -->
     <tag>
-        <name>creditCard</name>
-        <tag-class>net.sourceforge.myfaces.validate.taglib.CreditCardValidatorTag</tag-class>
+        <name>validateCreditCard</name>
+        <tag-class>net.sourceforge.myfaces.validate.taglib.ValidateCreditCardTag</tag-class>
         <body-content>JSP</body-content>
         <description>
 			A custom validator for creditCards, based upons Jakarta Commons.
@@ -1049,5 +1053,14 @@
         </attribute>
     </tag>
     
+    <!-- Validator for Email -->
+     <tag>
+        <name>validateEmail</name>
+        <tag-class>net.sourceforge.myfaces.validate.taglib.ValidateEmailTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+			A custom validator for email address format, based upons Jakarta Commons.
+        </description>
+	</tag>   
 
 </taglib>

@@ -6,6 +6,7 @@ package net.sourceforge.myfaces.examples.validate;
 public class ValidateForm {
 
 	private String email = null;
+	private String email2 = null;
 	private String creditCardNumber = null;
 	
 
@@ -28,6 +29,14 @@ public class ValidateForm {
 
 	public void setCreditCardNumber(String string) {
 		creditCardNumber = string;
+	}
+
+	public String getEmail2() {
+		return email2;
+	}
+
+	public void setEmail2(String string) {
+		email2 = string;
 	}
 
 }

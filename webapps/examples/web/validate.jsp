@@ -67,9 +67,15 @@ managed beans used:
                     </h:inputText>
 					<h:message id="emailError" for="form1:email" styleClass="error" />
 					
+					<h:outputLabel for="form1:email2" value="Email2" />
+                    <h:inputText id="email2" value="#{validateForm.email2}" required="true">
+                        <x:validateEmail />
+                    </h:inputText>
+					<h:message id="emailError2" for="form1:email2" styleClass="error" />
+					
 					<h:outputLabel for="form1:creditCardNumber" value="CreditCard" />
                     <h:inputText id="creditCardNumber" value="#{validateForm.creditCardNumber}" required="true">
-                        <x:creditCard />
+                        <x:validateCreditCard />
                     </h:inputText>
 					<h:message id="creditCardNumberError" for="form1:creditCardNumber" styleClass="error" />
 				
