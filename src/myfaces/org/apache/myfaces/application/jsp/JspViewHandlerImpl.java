@@ -197,63 +197,68 @@ public class JspViewHandlerImpl
         }
 
         ExternalContext externalContext = facescontext.getExternalContext();
-        Object[] pathInfo = getPathInfo(externalContext);
-        if (pathInfo == null)
-        {
-            return viewId;
-        }
-        boolean isExtensionMapping = ((Boolean)pathInfo[0]).booleanValue();
-        String path = (String)pathInfo[1];
+        ServletMapping servletMapping = getServletMapping(externalContext);
 
-        viewId = viewId.substring(1, viewId.length());
-        if (isExtensionMapping)
+        if (servletMapping.isExtensionMapping())
         {
+            String urlpattern = servletMapping.getUrlPattern();
+            if (urlpattern.startsWith("*"))
+            {
+                urlpattern = urlpattern.substring(1, urlpattern.length());
+            }
             // extension mapping
-            if (viewId.endsWith(path))
+            if (viewId.endsWith(urlpattern))
             {
                 return viewId;
             }
             else
             {
                 int idx = viewId.lastIndexOf(".");
-                return viewId.substring(0, idx) + path;
+                if (idx >= 0)
+                {
+                    return viewId.substring(0, idx) + urlpattern;
+                }
+                else
+                {
+                    return viewId + urlpattern;
+                }
+
             }
         }
         else
         {
+            String urlpattern = servletMapping.getUrlPattern();
+            if (urlpattern.endsWith("/*"))
+            {
+                urlpattern = urlpattern.substring(0, urlpattern.length() - 2);
+            }
             // prefix mapping
-            return path + "/" + viewId;
+            return urlpattern + viewId;
         }
     }
 
-    private Object[] getPathInfo(ExternalContext externalContext)
+    private static ServletMapping getServletMapping(ExternalContext externalContext)
     {
         String servletPath = externalContext.getRequestServletPath();
         String requestPathInfo = externalContext.getRequestPathInfo();
 
-
         WebXml webxml = WebXml.getWebXml(externalContext);
         List mappings = webxml.getFacesServletMappings();
-        String path = null;
+
         boolean isExtensionMapping = requestPathInfo == null;
+
         for (int i = 0, size = mappings.size(); i < size; i++)
         {
             ServletMapping servletMapping = (ServletMapping) mappings.get(i);
-            String urlpattern = servletMapping.getUrlPattern();
-
-            boolean isValidUrlpattern =
-                isExtensionMapping && urlpattern.startsWith("*.") ||
-                !isExtensionMapping && urlpattern.indexOf("/*") >= 0;
-
-            if (isValidUrlpattern)
+            if (servletMapping.isExtensionMapping() == isExtensionMapping)
             {
+                String urlpattern = servletMapping.getUrlPattern();
                 if (isExtensionMapping)
                 {
                     String extension = urlpattern.substring(1, urlpattern.length());
                     if (servletPath.endsWith(extension))
                     {
-                        path = extension;
-                        break;
+                        return servletMapping;
                     }
                 }
                 else
@@ -261,22 +266,15 @@ public class JspViewHandlerImpl
                     urlpattern = urlpattern.substring(0, urlpattern.length() - 2);
                     if (servletPath.equals(urlpattern))
                     {
-                        path = urlpattern;
-                        break;
+                        return servletMapping;
                     }
                 }
             }
-
-            if (log.isTraceEnabled()) log.trace("ignoring servlet-mapping for urlpattern = " +
-                                                urlpattern + " extenxsionMapping = " + isExtensionMapping);
         }
-        if (path == null)
-        {
-            log.error("could not find pathMapping for servletPath = " + servletPath +
-                      " requestPathInfo = " + requestPathInfo);
-            return null;
-        }
-        return new Object[] {isExtensionMapping ? Boolean.TRUE : Boolean.FALSE, path};
+        log.error("could not find pathMapping for servletPath = " + servletPath +
+                  " requestPathInfo = " + requestPathInfo);
+        throw new IllegalArgumentException("could not find pathMapping for servletPath = " + servletPath +
+                  " requestPathInfo = " + requestPathInfo);
     }
 
     public void renderView(FacesContext facesContext, UIViewRoot viewToRender) throws IOException, FacesException
