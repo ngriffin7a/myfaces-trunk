@@ -25,18 +25,15 @@
 
 <web-app>
 
-    <description>
-
-        This web.xml can be used during debugging, when there is no myfaces.jar
+    <!-- This web.xml can be used during debugging, when there is no myfaces.jar
         library available.
 
         The faces-config.xml file (that is normally in the myfaces.jar) must be
         copied to the /WEB-INF directory of the web context.
 
         The TLDs (that are normally in the myfaces.jar) must be
-        copied to the /WEB-INF/lib directory of the web context.
-
-    </description>
+        copied to the /WEB-INF/lib directory of the web context.-->
+    <description>debug web.xml</description>
 
     <context-param>
         <param-name>javax.faces.application.CONFIG_FILES</param-name>

@@ -12,6 +12,9 @@ cos.jar = ${project.dir}/lib/cos.jar
 # File path to commons logging package
 commons-logging.jar = ${project.dir}/lib/commons-logging.jar
 
+# File path to commons el package
+commons-el.jar = ${project.dir}/lib/commons-el.jar
+
 # File path to JavaServer Faces API version 1.0 final
 # (not included, please download from http://java.sun.com/j2ee/javaserverfaces/download.html)
 sun-jsf-api.jar = ${project.dir}/lib/jsf-api.jar
