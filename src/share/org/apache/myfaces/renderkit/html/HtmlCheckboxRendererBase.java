@@ -41,6 +41,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.15  2005/02/08 18:01:01  svieujot
+ * Typo.
+ *
  * Revision 1.14  2005/01/18 22:43:05  svieujot
  * Fix some bugs where converter wasn't used to determine selected values.
  * This caused for examples the list, checkbox and radio based components to bug when the backing bean value type is a primitive.
@@ -86,7 +89,7 @@ public class HtmlCheckboxRendererBase extends HtmlRenderer {
         RendererUtils.checkParamValidity(facesContext, uiComponent, null);
         if (uiComponent instanceof UISelectBoolean) {
             Boolean value = RendererUtils.getBooleanValue( uiComponent );
-            boolean isChecked = value != null ? value.booleanValue() : false;;
+            boolean isChecked = value != null ? value.booleanValue() : false;
             renderCheckbox(facesContext, uiComponent, EXTERNAL_TRUE_VALUE,
                     null, isChecked, true);
         } else if (uiComponent instanceof UISelectMany) {
