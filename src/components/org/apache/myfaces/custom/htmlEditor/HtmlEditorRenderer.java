@@ -33,6 +33,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2004/12/08 04:36:27  svieujot
+ * Cancel last *source attributes, and make style and styleClass more modular.
+ *
  * Revision 1.12  2004/12/08 04:13:56  svieujot
  * Add styleSource and styleClassSource for the htmlEditor source window.
  *
@@ -856,26 +859,22 @@ public class HtmlEditorRenderer extends Renderer {
             
             // Edit space
             writer.startElement(HTML.DIV_ELEM, null);
-            writer.writeAttribute(HTML.CLASS_ATTR, "kupu-editorframe", null);
+            writer.writeAttribute(HTML.CLASS_ATTR,
+                    "kupu-editorframe"+(editor.getStyleClass()==null ? "" : " "+editor.getStyleClass()), null);
             if( !editor.isShowAnyToolBox() ){
-                writer.writeAttribute(HTML.STYLE_ATTR, "margin-right: 0.3em;", null);
+                writer.writeAttribute(HTML.STYLE_ATTR,
+                        "margin-right: 0.3em"+(editor.getStyle()==null ? "" : ";"+editor.getStyle()), null);
             }
             	writer.startElement(HTML.IFRAME_ELEM, null);
             	writer.writeAttribute(HTML.ID_ATTR, "kupu-editor", null);
             	writer.writeAttribute(HTML.FRAMEBORDER_ATTR, "0", null);
             	writer.writeAttribute(HTML.SCROLLING_ATTR, "auto", null);
             	writer.writeAttribute(HTML.SRC_ATTR, "about:blank", null); // Text loaded afterward by javascript
-            	if( editor.getStyleClass() != null )
-            	    writer.writeAttribute(HTML.CLASS_ATTR, editor.getStyleClass(), null);
-                if( editor.getStyle() != null )
-            	    writer.writeAttribute(HTML.STYLE_ATTR, editor.getStyle(), null);
+
             	writer.endElement(HTML.IFRAME_ELEM);
             	writer.startElement(HTML.TEXTAREA_ELEM, null);
             	writer.writeAttribute(HTML.ID_ATTR, "kupu-editor-textarea", null);
-            	if( editor.getStyleClassSource() != null )
-            	    writer.writeAttribute(HTML.CLASS_ATTR, editor.getStyleClassSource(), null);
-            	writer.writeAttribute(HTML.STYLE_ATTR,
-            	        "display: none"+(editor.getStyleSource()==null ? "" : ";"+editor.getStyleSource()), null);
+            	writer.writeAttribute(HTML.STYLE_ATTR, "display: none", null);
             	writer.endElement(HTML.TEXTAREA_ELEM);
             writer.endElement(HTML.DIV_ELEM);
             

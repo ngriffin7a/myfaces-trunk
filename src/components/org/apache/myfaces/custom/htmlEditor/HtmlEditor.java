@@ -29,6 +29,9 @@ import org.apache.myfaces.component.UserRoleUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.11  2004/12/08 04:36:27  svieujot
+ * Cancel last *source attributes, and make style and styleClass more modular.
+ *
  * Revision 1.10  2004/12/08 04:13:56  svieujot
  * Add styleSource and styleClassSource for the htmlEditor source window.
  *
@@ -66,8 +69,6 @@ public class HtmlEditor extends UIInput implements UserRoleAware {
     
     private String _style;
     private String _styleClass;
-    private String _styleSource;
-    private String _styleClassSource;
     
     private Boolean _allowEditSource;
     private Boolean _addKupuLogo;
@@ -95,11 +96,9 @@ public class HtmlEditor extends UIInput implements UserRoleAware {
         Object values[] = new Object[6];
         values[0] = super.saveState(context);
         
-        String[] display = new String[4];
+        String[] display = new String[2];
         display[0] = _style;
         display[1] = _styleClass;
-        display[2] = _styleSource;
-        display[3] = _styleClassSource;
         
         values[1] = display;
         
@@ -139,8 +138,6 @@ public class HtmlEditor extends UIInput implements UserRoleAware {
         String[] display = (String[]) values[1];
         _style = display[0];
         _styleClass = display[1];
-        _styleSource = display[2];
-        _styleClassSource = display[3];
         
         Boolean[] toolBarButtons = (Boolean[]) values[2];
         _allowEditSource = toolBarButtons[0];
@@ -179,26 +176,6 @@ public class HtmlEditor extends UIInput implements UserRoleAware {
     }
     public void setStyleClass(String styleClass){
    		this._styleClass = styleClass;
-    }
-    
-    public String getStyleSource(){
-   		if (_styleSource != null)
-   		    return _style;
-    	ValueBinding vb = getValueBinding("styleSource");
-   		return vb != null ? (String)vb.getValue(getFacesContext()) : null;
-    }
-    public void setStyleSource(String styleSource){
-   		this._styleSource = styleSource;
-    }
-    
-    public String getStyleClassSource(){
-   		if (_styleClassSource != null)
-   		    return _styleClassSource;
-    	ValueBinding vb = getValueBinding("styleClassSource");
-   		return vb != null ? (String)vb.getValue(getFacesContext()) : null;
-    }
-    public void setStyleClassSource(String styleClassSource){
-   		this._styleClassSource = styleClassSource;
     }
     
     public Boolean isAllowEditSource(){
