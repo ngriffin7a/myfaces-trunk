@@ -161,8 +161,8 @@
     </component>
 
   <component>
-      <component-type>net.sourceforge.myfaces.RdfTicker</component-type>
-      <component-class>net.sourceforge.myfaces.custom.rdfticker.HtmlRdfTicker</component-class>
+      <component-type>net.sourceforge.myfaces.RssTicker</component-type>
+      <component-class>net.sourceforge.myfaces.custom.rssticker.HtmlRssTicker</component-class>
   </component>
 
   <component>

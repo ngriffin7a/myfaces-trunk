@@ -34,7 +34,7 @@
                 <x:navigationMenuItem id="nav_2_4_6" itemLabel="#{example_messages['nav_Calendar']}" action="go_calendar" icon="images/myfaces.gif" split="true" />
                 <x:navigationMenuItem id="nav_2_4_7" itemLabel="#{example_messages['nav_dataList']}" action="go_dataList" icon="images/myfaces.gif" />
                 <x:navigationMenuItem id="nav_2_4_8" itemLabel="#{example_messages['nav_tree']}" action="go_tree" icon="images/myfaces.gif" />
-                <x:navigationMenuItem id="nav_2_4_9" itemLabel="#{example_messages['nav_rdfTicker']}" action="go_rssticker" icon="images/myfaces.gif" />
+                <x:navigationMenuItem id="nav_2_4_9" itemLabel="#{example_messages['nav_rssTicker']}" action="go_rssticker" icon="images/myfaces.gif" />
                 <x:navigationMenuItem id="nav_2_4_10" itemLabel="#{example_messages['nva_dataScroller']}" action="go_datascroller" icon="images/myfaces.gif" />
             </x:navigationMenuItem>
         </x:navigationMenuItem>
