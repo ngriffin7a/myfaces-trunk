@@ -37,6 +37,9 @@ import java.util.Locale;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/10/04 11:11:46  royalts
+ * removed check on urlPattern
+ *
  * Revision 1.4  2004/08/26 15:34:06  manolito
  * trivial cosmetic changes
  *
@@ -66,12 +69,7 @@ public class JspTilesViewHandlerImpl
         _viewHandler = viewHandler;
     }
 
-    public void setDefinitionsFactory(DefinitionsFactory definitionsFactory)
-    {
-        _definitionsFactory = definitionsFactory;
-    }
-
-    public DefinitionsFactory getDefinitionsFactory()
+    private DefinitionsFactory getDefinitionsFactory()
     {
         if (_definitionsFactory == null)
         {
