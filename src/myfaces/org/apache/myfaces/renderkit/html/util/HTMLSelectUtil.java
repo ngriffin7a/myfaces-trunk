@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html.util;
 
 import net.sourceforge.myfaces.component.UISelectMany;
+import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.ListboxRenderer;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
@@ -81,7 +82,7 @@ public class HTMLSelectUtil
             if (selectMany) writer.write(" multiple ");
             writer.write(">\n");
 
-            Object currentValue = null;
+            String currentStrValue = null;
             Set selectedValuesSet = null;
             if (selectMany)
             {
@@ -91,7 +92,10 @@ public class HTMLSelectUtil
             }
             else
             {
-                currentValue = uiComponent.currentValue(facesContext);
+                Object currentValue = uiComponent.currentValue(facesContext);
+                currentStrValue = ConverterUtils.getComponentValueAsString(facesContext,
+                                                                           uiComponent,
+                                                                           currentValue);
             }
 
             while (it.hasNext())
@@ -106,7 +110,7 @@ public class HTMLSelectUtil
                     writer.write(HTMLEncoder.encode(itemStrValue, false, false));
                     writer.write("\"");
                     if ((selectMany && selectedValuesSet.contains(itemStrValue)) ||
-                        (currentValue != null && itemStrValue.equals(currentValue)))
+                        (currentStrValue != null && itemStrValue.equals(currentStrValue)))
                     {
                         writer.write(" selected");
                     }

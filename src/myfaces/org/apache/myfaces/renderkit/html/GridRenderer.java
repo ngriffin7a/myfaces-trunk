@@ -234,7 +234,7 @@ public class GridRenderer
 
         if (columnClasses != null && columnClasses.length > 0)
         {
-            return columnClasses[(actualColumn + 1) % columnClasses.length];
+            return columnClasses[actualColumn % columnClasses.length];
         }
 
         return null;
