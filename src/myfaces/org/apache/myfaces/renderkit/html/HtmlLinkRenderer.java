@@ -76,7 +76,7 @@ public class HtmlLinkRenderer
             HtmlRendererUtils.renderCommandLinkStart(facesContext, component,
                     component.getClientId(facesContext),
                     ((UICommand) component).getValue(),
-                    getStyleClass(facesContext, component), null);
+                    getStyleClass(facesContext, (UICommand)component), null);
         }
         else if (component instanceof UIOutput)
         {
@@ -93,7 +93,7 @@ public class HtmlLinkRenderer
      * Can be overwritten by derived classes to overrule the style class to be used.
      * TODO: the same for Style
      */
-    protected String getStyleClass(FacesContext facesContext, UIComponent link)
+    protected String getStyleClass(FacesContext facesContext, UICommand link)
     {
         if (link instanceof HtmlCommandLink)
         {

@@ -85,16 +85,19 @@ public class MyFacesConfig
     
     public static boolean isAllowDesignMode(ExternalContext externalContext)
     {
+        return true;
+        /*
         return getBooleanInitParameter(externalContext,
                                        PARAM_allowDesignMode,
                                        DEFAULT_allowDesignMode);
+                                       */
     }
 
     protected static boolean getBooleanInitParameter(ExternalContext externalContext,
                                                      String paramName,
                                                      boolean defaultValue)
     {
-        String strValue = (externalContext != null) 
+        String strValue = (externalContext != null)
             ? externalContext.getInitParameter(paramName) : null;
         if (strValue == null)
         {
