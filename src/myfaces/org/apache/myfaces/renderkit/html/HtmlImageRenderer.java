@@ -20,6 +20,8 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlGraphicImage;
@@ -37,8 +39,10 @@ import java.io.IOException;
 public class HtmlImageRenderer
 extends HtmlRenderer
 {
+    private static final Log log = LogFactory.getLog(HtmlTextRenderer.class);
+
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
-    throws IOException
+            throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlGraphicImage.class);
 
@@ -46,30 +50,37 @@ extends HtmlRenderer
 
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        String value = img.getURL();
+        String url = img.getURL();
 
-        if ((value != null) && (value.length() > 0))
+        if ((url != null) && (url.length() > 0))
         {
             writer.startElement(HTML.IMG_ELEM, img);
 
-            String src=img.getURL();
-
-            if (value.startsWith(HTML.HREF_PATH_SEPARATOR))
+            String src;
+            if (url.startsWith(HTML.HREF_PATH_SEPARATOR))
             {
                 String path = facesContext.getExternalContext().getRequestContextPath();
-                src = path + value;
+                src = path + url;
             }
-
+            else
+            {
+                src = url;
+            }
             //Encode URL
             //Although this is an image url, encodeURL is no nonsense, because the
             //actual image url could also be a dynamic servlet request:
             src = facesContext.getExternalContext().encodeResourceURL(src);
-
             writer.writeAttribute(HTML.SRC_ATTR, src, null);
 
-            writer.writeAttribute(HTML.ALT_ATTR, img.getAlt(), null);
+            writer.writeAttribute(HTML.ALT_ATTR, img.getAlt(), "alt");
 
             HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.IMG_PASSTHROUGH_ATTRIBUTES);
+
+            writer.endElement(HTML.IMG_ELEM);
+        }
+        else
+        {
+            if (log.isWarnEnabled()) log.warn("Graphic with id " + img.getClientId(facesContext) + " has no value (url).");
         }
     }
 }

@@ -35,6 +35,11 @@ import java.util.List;
 public class HtmlGridRenderer
     extends HtmlRenderer
 {
+    public boolean getRendersChildren()
+    {
+        return true;
+    }
+
     public void encodeBegin(FacesContext context, UIComponent component)
             throws IOException
     {
@@ -88,11 +93,6 @@ public class HtmlGridRenderer
     public void encodeChildren(FacesContext context, UIComponent component)
         throws IOException
     {
-    }
-
-    public boolean getRendersChildren()
-    {
-        return true;
     }
 
     protected void renderChild(FacesContext facesContext, UIComponent component)

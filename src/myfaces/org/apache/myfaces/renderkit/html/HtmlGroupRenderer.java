@@ -19,28 +19,30 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.RendererUtils;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 
 /**
  * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Manfred Geiler
  * @version $Revision$ $Date$
  */
 public class HtmlGroupRenderer
     extends HtmlRenderer
 {
+    public boolean getRendersChildren()
+    {
+        return true;
+    }
+
     public void encodeBegin(FacesContext context, UIComponent component)
             throws IOException
     {
-    }
-
-    public void encodeEnd(FacesContext context, UIComponent component)
-            throws IOException
-    {
-        renderChild(context, component);
     }
 
     public void encodeChildren(FacesContext context, UIComponent component)
@@ -48,14 +50,18 @@ public class HtmlGroupRenderer
     {
     }
 
-    public boolean getRendersChildren()
-    {
-        return true;
-    }
-
-    protected void renderChild(FacesContext facesContext, UIComponent component)
+    public void encodeEnd(FacesContext context, UIComponent component)
             throws IOException
     {
-        RendererUtils.renderChild(facesContext, component);
+        ResponseWriter writer = context.getResponseWriter();
+        boolean span = HTMLUtil.renderHTMLAttributesWithOptionalStartElement(writer,
+                                                                             component,
+                                                                             HTML.SPAN_ELEM,
+                                                                             HTML.COMMON_PASSTROUGH_ATTRIBUTES);
+        RendererUtils.renderChildren(context, component);
+        if (span)
+        {
+            writer.endElement(HTML.SPAN_ELEM);
+        }
     }
 }

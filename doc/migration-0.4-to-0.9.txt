@@ -3,7 +3,26 @@ Necessary steps to migrate applications from MyFaces 0.4.x to 0.9.x
 
 Mandatory steps
 ---------------
+* change <f:use_faces> tags to <f:view>
 
+* replace all key/bundle attribute pairs by the corresponding value binding
+    e.g.
+        old: <h:output_message bundle="example_messages" key="today" >
+        new: <h:output_message value="#{example_messages['today']}" >
+
+* rename <x:page_layout> tags to <x:panel_layout> and change attributes:
+    layoutRef --> layout with value binding syntax
+    panelClass --> styleClass
+
+* rename <x:navigation> tags to <x:panel_navigation> and change attributes:
+    bundle --> no longer supported/needed
+    panelClass --> styleClass
+
+* rename <x:navigation_item> tags to <x:command_navigation> and change attributes:
+    key --> value
+    commandClass --> styleClass
+
+* rename <x:navigation_separator> tags to <x:output_navigation>
 
 
 
@@ -19,4 +38,5 @@ Optional steps (deprecated features)
     myfaces_ServletMappingMode - no longer needed
     myfaces_DiscardInternalAttributes - no longer needed
 
-* change <f:use_faces> tags to <f:view>
+
+

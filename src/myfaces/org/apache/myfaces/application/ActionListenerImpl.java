@@ -26,7 +26,6 @@ import javax.faces.el.MethodBinding;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
-import javax.faces.event.PhaseId;
 
 
 /**
@@ -37,14 +36,6 @@ import javax.faces.event.PhaseId;
 public class ActionListenerImpl
     implements ActionListener
 {
-    //~ Methods ------------------------------------------------------------------------------------
-
-    public PhaseId getPhaseId()
-    {
-        // FIXME: is this needed by the new spec?
-        return PhaseId.INVOKE_APPLICATION;
-    }
-
     public void processAction(ActionEvent actionEvent) throws AbortProcessingException
     {
         FacesContext      facesContext      = FacesContext.getCurrentInstance();

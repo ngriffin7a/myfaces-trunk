@@ -189,6 +189,20 @@
     <component-class>net.sourceforge.myfaces.component.ext.HtmlPanelLayout</component-class>
   </component>
 
+  <component>
+    <component-type>PanelNavigation</component-type>
+    <component-class>net.sourceforge.myfaces.component.ext.HtmlPanelNavigation</component-class>
+  </component>
+
+  <component>
+    <component-type>CommandNavigation</component-type>
+    <component-class>net.sourceforge.myfaces.component.ext.HtmlCommandNavigation</component-class>
+  </component>
+
+  <component>
+    <component-type>OutputNavigation</component-type>
+    <component-class>net.sourceforge.myfaces.component.ext.HtmlOutputNavigation</component-class>
+  </component>
 
     <!--
     <component>
@@ -397,6 +411,12 @@
       </renderer>
 
       <renderer>
+          <renderer-type>Group</renderer-type>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlGroupRenderer</renderer-class>
+          <supported-component-type><component-type>PanelGroup</component-type></supported-component-type>
+      </renderer>
+
+      <renderer>
           <renderer-type>Hidden</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlHiddenRenderer</renderer-class>
           <supported-component-type><component-type>InputHidden</component-type></supported-component-type>
@@ -471,6 +491,12 @@
             <renderer-type>Layout</renderer-type>
             <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.HtmlLayoutRenderer</renderer-class>
             <supported-component-type><component-type>PanelLayout</component-type></supported-component-type>
+        </renderer>
+
+        <renderer>
+            <renderer-type>Navigation</renderer-type>
+            <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.HtmlNavigationRenderer</renderer-class>
+            <supported-component-type><component-type>PanelNavigation</component-type></supported-component-type>
         </renderer>
 
     <!--

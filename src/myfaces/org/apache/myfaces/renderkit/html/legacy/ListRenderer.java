@@ -16,13 +16,14 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.html;
+package net.sourceforge.myfaces.renderkit.html.legacy;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.callback.CallbackRenderer;
 import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
+import net.sourceforge.myfaces.renderkit.html.HTML;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
-import net.sourceforge.myfaces.renderkit.html.legacy.DataRenderer;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIPanel;
@@ -31,7 +32,6 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 import javax.servlet.ServletRequest;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
@@ -70,6 +70,7 @@ implements CallbackRenderer
         FacesContext facesContext, Renderer renderer, UIComponent uiComponent)
     throws IOException
     {
+        /*FIXME
         UIComponent parent             = uiComponent.getParent();
 
         String      rendererType       = uiComponent.getRendererType();
@@ -91,12 +92,14 @@ implements CallbackRenderer
                 afterCloseColumn(facesContext, column - 1);
             }
         }
+        */
     }
 
     public void beforeEncodeBegin(
         FacesContext facesContext, Renderer renderer, UIComponent uiComponent)
     throws IOException
     {
+        /*FIXME:
         UIComponent parent             = uiComponent.getParent();
         String      rendererType       = uiComponent.getRendererType();
         String      parentRendererType = parent.getRendererType();
@@ -146,6 +149,7 @@ implements CallbackRenderer
                 }
             }
         }
+        */
     }
 
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
@@ -362,6 +366,7 @@ implements CallbackRenderer
         FacesContext context, UIComponent listComponent, UIComponent rowComponent)
     throws IOException
     {
+        /*FIXME
         String         rendererType         = rowComponent.getRendererType();
         ResponseWriter writer               = context.getResponseWriter();
         boolean        isLastChildcomponent =
@@ -385,6 +390,7 @@ implements CallbackRenderer
         writer.write('>');
 
         afterOpenRow(context, row);
+        */
     }
 
     protected UIComponent peekListComponent(FacesContext context)

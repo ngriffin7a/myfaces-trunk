@@ -64,6 +64,7 @@ public class HtmlCommandLinkTag
 
     // UICommand attributes
     private String _action;
+    private String _outcome;
     private String _immediate;
 
     //HtmlCommandLink Attributes
@@ -86,11 +87,22 @@ public class HtmlCommandLinkTag
         setIntegerProperty(component, HTML.TABINDEX_ATTR, _tabindex);
         setStringProperty(component, HTML.TYPE_ATTR, _type);
 
-        setStringProperty(component, JSFAttr.ACTION_ATTR, _action);
         setBooleanProperty(component, JSFAttr.IMMEDIATE_ATTR, _immediate);
 
         setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
         setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
+
+        /*TODO:
+        if (_outcome != null)
+        {
+
+        }
+
+        if (_action != null)
+        {
+            MethodBinding mb = context.getApplication().createMethodBinding(_action, )
+        }
+        */
    }
 
     public void setAccesskey(String accesskey)

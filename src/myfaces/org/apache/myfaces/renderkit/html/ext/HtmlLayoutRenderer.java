@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.component.ext.HtmlPanelLayout;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -46,18 +47,6 @@ public class HtmlLayoutRenderer
     public boolean getRendersChildren()
     {
         return true;
-    }
-
-    public void decode(FacesContext context, UIComponent component)
-    {
-    }
-
-    public void encodeBegin(FacesContext context, UIComponent component) throws IOException
-    {
-    }
-
-    public void encodeChildren(FacesContext context, UIComponent component) throws IOException
-    {
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent component) throws IOException
@@ -95,6 +84,7 @@ public class HtmlLayoutRenderer
         UIComponent footer = panelLayout.getFooter();
 
         writer.startElement(HTML.TABLE_ELEM, null);
+        HTMLUtil.renderHTMLAttributes(writer, panelLayout, HTML.TABLE_PASSTHROUGH_ATTRIBUTES);
         if (header != null)
         {
             writer.startElement(HTML.TR_ELEM, null);
@@ -144,6 +134,7 @@ public class HtmlLayoutRenderer
         UIComponent footer = panelLayout.getFooter();
 
         writer.startElement(HTML.TABLE_ELEM, null);
+        HTMLUtil.renderHTMLAttributes(writer, panelLayout, HTML.TABLE_PASSTHROUGH_ATTRIBUTES);
         if (header != null)
         {
             writer.startElement(HTML.TR_ELEM, null);
@@ -193,6 +184,7 @@ public class HtmlLayoutRenderer
         UIComponent footer = panelLayout.getFooter();
 
         writer.startElement(HTML.TABLE_ELEM, null);
+        HTMLUtil.renderHTMLAttributes(writer, panelLayout, HTML.TABLE_PASSTHROUGH_ATTRIBUTES);
         if (footer != null)
         {
             writer.startElement(HTML.TR_ELEM, null);

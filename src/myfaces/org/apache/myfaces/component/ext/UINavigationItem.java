@@ -23,9 +23,7 @@ import net.sourceforge.myfaces.renderkit.html.state.StateRestorer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
-import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;

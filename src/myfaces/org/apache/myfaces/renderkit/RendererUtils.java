@@ -216,15 +216,11 @@ public class RendererUtils
         }
     }
 
-    public static void renderChild(FacesContext facesContext, UIComponent component)
+
+    public static void renderChildren(FacesContext facesContext, UIComponent component)
             throws IOException
     {
-        component.encodeBegin(facesContext);
-        if (component.getRendersChildren())
-        {
-            component.encodeChildren(facesContext);
-        }
-        else if (component.getChildCount() > 0)
+        if (component.getChildCount() > 0)
         {
             for (Iterator it = component.getChildren().iterator(); it.hasNext(); )
             {
@@ -232,7 +228,22 @@ public class RendererUtils
                 renderChild(facesContext, child);
             }
         }
-        component.encodeEnd(facesContext);
+    }
+
+
+    public static void renderChild(FacesContext facesContext, UIComponent child)
+            throws IOException
+    {
+        child.encodeBegin(facesContext);
+        if (child.getRendersChildren())
+        {
+            child.encodeChildren(facesContext);
+        }
+        else
+        {
+            renderChildren(facesContext, child);
+        }
+        child.encodeEnd(facesContext);
     }
 
 }
