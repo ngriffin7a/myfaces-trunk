@@ -58,19 +58,28 @@ public class SelectItemHelper
             {
                 for (int i = 0; i < ((Object[])currentValue).length; i++)
                 {
-                    Object obj = ((Object[])currentValue)[i];
-                    Converter converter = ConverterUtils.findConverter(obj.getClass());
-                    if (converter != null)
+                    Object currentValueObj = ((Object[])currentValue)[i];
+                    if (currentValueObj instanceof String &&
+                        !(itemValue instanceof String) &&
+                        itemValue.toString().equals(currentValueObj))
                     {
-                        Object convObj = converter.getAsObject(facesContext, uiComponent, obj.toString());
-                        if (itemValue.equals(convObj))
+                        return true;
+                    }
+                    else
+                    {
+                        Converter converter = ConverterUtils.findConverter(currentValueObj.getClass());
+                        if (converter != null)
+                        {
+                            Object convObj = converter.getAsObject(facesContext, uiComponent, currentValueObj.toString());
+                            if (itemValue.equals(convObj))
+                            {
+                                return true;
+                            }
+                        }
+                        else if (itemValue.equals(currentValueObj))
                         {
                             return true;
                         }
-                    }
-                    else if (itemValue.equals(obj))
-                    {
-                        return true;
                     }
                 }
             }
@@ -104,13 +113,13 @@ public class SelectItemHelper
         return getSelectItemsList(context, component).iterator();
     }
 
-    private static ArrayList getSelectItemsList(FacesContext context, UIComponent component)
+    private static ArrayList getSelectItemsList(FacesContext facesContext, UIComponent uiComponent)
     {
-        ArrayList list = (ArrayList)component.getAttribute(LIST_ATTR);
+        ArrayList list = (ArrayList)uiComponent.getAttribute(LIST_ATTR);
         if (list == null)
         {
-            list = new ArrayList(component.getChildCount());
-            for(Iterator children = component.getChildren(); children.hasNext();)
+            list = new ArrayList(uiComponent.getChildCount());
+            for(Iterator children = uiComponent.getChildren(); children.hasNext();)
             {
                 UIComponent child = (UIComponent)children.next();
                 if (child instanceof UISelectItem)
@@ -120,7 +129,7 @@ public class SelectItemHelper
                     String text;
                     if (key != null)
                     {
-                        text = BundleUtils.getString(context,
+                        text = BundleUtils.getString(facesContext,
                                                      item.getItemBundle(),
                                                      key);
                     }
@@ -129,13 +138,19 @@ public class SelectItemHelper
                         text = item.getItemLabel();
                     }
 
-                    list.add(new SelectItem(item.getItemValue(),
+                    Object itemValue = item.getItemValue();
+                    if (itemValue == null)
+                    {
+                        itemValue = item.currentValue(facesContext);
+                    }
+
+                    list.add(new SelectItem(itemValue,
                                             text,
                                             item.getItemDescription()));
                 }
                 else if (child instanceof UISelectItems)
                 {
-                    Object value = child.currentValue(context);
+                    Object value = child.currentValue(facesContext);
                     if (value instanceof UISelectItem)
                     {
                         list.add(value);
