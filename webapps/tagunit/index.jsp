@@ -1,0 +1,1 @@
+<jsp:forward page="/test/servlet/RunTests?uri=/test/index.jsp"/>

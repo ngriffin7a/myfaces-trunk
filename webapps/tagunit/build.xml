@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<project name="myfaces-examples" default="compile-and-copy-libs">
+
+    <property environment="env"/>
+
+    <!-- Constants -->
+    <property name="project.dir" location="${basedir}/../.."/>
+    <property name="tagunit.web" location="${basedir}/web"/>
+    <property name="web-inf.classes.dir" location="${tagunit.web}/WEB-INF/classes"/>
+    <property name="web-inf.lib.dir" location="${tagunit.web}/WEB-INF/lib"/>
+
+
+    <!-- Properties -->
+    <property file="../../build.properties"/>
+    <property file="build.properties"/>
+
+    <!-- Temporary dir. May be overridden in build.properties -->
+    <property name="temp.dir" value="${env.TEMP}"/>
+
+    <target name="-myfaces-jar" unless="myfaces.jar.available">
+        <!-- creates myfaces.jar via main buildfile if it does not exist -->
+        <ant dir="../.."
+             antfile="build.xml"
+             target="myfaces-jar"
+             inheritall="false"/>
+    </target>
+
+    <target name="-check-myfaces-jar">
+        <!-- check if myfaces.jar exist -->
+        <available file="${myfaces.jar}" property="myfaces.jar.available"/>
+        <antcall target="-myfaces-jar"/>
+    </target>
+
+
+    <target name="copy-libs"
+            depends="-check-myfaces-jar"
+            description="copies all needed libs to WEB-INF/lib">
+        <copy todir="${web-inf.lib.dir}">
+            <fileset file="${jsf-api.jar}"/>
+            <fileset file="${myfaces.jar}"/>
+        </copy>
+    </target>
+
+
+    <target name="clean"
+            description="deletes all files that were built">
+        <delete quiet="true" failonerror="false" includeEmptyDirs="true">
+            <fileset file="${web-inf.lib.dir}/myfaces.jar" />
+            <fileset file="${web-inf.lib.dir}/jsf-api.jar" />
+        </delete>
+    </target>
+
+
+
+</project>
