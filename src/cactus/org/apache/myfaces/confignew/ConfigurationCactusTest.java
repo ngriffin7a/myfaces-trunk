@@ -25,7 +25,11 @@ import java.util.Iterator;
 
 import javax.faces.application.ViewHandler;
 import javax.faces.application.ApplicationFactory;
+import javax.faces.application.StateManager;
+import javax.faces.application.NavigationHandler;
 import javax.faces.FactoryFinder;
+import javax.faces.el.PropertyResolver;
+import javax.faces.el.VariableResolver;
 import javax.faces.event.PhaseListener;
 
 import org.apache.cactus.ServletTestCase;
@@ -33,6 +37,10 @@ import net.sourceforge.myfaces.confignew.impl.digester.DigesterFacesConfigUnmars
 import net.sourceforge.myfaces.confignew.impl.digester.elements.*;
 import net.sourceforge.myfaces.context.servlet.ServletExternalContextImpl;
 import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
+import net.sourceforge.myfaces.application.jsp.JspStateManagerImpl;
+import net.sourceforge.myfaces.application.NavigationHandlerImpl;
+import net.sourceforge.myfaces.el.PropertyResolverImpl;
+import net.sourceforge.myfaces.el.VariableResolverImpl;
 
 
 public class ConfigurationCactusTest extends ServletTestCase
@@ -59,11 +67,8 @@ public class ConfigurationCactusTest extends ServletTestCase
     public void testConfiguration() throws Exception
     {
         ServletExternalContextImpl externalContext = new ServletExternalContextImpl(request.getSession().getServletContext(), null, null);
-        // This can be removed as soon as newconfig becomes regular config
-        FacesConfigurator configurator = new FacesConfigurator(externalContext);
-        configurator.configure();
 
-        // test if everything is configured correctly
+        // test decorator pattern support
 
         // application factory
         ApplicationFactory applicationFactory = (ApplicationFactory) FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
@@ -74,12 +79,34 @@ public class ConfigurationCactusTest extends ServletTestCase
         // view handler
         ViewHandler viewHandler = application.getViewHandler();
 
-        assertEquals(TestViewHandlerA.class, viewHandler.getClass());
-        assertEquals(((TestViewHandlerA)viewHandler).getDelegate().getClass(), JspViewHandlerImpl.class);
+        assertEquals(TestViewHandlerB.class, viewHandler.getClass());
+        assertEquals( TestViewHandlerA.class, ((TestViewHandlerB)viewHandler).getDelegate().getClass());
+        assertEquals( JspViewHandlerImpl.class, ((TestViewHandlerA)((TestViewHandlerB)viewHandler).getDelegate()).getDelegate().getClass());
+
+        // navigation handler
+        NavigationHandler navigationHandler = application.getNavigationHandler();
+
+        assertEquals(TestNavigationHandler.class, navigationHandler.getClass());
+        assertEquals( NavigationHandlerImpl.class, ((TestNavigationHandler)navigationHandler).getDelegate().getClass());
 
         // state manager
+        StateManager stateManager = application.getStateManager();
 
-        // ...
+        assertEquals(TestStateManager.class, stateManager.getClass());
+        assertEquals(JspStateManagerImpl.class, ((TestStateManager)stateManager).getDelegate().getClass());
+
+        // PropvertyResolver
+        PropertyResolver propertyResolver = application.getPropertyResolver();
+
+        assertEquals(TestPropertyResolver.class, propertyResolver.getClass());
+        assertEquals(PropertyResolverImpl.class, ((TestPropertyResolver)propertyResolver).getDelegate().getClass());
+
+        // VariableResolver
+        VariableResolver variableResolver = application.getVariableResolver();
+
+        assertEquals(TestVariableResolver.class, variableResolver.getClass());
+        assertEquals(VariableResolverImpl.class, ((TestVariableResolver)variableResolver).getDelegate().getClass());
+
 
         // RuntimeConfig
 

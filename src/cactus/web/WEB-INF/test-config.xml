@@ -107,4 +107,13 @@
         </map-entries>
     </managed-bean>
 
+
+    <application>
+        <view-handler>net.sourceforge.myfaces.confignew.TestViewHandlerB</view-handler>
+        <navigation-handler>net.sourceforge.myfaces.confignew.TestNavigationHandler</navigation-handler>
+        <property-resolver>net.sourceforge.myfaces.confignew.TestPropertyResolver</property-resolver>
+        <variable-resolver>net.sourceforge.myfaces.confignew.TestVariableResolver</variable-resolver>
+        <state-manager>net.sourceforge.myfaces.confignew.TestStateManager</state-manager>
+    </application>
+
 </faces-config>
