@@ -20,275 +20,312 @@ package net.sourceforge.myfaces.util.bean;
 
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
-import java.lang.reflect.InvocationTargetException;
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 import java.util.StringTokenizer;
 
 /**
- * TODO: description
- * TODO: Array/List properties
- * TODO: Replace by java.beans.Introspection
+ * Convenient bean property get and set methods that support
+ * nested bean properties.
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class BeanUtils
 {
-    private static final Class[] NO_METHOD_PARAMS = new Class[0];
+    private static final Object[] EMPTY_ARGS = new Object[]{};
 
-    public static Object getBeanProperty(Object bean, String property)
+    private BeanUtils()
     {
-        BeanMethod beanMethod = getBeanPropertyGetMethod(bean, property);
-        Object obj = beanMethod.getBean();
-        if (obj == null)
-        {
-            LogUtil.getLogger().info("Getting property of a null bean.");
-            return null;
-        }
-        Method method = beanMethod.getMethod();
+    }
+
+    /**
+     * TODO: Cache BeanInfos
+     * @param bean
+     * @return
+     */
+    public static BeanInfo getBeanInfo(Object bean)
+    {
         try
         {
-            return method.invoke(obj, new Object[0]);
+            return Introspector.getBeanInfo(bean.getClass());
         }
-        catch (IllegalAccessException e)
+        catch (IntrospectionException e)
         {
             throw new RuntimeException(e);
         }
-        catch (InvocationTargetException e)
-        {
-            throw new RuntimeException(e.getTargetException());
-        }
     }
 
-    public static Object setBeanProperty(Object bean, String property, Object newValue)
-        throws IllegalArgumentException
+    public static PropertyDescriptor findPropertyDescriptor(Object bean,
+                                                            String propertyName)
     {
-        BeanMethod beanMethod;
-        if (newValue == null)
+        if (isNestedPropertyName(propertyName))
         {
-            beanMethod = getBeanPropertySetMethod(bean, property, null);
+            bean = getNestedBean(bean, propertyName);
         }
-        else
-        {
-            beanMethod = getBeanPropertySetMethod(bean, property, newValue.getClass());
-        }
-        Object obj = beanMethod.getBean();
-        if (obj == null)
-        {
-            LogUtil.getLogger().warning("Cannot set property of a null bean.");
-            return null;
-        }
-        Method method = beanMethod.getMethod();
-        if (method == null)
-        {
-            Object nestedBean = beanMethod.getBean();
-            int i = property.lastIndexOf('.');
-            String propName = (i == -1 ? property : property.substring(i + 1));
-            String msg = "Bean " + nestedBean + " (Class " + nestedBean.getClass() + ") does not have a set method for a property '" + propName + "' of type " + (newValue == null ? "'unknown'" : newValue.getClass().getName()) + ".";
-            throw new IllegalArgumentException(msg);
-        }
-
-        try
-        {
-            if (newValue == null)
-            {
-                LogUtil.getLogger().finest("Setting null property.");
-                Class propertyType = method.getParameterTypes()[0];
-                if (propertyType.isPrimitive())
-                {
-                    LogUtil.getLogger().warning("Setting primitive bean property to null - choosing appropriate '0' value.");
-                    if (propertyType == Boolean.TYPE)
-                    {
-                        return method.invoke(obj, new Object[]{new Boolean(false)});
-                    }
-                    else if (propertyType == Byte.TYPE)
-                    {
-                        return method.invoke(obj, new Object[]{new Byte((byte)0)});
-                    }
-                    else if (propertyType == Integer.TYPE)
-                    {
-                        return method.invoke(obj, new Object[]{new Integer(0)});
-                    }
-                    else if (propertyType == Short.TYPE)
-                    {
-                        return method.invoke(obj, new Object[]{new Short((short)0)});
-                    }
-                    else if (propertyType == Long.TYPE)
-                    {
-                        return method.invoke(obj, new Object[]{new Long(0)});
-                    }
-                    else if (propertyType == Character.TYPE)
-                    {
-                        return method.invoke(obj, new Object[]{new Character((char)0)});
-                    }
-                    else if (propertyType == Double.TYPE)
-                    {
-                        return method.invoke(obj, new Object[]{new Double(0)});
-                    }
-                    else if (propertyType == Float.TYPE)
-                    {
-                        return method.invoke(obj, new Object[]{new Float(0)});
-                    }
-                    throw new UnsupportedOperationException("Unsupported primitive type " + propertyType.getName());
-                }
-                else
-                {
-                    return method.invoke(obj, new Object[]{newValue});
-                }
-            }
-            else
-            {
-                return method.invoke(obj, new Object[]{newValue});
-            }
-        }
-        catch (IllegalAccessException e)
-        {
-            throw new RuntimeException(e);
-        }
-        catch (InvocationTargetException e)
-        {
-            throw new RuntimeException(e.getTargetException());
-        }
+        return findPropertyDescriptor(getBeanInfo(bean), propertyName);
     }
 
-    public static Class getBeanPropertyType(Object bean, String property)
-        throws IllegalArgumentException
+    public static PropertyDescriptor findPropertyDescriptor(BeanInfo beanInfo,
+                                                            String propertyName)
     {
-        BeanMethod beanMethod = getBeanPropertyGetMethod(bean, property);
-        return beanMethod.getMethod().getReturnType();
-    }
-
-    private static BeanMethod getBeanPropertyGetMethod(Object bean,
-                                                       String propertyPath)
-        throws IllegalArgumentException
-    {
-        BeanMethod beanMethod = findNestedBeanMethod(bean, propertyPath, "get", NO_METHOD_PARAMS);
-        if (beanMethod.getBean() != null)
+        PropertyDescriptor propDescriptors[] = beanInfo.getPropertyDescriptors();
+        for (int i = 0; i < propDescriptors.length; i++)
         {
-            if (beanMethod.getMethod() == null)
+            if (propDescriptors[i].getName().equals(propertyName))
             {
-                beanMethod = findNestedBeanMethod(bean, propertyPath, "is", NO_METHOD_PARAMS);
-            }
-            if (beanMethod.getMethod() == null)
-            {
-                Object nestedBean = beanMethod.getBean();
-                int i = propertyPath.lastIndexOf('.');
-                String propName = (i == -1 ? propertyPath : propertyPath.substring(i + 1));
-                throw new IllegalArgumentException("Bean " + nestedBean + " (Class " + nestedBean.getClass() + ") does not have a property '" + propName + "'.");
+                return propDescriptors[i];
             }
         }
-        return beanMethod;
-    }
-
-    public static BeanMethod getBeanPropertySetMethod(Object bean,
-                                                       String propertyPath,
-                                                       Class propertyType)
-    {
-        if (propertyType == null)
-        {
-            return findNestedBeanMethod(bean, propertyPath, "set", new Class[] {null});
-        }
-
-        BeanMethod beanMethod
-            = findNestedBeanMethod(bean, propertyPath, "set",
-                                   new Class[] {propertyType});
-        if (beanMethod.getMethod() == null)
-        {
-            //try primitive types:
-            if (propertyType == Boolean.class)
-            {
-                beanMethod
-                    = findNestedBeanMethod(bean, propertyPath, "set",
-                                           new Class[] {Boolean.TYPE});
-            }
-            else if (propertyType == Byte.class)
-            {
-                beanMethod
-                    = findNestedBeanMethod(bean, propertyPath, "set",
-                                           new Class[]{Byte.TYPE});
-            }
-            else if (propertyType == Integer.class)
-            {
-                beanMethod
-                    = findNestedBeanMethod(bean, propertyPath, "set",
-                                           new Class[]{Integer.TYPE});
-            }
-            else if (propertyType == Short.class)
-            {
-                beanMethod
-                    = findNestedBeanMethod(bean, propertyPath, "set",
-                                           new Class[]{Short.TYPE});
-            }
-            else if (propertyType == Long.class)
-            {
-                beanMethod
-                    = findNestedBeanMethod(bean, propertyPath, "set",
-                                           new Class[]{Long.TYPE});
-            }
-            else if (propertyType == Character.class)
-            {
-                beanMethod
-                    = findNestedBeanMethod(bean, propertyPath, "set",
-                                           new Class[]{Character.TYPE});
-            }
-            else if (propertyType == Double.class)
-            {
-                beanMethod
-                    = findNestedBeanMethod(bean, propertyPath, "set",
-                                           new Class[]{Double.TYPE});
-            }
-            else if (propertyType == Float.class)
-            {
-                beanMethod
-                    = findNestedBeanMethod(bean, propertyPath, "set",
-                                           new Class[]{Float.TYPE});
-            }
-
-        }
-        return beanMethod;
+        return null;
     }
 
 
     /**
      * @param bean
+     * @param propertyName
+     * @return value of this bean's property with the specified name
+     */
+    public static Object getBeanPropertyValue(Object bean,
+                                              String propertyName)
+    {
+        if (isNestedPropertyName(propertyName))
+        {
+            bean = getNestedBean(bean, propertyName);
+        }
+        return getBeanPropertyValue(bean, propertyName, getBeanInfo(bean));
+    }
+
+    /**
+     * Optimized version where BeanInfo already is available.
+     * @param bean
+     * @param propertyName
+     * @param beanInfo
+     * @return
+     */
+    public static Object getBeanPropertyValue(Object bean,
+                                              String propertyName,
+                                              BeanInfo beanInfo)
+    {
+        if (isNestedPropertyName(propertyName))
+        {
+            throw new IllegalArgumentException("Optimized version cannot handle nested beans.");
+        }
+        PropertyDescriptor propertyDescriptor = findPropertyDescriptor(beanInfo, propertyName);
+        if (propertyDescriptor == null)
+        {
+            throw new IllegalArgumentException("Bean " + bean + " of class " + bean.getClass() + " does not have a property '" + propertyName + ".");
+        }
+        return getBeanPropertyValue(bean, propertyDescriptor);
+    }
+
+    /**
+     * Optimized version where PropertyDescriptor already is available.
+     * @param bean
+     * @param propertyDescriptor
+     * @return
+     */
+    public static Object getBeanPropertyValue(Object bean,
+                                              PropertyDescriptor propertyDescriptor)
+    {
+        Method m = propertyDescriptor.getReadMethod();
+        try
+        {
+            return m.invoke(bean, EMPTY_ARGS);
+        }
+        catch (IllegalAccessException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (IllegalArgumentException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (InvocationTargetException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public static void setBeanPropertyValue(Object bean,
+                                            String propertyName,
+                                            Object propertyValue)
+    {
+        if (isNestedPropertyName(propertyName))
+        {
+            bean = getNestedBean(bean, propertyName);
+        }
+        setBeanPropertyValue(bean, propertyName, propertyValue, getBeanInfo(bean));
+    }
+
+    /**
+     * Optimized version where BeanInfo already is available.
+     */
+    public static void setBeanPropertyValue(Object bean,
+                                            String propertyName,
+                                            Object propertyValue,
+                                            BeanInfo beanInfo)
+    {
+        if (isNestedPropertyName(propertyName))
+        {
+            throw new IllegalArgumentException("Optimized version cannot handle nested beans.");
+        }
+        PropertyDescriptor propertyDescriptor = findPropertyDescriptor(beanInfo, propertyName);
+        if (propertyDescriptor == null)
+        {
+            throw new IllegalArgumentException("Bean " + bean + " of class " + bean.getClass() + " does not have a property '" + propertyName + ".");
+        }
+        setBeanPropertyValue(bean, propertyDescriptor, propertyValue);
+    }
+
+    /**
+     * Optimized version where PropertyDescriptor already is available.
+     */
+    public static void setBeanPropertyValue(Object bean,
+                                            PropertyDescriptor propertyDescriptor,
+                                            Object propertyValue)
+    {
+        Method m = propertyDescriptor.getWriteMethod();
+        try
+        {
+            m.invoke(bean, new Object[]{propertyValue});
+        }
+        catch (IllegalAccessException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (IllegalArgumentException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (InvocationTargetException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public static Class getBeanPropertyType(Object bean,
+                                            String propertyName)
+    {
+        if (isNestedPropertyName(propertyName))
+        {
+            bean = getNestedBean(bean, propertyName);
+        }
+        return getBeanPropertyType(getBeanInfo(bean), propertyName);
+    }
+
+    /**
+     * Optimized version where BeanInfo already is available.
+     */
+    public static Class getBeanPropertyType(BeanInfo beanInfo,
+                                            String propertyName)
+    {
+        if (isNestedPropertyName(propertyName))
+        {
+            throw new IllegalArgumentException("Optimized version cannot handle nested beans.");
+        }
+        PropertyDescriptor propertyDescriptor = findPropertyDescriptor(beanInfo, propertyName);
+        if (propertyDescriptor == null)
+        {
+            throw new IllegalArgumentException("Bean " + beanInfo.getBeanDescriptor().getName() + " of class " + beanInfo.getBeanDescriptor().getBeanClass() + " does not have a property '" + propertyName + ".");
+        }
+        return propertyDescriptor.getPropertyType();
+    }
+
+
+    private static boolean isNestedPropertyName(String propertyName)
+    {
+        return propertyName.indexOf('.') >= 0;
+    }
+
+    private static Object getNestedBean(Object bean,
+                                        String propertyPath)
+    {
+        Object obj = bean;
+        if (obj == null)
+        {
+            throw new IllegalArgumentException("Bean is null!");
+        }
+        StringTokenizer st = new StringTokenizer(propertyPath, ".");
+        String nextProp;
+        while (true)
+        {
+            nextProp = st.nextToken();
+            if (!st.hasMoreTokens())
+            {
+                return obj;
+            }
+
+            PropertyDescriptor propDescr = findPropertyDescriptor(obj, nextProp);
+            if (propDescr == null)
+            {
+                throw new IllegalArgumentException("Bean " + obj + " (Class " + obj.getClass() + ") does not have a property of name '" + nextProp + "'.");
+            }
+
+            Method m = propDescr.getReadMethod();
+            Object newObj;
+            try
+            {
+                newObj = m.invoke(obj, EMPTY_ARGS);
+            }
+            catch (IllegalAccessException e)
+            {
+                throw new RuntimeException(e);
+            }
+            catch (IllegalArgumentException e)
+            {
+                throw new RuntimeException(e);
+            }
+            catch (InvocationTargetException e)
+            {
+                throw new RuntimeException(e);
+            }
+
+            obj = newObj;
+            if (obj == null)
+            {
+                LogUtil.getLogger().info("Nested property '" + nextProp + "' of bean " + obj + " is null.");
+                return null;
+            }
+        }
+    }
+
+
+    /**
+     * Finds a nested method that is given by the specified propertyPath.
+     * @param bean
      * @param propertyPath
-     * @param methodPrefix
      * @param parameterTypes  null means find any method with this name
-     * @return a BeanMethod
+     * @return a Method
      */
     public static BeanMethod findNestedBeanMethod(Object bean,
                                                   String propertyPath,
-                                                  String methodPrefix,
                                                   Class[] parameterTypes)
     {
         Object obj;
-        String propertyName;
+        String methodName;
         int dot = propertyPath.lastIndexOf('.');
         if (dot == -1)
         {
             obj = bean;
-            propertyName = propertyPath;
+            methodName = propertyPath;
         }
         else
         {
             //Nested beans
             obj = getNestedBean(bean, propertyPath);
-            propertyName = propertyPath.substring(dot + 1);
+            methodName = propertyPath.substring(dot + 1);
         }
 
         if (obj == null)
         {
             LogUtil.getLogger().finest("Bean object is null.");
-            return new BeanMethod(null, null);
-        }
-
-        String methodName;
-        if (methodPrefix != null && methodPrefix.length() > 0)
-        {
-            methodName = methodPrefix + capitalize(propertyName);
-        }
-        else
-        {
-            methodName = propertyName;
+            return null;
         }
 
         boolean hasNullParameterType = false;
@@ -345,72 +382,16 @@ public class BeanUtils
         return new BeanMethod(obj, method);
     }
 
-    private static Object getNestedBean(Object bean, String property)
-    {
-        Object obj = bean;
-        if (obj == null)
-        {
-            throw new IllegalArgumentException("Bean is null!");
-        }
-        StringTokenizer st = new StringTokenizer(property, ".");
-        String nextProp;
-        String methodName;
-        while (true)
-        {
-            nextProp = st.nextToken();
-            if (!st.hasMoreTokens())
-            {
-                return obj;
-            }
-
-            methodName = "get" + capitalize(nextProp);
-
-            Object newObj;
-            try
-            {
-                Method method = obj.getClass().getMethod(methodName, new Class[0]);
-                newObj = method.invoke(obj, new Object[0]);
-            }
-            catch (IllegalAccessException e)
-            {
-                throw new RuntimeException(e);
-            }
-            catch (InvocationTargetException e)
-            {
-                throw new RuntimeException(e.getTargetException());
-            }
-            catch (NoSuchMethodException e)
-            {
-                throw new IllegalArgumentException("Bean " + obj + " (Class " + obj.getClass() + ") does not have a property of name '" + nextProp + "'.");
-            }
-
-            obj = newObj;
-            if (obj == null)
-            {
-                LogUtil.getLogger().info("Nested property '" + nextProp + "' of bean " + obj + " is null.");
-                return null;
-            }
-        }
-    }
-
-    private static String capitalize(String s)
-    {
-        if (s.length() < 1) return s;
-        char first = s.charAt(0);
-        if (Character.isUpperCase(first)) return s;
-        return Character.toUpperCase(first) + s.substring(1);
-    }
-
 
     public static void copyProperties(Object fromBean,
                                       Object toBean,
-                                      String[] properties)
+                                      String[] propertyNames)
     {
-        for (int i = 0; i < properties.length; i++)
+        for (int i = 0; i < propertyNames.length; i++)
         {
-            String p = properties[i];
-            Object obj = getBeanProperty(fromBean, p);
-            setBeanProperty(toBean, p, obj);
+            String p = propertyNames[i];
+            Object obj = getBeanPropertyValue(fromBean, p);
+            setBeanPropertyValue(toBean, p, obj);
         }
     }
 
