@@ -85,7 +85,6 @@ public class TreeCopier
             try
             {
                 //destination component already exists?
-                //TODO: Optimize by a "destinationChildren"-set
                 clone = toComp.findComponent(child.getComponentId());
             }
             catch (IllegalArgumentException e)
@@ -118,7 +117,6 @@ public class TreeCopier
         if (tag != null)
         {
             UIComponent clone = tag.createComponent();
-            tag.release();  //TODO: necessary?
             return clone;
         }
 

@@ -123,7 +123,7 @@ import java.lang.reflect.Method;
         if (retObj == null)
         {
             //method is void
-            return false; //TODO: false ok?
+            return false; //default false means continue with other events
         }
 
         if (!(retObj instanceof Boolean))

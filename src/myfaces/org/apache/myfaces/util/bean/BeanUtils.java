@@ -43,7 +43,9 @@ public class BeanUtils
     }
 
     /**
-     * TODO: Cache BeanInfos
+     * Get BeanInfo for the given Object.
+     * Since Introspector already caches recent BeanInfos we do not
+     * need to cache them ourselves.
      * @param bean
      * @return
      */

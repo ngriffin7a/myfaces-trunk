@@ -20,9 +20,7 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.component.UIParameter;
-import net.sourceforge.myfaces.renderkit.html.state.JspInfo;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
-import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
@@ -36,7 +34,6 @@ import javax.faces.event.FacesEvent;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
-import javax.faces.tree.Tree;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -110,30 +107,6 @@ public class HyperlinkRenderer
 
         //nested parameters
         Iterator children = uiComponent.getChildren();
-
-        if (!children.hasNext())
-        {
-            // TODO: is this still necessary?
-            //no children can mean that the tree is not yet built
-            //so, we try the static tree
-            Tree staticTree = JspInfo.getStaticTree(facesContext,
-                                                    facesContext.getResponseTree().getTreeId());
-            UIComponent staticComp = null;
-            try
-            {
-                staticComp = staticTree.getRoot().findComponent(uiComponent.getCompoundId());
-            }
-            catch (IllegalArgumentException e) {}
-
-            if (staticComp == null)
-            {
-                LogUtil.getLogger().warning("Component " + uiComponent.getCompoundId() + " not found in static tree!?");
-            }
-            else
-            {
-                children = staticComp.getChildren();
-            }
-        }
         while (children.hasNext())
         {
             UIComponent child = (UIComponent)children.next();

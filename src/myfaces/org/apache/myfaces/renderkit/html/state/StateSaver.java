@@ -72,6 +72,7 @@ public class StateSaver
 
     public void init(FacesContext facesContext) throws IOException
     {
+        /*
         if (MyFacesConfig.isStateEncodingOnTheFly())
         {
             //state encoding on the fly (without tokens)
@@ -97,11 +98,12 @@ public class StateSaver
         {
             //state encoding with tokens
             //means we can create the components on the fly
-            //TODO: BUT, what about components that rely on underlying child components?
+            //BUT, what about components that rely on underlying child components?
             //e.g. a UIParameter under a Hyperlink-UICommand would not exist when the
             // HyperlinkRenderer would need it already during encodeBegin !?
             //So, should we always prebuild the tree from the static tree before rendering?
         }
+        */
     }
 
     public void encodeState(FacesContext facesContext, int encodingType) throws IOException

@@ -52,7 +52,7 @@ public class SecretRenderer
 
     public boolean supportsComponentType(UIComponent uicomponent)
     {
-        return uicomponent instanceof UITextEntry; //TODO: javax.faces.component.UIInput instead with final API release
+        return uicomponent instanceof UITextEntry; //FINAL: javax.faces.component.UIInput instead with final API release
     }
 
     public void decode(FacesContext facescontext, UIComponent uicomponent)

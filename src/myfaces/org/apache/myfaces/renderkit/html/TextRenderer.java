@@ -50,7 +50,7 @@ public class TextRenderer
 
     public boolean supportsComponentType(UIComponent uicomponent)
     {
-        return uicomponent instanceof UITextEntry ||   //TODO:javax.faces.component.UIInput instead!
+        return uicomponent instanceof UITextEntry ||   //FINAL: javax.faces.component.UIInput instead!
                uicomponent instanceof UIOutput;
     }
 
