@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html.jsp_parser;
 
 import net.sourceforge.myfaces.component.MyFacesComponent;
+import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 import org.apache.jasper.Constants;
 import org.apache.jasper.JasperException;
@@ -33,9 +34,13 @@ import javax.faces.webapp.FacesTag;
 import javax.servlet.jsp.tagext.TagAttributeInfo;
 import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagLibraryInfo;
-import java.beans.*;
+import java.beans.BeanInfo;
+import java.beans.PropertyDescriptor;
+import java.beans.PropertyEditor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -334,7 +339,7 @@ public class MyParseEventListener
 
         if (!FacesTag.class.isAssignableFrom(c))
         {
-            LogUtil.getLogger().info("Not a FacesTag.");
+            LogUtil.getLogger().fine("Not a FacesTag.");
             _tagClasses.put(ti.getTagClassName(), NULL_DUMMY);
             return null;
         }
@@ -432,7 +437,7 @@ public class MyParseEventListener
         {
             String id = null;
 
-            BeanInfo beanInfo = getBeanInfo(tag);
+            BeanInfo beanInfo = BeanUtils.getBeanInfo(tag);
 
             TagAttributeInfo[] attrInfos = ti.getAttributes();
             for (int i = 0; i < attrInfos.length; i++)
@@ -455,14 +460,19 @@ public class MyParseEventListener
                     }
                     else
                     {
+                        PropertyDescriptor propDescr = BeanUtils.findPropertyDescriptor(beanInfo, attrName);
+                        if (propDescr == null)
+                        {
+                            throw new RuntimeException("No PropertyDescriptor found for tag property " + attrName);
+                        }
+
                         if (attrValue instanceof String)
                         {
                             //TODO: If attrInfos[i].getTypeName() is given use it as the target type
-                            attrValue = convertStringToTargetType(beanInfo,
-                                                                  attrName,
+                            attrValue = convertStringToTargetType(propDescr,
                                                                   (String)attrValue);
                         }
-                        setBeanProperty(tag, attrName, attrValue, beanInfo);
+                        BeanUtils.setBeanPropertyValue(tag, propDescr, attrValue);
                     }
                 }
             }
@@ -497,50 +507,75 @@ public class MyParseEventListener
                 comp.setRendererType(rendererType);
             }
 
-            tag.overrideProperties(comp);
+            overrideProperties(tag, comp);
             tag.release(); //TODO: Do we have to call it really?
+
+            _currentComponent.addChild(comp);
+            _currentComponent = comp;
 
             String compoundId = comp.getCompoundId();
             if (compoundId != null)
             {
                 _creatorTags.put(compoundId, tag);
             }
-
-            _currentComponent.addChild(comp);
-            _currentComponent = comp;
         }
     }
 
 
-    private BeanInfo getBeanInfo(Object tagBean)
+    /**
+     * Hack to access the protected FacesTag method "overrideProperties".
+     * @param tag
+     * @param comp
+     */
+    private void overrideProperties(Object tag, UIComponent comp)
     {
         try
         {
-            return Introspector.getBeanInfo(tagBean.getClass());
+            Method m = null;
+            Class c = tag.getClass();
+            while (m == null && c != null && !c.equals(Object.class))
+            {
+                try
+                {
+                    m = c.getDeclaredMethod("overrideProperties",
+                                            new Class[] {UIComponent.class});
+                }
+                catch (NoSuchMethodException e) {}
+                c = c.getSuperclass();
+            }
+
+            if (m == null)
+            {
+                throw new NoSuchMethodException();
+            }
+
+            if (m.isAccessible())
+            {
+                m.invoke(tag, new Object[] {comp});
+            }
+            else
+            {
+                final Method finalM = m;
+                AccessController.doPrivileged(
+                    new PrivilegedAction()
+                    {
+                        public Object run()
+                        {
+                            finalM.setAccessible(true);
+                            return null;
+                        }
+                    });
+                m.invoke(tag, new Object[]{comp});
+                m.setAccessible(false);
+            }
         }
-        catch (IntrospectionException e)
+        catch (NoSuchMethodException e)
         {
             throw new RuntimeException(e);
         }
-    }
-
-
-    private void setBeanProperty(Object bean,
-                                 String propertyName,
-                                 Object propertyValue,
-                                 BeanInfo beanInfo)
-    {
-        //find PropertyDescriptor
-        PropertyDescriptor propDescr = findPropertyDescriptor(beanInfo, propertyName);
-        if (propDescr == null)
+        catch (SecurityException e)
         {
-            throw new RuntimeException("No PropertyDescriptor found for property " + propertyName);
-        }
-
-        Method setMethod = propDescr.getWriteMethod();
-        try
-        {
-            setMethod.invoke(bean, new Object[]{propertyValue});
+            throw new RuntimeException(e);
         }
         catch (IllegalAccessException e)
         {
@@ -557,32 +592,10 @@ public class MyParseEventListener
     }
 
 
-    private PropertyDescriptor findPropertyDescriptor(BeanInfo beanInfo, String propertyName)
-    {
-        PropertyDescriptor propDescr = null;
-        PropertyDescriptor propDescriptors[] = beanInfo.getPropertyDescriptors();
-        for (int i = 0; i < propDescriptors.length; i++)
-        {
-            if (propDescriptors[i].getName().equals(propertyName))
-            {
-                return propDescriptors[i];
-            }
-        }
-        return null;
-    }
-
-
-    private Object convertStringToTargetType(BeanInfo beanInfo,
-                                             String propertyName,
+    private Object convertStringToTargetType(PropertyDescriptor propertyDescriptor,
                                              String propertyStringValue)
     {
-        PropertyDescriptor propDescr = findPropertyDescriptor(beanInfo, propertyName);
-        if (propDescr == null)
-        {
-            throw new RuntimeException("No PropertyDescriptor found for property " + propertyName);
-        }
-
-        Class propertyEditorClass = propDescr.getPropertyEditorClass();
+        Class propertyEditorClass = propertyDescriptor.getPropertyEditorClass();
         if (propertyEditorClass != null)
         {
             PropertyEditor pe = null;
@@ -603,7 +616,7 @@ public class MyParseEventListener
         }
 
         return convertStringToTargetType(propertyStringValue,
-                                         propDescr.getPropertyType());
+                                         propertyDescriptor.getPropertyType());
     }
 
 

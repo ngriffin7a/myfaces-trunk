@@ -284,7 +284,7 @@ public class FacesContextImpl
                 return null;
             }
 
-            return BeanUtils.getBeanProperty(obj, propName);
+            return BeanUtils.getBeanPropertyValue(obj, propName);
         }
     }
 
@@ -307,7 +307,7 @@ public class FacesContextImpl
                 return;
             }
 
-            BeanUtils.setBeanProperty(obj, propName, value);
+            BeanUtils.setBeanPropertyValue(obj, propName, value);
         }
     }
 

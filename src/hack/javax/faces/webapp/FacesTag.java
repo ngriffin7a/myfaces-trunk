@@ -305,7 +305,7 @@ public abstract class FacesTag
         _properties.put(attrName, attrValue);
     }
 
-    public void overrideProperties(UIComponent uiComponent)
+    protected void overrideProperties(UIComponent uiComponent)
     {
         FacesContext facesContext = null;
         if (getPageContext() != null)

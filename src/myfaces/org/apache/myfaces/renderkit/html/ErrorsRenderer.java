@@ -60,19 +60,26 @@ public class ErrorsRenderer
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
+        boolean ulLayout;
         ResponseWriter writer = facesContext.getResponseWriter();
         Iterator it;
         String compoundId = (String)uiComponent.getAttribute(UIOutput.COMPOUND_ID_ATTR);
         if (compoundId == null)
         {
+            //All messages
             it = facesContext.getMessages();
+            ulLayout = true;
         }
         else if (compoundId.length() == 0)
         {
+            //All component messages
             it = facesContext.getMessages(null);
+            ulLayout = true;
         }
         else
         {
+            //All messages for this component
+            ulLayout = false;
             UIComponent comp = null;
             try
             {
@@ -91,17 +98,36 @@ public class ErrorsRenderer
 
         if (it.hasNext())
         {
-            writer.write("\n<ul>");
-            while (it.hasNext())
+            if (ulLayout)
             {
-                Message msg = (Message)it.next();
-                writer.write("\n\t<li>");
-                writer.write(msg.getSummary());
-                writer.write(": ");
-                writer.write(msg.getDetail());
-                writer.write("</li>");
+                writer.write("\n<ul>");
+                while (it.hasNext())
+                {
+                    Message msg = (Message)it.next();
+                    writer.write("\n\t<li>");
+                    writer.write(msg.getSummary());
+                    writer.write(": ");
+                    writer.write(msg.getDetail());
+                    writer.write("</li>");
+                }
+                writer.write("\n</ul>");
             }
-            writer.write("\n</ul>");
+            else
+            {
+                while (it.hasNext())
+                {
+                    Message msg = (Message)it.next();
+                    writer.write("\n<font color=\"red\">");
+                    writer.write(msg.getSummary());
+                    writer.write(": ");
+                    writer.write(msg.getDetail());
+                    writer.write("</font>");
+                    if (it.hasNext())
+                    {
+                        writer.write("<br>");
+                    }
+                }
+            }
         }
     }
 

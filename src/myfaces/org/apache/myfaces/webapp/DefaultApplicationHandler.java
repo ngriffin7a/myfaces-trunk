@@ -75,8 +75,12 @@ import java.lang.reflect.Method;
         String methodPath = commandRef.substring(i + 1);
 
         Object controllerObj = facesContext.getModelValue(controllerId);
+        if (controllerObj == null)
+        {
+            throw new RuntimeException("Controller object " + controllerId + " is null.");
+        }
         BeanMethod beanMethod
-            = BeanUtils.findNestedBeanMethod(controllerObj, methodPath, "",
+            = BeanUtils.findNestedBeanMethod(controllerObj, methodPath,
                                              new Class[] {FacesContext.class, CommandEvent.class});
         Object obj = beanMethod.getBean();
         Method method = beanMethod.getMethod();
