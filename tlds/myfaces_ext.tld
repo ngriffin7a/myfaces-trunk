@@ -1290,11 +1290,6 @@
             <rtexprvalue>false</rtexprvalue>
         </attribute>
         <attribute>
-            <name>iconChild</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
             <name>iconChildFirst</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>

@@ -35,6 +35,9 @@ import javax.servlet.jsp.JspException;
  * @version $Revision$ $Date: 2004/10/13 11:50:58
  *
  *          $ $Log$
+ *          $ Revision 1.9  2004/11/26 12:46:38  oros
+ *          $ cleanup: removed unused iconChild attribute
+ *          $
  *          $ Revision 1.8  2004/11/26 12:14:10  oros
  *          $ MYFACES-8: applied tree table patch by David Le Strat
  *          $
@@ -46,7 +49,6 @@ public class TreeTag extends UIComponentTagBase
     private String var;
     private String iconLine;
     private String iconNoline;
-    private String iconChild;
     private String iconChildFirst;
     private String iconChildMiddle;
     private String iconChildLast;
@@ -124,16 +126,6 @@ public class TreeTag extends UIComponentTagBase
     public void setIconNoline(String iconNoline)
     {
         this.iconNoline = iconNoline;
-    }
-
-    public String getIconChild()
-    {
-        return iconChild;
-    }
-
-    public void setIconChild(String iconChild)
-    {
-        this.iconChild = iconChild;
     }
 
     /**
@@ -436,7 +428,6 @@ public class TreeTag extends UIComponentTagBase
         setStringProperty(component, "var", var);
         setStringProperty(component, "iconLine", iconLine);
         setStringProperty(component, "iconNoline", iconNoline);
-        setStringProperty(component, "iconChild", iconChild);
         setStringProperty(component, "iconChildFirst", iconChildFirst);
         setStringProperty(component, "iconChildMiddle", iconChildMiddle);
         setStringProperty(component, "iconChildLast", iconChildLast);

@@ -32,6 +32,9 @@ import java.util.List;
  * @version $Revision$ $Date$
  *
  *          $Log$
+ *          Revision 1.12  2004/11/26 12:46:38  oros
+ *          cleanup: removed unused iconChild attribute
+ *
  *          Revision 1.11  2004/11/26 12:14:10  oros
  *          MYFACES-8: applied tree table patch by David Le Strat
  *
@@ -56,7 +59,6 @@ public class HtmlTreeNode
     public static final int CHILD = 20;
     public static final int CHILD_FIRST = 21;
     public static final int CHILD_LAST = 22;
-    public static final int CHILD_SINGLE = 23;
     public static final int LINE = 30;
     public static final int EMPTY = 40;
     private static final int OFFSET = 10;

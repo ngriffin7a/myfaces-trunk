@@ -49,6 +49,9 @@ import org.apache.myfaces.custom.tree.model.TreePath;
  * @version $Revision$ $Date$
  *          <p/>
  *          $Log$
+ *          Revision 1.27  2004/11/26 12:46:38  oros
+ *          cleanup: removed unused iconChild attribute
+ *
  *          Revision 1.26  2004/11/26 12:33:54  oros
  *          MYFACES-9: store iconChildMiddle in component state
  *
@@ -79,7 +82,6 @@ public class HtmlTree extends HtmlPanelGroup implements TreeModelListener
     private String iconClass;
     private String iconLine = "images/tree/line.gif";
     private String iconNoline = "images/tree/noline.gif";
-    private String iconChild = "images/tree/noline.gif";
     private String iconChildFirst = "images/tree/line_first.gif";
     private String iconChildMiddle = "images/tree/line_middle.gif";
     private String iconChildLast = "images/tree/line_last.gif";
@@ -187,18 +189,6 @@ public class HtmlTree extends HtmlPanelGroup implements TreeModelListener
     public void setIconNoline(String iconNoline)
     {
         this.iconNoline = iconNoline;
-    }
-
-
-    public String getIconChild()
-    {
-        return iconChild;
-    }
-
-
-    public void setIconChild(String iconChild)
-    {
-        this.iconChild = iconChild;
     }
 
 
@@ -572,33 +562,32 @@ public class HtmlTree extends HtmlPanelGroup implements TreeModelListener
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[26];
+        Object values[] = new Object[25];
         values[0] = super.saveState(context);
-        values[1] = iconChild;
-        values[2] = iconChildFirst;
-        values[3] = iconChildMiddle;
-        values[4] = iconChildLast;
-        values[5] = iconLine;
-        values[6] = iconNodeClose;
-        values[7] = iconNodeCloseFirst;
-        values[8] = iconNodeCloseLast;
-        values[9] = iconNodeCloseMiddle;
-        values[10] = iconNodeOpen;
-        values[11] = iconNodeOpenFirst;
-        values[12] = iconNodeOpenLast;
-        values[13] = iconNodeOpenMiddle;
-        values[14] = iconNoline;
-        values[15] = styleClass;
-        values[16] = nodeClass;
-        values[17] = selectedNodeClass;
-        values[18] = new Integer(uniqueIdCounter);
-        values[19] = selectedPath;
-        values[20] = iconClass;
-        values[21] = new Integer(internalId);
-        values[22] = new Long(expireListeners);
-        values[23] = rowClasses;
-        values[24] = columnClasses;
-        values[25] = var;
+        values[1] = iconChildFirst;
+        values[2] = iconChildMiddle;
+        values[3] = iconChildLast;
+        values[4] = iconLine;
+        values[5] = iconNodeClose;
+        values[6] = iconNodeCloseFirst;
+        values[7] = iconNodeCloseLast;
+        values[8] = iconNodeCloseMiddle;
+        values[9] = iconNodeOpen;
+        values[10] = iconNodeOpenFirst;
+        values[11] = iconNodeOpenLast;
+        values[12] = iconNodeOpenMiddle;
+        values[13] = iconNoline;
+        values[14] = styleClass;
+        values[15] = nodeClass;
+        values[16] = selectedNodeClass;
+        values[17] = new Integer(uniqueIdCounter);
+        values[18] = selectedPath;
+        values[19] = iconClass;
+        values[20] = new Integer(internalId);
+        values[21] = new Long(expireListeners);
+        values[22] = rowClasses;
+        values[23] = columnClasses;
+        values[24] = var;
         return ((Object) (values));
     }
 
@@ -607,31 +596,30 @@ public class HtmlTree extends HtmlPanelGroup implements TreeModelListener
     {
         Object values[] = (Object[]) state;
         super.restoreState(context, values[0]);
-        iconChild = (String) values[1];
-        iconChildFirst = (String) values[2];
-        iconChildMiddle = (String) values[3];
-        iconChildLast = (String) values[4];
-        iconLine = (String) values[5];
-        iconNodeClose = (String) values[6];
-        iconNodeCloseFirst = (String) values[7];
-        iconNodeCloseLast = (String) values[8];
-        iconNodeCloseMiddle = (String) values[9];
-        iconNodeOpen = (String) values[10];
-        iconNodeOpenFirst = (String) values[11];
-        iconNodeOpenLast = (String) values[12];
-        iconNodeOpenMiddle = (String) values[13];
-        iconNoline = (String) values[14];
-        styleClass = (String) values[15];
-        nodeClass = (String) values[16];
-        selectedNodeClass = (String) values[17];
-        uniqueIdCounter = ((Integer) values[18]).intValue();
-        selectedPath = (int[]) values[19];
-        iconClass = (String) values[20];
-        internalId = ((Integer) values[21]).intValue();
-        expireListeners = ((Long) values[22]).longValue();
-        rowClasses = (String) values[23];
-        columnClasses = (String) values[24];
-        var = (String) values[25];
+        iconChildFirst = (String) values[1];
+        iconChildMiddle = (String) values[2];
+        iconChildLast = (String) values[3];
+        iconLine = (String) values[4];
+        iconNodeClose = (String) values[5];
+        iconNodeCloseFirst = (String) values[6];
+        iconNodeCloseLast = (String) values[7];
+        iconNodeCloseMiddle = (String) values[8];
+        iconNodeOpen = (String) values[9];
+        iconNodeOpenFirst = (String) values[10];
+        iconNodeOpenLast = (String) values[11];
+        iconNodeOpenMiddle = (String) values[12];
+        iconNoline = (String) values[13];
+        styleClass = (String) values[14];
+        nodeClass = (String) values[15];
+        selectedNodeClass = (String) values[16];
+        uniqueIdCounter = ((Integer) values[17]).intValue();
+        selectedPath = (int[]) values[18];
+        iconClass = (String) values[19];
+        internalId = ((Integer) values[20]).intValue();
+        expireListeners = ((Long) values[21]).longValue();
+        rowClasses = (String) values[22];
+        columnClasses = (String) values[23];
+        var = (String) values[24];
         addToModelListeners();
     }
 

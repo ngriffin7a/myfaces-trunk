@@ -43,6 +43,9 @@ import java.util.List;
  * @version $Revision$ $Date$
  *
  *          $Log$
+ *          Revision 1.12  2004/11/26 12:46:38  oros
+ *          cleanup: removed unused iconChild attribute
+ *
  *          Revision 1.11  2004/11/26 12:14:09  oros
  *          MYFACES-8: applied tree table patch by David Le Strat
  * 
@@ -403,8 +406,7 @@ public class HtmlTreeRenderer extends HtmlTableRendererBase
         int state = layout[layout.length - 1];
         String url = getLayoutImage(tree, state);
 
-        if (state == HtmlTreeNode.CHILD || state == HtmlTreeNode.CHILD_FIRST || state == HtmlTreeNode.CHILD_SINGLE
-                || state == HtmlTreeNode.CHILD_LAST)
+        if (state == HtmlTreeNode.CHILD || state == HtmlTreeNode.CHILD_FIRST || state == HtmlTreeNode.CHILD_LAST)
         {
             // no action, just img
             writeImageElement(url, facesContext, writer, child);
@@ -538,8 +540,6 @@ public class HtmlTreeRenderer extends HtmlTableRendererBase
             return tree.getIconChildFirst();
         case HtmlTreeNode.CHILD_LAST:
             return tree.getIconChildLast();
-        case HtmlTreeNode.CHILD_SINGLE:
-            return tree.getIconChild();
         case HtmlTreeNode.LINE:
             return tree.getIconLine();
         case HtmlTreeNode.EMPTY:
