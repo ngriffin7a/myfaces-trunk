@@ -9,7 +9,7 @@
      </project-information>
 	<docu href="docs/" label="Documentation" tab="documentation">
 		<gettingstarted label="Getting Started" href="gettingstarted.html"/>
-		<ri label="MyFaces and RI sample" href="risamples.html"/>
+		<ri label="MyFaces and RI" href="risamples.html"/>
 		<compatibility label="Compatibility" href="compatibility.html"/>
 		<faq label="FAQ" href="faq.html" />
 		<jars label="JARs" href="jars.html" />
