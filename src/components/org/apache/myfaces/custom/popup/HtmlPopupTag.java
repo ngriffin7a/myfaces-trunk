@@ -12,6 +12,9 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2005/03/14 20:34:13  mmarinschek
+ * fixed bug myfaces-132, thanks to gerhard hofmann
+ *
  * Revision 1.5  2005/03/14 13:43:34  svieujot
  * Close MyFaces-132 thanks to Gerhard Hofmann
  *
