@@ -42,6 +42,10 @@ Mandatory steps
 
 * rename <h:command_hyperlink> tags to <h:command_link>
 
+* alter <from-view-id> values of navigation rules: use .jsp extension instead of .jsf
+
+* rename <h:selectitem> tags to <f:selectitem> and change attributes:
+    label --> itemLabel
 
 
 

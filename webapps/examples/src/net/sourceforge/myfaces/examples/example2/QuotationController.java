@@ -18,6 +18,9 @@
  */
 package net.sourceforge.myfaces.examples.example2;
 
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.el.VariableResolver;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
@@ -33,28 +36,23 @@ public class QuotationController
 {
     public void processAction(ActionEvent event) throws AbortProcessingException
     {
-        /*
-        FIXME
-        String commandName = event.getActionCommand();
-        FacesContext facesContext = FacesContext.getCurrentInstance();
+        if (event.getPhaseId() == PhaseId.INVOKE_APPLICATION)
+        {
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            UIComponent component = event.getComponent();
 
-        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-        ValueBinding vb = af.getApplication().getValueBinding("q_form");
-        QuotationForm form = (QuotationForm)vb.getValue(facesContext);
+            VariableResolver vr = facesContext.getApplication().getVariableResolver();
+            QuotationForm form = (QuotationForm)vr.resolveVariable(facesContext, "q_form");
+            if (component.getId().equals("button1"))
+            {
+                form.quote();
+            }
+            else
+            {
+                form.unquote();
+            }
+        }
 
-        if (commandName.equals("quotationOn"))
-        {
-            form.quote();
-        }
-        else if (commandName.equals("quotationOff"))
-        {
-            form.unquote();
-        }
-        else
-        {
-            throw new IllegalArgumentException("Unknown Command " + commandName);
-        }
-        */
     }
     
     public PhaseId getPhaseId()

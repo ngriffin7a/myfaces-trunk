@@ -64,59 +64,103 @@
 
 <!--
 *************************************************************************************
-Start of revised 1.0 conforming tags
+Start of revised 1.0 conforming tags (in alphabetical order)
 *************************************************************************************
 -->
 
-<!-- output_text -->
+<!-- command_button -->
     <tag>
-        <name>output_text</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlOutputTextTag</tag-class>
+        <name>command_button</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlCommandButtonTag</tag-class>
         <body-content>JSP</body-content>
-        <description>
-            Renders the value of the associated UIOutput component.
-        </description>
         &ui_component_attributes;
-        &ui_output_attributes;
+        &ui_command_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
+        &html_button_attributes;
         &user_role_attributes;
-        <!-- HtmlOutputText attributes -->
+        <!-- HtmlCommandButton attributes -->
         <attribute>
-            <name>escape</name>
+            <name>image</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
-            <description>
-                Indicates whether rendered markup should be escaped.
-                Default: true
-            </description>
         </attribute>
     </tag>
 
-<!-- output_message -->
+<!-- command_link -->
     <tag>
-        <name>output_message</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlOutputMessageTag</tag-class>
+        <name>command_link</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlCommandLinkTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_command_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_anchor_attributes;
+        &user_role_attributes;
+        <!-- HtmlCommandLink attributes -->
+    </tag>
+
+<!-- form -->
+    <tag>
+        <name>form</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlFormTag</tag-class>
         <body-content>JSP</body-content>
         <description>
-            Takes the value of the associated UIOutput component as a MessageFormat
-            pattern and formats embedded parameters with this pattern.
+            Renders a HTML form element.
         </description>
         &ui_component_attributes;
-        &ui_output_attributes;
+        &ui_form_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_form_attributes;
+        &user_role_attributes;
+    </tag>
+
+<!-- graphic_image -->
+    <tag>
+        <name>graphic_image</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlGraphicImageTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_graphic_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_img_attributes;
+        &user_role_attributes;
+    </tag>
+
+<!-- input_hidden -->
+    <tag>
+        <name>input_hidden</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputHiddenTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_input_attributes;
+        <!-- HiddenRenderer attributes -->
+    </tag>
+
+<!-- input_secret -->
+    <tag>
+        <name>input_secret</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputSecretTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_input_attributes;
+        <!-- FIXME: not all html_input_attributes are used for input_secret
+            in RI (e.g. datafld, datasrc, ...) -->
+        &html_input_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
         &user_role_attributes;
-        <!-- HtmlOutputMessage attributes
-        (API attributes are wrong: OutputMessage has nothing to do with error messages,
-         see description above!) -->
+        <!-- SecretRenderer attributes -->
         <attribute>
-            <name>escape</name>
+            <name>redisplay</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
             <description>
-                Indicates whether rendered markup should be escaped.
-                Default: true
+                If true, the value will be re-sent (in plaintext) when the form
+                is rerendered (see JSF.7.4.4). Default is false.
             </description>
         </attribute>
     </tag>
@@ -146,21 +190,18 @@ Start of revised 1.0 conforming tags
         </attribute>
     </tag>
 
-<!-- form -->
+<!-- input_textarea -->
     <tag>
-        <name>form</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlFormTag</tag-class>
+        <name>input_textarea</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputTextareaTag</tag-class>
         <body-content>JSP</body-content>
-        <description>
-            Renders a HTML form element.
-        </description>
         &ui_component_attributes;
-        &ui_form_attributes;
+        &ui_input_attributes;
+        &html_textarea_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
-        &html_form_attributes;
         &user_role_attributes;
-    </tag>
+   </tag>
 
 <!-- message -->
     <tag>
@@ -317,126 +358,6 @@ Start of revised 1.0 conforming tags
         </attribute>
     </tag>
 
-<!-- command_button -->
-    <tag>
-        <name>command_button</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlCommandButtonTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-        &ui_command_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &html_button_attributes;
-        &user_role_attributes;
-        <!-- HtmlCommandButton attributes -->
-        <attribute>
-            <name>image</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-    </tag>
-
-<!-- command_link -->
-    <tag>
-        <name>command_link</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlCommandLinkTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-        &ui_command_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &html_anchor_attributes;
-        &user_role_attributes;
-        <!-- HtmlCommandLink attributes -->
-    </tag>
-
-<!-- output_link -->
-    <tag>
-        <name>output_link</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlOutputLinkTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-        &ui_output_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &html_anchor_attributes;
-        &user_role_attributes;
-        <!-- HtmlOutputLink attributes -->
-    </tag>
-
-<!-- graphic_image -->
-    <tag>
-        <name>graphic_image</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlGraphicImageTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-        &ui_graphic_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &html_img_attributes;
-        &user_role_attributes;
-    </tag>
-
-<!-- input_hidden -->
-    <tag>
-        <name>input_hidden</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputHiddenTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-        &ui_input_attributes;
-        <!-- HiddenRenderer attributes -->
-    </tag>
-
-<!-- input_secret -->
-    <tag>
-        <name>input_secret</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputSecretTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-        &ui_input_attributes;
-        <!-- FIXME: not all html_input_attributes are used for input_secret
-            in RI (e.g. datafld, datasrc, ...) -->
-        &html_input_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &user_role_attributes;
-        <!-- SecretRenderer attributes -->
-        <attribute>
-            <name>redisplay</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>
-                If true, the value will be re-sent (in plaintext) when the form
-                is rerendered (see JSF.7.4.4). Default is false.
-            </description>
-        </attribute>
-    </tag>
-
-<!-- input_textarea -->
-    <tag>
-        <name>input_textarea</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlInputTextareaTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-        &ui_input_attributes;
-        &html_textarea_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &user_role_attributes;
-   </tag>
-
-<!-- panel_group -->
-    <tag>
-        <name>panel_group</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlPanelGroupTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-        &ui_panel_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &user_role_attributes;
-    </tag>
-
 <!-- output_label -->
     <tag>
         <name>output_label</name>
@@ -460,6 +381,85 @@ Start of revised 1.0 conforming tags
         </attribute>
     </tag>
 
+<!-- output_link -->
+    <tag>
+        <name>output_link</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlOutputLinkTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_output_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_anchor_attributes;
+        &user_role_attributes;
+        <!-- HtmlOutputLink attributes -->
+    </tag>
+
+<!-- output_message -->
+    <tag>
+        <name>output_message</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlOutputMessageTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Takes the value of the associated UIOutput component as a MessageFormat
+            pattern and formats embedded parameters with this pattern.
+        </description>
+        &ui_component_attributes;
+        &ui_output_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &user_role_attributes;
+        <!-- HtmlOutputMessage attributes
+        (API attributes are wrong: OutputMessage has nothing to do with error messages,
+         see description above!) -->
+        <attribute>
+            <name>escape</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                Indicates whether rendered markup should be escaped.
+                Default: true
+            </description>
+        </attribute>
+    </tag>
+
+<!-- output_text -->
+    <tag>
+        <name>output_text</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlOutputTextTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Renders the value of the associated UIOutput component.
+        </description>
+        &ui_component_attributes;
+        &ui_output_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &user_role_attributes;
+        <!-- HtmlOutputText attributes -->
+        <attribute>
+            <name>escape</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                Indicates whether rendered markup should be escaped.
+                Default: true
+            </description>
+        </attribute>
+    </tag>
+
+<!-- panel_group -->
+    <tag>
+        <name>panel_group</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlPanelGroupTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_panel_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &user_role_attributes;
+    </tag>
+
 <!-- selectboolean_checkbox -->
     <tag>
         <name>selectboolean_checkbox</name>
@@ -473,19 +473,10 @@ Start of revised 1.0 conforming tags
         &user_role_attributes;
     </tag>
 
-
-
-<!--
-*************************************************************************************
-Start of legacy (EA4 conforming) tags
-*************************************************************************************
--->
-
-<!-- selectmany_checkbox -->
+<!-- selectmany_checkboxlist -->
     <tag>
-        <name>selectmany_checkbox</name>
-        <!-- strictly speaking "select_many_checkbox", but Sun names it so in ref.impl.-->
-        <tag-class>net.sourceforge.myfaces.taglib.legacy.SelectManyCheckboxTag</tag-class>
+        <name>selectmany_checkboxlist</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectManyCheckboxListTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_select_many_attributes;
@@ -499,15 +490,14 @@ Start of legacy (EA4 conforming) tags
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
             <type>java.lang.String</type>
-            <description>see JSF.7.4.8</description>
+            <description>see JSF Spec. 8.5.9</description>
         </attribute>
     </tag>
 
 <!-- selectmany_listbox -->
     <tag>
         <name>selectmany_listbox</name>
-        <!-- strictly speaking "select_many_listbox", but Sun names it so in ref.impl.-->
-        <tag-class>net.sourceforge.myfaces.taglib.legacy.SelectManyListboxTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectManyListboxTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_select_many_attributes;
@@ -520,8 +510,7 @@ Start of legacy (EA4 conforming) tags
 <!-- selectmany_menu -->
     <tag>
         <name>selectmany_menu</name>
-        <!-- strictly speaking "select_many_menu", but Sun names it so in ref.impl.-->
-        <tag-class>net.sourceforge.myfaces.taglib.legacy.SelectManyMenuTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectManyMenuTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_select_many_attributes;
@@ -534,14 +523,15 @@ Start of legacy (EA4 conforming) tags
             <name>size</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>see JSF Spec. 8.5.9</description>
         </attribute>
     </tag>
 
 <!-- selectone_listbox -->
     <tag>
         <name>selectone_listbox</name>
-        <!-- strictly speaking "select_one_listbox", but Sun names it so in ref.impl.-->
-        <tag-class>net.sourceforge.myfaces.taglib.legacy.SelectOneListboxTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectOneListboxTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_select_one_attributes;
@@ -554,8 +544,7 @@ Start of legacy (EA4 conforming) tags
 <!-- selectone_menu -->
     <tag>
         <name>selectone_menu</name>
-        <!-- strictly speaking "select_one_menu", but Sun names it so in ref.impl.-->
-        <tag-class>net.sourceforge.myfaces.taglib.legacy.SelectOneMenuTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectOneMenuTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_select_one_attributes;
@@ -568,14 +557,15 @@ Start of legacy (EA4 conforming) tags
             <name>size</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>see JSF Spec. 8.5.10</description>
         </attribute>
     </tag>
 
 <!-- selectone_radio -->
     <tag>
         <name>selectone_radio</name>
-        <!-- strictly speaking "select_one_radio", but Sun names it so in ref.impl.-->
-        <tag-class>net.sourceforge.myfaces.taglib.legacy.SelectOneRadioTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlSelectOneRadioTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_select_one_attributes;
@@ -588,8 +578,18 @@ Start of legacy (EA4 conforming) tags
             <name>layout</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>see JSF Spec. 8.5.10</description>
         </attribute>
     </tag>
+
+<!--
+*************************************************************************************
+Start of legacy (EA4 conforming) tags
+*************************************************************************************
+-->
+
+
 
 <!-- panel_data -->
     <tag>
@@ -645,40 +645,6 @@ Start of legacy (EA4 conforming) tags
         </attribute>
      </tag>
 
-
-<!-- panel_list -->
-    <tag>
-        <name>panel_list</name>
-        <tag-class>net.sourceforge.myfaces.taglib.legacy.PanelListTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-        &ui_panel_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &html_table_attributes;
-        &user_role_attributes;
-        <!-- List Renderer attributes -->
-        <attribute>
-            <name>columnClasses</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>footerClass</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>headerClass</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>rowClasses</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-     </tag>
 
 
 </taglib>

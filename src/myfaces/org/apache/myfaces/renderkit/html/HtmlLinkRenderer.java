@@ -18,13 +18,18 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
+import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.application.MyfacesViewHandler;
+import net.sourceforge.myfaces.component.html.MyFacesHtmlForm;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
+import net.sourceforge.myfaces.renderkit.html.util.ResponseWriterWrapper;
 
+import javax.faces.application.StateManager;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIForm;
 import javax.faces.component.UIParameter;
 import javax.faces.component.html.HtmlCommandLink;
 import javax.faces.component.html.HtmlOutputLink;
@@ -33,8 +38,12 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.event.ActionEvent;
 import java.io.IOException;
+import java.io.Writer;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * HyperlinkRenderer-Extension:
@@ -48,6 +57,10 @@ public class HtmlLinkRenderer
     extends HtmlRenderer
 {
     //private static final Log log = LogFactory.getLog(HtmlLinkRenderer.class);
+
+    private static final String DUMMY_FORM_ID = "linkDummyForm";
+    private static final String DUMMY_FORM_NAME = "linkDummyForm";
+    private static final String DUMMY_RESPONSE_WRITER_REQ_PARAM = HtmlLinkRenderer.class.getName() + ".DUMMY_RESPONSE_WRITER";
 
     public boolean getRendersChildren()
     {
@@ -108,6 +121,30 @@ public class HtmlLinkRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
 
+        if (MyFacesConfig.isAllowJavascript(facesContext.getExternalContext()))
+        {
+            renderJavaScriptAnchorStart(facesContext, writer, commandLink);
+        }
+        else
+        {
+            renderNonJavaScriptAnchorStart(facesContext, writer, commandLink);
+        }
+
+        HTMLUtil.renderHTMLAttributes(writer, commandLink, HTML.ANCHOR_PASSTHROUGH_ATTRIBUTES);
+
+        //MyFaces extension: Render text given by value
+        Object value = commandLink.getValue();
+        if(value != null)
+        {
+            writer.writeText(value.toString(), JSFAttr.VALUE_ATTR);
+        }
+    }
+
+    private void renderNonJavaScriptAnchorStart(FacesContext facesContext,
+                                                ResponseWriter writer,
+                                                HtmlCommandLink commandLink)
+        throws IOException
+    {
         String path;
         ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
         ExternalContext externalContext = facesContext.getExternalContext();
@@ -155,20 +192,10 @@ public class HtmlLinkRenderer
             href = externalContext.encodeResourceURL(href);    //TODO: or encodeActionURL ?
         }
 
-        //write anchor
         writer.startElement(HTML.ANCHOR_ELEM, commandLink);
         writer.writeURIAttribute(HTML.HREF_ATTR, href, null);
-        HTMLUtil.renderHTMLAttributes(writer, commandLink, HTML.ANCHOR_PASSTHROUGH_ATTRIBUTES);
-
-        //MyFaces extension: Render text given by value
-        Object value = commandLink.getValue();
-        if(value != null)
-        {
-            writer.writeText(value.toString(), JSFAttr.VALUE_ATTR);
-        }
     }
-   
-    
+
     private void addChildParametersToHref(UIComponent linkComponent,
                                           StringBuffer hrefBuf,
                                           boolean firstParameter,
@@ -192,16 +219,105 @@ public class HtmlLinkRenderer
                 hrefBuf.append('=');
                 if (value != null)
                 {
-                    //TODO: use Converter for this class?
-                    //UIParameter is no ConvertibleValueHolder!
+                    //UIParameter is no ConvertibleValueHolder, so no conversion possible
                     hrefBuf.append(URLEncoder.encode(value.toString(), charEncoding));
                 }
             }
         }
     }
 
-    
-    
+
+    private void renderJavaScriptAnchorStart(FacesContext facesContext,
+                                            ResponseWriter writer,
+                                            HtmlCommandLink commandLink)
+        throws IOException
+    {
+        //Find form
+        UIComponent parent = commandLink.getParent();
+        while (parent != null && !(parent instanceof UIForm))
+        {
+            parent = parent.getParent();
+        }
+
+        boolean insideForm;
+        String formName;
+        if (parent != null)
+        {
+            //link is nested inside a form
+            UIForm form = (UIForm)parent;
+            formName = MyFacesHtmlForm.getFormName(facesContext, form);
+            insideForm = true;
+        }
+        else
+        {
+            //not nested in form, we must add a dummy form at the end of the document
+            //we do this by replacing the current ResponseWriter by a wrapper
+            writer = createDummyFormResponseWriter(facesContext);
+            formName = DUMMY_FORM_NAME;
+            insideForm = false;
+        }
+
+        StringBuffer onClick = new StringBuffer();
+        if (commandLink.getOnclick() != null)
+        {
+            onClick.append(commandLink.getOnclick());
+            onClick.append(';');
+        }
+
+        String jsForm = "document.forms['" + formName + "']";
+
+        //add id parameter for decode
+        String clientId = commandLink.getClientId(facesContext);
+        onClick.append(jsForm);
+        onClick.append(".elements['").append(clientId).append("']");
+        onClick.append(".value='").append(URL_PARAM_VALUE).append("';");
+        if (insideForm)
+        {
+            renderHiddenParam(writer, clientId);
+        }
+        else
+        {
+            ((DummyFormResponseWriter)writer).addHiddenParam(clientId);
+        }
+
+        //add child parameters
+        for (Iterator it = commandLink.getChildren().iterator(); it.hasNext(); )
+        {
+            UIComponent child = (UIComponent)it.next();
+            if (child instanceof UIParameter)
+            {
+                String name = ((UIParameter)child).getName();
+                if (name == null)
+                {
+                    throw new IllegalArgumentException("Unnamed parameter value not allowed within command link.");
+                }
+                Object value = ((UIParameter)child).getValue();
+                onClick.append(jsForm);
+                onClick.append(".elements['").append(name).append("']");
+                //UIParameter is no ConvertibleValueHolder, so no conversion possible
+                onClick.append(".value='").append(value.toString()).append("';");
+
+                if (insideForm)
+                {
+                    renderHiddenParam(writer, name);
+                }
+                else
+                {
+                    ((DummyFormResponseWriter)writer).addHiddenParam(name);
+                }
+            }
+        }
+
+        //submit
+        onClick.append(jsForm);
+        onClick.append(".submit()");
+
+        writer.startElement(HTML.ANCHOR_ELEM, commandLink);
+        writer.writeURIAttribute(HTML.HREF_ATTR, "#", null);
+        writer.writeAttribute(HTML.ONCLICK_ATTR, onClick.toString(), null);
+    }
+
+
     public void renderOutputLinkStart(FacesContext facesContext, HtmlOutputLink outputLink)
             throws IOException
     {
@@ -244,6 +360,103 @@ public class HtmlLinkRenderer
         {
             ResponseWriter writer = facesContext.getResponseWriter();
             writer.endElement(HTML.ANCHOR_ELEM);
+        }
+    }
+
+
+
+    private static void renderHiddenParam(ResponseWriter writer, String paramName)
+        throws IOException
+    {
+        writer.startElement(HTML.INPUT_ELEM, null);
+        writer.writeAttribute(HTML.TYPE_ATTR, "hidden", null);
+        writer.writeAttribute(HTML.NAME_ATTR, paramName, null);
+        writer.endElement(HTML.INPUT_ELEM);
+    }
+
+    private DummyFormResponseWriter createDummyFormResponseWriter(FacesContext facesContext)
+    {
+        Map requestMap = facesContext.getExternalContext().getRequestMap();
+        DummyFormResponseWriter writer = (DummyFormResponseWriter)requestMap.get(DUMMY_RESPONSE_WRITER_REQ_PARAM);
+        if (writer == null)
+        {
+            writer = new DummyFormResponseWriter(facesContext.getResponseWriter());
+            facesContext.setResponseWriter(writer);
+            requestMap.put(DUMMY_RESPONSE_WRITER_REQ_PARAM, writer);
+        }
+        return writer;
+    }
+
+    private class DummyFormResponseWriter
+            extends ResponseWriterWrapper
+    {
+        private List _hiddenParams = new ArrayList();
+
+        public DummyFormResponseWriter(ResponseWriter responseWriter)
+        {
+            super(responseWriter);
+        }
+
+        private DummyFormResponseWriter(ResponseWriter responseWriter,
+                                        List hiddenParams)
+        {
+            super(responseWriter);
+            _hiddenParams = hiddenParams;
+        }
+
+        public void addHiddenParam(String paramName)
+        {
+            _hiddenParams.add(paramName);
+        }
+
+        public ResponseWriter cloneWithWriter(Writer writer)
+        {
+            return new DummyFormResponseWriter(_responseWriter.cloneWithWriter(writer),
+                                               _hiddenParams);
+        }
+
+        public void endDocument() throws IOException
+        {
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            ExternalContext externalContext = facesContext.getExternalContext();
+            ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
+            String actionURL;
+            String contextPath = externalContext.getRequestContextPath();
+            String viewId = facesContext.getViewRoot().getViewId();
+            if (contextPath == null)
+            {
+                actionURL = viewHandler.getViewIdPath(facesContext, viewId);
+            }
+            else
+            {
+                actionURL = contextPath + viewHandler.getViewIdPath(facesContext, viewId);
+            }
+
+            //write out dummy form
+            _responseWriter.startElement(HTML.FORM_ELEM, null);
+            _responseWriter.writeAttribute(HTML.ID_ATTR, DUMMY_FORM_ID, null);
+            _responseWriter.writeAttribute(HTML.NAME_ATTR, DUMMY_FORM_NAME, null);
+            _responseWriter.writeAttribute(HTML.STYLE_ATTR, "display:inline", null);
+            _responseWriter.writeAttribute(HTML.METHOD_ATTR, "post", null);
+            _responseWriter.writeAttribute(HTML.ACTION_ATTR, externalContext.encodeActionURL(actionURL), null);
+            _responseWriter.flush();
+            for (Iterator it = _hiddenParams.iterator(); it.hasNext(); )
+            {
+                renderHiddenParam(_responseWriter, (String)it.next());
+            }
+
+            StateManager stateManager = facesContext.getApplication().getViewHandler().getStateManager();
+            if (stateManager.isSavingStateInClient(facesContext))
+            {
+                //render state parameters
+                //TODO: Optimize saveSerializedView call, because serialized view id built twice!
+                StateManager.SerializedView serializedView = stateManager.saveSerializedView(facesContext);
+                stateManager.writeState(facesContext, serializedView);
+            }
+
+            _responseWriter.endElement(HTML.FORM_ELEM);
+
+            super.endDocument();
         }
     }
 

@@ -22,17 +22,12 @@ import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.legacy.ListboxRenderer;
 
 import javax.faces.component.UIComponent;
-import javax.faces.component.UISelectMany;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.el.ValueBinding;
-import javax.faces.model.SelectItem;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.Set;
 
 
 /**
@@ -206,87 +201,6 @@ public class HTMLUtil
             }
         }
         return startElementWritten;
-    }
-
-
-    public static void renderSelect(
-        FacesContext facesContext, UIComponent uiComponent, Class rendererClass, int size)
-    throws IOException
-    {
-        ResponseWriter writer     = facesContext.getResponseWriter();
-
-        boolean        selectMany = (uiComponent instanceof UISelectMany);
-
-        writer.startElement(HTML.SELECT_ELEM, uiComponent);
-        writer.writeAttribute(HTML.NAME_ATTR, uiComponent.getClientId(facesContext), null);
-
-        if (rendererClass.isAssignableFrom (ListboxRenderer.class))
-        {
-            writer.writeAttribute(HTML.SIZE_ATTR, Integer.toString(size),null);
-        }
-
-        renderHTMLAttributes(writer, uiComponent, HTML.SELECT_PASSTHROUGH_ATTRIBUTES);
-        renderDisabledOnUserRole(writer, uiComponent, facesContext);
-
-        if (selectMany)
-        {
-            writer.writeAttribute(HTML.MULTIPLE_ATTR, HTML.MULTIPLE_ATTR, null);
-        }
-
-        Iterator it = SelectItemUtil.getSelectItems(facesContext, uiComponent);
-
-        if (it.hasNext())
-        {
-            String currentStrValue   = null;
-            Set    selectedValuesSet = null;
-
-            if (selectMany)
-            {
-                selectedValuesSet =
-                    SelectItemUtil.getSelectedValuesAsStringSet(
-                        facesContext, (UISelectMany) uiComponent);
-            }
-            else
-            {
-                ValueBinding vb = uiComponent.getValueBinding(JSFAttr.VALUE_ATTR);
-                Object currentValue = vb.getValue(facesContext);
-                currentStrValue = ((currentValue != null) ? currentValue.toString() : null);
-            }
-
-            while (it.hasNext())
-            {
-                SelectItem item = (SelectItem) it.next();
-                writer.write("\t\t");
-                writer.startElement(HTML.OPTION_ELEM, uiComponent);
-
-                Object itemObjValue = item.getValue();
-
-                if (itemObjValue != null)
-                {
-                    String itemStrValue = itemObjValue.toString();
-                    writer.writeAttribute(HTML.VALUE_ATTR, itemStrValue, null);
-
-                    if (
-                        (selectMany && selectedValuesSet.contains(itemStrValue))
-                                || ((currentStrValue != null)
-                                && itemStrValue.equals(currentStrValue)))
-                    {
-                        writer.writeAttribute(HTML.INPUT_SELECTED_VALUE,
-                                HTML.INPUT_SELECTED_VALUE, null);
-                    }
-                }
-
-
-                writer.writeText(HTMLEncoder.encode(
-                        item.getLabel(),
-                        true,
-                        true),null);
-
-                writer.endElement(HTML.OPTION_ELEM);
-            }
-        }
-
-        writer.endElement(HTML.SELECT_ELEM);
     }
 
 

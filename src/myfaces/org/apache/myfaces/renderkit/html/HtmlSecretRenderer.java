@@ -68,12 +68,7 @@ public class HtmlSecretRenderer
     public void decode(FacesContext facesContext, UIComponent component)
     {
         RendererUtils.checkParamValidity(facesContext, component, HtmlInputSecret.class);
-
-        HtmlRendererUtils.decodeInput(facesContext,
-                                      (HtmlInputSecret)component,
-                                      null, //default String conversion
-                                      false, //don't set if request param absent
-                                      null);
+        HtmlRendererUtils.decodeInput(facesContext, (HtmlInputSecret)component);
     }
 
 }

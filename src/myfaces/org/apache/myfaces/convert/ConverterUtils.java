@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.convert;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.application.MessageFactory;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.config.*;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
@@ -50,22 +51,35 @@ public class ConverterUtils
 {
     private static final Log log = LogFactory.getLog(ConverterUtils.class);
 
+    //TODO: Define in Bundle
+    private static final String DEFAULT_CONVERTER_EXCEPTION_MSG_ID
+            = "net.sourceforge.myfaces.convert.Converter.EXCEPTION";
+
     private static final int DEFAULT_DATE_STYLE = DateFormat.SHORT;
     private static final int DEFAULT_TIME_STYLE = DateFormat.SHORT;
 
     private ConverterUtils() {}
 
+    /**
+     * @deprecated
+     */
     public static Converter getConverter(Class c)
         throws IllegalArgumentException
     {
         return getConverter(c.getName());
     }
 
+    /**
+     * @deprecated
+     */
     public static Converter findConverter(Class c)
     {
         return findConverter(c.getName());
     }
 
+    /**
+     * @deprecated
+     */
     public static Converter getConverter(String converterId)
         throws IllegalArgumentException
     {
@@ -82,6 +96,9 @@ public class ConverterUtils
         }
     }
 
+    /**
+     * @deprecated
+     */
     public static Converter findConverter(String converterId)
     {
         try
@@ -112,6 +129,7 @@ public class ConverterUtils
      * @param uiOutput
      * @return
      * @throws IllegalArgumentException if a converter for this value type cannot be found
+     * @deprecated
      */
     public static Converter getValueConverter(FacesContext facesContext,
                                               UIOutput uiOutput)
@@ -165,7 +183,8 @@ public class ConverterUtils
      * @param facesContext
      * @param uiOutput
      * @return
-     */
+      * @deprecated
+      */
     public static Converter findValueConverter(FacesContext facesContext,
                                                UIOutput uiOutput)
     {
@@ -581,6 +600,46 @@ public class ConverterUtils
         else
         {
             throw new IllegalArgumentException("Cannot convert " + value.toString() + " to double");
+        }
+    }
+
+
+    /**
+     * Converts a String value using the given Converter and handles a
+     * possible ConverterException by adding a FacesMessage to the current FacesContext.
+     * @param facesContext
+     * @param uiComponent
+     * @param converter  Converter to use
+     * @param strValue   String value to convert
+     * @return converted value
+     * @throws ConverterException
+     */
+    public static Object getAsObjectWithErrorHandling(FacesContext facesContext,
+                                                      UIComponent uiComponent,
+                                                      Converter converter,
+                                                      String strValue)
+        throws ConverterException
+    {
+        try
+        {
+            return converter.getAsObject(facesContext, uiComponent, strValue);
+        }
+        catch (ConverterException e)
+        {
+            if (log.isInfoEnabled()) log.info("Converter exception", e);
+            if (e instanceof MyFacesConverterException)
+            {
+                facesContext.addMessage(uiComponent.getClientId(facesContext),
+                                        ((MyFacesConverterException)e).getFacesMessage());
+                ((MyFacesConverterException)e).release();
+            }
+            else
+            {
+                MessageFactory mf = MyFacesFactoryFinder.getMessageFactory(facesContext.getExternalContext());
+                facesContext.addMessage(uiComponent.getClientId(facesContext),
+                                        mf.getMessage(facesContext, DEFAULT_CONVERTER_EXCEPTION_MSG_ID));
+            }
+            throw e;
         }
     }
 

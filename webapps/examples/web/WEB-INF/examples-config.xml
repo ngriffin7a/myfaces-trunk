@@ -186,7 +186,7 @@
 
 
     <navigation-rule>
-        <from-view-id>/sample1.jsf</from-view-id>
+        <from-view-id>/sample1.jsp</from-view-id>
 
         <navigation-case>
             <from-outcome>jump_home</from-outcome>

@@ -18,12 +18,16 @@
  */
 package net.sourceforge.myfaces.component;
 
-import javax.faces.component.UISelectItem;
-import javax.faces.component.UISelectItems;
+import net.sourceforge.myfaces.renderkit.RendererUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.faces.component.*;
+import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
 import javax.faces.model.SelectItem;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -31,22 +35,58 @@ import java.util.Map;
  */
 public class ComponentUtils
 {
-    //private static final Log log = LogFactory.getLog(ComponentUtils.class);
+    private static final Log log = LogFactory.getLog(ComponentUtils.class);
 
     /**
      * Utility method to get the model SelectItem that a UISelectItem component represents.
      */
     public static SelectItem getSelectItemFromUISelectItem(UISelectItem uiSelectItem)
     {
-        SelectItem selectItem = (SelectItem)uiSelectItem.getValue();
-        if (selectItem == null)
+        Object v = uiSelectItem.getValue();
+        if (v != null)
         {
-            selectItem = new SelectItem(uiSelectItem.getItemValue(),
-                                        uiSelectItem.getItemLabel(),
-                                        uiSelectItem.getItemDescription(),
-                                        MyFacesUISelectItem.isDisabled(uiSelectItem));
+            if (!(v instanceof SelectItem))
+            {
+                throw new IllegalArgumentException("Value of UISelectItem with id " + uiSelectItem.getClientId(FacesContext.getCurrentInstance()) + " is not of type SelectItem, perhaps you used value instead of itemValue by mistake?");
+            }
+            return (SelectItem)v;
         }
-        return selectItem;
+        else
+        {
+            Converter converter;
+            UIComponent parent = uiSelectItem.getParent();
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            if (parent instanceof UISelectMany)
+            {
+                converter = RendererUtils.findUISelectManyConverter(facesContext,
+                                                                    (UISelectMany)parent);
+            }
+            else if (parent instanceof UISelectOne)
+            {
+                converter = RendererUtils.findUIOutputConverter(facesContext,
+                                                                (UISelectOne)parent);
+            }
+            else
+            {
+                log.error("UISelectItem with id " + uiSelectItem.getClientId(facesContext) + " not nested within UISelectOne or UISelectMany");
+                converter = null;
+            }
+
+            Object convertedValue;
+            if (converter == null)
+            {
+                convertedValue = uiSelectItem.getItemValue();
+            }
+            else
+            {
+                convertedValue = converter.getAsObject(facesContext, uiSelectItem, uiSelectItem.getItemValue());
+            }
+
+            return new SelectItem(convertedValue,
+                                  uiSelectItem.getItemLabel(),
+                                  uiSelectItem.getItemDescription(),
+                                  MyFacesUISelectItem.isDisabled(uiSelectItem));
+        }
     }
 
     /**
@@ -84,18 +124,10 @@ public class ComponentUtils
                 collection.add(it.next());
             }
         }
-        // MyFaces extension: Map is also supported.
-        // (entry.key => value, entry.value => label and description)
-        else if (value instanceof Map)
+        else
         {
-            for (Iterator it = ((Map)value).entrySet().iterator(); it.hasNext(); )
-            {
-                Map.Entry entry = (Map.Entry)it.next();
-                String label = (String)entry.getValue();
-                collection.add(new SelectItem(entry.getKey(),
-                                              label,
-                                              label));
-            }
+            throw new IllegalArgumentException("Unsupported UISelectItems value of type " + value.getClass().getName());
         }
     }
+
 }

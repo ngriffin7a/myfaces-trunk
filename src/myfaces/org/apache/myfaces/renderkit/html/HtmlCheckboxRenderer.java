@@ -18,14 +18,12 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.convert.impl.BooleanConverter;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectBoolean;
 import javax.faces.component.html.HtmlSelectBooleanCheckbox;
 import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
 import java.io.IOException;
 
 
@@ -38,16 +36,15 @@ import java.io.IOException;
 public class HtmlCheckboxRenderer
 extends HtmlRenderer
 {
-    private static final Converter BOOLEAN_CONVERTER = new BooleanConverter();
+    private static final String EXTERNAL_TRUE_VALUE = "1";
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent,
-                                         HtmlSelectBooleanCheckbox.class);
-        Boolean checked = (Boolean) ((UISelectBoolean)uiComponent).getValue();
-        HtmlRendererUtils.drawCheckbox(facesContext, uiComponent, "1", null,
-                                       (checked != null) ? checked.booleanValue() : false);
+                                         UISelectBoolean.class);
+        HtmlRendererUtils.drawCheckbox(facesContext, uiComponent, EXTERNAL_TRUE_VALUE, null,
+                                       ((UISelectBoolean)uiComponent).isSelected());
     }
 
 
@@ -55,11 +52,10 @@ extends HtmlRenderer
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent,
                                          HtmlSelectBooleanCheckbox.class);
-        HtmlRendererUtils.decodeInput(facesContext,
-                                      (UISelectBoolean)uiComponent,
-                                      BOOLEAN_CONVERTER,
-                                      true, //set to FALSE if request param absent
-                                      Boolean.FALSE);
+        HtmlRendererUtils.decodeSelectBoolean(facesContext,
+                                              (HtmlSelectBooleanCheckbox)uiComponent,
+                                              true, //set to FALSE if request param absent,
+                                              EXTERNAL_TRUE_VALUE);
     }
 
 }

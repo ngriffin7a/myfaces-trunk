@@ -18,8 +18,9 @@
  */
 package net.sourceforge.myfaces.examples.example2;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.faces.model.SelectItem;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * DOCUMENT ME!
@@ -32,8 +33,8 @@ public class QuotationForm
     private String _quoteChar;
     private String[] _selectManyValues;
 
-    private Map _selectItems = null;
-    private Map _selectManyItems = null;
+    private SelectItem[] _selectItems = null;
+    private List _selectManyItems = null;
 
 
 
@@ -62,13 +63,13 @@ public class QuotationForm
         _quoteChar = value;
     }
 
-    public Map getSelectOneItems()
+    public SelectItem[] getSelectOneItems()
     {
         if (_selectItems == null)
         {
-            _selectItems = new HashMap();
-            _selectItems.put("*", "Asterisk");
-            _selectItems.put("+", "Plus");
+            _selectItems = new SelectItem[2];
+            _selectItems[0] = new SelectItem("*", "Asterisk");
+            _selectItems[1] = new SelectItem("+", "Plus");
         }
         return _selectItems;
     }
@@ -86,16 +87,16 @@ public class QuotationForm
         _selectManyValues = value;
     }
 
-    public Map getSelectManyItems()
+    public List getSelectManyItems()
     {
         if (_selectManyItems == null)
         {
-            _selectManyItems = new HashMap();
-            _selectManyItems.put("\"", "Double");
-            _selectManyItems.put("'", "Single");
-            _selectManyItems.put("*", "Asterisk");
-            _selectManyItems.put("+", "Plus");
-            _selectManyItems.put("-", "Hyphen");
+            _selectManyItems = new ArrayList();
+            _selectManyItems.add(new SelectItem("\"", "Double"));
+            _selectManyItems.add(new SelectItem("'", "Single"));
+            _selectManyItems.add(new SelectItem("*", "Asterisk"));
+            _selectManyItems.add(new SelectItem("+", "Plus"));
+            _selectManyItems.add(new SelectItem("-", "Hyphen"));
         }
         return _selectManyItems;
     }

@@ -23,7 +23,8 @@ package net.sourceforge.myfaces.taglib.html;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class HtmlSelectOneListboxTag extends HtmlSelectManyListboxTag
+public class HtmlSelectOneListboxTag
+        extends HtmlSelectManyListboxTag
 {
     public String getComponentType()
     {

@@ -1,8 +1,8 @@
 <!-- UISelectMany attributes -->
         <attribute>
-            <name>selectedValues</name>
+            <name>value</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
             <type>java.lang.String</type>
-            <description>Initial value to set when rendered for the first time.</description>
+            <description>Initial selectedValues to set when rendered for the first time.</description>
         </attribute>

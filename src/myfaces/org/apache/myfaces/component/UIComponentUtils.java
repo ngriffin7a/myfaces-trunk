@@ -83,7 +83,7 @@ public class UIComponentUtils
                                           String newValue,
                                           boolean addErrorMessageOnFail)
     {
-        Converter conv = ConverterUtils.findValueConverter(facesContext, uiOutput);
+        Converter conv = ConverterUtils.findUIOutputConverter(facesContext, uiOutput);
         if (conv == null)
         {
             //default to StringConverter
@@ -98,7 +98,7 @@ public class UIComponentUtils
                                           String[] newValues,
                                           boolean addErrorMessageOnFail)
     {
-        Converter conv = ConverterUtils.findValueConverter(facesContext, uiOutput);
+        Converter conv = ConverterUtils.findUIOutputConverter(facesContext, uiOutput);
         if (conv == null)
         {
             //default to StringConverter
@@ -127,7 +127,7 @@ public class UIComponentUtils
     {
         try
         {
-            Object objValue = converter.getAsObject(facesContext, uiOutput, newValue);
+            Object objValue = converter.getAsObjectWithErrorHandling(facesContext, uiOutput, newValue);
             setComponentValue(uiOutput, objValue);
         }
         catch (ConverterException e)
@@ -226,7 +226,7 @@ public class UIComponentUtils
         if (uiComponent instanceof javax.faces.component.UIOutput &&
             attrName.equals(MyFacesUIOutput.VALUE_PROP))
         {
-            return ConverterUtils.findValueConverter(facesContext,
+            return ConverterUtils.findUIOutputConverter(facesContext,
                                                      (javax.faces.component.UIOutput)uiComponent);
         }
         else if (attrName.equals(CommonComponentProperties.STRING_VALUE_ATTR))

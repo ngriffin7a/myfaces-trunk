@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -23,35 +23,36 @@ import net.sourceforge.myfaces.renderkit.RendererUtils;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectMany;
 import javax.faces.component.UISelectOne;
-import javax.faces.component.html.HtmlSelectManyListbox;
-import javax.faces.component.html.HtmlSelectOneListbox;
+import javax.faces.component.html.HtmlSelectManyMenu;
+import javax.faces.component.html.HtmlSelectOneMenu;
 import javax.faces.context.FacesContext;
 import java.io.IOException;
 
-
 /**
- * DOCUMENT ME!
- * @author Thomas Spiegl (latest modification by $Author$)
- * @author Anton Koinov
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class HtmlListboxRenderer
+public class HtmlMenuRenderer
         extends HtmlRenderer
 {
+    //private static final Log log = LogFactory.getLog(HtmlMenuRenderer.class);
+
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, null);
 
-        if (uiComponent instanceof HtmlSelectManyListbox)
+        if (uiComponent instanceof HtmlSelectManyMenu)
         {
-            HtmlRendererUtils.renderListbox(facesContext,
-                                            (HtmlSelectManyListbox)uiComponent);
+            HtmlRendererUtils.renderMenu(facesContext,
+                                         (HtmlSelectManyMenu)uiComponent,
+                                         ((HtmlSelectManyMenu)uiComponent).getSize());
         }
-        else if (uiComponent instanceof HtmlSelectOneListbox)
+        else if (uiComponent instanceof HtmlSelectOneMenu)
         {
-            HtmlRendererUtils.renderListbox(facesContext,
-                                            (HtmlSelectOneListbox)uiComponent);
+            HtmlRendererUtils.renderMenu(facesContext,
+                                         (HtmlSelectOneMenu)uiComponent,
+                                         ((HtmlSelectOneMenu)uiComponent).getSize());
         }
         else
         {

@@ -325,13 +325,13 @@ public class MinimizingStateRestorer
 //        if (uiComponent instanceof UIOutput &&
 //            propName.equals(MyFacesUIOutput.VALUE_PROP))
 //        {
-//            conv = ConverterUtils.findValueConverter(facesContext,
+//            conv = ConverterUtils.findUIOutputConverter(facesContext,
 //                                                     (UIOutput)uiComponent);
 //        }
 //        else if (uiComponent instanceof UISelectOne &&
 //                propName.equals(MyFacesUISelectOne.SELECTED_VALUE_PROP))
 //        {
-//            conv = ConverterUtils.findValueConverter(facesContext,
+//            conv = ConverterUtils.findUIOutputConverter(facesContext,
 //                                                     (UIOutput)uiComponent);
 //        }
 //        else
@@ -492,7 +492,7 @@ public class MinimizingStateRestorer
 //            }
 //
 //            Object propValue;
-//            Converter conv = ConverterUtils.findValueConverter(facesContext, uiSaveState);
+//            Converter conv = ConverterUtils.findUIOutputConverter(facesContext, uiSaveState);
 //            if (conv != null)
 //            {
 //                try

@@ -21,6 +21,7 @@ package net.sourceforge.myfaces;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.faces.context.ExternalContext;
 import javax.servlet.ServletContext;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +34,10 @@ import java.util.Map;
 public class MyFacesConfig
 {
     private static final Log log = LogFactory.getLog(MyFacesConfig.class);
+
+    private static final String PARAM_allowJavascript = "myfaces_allow_javascript";
+    private static final boolean DEFAULT_allowJavascript = true;
+
 
     private static final String PARAM_checkJspModification = "myfaces_CheckJspModification";
     private static final boolean DEFAULT_checkJspModification = true;
@@ -54,6 +59,47 @@ public class MyFacesConfig
     {
         // utility class, no instances allowed
     }
+
+
+    public static boolean isAllowJavascript(ExternalContext externalContext)
+    {
+        return getBooleanInitParameter(externalContext,
+                                       PARAM_allowJavascript,
+                                       DEFAULT_allowJavascript);
+    }
+
+    protected static boolean getBooleanInitParameter(ExternalContext externalContext,
+                                                     String paramName,
+                                                     boolean defaultValue)
+    {
+        String strValue = externalContext.getInitParameter(paramName);
+        if (strValue == null)
+        {
+            if (log.isInfoEnabled()) log.info("No context init parameter '" + paramName + "' found, using default value " + defaultValue);
+            return defaultValue;
+        }
+        else if (strValue.equalsIgnoreCase("true"))
+        {
+            return true;
+        }
+        else if (strValue.equalsIgnoreCase("false"))
+        {
+            return false;
+        }
+        else
+        {
+            if (log.isWarnEnabled()) log.warn("Wrong context init parameter '" + paramName + "' (='" + strValue + "'), using default value " + defaultValue);
+            return defaultValue;
+        }
+    }
+
+
+
+
+
+
+
+
 
     /**
      * MyFaces needs to parse JSP files when doing the "minimizing state

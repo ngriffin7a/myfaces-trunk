@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.renderkit.html.RadioRenderer;
+import net.sourceforge.myfaces.renderkit.html.legacy.RadioRenderer;
 import net.sourceforge.myfaces.taglib.legacy.SelectOneRadioTag;
 
 

@@ -46,17 +46,6 @@ extends HtmlRenderer
     private static final Converter STRINGARRAY_CONVERTER = new StringArrayConverter();
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
-    public void decode(FacesContext facesContext, UIComponent uiComponent)
-    {
-        RendererUtils.checkParamValidity(facesContext, uiComponent,
-                                         HtmlSelectManyCheckboxList.class);
-        HtmlRendererUtils.decodeInput(facesContext,
-                                      (UISelectMany)uiComponent,
-                                      STRINGARRAY_CONVERTER,
-                                      true, //set to FALSE if request param absent
-                                      EMPTY_STRING_ARRAY);
-    }
-
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
     {
@@ -92,6 +81,15 @@ extends HtmlRenderer
                 selectItem.getLabel(),
                 checked);
         }
+    }
+
+
+    public void decode(FacesContext facesContext, UIComponent uiComponent)
+    {
+        RendererUtils.checkParamValidity(facesContext, uiComponent,
+                                         HtmlSelectManyCheckboxList.class);
+        HtmlRendererUtils.decodeSelectMany(facesContext,
+                                           (HtmlSelectManyCheckboxList)uiComponent);
     }
 
 }

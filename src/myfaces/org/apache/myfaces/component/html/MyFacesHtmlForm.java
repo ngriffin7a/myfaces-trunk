@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.util.DebugUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.faces.component.UIForm;
 import javax.faces.component.html.HtmlForm;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
@@ -56,16 +57,16 @@ public class MyFacesHtmlForm
     /**
      * MyFaces independent getter util for form name.
      */
-    public static String getFormName(FacesContext facesContext, HtmlForm htmlForm)
+    public static String getFormName(FacesContext facesContext, UIForm uiForm)
     {
-        if (htmlForm instanceof MyFacesHtmlForm)
+        if (uiForm instanceof MyFacesHtmlForm)
         {
-            return ((MyFacesHtmlForm)htmlForm).getFormName(facesContext);
+            return ((MyFacesHtmlForm)uiForm).getFormName(facesContext);
         }
         else
         {
-            String name = (String)htmlForm.getAttributes().get("name");
-            return name != null ? name : htmlForm.getClientId(facesContext);
+            String name = (String)uiForm.getAttributes().get("name");
+            return name != null ? name : uiForm.getClientId(facesContext);
         }
     }
 

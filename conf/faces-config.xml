@@ -438,6 +438,14 @@
           <renderer-type>Listbox</renderer-type>
           <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlListboxRenderer</renderer-class>
           <supported-component-type><component-type>SelectOneListbox</component-type></supported-component-type>
+          <supported-component-type><component-type>SelectManyListbox</component-type></supported-component-type>
+      </renderer>
+
+      <renderer>
+          <renderer-type>Menu</renderer-type>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlMenuRenderer</renderer-class>
+          <supported-component-type><component-type>SelectOneMenu</component-type></supported-component-type>
+          <supported-component-type><component-type>SelectManyMenu</component-type></supported-component-type>
       </renderer>
 
       <renderer>

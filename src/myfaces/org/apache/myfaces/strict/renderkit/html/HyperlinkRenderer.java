@@ -215,13 +215,13 @@ public class HyperlinkRenderer
 //                conv = getApplication().getConverter(type);
 //            else
 //                conv =
-//                    ConverterUtils.findValueConverter(
+//                    ConverterUtils.findUIOutputConverter(
 //                        facesContext, uiParameter);
 //
 //            if (conv != null) {
 //                try {
 //                    objValue =
-//                        conv.getAsObject(facesContext, uiParameter, strV);
+//                        conv.getAsObjectWithErrorHandling(facesContext, uiParameter, strV);
 //                } catch (ConverterException e) {
 //                    objValue = null;
 //                    DebugUtils.getLogger().severe(

@@ -204,6 +204,30 @@ public class ArrayUtils
         return concat(toArray, totalLen, arrs);
     }
 
+
+
+    public static boolean contains(Object[] array, Object value)
+    {
+        if (array == null || array.length == 0)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < array.length; i++)
+        {
+            Object o = array[i];
+            if ((o == null && value == null) ||
+                (o != null && o.equals(value)))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+
 //    public static void main(String[] args)
 //    {
 //        // test code

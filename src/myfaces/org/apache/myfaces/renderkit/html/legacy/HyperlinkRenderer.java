@@ -125,14 +125,14 @@ public class HyperlinkRenderer
             }
             else
             {
-                conv = ConverterUtils.findValueConverter(facesContext, uiParameter);
+                conv = ConverterUtils.findUIOutputConverter(facesContext, uiParameter);
             }
 
             if (conv != null)
             {
                 try
                 {
-                    objValue = conv.getAsObject(facesContext, uiParameter, strV);
+                    objValue = conv.getAsObjectWithErrorHandling(facesContext, uiParameter, strV);
                 }
                 catch (ConverterException e)
                 {
@@ -278,7 +278,7 @@ public class HyperlinkRenderer
             String strValue;
 
             //FIXME
-            //Converter conv = ConverterUtils.findValueConverter(facesContext, uiParameter);
+            //Converter conv = ConverterUtils.findUIOutputConverter(facesContext, uiParameter);
             Converter conv = null;
             if (conv != null)
             {

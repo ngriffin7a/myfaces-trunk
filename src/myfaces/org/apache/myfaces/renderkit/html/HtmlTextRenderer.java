@@ -126,11 +126,7 @@ public class HtmlTextRenderer
 
         if (component instanceof HtmlInputText)
         {
-            HtmlRendererUtils.decodeInput(facesContext,
-                                          (HtmlInputText)component,
-                                          null, //default String conversion
-                                          false, //don't set if request param absent
-                                          null);
+            HtmlRendererUtils.decodeInput(facesContext, (HtmlInputText)component);
         }
         else if (component instanceof HtmlOutputText)
         {
