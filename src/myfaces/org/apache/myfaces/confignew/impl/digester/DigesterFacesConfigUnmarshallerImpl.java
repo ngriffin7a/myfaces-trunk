@@ -44,6 +44,7 @@ public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshal
         digester.setValidating(true);
         digester.setNamespaceAware(true);
         digester.setEntityResolver(new FacesConfigEntityResolver());
+        digester.setUseContextClassLoader(true);
 
         digester.addObjectCreate("faces-config", FacesConfig.class);
         digester.addObjectCreate("faces-config/application", Application.class);
@@ -156,7 +157,7 @@ public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshal
 
     public Object getFacesConfig(InputStream in, String systemId) throws IOException, SAXException
     {
-        return digester.parse(in);
+          return digester.parse(in);
     }
 
 
