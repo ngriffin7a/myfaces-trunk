@@ -15,6 +15,7 @@
  */
 package org.apache.myfaces.custom.navmenu.jscookmenu;
 
+import org.apache.myfaces.component.html.util.AddResource;
 import org.apache.myfaces.custom.navmenu.NavigationMenuItem;
 import org.apache.myfaces.custom.navmenu.NavigationMenuUtils;
 import org.apache.myfaces.el.SimpleActionMethodBinding;
@@ -38,6 +39,9 @@ import java.util.Map;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.11  2004/12/24 14:49:29  svieujot
+ *          Upgrade the navmenu component to use the Extensions filter.
+ *
  *          Revision 1.10  2004/12/13 23:14:37  oros
  *          fix #1044663: handle enabledOnUserRole/visibleOnUserRole, disabled menu items are rendered with null actions
  *
@@ -194,6 +198,21 @@ public class HtmlJSCookMenuRenderer
     {
         RendererUtils.checkParamValidity(context, component, HtmlCommandJSCookMenu.class);
         HtmlCommandJSCookMenu menu = (HtmlCommandJSCookMenu)component;
+        
+        AddResource.addJavaScriptToHeader(NavigationMenuItem.class, "jscookmenu/JSCookMenu.js", context);
+
+        AddResource.addJavaScriptToHeader(NavigationMenuItem.class, "jscookmenu/ThemeOffice/theme.js", context);
+        AddResource.addStyleSheet(NavigationMenuItem.class, "jscookmenu/ThemeOffice/theme.css", context);
+
+        AddResource.addJavaScriptToHeader(NavigationMenuItem.class, "jscookmenu/ThemeMiniBlack/theme.js", context);
+        AddResource.addStyleSheet(NavigationMenuItem.class, "jscookmenu/ThemeMiniBlack/theme.css", context);
+
+        AddResource.addJavaScriptToHeader(NavigationMenuItem.class, "jscookmenu/ThemeIE/theme.js", context);
+        AddResource.addStyleSheet(NavigationMenuItem.class, "jscookmenu/ThemeIE/theme.css", context);
+
+        AddResource.addJavaScriptToHeader(NavigationMenuItem.class, "jscookmenu/ThemePanel/theme.js", context);
+        AddResource.addStyleSheet(NavigationMenuItem.class, "jscookmenu/ThemePanel/theme.css", context);
+        
         ResponseWriter writer = context.getResponseWriter();
 
         String menuId = component.getId() + "_menu";
