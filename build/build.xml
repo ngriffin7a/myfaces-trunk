@@ -152,8 +152,8 @@
             depends="myfaces-jar, javadoc, tlddoc"
             description="creates the binary release file myfaces-x.x.x.tgz (don't forget to adjust manifest.properties!)">
 
-        <tar destfile="${project.dir}/myfaces-${manifest.impl.version}.tgz">
-             <!--compression="gzip"-->
+        <tar destfile="${project.dir}/myfaces-${manifest.impl.version}.tgz"
+            compression="gzip" >
             <tarfileset dir="${doc.dir}"
                         prefix="myfaces-${manifest.impl.version}/doc"/>
             <tarfileset dir="${conf.dir}"
