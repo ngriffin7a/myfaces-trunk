@@ -63,6 +63,9 @@ import java.util.jar.JarInputStream;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.8  2004/11/11 22:46:35  bdudney
+ *          added some error reporting
+ *
  *          Revision 1.7  2004/10/13 11:50:59  matze
  *          renamed packages to org.apache
  *
@@ -607,7 +610,14 @@ public class FacesConfigurator
             for (Iterator renderers = _dispenser.getRenderers(renderKitId); renderers.hasNext();)
             {
                 Renderer element = (Renderer) renderers.next();
-                javax.faces.render.Renderer renderer = (javax.faces.render.Renderer) ClassUtils.newInstance(element.getRendererClass());
+                javax.faces.render.Renderer renderer = null;
+                try {
+                  renderer = (javax.faces.render.Renderer) ClassUtils.newInstance(element.getRendererClass());
+                } catch(FacesException e) {
+                  // ignore the failure so that the render kit is configured
+                  log.error("failed to configure class " + element.getRendererClass(), e);
+                  continue;
+                }
 
                 renderKit.addRenderer(element.getComponentFamily(), element.getRendererType(), renderer);
             }
