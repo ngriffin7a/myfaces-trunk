@@ -36,6 +36,8 @@ import java.text.ParseException;
 public class BigDecimalConverter
     implements Converter
 {
+    private static final String CONVERTER_EXCEPTION_MSG_ID = BigDecimalConverter.class.getName() + ".EXCEPTION";
+
     private static final String CONVERTER_ID = "BigDecimalConverter";
     public String getConverterId()
     {
@@ -58,7 +60,7 @@ public class BigDecimalConverter
         }
         catch (ParseException e)
         {
-            throw new ConverterException(e);
+            throw new ConverterException(CONVERTER_EXCEPTION_MSG_ID);
         }
     }
 

@@ -35,6 +35,8 @@ import java.text.ParseException;
 public class TimeConverter
     implements Converter
 {
+    private static final String CONVERTER_EXCEPTION_MSG_ID = TimeConverter.class.getName() + ".EXCEPTION";
+
     private static final String CONVERTER_ID = "TimeConverter";
     public String getConverterId()
     {
@@ -56,7 +58,7 @@ public class TimeConverter
         }
         catch (ParseException e)
         {
-            throw new ConverterException(e);
+            throw new ConverterException(CONVERTER_EXCEPTION_MSG_ID);
         }
     }
 

@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.component;
 
-import net.sourceforge.myfaces.convert.ConversionErrorMessage;
 import net.sourceforge.myfaces.convert.Converter;
 import net.sourceforge.myfaces.convert.ConverterException;
 import net.sourceforge.myfaces.convert.ConverterUtils;
@@ -28,8 +27,12 @@ import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
+import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.context.Message;
+import javax.faces.context.MessageResources;
+import javax.faces.context.MessageResourcesFactory;
 import javax.servlet.jsp.tagext.Tag;
 
 /**
@@ -109,7 +112,7 @@ public class UIComponentUtils
             uiComponent.setValid(false);
             if (addErrorMessageOnFail)
             {
-                addConversionErrorMessage(facesContext, uiComponent, e.getMessage());
+                addConversionErrorMessage(facesContext, uiComponent, e.getMessageId());
             }
             else
             {
@@ -121,11 +124,14 @@ public class UIComponentUtils
 
     protected static void addConversionErrorMessage(FacesContext facesContext,
                                                     UIComponent comp,
-                                                    String errorMessage)
+                                                    String messageId)
     {
-        facesContext.addMessage(comp, new ConversionErrorMessage(errorMessage));
+        MessageResourcesFactory msgResFactory = (MessageResourcesFactory)FactoryFinder.getFactory(FactoryFinder.MESSAGE_RESOURCES_FACTORY);
+        MessageResources msgRes = msgResFactory.getMessageResources(MessageResourcesFactory.FACES_IMPL_MESSAGES);
+        //TODO: Determine a label for the component and add it as a MessageFormat parameter
+        Message msg = msgRes.getMessage(facesContext, messageId);
+        facesContext.addMessage(comp, msg);
     }
-
 
 
     public static void convertAndSetAttribute(FacesContext facesContext,

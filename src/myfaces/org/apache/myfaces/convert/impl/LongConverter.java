@@ -35,6 +35,8 @@ import java.text.ParseException;
 public class LongConverter
     implements Converter
 {
+    private static final String CONVERTER_EXCEPTION_MSG_ID = LongConverter.class.getName() + ".EXCEPTION";
+
     private static final String CONVERTER_ID = "LongConverter";
     public String getConverterId()
     {
@@ -57,7 +59,7 @@ public class LongConverter
         }
         catch (ParseException e)
         {
-            throw new ConverterException(e);
+            throw new ConverterException(CONVERTER_EXCEPTION_MSG_ID);
         }
     }
 

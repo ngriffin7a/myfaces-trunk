@@ -36,6 +36,8 @@ import java.util.Locale;
 public class DateConverter
     implements Converter
 {
+    private static final String CONVERTER_EXCEPTION_MSG_ID = DateConverter.class.getName() + ".EXCEPTION";
+
     private static final String CONVERTER_ID = "DateConverter";
     public String getConverterId()
     {
@@ -78,7 +80,7 @@ public class DateConverter
                     }
                 }
             }
-            throw new ConverterException(ex1);
+            throw new ConverterException(CONVERTER_EXCEPTION_MSG_ID);
         }
     }
 

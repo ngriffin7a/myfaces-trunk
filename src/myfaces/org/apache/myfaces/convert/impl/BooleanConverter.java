@@ -34,6 +34,8 @@ import java.util.Map;
 public class BooleanConverter
     implements Converter
 {
+    private static final String CONVERTER_EXCEPTION_MSG_ID = BooleanConverter.class.getName() + ".EXCEPTION";
+
     private static final String CONVERTER_ID = "BooleanConverter";
     public String getConverterId()
     {
@@ -64,7 +66,7 @@ public class BooleanConverter
         Boolean b = (Boolean)BOOLEAN_MAP.get(value);
         if (b == null)
         {
-            throw new ConverterException("Could not convert '" + value + "' to Boolean!");
+            throw new ConverterException(CONVERTER_EXCEPTION_MSG_ID, value);
         }
         return b;
     }

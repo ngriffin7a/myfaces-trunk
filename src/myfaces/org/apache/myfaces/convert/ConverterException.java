@@ -19,29 +19,46 @@
 package net.sourceforge.myfaces.convert;
 
 /**
- * TODO: description
+ * ConverterException as described in JSF.7.4
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class ConverterException
         extends Exception
 {
-    public ConverterException()
+    private String _value;
+
+    /**
+     * @param messageId  messageId in the MessageResources "MessageResourcesFactory.FACES_IMPL_MESSAGES".
+     */
+    public ConverterException(String messageId)
     {
+        this(messageId, null);
     }
 
-    public ConverterException(Throwable cause)
+    /**
+     * @param messageId  messageId in the MessageResources "MessageResourcesFactory.FACES_IMPL_MESSAGES".
+     * @param value      String value that could not be converted to an Object
+     */
+    public ConverterException(String messageId, String value)
     {
-        super(cause);
+        super(messageId);
+        _value = value;
     }
 
-    public ConverterException(String message)
+    /**
+     * @return messageId in the MessageResources "MessageResourcesFactory.FACES_IMPL_MESSAGES".
+     */
+    public String getMessageId()
     {
-        super(message);
+        return getMessage();
     }
 
-    public ConverterException(String message, Throwable cause)
+    /**
+     * @return String value that could not be converted to an Object
+     */
+    public String getValue()
     {
-        super(message, cause);
+        return _value;
     }
 }
