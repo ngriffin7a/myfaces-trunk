@@ -59,6 +59,7 @@
 					</f:verbatim>
 
 					<x:htmlEditor value="#{editor.text}"
+						style="height: 60ex;"
 						formularMode="#{editor.formularMode}"
 						allowEditSource="#{editor.allowEditSource}"
 						showPropertiesToolBox="#{editor.showPropertiesToolBox}"
