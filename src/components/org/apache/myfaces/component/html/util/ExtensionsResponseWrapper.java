@@ -31,6 +31,9 @@ import org.xml.sax.InputSource;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/12/22 01:55:29  svieujot
+ * Fix a buffering problem.
+ *
  * Revision 1.4  2004/12/02 02:13:15  svieujot
  * *** empty log message ***
  *
@@ -46,21 +49,22 @@ import org.xml.sax.InputSource;
  * 
  */
 public class ExtensionsResponseWrapper extends HttpServletResponseWrapper {
-    private ByteArrayOutputStream output;
+    private ByteArrayOutputStream stream = null;
+    private PrintWriter writer = null;
 
     public ExtensionsResponseWrapper(HttpServletResponse response){
         super( response );
-        output = new ByteArrayOutputStream();
+        stream = new ByteArrayOutputStream();
     }
 
 
     public byte[] getBytes() {
-        return output.toByteArray();
+        return stream.toByteArray();
     }
 
     public String toString(){
     	try{
-    		return output.toString(getCharacterEncoding());
+    		return stream.toString(getCharacterEncoding());
     	}catch(UnsupportedEncodingException e){
     		// an attempt to set an invalid character encoding would have caused this exception before
             throw new RuntimeException("Response accepted invalid character encoding " + getCharacterEncoding());
@@ -70,17 +74,19 @@ public class ExtensionsResponseWrapper extends HttpServletResponseWrapper {
     /** This method is used by Tomcat.
      */
     public PrintWriter getWriter(){
-        return new PrintWriter( output );
+        if( writer == null )
+        	writer = new PrintWriter(stream, true); // autoFlush is true
+        return writer;
     }
     
 	/** This method is used by Jetty.
 	*/
 	public ServletOutputStream getOutputStream(){
-		return new MyServletOutputStream( output );
+		return new MyServletOutputStream( stream );
 	}
     
     public InputSource getInputSource(){
-		ByteArrayInputStream bais = new ByteArrayInputStream( output.toByteArray() );
+		ByteArrayInputStream bais = new ByteArrayInputStream( stream.toByteArray() );
 		return new InputSource( bais );
     }
 
@@ -92,7 +98,20 @@ public class ExtensionsResponseWrapper extends HttpServletResponseWrapper {
     }
     
     public void flushBuffer() throws IOException{
-    	output.flush();
+    	stream.flush();
+    }
+    
+    public void finishResponse() {
+        try {
+            if (writer != null) {
+                writer.close();
+            } else {
+                if (stream != null) {
+                    stream.close();
+                }
+            }
+        } catch (IOException e) {
+        }
     }
     
     /** Used in the <code>getOutputStream()</code> method.
@@ -106,6 +125,14 @@ public class ExtensionsResponseWrapper extends HttpServletResponseWrapper {
 		
 		public void write(int b){
 		    outputStream.write( b );
+		}
+		
+		public void write(byte[] bytes) throws IOException{
+		    outputStream.write( bytes );
+		}
+		
+		public void write(byte[] bytes, int off, int len){
+		    outputStream.write(bytes, off, len);
 		}
     }
 }
