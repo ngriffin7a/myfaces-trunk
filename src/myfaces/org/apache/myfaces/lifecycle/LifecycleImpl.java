@@ -16,6 +16,7 @@
 package net.sourceforge.myfaces.lifecycle;
 
 import net.sourceforge.myfaces.util.DebugUtils;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -339,7 +340,7 @@ public class LifecycleImpl
             UIComponent component = (UIComponent)it.next();
 
             ValueBinding binding = component.getValueBinding("binding");    //TODO: constant
-            if (binding != null)
+            if (binding != null && !binding.isReadOnly(facesContext))
             {
                 binding.setValue(facesContext, component);
             }
