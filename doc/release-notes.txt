@@ -7,7 +7,7 @@ Changes in Release 1.0.8 beta
 * providing a tld for MyFaces custom components, that still contains
   the 'old' sf-URI name for backward compatibility
 * i18n support for Brazilian Portuguese; thanks to Rogerio Pereira
-
+* bug fix #1045363 New <br> and &nbsp; 'feature'
 ----------------------------------------------------------------------
 Changes in Release 1.0.7 beta
 * new custom component: HtmlPanelStack
