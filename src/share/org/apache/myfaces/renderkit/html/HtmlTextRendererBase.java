@@ -21,6 +21,7 @@ import net.sourceforge.myfaces.renderkit.RendererUtils;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.component.UIOutput;
+import javax.faces.component.UIViewRoot;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.component.html.HtmlOutputText;
 import javax.faces.context.FacesContext;
@@ -33,6 +34,9 @@ import java.io.IOException;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/09/02 16:44:38  tinytoony
+ * fix for the fix ;) for span-element bug
+ *
  * Revision 1.5  2004/08/30 17:50:34  tinytoony
  * fix for span-element bug
  *
@@ -101,12 +105,24 @@ public class HtmlTextRendererBase
         if (text != null)
         {
             ResponseWriter writer = facesContext.getResponseWriter();
+            boolean span = false;
 
-            writer.startElement(HTML.SPAN_ELEM, component);
+            if(component.getId()!=null && !component.getId().startsWith(UIViewRoot.UNIQUE_ID_PREFIX))
+            {
+                span = true;
 
-            writer.writeAttribute(HTML.ID_ATTR, component.getClientId(facesContext),null);
+                writer.startElement(HTML.SPAN_ELEM, component);
 
-            HtmlRendererUtils.renderHTMLAttributes(writer, component, HTML.COMMON_PASSTROUGH_ATTRIBUTES);
+                writer.writeAttribute(HTML.ID_ATTR, component.getClientId(facesContext),null);
+
+                HtmlRendererUtils.renderHTMLAttributes(writer, component, HTML.COMMON_PASSTROUGH_ATTRIBUTES);
+
+            }
+            else
+            {
+                span = HtmlRendererUtils.renderHTMLAttributesWithOptionalStartElement(writer,component,
+                        HTML.SPAN_ELEM,HTML.COMMON_PASSTROUGH_ATTRIBUTES);
+            }
 
             if (escape)
             {
@@ -117,7 +133,8 @@ public class HtmlTextRendererBase
                 writer.write(text);
             }
 
-            writer.endElement(HTML.SPAN_ELEM);
+            if(span)
+                writer.endElement(HTML.SPAN_ELEM);
         }
     }
 
