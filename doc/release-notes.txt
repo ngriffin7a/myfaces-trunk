@@ -14,6 +14,7 @@ Changes in Release 1.0.9
 * closed MYFACES-90 in Jira (i18n support)
 * closed MYFACES-86 in Jira (portlet)
 * closed MYFACES-83 in Jira (Refactored HtmlTableRendererBase)
+* closed MYFACES-82 in Jira (Use submitted value for Radio Buttons)
 * closed MYFACES-81 in Jira (StateManager.SerializedView should not implement Serializable)
 * closed MFACES-76 in Jira
 * closed MFACES-74 in Jira

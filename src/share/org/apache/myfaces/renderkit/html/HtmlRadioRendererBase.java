@@ -15,10 +15,9 @@
  */
 package org.apache.myfaces.renderkit.html;
 
-import org.apache.myfaces.renderkit.JSFAttr;
-import org.apache.myfaces.renderkit.RendererUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
@@ -31,15 +30,21 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import javax.faces.model.SelectItem;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.myfaces.renderkit.JSFAttr;
+import org.apache.myfaces.renderkit.RendererUtils;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.15  2005/02/08 17:57:23  svieujot
+ * Close MYFACES-82 (Use submitted values).
+ * Also, use more RendererUtil methods.
+ *
  * Revision 1.14  2005/01/22 16:47:17  mmarinschek
  * fixing bug with validation not called if the submitted value is empty; an empty string is submitted instead if the component is enabled.
  *
@@ -100,7 +105,7 @@ public class HtmlRadioRendererBase
 
         String layout = getLayout(selectOne);
 
-        boolean pageDirectionLayout = false; // Defaults to LINE_DIRECTION ?
+        boolean pageDirectionLayout = false; // Defaults to LINE_DIRECTION
         if (layout != null)
         {
             if (layout.equals(PAGE_DIRECTION))
@@ -118,7 +123,6 @@ public class HtmlRadioRendererBase
         }
 
         ResponseWriter writer = facesContext.getResponseWriter();
-        String clientId = selectOne.getClientId(facesContext);
 
         writer.startElement(HTML.TABLE_ELEM, selectOne);
         HtmlRendererUtils.renderHTMLAttributes(writer, selectOne,
@@ -139,32 +143,12 @@ public class HtmlRadioRendererBase
             converter = null;
         }
 
-        Object currentValue = selectOne.getValue();
-
-        String currentValueStr = null;
-
-        if(converter==null)
-        {
-            currentValueStr = currentValue==null ? null : currentValue.toString();
-        }
-        else
-        {
-            currentValueStr = currentValue==null?null:converter.getAsString(facesContext, selectOne, currentValue);
-        }
+        String currentValueStr = RendererUtils.getStringValue(facesContext, selectOne);
 
         for (Iterator it = selectItemList.iterator(); it.hasNext(); )
         {
             SelectItem selectItem = (SelectItem)it.next();
-            Object itemValue = selectItem.getValue();
-            String itemStrValue;
-            if (converter == null)
-            {
-                itemStrValue = itemValue.toString();
-            }
-            else
-            {
-                itemStrValue = converter.getAsString(facesContext, selectOne, itemValue);
-            }
+            String itemStrValue = RendererUtils.getConvertedStringValue(facesContext, selectOne, converter, selectItem.getValue());
 
             writer.write("\t\t");
             if (pageDirectionLayout) writer.startElement(HTML.TR_ELEM, selectOne);
@@ -174,8 +158,7 @@ public class HtmlRadioRendererBase
                         selectOne,
                         itemStrValue,
                         selectItem.getLabel(),
-                        currentValue == null && itemValue == null ||
-                        currentValueStr != null && currentValueStr.equals(itemStrValue),
+                        currentValueStr.equals(itemStrValue),
                         false);
             writer.endElement(HTML.LABEL_ELEM);
             writer.endElement(HTML.TD_ELEM);
@@ -193,10 +176,8 @@ public class HtmlRadioRendererBase
         {
             return ((HtmlSelectOneRadio)selectOne).getLayout();
         }
-        else
-        {
-            return (String)selectOne.getAttributes().get(JSFAttr.LAYOUT_ATTR);
-        }
+
+        return (String)selectOne.getAttributes().get(JSFAttr.LAYOUT_ATTR);
     }
 
 
@@ -206,10 +187,8 @@ public class HtmlRadioRendererBase
          {
              return ((HtmlSelectOneRadio)selectOne).getStyleClass();
          }
-         else
-         {
-             return (String)selectOne.getAttributes().get(JSFAttr.STYLE_CLASS_ATTR);
-         }
+
+         return (String)selectOne.getAttributes().get(JSFAttr.STYLE_CLASS_ATTR);
      }
 
 
@@ -265,10 +244,8 @@ public class HtmlRadioRendererBase
         {
             return ((HtmlSelectOneRadio)uiComponent).isDisabled();
         }
-        else
-        {
-            return RendererUtils.getBooleanAttribute(uiComponent, HTML.DISABLED_ATTR, false);
-        }
+
+        return RendererUtils.getBooleanAttribute(uiComponent, HTML.DISABLED_ATTR, false);
     }
 
 
