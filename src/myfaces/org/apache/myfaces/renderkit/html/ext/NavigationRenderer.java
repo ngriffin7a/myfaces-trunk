@@ -40,6 +40,9 @@ public class NavigationRenderer
     extends HTMLRenderer
     implements NavigationRendererAttributes
 {
+    public static final String GET_CHILDREN_FROM_REQUEST_ATTR
+        = NavigationRenderer.class.getName() + ".GET_CHILDREN_FROM_REQUEST";
+
     public static final String TYPE = "Navigation";
     public String getRendererType()
     {
@@ -74,6 +77,25 @@ public class NavigationRenderer
     public void encodeChildren(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
+        Boolean b = (Boolean)facesContext.getResponseTree().getRoot().getAttribute(GET_CHILDREN_FROM_REQUEST_ATTR);
+        facesContext.getResponseTree().getRoot().setAttribute(GET_CHILDREN_FROM_REQUEST_ATTR, null);
+        if (b != null && b.booleanValue())
+        {
+            //Remove all children:
+            while(uiComponent.getChildCount() > 0)
+            {
+                uiComponent.removeChild(0);
+            }
+
+            //Add all children from same component in request
+            UIComponent requestNav
+                = facesContext.getRequestTree().getRoot()
+                    .findComponent(uiComponent.getCompoundId());
+            for (Iterator it = requestNav.getChildren(); it.hasNext();)
+            {
+                uiComponent.addChild((UIComponent)it.next());
+            }
+        }
         renderChildren(facesContext, 0, uiComponent.getChildren());
     }
 

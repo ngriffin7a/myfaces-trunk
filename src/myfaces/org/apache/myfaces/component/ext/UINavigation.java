@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.UIPanel;
 import net.sourceforge.myfaces.component.UICommand;
 import net.sourceforge.myfaces.renderkit.html.ext.NavigationItemRenderer;
+import net.sourceforge.myfaces.renderkit.html.ext.NavigationRenderer;
 
 import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
@@ -101,8 +102,8 @@ public class UINavigation
             {
                 TreeFactory tf = (TreeFactory)FactoryFinder.getFactory(FactoryFinder.TREE_FACTORY);
                 Tree responseTree = tf.getTree(context.getServletContext(), treeId);
-                responseTree.getRoot().addChild(this);  //HACK(?): Add Navigation, so that response tree has current state info
                 context.setResponseTree(responseTree);
+                responseTree.getRoot().setAttribute(NavigationRenderer.GET_CHILDREN_FROM_REQUEST_ATTR, Boolean.TRUE);
                 return true;
             }
 
