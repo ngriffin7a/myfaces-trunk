@@ -90,7 +90,7 @@ managed beans used:
 
                 <h:command_link id="href1" action="none"><f:verbatim>Add them by clicking this link</f:verbatim>
                     <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
-                </h:command_link><br>
+                </h:command_link><f:verbatim><br></f:verbatim>
                 <h:command_link id="href2" action="none"><f:verbatim>Subtract them by clicking this link</f:verbatim>
                     <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
                 </h:command_link>
