@@ -10,7 +10,7 @@
             <name>rendered</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
-            <type>boolean</type>
+            <type>java.lang.String</type>
             <description>If false, this component will not be rendered.</description>
         </attribute>
         <!-- FIXME: rendererType is no attribute in RI... addition by myfaces?

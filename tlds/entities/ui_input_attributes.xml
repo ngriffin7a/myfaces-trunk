@@ -10,7 +10,7 @@
             <name>required</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
-            <type>boolean</type>
+            <type>java.lang.String</type>
             <description>If true, this component will be checked for non-empty input.</description>
         </attribute>
         <attribute>
@@ -21,10 +21,10 @@
             <description>MethodBinding pointing at a method that will be called during Process Validations phase of the request processing lifecycle, to validate the current value of this component.</description>
         </attribute>
         <attribute>
-            <name>converter</name>
+            <name>converterId</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
-            <type>javax.faces.convert.Converter</type>
+            <type>java.lang.String</type>
             <description>Converter to be used.</description>
         </attribute>
         <!-- FIXME: valueChangeListener is a tag in RI but not here so far.

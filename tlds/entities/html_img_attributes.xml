@@ -36,7 +36,7 @@
             <name>ismap</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
-            <type>boolean</type>
+            <type>java.lang.String</type>
         </attribute>
         <attribute>
             <name>longdesc</name>

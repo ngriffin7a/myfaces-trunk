@@ -8,6 +8,6 @@
         <attribute><name>rel</name>         <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
         <attribute><name>rev</name>         <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
         <attribute><name>shape</name>       <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
-        <attribute><name>tabindex</name>    <required>false</required>  <rtexprvalue>false</rtexprvalue><type>int</type>             </attribute>
+        <attribute><name>tabindex</name>    <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
         <attribute><name>target</name>      <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
         <attribute><name>type</name>        <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
