@@ -15,13 +15,15 @@
  */
 package org.apache.myfaces.application;
 
-import org.apache.myfaces.config.RuntimeConfig;
-import org.apache.myfaces.config.element.NavigationCase;
-import org.apache.myfaces.config.element.NavigationRule;
-import org.apache.myfaces.util.HashMapUtils;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import javax.faces.FacesException;
 import javax.faces.application.NavigationHandler;
@@ -30,15 +32,23 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.*;
-import javax.portlet.PortletRequest;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.myfaces.config.RuntimeConfig;
+import org.apache.myfaces.config.element.NavigationCase;
+import org.apache.myfaces.config.element.NavigationRule;
+import org.apache.myfaces.portlet.PortletUtil;
+import org.apache.myfaces.util.HashMapUtils;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.35  2005/03/11 09:12:15  matzew
+ * Patch from Stan Silver that removes the portlet dependency (MYFACES-126)
+ *
  * Revision 1.34  2005/01/26 17:03:09  matzew
  * MYFACES-86. portlet support provided by Stan Silver (JBoss Group)
  *
@@ -152,7 +162,7 @@ public class NavigationHandlerImpl
                           " redirect=" + navigationCase.isRedirect());
             }
             if (navigationCase.isRedirect() && 
-               (!(facesContext.getExternalContext().getRequest() instanceof PortletRequest)))
+               (!PortletUtil.isPortletRequest(facesContext)))
             { // Spec section 7.4.2 says "redirects not possible" in this case for portlets
                 ExternalContext externalContext = facesContext.getExternalContext();
                 ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
