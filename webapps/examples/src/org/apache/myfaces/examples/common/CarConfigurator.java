@@ -44,8 +44,8 @@ public class CarConfigurator
     static
     {
         _cars = new ArrayList();
-        _colors = new ArrayList();;
-        _extrasList = new ArrayList();;
+        _colors = new ArrayList();
+        _extrasList = new ArrayList();
 
         _cars.add(new SelectItem("c1", "Audee X6", null));
         _cars.add(new SelectItem("c2", "PMW 321u", null));

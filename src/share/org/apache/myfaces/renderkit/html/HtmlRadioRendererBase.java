@@ -40,6 +40,9 @@ import java.util.List;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12  2005/01/19 13:18:04  mmarinschek
+ * better logging of component information
+ *
  * Revision 1.11  2005/01/18 22:43:05  svieujot
  * Fix some bugs where converter wasn't used to determine selected values.
  * This caused for examples the list, checkbox and radio based components to bug when the backing bean value type is a primitive.
@@ -229,14 +232,13 @@ public class HtmlRadioRendererBase
             writer.writeAttribute(HTML.DISABLED_ATTR, Boolean.TRUE, null);
         }
 
+        writer.endElement(HTML.INPUT_ELEM);
+
         if ((label != null) && (label.length() > 0))
         {
             writer.write(HTML.NBSP_ENTITY);
             writer.writeText(label, null);
         }
-
-        //input is one of the empty HTML elements, so we must not close the input tag
-        //writer.endElement(HTML.INPUT_ELEM);
     }
 
 

@@ -20,6 +20,7 @@ import org.apache.myfaces.renderkit.html.util.DummyFormResponseWriter;
 import org.apache.myfaces.renderkit.html.util.DummyFormUtils;
 import org.apache.myfaces.renderkit.html.util.HTMLEncoder;
 import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
+import org.apache.myfaces.renderkit.RendererUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -36,6 +37,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.33  2005/01/19 13:18:04  mmarinschek
+ * better logging of component information
+ *
  * Revision 1.32  2005/01/04 15:41:06  svieujot
  * new x:buffer component.
  *
@@ -98,9 +102,11 @@ public class HtmlResponseWriterImpl
     private String _contentType;
     private String _characterEncoding;
     private String _startElementName;
+    private UIComponent _startElementUIComponent;
     private boolean _startTagOpen;
 
     private static final Set s_emptyHtmlElements = new HashSet();
+
     static
     {
         s_emptyHtmlElements.add("area");
@@ -201,6 +207,7 @@ public class HtmlResponseWriterImpl
         _writer.write('<');
         _writer.write(name);
         _startElementName = name;
+        _startElementUIComponent = uiComponent;
         _startTagOpen = true;
     }
 
@@ -236,7 +243,9 @@ public class HtmlResponseWriterImpl
                 !name.equals(_startElementName))
             {
                 if (log.isWarnEnabled())
-                    log.warn("HTML nesting warning on closing " + name + ": element " + _startElementName + " not explicitly closed");
+                    log.warn("HTML nesting warning on closing " + name + ": element " + _startElementName +
+                            (_startElementUIComponent==null?"":(" rendered by component : "+
+                            RendererUtils.getPathToComponent(_startElementUIComponent)))+" not explicitly closed");
             }
         }
 
@@ -271,6 +280,7 @@ public class HtmlResponseWriterImpl
         }
 
         _startElementName = null;
+        _startElementUIComponent = null;
     }
 
     public void writeAttribute(String name, Object value, String componentPropertyName) throws IOException

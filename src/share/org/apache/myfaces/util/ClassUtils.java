@@ -33,6 +33,9 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.11  2005/01/19 13:18:04  mmarinschek
+ * better logging of component information
+ *
  * Revision 1.10  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -282,6 +285,11 @@ public class ClassUtils
         try
         {
             return clazz.newInstance();
+        }
+        catch(NoClassDefFoundError e)
+        {
+            log.error("Class : "+clazz.getName()+" not found.",e);
+            throw new FacesException(e);
         }
         catch (InstantiationException e)
         {

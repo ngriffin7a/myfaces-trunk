@@ -69,12 +69,12 @@ managed beans used:
 
                         <h:outputLabel for="selone_lb" value="#{example_messages['label_cars']}" />
                         <h:selectOneListbox id="selone_lb" size="3" value="#{carconf.car}"
-                                            validator="#{carconf.validateCar}" styleClass="selectOneListbox">
+                                            validator="#{carconf.validateCar}" styleClass="selectOneListbox" required="true" >
                             <f:selectItems id="selone_lb_cars" value="#{carconf.cars}" />
                         </h:selectOneListbox>
 
                         <h:outputLabel for="selone_menu_colors" value="#{example_messages['label_colors']}" />
-                        <h:selectOneMenu id="selone_menu_colors" value="#{carconf.color}" styleClass="selectOneMenu">
+                        <h:selectOneMenu id="selone_menu_colors" value="#{carconf.color}" styleClass="selectOneMenu" required="true" >
                             <f:selectItem itemValue="" itemLabel="#{example_messages['empty_selitem']}" />
                             <f:selectItems value="#{carconf.colors}" />
                         </h:selectOneMenu>
