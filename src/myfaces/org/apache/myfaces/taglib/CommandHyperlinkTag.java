@@ -132,4 +132,14 @@ public class CommandHyperlinkTag
     {
         setRendererAttribute(HyperlinkRenderer.TYPE_ATTR, value);
     }
+
+    public void setEnabledOnUserRole(String value)
+    {
+        setRendererAttribute(HyperlinkRenderer.ENABLED_ON_USER_ROLE_ATTR, value);
+    }
+
+    public void setVisibleOnUserRole(String value)
+    {
+        setRendererAttribute(HyperlinkRenderer.VISIBLE_ON_USER_ROLE_ATTR, value);
+    }
 }

@@ -432,13 +432,13 @@ public class FacesContextImpl
     /**
      * @return  null, if not found
      */
-    public static Object findBean(FacesContext facesContext, String modelId)
+    public static Object findBean(FacesContext facesContext, String beanId)
     {
         Object obj;
 
         //Request context
         ServletRequest servletrequest = facesContext.getServletRequest();
-        obj = servletrequest.getAttribute(modelId);
+        obj = servletrequest.getAttribute(beanId);
         if (obj != null)
         {
             return obj;
@@ -450,7 +450,7 @@ public class FacesContextImpl
             HttpSession session = ((HttpServletRequest)servletrequest).getSession(false);
             if (session != null)
             {
-                obj = session.getAttribute(modelId);
+                obj = session.getAttribute(beanId);
                 if (obj != null)
                 {
                     return obj;
@@ -460,7 +460,7 @@ public class FacesContextImpl
 
         //Application context
         ServletContext servletcontext = facesContext.getServletContext();
-        obj = servletcontext.getAttribute(modelId);
+        obj = servletcontext.getAttribute(beanId);
         if (obj != null)
         {
             return obj;

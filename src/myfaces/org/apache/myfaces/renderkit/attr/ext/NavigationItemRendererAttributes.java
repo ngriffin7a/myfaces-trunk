@@ -33,4 +33,5 @@ public interface NavigationItemRendererAttributes
     public static final String LABEL_ATTR = "label";
     public static final String KEY_ATTR = "key";
     public static final String BUNDLE_ATTR = "bundle";
+    public static final String USER_ROLE_ATTR = "userRole";
 }

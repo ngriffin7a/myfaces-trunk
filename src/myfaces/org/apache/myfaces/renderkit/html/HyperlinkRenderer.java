@@ -204,7 +204,27 @@ public class HyperlinkRenderer
         {
             return;
         }
+
         ResponseWriter writer = facesContext.getResponseWriter();
+        HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
+
+        String visibleOnUserRole = (String)uiComponent.getAttribute(VISIBLE_ON_USER_ROLE_ATTR);
+        if (visibleOnUserRole != null &&
+            !request.isUserInRole(visibleOnUserRole))
+        {
+            return;
+        }
+
+        String enabledOnUserRole = (String)uiComponent.getAttribute(ENABLED_ON_USER_ROLE_ATTR);
+        if (enabledOnUserRole != null &&
+            !request.isUserInRole(enabledOnUserRole))
+        {
+            //write out body content
+            BodyContent bodyContent = getBodyContent(facesContext, uiComponent);
+            bodyContent.writeOut(writer);
+            return;
+        }
+
         writer.write("<a href=\"");
         String href = (String)uiComponent.getAttribute(HREF_ATTR);
         if (href == null)
@@ -215,7 +235,6 @@ public class HyperlinkRenderer
             ServletMapping sm = smf.getServletMapping(servletContext);
             String treeURL = sm.encodeTreeIdForURL(facesContext, facesContext.getTree().getTreeId());
 
-            HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
             href = request.getContextPath() + treeURL;
         }
 

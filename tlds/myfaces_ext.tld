@@ -105,6 +105,17 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
+        <attribute>
+            <name>userRole</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>
+                If given, this navigation item will only be rendered when
+                the isUserInRole method in the HttpServletRequest returns
+                true with this value.
+            </description>
+        </attribute>
     </tag>
 
     <!--
@@ -120,24 +131,40 @@
              <rtexprvalue>false</rtexprvalue>
          </attribute>
          <attribute>
-             <name>column</name>    <!-- the sort column (alias for value)-->
+             <name>column</name>
              <required>false</required>
              <rtexprvalue>true</rtexprvalue>
+             <type>java.lang.String</type>
+             <description>
+                 the sort column (alias for value)
+             </description>
          </attribute>
          <attribute>
-             <name>ascending</name>    <!-- the sort direction -->
+             <name>ascending</name>
              <required>false</required>
              <rtexprvalue>true</rtexprvalue>
+             <type>java.lang.Boolean</type>
+             <description>
+                 the sort direction
+             </description>
          </attribute>
          <attribute>
-             <name>columnReference</name>    <!-- reference to the current sort column -->
+             <name>columnReference</name>
              <required>true</required>
              <rtexprvalue>false</rtexprvalue>
+             <type>java.lang.String</type>
+             <description>
+                 reference to the current sort column
+             </description>
          </attribute>
          <attribute>
-             <name>ascendingReference</name>    <!-- reference to the current sort direction -->
+             <name>ascendingReference</name>
              <required>true</required>
              <rtexprvalue>false</rtexprvalue>
+             <type>java.lang.String</type>
+             <description>
+                 reference to the current sort direction
+             </description>
          </attribute>
     </tag>
 
@@ -417,6 +444,29 @@
             <name>accept</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+
+
+    <tag>
+        <name>setBundle</name>
+        <tag-class>net.sourceforge.myfaces.taglib.ext.SetBundleTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>basename</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>var</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
         </attribute>
     </tag>
 

@@ -105,29 +105,24 @@ public class NavigationItemRenderer
      */
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
-        /*
-        Boolean b = (Boolean)uiComponent.getAttribute(DECODED_ATTR);
-        if (b == null || !b.booleanValue())
+        String userRole = (String)uiComponent.getAttribute(USER_ROLE_ATTR);
+        if (userRole != null)
         {
-            //There was no decoding, so we can assume that the state has not been restored yet and we can
-            //explicitly restore state for that component
-            RenderKit renderKit = _rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
-            Renderer stateRenderer = null;
-            try
+            //is user in role?
+            HttpServletRequest httpServletRequest = (HttpServletRequest)facesContext.getServletRequest();
+            if (!httpServletRequest.isUserInRole(userRole))
             {
-                stateRenderer = renderKit.getRenderer(StateRenderer.TYPE);
-            }
-            catch (Exception e)
-            {
-                //No StateRenderer
-            }
-            if (stateRenderer != null)
-            {
-                stateRenderer.decode(facesContext, uiComponent);
+                //for security reasons we make sure that item is closed
+                Boolean open = (Boolean)uiComponent.getAttribute(UINavigation.UINavigationItem.OPEN_ATTR);
+                if (open != null && open.booleanValue())
+                {
+                    uiComponent.setAttribute(UINavigation.UINavigationItem.OPEN_ATTR,
+                                             Boolean.TRUE);
+                }
+                //user not in role, bye bye...
+                return;
             }
         }
-        */
-
 
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<a href=\"");

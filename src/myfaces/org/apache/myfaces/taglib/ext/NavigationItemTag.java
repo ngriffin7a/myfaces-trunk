@@ -67,4 +67,9 @@ public class NavigationItemTag
         setComponentAttribute(UINavigation.UINavigationItem.OPEN_ATTR,
                               b ? Boolean.TRUE : Boolean.FALSE);
     }
+
+    public void setUserRole(String userRole)
+    {
+        setRendererAttribute(NavigationItemRenderer.USER_ROLE_ATTR, userRole);
+    }
 }

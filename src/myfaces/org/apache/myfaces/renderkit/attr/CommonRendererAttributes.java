@@ -19,8 +19,6 @@
 package net.sourceforge.myfaces.renderkit.attr;
 
 import javax.faces.component.AttributeDescriptor;
-import java.util.Set;
-import java.util.HashSet;
 
 /**
  * "Mixin" interface that defines the commonly used renderer attributes as defined in JSF.7.6
@@ -88,4 +86,8 @@ public interface CommonRendererAttributes
         ONKEYDOWN_ATTR,
         ONKEYUP_ATTR
     };
+
+    //MyFaces extensions
+    public static final String ENABLED_ON_USER_ROLE_ATTR = "enabledOnUserRole";
+    public static final String VISIBLE_ON_USER_ROLE_ATTR = "visibleOnUserRole";
 }
