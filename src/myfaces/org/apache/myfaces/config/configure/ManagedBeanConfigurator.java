@@ -24,6 +24,7 @@ import net.sourceforge.myfaces.util.bean.BeanUtils;
 
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+import java.beans.PropertyDescriptor;
 import java.util.*;
 
 /**
@@ -34,12 +35,28 @@ public class ManagedBeanConfigurator
 {
     //private static final Log log = LogFactory.getLog(ManagedBeanConfigurator.class);
 
+    private static final ManagedBeanConfigurator STATIC_INSTANCE = new ManagedBeanConfigurator();
+
     private ManagedBeanConfig _managedBeanConfig;
 
     public ManagedBeanConfigurator(ManagedBeanConfig managedBeanConfig)
     {
         _managedBeanConfig = managedBeanConfig;
     }
+
+    private ManagedBeanConfigurator()
+    {
+    }
+
+    public static void configure(FacesContext facesContext,
+                                 ManagedBeanConfig managedBeanConfig,
+                                 Object bean)
+    {
+        STATIC_INSTANCE._managedBeanConfig = managedBeanConfig;
+
+
+    }
+
 
     public void configure(FacesContext facesContext, Object bean)
     {
@@ -58,12 +75,7 @@ public class ManagedBeanConfigurator
                 {
                     throw new IllegalArgumentException("Class of managed bean " + _managedBeanConfig.getManagedBeanName() + " is no Map.");
                 }
-                else
-                {
-                    MapEntriesConfigurator configurator
-                            = new MapEntriesConfigurator(_managedBeanConfig.getMapEntriesConfig());
-                    configurator.configure(facesContext, (Map)bean);
-                }
+                configureMap(facesContext, _managedBeanConfig.getMapEntriesConfig(), (Map)bean);
                 break;
 
             case ManagedBeanConfig.TYPE_LIST:
@@ -71,12 +83,7 @@ public class ManagedBeanConfigurator
                 {
                     throw new IllegalArgumentException("Class of managed bean " + _managedBeanConfig.getManagedBeanName() + " is no List.");
                 }
-                else
-                {
-                    ListEntriesConfigurator configurator
-                            = new ListEntriesConfigurator(_managedBeanConfig.getListEntriesConfig());
-                    configurator.configure(facesContext, (List)bean);
-                }
+                configureList(facesContext, _managedBeanConfig.getListEntriesConfig(), (List)bean);
                 break;
 
             case ManagedBeanConfig.TYPE_NO_INIT:
@@ -111,42 +118,133 @@ public class ManagedBeanConfigurator
                 break;
 
             case ManagedPropertyConfig.TYPE_LIST:
-                ListEntriesConfig listEntriesConfig = propertyConfig.getListEntriesConfig();
-                if (listEntriesConfig.isContainsValueBindings())
-                {
-                    List list = new ArrayList(listEntriesConfig.getValues().size());
-                    ListEntriesConfigurator listEntriesConfigurator
-                            = new ListEntriesConfigurator(listEntriesConfig);
-                    listEntriesConfigurator.configure(facesContext, list);
-                }
-                else
-                {
-                    BeanUtils.setBeanPropertyValue(bean,
-                                                   propertyConfig.getPropertyName(),
-                                                   listEntriesConfig.getValues());
-                }
+                setListProperty(facesContext, bean, propertyConfig);
                 break;
 
             case ManagedPropertyConfig.TYPE_MAP:
-                MapEntriesConfig mapEntriesConfig = propertyConfig.getMapEntriesConfig();
-                if (mapEntriesConfig.isContainsValueBindings())
-                {
-                    Map map = new HashMap(HashMapUtils.calcCapacity(mapEntriesConfig.getMap().size()));
-                    MapEntriesConfigurator mapEntriesConfigurator
-                            = new MapEntriesConfigurator(mapEntriesConfig);
-                    mapEntriesConfigurator.configure(facesContext, map);
-                }
-                else
-                {
-                    BeanUtils.setBeanPropertyValue(bean,
-                                                   propertyConfig.getPropertyName(),
-                                                   mapEntriesConfig.getMap());
-                }
+                setMapProperty(facesContext, bean, propertyConfig);
                 break;
 
             case ManagedPropertyConfig.TYPE_UNKNOWN:
             default:
                 throw new IllegalArgumentException("Unsupported ManagedPropertyConfig type for managed property " + propertyConfig.getPropertyName());
+        }
+    }
+
+
+    private void setListProperty(FacesContext facesContext,
+                                 Object bean,
+                                 ManagedPropertyConfig propertyConfig)
+    {
+        List list = null;
+        ListEntriesConfig listEntriesConfig = propertyConfig.getListEntriesConfig();
+
+        PropertyDescriptor pd = BeanUtils.findBeanPropertyDescriptor(bean, propertyConfig.getPropertyName());
+        if (pd == null)
+        {
+            throw new IllegalArgumentException("Bean " + _managedBeanConfig.getManagedBeanName() + " does not have a property " + propertyConfig.getPropertyName());
+        }
+        if (pd.getReadMethod() != null)
+        {
+            //bean has getter method, try to get List from property
+            list = (List)BeanUtils.getBeanPropertyValue(bean, pd);
+        }
+
+        if (list != null)
+        {
+            //bean has no getter, or getter returned null, create new ArrayList
+            list = new ArrayList(listEntriesConfig.getValues().size());
+        }
+
+        //add list entries
+        configureList(facesContext, listEntriesConfig, list);
+    }
+
+
+    private void configureList(FacesContext facesContext,
+                               ListEntriesConfig listEntriesConfig,
+                               List list)
+    {
+        if (listEntriesConfig.isContainsValueBindings())
+        {
+            // copy one by one
+            for (Iterator it = listEntriesConfig.getValues().iterator(); it.hasNext();)
+            {
+                Object value = it.next();
+                if (value instanceof ValueBindingExpression)
+                {
+                    ValueBinding vb = ((ValueBindingExpression)value).getValueBinding(facesContext,
+                                                                                      listEntriesConfig.getValueClass());
+                    list.add(vb.getValue(facesContext));
+                }
+                else
+                {
+                    list.add(value);
+                }
+            }
+        }
+        else
+        {
+            list.addAll(listEntriesConfig.getValues());
+        }
+    }
+
+
+    private void setMapProperty(FacesContext facesContext,
+                                Object bean,
+                                ManagedPropertyConfig propertyConfig)
+    {
+        Map map = null;
+        MapEntriesConfig mapEntriesConfig = propertyConfig.getMapEntriesConfig();
+
+        PropertyDescriptor pd = BeanUtils.findBeanPropertyDescriptor(bean, propertyConfig.getPropertyName());
+        if (pd == null)
+        {
+            throw new IllegalArgumentException("Bean " + _managedBeanConfig.getManagedBeanName() + " does not have a property " + propertyConfig.getPropertyName());
+        }
+        if (pd.getReadMethod() != null)
+        {
+            //bean has getter method, try to get Map from property
+            map = (Map)BeanUtils.getBeanPropertyValue(bean, pd);
+        }
+
+        if (map != null)
+        {
+            //bean has no getter, or getter returned null, create new HashMap
+            map = new HashMap(HashMapUtils.calcCapacity(mapEntriesConfig.getMap().size()));
+        }
+
+        //add map entries
+        configureMap(facesContext, mapEntriesConfig, map);
+    }
+
+
+    private void configureMap(FacesContext facesContext,
+                              MapEntriesConfig mapEntriesConfig,
+                              Map map)
+    {
+        if (mapEntriesConfig.isContainsValueBindings())
+        {
+            for (Iterator it = mapEntriesConfig.getMap().entrySet().iterator(); it.hasNext();)
+            {
+                Map.Entry mapEntry = (Map.Entry)it.next();
+                Object key = mapEntry.getKey();
+                Object value = mapEntry.getValue();
+                if (value instanceof ValueBindingExpression)
+                {
+                    ValueBinding vb = ((ValueBindingExpression)value).getValueBinding(facesContext,
+                                                                                      mapEntriesConfig.getValueClass());
+                    map.put(key, vb.getValue(facesContext));
+                }
+                else
+                {
+                    map.put(key, value);
+                }
+            }
+        }
+        else
+        {
+            map.putAll(mapEntriesConfig.getMap());
         }
     }
 
