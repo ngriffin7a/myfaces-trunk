@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+
+<document>
+
+<header>
+    <title>Apache MyFaces - MyFaces inside of Tomcat 5.5.x </title>
+</header>
+
+<body>
+
+<section>
+<title>MyFaces inside of Tomcat 5.5.x</title>
+      <p>Some users had problems by using MyFaces and Tomcat5.5. Here is a short guide that hopefully helps :-)</p>
+      
+      <ul>
+        <li>binary version: MyFaces is designed to work with Tomcat5.0.x. So if you want to use Tomcat 5.5.x you have to remove two JAR files of the <code>WEB-INF/lib</code> folder. That files are <code>jsp-2.0.jar</code> and <code>commons-el.jar</code>.</li>
+		<li>source version: If you want to build MyFaces from a scratch, so you have to set inside the file <code>$MYFACES_HOME/build/build.default.properties</code> the property <code>tomcat.pre.5.5.version</code> to the value <code>false</code>.</li>
+      </ul>
+      <ul>
+        <li>That all does not help? Please contact the user list of MyFaces!</li>
+      </ul>
+</section>
+
+
+
+</body>
+    
+<footer>
+    	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
+	&copy; 2004, Apache Software Foundation
+	</legal>
+</footer>
+
+</document>

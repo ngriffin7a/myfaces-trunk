@@ -14,6 +14,7 @@
     <p><strong>General</strong></p>
       <ol>
         <li><link href="#what-is">What is MyFaces?</link></li>
+        <li><link href="#tomcat5">Does MyFaces work with Tomcat 5.5?</link></li>
       </ol>
 </section>
 
@@ -23,6 +24,10 @@
         <dt>What is MyFaces?</dt>
         <dd><anchor id="what-is" /> MyFaces is a Open Source Implementation of the JavaServer Faces Framework. See the <fork href="http://jcp.org/en/jsr/detail?id=127">JSR 127</fork> for more info.</dd>
       </dl>
+	  <dl>
+        <dt>Does MyFaces work with Tomcat 5.5?</dt>
+        <dd><anchor id="tomcat5" /> Yes, Apache MyFaces works with Tomcat5.5. If you see a blank page in your browser, try to remove the JAR files <code>jsp-2.0.jar</code> and <code>commons-el.jar</code> of the folder <code>WEB-INF/lib</code>.</dd>
+      </dl>	  
  </section>
  
      </body>

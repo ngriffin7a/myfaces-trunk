@@ -29,6 +29,11 @@
 			<li>Resin 2.1.x</li>
 			<li>Jetty 4.2.x</li>
 			<li>Websphere 5.1.2</li>
+			<li>OC4J</li>
+		</ol>
+		<li>Custom JSF components</li>
+		<ol>
+			<li>ADF Faces of Oracle</li>
 		</ol>
 	</ol>
 </section>

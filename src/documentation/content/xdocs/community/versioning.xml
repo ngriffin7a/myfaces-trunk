@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+
+<document>
+
+<header>
+    <title>Apache MyFaces - CVS </title>
+</header>
+
+<body>
+
+<section>
+<title>CVS Access of MyFaces</title>
+      <p>MyFaces uses CVS.</p>
+      
+      <ul>
+        <li><link href="http://cvs.apache.org/viewcvs.cgi/incubator-myfaces/">watch CVS here</link></li>
+		<li>The CVS root is [login]@cvs.apache.org:/home/cvs for committers, and :pserver:anoncvs@cvs.apache.org:/home/cvspublic for non-committers.</li>
+      </ul>
+</section>
+
+
+
+</body>
+    
+<footer>
+    	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
+	&copy; 2004, Apache Software Foundation
+	</legal>
+</footer>
+
+</document>
