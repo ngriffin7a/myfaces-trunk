@@ -120,7 +120,7 @@ public class ServletFacesContextImpl
                 {
                     if (!_nextFound)
                     {
-                        for (; _next < _messageClientIds.size(); _next++)
+                        for (int len = _messageClientIds.size(); _next < len; _next++)
                         {
                             if (_messageClientIds.get(_next) != NULL_DUMMY)
                             {
