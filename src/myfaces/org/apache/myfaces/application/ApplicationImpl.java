@@ -43,6 +43,7 @@ import java.util.Map;
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class ApplicationImpl
@@ -50,7 +51,7 @@ public class ApplicationImpl
 {
     private ServletContext _servletContext;
     private FacesConfig _facesConfig;
-    private Map _valueBindungMap = new HashMap();
+    private Map _valueBindingMap = new HashMap();
 
     public ApplicationImpl(ServletContext servletContext)
     {
@@ -108,20 +109,17 @@ public class ApplicationImpl
         getFacesConfig().getApplicationConfig().setVariableResolver(variableResolver);
     }
 
-
-
     public ValueBinding getValueBinding(String ref) throws ReferenceSyntaxException
     {
-        ValueBinding vb = (ValueBinding)_valueBindungMap.get(ref);
+        ValueBinding vb = (ValueBinding)_valueBindingMap.get(ref);
         if (vb == null)
         {
-            vb = new ValueBindingImpl(ref, getVariableResolver(), getPropertyResolver());
-            _valueBindungMap.put(ref, vb);
+        	// Note: we cannot cache VariableResolver and PropertyResolve directly in ValueBinding since those can change through the set methods
+            vb = new ValueBindingImpl(ref, this);
+            _valueBindingMap.put(ref, vb);
         }
         return vb;
     }
-
-
 
     public void addConverter(String converterId, String converterClass)
     {

@@ -26,6 +26,7 @@ import net.sourceforge.myfaces.util.logging.LogUtil;
 import javax.faces.FactoryFinder;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.context.FacesContext;
+import javax.faces.el.ReferenceSyntaxException;
 import javax.faces.el.ValueBinding;
 import javax.faces.el.VariableResolver;
 import javax.servlet.ServletContext;
@@ -37,6 +38,7 @@ import java.util.Iterator;
 /**
  * JSF 1.0 PRD2, 5.2.1
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
  * @version $Revision$ $Date$
  */
 public class VariableResolverImpl
@@ -44,6 +46,9 @@ public class VariableResolverImpl
 {
     public Object resolveVariable(FacesContext facesContext, String name)
     {
+    	if (name == null || name.length() == 0)
+    		throw new ReferenceSyntaxException("Varible name is null");
+    	
         Object obj;
 
         //Implicit objects
@@ -86,6 +91,7 @@ public class VariableResolverImpl
         }
 
         //ManagedBean
+        // REVISIT: shouldn't we get the registered factory finder?
         FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(servletcontext);
         FacesConfig facesConfig = fcf.getFacesConfig(servletcontext);
         ManagedBeanConfig mbc = facesConfig.getManagedBeanConfig(name);
