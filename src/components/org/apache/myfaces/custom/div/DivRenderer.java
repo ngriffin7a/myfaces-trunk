@@ -27,6 +27,9 @@ import org.apache.myfaces.renderkit.html.HtmlRenderer;
  * @author bdudney (latest modification by $Author$) 
  * @version $Revision$ $Date$ 
  * $Log$
+ * Revision 1.2  2004/11/10 11:09:52  bdudney
+ * div renderer now puts the class/style in quotes
+ *
  * Revision 1.1  2004/11/08 03:43:20  bdudney
  * Added a div element. x:div to use, inserts a div with class or style attributes
  *
@@ -52,10 +55,10 @@ public class DivRenderer extends HtmlRenderer {
       throw new IllegalStateException("Only one of style or styleClass can be specified");
     }
     if(null != styleClass) {
-      writer.write("class=" + styleClass);
+      writer.write("class=\"" + styleClass + "\"");
     }
     if(null != style) {
-      writer.write("style=" + style);
+      writer.write("style=\"" + style + "\"");
     }
     writer.write(">");
   }
