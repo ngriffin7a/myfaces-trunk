@@ -23,8 +23,8 @@ import javax.faces.context.FacesContext;
 import java.util.EventListener;
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl
  * @version $Revision$ $Date$
  */
 public interface Validator

@@ -25,8 +25,6 @@ import java.util.Iterator;
 import java.util.Locale;
 
 /**
- * DOCUMENT ME!
- * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

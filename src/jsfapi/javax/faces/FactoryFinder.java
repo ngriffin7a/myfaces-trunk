@@ -29,8 +29,6 @@ import java.util.Map;
 import java.util.Stack;
 
 /**
- * DOCUMENT ME!
- *
  * TODO:
  * - The "META-INF/services/" thing: is it done by configuration reader?
  * - Who calls the setFactory method, and is it guaranteed that this is done in the right order?

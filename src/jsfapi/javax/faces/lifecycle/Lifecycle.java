@@ -21,7 +21,6 @@ package javax.faces.lifecycle;
 import javax.faces.FacesException;
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

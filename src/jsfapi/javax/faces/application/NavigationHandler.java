@@ -21,8 +21,6 @@ package javax.faces.application;
 import javax.faces.context.FacesContext;
 
 /**
- * DOCUMENT ME!
- * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

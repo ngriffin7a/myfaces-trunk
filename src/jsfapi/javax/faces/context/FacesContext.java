@@ -22,8 +22,6 @@ import javax.faces.application.FacesMessage;
 import java.util.Iterator;
 
 /**
- * DOCUMENT ME!
- * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

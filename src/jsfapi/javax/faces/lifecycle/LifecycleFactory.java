@@ -21,7 +21,6 @@ package javax.faces.lifecycle;
 import java.util.Iterator;
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

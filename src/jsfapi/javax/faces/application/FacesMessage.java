@@ -22,8 +22,6 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- * DOCUMENT ME!
- * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

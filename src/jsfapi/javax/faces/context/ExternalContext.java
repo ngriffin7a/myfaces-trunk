@@ -24,8 +24,6 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * DOCUMENT ME!
- * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

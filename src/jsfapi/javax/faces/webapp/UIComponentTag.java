@@ -36,7 +36,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

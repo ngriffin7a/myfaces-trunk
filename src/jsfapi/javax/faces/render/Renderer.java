@@ -24,7 +24,6 @@ import javax.faces.convert.ConverterException;
 import java.io.IOException;
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

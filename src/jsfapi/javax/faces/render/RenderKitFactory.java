@@ -22,7 +22,6 @@ import javax.faces.context.FacesContext;
 import java.util.Iterator;
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

@@ -21,7 +21,6 @@ package javax.faces.context;
 import java.io.OutputStream;
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

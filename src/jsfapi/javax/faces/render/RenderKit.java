@@ -22,7 +22,6 @@ import javax.faces.context.ResponseWriter;
 import java.io.Writer;
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

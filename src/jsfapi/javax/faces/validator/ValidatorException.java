@@ -22,8 +22,8 @@ import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl
  * @version $Revision$ $Date$
  */
 public class ValidatorException
