@@ -24,10 +24,12 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UISelectOne;
 import javax.faces.component.html.HtmlSelectOneRadio;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.convert.Converter;
+import javax.faces.convert.ConverterException;
 import javax.faces.model.SelectItem;
 import java.io.IOException;
 import java.util.Iterator;
@@ -122,7 +124,16 @@ public class HtmlRadioRenderer
     public void decode(FacesContext facesContext, UIComponent uiComponent)
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlSelectOneRadio.class);
-        HtmlRendererUtils.decodeInput(facesContext, (HtmlSelectOneRadio)uiComponent);
+        HtmlRendererUtils.decodeUIInput(facesContext, (HtmlSelectOneRadio)uiComponent);
+    }
+
+
+    public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException
+    {
+        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlSelectOneRadio.class);
+        return RendererUtils.getConvertedUIOutputValue(facesContext,
+                                                       (UISelectOne)uiComponent,
+                                                       submittedValue);
     }
 
 }

@@ -27,6 +27,7 @@ import javax.faces.component.html.HtmlInputText;
 import javax.faces.component.html.HtmlOutputText;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.convert.ConverterException;
 import java.io.IOException;
 
 /**
@@ -126,7 +127,7 @@ public class HtmlTextRenderer
 
         if (component instanceof HtmlInputText)
         {
-            HtmlRendererUtils.decodeInput(facesContext, (HtmlInputText)component);
+            HtmlRendererUtils.decodeUIInput(facesContext, (HtmlInputText)component);
         }
         else if (component instanceof HtmlOutputText)
         {
@@ -136,6 +137,15 @@ public class HtmlTextRenderer
         {
             throw new IllegalArgumentException("Unsupported component class " + component.getClass().getName());
         }
+    }
+
+
+    public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException
+    {
+        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlInputText.class);
+        return RendererUtils.getConvertedUIOutputValue(facesContext,
+                                                       (HtmlInputText)uiComponent,
+                                                       submittedValue);
     }
 
 }

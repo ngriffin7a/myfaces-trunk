@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.renderkit;
 
 import net.sourceforge.myfaces.component.ComponentUtils;
 import net.sourceforge.myfaces.component.UserRoleSupport;
+import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.util.HashMapUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,6 +29,7 @@ import javax.faces.FacesException;
 import javax.faces.component.*;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
+import javax.faces.convert.ConverterException;
 import javax.faces.el.ValueBinding;
 import java.io.IOException;
 import java.util.*;
@@ -49,6 +51,17 @@ public class RendererUtils
         if (!(component instanceof ValueHolder))
         {
             throw new IllegalArgumentException("Component is not a ValueHolder");
+        }
+
+        if (component instanceof EditableValueHolder &&
+            !((EditableValueHolder)component).isValid())
+        {
+            Object submittedValue = ((EditableValueHolder)component).getSubmittedValue();
+            if (!(submittedValue instanceof String))
+            {
+                throw new IllegalArgumentException("Expected submitted value of type String");
+            }
+            return (String)submittedValue; 
         }
 
         Object value = ((ValueHolder)component).getValue();
@@ -426,5 +439,81 @@ public class RendererUtils
         }
     }
 
+    
+    public static Object getConvertedUIOutputValue(FacesContext facesContext,
+                                                   UIOutput output,
+                                                   Object submittedValue)
+        throws ConverterException
+    {
+        if (!(submittedValue instanceof String))
+        {
+            throw new IllegalArgumentException("Submitted value of type String expected");
+        }
+
+        Converter converter;
+        try
+        {
+            converter = findUIOutputConverter(facesContext, output);
+        }
+        catch (FacesException e)
+        {
+            throw new ConverterException(e);
+        }
+
+        if (converter == null)
+        {
+            //No conversion needed
+            return submittedValue;
+        }
+
+        //Conversion
+        return ConverterUtils.getAsObjectWithErrorHandling(facesContext,
+                                                           output,
+                                                           converter,
+                                                           (String)submittedValue);
+    }
+
+
+    public static Object getConvertedUISelectManyValue(FacesContext facesContext,
+                                                       UISelectMany selectMany,
+                                                       Object submittedValue)
+            throws ConverterException
+    {
+        if (!(submittedValue instanceof String[]))
+        {
+            throw new ConverterException("Submitted value of type String[] expected");
+        }
+
+        Converter converter;
+        try
+        {
+            converter = findUISelectManyConverter(facesContext, selectMany);
+        }
+        catch (FacesException e)
+        {
+            throw new ConverterException(e);
+        }
+
+        if (converter == null)
+        {
+            //No conversion needed
+            return submittedValue;
+        }
+
+        //Conversion
+        String[] submittedStrValues = (String[])submittedValue;
+        Object[] convertedValues;
+        convertedValues = new Object[submittedStrValues.length];
+        for (int i = 0; i < submittedStrValues.length; i++)
+        {
+            convertedValues[i]
+                = ConverterUtils.getAsObjectWithErrorHandling(facesContext,
+                                                              selectMany,
+                                                              converter,
+                                                              submittedStrValues[i]);
+        }
+
+        return convertedValues;
+    }
 
 }

@@ -26,6 +26,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlInputSecret;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.convert.ConverterException;
 import java.io.IOException;
 
 
@@ -39,7 +40,7 @@ public class HtmlSecretRenderer
         extends HtmlRenderer
 {
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
-    throws IOException
+            throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlInputSecret.class);
         
@@ -68,7 +69,15 @@ public class HtmlSecretRenderer
     public void decode(FacesContext facesContext, UIComponent component)
     {
         RendererUtils.checkParamValidity(facesContext, component, HtmlInputSecret.class);
-        HtmlRendererUtils.decodeInput(facesContext, (HtmlInputSecret)component);
+        HtmlRendererUtils.decodeUIInput(facesContext, (HtmlInputSecret)component);
+    }
+
+    public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException
+    {
+        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlInputSecret.class);
+        return RendererUtils.getConvertedUIOutputValue(facesContext,
+                                                       (HtmlInputSecret)uiComponent,
+                                                       submittedValue);
     }
 
 }

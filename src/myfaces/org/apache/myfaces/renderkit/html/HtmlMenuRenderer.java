@@ -26,6 +26,7 @@ import javax.faces.component.UISelectOne;
 import javax.faces.component.html.HtmlSelectManyMenu;
 import javax.faces.component.html.HtmlSelectOneMenu;
 import javax.faces.context.FacesContext;
+import javax.faces.convert.ConverterException;
 import java.io.IOException;
 
 /**
@@ -64,11 +65,33 @@ public class HtmlMenuRenderer
 
         if (uiComponent instanceof UISelectMany)
         {
-            HtmlRendererUtils.decodeSelectMany(facesContext, (UISelectMany)uiComponent);
+            HtmlRendererUtils.decodeUISelectMany(facesContext, (UISelectMany)uiComponent);
         }
         else if (uiComponent instanceof UISelectOne)
         {
-            HtmlRendererUtils.decodeInput(facesContext, (UISelectOne)uiComponent);
+            HtmlRendererUtils.decodeUIInput(facesContext, (UISelectOne)uiComponent);
+        }
+        else
+        {
+            throw new IllegalArgumentException("Unsupported component class " + uiComponent.getClass().getName());
+        }
+    }
+
+    public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException
+    {
+        RendererUtils.checkParamValidity(facesContext, uiComponent, null);
+
+        if (uiComponent instanceof UISelectMany)
+        {
+            return RendererUtils.getConvertedUISelectManyValue(facesContext,
+                                                               (UISelectMany)uiComponent,
+                                                               submittedValue);
+        }
+        else if (uiComponent instanceof UISelectOne)
+        {
+            return RendererUtils.getConvertedUIOutputValue(facesContext,
+                                                           (UISelectOne)uiComponent,
+                                                           submittedValue);
         }
         else
         {

@@ -54,93 +54,30 @@ public class HtmlRendererUtils
      * @param facesContext
      * @param input
      */
-    public static void decodeInput(FacesContext facesContext,
-                                   UIInput input)
+    public static void decodeUIInput(FacesContext facesContext,
+                                     UIInput input)
     {
-
         Map paramValuesMap = facesContext.getExternalContext().getRequestParameterValuesMap();
         String clientId  = input.getClientId(facesContext);
-        if (!paramValuesMap.containsKey(clientId))
+        if (paramValuesMap.containsKey(clientId))
         {
-            //request parameter not found, nothing to decode
-            input.setSubmittedValue(null);
-            return;
-        }
-
-        String[] reqValues = (String[])paramValuesMap.get(clientId);
-        String submittedValue;
-
-        Converter converter;
-        try
-        {
-            converter = RendererUtils.findUIOutputConverter(facesContext, input);
-        }
-        catch (FacesException e)
-        {
-            //TODO: other message?
-            MessageUtils.addMessage(FacesMessage.SEVERITY_ERROR,
-                                    "javax.faces.component.UIInput.CONVERSION",
-                                    null,
-                                    input.getClientId(facesContext));
-
-            submittedValue = StringArrayConverter.getAsString(reqValues, false);
-            input.setSubmittedValue(submittedValue);
-            input.setValue(submittedValue);
-            input.setValid(false);
-            return;
-        }
-
-        Object convertedValue;
-        if (converter == null)
-        {
-            //No conversion needed, make String out of StringArray
-            submittedValue = StringArrayConverter.getAsString(reqValues, false);
-            convertedValue = submittedValue;
+            String[] reqValues = (String[])paramValuesMap.get(clientId);
+            input.setSubmittedValue(StringArrayConverter.getAsString(reqValues, false));
+            //input.setValid(true);
         }
         else
         {
-            //Conversion
-            if (converter.getClass().equals(StringArrayConverter.class))
-            {
-                //Expected type is StringArray according to MyFaces StringArrayConverter
-                // --> no conversion necessary
-                submittedValue = StringArrayConverter.getAsString(reqValues, false);
-                convertedValue = reqValues;
-            }
-            else
-            {
-                //make String out of StringArray
-                submittedValue = StringArrayConverter.getAsString(reqValues, false);
-                try
-                {
-                    convertedValue = ConverterUtils.getAsObjectWithErrorHandling(facesContext,
-                                                                                 input,
-                                                                                 converter,
-                                                                                 submittedValue);
-                }
-                catch (ConverterException e)
-                {
-                    //FacesMessage already handled by getAsObjectWithErrorHandling method
-                    input.setSubmittedValue(submittedValue);
-                    input.setValue(submittedValue);
-                    input.setValid(false);
-                    return;
-                }
-            }
+            //request parameter not found, nothing to decode
+            input.setSubmittedValue(null);
         }
-
-        input.setSubmittedValue(submittedValue);
-        input.setValue(convertedValue);
-        input.setValid(true);
     }
 
 
-    public static void decodeSelectBoolean(FacesContext facesContext,
-                                           UISelectBoolean selectBoolean,
-                                           boolean setFalseOnAbsentParam,
-                                           String externalTrueValue)
+    public static void decodeUISelectBoolean(FacesContext facesContext,
+                                             UISelectBoolean selectBoolean,
+                                             boolean setFalseOnAbsentParam,
+                                             String externalTrueValue)
     {
-
         Map paramValuesMap = facesContext.getExternalContext().getRequestParameterValuesMap();
         String clientId  = selectBoolean.getClientId(facesContext);
         if (!paramValuesMap.containsKey(clientId))
@@ -165,8 +102,8 @@ public class HtmlRendererUtils
     }
 
 
-    public static void decodeSelectMany(FacesContext facesContext,
-                                        UISelectMany selectMany)
+    public static void decodeUISelectMany(FacesContext facesContext,
+                                          UISelectMany selectMany)
     {
         Map paramValuesMap = facesContext.getExternalContext().getRequestParameterValuesMap();
         String clientId  = selectMany.getClientId(facesContext);

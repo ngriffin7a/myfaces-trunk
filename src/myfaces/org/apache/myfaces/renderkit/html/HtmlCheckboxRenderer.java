@@ -30,6 +30,7 @@ import javax.faces.component.html.HtmlSelectManyCheckbox;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.convert.Converter;
+import javax.faces.convert.ConverterException;
 import javax.faces.model.SelectItem;
 import java.io.IOException;
 import java.util.Iterator;
@@ -71,29 +72,6 @@ public class HtmlCheckboxRenderer
             throw new IllegalArgumentException("Unsupported component class " + uiComponent.getClass().getName());
         }
     }
-
-
-    public void decode(FacesContext facesContext, UIComponent uiComponent)
-    {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, null);
-        if (uiComponent instanceof HtmlSelectBooleanCheckbox)
-        {
-            HtmlRendererUtils.decodeSelectBoolean(facesContext,
-                                                  (HtmlSelectBooleanCheckbox)uiComponent,
-                                                  true, //set to FALSE if request param absent,
-                                                  EXTERNAL_TRUE_VALUE);
-        }
-        else if (uiComponent instanceof HtmlSelectManyCheckbox)
-        {
-            HtmlRendererUtils.decodeSelectMany(facesContext,
-                                               (HtmlSelectManyCheckbox)uiComponent);
-        }
-        else
-        {
-            throw new IllegalArgumentException("Unsupported component class " + uiComponent.getClass().getName());
-        }
-    }
-
 
 
     public void renderCheckboxList(FacesContext facesContext, HtmlSelectManyCheckbox selectMany)
@@ -166,4 +144,33 @@ public class HtmlCheckboxRenderer
     }
 
 
+    public void decode(FacesContext facesContext, UIComponent uiComponent)
+    {
+        RendererUtils.checkParamValidity(facesContext, uiComponent, null);
+        if (uiComponent instanceof HtmlSelectBooleanCheckbox)
+        {
+            HtmlRendererUtils.decodeUISelectBoolean(facesContext,
+                                                  (HtmlSelectBooleanCheckbox)uiComponent,
+                                                  true, //set to FALSE if request param absent,
+                                                  EXTERNAL_TRUE_VALUE);
+        }
+        else if (uiComponent instanceof HtmlSelectManyCheckbox)
+        {
+            HtmlRendererUtils.decodeUISelectMany(facesContext,
+                                                 (HtmlSelectManyCheckbox)uiComponent);
+        }
+        else
+        {
+            throw new IllegalArgumentException("Unsupported component class " + uiComponent.getClass().getName());
+        }
+    }
+
+
+    public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException
+    {
+        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlSelectManyCheckbox.class);
+        return RendererUtils.getConvertedUISelectManyValue(facesContext,
+                                                           (HtmlSelectManyCheckbox)uiComponent,
+                                                           submittedValue);
+    }
 }

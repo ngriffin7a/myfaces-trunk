@@ -26,6 +26,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlInputTextarea;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.convert.ConverterException;
 import java.io.IOException;
 
 
@@ -62,7 +63,15 @@ public class HtmlTextareaRenderer
     public void decode(FacesContext facesContext, UIComponent component)
     {
         RendererUtils.checkParamValidity(facesContext, component, HtmlInputTextarea.class);
-        HtmlRendererUtils.decodeInput(facesContext, (HtmlInputTextarea)component);
+        HtmlRendererUtils.decodeUIInput(facesContext, (HtmlInputTextarea)component);
+    }
+
+    public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException
+    {
+        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlInputTextarea.class);
+        return RendererUtils.getConvertedUIOutputValue(facesContext,
+                                                       (HtmlInputTextarea)uiComponent,
+                                                       submittedValue);
     }
 
 }

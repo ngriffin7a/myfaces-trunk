@@ -3,12 +3,14 @@ License
 
 This product is developed and distributed under the terms of
 
-- The GNU Lesser General Public License (see license/GNU_Lesser_General_Public_License.html)
-- The Apache Software License, Version 1.1 (see license/Apache_Software_License.txt)
-- The JavaServerTM Faces Pre-Release Binary Software Evaluation Agreement
-  (see license/JSF_Pre-Release_Binary_Software_Evaluation_Agreement.txt)
-- The JavaServerTM Faces Specification License
-  (see license/jsf-1_0-prd2-spec-license.html)
+- The GNU Lesser General Public License
+   (see license/GNU_Lesser_General_Public_License.html)
+- The Apache Software License, Version 1.1
+   (see license/Apache_Software_License.txt)
+- Sun Microsystems, Inc. Binary Code License Agreement
+   (see license/JSF_LICENSE.txt)
+- JAVA(TM) INTERFACE CLASSES JAVASERVER(TM) FACES 1.0 SUPPLEMENTAL LICENSE TERMS
+   (see license/JSF_LICENSE.txt)
 
 
 Acknowledgements

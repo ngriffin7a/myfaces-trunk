@@ -259,9 +259,9 @@ public class ValueBindingImpl
             return null;
         }
 
-        return (name instanceof String)
-        ? _application.getPropertyResolver().getValue(base, (String) name)
-        : _application.getPropertyResolver().getValue(base, ((Integer) name).intValue());
+        return (name instanceof Integer)
+            ? _application.getPropertyResolver().getValue(base, ((Integer) name).intValue())
+            : _application.getPropertyResolver().getValue(base, name);
     }
 
     /**
