@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.el;
 
+import net.sourceforge.myfaces.util.StringUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import java.util.ArrayList;
@@ -540,32 +541,12 @@ extends ValueBinding
                 indexofOpeningBracket + 1, indexofClosingBracket);
 
         // Case 2: index is integer (e.g., for arrays)
-        if (isUnsignedInteger(index))
+        if (StringUtils.isUnsignedInteger(index))
         {
             return Integer.valueOf(index);
         }
 
         return _application.getValueBinding(index);
-    }
-
-    private static boolean isUnsignedInteger(String str)
-    {
-        int len = str.length();
-
-        if (len == 0)
-        {
-            return false;
-        }
-
-        for (int i = 0; i < len; i++)
-        {
-            if (!Character.isDigit(str.charAt(i)))
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     private Object[] parse(String reference)

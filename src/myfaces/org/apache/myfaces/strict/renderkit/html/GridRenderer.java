@@ -21,11 +21,11 @@ package net.sourceforge.myfaces.strict.renderkit.html;
 import net.sourceforge.myfaces.renderkit.*;
 import net.sourceforge.myfaces.renderkit.html.*;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
+import net.sourceforge.myfaces.util.StringUtils;
 
 import java.io.IOException;
 
 import java.util.Iterator;
-import java.util.StringTokenizer;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -43,12 +43,8 @@ extends HTMLRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-    public static final String  TYPE                      = "Grid";
-    private static final String ROW_CLASSES_ATTR_CACHE    =
-        GridRenderer.class.getName() + ".rowclasses";
-    private static final String COLUMN_CLASSES_ATTR_CACHE =
-        GridRenderer.class.getName() + ".colclasses";
-    private static final String DELIMITER                 = ",";
+    public static final String TYPE      = "Grid";
+    private static final char  DELIMITER = ',';
 
     //~ Methods ------------------------------------------------------------------------------------
 
@@ -112,8 +108,12 @@ extends HTMLRenderer
 
         if ((children != null) && children.hasNext())
         {
-            String[] rowClasses    = getRowClasses(component); // TODO
-            String[] columnClasses = getColumnClasses(component); // TODO
+            String[] rowClasses    =
+                StringUtils.splitShortString(
+                    (String) component.getAttribute(JSFAttr.ROW_CLASSES_ATTR), DELIMITER);
+            String[] columnClasses =
+                StringUtils.splitShortString(
+                    (String) component.getAttribute(JSFAttr.COLUMN_CLASSES_ATTR), DELIMITER);
 
             HTMLUtil.renderTableRows(
                 context, children, columns, rowClasses, columnClasses, "td", "tbody");
@@ -144,66 +144,5 @@ extends HTMLRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("</table>\n");
-    }
-
-    // TODO: move to utils
-    static String[] getColumnClasses(UIComponent gridComponent)
-    {
-        String[] rowClasses = (String[]) gridComponent.getAttribute(COLUMN_CLASSES_ATTR_CACHE);
-
-        if (rowClasses == null)
-        {
-            rowClasses = getAttributes(gridComponent, JSFAttr.COLUMN_CLASSES_ATTR);
-            gridComponent.setAttribute(COLUMN_CLASSES_ATTR_CACHE, rowClasses);
-        }
-
-        return rowClasses;
-    }
-
-    // TODO: move to utils
-    static String[] getRowClasses(UIComponent gridComponent)
-    {
-        String[] rowClasses = (String[]) gridComponent.getAttribute(ROW_CLASSES_ATTR_CACHE);
-
-        if (rowClasses == null)
-        {
-            rowClasses = getAttributes(gridComponent, JSFAttr.ROW_CLASSES_ATTR);
-            gridComponent.setAttribute(ROW_CLASSES_ATTR_CACHE, rowClasses);
-        }
-
-        return rowClasses;
-    }
-
-    // TODO: move to utils
-    private static String[] getAttributes(UIComponent uiComponent, String attributeName)
-    {
-        String[] attr = null;
-        Object   obj = uiComponent.getAttribute(attributeName);
-
-        if (obj instanceof String[])
-        {
-            return (String[]) obj;
-        }
-
-        String rowClasses = (String) obj;
-
-        if ((rowClasses != null) && (rowClasses.length() > 0))
-        {
-            StringTokenizer tokenizer = new StringTokenizer(rowClasses, DELIMITER);
-
-            attr = new String[tokenizer.countTokens()];
-
-            for (int i = 0; tokenizer.hasMoreTokens(); i++)
-            {
-                attr[i] = tokenizer.nextToken().trim();
-            }
-        }
-
-        if (attr == null)
-        {
-            attr = new String[0];
-        }
-
-        return attr;
     }
 }
