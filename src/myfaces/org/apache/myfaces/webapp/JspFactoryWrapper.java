@@ -24,7 +24,14 @@ public class JspFactoryWrapper
 
     public void releasePageContext(PageContext pageContext)
     {
-        _originalJspFactory.releasePageContext(pageContext);
+        if (pageContext instanceof PageContextWrapper)
+        {
+            _originalJspFactory.releasePageContext(((PageContextWrapper)pageContext).getWrappedPageContext());
+        }
+        else
+        {
+            _originalJspFactory.releasePageContext(pageContext);
+        }
     }
 
     public JspEngineInfo getEngineInfo()

@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.webapp;
 
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.MyFacesConfig;
 
 import javax.faces.webapp.FacesServlet;
 import javax.servlet.*;
@@ -65,8 +66,11 @@ public class MyFacesServlet
             _facesServlet.init(servletConfig);
             System.setOut(oldOut);
 
-            //Wrap JspFactory
-            //wrapJspFactory();   //make configurable
+            //Wrap JspFactory to enhance Logging of ServletExceptions
+            if (MyFacesConfig.isWrapPageContext(servletConfig.getServletContext()))
+            {
+                wrapJspFactory();
+            }
         }
 
         LogUtil.getLogger().info("MyFacesServlet for context '" + servletConfig.getServletContext().getRealPath("/") + "' initialized.");

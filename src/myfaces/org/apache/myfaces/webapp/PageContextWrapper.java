@@ -20,6 +20,11 @@ public class PageContextWrapper
         _originalPageContext = originalPageContext;
     }
 
+    public PageContext getWrappedPageContext()
+    {
+        return _originalPageContext;
+    }
+
     public void initialize(Servlet servlet, ServletRequest servletRequest, ServletResponse servletResponse, String name, boolean b, int i, boolean b1) throws IOException, IllegalStateException, IllegalArgumentException
     {
         _originalPageContext.initialize(servlet, servletRequest, servletResponse, name, b, i, b1);
@@ -27,17 +32,7 @@ public class PageContextWrapper
 
     public void release()
     {
-        if (_originalPageContext != null)
-        {
-            try
-            {
-                _originalPageContext.release();
-            }
-            catch (Exception e)
-            {
-                LogUtil.getLogger().throwing(getClass().getName(), "release", e);
-            }
-        }
+        _originalPageContext.release();
     }
 
     public void setAttribute(String name, Object o)

@@ -74,6 +74,8 @@ public class MyFacesConfig
 
     private static final String CONFIG_MAP_ATTR = MyFacesConfig.class.getName() + ".MAP";
 
+    private static final String PARAM_wrapPageContext = "myfaces_WrapPageContext";
+    private static final boolean DEFAULT_wrapPageContext = true;
 
 
     private MyFacesConfig() {}
@@ -212,6 +214,15 @@ public class MyFacesConfig
                                        DEFAULT_disableJspParser);
     }
 
+    /**
+     * See web.xml in the examples webapp for documentation!
+     */
+    public static boolean isWrapPageContext(ServletContext servletContext)
+    {
+        return getBooleanInitParameter(servletContext,
+                                       PARAM_wrapPageContext,
+                                       DEFAULT_wrapPageContext);
+    }
 
     /**
      * See web.xml in the examples webapp for documentation!
