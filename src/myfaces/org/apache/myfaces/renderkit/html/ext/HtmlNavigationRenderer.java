@@ -137,6 +137,11 @@ public class HtmlNavigationRenderer
                 writer.endElement(HTML.TD_ELEM);
                 writer.endElement(HTML.TR_ELEM);
             }
+
+            if (log.isDebugEnabled())
+            {
+                writer.write("\n");    
+            }
         }
     }
 

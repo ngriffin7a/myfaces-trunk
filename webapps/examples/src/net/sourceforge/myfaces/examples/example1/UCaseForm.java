@@ -50,19 +50,13 @@ public class UCaseForm
         this.text = text;
     }
 
-    /*
-    FIXME:
-    public Action getJumpHome()
+    /**
+     * Test method for method binding.
+     */
+    public String jumpHome()
     {
-        return new Action()
-        {
-            public String invoke()
-            {
-                return "jump_home";
-            }
-        };
+        System.out.println("JumpHome Action was called.");
+        return "jump_home";
     }
-    */
-
 
 }

@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.ext.UISaveState;
-import net.sourceforge.myfaces.taglib.legacy.MyFacesTag;
+import net.sourceforge.myfaces.taglib.MyfacesComponentTag;
 
 /**
  * DOCUMENT ME!
@@ -27,7 +27,7 @@ import net.sourceforge.myfaces.taglib.legacy.MyFacesTag;
  * @version $Revision$ $Date$
  */
 public class SaveStateTag
-    extends MyFacesTag
+    extends MyfacesComponentTag
 {
     public String getComponentType()
     {

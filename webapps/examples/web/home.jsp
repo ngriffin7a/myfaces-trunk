@@ -71,6 +71,7 @@
         </f:facet>
 
         <%@include file="inc/page_footer.jsp" %>
+        
     </x:panel_layout>
 
 </f:view>

@@ -18,19 +18,15 @@
  */
 package net.sourceforge.myfaces.taglib.core;
 
-import net.sourceforge.myfaces.component.UIComponentUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import net.sourceforge.myfaces.util.ClassUtils;
 
-import javax.faces.FacesException;
+import javax.faces.component.ActionSource;
 import javax.faces.component.UIComponent;
 import javax.faces.event.ActionListener;
 import javax.faces.webapp.UIComponentTag;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagSupport;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 /**
  * DOCUMENT ME!
@@ -40,7 +36,7 @@ import java.lang.reflect.Method;
 public class ActionListenerTag
     extends TagSupport
 {
-    private static final Log log = LogFactory.getLog(ActionListenerTag.class);
+    //private static final Log log = LogFactory.getLog(ActionListenerTag.class);
 
     private String _type = null;
 
@@ -56,100 +52,30 @@ public class ActionListenerTag
 
     public int doStartTag() throws JspException
     {
-        //Find parent FacesTag
-        //TODO: This is likely to fail under Tomcat, when this is the first Tag in a <jsp:include> file
-        Tag parent = getParent();
-        while (parent != null && !(parent instanceof UIComponentTag))
-        {
-            parent = parent.getParent();
-        }
-        if (parent == null)
+        //Find parent UIComponentTag
+        UIComponentTag componentTag = UIComponentTag.getParentUIComponentTag(pageContext);
+        if (componentTag == null)
         {
             throw new JspException("action_listener has no UIComponentTag ancestor");
         }
 
-        UIComponentTag facesTag = (UIComponentTag)parent;
-
-        if (facesTag.getCreated())
+        if (componentTag.getCreated())
         {
             //Component was just created, so we add the Listener
-            //FIXME
-            //UIComponent component = facesTag.getComponent();
-            UIComponent component = null;
-            addActionListener(component, _type);
+            UIComponent component = componentTag.getComponentInstance();
+            if (component instanceof ActionSource)
+            {
+                ActionListener al = (ActionListener)ClassUtils.newInstance(_type);
+                ((ActionSource)component).addActionListener(al);
+            }
+            else
+            {
+                throw new JspException("Component " + component.getId() + " is no ActionSource");
+            }
         }
 
         return Tag.SKIP_BODY;
     }
 
-
-
-    private static final String ADD_ACTION_LISTENER_METHOD_NAME = "addActionListener";
-    private static final Class[] ADD_ACTION_LISTENER_METHOD_PARAMS = new Class[]{ActionListener.class};
-
-    public static void addActionListener(UIComponent uiComponent,
-                                         String type)
-        throws FacesException
-    {
-        try
-        {
-            Method method = uiComponent.getClass().getMethod(ADD_ACTION_LISTENER_METHOD_NAME,
-                                                             ADD_ACTION_LISTENER_METHOD_PARAMS);
-            if (method == null)
-            {
-                log.error("Component " + UIComponentUtils.toString(uiComponent)
-                          + " has no " + ADD_ACTION_LISTENER_METHOD_NAME + " method.");
-            }
-            else
-            {
-                Class c = Class.forName(type, true, Thread.currentThread().getContextClassLoader());
-                ActionListener al = (ActionListener)c.newInstance();
-                method.invoke(uiComponent, new Object[]{al});
-
-                //getTagCreatedListenersSet().add(al);
-            }
-        }
-        catch (ClassNotFoundException e)
-        {
-            throw new FacesException(e);
-        }
-        catch (NoSuchMethodException e)
-        {
-            throw new FacesException(e);
-        }
-        catch (SecurityException e)
-        {
-            throw new FacesException(e);
-        }
-        catch (InstantiationException e)
-        {
-            throw new FacesException(e);
-        }
-        catch (IllegalAccessException e)
-        {
-            throw new FacesException(e);
-        }
-        catch (InvocationTargetException e)
-        {
-            throw new FacesException(e);
-        }
-    }
-
-
-    /*
-    public static final String TAG_CREATED_ACTION_LISTENERS_SET_ATTR
-        = ActionListenerTag.class.getName() + ".TAG_CREATED_LISTENERS_SET";
-    private static final Set getTagCreatedListenersSet()
-    {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        Set set = (Set)((ServletRequest)facesContext.getExternalContext().getRequest()).getAttribute(TAG_CREATED_ACTION_LISTENERS_SET_ATTR);
-        if (set == null)
-        {
-            set = new HashSet();
-            ((ServletRequest)facesContext.getExternalContext().getRequest()).setAttribute(TAG_CREATED_ACTION_LISTENERS_SET_ATTR, set);
-        }
-        return set;
-    }
-    */
 
 }

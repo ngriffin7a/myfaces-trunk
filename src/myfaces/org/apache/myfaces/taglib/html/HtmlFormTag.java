@@ -54,6 +54,7 @@ public class HtmlFormTag
     private String _accept;
     private String _acceptCharset;
     private String _enctype;
+    private String _name;
     private String _onreset;
     private String _onsubmit;
     private String _target;
@@ -67,6 +68,7 @@ public class HtmlFormTag
         setStringProperty(component, HTML.ACCEPT_ATTR, _accept);
         setStringProperty(component, HTML.ACCEPT_CHARSET_ATTR, _acceptCharset);
         setStringProperty(component, HTML.ENCTYPE_ATTR, _enctype);
+        setStringProperty(component, HTML.NAME_ATTR, _name);
         setStringProperty(component, HTML.ONRESET_ATTR, _onreset);
         setStringProperty(component, HTML.ONSUMBIT_ATTR, _onsubmit);
         setStringProperty(component, HTML.TARGET_ATTR, _target);
@@ -85,6 +87,11 @@ public class HtmlFormTag
     public void setEnctype(String enctype)
     {
         _enctype = enctype;
+    }
+
+    public void setName(String name)
+    {
+        _name = name;
     }
 
     public void setOnreset(String onreset)

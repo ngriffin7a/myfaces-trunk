@@ -69,32 +69,24 @@ public class NavigationHandlerImpl
         Map casesMap = getNavigationCases(facesContext);
         NavigationCaseConfig navigationCase = null;
 
-        // Exact match
         List casesList = (List)casesMap.get(viewId);
         if (casesList != null)
         {
+            // Exact match?
             navigationCase = calcMatchingNavigationCase(casesList, fromAction, outcome);
-            if (navigationCase == null)
+        }
+
+        if (navigationCase == null)
+        {
+            // Wildcard match?
+            List keys = getSortedWildcardKeys();
+            for (int i = 0, size = keys.size(); i < size; i++)
             {
-                // Wildcard match
-                List keys = getSortedWildcardKeys();
-                for (int i = 0, size = keys.size(); i < size; i++)
+                String fromViewId = (String)keys.get(i);
+                if (fromViewId.length() > 2)
                 {
-                    String fromViewId = (String)keys.get(i);
-                    if (fromViewId.length() > 2)
-                    {
-                        String prefix = fromViewId.substring(0, fromViewId.length() - 2);
-                        if (viewId.startsWith(prefix))
-                        {
-                            casesList = (List)casesMap.get(fromViewId);
-                            if (casesList != null)
-                            {
-                                navigationCase = calcMatchingNavigationCase(casesList, fromAction, outcome);
-                                if (navigationCase != null) break;
-                            }
-                        }
-                    }
-                    else
+                    String prefix = fromViewId.substring(0, fromViewId.length() - 2);
+                    if (viewId.startsWith(prefix))
                     {
                         casesList = (List)casesMap.get(fromViewId);
                         if (casesList != null)
@@ -102,6 +94,15 @@ public class NavigationHandlerImpl
                             navigationCase = calcMatchingNavigationCase(casesList, fromAction, outcome);
                             if (navigationCase != null) break;
                         }
+                    }
+                }
+                else
+                {
+                    casesList = (List)casesMap.get(fromViewId);
+                    if (casesList != null)
+                    {
+                        navigationCase = calcMatchingNavigationCase(casesList, fromAction, outcome);
+                        if (navigationCase != null) break;
                     }
                 }
             }

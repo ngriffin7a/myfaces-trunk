@@ -31,31 +31,37 @@
 
 <body>
 
-<f:use_faces>
+<f:view>
 
-    <x:page_layout id="page" layoutRef="globalOptions.pageLayout"
-            panelClass="pageLayout"
+    <f:loadBundle basename="net.sourceforge.myfaces.examples.resource.example_messages" var="example_messages"/>
+
+    <x:panel_layout id="page" layout="#{globalOptions.pageLayout}"
+            styleClass="pageLayout"
             headerClass="pageHeader"
             navigationClass="pageNavigation"
             bodyClass="pageBody"
             footerClass="pageFooter" >
+
         <%@include file="inc/page_header.jsp" %>
         <%@include file="inc/navigation.jsp"  %>
 
         <f:facet name="body">
             <h:panel_group id="body">
-                <h3>Webpages</h3>
-                 <a href="http://myfaces.sourceforge.net/" target="_blank">Project Homepage</a><br>
-                 <a href="http://www.sourceforge.net/projects/myfaces" target="_blank">MyFaces@Sourceforge</a><br>
-                <h3>Project Members</h3>
-                 <a href="http://sourceforge.net/project/memberlist.php?group_id=69709">MyFaces Team Members@Sourceforge</a><br>
+                <f:verbatim>
+                    <h3>Webpages</h3>
+                     <a href="http://myfaces.sourceforge.net/" target="_blank">Project Homepage</a><br>
+                     <a href="http://www.sourceforge.net/projects/myfaces" target="_blank">MyFaces@Sourceforge</a><br>
+                    <h3>Project Members</h3>
+                     <a href="http://sourceforge.net/project/memberlist.php?group_id=69709">MyFaces Team Members@Sourceforge</a><br>
+                </f:verbatim>
             </h:panel_group>
         </f:facet>
 
         <%@include file="inc/page_footer.jsp" %>
-    </x:page_layout>
 
-</f:use_faces>
+    </x:panel_layout>
+
+</f:view>
 
 </body>
 

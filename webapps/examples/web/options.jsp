@@ -29,22 +29,25 @@
 
 <body>
 
-<f:use_faces>
-
 <!--
 managed beans used:
     optionsForm
     optionsCtrl
 -->
 
-<x:save_state id="ss1" valueRef="optionsForm.language" />
+<f:view>
 
-    <x:page_layout id="page" layoutRef="globalOptions.pageLayout"
-            panelClass="pageLayout"
+    <x:save_state id="ss1" valueRef="optionsForm.language" />
+
+    <f:loadBundle basename="net.sourceforge.myfaces.examples.resource.example_messages" var="example_messages"/>
+
+    <x:panel_layout id="page" layout="#{globalOptions.pageLayout}"
+            styleClass="pageLayout"
             headerClass="pageHeader"
             navigationClass="pageNavigation"
             bodyClass="pageBody"
             footerClass="pageFooter" >
+
         <%@include file="inc/page_header.jsp" %>
         <%@include file="inc/navigation.jsp"  %>
 
@@ -76,9 +79,10 @@ managed beans used:
         </f:facet>
 
         <%@include file="inc/page_footer.jsp" %>
-    </x:page_layout>
 
-</f:use_faces>
+    </x:panel_layout>
+
+</f:view>
 
 </body>
 

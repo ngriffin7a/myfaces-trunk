@@ -37,18 +37,16 @@ managed beans used:
     ucaseForm
 -->
 
-<f:use_faces>
+<f:view>
 
-    <x:page_layout id="page" layoutRef="globalOptions.pageLayout"
-            panelClass="pageLayout"
+    <f:loadBundle basename="net.sourceforge.myfaces.examples.resource.example_messages" var="example_messages"/>
+
+    <x:panel_layout id="page" layout="#{globalOptions.pageLayout}"
+            styleClass="pageLayout"
             headerClass="pageHeader"
             navigationClass="pageNavigation"
             bodyClass="pageBody"
             footerClass="pageFooter" >
-        <%@include file="inc/page_header.jsp" %>
-        <%@include file="inc/navigation.jsp"  %>
-
-        <h:output_errors />
 
         <f:facet name="body">
             <h:panel_group id="body">
@@ -58,55 +56,50 @@ managed beans used:
                 <!--x:save_state id="save3" valueRef="calcForm.result" /-->
                 <x:save_state id="save4" valueRef="ucaseForm.text" />
 
-                <%
-                    Date test = new Date();
-                %>
-                You entered this page on <h:output_text id="test" value="<%=test.toString()%>" /><br>
-
-                <h:output_errors id="messageList" />
+                <h:messages id="messageList" />
 
                 <h4>A Form</h4>
                 <table border="1"><tr><td>
-                    <h:form id="form1" formName="calcForm">
+                    <h:form id="form1" name="calcForm">
                         <h:output_label for="number1" value="Number 1" />:
-                        <h:input_text id="number1" valueRef="calcForm.number1" maxlength="10" size="25" >
+                        <h:input_text id="number1" value="#{calcForm.number1}" maxlength="10" size="25" >
                            <f:validate_longrange minimum="1" maximum="10" />
                         </h:input_text>
-                        <h:output_errors id="number1Error" for="number1" outputClass="error" /><br>
+                        <h:message id="number1Error" for="number1" styleClass="error" /><br>
 
                         <h:output_label for="number2" value="Number 2" />:
-                        <h:input_text id="number2" valueRef="calcForm.number2" maxlength="10" size="25"/>
-                        <h:output_errors id="number2Error" for="number2" outputClass="error" /><br>
+                        <h:input_text id="number2" value="#{calcForm.number2}" maxlength="10" size="25"/>
+                        <h:message id="number2Error" for="number2" styleClass="error" /><br>
 
                         <h:output_label for="result" value="Result" />:
-                        <h:output_text id="result" valueRef="calcForm.result" /><br>
+                        <h:output_text id="result" value="#{calcForm.result}" /><br>
 
-                        <h:command_button id="addButton" commandName="add" label="Add them" action="none">
+                        <h:command_button id="addButton" value="Add them" action="none">
                             <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
                         </h:command_button>
-                        <h:command_button id="subtractButton" commandName="subtract" label="Subtract them" action="none">
+                        <h:command_button id="subtractButton" value="Subtract them" action="none">
                             <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
                         </h:command_button>
                         <br>
                     </h:form>
 
-                    <h:command_hyperlink id="href1" commandName="add" action="none">Add them by clicking this link
+                    <h:command_link id="href1" action="none">Add them by clicking this link
                         <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
-                    </h:command_hyperlink><br>
-                    <h:command_hyperlink id="href2" commandName="subtract" action="none">Subtract them by clicking this link
+                    </h:command_link><br>
+                    <h:command_link id="href2" action="none">Subtract them by clicking this link
                         <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>
-                    </h:command_hyperlink>
+                    </h:command_link>
                 </td></tr></table>
 
                 <h4>Another Form</h4>
                 <table border="1"><tr><td>
-                    <h:form id="form2" formName="ucaseForm">
-                        <h:input_text id="text" valueRef="ucaseForm.text"/>
-                        <h:output_errors id="textError" for="text" outputClass="error" /><br>
-                        <h:command_button id="ucaseButton" commandName="up" label="Make it uppercase" action="none">
+                    <h:form id="form2" name="ucaseForm">
+                        <h:input_text id="text" value="#{ucaseForm.text}"/>
+                        <h:message id="textError" for="text" styleClass="error" /><br>
+                        <h:command_button id="ucaseButton" value="Make it uppercase" action="none">
                             <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseController" />
                         </h:command_button>
-                        <h:command_button id="lcaseButton" commandName="low" label="Make it lowercase" action="none">
+                        <h:command_button id="lcaseButton" value="Make it lowercase" action="none">
                             <f:action_listener type="net.sourceforge.myfaces.examples.example1.UCaseController" />
                         </h:command_button>
                         <br>
@@ -115,25 +108,26 @@ managed beans used:
 
                 <h4>Validation</h4>
                 <table border="1"><tr><td>
-                    <h:form id="form3" formName="valForm">
-                        <h:command_button id="valEnable" label="Enable validation" action="none" commandName="enableVal">
+                    <h:form id="form3" name="valForm">
+                        <h:command_button id="valEnable" value="Enable validation" action="none" >
                             <f:action_listener type="net.sourceforge.myfaces.examples.example1.ValidationController" />
                         </h:command_button>
-                        <h:command_button id="valDisable" label="Disable validation" action="none" commandName="disableVal" >
+                        <h:command_button id="valDisable" value="Disable validation" action="none" >
                             <f:action_listener type="net.sourceforge.myfaces.examples.example1.ValidationController" />
                         </h:command_button>
                     </h:form>
                 </td></tr></table>
 
-        <br><h:command_hyperlink id="jump_home" actionRef="ucaseForm.jumpHome" >Go Home</h:command_hyperlink>
+        <br><h:command_link id="jump_home" action="#{ucaseForm.jumpHome}" >Go Home</h:command_link>
 
             </h:panel_group>
         </f:facet>
 
         <%@include file="inc/page_footer.jsp" %>
-    </x:page_layout>
 
-</f:use_faces>
+    </x:panel_layout>
+
+</f:view>
 
 </body>
 

@@ -10,6 +10,22 @@ Mandatory steps
         old: <h:output_message bundle="example_messages" key="today" >
         new: <h:output_message value="#{example_messages['today']}" >
 
+* replace all valueRef attributes by the corresponding value binding
+    e.g.
+        old: <h:output_text valueRef="calcForm.result" />
+        new: <h:output_text value="#{calcForm.result}" />
+
+* in all <h:form> tags rename "formName" attributes to "name"
+
+* remove all "commandName" attributes in <h:command_button> and <h:command_link> tags
+
+* replace all actionRef attributes by the corresponding action method binding
+    e.g.
+        old: <h:command_link actionRef="ucaseForm.jumpHomeAction" >
+        new: <h:command_link action="#{ucaseForm.jumpHome}" >
+    Note: In this example we must also change the old getJumpHomeAction method to a
+          method with the following signature: public String jumpHome()
+
 * rename <x:page_layout> tags to <x:panel_layout> and change attributes:
     layoutRef --> layout with value binding syntax
     panelClass --> styleClass
@@ -24,6 +40,7 @@ Mandatory steps
 
 * rename <x:navigation_separator> tags to <x:output_navigation>
 
+* rename <h:command_hyperlink> tags to <h:command_link>
 
 
 

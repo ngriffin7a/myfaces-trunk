@@ -18,8 +18,9 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
+import net.sourceforge.myfaces.component.html.MyFacesHtmlForm;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
+import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIComponent;
@@ -48,7 +49,7 @@ public class HtmlFormRenderer
             throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, component, HtmlForm.class);
-        
+
         HtmlForm htmlForm = (HtmlForm)component;
 
         ExternalContext externalContext = facesContext.getExternalContext();
@@ -70,7 +71,7 @@ public class HtmlFormRenderer
 
         writer.startElement(HTML.FORM_ELEM, htmlForm);
         writer.writeAttribute(HTML.ID_ATTR, clientId, null);
-        writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
+        writer.writeAttribute(HTML.NAME_ATTR, MyFacesHtmlForm.getFormName(facesContext, htmlForm), null);
         writer.writeAttribute(HTML.METHOD_ATTR, "post", null);
         writer.writeAttribute(HTML.ACTION_ATTR,
                               externalContext.encodeActionURL(actionURL),

@@ -29,16 +29,16 @@
 
 <body>
 
-<f:use_faces>
+<f:view>
 
-    <x:page_layout id="page" layoutRef="globalOptions.pageLayout"
-            panelClass="pageLayout"
+    <f:loadBundle basename="net.sourceforge.myfaces.examples.resource.example_messages" var="example_messages"/>
+
+    <x:panel_layout id="page" layout="#{globalOptions.pageLayout}"
+            styleClass="pageLayout"
             headerClass="pageHeader"
             navigationClass="pageNavigation"
             bodyClass="pageBody"
             footerClass="pageFooter" >
-        <%@include file="inc/page_header.jsp" %>
-        <%@include file="inc/navigation.jsp"  %>
 
         <f:facet name="body">
             <h:panel_group id="body">
@@ -55,9 +55,10 @@
         </f:facet>
 
         <%@include file="inc/page_footer.jsp" %>
-    </x:page_layout>
 
-</f:use_faces>
+    </x:panel_layout>
+
+</f:view>
 
 </body>
 

@@ -22,12 +22,11 @@ import net.sourceforge.myfaces.component.html.MyFacesHtmlCommandLink;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.faces.component.StateHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
-import javax.faces.event.ActionListener;
+import javax.faces.event.FacesEvent;
 import javax.faces.event.PhaseId;
 import java.util.Iterator;
 
@@ -48,7 +47,6 @@ public class HtmlCommandNavigation
     public HtmlCommandNavigation()
     {
         super();
-        addActionListener(NAV_ACTION_LISTENER);
     }
 
     public boolean isImmediate()
@@ -193,14 +191,11 @@ public class HtmlCommandNavigation
     }
 
 
-
-    public static ActionListener NAV_ACTION_LISTENER = new NavigationActionListener();
-
-    public static class NavigationActionListener
-        implements ActionListener, StateHolder
+    public void broadcast(FacesEvent event) throws AbortProcessingException
     {
-        public void processAction(ActionEvent actionEvent) throws AbortProcessingException
+        if (event instanceof ActionEvent)
         {
+            ActionEvent actionEvent = (ActionEvent)event;
             if (actionEvent.getPhaseId() == PhaseId.APPLY_REQUEST_VALUES)
             {
                 HtmlCommandNavigation navItem = (HtmlCommandNavigation)actionEvent.getComponent();
@@ -208,25 +203,7 @@ public class HtmlCommandNavigation
                 FacesContext.getCurrentInstance().renderResponse();
             }
         }
-
-        public Object saveState(FacesContext facescontext)
-        {
-            return null;
-        }
-
-        public void restoreState(FacesContext facescontext, Object obj)
-        {
-        }
-
-        public boolean isTransient()
-        {
-            return false;   //TODO: true?
-        }
-
-        public void setTransient(boolean flag)
-        {
-            throw new UnsupportedOperationException();
-        }
+        super.broadcast(event);
     }
 
 
