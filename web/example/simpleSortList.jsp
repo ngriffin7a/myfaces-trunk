@@ -26,7 +26,7 @@
 
 <head>
   <meta HTTP-EQUIV="Content-Type" CONTENT="text/html;CHARSET=iso-8859-1">
-  <title>Simple Country List</title>
+  <title>Simple Sortable List</title>
   <Link rel="stylesheet" type="text/css" href="css/basic.css">
 </head>
 
@@ -48,6 +48,7 @@
                     headerClass="standardTable_SortHeader"
                     footerClass="standardTable_Footer"
                     rowClasses="standardTable_Row1,standardTable_Row2" >
+                <!-- SORTHEADER -->
                 <x:sortheader id="list.header" commandReference="controller.sort" modelReference="list.sort" >
                     <x:sortcolumn id="list.header.col1" commandName="type">
                         <f:output_text id="list.header.name" text="Car-Type"  />
@@ -56,10 +57,12 @@
                         <f:output_text id="list.header.iso" text="Car-Color"  />
                     </x:sortcolumn>
                 </x:sortheader>
+                <!-- DATA -->
                 <f:listrow id="list.tr" var="car" modelReference="list.cars" >
                     <f:output_text id="list.name" modelReference="car.type" />
                     <f:output_text id="list.isoCode" modelReference="car.color" />
                 </f:listrow>
+                <!-- FOOTER -->
                 <f:group id="list.footer" >
                     <f:output_text id="list.footer.name" text="..."  />
                     <f:output_text id="list.footer.iso" />

@@ -49,10 +49,12 @@
                     headerClass="standardTable_Header"
                     footerClass="standardTable_Footer"
                     rowClasses="standardTable_Row1,standardTable_Row2" >
+                <!-- HEADER -->
                 <f:group id="header" >
                     <f:output_text id="header.name" text="Country name" />
                     <f:output_text id="header.isoCode" text="Iso-Code" />
                 </f:group>
+                <!-- DATA -->
                 <f:listrow id="countryList.tr" var="country" modelReference="countryList.countries" >
                     <f:output_text id="countryList.name" modelReference="country.name" />
                     <f:group id="g1" >
@@ -60,6 +62,7 @@
                         <% rows++; %>
                     </f:group>
                 </f:listrow>
+                <!-- FOOTER -->
                 <f:group id="footer" >
                     <f:output_text id="footer.1" text="look at this runtime values ..."/>
                     <f:group id="g2" >
@@ -77,7 +80,7 @@
             </f:list>
             <br>
 
-            <!-- TODO grid does not work -->
+            <!-- TODO grid does not work anymore -->
             <f:grid id="grid"
                     columns="2"
                     style="standardTable"
