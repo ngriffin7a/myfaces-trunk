@@ -24,6 +24,7 @@ import net.sourceforge.myfaces.util.bundle.BundleUtils;
 
 import javax.faces.component.SelectItem;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UISelectMany;
 import javax.faces.context.FacesContext;
 import java.util.*;
 
@@ -72,7 +73,7 @@ public class SelectItemUtil
             }
             else if (child instanceof UISelectItems)
             {
-                Object value = child.currentValue(facesContext);
+                Object value = ((UISelectItems)child).currentValue(facesContext);
                 if (value instanceof SelectItem)
                 {
                     list.add(value);
@@ -128,7 +129,7 @@ public class SelectItemUtil
 
 
     public static Set getSelectedValuesAsStringSet(FacesContext facesContext,
-                                                   UIComponent uiSelectMany)
+                                                   UISelectMany uiSelectMany)
     {
         Object[] selectedValues = (Object[])uiSelectMany.currentValue(facesContext);
         if (selectedValues == null || selectedValues.length == 0)

@@ -37,12 +37,15 @@ public class PageLayoutTag
     implements HTMLTableAttributes,
                LayoutRendererAttributes
 {
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        UIComponent comp = new UIPanel(false);
-        UIComponentUtils.setTransient(comp, true);
-        comp.setValid(true);
-        return comp;
+        return "Panel";
+    }
+
+    public void overrideProperties(UIComponent uiComponent)
+    {
+        super.overrideProperties(uiComponent);
+        UIComponentUtils.setTransient(uiComponent, true);
     }
 
     public String getRendererType()

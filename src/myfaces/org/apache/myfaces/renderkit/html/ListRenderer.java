@@ -66,6 +66,7 @@ public class ListRenderer
         return TYPE;
     }
 
+    /*
     public boolean supportsComponentType(UIComponent uiComponent)
     {
         return uiComponent instanceof javax.faces.component.UIPanel;
@@ -84,6 +85,7 @@ public class ListRenderer
         addAttributeDescriptors(UIPanel.TYPE, TLD_HTML_URI, "panel_list", PANEL_LIST_ATTRIBUTES);
         addAttributeDescriptors(UIPanel.TYPE, TLD_HTML_URI, "panel_list", USER_ROLE_ATTRIBUTES);
     }
+    */
 
 
     public void beforeEncodeBegin(FacesContext facesContext,
@@ -99,7 +101,7 @@ public class ListRenderer
             if (parentRendererType.equals(ListRenderer.TYPE) &&
                 rendererType.equals(DataRenderer.TYPE))
             {
-                Iterator it = DataRenderer.getIterator(facesContext, uiComponent);
+                Iterator it = DataRenderer.getIterator(facesContext, (UIPanel)uiComponent);
                 if (it == null)
                 {
                     // first call of encodeBegin
@@ -327,12 +329,12 @@ public class ListRenderer
     public static final String LIST_STACK_ATTR = ListRenderer.class.getName() + ".liststack";
     private Stack getListComponentStack(FacesContext context)
     {
-        ServletRequest request = context.getServletRequest();
-        Stack stack = (Stack)request.getAttribute(LIST_STACK_ATTR);
+        ServletRequest servletRequest = (ServletRequest)context.getExternalContext().getRequest();
+        Stack stack = (Stack)servletRequest.getAttribute(LIST_STACK_ATTR);
         if (stack == null)
         {
             stack = new Stack();
-            request.setAttribute(LIST_STACK_ATTR, stack);
+            servletRequest.setAttribute(LIST_STACK_ATTR, stack);
         }
         return stack;
     }
@@ -346,33 +348,36 @@ public class ListRenderer
     protected int incrementColumnAttr(FacesContext context)
     {
         Integer value = getActualColumnAttr(context);
-        context.getServletRequest().setAttribute(ACTUAL_COLUMN_ATTR, new Integer(value.intValue() + 1));
+        ServletRequest servletRequest = (ServletRequest)context.getExternalContext().getRequest();
+        servletRequest.setAttribute(ACTUAL_COLUMN_ATTR, new Integer(value.intValue() + 1));
         return value.intValue() + 1;
     }
 
     protected void resetColumnAttr(FacesContext context)
     {
-        context.getServletRequest().setAttribute(ACTUAL_COLUMN_ATTR, INITIAL_VALUE);
+        ServletRequest servletRequest = (ServletRequest)context.getExternalContext().getRequest();
+        servletRequest.setAttribute(ACTUAL_COLUMN_ATTR, INITIAL_VALUE);
     }
 
     protected Integer getActualColumnAttr(FacesContext context)
     {
-        ServletRequest request = context.getServletRequest();
-        Integer value = (Integer)request.getAttribute(ACTUAL_COLUMN_ATTR);
+        ServletRequest servletRequest = (ServletRequest)context.getExternalContext().getRequest();
+        Integer value = (Integer)servletRequest.getAttribute(ACTUAL_COLUMN_ATTR);
         return value == null ? INITIAL_VALUE : new Integer(value.intValue());
     }
 
     protected int incrementRowAttr(FacesContext context)
     {
         Integer value = getActualRowAttr(context);
-        context.getServletRequest().setAttribute(ACTUAL_ROW_ATTR, new Integer(value.intValue() + 1));
+        ServletRequest servletRequest = (ServletRequest)context.getExternalContext().getRequest();
+        servletRequest.setAttribute(ACTUAL_ROW_ATTR, new Integer(value.intValue() + 1));
         return value.intValue() + 1;
     }
 
     protected Integer getActualRowAttr(FacesContext context)
     {
-        ServletRequest request = context.getServletRequest();
-        Integer value = (Integer)request.getAttribute(ACTUAL_ROW_ATTR);
+        ServletRequest servletRequest = (ServletRequest)context.getExternalContext().getRequest();
+        Integer value = (Integer)servletRequest.getAttribute(ACTUAL_ROW_ATTR);
         return value == null ? INITIAL_VALUE : new Integer(value.intValue());
     }
 
@@ -446,7 +451,7 @@ public class ListRenderer
     private Styles getStyles(FacesContext context)
     {
         UIComponent listComponent = peekListComponent(context);
-        if (listComponent.getComponentType().equals(javax.faces.component.UIPanel.TYPE))
+        if (listComponent instanceof UIPanel)
         {
             if (!listComponent.getRendererType().equals(ListRenderer.TYPE))
             {

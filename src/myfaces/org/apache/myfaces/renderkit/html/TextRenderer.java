@@ -58,6 +58,7 @@ public class TextRenderer
         return TYPE;
     }
 
+    /*
     public boolean supportsComponentType(String s)
     {
         return s.equals(UIInput.TYPE) || s.equals(UIOutput.TYPE);
@@ -82,6 +83,7 @@ public class TextRenderer
         addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_text", OUTPUT_TEXT_ATTRIBUTES);
         addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_text", USER_ROLE_ATTRIBUTES);
     }
+    */
 
 
 
@@ -89,29 +91,29 @@ public class TextRenderer
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
-        if (uiComponent.getComponentType().equals(UIInput.TYPE))
+        if (uiComponent instanceof UIInput)
         {
-            renderInput(facesContext, uiComponent);
+            renderInput(facesContext, (UIInput)uiComponent);
         }
         else
         {
-            renderOutput(facesContext, uiComponent);
+            renderOutput(facesContext, (UIOutput)uiComponent);
         }
     }
 
-    public void renderInput(FacesContext facesContext, UIComponent uiComponent)
+    public void renderInput(FacesContext facesContext, UIInput uiInput)
             throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<input type=\"text\"");
-        String coumpoundId = uiComponent.getClientId(facesContext);
+        String coumpoundId = uiInput.getClientId(facesContext);
         writer.write(" name=\"");
         writer.write(coumpoundId);
         writer.write("\"");
         writer.write(" id=\"");
         writer.write(coumpoundId);
         writer.write("\"");
-        String currentValue = getStringValue(facesContext, uiComponent);
+        String currentValue = getStringValue(facesContext, uiInput);
         if (currentValue != null)
         {
             writer.write(" value=\"");
@@ -119,39 +121,39 @@ public class TextRenderer
             writer.write("\"");
         }
 
-        HTMLUtil.renderCssClass(writer, uiComponent, INPUT_CLASS_ATTR);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_INPUT_ATTRIBUTES);
-        HTMLUtil.renderDisabledOnUserRole(facesContext, uiComponent);
+        HTMLUtil.renderCssClass(writer, uiInput, INPUT_CLASS_ATTR);
+        HTMLUtil.renderHTMLAttributes(writer, uiInput, HTML_UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiInput, HTML_EVENT_HANDLER_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiInput, HTML_INPUT_ATTRIBUTES);
+        HTMLUtil.renderDisabledOnUserRole(facesContext, uiInput);
 
         writer.write(">");
     }
 
 
-    public void renderOutput(FacesContext facesContext, UIComponent uiComponent)
+    public void renderOutput(FacesContext facesContext, UIOutput uiOutput)
         throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
 
         // TODO: don't render span when empty
         writer.write("<span");
-        HTMLUtil.renderCssClass(writer, uiComponent, OUTPUT_CLASS_ATTR);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+        HTMLUtil.renderCssClass(writer, uiOutput, OUTPUT_CLASS_ATTR);
+        HTMLUtil.renderHTMLAttributes(writer, uiOutput, HTML_UNIVERSAL_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiOutput, HTML_EVENT_HANDLER_ATTRIBUTES);
         writer.write(">");
 
         String text;
-        String key = (String)uiComponent.getAttribute(KEY_ATTR);
+        String key = (String)uiOutput.getAttribute(KEY_ATTR);
         if (key != null)
         {
             text = BundleUtils.getString(facesContext,
-                                            (String)uiComponent.getAttribute(BUNDLE_ATTR),
+                                            (String)uiOutput.getAttribute(BUNDLE_ATTR),
                                             key);
         }
         else
         {
-            text = getStringValue(facesContext, uiComponent);
+            text = getStringValue(facesContext, uiOutput);
         }
 
         writer.write(HTMLEncoder.encode(text, true, true));

@@ -19,9 +19,13 @@
 package net.sourceforge.myfaces.examples.example2;
 
 import net.sourceforge.myfaces.examples.example2.QuotationForm;
+import net.sourceforge.myfaces.examples.example1.UCaseForm;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.*;
+import javax.faces.application.ApplicationFactory;
+import javax.faces.FactoryFinder;
+import javax.faces.el.ValueBinding;
 
 /**
  * DOCUMENT ME!
@@ -36,7 +40,9 @@ public class QuotationController
         String commandName = event.getActionCommand();
         FacesContext facesContext = FacesContext.getCurrentInstance();
 
-        QuotationForm form = (QuotationForm)facesContext.getModelValue("q_form");
+        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+        ValueBinding vb = af.getApplication().getValueBinding("q_form");
+        QuotationForm form = (QuotationForm)vb.getValue(facesContext);
 
         if (commandName.equals("quotationOn"))
         {

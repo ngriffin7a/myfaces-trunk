@@ -18,9 +18,6 @@
  */
 package net.sourceforge.myfaces.examples.example1;
 
-import javax.faces.context.FacesContext;
-import javax.faces.event.CommandEvent;
-import javax.faces.event.FacesEvent;
 import java.io.Serializable;
 
 /**

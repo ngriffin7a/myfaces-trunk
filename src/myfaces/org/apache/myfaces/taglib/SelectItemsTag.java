@@ -18,9 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UISelectItems;
 
-import javax.faces.component.UIComponent;
 
 /**
  * DOCUMENT ME!
@@ -30,9 +28,9 @@ import javax.faces.component.UIComponent;
 public class SelectItemsTag
     extends MyFacesTag
 {
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        return new UISelectItems();
+        return "SelectItems";
     }
 
     public String getRendererType()

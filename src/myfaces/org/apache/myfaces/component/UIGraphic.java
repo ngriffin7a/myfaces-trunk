@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.component;
 
-import javax.faces.context.FacesContext;
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 
 /**
  * Derived class from javax.faces.UIGraphic.
@@ -28,9 +28,9 @@ import javax.faces.component.UIComponent;
  */
 public class UIGraphic
     extends javax.faces.component.UIGraphic
-    implements CommonComponentAttributes
+    //implements CommonComponentAttributes
 {
-    public static final String URL_ATTR = "URL";
+    public static final String URL_PROP = "URL";
 
     public UIGraphic()
     {

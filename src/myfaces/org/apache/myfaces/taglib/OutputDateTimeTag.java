@@ -34,12 +34,18 @@ public class OutputDateTimeTag
     extends MyFacesTag
     implements DateTimeRendererAttributes
 {
-    //MyFaces tag extensions:
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        UIComponent uiComponent = new UIOutput();
-        uiComponent.setConverter("DateTimeConverter");
-        return uiComponent;
+        return "Output";
+    }
+
+    public void overrideProperties(UIComponent uiComponent)
+    {
+        super.overrideProperties(uiComponent);
+        if (uiComponent.getConverter() == null)
+        {
+            uiComponent.setConverter("DateTimeConverter");
+        }
     }
 
     public String getRendererType()

@@ -32,10 +32,7 @@ import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
 import javax.faces.tree.Tree;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
+import javax.servlet.*;
 import java.io.IOException;
 
 /**
@@ -47,10 +44,10 @@ public class ViewHandlerJspImpl
         implements ViewHandler
 {
     public void renderView(FacesContext facesContext)
-        throws IOException, ServletException
+        throws IOException, FacesException
     {
-        ServletRequest request = facesContext.getServletRequest();
-        ServletContext servletContext = facesContext.getServletContext();
+        ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
+        ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
         Tree tree = facesContext.getTree();
 
         //Build component tree from parsed JspInfo so that all components
@@ -95,10 +92,11 @@ public class ViewHandlerJspImpl
         String forwardURL = sm.mapTreeIdToFilename(servletContext, tree.getTreeId());
 
         RequestDispatcher requestDispatcher
-            = facesContext.getServletRequest().getRequestDispatcher(forwardURL);
+            = servletRequest.getRequestDispatcher(forwardURL);
         try
         {
-            requestDispatcher.forward(request, facesContext.getServletResponse());
+            requestDispatcher.forward(servletRequest,
+                                      (ServletResponse)facesContext.getExternalContext().getResponse());
         }
         catch(IOException ioe)
         {
@@ -106,7 +104,7 @@ public class ViewHandlerJspImpl
         }
         catch(ServletException se)
         {
-            throw new ServletException(se.getMessage());
+            throw new FacesException(se.getMessage());
         }
     }
 

@@ -23,6 +23,7 @@ import net.sourceforge.myfaces.component.UIComponentUtils;
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.servlet.ServletRequest;
 
 /**
  * DOCUMENT ME!
@@ -91,7 +92,7 @@ public class RequestParameterNames
 
     private static int getNextListenerSerial(FacesContext facesContext)
     {
-        Integer serial = (Integer)facesContext.getServletRequest().getAttribute(LISTENER_SERIAL_ATTR);
+        Integer serial = (Integer)((ServletRequest)facesContext.getExternalContext().getRequest()).getAttribute(LISTENER_SERIAL_ATTR);
         if (serial == null)
         {
             serial = new Integer(1);
@@ -100,7 +101,7 @@ public class RequestParameterNames
         {
             serial = new Integer(serial.intValue() + 1);
         }
-        facesContext.getServletRequest().setAttribute(LISTENER_SERIAL_ATTR, serial);
+        ((ServletRequest)facesContext.getExternalContext().getRequest()).setAttribute(LISTENER_SERIAL_ATTR, serial);
         return serial.intValue();
     }
 

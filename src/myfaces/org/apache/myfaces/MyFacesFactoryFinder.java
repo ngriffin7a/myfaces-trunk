@@ -21,6 +21,7 @@ package net.sourceforge.myfaces;
 import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 import net.sourceforge.myfaces.webapp.ServletMappingFactoryImpl;
+import net.sourceforge.myfaces.config.*;
 
 import javax.faces.FacesException;
 import javax.servlet.ServletContext;
@@ -34,11 +35,13 @@ import java.util.HashMap;
 public class MyFacesFactoryFinder
 {
     public static final String SERVLET_MAPPING_FACTORY = ServletMapping.class.getName();
+    public static final String FACES_CONFIG_FACTORY = FacesConfig.class.getName();
 
     private static final HashMap DEFAULT_FACTORIES = new HashMap();
     static
     {
         DEFAULT_FACTORIES.put(SERVLET_MAPPING_FACTORY, ServletMappingFactoryImpl.class.getName());
+        DEFAULT_FACTORIES.put(FACES_CONFIG_FACTORY, FacesConfigFactoryImpl.class.getName());
     }
 
     private static Object getFactory(ServletContext servletContext, String factoryName)
@@ -86,6 +89,12 @@ public class MyFacesFactoryFinder
         throws FacesException
     {
         return (ServletMappingFactory)getFactory(servletContext, SERVLET_MAPPING_FACTORY);
+    }
+
+    public static FacesConfigFactory getFacesConfigFactory(ServletContext servletContext)
+        throws FacesException
+    {
+        return (FacesConfigFactory)getFactory(servletContext, FACES_CONFIG_FACTORY);
     }
 
 }

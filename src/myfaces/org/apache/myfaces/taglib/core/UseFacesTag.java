@@ -30,8 +30,8 @@ import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
 import javax.faces.webapp.JspResponseWriter;
+import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTag;
 import javax.servlet.jsp.tagext.BodyTagSupport;
@@ -48,9 +48,7 @@ public class UseFacesTag
     protected FacesContext getFacesContext()
     {
         //FacesServlet saves the FacesContext as request attribute:
-        FacesContext facesContext
-            = (FacesContext)super.pageContext.getAttribute(FacesContext.FACES_CONTEXT_ATTR,
-                                                           PageContext.REQUEST_SCOPE);
+        FacesContext facesContext = FacesContext.getCurrentInstance();
         if (facesContext == null)
         {
             throw new IllegalStateException("No faces context!?");
@@ -110,7 +108,7 @@ public class UseFacesTag
             {
                 if (mode != MyFacesConfig.STATE_SAVING_MODE__SERVER_SESSION)
                 {
-                    facesContext.getServletRequest().setAttribute(ClientStateSaver.BODY_CONTENT_REQUEST_ATTR,
+                    ((ServletRequest)facesContext.getExternalContext().getRequest()).setAttribute(ClientStateSaver.BODY_CONTENT_REQUEST_ATTR,
                                                                   getBodyContent());
                 }
                 renderer.encodeEnd(facesContext, null);

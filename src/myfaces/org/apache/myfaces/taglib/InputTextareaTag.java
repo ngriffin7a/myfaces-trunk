@@ -19,9 +19,9 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIInput;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLTextareaAttributes;
 import net.sourceforge.myfaces.renderkit.attr.TextareaRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.TextareaRenderer;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLTextareaAttributes;
 
 import javax.faces.component.UIComponent;
 
@@ -35,9 +35,9 @@ public class InputTextareaTag
     implements HTMLTextareaAttributes,
                TextareaRendererAttributes
 {
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        return new UIInput();
+        return "Input";
     }
 
     public String getRendererType()

@@ -20,7 +20,6 @@ package net.sourceforge.myfaces.convert;
 
 import javax.faces.FacesException;
 import javax.faces.convert.Converter;
-import javax.faces.convert.ConverterFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -34,7 +33,6 @@ import java.util.Properties;
  * @version $Revision$ $Date$
  */
 public class ConverterFactoryImpl
-        extends ConverterFactory
 {
     private static final String CONVERTER_PROPS =
         "net.sourceforge.myfaces.convert.converter".replace('.', '/') + ".properties";

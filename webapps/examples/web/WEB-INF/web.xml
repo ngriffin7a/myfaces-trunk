@@ -158,7 +158,7 @@
 
 
     <listener>
-        <listener-class>net.sourceforge.myfaces.webapp.DefaultServletContextListener</listener-class>
+        <listener-class>net.sourceforge.myfaces.webapp.StartupServletContextListener</listener-class>
     </listener>
 
     <!-- Faces Servlet -->

@@ -28,6 +28,9 @@ import net.sourceforge.myfaces.util.logging.LogUtil;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
+import javax.faces.application.ApplicationFactory;
+import javax.faces.FactoryFinder;
+import javax.faces.el.ValueBinding;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -60,7 +63,7 @@ public class HTTPSessionStateSaver
 
     public void release(FacesContext facesContext) throws IOException
     {
-        HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
+        HttpServletRequest request = (HttpServletRequest)facesContext.getExternalContext().getRequest();
         HttpSession session = request.getSession(true);
 
         Tree tree = facesContext.getTree();
@@ -85,9 +88,9 @@ public class HTTPSessionStateSaver
         while (it.hasNext())
         {
             UIComponent comp = (UIComponent)it.next();
-            if (comp.getComponentType().equals(UISaveState.TYPE))
+            if (comp instanceof UISaveState)
             {
-                String modelRef = comp.getModelReference();
+                String modelRef = ((UISaveState)comp).getValueRef();
                 if (modelRef == null)
                 {
                     LogUtil.getLogger().warning("UISaveState without model reference?!");
@@ -104,10 +107,12 @@ public class HTTPSessionStateSaver
                         {
                             modelValuesColl = new ArrayList();
                         }
-                        Object v = facesContext.getModelValue(modelRef);
+                        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+                        ValueBinding vb = af.getApplication().getValueBinding(modelRef);
+                        Object v = vb.getValue(facesContext);
                         modelValuesColl.add(new ModelValueEntry(modelRef,
-                                                               v,
-                                                               ((UISaveState)comp).isGlobal()));
+                                                                v,
+                                                                ((UISaveState)comp).isGlobal()));
                     }
                 }
             }

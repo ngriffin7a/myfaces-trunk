@@ -18,12 +18,9 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UISelectMany;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLSelectAttributes;
 import net.sourceforge.myfaces.renderkit.attr.MenuRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.MenuRenderer;
-
-import javax.faces.component.UIComponent;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLSelectAttributes;
 
 
 /**
@@ -36,9 +33,9 @@ public class SelectManyMenuTag
     implements HTMLSelectAttributes,
                MenuRendererAttributes
 {
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        return new UISelectMany();
+        return "SelectMany";
     }
 
     public String getRendererType()

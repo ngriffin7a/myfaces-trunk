@@ -34,11 +34,11 @@ import net.sourceforge.myfaces.tree.TreeUtils;
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIPanel;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.tree.Tree;
+import javax.servlet.ServletRequest;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.StringTokenizer;
@@ -80,6 +80,7 @@ public class NavigationRenderer
         return TYPE;
     }
 
+    /*
     public boolean supportsComponentType(String s)
     {
         return s.equals(UINavigation.TYPE);
@@ -97,6 +98,7 @@ public class NavigationRenderer
         addAttributeDescriptors(UIPanel.TYPE, TLD_EXT_URI, "navigation", HTML_TABLE_ATTRIBUTES);
         addAttributeDescriptors(UIPanel.TYPE, TLD_EXT_URI, "navigation", NAVIGATION_ATTRIBUTES);
     }
+    */
 
 
 
@@ -141,9 +143,9 @@ public class NavigationRenderer
             //There was no decoding, so we can assume that the state has not been
             //restored yet and we must restore open/close state for children from
             //previous tree.
+            ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
             StateRestorer stateRestorer
-                = (StateRestorer)facesContext.getServletRequest()
-                        .getAttribute(StateRestorer.STATE_RESTORER_REQUEST_ATTR);
+                = (StateRestorer)servletRequest.getAttribute(StateRestorer.STATE_RESTORER_REQUEST_ATTR);
             if (stateRestorer != null)
             {
                 Tree previousTree  = stateRestorer.getPreviousTree(facesContext);

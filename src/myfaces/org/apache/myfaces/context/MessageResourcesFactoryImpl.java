@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.context;
 
 import javax.faces.context.MessageResources;
-import javax.faces.context.MessageResourcesFactory;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -29,7 +28,6 @@ import java.util.Iterator;
  * @version $Revision$ $Date$
  */
 public class MessageResourcesFactoryImpl
-    extends MessageResourcesFactory
 {
     private HashMap _messageResources = new HashMap();
 
@@ -38,9 +36,9 @@ public class MessageResourcesFactoryImpl
 
     public MessageResourcesFactoryImpl()
     {
-        addMessageResources(MessageResourcesFactory.FACES_API_MESSAGES,
+        addMessageResources(MessageResources.FACES_API_MESSAGES,
                             new MessageResourcesResourceBundleImpl(FACES_API_MESSAGES_RESOURCE));
-        addMessageResources(MessageResourcesFactory.FACES_IMPL_MESSAGES,
+        addMessageResources(MessageResources.FACES_IMPL_MESSAGES,
                             new MessageResourcesResourceBundleImpl(FACES_IMPL_MESSAGES_RESOURCE));
     }
 

@@ -43,9 +43,9 @@ public class TextareaRenderer
     extends HTMLRenderer
     implements CommonComponentAttributes,
                CommonRendererAttributes,
-    HTMLUniversalAttributes,
-    HTMLEventHandlerAttributes,
-    HTMLTextareaAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLTextareaAttributes,
                TextareaRendererAttributes,
                UserRoleAttributes
 {
@@ -56,6 +56,7 @@ public class TextareaRenderer
         return TYPE;
     }
 
+    /*
     public boolean supportsComponentType(String s)
     {
         return s.equals(UIInput.TYPE);
@@ -74,6 +75,7 @@ public class TextareaRenderer
         addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", INPUT_TEXTAREA_ATTRIBUTES);
         addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_text", USER_ROLE_ATTRIBUTES);
     }
+    */
 
 
 
@@ -97,7 +99,7 @@ public class TextareaRenderer
         HTMLUtil.renderDisabledOnUserRole(facesContext, uiComponent);
 
         writer.write(">");
-        String currentValue = getStringValue(facesContext, uiComponent);
+        String currentValue = getStringValue(facesContext, (UIInput)uiComponent);
         if (currentValue != null)
         {
             writer.write(HTMLEncoder.encode(currentValue, false, false));

@@ -20,7 +20,6 @@ package net.sourceforge.myfaces.renderkit.callback;
 
 import net.sourceforge.myfaces.component.UIComponentUtils;
 
-import javax.faces.component.AttributeDescriptor;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.render.Renderer;
@@ -101,6 +100,7 @@ class RendererWrapper
         renderer.decode(facesContext, uiComponent);
     }
 
+    /*
     public AttributeDescriptor getAttributeDescriptor(UIComponent uiComponent, String name)
     {
         return getAttributeDescriptor(uiComponent.getComponentType(), name);
@@ -133,6 +133,7 @@ class RendererWrapper
         Renderer renderer = CallbackSupport.getOriginalRenderKit(FacesContext.getCurrentInstance()).getRenderer(_rendererType);
         return renderer.supportsComponentType(componentType);
     }
+    */
 
     public String getClientId(FacesContext facesContext, UIComponent uiComponent)
     {

@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.component;
 
-import javax.faces.context.FacesContext;
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 
 /**
  * DOCUMENT ME!

@@ -19,9 +19,9 @@
 package net.sourceforge.myfaces.context;
 
 import javax.faces.FacesException;
+import javax.faces.application.Message;
+import javax.faces.application.MessageImpl;
 import javax.faces.context.FacesContext;
-import javax.faces.context.Message;
-import javax.faces.context.MessageImpl;
 import javax.faces.context.MessageResources;
 import java.text.MessageFormat;
 import java.util.NoSuchElementException;

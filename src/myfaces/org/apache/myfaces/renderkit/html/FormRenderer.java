@@ -32,7 +32,6 @@ import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
 import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIForm;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.RenderKit;
@@ -40,7 +39,6 @@ import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -49,13 +47,13 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class FormRenderer
-        extends HTMLRenderer
-        implements CommonRendererAttributes,
-    HTMLUniversalAttributes,
-    HTMLEventHandlerAttributes,
-    HTMLFormAttributes,
-                   FormRendererAttributes,
-                   UserRoleAttributes
+    extends HTMLRenderer
+    implements CommonRendererAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLFormAttributes,
+               FormRendererAttributes,
+               UserRoleAttributes
 {
     public static final String TYPE = "Form";
     public String getRendererType()
@@ -63,6 +61,7 @@ public class FormRenderer
         return TYPE;
     }
 
+    /*
     public boolean supportsComponentType(String s)
     {
         return s.equals(UIForm.TYPE);
@@ -81,6 +80,7 @@ public class FormRenderer
         addAttributeDescriptors(UIForm.TYPE, TLD_HTML_URI, "form", FORM_FORM_ATTRIBUTES);
         addAttributeDescriptors(UIForm.TYPE, TLD_HTML_URI, "form", USER_ROLE_ATTRIBUTES);
     }
+    */
 
 
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
@@ -88,7 +88,7 @@ public class FormRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<form method=\"post\" action=\"");
-        writer.write(getActionStr(facesContext, uiComponent));
+        writer.write(getActionStr(facesContext));
         writer.write("\"");
         HTMLUtil.renderCssClass(writer, uiComponent, FORM_CLASS_ATTR);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
@@ -97,20 +97,19 @@ public class FormRenderer
         writer.write(">");
     }
 
-    private String getActionStr(FacesContext facesContext, UIComponent form)
+    private String getActionStr(FacesContext facesContext)
     {
-        HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
-        HttpServletResponse response = (HttpServletResponse)facesContext.getServletResponse();
+        HttpServletRequest request = (HttpServletRequest)facesContext.getExternalContext().getRequest();
 
-        ServletContext servletContext = facesContext.getServletContext();
+        ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
         ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
         ServletMapping sm = smf.getServletMapping(servletContext);
         String treeURL = sm.encodeTreeIdForURL(facesContext, facesContext.getTree().getTreeId());
 
         String action = request.getContextPath() + treeURL;
 
-        //Encode URL for those still using HttpSessions... ;-)
-        action = response.encodeURL(action);
+        //Encode URL
+        action = facesContext.getExternalContext().encodeURL(action);
 
         return action;
     }

@@ -28,8 +28,6 @@ import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.component.UIComponent;
-import javax.faces.component.UISelectMany;
-import javax.faces.component.UISelectOne;
 import javax.faces.context.FacesContext;
 import java.io.IOException;
 
@@ -56,6 +54,7 @@ public class MenuRenderer
         return TYPE;
     }
 
+    /*
     public boolean supportsComponentType(String s)
     {
         return s.equals(UISelectMany.TYPE) ||
@@ -82,6 +81,7 @@ public class MenuRenderer
         addAttributeDescriptors(UISelectOne.TYPE, TLD_HTML_URI, "selectone_menu", SELECT_ONE_MENU_ATTRIBUTES);
         addAttributeDescriptors(UISelectOne.TYPE, TLD_HTML_URI, "selectone_menu", USER_ROLE_ATTRIBUTES);
     }
+    */
 
 
 

@@ -25,6 +25,7 @@ import net.sourceforge.myfaces.tree.TreeUtils;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
+import javax.servlet.ServletContext;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -41,7 +42,7 @@ public class StateUtils
     public static void discardInternalAttributes(FacesContext facesContext,
                                                  Tree tree)
     {
-        if (MyFacesConfig.isDiscardInternalAttributes(facesContext.getServletContext()))
+        if (MyFacesConfig.isDiscardInternalAttributes(((ServletContext)facesContext.getExternalContext().getContext())))
         {
             List lst = new ArrayList();
             for (Iterator treeIt = TreeUtils.treeIterator(tree); treeIt.hasNext();)

@@ -10,6 +10,7 @@ and custom component developers.
 Component developer guidelines
 
 * Attributes instead of class members
+TODO: still true?
   MyFaces' StateSaver is only able to save the state of a component, if all
   important (state relevant) values are stored as component attributes.
   i.e. Every value that should be saved between requests, must appear in the

@@ -34,6 +34,7 @@ import javax.faces.component.UISelectBoolean;
 import javax.faces.component.UISelectMany;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.servlet.ServletRequest;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
@@ -47,9 +48,9 @@ public class CheckboxRenderer
     extends HTMLRenderer
     implements CommonComponentAttributes,
                CommonRendererAttributes,
-    HTMLUniversalAttributes,
-    HTMLEventHandlerAttributes,
-    HTMLInputAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLInputAttributes,
                CheckboxRendererAttributes,
                UserRoleAttributes
 {
@@ -59,6 +60,7 @@ public class CheckboxRenderer
         return TYPE;
     }
 
+    /*
     public boolean supportsComponentType(String s)
     {
         return s.equals(UISelectBoolean.TYPE) ||
@@ -85,22 +87,24 @@ public class CheckboxRenderer
         addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_checkbox", SELECT_MANY_CHECKBOX_ATTRIBUTES);
         addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_checkbox", USER_ROLE_ATTRIBUTES);
     }
+    */
 
 
-    public void decode(FacesContext facescontext, UIComponent uiComponent)
+    public void decode(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
-        if (uiComponent.getComponentType().equals(UISelectMany.TYPE))
+        ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
+        if (uiComponent instanceof UISelectMany)
         {
-            String clientId = uiComponent.getClientId(facescontext);
-            String[] newValues = facescontext.getServletRequest().getParameterValues(clientId);
+            String clientId = uiComponent.getClientId(facesContext);
+            String[] newValues = servletRequest.getParameterValues(clientId);
             ((UISelectMany)uiComponent).setSelectedValues(newValues);
             uiComponent.setValid(true);
         }
-        else if (uiComponent.getComponentType().equals(UISelectBoolean.TYPE))
+        else if (uiComponent instanceof UISelectBoolean)
         {
-            String clientId = uiComponent.getClientId(facescontext);
-            String[] newValues = facescontext.getServletRequest().getParameterValues(clientId);
+            String clientId = uiComponent.getClientId(facesContext);
+            String[] newValues = servletRequest.getParameterValues(clientId);
             if (newValues != null)
             {
                 ((UISelectBoolean)uiComponent).setSelected(true);
@@ -113,18 +117,18 @@ public class CheckboxRenderer
         }
         else
         {
-            throw new IllegalArgumentException("CheckboxRenderer does not support components of type '" + uiComponent.getComponentType() + "'.");
+            throw new IllegalArgumentException("CheckboxRenderer does not support components of type '" + uiComponent.getClass().getName() + "'.");
         }
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
-        if (uiComponent.getComponentType().equals(UISelectMany.TYPE))
+        if (uiComponent instanceof UISelectMany)
         {
             Set selectedValuesSet
                 = SelectItemUtil.getSelectedValuesAsStringSet(facesContext,
-                                                              uiComponent);
+                                                              (UISelectMany)uiComponent);
 
             boolean breakLine = false;
             for (Iterator it = SelectItemUtil.getSelectItems(facesContext, uiComponent); it.hasNext(); )
@@ -148,16 +152,16 @@ public class CheckboxRenderer
                              checked);
             }
         }
-        else if (uiComponent.getComponentType().equals(UISelectBoolean.TYPE))
+        else if (uiComponent instanceof UISelectBoolean)
         {
-            Boolean checked = (Boolean)uiComponent.currentValue(facesContext);
-            String value = getStringValue(facesContext, uiComponent);
+            Boolean checked = (Boolean)((UISelectBoolean)uiComponent).currentValue(facesContext);
+            String value = getStringValue(facesContext, (UISelectBoolean)uiComponent);
             drawCheckbox(facesContext, uiComponent, value, null,
                          checked != null ? checked.booleanValue() : false);
         }
         else
         {
-            throw new IllegalArgumentException("CheckboxRenderer does not support components of type '" + uiComponent.getComponentType() + "'.");
+            throw new IllegalArgumentException("CheckboxRenderer does not support components of type '" + uiComponent.getClass().getName() + "'.");
         }
     }
 

@@ -60,7 +60,7 @@ public class ServletMappingWithVirtualPath
             absolutePath = urlToEncode;
         }
 
-        ServletRequest servletRequest = facesContext.getServletRequest();
+        ServletRequest servletRequest = facesContext.getExternalContext().getRequest();
         if (!(servletRequest instanceof HttpServletRequest))
         {
             throw new UnsupportedOperationException("only HttpServletRequest supported");

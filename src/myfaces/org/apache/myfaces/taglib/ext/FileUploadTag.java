@@ -18,13 +18,10 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.component.ext.UIFileUpload;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLInputAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ext.FileUploadRendererAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLInputAttributes;
 import net.sourceforge.myfaces.renderkit.html.ext.FileUploadRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
-
-import javax.faces.component.UIComponent;
 
 /**
  * see "file_upload" tag in myfaces_ext.tld
@@ -36,9 +33,9 @@ public class FileUploadTag
     implements HTMLInputAttributes,
                FileUploadRendererAttributes
 {
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        return new UIFileUpload();
+        return "FileUpload";
     }
 
     public String getRendererType()

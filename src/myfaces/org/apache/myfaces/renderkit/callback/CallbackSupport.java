@@ -26,6 +26,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.tree.Tree;
+import javax.servlet.ServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -115,7 +116,7 @@ public class CallbackSupport
 
     protected static RenderKit getOriginalRenderKit(FacesContext facesContext)
     {
-        return (RenderKit)facesContext.getServletRequest().getAttribute(ORIGINAL_RENDER_KIT_ATTR);
+        return (RenderKit)((ServletRequest)facesContext.getExternalContext().getRequest()).getAttribute(ORIGINAL_RENDER_KIT_ATTR);
     }
 
     protected static void wrapRenderKit(FacesContext facesContext)
@@ -138,9 +139,9 @@ public class CallbackSupport
             //by another RenderKit in the meantime.
             throw new IllegalStateException("CallbackRenderKit has been replaced by another RenderKit.");
         }
-        facesContext.getServletRequest().setAttribute(ORIGINAL_RENDER_KIT_ID_ATTR,
+        ((ServletRequest)facesContext.getExternalContext().getRequest()).setAttribute(ORIGINAL_RENDER_KIT_ID_ATTR,
                                                       currentRenderKitId);
-        facesContext.getServletRequest().setAttribute(ORIGINAL_RENDER_KIT_ATTR,
+        ((ServletRequest)facesContext.getExternalContext().getRequest()).setAttribute(ORIGINAL_RENDER_KIT_ATTR,
                                                       currentRenderKit);
 
         // lookup CallbackRenderKit in RenderKitFactory...
@@ -167,9 +168,9 @@ public class CallbackSupport
 
     protected static void unwrapRenderKit(FacesContext facesContext)
     {
-        String originalRenderKitId = (String)facesContext.getServletRequest().getAttribute(ORIGINAL_RENDER_KIT_ID_ATTR);
+        String originalRenderKitId = (String)((ServletRequest)facesContext.getExternalContext().getRequest()).getAttribute(ORIGINAL_RENDER_KIT_ID_ATTR);
         facesContext.getTree().setRenderKitId(originalRenderKitId);
-        facesContext.getServletRequest().setAttribute(ORIGINAL_RENDER_KIT_ATTR, null);
+        ((ServletRequest)facesContext.getExternalContext().getRequest()).setAttribute(ORIGINAL_RENDER_KIT_ATTR, null);
     }
 
 
@@ -180,11 +181,11 @@ public class CallbackSupport
 
     protected static Map getCallbackRendererInfoMap(FacesContext facesContext)
     {
-        Map map = (Map)facesContext.getServletRequest().getAttribute(CALLBACK_RENDERER_INFO_MAP_ATTR);
+        Map map = (Map)((ServletRequest)facesContext.getExternalContext().getRequest()).getAttribute(CALLBACK_RENDERER_INFO_MAP_ATTR);
         if (map == null)
         {
             map = new HashMap();
-            facesContext.getServletRequest().setAttribute(CALLBACK_RENDERER_INFO_MAP_ATTR, map);
+            ((ServletRequest)facesContext.getExternalContext().getRequest()).setAttribute(CALLBACK_RENDERER_INFO_MAP_ATTR, map);
         }
         return map;
     }

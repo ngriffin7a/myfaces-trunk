@@ -19,8 +19,10 @@
 package net.sourceforge.myfaces.examples.listexample;
 
 import javax.faces.FactoryFinder;
+import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
@@ -57,7 +59,10 @@ public class SimpleCountryController
         form.setIsoCode(isoCode);
         form.setName(name);
         form.setSize(size);
-        facesContext.setModelValue("countryForm", form);
+
+        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+        ValueBinding vb = af.getApplication().getValueBinding("countryForm");
+        vb.setValue(facesContext, form);    //TODO: countryForm should be managedBean!
 
         //Jump to detail page
         TreeFactory tf = (TreeFactory)FactoryFinder.getFactory(FactoryFinder.TREE_FACTORY);

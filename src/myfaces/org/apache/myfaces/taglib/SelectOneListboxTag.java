@@ -19,9 +19,9 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UISelectOne;
+import net.sourceforge.myfaces.renderkit.attr.ListboxRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.ListboxRenderer;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLSelectAttributes;
-import net.sourceforge.myfaces.renderkit.attr.ListboxRendererAttributes;
 
 import javax.faces.component.UIComponent;
 
@@ -36,9 +36,9 @@ public class SelectOneListboxTag
     implements HTMLSelectAttributes,
                ListboxRendererAttributes
 {
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        return new UISelectOne();
+        return "SelectOne";
     }
 
     public String getRendererType()

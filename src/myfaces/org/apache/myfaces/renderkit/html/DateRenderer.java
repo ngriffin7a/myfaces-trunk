@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.UIOutput;
 import net.sourceforge.myfaces.renderkit.attr.DateRendererAttributes;
 
 
@@ -38,6 +37,7 @@ public class DateRenderer
         return TYPE;
     }
 
+    /*
     protected void initAttributeDescriptors()
     {
         addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_date", HTML_UNIVERSAL_ATTRIBUTES);
@@ -46,5 +46,6 @@ public class DateRenderer
         addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_date", USER_ROLE_ATTRIBUTES);
         //TODO: input
     }
+    */
 
 }

@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.tree;
 
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
-import net.sourceforge.myfaces.component.UICommand;
 
 import javax.faces.component.UIComponent;
 import javax.faces.tree.Tree;
@@ -27,7 +26,6 @@ import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Stack;
-import java.util.List;
 
 /**
  * DOCUMENT ME!
@@ -167,7 +165,7 @@ public class TreeUtils
     {
         printIndent(stream, indent);
         stream.print('<');
-        stream.print(comp.getComponentType());
+        stream.print(comp.getClass().getName());
 
         /*
         stream.print(" component=\"");
@@ -216,7 +214,7 @@ public class TreeUtils
                 }
                 printIndent(stream, indent);
                 stream.print("</");
-                stream.print(comp.getComponentType());
+                stream.print(comp.getClass().getName());
                 stream.println('>');
             }
             else

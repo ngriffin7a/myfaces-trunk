@@ -47,9 +47,9 @@ import java.io.IOException;
 public class FileUploadRenderer
     extends HTMLRenderer
     implements CommonRendererAttributes,
-    HTMLUniversalAttributes,
-    HTMLEventHandlerAttributes,
-    HTMLInputAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLInputAttributes,
                FileUploadRendererAttributes,
                UserRoleAttributes
 {
@@ -60,6 +60,7 @@ public class FileUploadRenderer
         return TYPE;
     }
 
+    /*
     public boolean supportsComponentType(String s)
     {
         return s.equals(UIFileUpload.TYPE);
@@ -78,13 +79,14 @@ public class FileUploadRenderer
         addAttributeDescriptors(UIFileUpload.TYPE, TLD_EXT_URI, "file_upload", FILE_UPLOAD_ATTRIBUTES);
         addAttributeDescriptors(UIFileUpload.TYPE, TLD_EXT_URI, "file_upload", USER_ROLE_ATTRIBUTES);
     }
+    */
 
 
 
     public void decode(FacesContext facescontext, UIComponent uiComponent)
         throws IOException
     {
-        if (!supportsComponentType(uiComponent))
+        if (!(uiComponent instanceof UIFileUpload))
         {
             throw new IllegalArgumentException("Only UIFileUpload type supported.");
         }
@@ -93,7 +95,7 @@ public class FileUploadRenderer
         //Filters. We try to find the MultipartWrapper, but if a filter has wrapped
         //the ServletRequest with a class other than HttpServletRequestWrapper
         //this will fail.
-        ServletRequest multipartRequest = facescontext.getServletRequest();
+        ServletRequest multipartRequest = (ServletRequest)facescontext.getExternalContext().getRequest();
         while (multipartRequest != null &&
                !(multipartRequest instanceof MultipartWrapper))
         {
@@ -118,7 +120,7 @@ public class FileUploadRenderer
                 UploadedFile upFile = new UploadedFile(mpReq.getFilesystemName(paramName),
                                                        mpReq.getContentType(paramName),
                                                        file);
-                uiComponent.setValue(upFile);
+                ((UIFileUpload)uiComponent).setValue(upFile);
                 uiComponent.setValid(true);
             }
         }
@@ -127,7 +129,7 @@ public class FileUploadRenderer
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
-        if (!supportsComponentType(uiComponent))
+        if (!(uiComponent instanceof UIFileUpload))
         {
             throw new IllegalArgumentException("Only UIFileUpload type supported.");
         }
@@ -141,7 +143,7 @@ public class FileUploadRenderer
         writer.write(" id=\"");
         writer.write(clientId);
         writer.write("\"");
-        UploadedFile value = (UploadedFile)uiComponent.currentValue(facesContext);
+        UploadedFile value = (UploadedFile)((UIFileUpload)uiComponent).currentValue(facesContext);
         if (value != null)
         {
             writer.write(" value=\"");

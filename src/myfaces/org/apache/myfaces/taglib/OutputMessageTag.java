@@ -18,11 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UIOutput;
 import net.sourceforge.myfaces.renderkit.attr.MessageRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.MessageRenderer;
-
-import javax.faces.component.UIComponent;
 
 
 /**
@@ -34,10 +31,9 @@ public class OutputMessageTag
     extends MyFacesTag
     implements MessageRendererAttributes
 {
-    //MyFaces tag extensions:
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        return new UIOutput();
+        return "Output";
     }
 
     public String getRendererType()

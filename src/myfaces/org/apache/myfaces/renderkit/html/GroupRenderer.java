@@ -23,7 +23,6 @@ import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.GroupRendererAttributes;
 
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIPanel;
 import javax.faces.context.FacesContext;
 import java.io.IOException;
 
@@ -33,7 +32,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class GroupRenderer
-    extends AbstractPanelRenderer
+    extends HTMLRenderer
     implements CommonComponentAttributes,
                CommonRendererAttributes,
                GroupRendererAttributes
@@ -44,6 +43,7 @@ public class GroupRenderer
         return TYPE;
     }
 
+    /*
     public boolean supportsComponentType(String s)
     {
         return s.equals(UIPanel.TYPE);
@@ -58,6 +58,7 @@ public class GroupRenderer
     {
         addAttributeDescriptors(UIPanel.TYPE, TLD_HTML_URI, "panel_group", PANEL_GROUP_ATTRIBUTES);
     }
+    */
 
 
 

@@ -27,7 +27,7 @@ import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.webapp.FacesBodyTag;
+import javax.faces.webapp.UIComponentBodyTag;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyTag;
@@ -43,7 +43,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public abstract class MyFacesBodyTag
-    extends FacesBodyTag
+    extends UIComponentBodyTag
     implements MyFacesTagBaseIF,
                CommonComponentAttributes,
                CommonRendererAttributes,
@@ -94,8 +94,7 @@ public abstract class MyFacesBodyTag
         {
             _helper.release();
             id = null;
-            modelReference = null;
-            created = false;
+            //TODO: HACK for created = false;
         }
     }
 
@@ -116,6 +115,16 @@ public abstract class MyFacesBodyTag
     public int getDoAfterBodyValue() throws JspException
     {
         return Tag.SKIP_BODY;
+    }
+
+
+    //Make protected properties accessible:
+
+    public abstract String getComponentType();
+
+    public String getId()
+    {
+        return id;
     }
 
 
@@ -185,14 +194,14 @@ public abstract class MyFacesBodyTag
         UIComponent c = _helper.findComponent();
         if (c == null)
         {
-            c = super.findComponent();
+            c = super.findComponent(getFacesContext());
         }
         return c;
     }
 
     public void setCreated(boolean b)
     {
-        created = b;
+        //TODO: HACK for created = b;
     }
 
     /**

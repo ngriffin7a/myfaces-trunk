@@ -57,6 +57,7 @@ public class LabelRenderer
         return TYPE;
     }
 
+    /*
     public boolean supportsComponentType(UIComponent component)
     {
         return component instanceof UIOutput;
@@ -75,6 +76,7 @@ public class LabelRenderer
         addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_label", OUTPUT_LABEL_ATTRIBUTES);
         addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_label", USER_ROLE_ATTRIBUTES);
     }
+    */
 
 
 
@@ -100,7 +102,7 @@ public class LabelRenderer
         }
         else
         {
-            text = getStringValue(facesContext, uiComponent);
+            text = getStringValue(facesContext, (UIOutput)uiComponent);
         }
         writer.write(HTMLEncoder.encode(text, true, true));
     }

@@ -20,7 +20,7 @@ package net.sourceforge.myfaces.renderkit.html.state.client;
 
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.component.UIComponentUtils;
-import net.sourceforge.myfaces.component.UIPanel;
+import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.html.DataRenderer;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
@@ -33,7 +33,12 @@ import net.sourceforge.myfaces.tree.TreeUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
+import javax.faces.FactoryFinder;
+import javax.faces.el.ValueBinding;
+import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIOutput;
+import javax.faces.component.UIPanel;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
@@ -42,6 +47,7 @@ import javax.faces.event.FacesListener;
 import javax.faces.event.PhaseId;
 import javax.faces.event.ValueChangedListener;
 import javax.faces.tree.Tree;
+import javax.servlet.ServletRequest;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
@@ -80,7 +86,7 @@ public class MinimizingStateSaver
     static
     {
         IGNORE_ATTRIBUTES.add(CommonComponentAttributes.PARENT_ATTR);
-        IGNORE_ATTRIBUTES.add(UIComponent.CLIENT_ID_ATTR);
+        IGNORE_ATTRIBUTES.add(CommonComponentAttributes.CLIENT_ID_ATTR);
 
         //we must save the "valid" attribute
 
@@ -93,12 +99,12 @@ public class MinimizingStateSaver
 
     protected Map getStateMap(FacesContext facesContext)
     {
-        Map map = (Map)facesContext.getServletRequest()
+        Map map = (Map)((ServletRequest)facesContext.getExternalContext().getRequest())
                             .getAttribute(STATE_MAP_REQUEST_ATTR);
         if (map == null)
         {
             map = new HashMap();
-            facesContext.getServletRequest().setAttribute(STATE_MAP_REQUEST_ATTR,
+            ((ServletRequest)facesContext.getExternalContext().getRequest()).setAttribute(STATE_MAP_REQUEST_ATTR,
                                                           map);
             saveResponseTreeId(facesContext, map);
             saveComponents(facesContext, map);
@@ -427,21 +433,25 @@ public class MinimizingStateSaver
                                                        facesContext.getTree().getTreeId());
         while (it.hasNext())
         {
-            UIComponent uiSaveState = (UIComponent)it.next();
+            UISaveState uiSaveState = (UISaveState)it.next();
             saveModelValue(facesContext, stateMap, uiSaveState);
         }
     }
 
     protected void saveModelValue(FacesContext facesContext,
                                      Map stateMap,
-                                     UIComponent uiSaveState)
+                                     UISaveState uiSaveState)
     {
-        String modelRef = uiSaveState.getModelReference();
-        if (modelRef == null)
+        String valueRef = uiSaveState.getValueRef();
+        if (valueRef == null)
         {
             throw new FacesException("UISaveState " + uiSaveState.getComponentId() + " has no model reference");
         }
-        Object propValue = facesContext.getModelValue(modelRef);
+
+        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+        ValueBinding vb = af.getApplication().getValueBinding(valueRef);
+
+        Object propValue = vb.getValue(facesContext);
         if (propValue != null)
         {
             String paramValue;
@@ -454,7 +464,7 @@ public class MinimizingStateSaver
                 }
                 catch (ConverterException e)
                 {
-                    throw new FacesException("Error saving state of model value " + modelRef + ": Converter exception!", e);
+                    throw new FacesException("Error saving state of model value " + valueRef + ": Converter exception!", e);
                 }
             }
             else
@@ -463,13 +473,13 @@ public class MinimizingStateSaver
             }
 
             saveParameter(stateMap,
-                          RequestParameterNames.getModelValueStateParameterName(modelRef),
+                          RequestParameterNames.getModelValueStateParameterName(valueRef),
                           paramValue);
         }
         else
         {
             saveParameter(stateMap,
-                          RequestParameterNames.getModelValueStateParameterName(modelRef),
+                          RequestParameterNames.getModelValueStateParameterName(valueRef),
                           NULL_DUMMY_VALUE);
         }
     }
@@ -525,9 +535,10 @@ public class MinimizingStateSaver
         {
             return true;
         }
-        else if (attrName.equals(CommonComponentAttributes.VALUE_ATTR))
+        else if (attrName.equals(CommonComponentAttributes.VALUE_ATTR) &&
+                 comp instanceof UIOutput)
         {
-            return isIgnoreValue(comp);
+            return isIgnoreValue((UIOutput)comp);
         }
         else
         {
@@ -535,7 +546,7 @@ public class MinimizingStateSaver
         }
     }
 
-    protected boolean isIgnoreValue(UIComponent comp)
+    protected boolean isIgnoreValue(UIOutput comp)
     {
         //Secret with redisplay == false?
         String rendererType = comp.getRendererType();
@@ -557,13 +568,13 @@ public class MinimizingStateSaver
         }
 
         //is it a DataRenderer variable (= "var" attribute of a UIPanel) ?
-        String modelRef = comp.getModelReference();
+        String modelRef = comp.getValueRef();
         if (modelRef != null)
         {
             UIComponent parent = UIComponentUtils.getParentOrFacetOwner(comp);
             while (parent != null)
             {
-                if (parent.getComponentType().equals(UIPanel.TYPE))
+                if (parent instanceof UIPanel)
                 {
                     String var = (String)parent.getAttribute(DataRenderer.VAR_ATTR);
                     if (var != null)
@@ -607,7 +618,7 @@ public class MinimizingStateSaver
         {
             /*
             Set tagCreatedActionListenersSet
-                = (Set)facesContext.getServletRequest()
+                = (Set)facesContext.getExternalContext().getRequest()
                     .getAttribute(ActionListenerTag.TAG_CREATED_ACTION_LISTENERS_SET_ATTR);
             */
             for (Iterator it = PhaseId.VALUES.iterator(); it.hasNext();)

@@ -136,11 +136,11 @@ public class ActionListenerTag
     private static final Set getTagCreatedListenersSet()
     {
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        Set set = (Set)facesContext.getServletRequest().getAttribute(TAG_CREATED_ACTION_LISTENERS_SET_ATTR);
+        Set set = (Set)((ServletRequest)facesContext.getExternalContext().getRequest()).getAttribute(TAG_CREATED_ACTION_LISTENERS_SET_ATTR);
         if (set == null)
         {
             set = new HashSet();
-            facesContext.getServletRequest().setAttribute(TAG_CREATED_ACTION_LISTENERS_SET_ATTR, set);
+            ((ServletRequest)facesContext.getExternalContext().getRequest()).setAttribute(TAG_CREATED_ACTION_LISTENERS_SET_ATTR, set);
         }
         return set;
     }

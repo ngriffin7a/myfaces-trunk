@@ -34,7 +34,7 @@ import java.util.Map;
  * @version $Revision$ $Date$
  */
 public class RenderKitFactoryImpl
-        extends RenderKitFactory
+    extends RenderKitFactory
 {
     private static final Object _lock = new Object();
     private static Map _renderkits = new HashMap();

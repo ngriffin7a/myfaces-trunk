@@ -23,12 +23,15 @@ import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.taglib.UIComponentTagHacks;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
-import javax.faces.webapp.FacesTag;
 import javax.faces.validator.Validator;
+import javax.faces.webapp.UIComponentTag;
+import javax.faces.application.ApplicationFactory;
+import javax.faces.FactoryFinder;
 import java.beans.PropertyDescriptor;
 import java.util.Iterator;
 import java.util.Set;
@@ -181,10 +184,12 @@ public class TreeCopier
 
     private UIComponent cloneComponent(UIComponent toBeCloned)
     {
-        FacesTag tag = JspInfo.getCreatorTag(toBeCloned);
+        UIComponentTag tag = JspInfo.getCreatorTag(toBeCloned);
         if (tag != null)
         {
-            UIComponent clone = tag.createComponent();
+            String componentType = UIComponentTagHacks.getComponentType(tag);
+            ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+            UIComponent clone = af.getApplication().getComponent(componentType);
             return clone;
         }
 

@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.util.bean.BeanUtils;
 
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletRequest;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
@@ -92,11 +93,11 @@ public class JspInfoUtils
                     throw new IllegalArgumentException("Page scope is not supported!");
 
                 case PageContext.REQUEST_SCOPE:
-                    facesContext.getServletRequest().setAttribute(jspBeanInfo.getId(), bean);
+                    ((ServletRequest)facesContext.getExternalContext().getRequest()).setAttribute(jspBeanInfo.getId(), bean);
                     break;
 
                 case PageContext.SESSION_SCOPE:
-                    ServletRequest servletRequest = facesContext.getServletRequest();
+                    ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
                     if (servletRequest instanceof HttpServletRequest)
                     {
                         HttpSession session = ((HttpServletRequest)servletRequest).getSession();
@@ -109,7 +110,7 @@ public class JspInfoUtils
                     break;
 
                 case PageContext.APPLICATION_SCOPE:
-                    facesContext.getServletContext().setAttribute(jspBeanInfo.getId(), bean);
+                    ((ServletContext)facesContext.getExternalContext().getContext()).setAttribute(jspBeanInfo.getId(), bean);
                     break;
 
                 default:
@@ -127,10 +128,10 @@ public class JspInfoUtils
                 throw new IllegalArgumentException("Page scope is not supported!");
 
             case PageContext.REQUEST_SCOPE:
-                return facesContext.getServletRequest().getAttribute(id);
+                return ((ServletRequest)facesContext.getExternalContext().getRequest()).getAttribute(id);
 
             case PageContext.SESSION_SCOPE:
-                ServletRequest servletRequest = facesContext.getServletRequest();
+                ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
                 if (servletRequest instanceof HttpServletRequest)
                 {
                     HttpSession session = ((HttpServletRequest)servletRequest).getSession(false);
@@ -149,7 +150,7 @@ public class JspInfoUtils
                 }
 
             case PageContext.APPLICATION_SCOPE:
-                return facesContext.getServletContext().getAttribute(id);
+                return ((ServletContext)facesContext.getExternalContext().getContext()).getAttribute(id);
 
             default:
                 throw new IllegalArgumentException("Unknown scope " + scope);

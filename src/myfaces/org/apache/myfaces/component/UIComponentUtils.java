@@ -75,36 +75,36 @@ public class UIComponentUtils
     }
 
 
-    public static void setComponentValue(UIComponent uiComponent,
+    public static void setComponentValue(javax.faces.component.UIOutput uiOutput,
                                          Object newValue)
     {
-        uiComponent.setValue(newValue);
-        uiComponent.setAttribute(CommonComponentAttributes.STRING_VALUE_ATTR, null);
-        uiComponent.setValid(true);
+        uiOutput.setValue(newValue);
+        uiOutput.setAttribute(CommonComponentAttributes.STRING_VALUE_ATTR, null);
+        uiOutput.setValid(true);
     }
 
 
     public static void convertAndSetValue(FacesContext facesContext,
-                                          UIComponent uiComponent,
+                                          javax.faces.component.UIOutput uiOutput,
                                           String newValue,
                                           boolean addErrorMessageOnFail)
     {
-        Converter conv = ConverterUtils.findValueConverter(facesContext, uiComponent);
+        Converter conv = ConverterUtils.findValueConverter(facesContext, uiOutput);
         if (conv == null)
         {
             //default to StringConverter
             conv = ConverterUtils.getConverter(String.class);
         }
 
-        convertAndSetValue(facesContext, uiComponent, newValue, conv, addErrorMessageOnFail);
+        convertAndSetValue(facesContext, uiOutput, newValue, conv, addErrorMessageOnFail);
     }
 
     public static void convertAndSetValue(FacesContext facesContext,
-                                          UIComponent uiComponent,
+                                          javax.faces.component.UIOutput uiOutput,
                                           String[] newValues,
                                           boolean addErrorMessageOnFail)
     {
-        Converter conv = ConverterUtils.findValueConverter(facesContext, uiComponent);
+        Converter conv = ConverterUtils.findValueConverter(facesContext, uiOutput);
         if (conv == null)
         {
             //default to StringConverter
@@ -113,19 +113,19 @@ public class UIComponentUtils
 
         if (conv instanceof StringArrayConverter)
         {
-            setComponentValue(uiComponent, newValues);
+            setComponentValue(uiOutput, newValues);
         }
         else
         {
             String s = StringArrayConverter.getAsString(newValues, false);
-            convertAndSetValue(facesContext, uiComponent, s, conv, addErrorMessageOnFail);
+            convertAndSetValue(facesContext, uiOutput, s, conv, addErrorMessageOnFail);
         }
     }
 
 
 
     public static void convertAndSetValue(FacesContext facesContext,
-                                          UIComponent uiComponent,
+                                          javax.faces.component.UIOutput uiOutput,
                                           String newValue,
                                           Converter converter,
                                           boolean addErrorMessageOnFail)
@@ -133,21 +133,21 @@ public class UIComponentUtils
     {
         try
         {
-            Object objValue = converter.getAsObject(facesContext, uiComponent, newValue);
-            setComponentValue(uiComponent, objValue);
+            Object objValue = converter.getAsObject(facesContext, uiOutput, newValue);
+            setComponentValue(uiOutput, objValue);
         }
         catch (ConverterException e)
         {
-            uiComponent.setValue(null);
-            uiComponent.setAttribute(CommonComponentAttributes.STRING_VALUE_ATTR, newValue);
-            uiComponent.setValid(false);
+            uiOutput.setValue(null);
+            uiOutput.setAttribute(CommonComponentAttributes.STRING_VALUE_ATTR, newValue);
+            uiOutput.setValid(false);
             if (addErrorMessageOnFail)
             {
-                addConversionErrorMessage(facesContext, uiComponent, e);
+                addConversionErrorMessage(facesContext, uiOutput, e);
             }
             else
             {
-                throw new FacesException("Error converting value of component " + toString(uiComponent) + " from String to Object: Converter Exception.", e);
+                throw new FacesException("Error converting value of component " + toString(uiOutput) + " from String to Object: Converter Exception.", e);
             }
         }
     }
@@ -305,7 +305,7 @@ public class UIComponentUtils
     public static String getClientId(FacesContext facesContext,
                                      UIComponent uiComponent)
     {
-        String clientId = (String)uiComponent.getAttribute(UIComponent.CLIENT_ID_ATTR);
+        String clientId = (String)uiComponent.getAttribute(CommonComponentAttributes.CLIENT_ID_ATTR);
         if (clientId != null)
         {
             return clientId;
@@ -355,7 +355,7 @@ public class UIComponentUtils
             }
         }
 
-        uiComponent.setAttribute(UIComponent.CLIENT_ID_ATTR, clientId);
+        uiComponent.setAttribute(CommonComponentAttributes.CLIENT_ID_ATTR, clientId);
         return clientId;
     }
 
@@ -396,10 +396,11 @@ public class UIComponentUtils
                                                       UIComponent uiComponent,
                                                       String attrName)
     {
-        if (attrName.equals(CommonComponentAttributes.VALUE_ATTR))
+        if (attrName.equals(CommonComponentAttributes.VALUE_ATTR) &&
+            uiComponent instanceof javax.faces.component.UIOutput)
         {
             return ConverterUtils.findValueConverter(facesContext,
-                                                     uiComponent);
+                                                     (javax.faces.component.UIOutput)uiComponent);
         }
         else if (attrName.equals(CommonComponentAttributes.STRING_VALUE_ATTR))
         {

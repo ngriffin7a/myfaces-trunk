@@ -34,15 +34,14 @@ import javax.servlet.ServletResponse;
 public class FacesContextFactoryImpl
         extends FacesContextFactory
 {
-    public FacesContext getFacesContext(ServletContext servletcontext,
-                                        ServletRequest servletrequest,
-                                        ServletResponse servletresponse,
+    public FacesContext getFacesContext(Object servletcontext,
+                                        Object servletrequest,
+                                        Object servletresponse,
                                         Lifecycle lifecycle)
             throws FacesException
     {
-        return new FacesContextImpl(servletcontext,
-                                    servletrequest,
-                                    servletresponse,
-                                    lifecycle);
+        return new FacesContextImpl((ServletContext)servletcontext,
+                                    (ServletRequest)servletrequest,
+                                    (ServletResponse)servletresponse);
     }
 }

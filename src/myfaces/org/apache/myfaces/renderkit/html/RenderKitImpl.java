@@ -22,11 +22,12 @@ import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.renderkit.html.ext.*;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.render.RenderKit;
 import javax.faces.render.Renderer;
-import java.util.*;
+import javax.servlet.ServletContext;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * DOCUMENT ME!
@@ -34,7 +35,7 @@ import java.util.*;
  * @version $Revision$ $Date$
  */
 public class RenderKitImpl
-        extends RenderKit
+    extends RenderKit
 {
     private Map _renderers = null;
 
@@ -47,37 +48,37 @@ public class RenderKitImpl
         _renderers = new HashMap();
 
         //Standard Renderkit
-        addRenderer(new FormRenderer());
-        addRenderer(new TextRenderer());
-        addRenderer(new DateRenderer());
-        addRenderer(new DateTimeRenderer());
-        addRenderer(new TimeRenderer());
-        addRenderer(new MessageRenderer());
-        addRenderer(new SecretRenderer());
-        addRenderer(new ButtonRenderer());
-        addRenderer(new HyperlinkRenderer());
-        addRenderer(new ErrorsRenderer());
-        addRenderer(new ImageRenderer());
-        addRenderer(new ListboxRenderer());
-        addRenderer(new MenuRenderer());
-        addRenderer(new ListRenderer());
-        addRenderer(new DataRenderer());
-        addRenderer(new GroupRenderer());
-        addRenderer(new GridRenderer());
-        addRenderer(new LabelRenderer());
-        addRenderer(new CheckboxRenderer());
-        addRenderer(new HiddenRenderer());
-        addRenderer(new TextareaRenderer());
+        _addRenderer(new FormRenderer());
+        _addRenderer(new TextRenderer());
+        _addRenderer(new DateRenderer());
+        _addRenderer(new DateTimeRenderer());
+        _addRenderer(new TimeRenderer());
+        _addRenderer(new MessageRenderer());
+        _addRenderer(new SecretRenderer());
+        _addRenderer(new ButtonRenderer());
+        _addRenderer(new HyperlinkRenderer());
+        _addRenderer(new ErrorsRenderer());
+        _addRenderer(new ImageRenderer());
+        _addRenderer(new ListboxRenderer());
+        _addRenderer(new MenuRenderer());
+        _addRenderer(new ListRenderer());
+        _addRenderer(new DataRenderer());
+        _addRenderer(new GroupRenderer());
+        _addRenderer(new GridRenderer());
+        _addRenderer(new LabelRenderer());
+        _addRenderer(new CheckboxRenderer());
+        _addRenderer(new HiddenRenderer());
+        _addRenderer(new TextareaRenderer());
 
         //MyFaces Extensions
-        addRenderer(new NavigationRenderer());
-        addRenderer(new NavigationItemRenderer());
-        addRenderer(new SortColumnRenderer());
-        addRenderer(new LayoutRenderer());
-        addRenderer(new FileUploadRenderer());
+        _addRenderer(new NavigationRenderer());
+        _addRenderer(new NavigationItemRenderer());
+        _addRenderer(new SortColumnRenderer());
+        _addRenderer(new LayoutRenderer());
+        _addRenderer(new FileUploadRenderer());
     }
 
-    private void addRenderer(HTMLRenderer r)
+    private void _addRenderer(HTMLRenderer r)
     {
         _renderers.put(r.getRendererType(), r);
     }
@@ -100,7 +101,7 @@ public class RenderKitImpl
                 FacesContext facesContext = FacesContext.getCurrentInstance();
                 if (facesContext != null)
                 {
-                    int mode = MyFacesConfig.getStateSavingMode(facesContext.getServletContext());
+                    int mode = MyFacesConfig.getStateSavingMode(((ServletContext)facesContext.getExternalContext().getContext()));
                     renderer = new StateRenderer(mode);
                     addRenderer(StateRenderer.TYPE, renderer);
                     return renderer;
@@ -113,6 +114,7 @@ public class RenderKitImpl
     }
 
 
+    /*
     public Iterator getRendererTypes()
     {
         return getRendererTypes((String)null);
@@ -151,6 +153,7 @@ public class RenderKitImpl
     {
         throw new UnsupportedOperationException();
     }
+    */
 
 
 }

@@ -19,12 +19,12 @@
 package net.sourceforge.myfaces.webapp;
 
 import net.sourceforge.myfaces.MyFacesConfig;
+import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.config.FacesConfig;
+import net.sourceforge.myfaces.config.FacesConfigFactory;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
-import javax.faces.FactoryFinder;
-import javax.faces.lifecycle.ApplicationHandler;
-import javax.faces.lifecycle.Lifecycle;
-import javax.faces.lifecycle.LifecycleFactory;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.util.logging.Handler;
@@ -36,10 +36,10 @@ import java.util.logging.Logger;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class DefaultServletContextListener
+public class StartupServletContextListener
         implements ServletContextListener
 {
-    public DefaultServletContextListener()
+    public StartupServletContextListener()
     {
     }
 
@@ -47,14 +47,15 @@ public class DefaultServletContextListener
     {
         try
         {
+            ServletContext servletContext = e.getServletContext();
+
             //Set logging level
             setLoggerLevel(LogUtil.getLogger(),
-                           MyFacesConfig.getLogLevel(e.getServletContext()));
+                           MyFacesConfig.getLogLevel(servletContext));
 
-            ApplicationHandler handler = new DefaultApplicationHandler();
-            LifecycleFactory factory = (LifecycleFactory)FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
-            Lifecycle lifecycle = factory.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
-            lifecycle.setApplicationHandler(handler);
+            FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(servletContext);
+            FacesConfig facesConfig = fcf.getFacesConfig(servletContext);
+            facesConfig.configureAll();
         }
         catch (Exception ex)
         {

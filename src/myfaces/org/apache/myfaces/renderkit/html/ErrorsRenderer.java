@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
-import net.sourceforge.myfaces.component.UIOutput;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ErrorsRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.LabelRendererAttributes;
@@ -30,10 +29,15 @@ import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.tree.TreeUtils;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
-import javax.faces.component.UIComponent;
-import javax.faces.context.*;
 import javax.faces.FactoryFinder;
+import javax.faces.application.ApplicationFactory;
+import javax.faces.application.Message;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.context.MessageResources;
+import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -66,6 +70,7 @@ public class ErrorsRenderer
         return TYPE;
     }
 
+    /*
     public boolean supportsComponentType(UIComponent uiComponent)
     {
         return uiComponent instanceof javax.faces.component.UIOutput;
@@ -83,6 +88,7 @@ public class ErrorsRenderer
         addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_errors", OUTPUT_ERRORS_ATTRIBUTES);
         addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_errors", USER_ROLE_ATTRIBUTES);
     }
+    */
 
 
     public void encodeBegin(FacesContext facescontext, UIComponent uiComponent)
@@ -95,7 +101,7 @@ public class ErrorsRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         Iterator it;
-        String msgClientId = (String)uiComponent.getAttribute(CLIENT_ID_ATTR);
+        String msgClientId = (String)uiComponent.getAttribute(FOR_ATTR);
         if (msgClientId == null)
         {
             //All messages
@@ -151,9 +157,9 @@ public class ErrorsRenderer
 
         writer.write(">");
 
-        MessageResourcesFactory mrf
-            = (MessageResourcesFactory)FactoryFinder.getFactory(FactoryFinder.MESSAGE_RESOURCES_FACTORY);
-        MessageResources mr = mrf.getMessageResources(MessageResourcesFactory.FACES_IMPL_MESSAGES);
+        ApplicationFactory af
+            = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+        MessageResources mr = af.getApplication().getMessageResources(MessageResources.FACES_IMPL_MESSAGES);
 
         while (it.hasNext())
         {
@@ -182,7 +188,15 @@ public class ErrorsRenderer
                     }
                     else
                     {
-                        labelText = getStringValue(facesContext, msgComp);
+                        if (msgComp instanceof javax.faces.component.UIOutput)
+                        {
+                            labelText = getStringValue(facesContext, (javax.faces.component.UIOutput)msgComp);
+                        }
+                        else
+                        {
+                            LogUtil.getLogger().warning("Label component " + msgComp.getClientId(facesContext) + " is no UIOutput.");
+                            labelText = "???";
+                        }
                     }
 
                     if (labelText != null &&

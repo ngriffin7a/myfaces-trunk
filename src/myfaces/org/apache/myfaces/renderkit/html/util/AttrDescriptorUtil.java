@@ -18,17 +18,14 @@
  */
 package net.sourceforge.myfaces.renderkit.html.util;
 
-import net.sourceforge.myfaces.renderkit.html.jspinfo.TLDInfo;
-import net.sourceforge.myfaces.util.logging.LogUtil;
 
-import javax.faces.component.AttributeDescriptor;
-import javax.servlet.ServletContext;
-import javax.servlet.jsp.tagext.TagAttributeInfo;
 
 /**
  * Utilities to create AttributeDescriptors from a TLD.
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ *
+ * @deprecated
  */
 public class AttrDescriptorUtil
 {
@@ -45,6 +42,7 @@ public class AttrDescriptorUtil
      * @param rendererAttributeName
      * @return a new AttributeDescriptor
      */
+    /*
     public static AttributeDescriptor getAttributeDescriptor(ServletContext servletContext,
                                                              String taglibURI,
                                                              String tagName,
@@ -77,6 +75,8 @@ public class AttrDescriptorUtil
 
         return new AttrDescriptorImpl(rendererAttributeName, clazz);
     }
+    */
+
 
     /**
      * Identical to {@link #getAttributeDescriptor(javax.servlet.ServletContext, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
@@ -88,6 +88,7 @@ public class AttrDescriptorUtil
      * @param attributeName
      * @return
      */
+    /*
     public static AttributeDescriptor getAttributeDescriptor(ServletContext servletContext,
                                                              String taglibURI,
                                                              final String tagName,
@@ -99,6 +100,7 @@ public class AttrDescriptorUtil
                                       attributeName,
                                       attributeName);
     }
+    */
 
 
 

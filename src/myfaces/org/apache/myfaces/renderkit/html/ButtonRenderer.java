@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.attr.ButtonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
@@ -28,16 +27,12 @@ import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
-import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIForm;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.event.ApplicationEvent;
-import javax.faces.event.CommandEvent;
-import javax.faces.event.FormEvent;
+import javax.servlet.ServletRequest;
 import java.io.IOException;
 
 /**
@@ -48,9 +43,9 @@ import java.io.IOException;
 public class ButtonRenderer
     extends HTMLRenderer
     implements CommonRendererAttributes,
-    HTMLUniversalAttributes,
-    HTMLEventHandlerAttributes,
-    HTMLButtonAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLButtonAttributes,
                ButtonRendererAttributes,
                UserRoleAttributes
 {
@@ -60,6 +55,7 @@ public class ButtonRenderer
         return TYPE;
     }
 
+    /*
     public boolean supportsComponentType(String s)
     {
         return s.equals(UICommand.TYPE);
@@ -78,23 +74,30 @@ public class ButtonRenderer
         addAttributeDescriptors(UICommand.TYPE, TLD_HTML_URI, "command_button", COMMAND_BUTTON_ATTRIBUTES);
         addAttributeDescriptors(UICommand.TYPE, TLD_HTML_URI, "command_button", USER_ROLE_ATTRIBUTES);
     }
+    */
 
 
+    /*
     private String getHiddenValueParamName(FacesContext facesContext, UIComponent uiComponent)
     {
         return uiComponent.getClientId(facesContext) + ".VALUE";
     }
+    */
 
     public void decode(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
         //super.decode must not be called, because value is handled here
 
-        String paramName = uiComponent.getClientId(facesContext);
-        String paramValue = facesContext.getServletRequest().getParameter(paramName);
+        UICommand uiCommand = (UICommand)uiComponent;
+
+        ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
+
+        String paramName = uiCommand.getClientId(facesContext);
+        String paramValue = servletRequest.getParameter(paramName);
         boolean submitted = false;
         if (paramValue == null)
         {
-            if (facesContext.getServletRequest().getParameter(paramName + ".x") != null) //image button
+            if (servletRequest.getParameter(paramName + ".x") != null) //image button
             {
                 submitted = true;
             }
@@ -109,77 +112,18 @@ public class ButtonRenderer
 
         if (submitted)
         {
-            String commandName;
-            String hiddenValue = facesContext.getServletRequest()
-                                    .getParameter(getHiddenValueParamName(facesContext,
-                                                                          uiComponent));
-            if (hiddenValue != null)
-            {
-                commandName = hiddenValue;
-            }
-            else
-            {
-                if (paramValue != null)
-                {
-                    commandName = paramValue;
-                }
-                else
-                {
-                    commandName = getStringValue(facesContext, uiComponent);
-                }
-            }
-
-            uiComponent.setValue(commandName);
-            uiComponent.setValid(true);
-
-            //Old event processing:
-
-            ApplicationEvent appEvent;
-
-            //Form suchen
-            UIForm form = null;
-            UIComponent parent = UIComponentUtils.getParentOrFacetOwner(uiComponent);
-            while(parent != null)
-            {
-                if (parent instanceof UIForm)
-                {
-                    form = (UIForm)parent;
-                    break;
-                }
-                parent = UIComponentUtils.getParentOrFacetOwner(parent);
-            }
-
-            if (form == null)
-            {
-                appEvent = new CommandEvent(uiComponent, commandName);
-            }
-            else
-            {
-                appEvent = new FormEvent(uiComponent, form.getFormName(), commandName);
-            }
-
-            facesContext.addApplicationEvent(appEvent);
-
-            //New event processing:
-            if (uiComponent instanceof UICommand)
-            {
-                ((UICommand)uiComponent).fireActionEvent(facesContext);
-            }
-            else
-            {
-                LogUtil.getLogger().warning("Component " + UIComponentUtils.toString(uiComponent) + "is no UICommand.");
-            }
+            uiCommand.fireActionEvent(facesContext);
         }
-        else
-        {
-            uiComponent.setValid(true);
-        }
+
+        uiCommand.setValid(true);
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
+        UICommand uiCommand = (UICommand)uiComponent;
+
         ResponseWriter writer = facesContext.getResponseWriter();
-        boolean hiddenParam = true;
+        //boolean hiddenParam = true;
         writer.write("<input type=");
         String imageSrc = (String)uiComponent.getAttribute(IMAGE_ATTR);
         if (imageSrc != null)
@@ -219,8 +163,9 @@ public class ButtonRenderer
             }
             if (label == null)
             {
-                label = getStringValue(facesContext, uiComponent);
-                hiddenParam = false;
+                //label = getStringValue(facesContext, uiComponent);
+                //hiddenParam = false;
+                label = uiCommand.getCommandName();
             }
             writer.write(HTMLEncoder.encode(label, false, false));
             writer.write("\"");
@@ -234,6 +179,7 @@ public class ButtonRenderer
 
         writer.write(">");
 
+        /*
         if (hiddenParam)
         {
             writer.write("<input type=\"hidden\" name=\"");
@@ -243,6 +189,7 @@ public class ButtonRenderer
             writer.write(HTMLEncoder.encode(strVal, false, false));
             writer.write("\">");
         }
+        */
     }
 
 }

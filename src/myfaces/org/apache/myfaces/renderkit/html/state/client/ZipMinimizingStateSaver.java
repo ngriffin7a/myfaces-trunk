@@ -23,6 +23,7 @@ import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.util.Base64;
 
 import javax.faces.context.FacesContext;
+import javax.servlet.ServletRequest;
 import java.io.*;
 import java.net.URLEncoder;
 import java.util.Iterator;
@@ -75,7 +76,7 @@ public class ZipMinimizingStateSaver
 
     protected String getZippedParams(FacesContext facesContext, Map stateMap) throws IOException
     {
-        String s = (String)facesContext.getServletRequest().getAttribute(ZIPPED_PARAMS_ATTR);
+        String s = (String)((ServletRequest)facesContext.getExternalContext().getRequest()).getAttribute(ZIPPED_PARAMS_ATTR);
         if (s != null)
         {
             return s;
@@ -109,7 +110,7 @@ public class ZipMinimizingStateSaver
         baos.close();
 
         s = baos.toString(ZIP_CHARSET);
-        facesContext.getServletRequest().setAttribute(ZIPPED_PARAMS_ATTR, s);
+        ((ServletRequest)facesContext.getExternalContext().getRequest()).setAttribute(ZIPPED_PARAMS_ATTR, s);
         return s;
     }
 

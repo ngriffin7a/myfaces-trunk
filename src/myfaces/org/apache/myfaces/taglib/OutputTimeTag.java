@@ -18,9 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UIOutput;
-import net.sourceforge.myfaces.renderkit.html.TimeRenderer;
 import net.sourceforge.myfaces.renderkit.attr.TimeRendererAttributes;
+import net.sourceforge.myfaces.renderkit.html.TimeRenderer;
 
 import javax.faces.component.UIComponent;
 
@@ -34,12 +33,18 @@ public class OutputTimeTag
     extends MyFacesTag
     implements TimeRendererAttributes
 {
-    //MyFaces tag extensions:
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        UIComponent uiComponent = new UIOutput();
-        uiComponent.setConverter("TimeConverter");
-        return uiComponent;
+        return "Output";
+    }
+
+    public void overrideProperties(UIComponent uiComponent)
+    {
+        super.overrideProperties(uiComponent);
+        if (uiComponent.getConverter() == null)
+        {
+            uiComponent.setConverter("TimeConverter");
+        }
     }
 
     public String getRendererType()

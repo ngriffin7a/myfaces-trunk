@@ -25,9 +25,9 @@ import net.sourceforge.myfaces.renderkit.html.ext.NavigationItemRenderer;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
-import javax.faces.component.UIComponent;
 import javax.faces.component.NamingContainer;
 import javax.faces.component.NamingContainerSupport;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.*;
 import javax.faces.tree.Tree;
@@ -46,10 +46,13 @@ public class UINavigation
 {
     public UINavigation()
     {
-        super(true);
         setValid(true);
     }
 
+    public boolean getRendersChildren()
+    {
+        return true;
+    }
 
     public static class UINavigationItem
         extends UICommand
@@ -172,7 +175,7 @@ public class UINavigation
                 /*
                 //Save current navigation with all it's children in request context, so that
                 //current state of children can be accessed when rendering new tree
-                facesContext.getServletRequest().setAttribute(NavigationRenderer.CURRENT_NAVIGATION_ATTR,
+                ((ServletRequest)facesContext.getExternalContext().getRequest()).setAttribute(NavigationRenderer.CURRENT_NAVIGATION_ATTR,
                                                               this);
                 */
 

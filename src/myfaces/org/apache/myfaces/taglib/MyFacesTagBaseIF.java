@@ -29,4 +29,6 @@ public interface MyFacesTagBaseIF
 {
     public void overrideProperties(UIComponent uiComponent);
     public void setCreated(boolean b);
+    public String getComponentType();
+    public String getId();
 }

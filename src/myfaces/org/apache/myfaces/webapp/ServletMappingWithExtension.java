@@ -98,7 +98,7 @@ public class ServletMappingWithExtension
         }
 
         //is this path within our current context?
-        ServletRequest servletRequest = facesContext.getServletRequest();
+        ServletRequest servletRequest = facesContext.getExternalContext().getRequest();
         if (!(servletRequest instanceof HttpServletRequest))
         {
             throw new UnsupportedOperationException("only HttpServletRequest supported");

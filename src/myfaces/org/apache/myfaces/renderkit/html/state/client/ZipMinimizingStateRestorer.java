@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.renderkit.html.state.client;
 import net.sourceforge.myfaces.util.Base64;
 
 import javax.faces.context.FacesContext;
+import javax.servlet.ServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,7 +48,7 @@ public class ZipMinimizingStateRestorer
 
     protected Map restoreStateMap(FacesContext facesContext)
     {
-        String stateParam = facesContext.getServletRequest().getParameter(ZipMinimizingStateSaver.STATE_PARAM);
+        String stateParam = ((ServletRequest)facesContext.getExternalContext().getRequest()).getParameter(ZipMinimizingStateSaver.STATE_PARAM);
         if (stateParam == null)
         {
             return Collections.EMPTY_MAP;

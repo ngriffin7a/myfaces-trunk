@@ -22,17 +22,15 @@ import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.DataRendererAttributes;
-import net.sourceforge.myfaces.renderkit.callback.CallbackRenderer;
-import net.sourceforge.myfaces.renderkit.callback.CallbackSupport;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIPanel;
 import javax.faces.context.FacesContext;
-import javax.faces.render.Renderer;
+import javax.servlet.ServletRequest;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Collection;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * DOCUMENT ME!
@@ -40,7 +38,7 @@ import java.util.Arrays;
  * @version $Revision$ $Date$
  */
 public class DataRenderer
-    extends AbstractPanelRenderer
+    extends HTMLRenderer
     implements CommonComponentAttributes,
                CommonRendererAttributes,
                DataRendererAttributes
@@ -53,6 +51,7 @@ public class DataRenderer
         return TYPE;
     }
 
+    /*
     public boolean supportsComponentType(String s)
     {
         return s.equals(UIPanel.TYPE);
@@ -67,17 +66,20 @@ public class DataRenderer
     {
         addAttributeDescriptors(UIPanel.TYPE, TLD_HTML_URI, "panel_data", PANEL_DATA_ATTRIBUTES);
     }
+    */
 
-    private static final Object DUMMY = new Object();
+    //private static final Object DUMMY = new Object();
+
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
     {
         // Init Iterator
-        Iterator it = getIterator(facesContext, uiComponent);
+        Iterator it = getIterator(facesContext, (UIPanel)uiComponent);
 
         // Set ModelValue VAR_ATTR
         String varAttr = (String)uiComponent.getAttribute(VAR_ATTR);
-        facesContext.setModelValue(varAttr, it != null && it.hasNext() ? it.next() : null);
+        ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
+        servletRequest.setAttribute(varAttr, it != null && it.hasNext() ? it.next() : null);
     }
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
@@ -85,8 +87,11 @@ public class DataRenderer
     {
         //Remove iterator after last row
          uiComponent.setAttribute(ITERATOR_ATTR, null);
+
         //Reset ModelValue VAR_ATTR
-         facesContext.setModelValue(VAR_ATTR, null);
+        String varAttr = (String)uiComponent.getAttribute(VAR_ATTR);
+        ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
+        servletRequest.setAttribute(varAttr, null);
     }
 
     public void encodeChildren(FacesContext context, UIComponent component)
@@ -94,12 +99,12 @@ public class DataRenderer
     {
     }
 
-    public static Iterator getIterator(FacesContext facesContext, UIComponent uiComponent)
+    public static Iterator getIterator(FacesContext facesContext, UIPanel uiPanel)
     {
-        Iterator iterator = (Iterator)uiComponent.getAttribute(ITERATOR_ATTR);
+        Iterator iterator = (Iterator)uiPanel.getAttribute(ITERATOR_ATTR);
         if (iterator == null)
         {
-            Object v = uiComponent.currentValue(facesContext);
+            Object v = uiPanel.currentValue(facesContext);
             if (v == null)
             {
                 return null;
@@ -122,9 +127,9 @@ public class DataRenderer
             }
             else
             {
-                throw new IllegalArgumentException("Value of component " + UIComponentUtils.toString(uiComponent) + " is neither collection nor array.");
+                throw new IllegalArgumentException("Value of component " + UIComponentUtils.toString(uiPanel) + " is neither collection nor array.");
             }
-            uiComponent.setAttribute(ITERATOR_ATTR, iterator);
+            uiPanel.setAttribute(ITERATOR_ATTR, iterator);
         }
         return iterator;
     }

@@ -19,9 +19,9 @@
 package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.ext.UINavigation;
-import net.sourceforge.myfaces.renderkit.html.ext.NavigationRenderer;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLTableAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ext.NavigationRendererAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLTableAttributes;
+import net.sourceforge.myfaces.renderkit.html.ext.NavigationRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
 
 import javax.faces.component.UIComponent;
@@ -36,9 +36,9 @@ public class NavigationTag
     implements NavigationRendererAttributes,
                HTMLTableAttributes
 {
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        return new UINavigation();
+        return "Navigation";
     }
 
     public String getRendererType()

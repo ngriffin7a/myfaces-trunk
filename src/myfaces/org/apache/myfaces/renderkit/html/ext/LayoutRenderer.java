@@ -72,15 +72,13 @@ public class LayoutRenderer
     public static final String BODY_FACET = "body";
     public static final String FOOTER_FACET = "footer";
 
-
-
-
     public static final String TYPE = "Layout";
     public String getRendererType()
     {
         return TYPE;
     }
 
+    /*
     public boolean supportsComponentType(UIComponent component)
     {
         return component instanceof UIPanel;
@@ -98,6 +96,7 @@ public class LayoutRenderer
         addAttributeDescriptors(UIPanel.TYPE, TLD_EXT_URI, "page_layout", HTML_TABLE_ATTRIBUTES);
         addAttributeDescriptors(UIPanel.TYPE, TLD_EXT_URI, "page_layout", PAGE_LAYOUT_ATTRIBUTES);
     }
+    */
 
 
 
@@ -113,7 +112,7 @@ public class LayoutRenderer
                                   UIComponent uiComponent)
         throws IOException
     {
-        if (uiComponent.getComponentType().equals(UIPanel.TYPE))
+        if (uiComponent instanceof UIPanel)
         {
             UIComponent parent = UIComponentUtils.getParentOrFacetOwner(uiComponent);
             if (uiComponent == parent.getFacet(HEADER_FACET))
@@ -144,7 +143,7 @@ public class LayoutRenderer
                                UIComponent uiComponent)
         throws IOException
     {
-        if (uiComponent.getComponentType().equals(UIPanel.TYPE))
+        if (uiComponent instanceof UIPanel)
         {
             UIComponent parent = UIComponentUtils.getParentOrFacetOwner(uiComponent);
             if (uiComponent == parent.getFacet(HEADER_FACET))
@@ -208,7 +207,7 @@ public class LayoutRenderer
             throw new IllegalStateException("No BodyContent!?");
         }
 
-        String layout = (String)uiComponent.currentValue(facesContext);
+        String layout = (String)((UIPanel)uiComponent).currentValue(facesContext);
         if (layout == null)
         {
             LogUtil.getLogger().severe("No layout attribute!");

@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html.util;
 
-import net.sourceforge.myfaces.component.UISelectMany;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.ListboxRenderer;
@@ -28,6 +27,8 @@ import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 
 import javax.faces.component.SelectItem;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
+import javax.faces.component.UISelectMany;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
@@ -106,7 +107,7 @@ public class HTMLUtil
     {
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        boolean selectMany = (uiComponent.getComponentType() == UISelectMany.TYPE);
+        boolean selectMany = (uiComponent instanceof UISelectMany);
 
         Iterator it = SelectItemUtil.getSelectItems(facesContext, uiComponent);
         if (it.hasNext())
@@ -140,11 +141,11 @@ public class HTMLUtil
             {
                 selectedValuesSet
                     = SelectItemUtil.getSelectedValuesAsStringSet(facesContext,
-                                                                  uiComponent);
+                                                                  (UISelectMany)uiComponent);
             }
             else
             {
-                Object currentValue = uiComponent.currentValue(facesContext);
+                Object currentValue = ((UIInput)uiComponent).currentValue(facesContext);
                 /*
                 currentStrValue = ConverterUtils.getComponentValueAsString(facesContext,
                                                                            uiComponent,

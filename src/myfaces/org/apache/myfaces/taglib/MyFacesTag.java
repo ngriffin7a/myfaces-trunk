@@ -19,15 +19,18 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
-import net.sourceforge.myfaces.renderkit.attr.*;
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.KeyBundleAttributes;
+import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.webapp.FacesTag;
+import javax.faces.webapp.UIComponentTag;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.IterationTag;
 import javax.servlet.jsp.tagext.Tag;
 import java.io.IOException;
 
@@ -37,8 +40,9 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public abstract class MyFacesTag
-    extends FacesTag
-    implements MyFacesTagBaseIF,
+    extends UIComponentTag
+    implements IterationTag,
+               MyFacesTagBaseIF,
                CommonComponentAttributes,
                CommonRendererAttributes,
                HTMLUniversalAttributes,
@@ -86,8 +90,7 @@ public abstract class MyFacesTag
         {
             _helper.release();
             id = null;
-            modelReference = null;
-            created = false;
+            //TODO: HACK for created = false;
         }
     }
 
@@ -108,12 +111,7 @@ public abstract class MyFacesTag
     public int doAfterBody()
         throws JspException
     {
-        int ret = super.doAfterBody();
-
-        //Reset number of children for next iteration
-        numChildren = 0;
-
-        return ret;
+        return getDoAfterBodyValue();
     }
 
     public int getDoAfterBodyValue() throws JspException
@@ -121,6 +119,16 @@ public abstract class MyFacesTag
         return Tag.SKIP_BODY;
     }
 
+
+
+    //Make protected properties accessible:
+
+    public abstract String getComponentType();
+
+    public String getId()
+    {
+        return id;
+    }
 
 
 
@@ -190,14 +198,14 @@ public abstract class MyFacesTag
         UIComponent c = _helper.findComponent();
         if (c == null)
         {
-            c = super.findComponent();
+            c = super.findComponent(getFacesContext());
         }
         return c;
     }
 
     public void setCreated(boolean b)
     {
-        created = b;
+        //created = b;    //TODO: HACK
     }
 
 

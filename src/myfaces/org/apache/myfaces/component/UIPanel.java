@@ -29,34 +29,18 @@ import javax.faces.context.FacesContext;
  */
 public class UIPanel
     extends javax.faces.component.UIPanel
-    implements CommonComponentAttributes
+    //implements CommonComponentAttributes
 {
-    private boolean _rendersChildren;
-
-    public UIPanel(boolean rendersChildren)
+    public UIPanel()
     {
         super();
-        _rendersChildren = rendersChildren;
         setValid(true);
     }
 
     public boolean getRendersChildren()
     {
-        return _rendersChildren;
+        return false;
     }
-
-    public Object getAttribute(String s)
-    {
-        if (s.equals("rendersChildren"))
-        {
-            return _rendersChildren ? Boolean.TRUE : Boolean.FALSE;
-        }
-        else
-        {
-            return super.getAttribute(s);
-        }
-    }
-
 
 
 //------------------------------------------------------------------------------

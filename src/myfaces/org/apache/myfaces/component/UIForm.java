@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.component;
 
-import javax.faces.context.FacesContext;
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 
 
 /**
@@ -35,18 +35,6 @@ public class UIForm
     public UIForm()
     {
         setValid(true);
-    }
-
-    public void setAttribute(String s, Object o)
-    {
-        if (s.equals(FORM_NAME_ATTR))
-        {
-            setValue(o);
-        }
-        else
-        {
-            super.setAttribute(s, o);
-        }
     }
 
 

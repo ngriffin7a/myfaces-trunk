@@ -19,8 +19,6 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
-import net.sourceforge.myfaces.component.UISelectMany;
-import net.sourceforge.myfaces.component.UISelectOne;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ListboxRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
@@ -57,6 +55,7 @@ public class ListboxRenderer
         return TYPE;
     }
 
+    /*
     public boolean supportsComponentType(String s)
     {
         return s.equals(javax.faces.component.UISelectOne.TYPE);
@@ -81,6 +80,7 @@ public class ListboxRenderer
         addAttributeDescriptors(UISelectOne.TYPE, TLD_HTML_URI, "selectone_listbox", SELECT_ONE_LISTBOX_ATTRIBUTES);
         addAttributeDescriptors(UISelectOne.TYPE, TLD_HTML_URI, "selectone_listbox", USER_ROLE_ATTRIBUTES);
     }
+    */
 
 
 

@@ -8,4 +8,4 @@ Servlet Container
 - JRun 4 SP1a
 
 JSF API
-- JSF-API from the JavaServerTM Faces v1.0 Reference Implementation Early Access 3
+- JSF-API from the JavaServerTM Faces v1.0 Reference Implementation Early Access 4

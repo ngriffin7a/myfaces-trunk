@@ -22,8 +22,6 @@ import net.sourceforge.myfaces.component.ext.UISortHeader;
 import net.sourceforge.myfaces.renderkit.html.GroupRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
 
-import javax.faces.component.UIComponent;
-
 
 /**
  * DOCUMENT ME!
@@ -33,9 +31,9 @@ import javax.faces.component.UIComponent;
 public class SortHeaderTag
     extends MyFacesTag
 {
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        return new UISortHeader();
+        return "SortHeader";
     }
 
     public String getRendererType()

@@ -18,11 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.component.ext.UISortColumn;
 import net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesBodyTag;
-
-import javax.faces.component.UIComponent;
 
 
 /**
@@ -33,10 +30,9 @@ import javax.faces.component.UIComponent;
 public class SortColumnTag
     extends MyFacesBodyTag
 {
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        //return new UICommand();
-        return new UISortColumn();
+        return "SortColumn";
     }
 
     public String getRendererType()
@@ -46,7 +42,7 @@ public class SortColumnTag
 
     public void setColumn(String v)
     {
-        setValue(v);
+        setValue(v);    //TODO: UISortColumn derived from UICommand which no longer has a value property!
     }
 
     public void setDefaultAscending(String b)

@@ -27,11 +27,17 @@ import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
 import javax.faces.webapp.FacesTag;
+import javax.faces.webapp.UIComponentTag;
+import javax.faces.application.ApplicationFactory;
+import javax.faces.FactoryFinder;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.util.*;
@@ -45,12 +51,12 @@ import java.util.logging.Level;
 public class MyFacesTagHelper
     implements Serializable
 {
-    private FacesTag _tag;
+    private UIComponentTag _tag;
     private Set _attributes = null;
     protected PageContext _pageContext;
     protected FacesContext _facesContext;
 
-    MyFacesTagHelper(FacesTag tag)
+    MyFacesTagHelper(UIComponentTag tag)
     {
         _tag = tag;
     }
@@ -223,9 +229,10 @@ public class MyFacesTagHelper
                     Attribute attr = (Attribute)it.next();
                     if (attr.isComponentProperty)
                     {
-                        if (attr.name.equals(CommonComponentAttributes.VALUE_ATTR))
+                        if (attr.name.equals(CommonComponentAttributes.VALUE_ATTR) &&
+                            uiComponent instanceof UIOutput)
                         {
-                            overrideComponentValue(uiComponent,
+                            overrideComponentValue((UIOutput)uiComponent,
                                                    attr.value);
                         }
                         else
@@ -331,7 +338,7 @@ public class MyFacesTagHelper
     }
 
 
-    private void overrideComponentValue(UIComponent uiComponent,
+    private void overrideComponentValue(UIOutput uiComponent,
                                         Object propertyValue)
     {
         //We must deal with value attribute special, because the value is always
@@ -363,7 +370,7 @@ public class MyFacesTagHelper
      */
     protected UIComponent findComponent()
     {
-        int mode = MyFacesConfig.getStateSavingMode(getFacesContext().getServletContext());
+        int mode = MyFacesConfig.getStateSavingMode((ServletContext)getFacesContext().getExternalContext().getContext());
         if (mode != MyFacesConfig.STATE_SAVING_MODE__CLIENT_MINIMIZED &&
             mode != MyFacesConfig.STATE_SAVING_MODE__CLIENT_MINIMIZED_ZIPPED)
         {
@@ -371,7 +378,7 @@ public class MyFacesTagHelper
             return null;
         }
 
-        if (_tag.getId() != null)
+        if (UIComponentTagHacks.getId(_tag) != null)
         {
             //hardcoded id, nothing special must be done --> default method of jsf-api works ok
             return null;
@@ -380,7 +387,9 @@ public class MyFacesTagHelper
         //We must locate the component, that corresponds to the current tag
         //in the parsed tree.
         //First we create a temporary component...
-        UIComponent tempComp = _tag.createComponent();
+        String componentType = UIComponentTagHacks.getComponentType(_tag);
+        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+        UIComponent tempComp = af.getApplication().getComponent(componentType);
         //...remember that we have created it (for overrideProperties)...
         ((MyFacesTagBaseIF)_tag).setCreated(true);
         //...and set the hardcoded attributes...
@@ -395,7 +404,7 @@ public class MyFacesTagHelper
 
 
     protected static UIComponent findoutComponentIdAndAdd(FacesContext facesContext,
-                                                          FacesTag facesTag,
+                                                          UIComponentTag facesTag,
                                                           UIComponent newComponent)
     {
         LogUtil.getLogger().entering(Level.FINEST);
@@ -469,7 +478,7 @@ public class MyFacesTagHelper
 
 
     private static UIComponent findParsedChild(FacesContext facesContext,
-                                               FacesTag facesTag,
+                                               UIComponentTag facesTag,
                                                UIComponent parsedParent,
                                                String parentClientId,
                                                UIComponent newComponent)
@@ -548,11 +557,11 @@ public class MyFacesTagHelper
         = MyFacesTagHelper.class.getName() + ".LAST_PARSED_CHILD_INDEX_MAP";
     private static Map getLastParsedChildIndexMap(FacesContext facesContext)
     {
-        Map map = (Map)facesContext.getServletRequest().getAttribute(LAST_PARSED_CHILD_INDEX_MAP);
+        Map map = (Map)((ServletRequest)facesContext.getExternalContext().getRequest()).getAttribute(LAST_PARSED_CHILD_INDEX_MAP);
         if (map == null)
         {
             map = new HashMap();
-            facesContext.getServletRequest().setAttribute(LAST_PARSED_CHILD_INDEX_MAP,
+            ((ServletRequest)facesContext.getExternalContext().getRequest()).setAttribute(LAST_PARSED_CHILD_INDEX_MAP,
                                                           map);
         }
         return map;
@@ -584,7 +593,7 @@ public class MyFacesTagHelper
 
 
 
-    protected static boolean equalsParsedChild(FacesTag facesTag,
+    protected static boolean equalsParsedChild(UIComponentTag facesTag,
                                                UIComponent parsedChild,
                                                UIComponent compToCompare)
     {

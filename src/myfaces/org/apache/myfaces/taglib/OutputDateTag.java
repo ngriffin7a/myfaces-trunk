@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UIOutput;
 import net.sourceforge.myfaces.renderkit.attr.DateRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.DateRenderer;
 
@@ -34,12 +33,18 @@ public class OutputDateTag
     extends MyFacesTag
     implements DateRendererAttributes
 {
-    //MyFaces tag extensions:
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        UIComponent uiComponent = new UIOutput();
-        uiComponent.setConverter("DateConverter");
-        return uiComponent;
+        return "Output";
+    }
+
+    public void overrideProperties(UIComponent uiComponent)
+    {
+        super.overrideProperties(uiComponent);
+        if (uiComponent.getConverter() == null)
+        {
+            uiComponent.setConverter("DateConverter");
+        }
     }
 
     public String getRendererType()

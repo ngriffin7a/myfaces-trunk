@@ -23,15 +23,15 @@ package net.sourceforge.myfaces.taglib.core;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-import javax.faces.webapp.ValidatorTag;
 import javax.faces.validator.RequiredValidator;
 import javax.faces.validator.Validator;
+import javax.faces.webapp.ValidatorTag;
 import javax.servlet.jsp.JspException;
 
 public class ValidateRequiredTag
     extends ValidatorTag
 {
-    private static final String TYPE = RequiredValidator.class.getName();
+    //private static final String TYPE = RequiredValidator.class.getName();
 
     public ValidateRequiredTag()
     {
@@ -39,7 +39,7 @@ public class ValidateRequiredTag
 
     protected Validator createValidator() throws JspException
     {
-        setType(TYPE);
+        //setType(TYPE);
         return super.createValidator();
     }
 }

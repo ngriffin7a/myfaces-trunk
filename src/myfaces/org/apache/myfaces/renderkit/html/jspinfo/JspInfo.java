@@ -29,8 +29,9 @@ import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
-import javax.faces.webapp.FacesTag;
+import javax.faces.webapp.UIComponentTag;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
@@ -53,10 +54,6 @@ public class JspInfo
     public static final String CREATOR_TAG_ATTR = JspInfo.class.getName() + ".CREATOR_TAG";
     public static final String JSP_POSITION_ATTR = JspInfo.class.getName() + ".JSP_POSITION";
     public static final String HARDCODED_ID_ATTR = JspInfo.class.getName() + ".HARDCODED_ID";
-
-    /**@deprecated*/
-    public static final String ACTION_LISTENERS_TYPE_LIST_ATTR = JspInfo.class.getName() + ".LISTENERS";
-
 
     private Tree _tree = null;
     private String _filePath = null;
@@ -214,18 +211,11 @@ public class JspInfo
         return getJspInfo(facesContext, treeId).getJspBeanInfos();
     }
 
-    public static FacesTag getCreatorTag(UIComponent uiComponent)
+    public static UIComponentTag getCreatorTag(UIComponent uiComponent)
     {
-        return (FacesTag)uiComponent.getAttribute(JspInfo.CREATOR_TAG_ATTR);
+        return (UIComponentTag)uiComponent.getAttribute(JspInfo.CREATOR_TAG_ATTR);
     }
 
-    /**
-     * @deprecated
-     */
-    public static List getActionListenersTypeList(UIComponent uiComponent)
-    {
-        return (List)uiComponent.getAttribute(JspInfo.ACTION_LISTENERS_TYPE_LIST_ATTR);
-    }
 
 
     public static Iterator getUISaveStateComponents(FacesContext facesContext,
@@ -247,10 +237,10 @@ public class JspInfo
     private static JspInfo getJspInfo(FacesContext facesContext,
                                       String treeId)
     {
-        ServletContext servletContext = facesContext.getServletContext();
+        ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
 
         //Try the last JspInfo in this request
-        JspInfo jspInfo = (JspInfo)facesContext.getServletRequest().getAttribute(LAST_JSP_INFO_REQUEST_ATTR);
+        JspInfo jspInfo = (JspInfo)((ServletRequest)facesContext.getExternalContext().getRequest()).getAttribute(LAST_JSP_INFO_REQUEST_ATTR);
         if (jspInfo != null &&
             jspInfo.getTree().getTreeId().equals(treeId))
         {
@@ -285,7 +275,7 @@ public class JspInfo
             jspInfoMap.put(treeId, jspInfo);
         }
 
-        facesContext.getServletRequest().setAttribute(LAST_JSP_INFO_REQUEST_ATTR,
+        ((ServletRequest)facesContext.getExternalContext().getRequest()).setAttribute(LAST_JSP_INFO_REQUEST_ATTR,
                                                       jspInfo);
         return jspInfo;
     }

@@ -18,12 +18,9 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UIOutput;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLLabelAttributes;
 import net.sourceforge.myfaces.renderkit.attr.LabelRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.LabelRenderer;
-
-import javax.faces.component.UIComponent;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLLabelAttributes;
 
 
 /**
@@ -36,10 +33,9 @@ public class OutputLabelTag
     implements HTMLLabelAttributes,
                LabelRendererAttributes
 {
-    //MyFaces tag extensions:
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        return new UIOutput();
+        return "Output";
     }
 
     public String getRendererType()

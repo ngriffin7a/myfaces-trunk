@@ -18,12 +18,9 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UICommand;
 import net.sourceforge.myfaces.renderkit.attr.ButtonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLButtonAttributes;
 import net.sourceforge.myfaces.renderkit.html.ButtonRenderer;
-
-import javax.faces.component.UIComponent;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLButtonAttributes;
 
 
 /**
@@ -36,10 +33,9 @@ public class CommandButtonTag
     implements HTMLButtonAttributes,
                ButtonRendererAttributes
 {
-    //MyFaces tag extensions:
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        return new UICommand();
+        return "Command";
     }
 
     public String getRendererType()
@@ -142,12 +138,5 @@ public class CommandButtonTag
     // user role attributes --> already implemented in MyFacesTag
 
 
-
-    //deprecated
-
-    public void setCommandReference(String v)
-    {
-        setComponentPropertyString(UICommand.COMMAND_REFERENCE_ATTR, v);
-    }
 
 }

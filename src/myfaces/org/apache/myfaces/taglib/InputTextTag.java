@@ -19,9 +19,9 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIInput;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLInputAttributes;
 import net.sourceforge.myfaces.renderkit.attr.TextRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.TextRenderer;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLInputAttributes;
 
 import javax.faces.component.UIComponent;
 
@@ -35,9 +35,9 @@ public class InputTextTag
     implements HTMLInputAttributes,
                TextRendererAttributes
 {
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        return new UIInput();
+        return "Input";
     }
 
     public String getRendererType()

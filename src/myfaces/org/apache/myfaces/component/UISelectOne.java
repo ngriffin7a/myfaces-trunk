@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.component;
 
-import javax.faces.context.FacesContext;
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import java.util.Iterator;
 
 /**
@@ -29,7 +29,7 @@ import java.util.Iterator;
  */
 public class UISelectOne
     extends javax.faces.component.UISelectOne
-    implements CommonComponentAttributes
+    //implements CommonComponentAttributes
 {
     public UISelectOne()
     {

@@ -18,12 +18,12 @@
  */
 package net.sourceforge.myfaces.util.logging;
 
-import net.sourceforge.myfaces.tree.TreeUtils;
 import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.tree.TreeUtils;
 
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
-import javax.faces.component.UIComponent;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;

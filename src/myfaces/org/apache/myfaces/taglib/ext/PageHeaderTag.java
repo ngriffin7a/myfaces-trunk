@@ -32,9 +32,9 @@ import javax.faces.component.UIComponent;
 public class PageHeaderTag
         extends MyFacesTag
 {
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        return new UIPanel(false);
+        return "Panel";
     }
 
     public String getRendererType()

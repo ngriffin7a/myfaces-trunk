@@ -48,8 +48,8 @@ import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -82,6 +82,7 @@ public class NavigationItemRenderer
         return TYPE;
     }
 
+    /*
     public boolean supportsComponentType(String s)
     {
         return s.equals(UICommand.TYPE);
@@ -100,7 +101,7 @@ public class NavigationItemRenderer
         addAttributeDescriptors(UICommand.TYPE, TLD_EXT_URI, "navigation_item", NAVIGATION_ITEM_ATTRIBUTES);
         addAttributeDescriptors(UICommand.TYPE, TLD_EXT_URI, "navigation_item", USER_ROLE_ATTRIBUTES);
     }
-
+    */
 
 
     public void decode(FacesContext facesContext, UIComponent uiComponent) throws IOException
@@ -114,7 +115,7 @@ public class NavigationItemRenderer
 
         //decode
         String paramName = uiComponent.getClientId(facesContext);
-        String paramValue = facesContext.getServletRequest().getParameter(paramName);
+        String paramValue = ((ServletRequest)facesContext.getExternalContext().getRequest()).getParameter(paramName);
         if (paramValue != null)
         {
             //item was clicked
@@ -149,16 +150,16 @@ public class NavigationItemRenderer
         writer.write("<a href=\"");
 
         //Modify URL for the faces servlet mapping:
-        ServletContext servletContext = facesContext.getServletContext();
+        ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
         ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
         ServletMapping sm = smf.getServletMapping(servletContext);
         String treeURL = sm.encodeTreeIdForURL(facesContext, facesContext.getTree().getTreeId());
 
-        HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
+        HttpServletRequest request = (HttpServletRequest)facesContext.getExternalContext().getRequest();
         String href = request.getContextPath() + treeURL;
 
-        //Encode URL for those still using HttpSessions... ;-)
-        href = ((HttpServletResponse)facesContext.getServletResponse()).encodeURL(href);
+        //Encode URL
+        href = facesContext.getExternalContext().encodeActionURL(href);
 
         writer.write(href);
 

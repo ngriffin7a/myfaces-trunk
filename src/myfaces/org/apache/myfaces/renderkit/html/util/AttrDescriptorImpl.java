@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html.util;
 
-import javax.faces.component.AttributeDescriptor;
+//import javax.faces.component.AttributeDescriptor;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -29,7 +29,7 @@ import java.util.ResourceBundle;
  * @version $Revision$ $Date$
  */
 public class AttrDescriptorImpl
-    extends AttributeDescriptor
+//    extends AttributeDescriptor
 {
     private static final String RESOURCE = "net.sourceforge.myfaces.renderkit.html.util.AttrDescriptor";
     private static final String DESCRIPTION_NAME_SUFFIX = ".descr";

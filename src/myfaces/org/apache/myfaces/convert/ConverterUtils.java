@@ -18,8 +18,10 @@
  */
 package net.sourceforge.myfaces.convert;
 
+import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.config.*;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.util.Base64;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
@@ -27,15 +29,13 @@ import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
-import javax.faces.component.AttributeDescriptor;
+import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
-import javax.faces.convert.ConverterFactory;
-import javax.faces.render.RenderKit;
-import javax.faces.render.RenderKitFactory;
-import javax.faces.render.Renderer;
+import javax.servlet.ServletContext;
 import java.beans.PropertyDescriptor;
 import java.io.*;
 import java.text.DateFormat;
@@ -59,15 +59,33 @@ public class ConverterUtils
     public static Converter getConverter(Class c)
         throws IllegalArgumentException
     {
-        ConverterFactory convFactory = (ConverterFactory)FactoryFinder.getFactory(FactoryFinder.CONVERTER_FACTORY);
-        return convFactory.getConverter(c);
+        return getConverter(c.getName());
     }
 
     public static Converter findConverter(Class c)
     {
+        return findConverter(c.getName());
+    }
+
+    public static Converter getConverter(String converterId)
+        throws IllegalArgumentException
+    {
+        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
         try
         {
-            return getConverter(c);
+            return af.getApplication().getConverter(converterId);
+        }
+        catch (FacesException e)
+        {
+            throw new IllegalArgumentException("Converter with id " + converterId + " not found.");
+        }
+    }
+
+    public static Converter findConverter(String converterId)
+    {
+        try
+        {
+            return getConverter(converterId);
         }
         catch (IllegalArgumentException e)
         {
@@ -77,51 +95,58 @@ public class ConverterUtils
 
 
 
-
     /**
      * Returns the converter that is responsible for converting the value
-     * of the given UIComponent.
+     * of the given UIOutput.
      * The converter is determined as follows:
      * <ul>
-     *  <li> if there is a "converter" attribute, return the corresponding converter
-     *  <li> if there is a "modelReference" attribute, find the value type via
-     *       {@link FacesContext#getModelType(String)} and return the converter
+     *  <li> if there is a "converter" attribute or the converter property is not null, return the corresponding converter
+     *  <li> if the component is a UIOutput and valueRef is not null, find the value type via
+     *       {@link javax.faces.el.ValueBinding#getType} and return the converter
      *       for this type
      *  <li> otherwise return null
      * </ul>
      *
      * @param facesContext
-     * @param uicomponent
+     * @param uiOutput
      * @return
      * @throws IllegalArgumentException if a converter for this value type cannot be found
      */
     public static Converter getValueConverter(FacesContext facesContext,
-                                              UIComponent uicomponent)
+                                              UIOutput uiOutput)
         throws IllegalArgumentException
     {
-        Object converterAttr = uicomponent.getAttribute(CommonComponentAttributes.CONVERTER_ATTR);
+        Object converterAttr = uiOutput.getAttribute(CommonComponentAttributes.CONVERTER_ATTR);
         if (converterAttr != null && converterAttr instanceof Converter)
         {
+            //JSF 1.0 PRD2, 8.4
+            //A component's "converter" attribute can also be a Converter instance.
             return (Converter)converterAttr;
         }
 
-        String converterId = (String)converterAttr;
-        if (converterId != null)
+        String converterId;
+        if (converterAttr != null)
         {
-            ConverterFactory convFactory = (ConverterFactory)FactoryFinder.getFactory(FactoryFinder.CONVERTER_FACTORY);
-            return convFactory.getConverter(converterId);
+            //If "converter" attribute is not a Converter instance it must be a converter id
+            converterId = (String)converterAttr;
+        }
+        else
+        {
+            converterId = uiOutput.getConverter();
         }
 
-        String modelRef = uicomponent.getModelReference();
-        if (modelRef != null)
+        if (converterId != null)
         {
-            Class c = facesContext.getModelType(modelRef);
-            if (c == null)
-            {
-                throw new IllegalArgumentException("Could not find ModelDefinition for ModelReference " + modelRef);
-            }
-            ConverterFactory convFactory = (ConverterFactory)FactoryFinder.getFactory(FactoryFinder.CONVERTER_FACTORY);
-            return convFactory.getConverter(c);
+            ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+            return af.getApplication().getConverter(converterId);
+        }
+
+        String valueRef = uiOutput.getValueRef();
+        if (valueRef != null)
+        {
+            ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+            Class c = af.getApplication().getValueBinding(valueRef).getType(facesContext);
+            return af.getApplication().getConverter(c.getName());
         }
 
         return null;
@@ -132,15 +157,15 @@ public class ConverterUtils
      * Same as {@link #getValueConverter} but never throws IllegalArgumentException.
      *
      * @param facesContext
-     * @param uicomponent
+     * @param uiOutput
      * @return
      */
     public static Converter findValueConverter(FacesContext facesContext,
-                                               UIComponent uicomponent)
+                                               UIOutput uiOutput)
     {
         try
         {
-            return getValueConverter(facesContext, uicomponent);
+            return getValueConverter(facesContext, uiOutput);
         }
         catch (IllegalArgumentException e)
         {
@@ -176,30 +201,25 @@ public class ConverterUtils
                                                                  attrName);
         if (pd != null)
         {
-            return ConverterUtils.findConverter(pd.getPropertyType());
+            return findConverter(pd.getPropertyType());
         }
 
-        //probably not a component attribute but a render dependent attribute
-        String rendererType = uiComponent.getRendererType();
-        if (rendererType == null)
-        {
-            LogUtil.getLogger().info("Component " + UIComponentUtils.toString(uiComponent) + " has no bean getter method for attribute '" + attrName + "'.");
-            return null;
-        }
+        //probably not a component property but a render dependent attribute
+        String rendererType = uiComponent.getRendererType();    //Each component must have a rendererType since Spec. 1.0 PRD2
 
         //Lookup the attribute descriptor
-        RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        RenderKit renderKit = rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
-        Renderer renderer = renderKit.getRenderer(rendererType);
-        AttributeDescriptor attrDescr = renderer.getAttributeDescriptor(uiComponent.getComponentType(),
-                                                                        attrName);
-        if (attrDescr == null)
+        ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
+        FacesConfigFactory fcf = MyFacesFactoryFinder.getFacesConfigFactory(servletContext);
+        FacesConfig facesConfig = fcf.getFacesConfig(servletContext);
+        RenderKitConfig rkc = facesConfig.getRenderKitConfig(facesContext.getTree().getRenderKitId());
+        RendererConfig rc = rkc.getRendererConfig(rendererType);
+        AttributeConfig ac = rc.getAttributeConfig(attrName);
+        if (ac == null)
         {
             LogUtil.getLogger().info("Could not find an attribute descriptor for attribute '" + attrName + "' of component " + UIComponentUtils.toString(uiComponent) + ".");
             return null;
         }
-
-        return ConverterUtils.findConverter(attrDescr.getType());
+        return findConverter(ac.getAttributeClass());
     }
 
 
@@ -210,14 +230,14 @@ public class ConverterUtils
      * @throws ConverterException
      */
     public static Object getComponentValueAsObject(FacesContext facescontext,
-                                                   UIComponent uicomponent,
+                                                   UIOutput uiOutput,
                                                    String value)
         throws ConverterException
     {
-        Converter converter = findValueConverter(facescontext, uicomponent);
+        Converter converter = findValueConverter(facescontext, uiOutput);
         if (converter != null)
         {
-            return converter.getAsObject(facescontext, uicomponent, value);
+            return converter.getAsObject(facescontext, uiOutput, value);
         }
         else
         {
@@ -233,7 +253,7 @@ public class ConverterUtils
      * @throws ConverterException
      */
     public static String getComponentValueAsString(FacesContext facesContext,
-                                                   UIComponent uiComponent,
+                                                   UIOutput uiOutput,
                                                    Object obj)
         throws ConverterException
     {
@@ -249,21 +269,21 @@ public class ConverterUtils
         }
 
         //Can we find a "real" value converter
-        Converter converter = ConverterUtils.findValueConverter(facesContext, uiComponent);
+        Converter converter = findValueConverter(facesContext, uiOutput);
         if (converter != null)
         {
-            return converter.getAsString(facesContext, uiComponent, obj);
+            return converter.getAsString(facesContext, uiOutput, obj);
         }
 
         //Let's try to find a proper converter for this class
         converter = findConverter(obj.getClass());
         if (converter != null)
         {
-            return converter.getAsString(facesContext, uiComponent, obj);
+            return converter.getAsString(facesContext, uiOutput, obj);
         }
 
         //As the last resort we do a toString
-        LogUtil.getLogger().warning("Cannot convert Object to String for component " + UIComponentUtils.toString(uiComponent) + ": No converter found for class " + obj.getClass().getName() + ".");
+        LogUtil.getLogger().warning("Cannot convert Object to String for component " + UIComponentUtils.toString(uiOutput) + ": No converter found for class " + obj.getClass().getName() + ".");
         return obj.toString();
     }
 

@@ -31,10 +31,9 @@ import javax.faces.component.UIComponent;
 public class ParameterTag
     extends MyFacesTag
 {
-    //MyFaces tag extensions:
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        return new UIParameter();
+        return "Parameter";
     }
 
     public String getRendererType()
@@ -44,7 +43,7 @@ public class ParameterTag
 
     public void setName(String v)
     {
-        setComponentPropertyString(UIParameter.NAME_ATTR, v);
+        setComponentPropertyString(UIParameter.NAME_PROP, v);
     }
 
     public void setValue(Object value)

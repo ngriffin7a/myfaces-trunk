@@ -18,13 +18,14 @@
  */
 package net.sourceforge.myfaces.component.ext;
 
-import net.sourceforge.myfaces.component.UIComponentUtils;
-import net.sourceforge.myfaces.component.UIPanel;
 import net.sourceforge.myfaces.component.UIComponentHelper;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.html.ext.SortColumnRenderer;
 
+import javax.faces.FactoryFinder;
+import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIComponentBase;
+import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
@@ -37,16 +38,11 @@ import javax.faces.event.PhaseId;
  * @version $Revision$ $Date$
  */
 public class UISortHeader
-    extends UIComponentBase
+    extends UIOutput
     implements ActionListener
 {
     public static final String ASCENDING_ATTR = "ascending";
     public static final String ASCENDING_REFERENCE_ATTR = "ascendingReference";
-
-    public String getComponentType()
-    {
-        return UIPanel.TYPE;
-    }
 
     public boolean isAscending()
     {
@@ -67,7 +63,8 @@ public class UISortHeader
         }
 
         String ascRef = getAscendingReference();
-        asc = (Boolean)facesContext.getModelValue(ascRef);
+        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+        asc = (Boolean)af.getApplication().getValueBinding(ascRef).getValue(facesContext);
         return asc.booleanValue();
     }
 
@@ -85,18 +82,20 @@ public class UISortHeader
 
     public void updateModel(FacesContext facesContext)
     {
+        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+
         String column = (String)getValue();
         if (column != null)
         {
-            String modelRef = getModelReference();
-            facesContext.setModelValue(modelRef, column);
+            String modelRef = getValueRef();
+            af.getApplication().getValueBinding(modelRef).setValue(facesContext, column);
         }
 
         Boolean asc = (Boolean)getAttribute(ASCENDING_ATTR);
         if (asc != null)
         {
             String ascRef = getAscendingReference();
-            facesContext.setModelValue(ascRef, asc);
+            af.getApplication().getValueBinding(ascRef).setValue(facesContext, asc);
         }
     }
 
@@ -114,7 +113,7 @@ public class UISortHeader
         if (source.getRendererType().equals(SortColumnRenderer.TYPE))
         {
             FacesContext facesContext = FacesContext.getCurrentInstance();
-            String sortColumn = (String)source.currentValue(facesContext);
+            String sortColumn = (String)((UIOutput)source).currentValue(facesContext);
             String currentColumn = (String)currentValue(facesContext);
             if (sortColumn.equals(currentColumn))
             {

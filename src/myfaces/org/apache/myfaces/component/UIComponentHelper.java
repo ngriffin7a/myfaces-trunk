@@ -18,9 +18,9 @@
  */
 package net.sourceforge.myfaces.component;
 
-import javax.faces.context.FacesContext;
-import javax.faces.component.UIComponent;
 import javax.faces.component.NamingContainer;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import java.io.Serializable;
 
 /**

@@ -30,6 +30,9 @@ import net.sourceforge.myfaces.util.logging.LogUtil;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
+import javax.faces.application.ApplicationFactory;
+import javax.faces.FactoryFinder;
+import javax.servlet.ServletRequest;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -61,7 +64,7 @@ public class SerializingStateSaver
     protected String getSerializedTree(FacesContext facesContext)
     {
         String serializedTree
-            = (String)facesContext.getServletRequest().getAttribute(SERIALIZED_TREE_CONTEXT_ATTR);
+            = (String)((ServletRequest)facesContext.getExternalContext().getRequest()).getAttribute(SERIALIZED_TREE_CONTEXT_ATTR);
         if (serializedTree == null)
         {
             Tree tree = facesContext.getTree();
@@ -79,7 +82,7 @@ public class SerializingStateSaver
 
             //Serialize tree
             serializedTree = zipTree(tree);
-            facesContext.getServletRequest().setAttribute(SERIALIZED_TREE_CONTEXT_ATTR,
+            ((ServletRequest)facesContext.getExternalContext().getRequest()).setAttribute(SERIALIZED_TREE_CONTEXT_ATTR,
                                                           serializedTree);
         }
         return serializedTree;
@@ -137,12 +140,12 @@ public class SerializingStateSaver
         while (it.hasNext())
         {
             UIComponent comp = (UIComponent)it.next();
-            if (comp.getComponentType().equals(UISaveState.TYPE))
+            if (comp instanceof UISaveState)
             {
-                String modelRef = comp.getModelReference();
+                String modelRef = ((UISaveState)comp).getValueRef();
                 if (modelRef == null)
                 {
-                    LogUtil.getLogger().warning("UISaveState without model reference?!");
+                    LogUtil.getLogger().warning("UISaveState without value reference?!");
                 }
                 else
                 {
@@ -150,7 +153,8 @@ public class SerializingStateSaver
                     {
                         modelValuesColl = new ArrayList();
                     }
-                    Object val = facesContext.getModelValue(modelRef);
+                    ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+                    Object val = af.getApplication().getValueBinding(modelRef).getValue(facesContext);
                     if (val instanceof Serializable)
                     {
                         modelValuesColl.add(new ModelValueEntry(modelRef,

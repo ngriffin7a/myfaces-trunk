@@ -29,21 +29,11 @@ import javax.faces.context.FacesContext;
 public class UIParameter
     extends javax.faces.component.UIParameter
 {
-    public static final String NAME_ATTR = "name";
+    public static final String NAME_PROP = "name";
 
     public UIParameter()
     {
         setValid(true);
-    }
-
-    public String getName()
-    {
-        return (String)getAttribute(NAME_ATTR);
-    }
-
-    public void setName(String name)
-    {
-        setAttribute(NAME_ATTR, name);
     }
 
 

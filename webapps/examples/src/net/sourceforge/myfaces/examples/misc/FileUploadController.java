@@ -20,11 +20,15 @@ package net.sourceforge.myfaces.examples.misc;
 
 import net.sourceforge.myfaces.component.ext.UploadedFile;
 
+import javax.faces.FactoryFinder;
+import javax.faces.application.ApplicationFactory;
 import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
 import javax.faces.event.PhaseId;
+import javax.servlet.ServletContext;
 
 /**
  * DOCUMENT ME!
@@ -42,13 +46,16 @@ public class FileUploadController
     public void processAction(ActionEvent event) throws AbortProcessingException
     {
         FacesContext facesContext = FacesContext.getCurrentInstance();
+        ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
 
-        FileUploadForm form = (FileUploadForm)facesContext.getModelValue("fileUploadForm");
+        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+        ValueBinding vb = af.getApplication().getValueBinding("fileUploadForm");
+        FileUploadForm form = (FileUploadForm)vb.getValue(facesContext);
         if (form != null)
         {
             UploadedFile upFile = form.getUpFile();
-            facesContext.getServletContext().setAttribute("fileupload_file", upFile.getFile());
-            facesContext.getServletContext().setAttribute("fileupload_type", upFile.getContentType());
+            servletContext.setAttribute("fileupload_file", upFile.getFile());
+            servletContext.setAttribute("fileupload_type", upFile.getContentType());
         }
     }
 }

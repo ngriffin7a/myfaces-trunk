@@ -18,8 +18,7 @@
  */
 package net.sourceforge.myfaces.examples.misc;
 
-import javax.faces.context.FacesContext;
-import javax.faces.event.CommandEvent;
+
 
 /**
  * DOCUMENT ME!
@@ -28,10 +27,12 @@ import javax.faces.event.CommandEvent;
  */
 public class OptionsController
 {
+    /*
     public boolean setLocale(FacesContext facesContext, CommandEvent commandEvent)
     {
         OptionsForm form = (OptionsForm)facesContext.getModelValue("optionsForm");
         facesContext.setLocale(form.getLocale());
         return false;
     }
+    */
 }

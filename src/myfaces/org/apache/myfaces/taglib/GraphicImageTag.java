@@ -18,15 +18,15 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UIGraphic;
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.component.UIGraphic;
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.ImageRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
 import net.sourceforge.myfaces.renderkit.html.ImageRenderer;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLImgAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
-import net.sourceforge.myfaces.renderkit.attr.*;
-
-import javax.faces.component.UIComponent;
 
 
 /**
@@ -38,15 +38,15 @@ public class GraphicImageTag
     extends MyFacesTag
     implements CommonComponentAttributes,
                CommonRendererAttributes,
-    HTMLUniversalAttributes,
-    HTMLEventHandlerAttributes,
-    HTMLImgAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLImgAttributes,
                UserRoleAttributes,
                ImageRendererAttributes
 {
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        return new UIGraphic();
+        return "Graphic";
     }
 
     public String getRendererType()
@@ -60,7 +60,7 @@ public class GraphicImageTag
 
     public void setUrl(String value)
     {
-        setComponentPropertyString(UIGraphic.URL_ATTR, value);
+        setComponentPropertyString(UIGraphic.URL_PROP, value);
     }
 
     public void setGraphicClass(String v)

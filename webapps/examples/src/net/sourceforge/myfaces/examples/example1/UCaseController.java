@@ -22,6 +22,9 @@ import net.sourceforge.myfaces.examples.example1.UCaseForm;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.*;
+import javax.faces.application.ApplicationFactory;
+import javax.faces.FactoryFinder;
+import javax.faces.el.ValueBinding;
 
 /**
  * DOCUMENT ME!
@@ -36,7 +39,9 @@ public class UCaseController
         String commandName = event.getActionCommand();
         FacesContext facesContext = FacesContext.getCurrentInstance();
 
-        UCaseForm form = (UCaseForm)facesContext.getModelValue("ucaseForm");
+        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+        ValueBinding vb = af.getApplication().getValueBinding("ucaseForm");
+        UCaseForm form = (UCaseForm)vb.getValue(facesContext);
         if (commandName.equals("up"))
         {
             form.uppercase();

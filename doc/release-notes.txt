@@ -2,6 +2,10 @@ MyFaces Release Notes
 =====================
 
 ----------------------------------------------------------------------
+Changes in Release 0.4
+* Many, many changes to catch up with current Spec. 1.0 PRD2 (= Early access release 4)
+
+----------------------------------------------------------------------
 Changes in Release 0.3.3
 * Stylesheet support for navigation-menu along with implementing a lots of other common attributes
 * Validators added

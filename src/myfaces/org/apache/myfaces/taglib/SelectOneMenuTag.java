@@ -19,9 +19,9 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UISelectOne;
+import net.sourceforge.myfaces.renderkit.attr.MenuRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.MenuRenderer;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLSelectAttributes;
-import net.sourceforge.myfaces.renderkit.attr.MenuRendererAttributes;
 
 import javax.faces.component.UIComponent;
 
@@ -36,9 +36,9 @@ public class SelectOneMenuTag
     implements HTMLSelectAttributes,
                MenuRendererAttributes
 {
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        return new UISelectOne();
+        return "SelectOne";
     }
 
     public String getRendererType()

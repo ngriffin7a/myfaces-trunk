@@ -41,12 +41,12 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class SecretRenderer
-        extends HTMLRenderer
+    extends HTMLRenderer
     implements CommonComponentAttributes,
                CommonRendererAttributes,
-    HTMLUniversalAttributes,
-    HTMLEventHandlerAttributes,
-    HTMLInputAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLInputAttributes,
                SecretRendererAttributes,
                UserRoleAttributes
 {
@@ -57,6 +57,7 @@ public class SecretRenderer
         return TYPE;
     }
 
+    /*
     public boolean supportsComponentType(String s)
     {
         return s.equals(UIInput.TYPE);
@@ -75,7 +76,7 @@ public class SecretRenderer
         addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_secret", INPUT_SECRET_ATTRIBUTES);
         addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_secret", USER_ROLE_ATTRIBUTES);
     }
-
+    */
 
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
@@ -90,7 +91,7 @@ public class SecretRenderer
                                                  REDISPLAY_ATTR,
                                                  false))
         {
-            String currentValue = getStringValue(facesContext, uiComponent);
+            String currentValue = getStringValue(facesContext, (UIInput)uiComponent);
             if (currentValue != null)
             {
                 writer.write(" value=\"");

@@ -19,11 +19,11 @@
 package net.sourceforge.myfaces.convert;
 
 import javax.faces.FactoryFinder;
+import javax.faces.application.ApplicationFactory;
+import javax.faces.application.Message;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.context.Message;
 import javax.faces.context.MessageResources;
-import javax.faces.context.MessageResourcesFactory;
 import javax.faces.convert.ConverterException;
 
 /**
@@ -44,7 +44,7 @@ public class MyFacesConverterException
                                      String messageId,
                                      String stringValue)
     {
-        super();
+        super("Converter exception " + messageId);
         _facesContext = facesContext;
         _comp = comp;
         _messageId = messageId;
@@ -64,8 +64,8 @@ public class MyFacesConverterException
     public Message getFacesMessage()
     {
         //TODO: Find a label (= UIOuput with LabelRenderer) for the component and add it as a MessageFormat parameter
-        MessageResourcesFactory msgResFactory = (MessageResourcesFactory)FactoryFinder.getFactory(FactoryFinder.MESSAGE_RESOURCES_FACTORY);
-        MessageResources msgRes = msgResFactory.getMessageResources(MessageResourcesFactory.FACES_IMPL_MESSAGES);
+        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+        MessageResources msgRes = af.getApplication().getMessageResources(MessageResources.FACES_IMPL_MESSAGES);
         return msgRes.getMessage(_facesContext, _messageId);
     }
 }

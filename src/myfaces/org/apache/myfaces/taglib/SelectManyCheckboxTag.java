@@ -19,9 +19,9 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UISelectMany;
+import net.sourceforge.myfaces.renderkit.attr.CheckboxRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.CheckboxRenderer;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLInputAttributes;
-import net.sourceforge.myfaces.renderkit.attr.CheckboxRendererAttributes;
 
 import javax.faces.component.UIComponent;
 
@@ -36,9 +36,9 @@ public class SelectManyCheckboxTag
     implements HTMLInputAttributes,
                CheckboxRendererAttributes
 {
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        return new UISelectMany();
+        return "SelectMany";
     }
 
     public String getRendererType()

@@ -18,21 +18,14 @@
  */
 package net.sourceforge.myfaces.context;
 
-import javax.faces.FacesException;
+import javax.faces.application.Message;
 import javax.faces.component.UIComponent;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.context.Message;
 import javax.faces.context.ResponseStream;
 import javax.faces.context.ResponseWriter;
-import javax.faces.event.ApplicationEvent;
 import javax.faces.event.FacesEvent;
-import javax.faces.lifecycle.ApplicationHandler;
-import javax.faces.lifecycle.ViewHandler;
 import javax.faces.tree.Tree;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpSession;
 import java.util.Iterator;
 import java.util.Locale;
 
@@ -52,33 +45,18 @@ public class FacesContextWrapper
         _facesContext = facesContext;
     }
 
-    public FacesContext getWrappedFacesContext()
+    public void release()
     {
-        return _facesContext;
+        _facesContext.release();
     }
 
-    //JSF.5.1.1
-    public HttpSession getHttpSession()
+    //JSF 6.1.1
+    public ExternalContext getExternalContext()
     {
-        return _facesContext.getHttpSession();
+        return _facesContext.getExternalContext();
     }
 
-    public ServletContext getServletContext()
-    {
-        return _facesContext.getServletContext();
-    }
-
-    public ServletRequest getServletRequest()
-    {
-        return _facesContext.getServletRequest();
-    }
-
-    public ServletResponse getServletResponse()
-    {
-        return _facesContext.getServletResponse();
-    }
-
-    //JSF.5.1.2
+    //JSF.6.1.2
     public Locale getLocale()
     {
         return _facesContext.getLocale();
@@ -89,36 +67,15 @@ public class FacesContextWrapper
         _facesContext.setLocale(locale);
     }
 
-    //JSF.5.1.3
-    public void setTree(Tree tree)
-    {
-        _facesContext.setTree(tree);
-    }
-
+    //JSF.6.1.3
     public Tree getTree()
     {
         return _facesContext.getTree();
     }
 
-    public void release()
+    public void setTree(Tree tree)
     {
-        _facesContext.release();
-    }
-
-    //JSF.5.1.4
-    public Iterator getApplicationEvents()
-    {
-        return _facesContext.getApplicationEvents();
-    }
-
-    public int getApplicationEventsCount()
-    {
-        return _facesContext.getApplicationEventsCount();
-    }
-
-    public void addApplicationEvent(ApplicationEvent event)
-    {
-        _facesContext.addApplicationEvent(event);
+        _facesContext.setTree(tree);
     }
 
     public void addMessage(UIComponent uicomponent, Message message)
@@ -131,47 +88,17 @@ public class FacesContextWrapper
         return _facesContext.getMaximumSeverity();
     }
 
-    public Iterator getMessages()
-    {
-        return _facesContext.getMessages();
-    }
-
     public Iterator getMessages(UIComponent uicomponent)
     {
         return _facesContext.getMessages(uicomponent);
     }
 
-    //JSF.5.1.6
-    public ApplicationHandler getApplicationHandler()
+    public Iterator getMessages()
     {
-        return _facesContext.getApplicationHandler();
+        return _facesContext.getMessages();
     }
 
-    public ViewHandler getViewHandler()
-    {
-        return _facesContext.getViewHandler();
-    }
-
-    //JSF.5.1.7
-    public Class getModelType(String modelReference)
-        throws FacesException
-    {
-        return _facesContext.getModelType(modelReference);
-    }
-
-    public Object getModelValue(String modelReference)
-        throws FacesException
-    {
-        return _facesContext.getModelValue(modelReference);
-    }
-
-    public void setModelValue(String modelReference, Object value)
-        throws FacesException
-    {
-        _facesContext.setModelValue(modelReference, value);
-    }
-
-    //JSF.5.1.8
+    //JSF.6.1.5
     public Iterator getFacesEvents()
     {
         return _facesContext.getFacesEvents();
@@ -182,6 +109,7 @@ public class FacesContextWrapper
         _facesContext.addFacesEvent(facesevent);
     }
 
+    //JSF.6.1.6
     public ResponseStream getResponseStream()
     {
         return _facesContext.getResponseStream();
@@ -202,6 +130,7 @@ public class FacesContextWrapper
         _facesContext.setResponseWriter(responsewriter);
     }
 
+    //JSF.6.1.7
     public void renderResponse()
     {
         _facesContext.renderResponse();
@@ -211,6 +140,4 @@ public class FacesContextWrapper
     {
         _facesContext.responseComplete();
     }
-
-
 }

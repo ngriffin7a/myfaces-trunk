@@ -23,6 +23,7 @@ import net.sourceforge.myfaces.renderkit.html.state.StateSaver;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.servlet.jsp.tagext.BodyContent;
+import javax.servlet.ServletRequest;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -78,7 +79,7 @@ public abstract class ClientStateSaver
     public void release(FacesContext facesContext)
         throws IOException
     {
-        BodyContent bodyContent = (BodyContent)facesContext.getServletRequest()
+        BodyContent bodyContent = (BodyContent)((ServletRequest)facesContext.getExternalContext().getRequest())
             .getAttribute(ClientStateSaver.BODY_CONTENT_REQUEST_ATTR);
         if (bodyContent == null)
         {

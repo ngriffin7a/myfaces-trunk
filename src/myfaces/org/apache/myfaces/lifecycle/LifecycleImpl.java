@@ -27,15 +27,16 @@ import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
+import javax.faces.application.Message;
+import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UICommand;
 import javax.faces.context.FacesContext;
-import javax.faces.context.Message;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.FacesEvent;
 import javax.faces.event.PhaseId;
-import javax.faces.lifecycle.ApplicationHandler;
+import javax.faces.event.ActionListener;
 import javax.faces.lifecycle.Lifecycle;
-import javax.faces.lifecycle.Phase;
 import javax.faces.lifecycle.ViewHandler;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
@@ -43,7 +44,6 @@ import javax.faces.render.Renderer;
 import javax.faces.tree.Tree;
 import javax.faces.tree.TreeFactory;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -59,7 +59,6 @@ import java.util.logging.Level;
 public class LifecycleImpl
         extends Lifecycle
 {
-    private ApplicationHandler _applicationHandler = null;
     private ViewHandler _viewHandler = null;
 
     private TreeFactory _treeFactory;
@@ -73,16 +72,13 @@ public class LifecycleImpl
     }
 
 
+    /*
     public int executePhase(FacesContext facescontext, Phase phase)
             throws FacesException
     {
         throw new UnsupportedOperationException("deprecated!");
     }
-
-    public ApplicationHandler getApplicationHandler()
-    {
-        return _applicationHandler;
-    }
+    */
 
     public ViewHandler getViewHandler()
     {
@@ -91,11 +87,6 @@ public class LifecycleImpl
             _viewHandler = new ViewHandlerJspImpl();
         }
         return _viewHandler;
-    }
-
-    public void setApplicationHandler(ApplicationHandler applicationhandler)
-    {
-        _applicationHandler = applicationhandler;
     }
 
     public void setViewHandler(ViewHandler viewhandler)
@@ -145,7 +136,7 @@ public class LifecycleImpl
         LogUtil.getLogger().entering();
 
         //Set locale
-        HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
+        HttpServletRequest request = (HttpServletRequest)facesContext.getExternalContext().getRequest();
         if (request.getLocale() != null)
         {
             facesContext.setLocale(request.getLocale());
@@ -211,6 +202,20 @@ public class LifecycleImpl
         {
             LogUtil.getLogger().info("No StateRenderer found, cannot restore tree.");
         }
+
+        UIComponent root = facesContext.getTree().getRoot();
+        try
+        {
+            root.processReconstitutes(facesContext);
+        }
+        catch (IOException e)
+        {
+            throw new FacesException(e);
+        }
+
+        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+        ActionListener actionListener = af.getApplication().getActionListener();
+        traverseAndRegisterActionListener(actionListener, root);
 
         LogUtil.getLogger().exiting();
     }
@@ -355,25 +360,7 @@ public class LifecycleImpl
     {
         LogUtil.getLogger().entering();
 
-        int eventsCount = facesContext.getApplicationEventsCount();
-        if (eventsCount > 0)
-        {
-            ApplicationHandler handler = facesContext.getApplicationHandler();
-            if (handler == null)
-            {
-                throw new FacesException("No application handler!");
-            }
-
-            for (Iterator events = facesContext.getApplicationEvents(); events.hasNext();)
-            {
-                if (handler.processEvent(facesContext, (FacesEvent)events.next()))
-                {
-                    renderResponse(facesContext);
-                    LogUtil.getLogger().exiting("after render response (because event handler returned true)", Level.INFO);
-                    return true;
-                }
-            }
-        }
+        doEventProcessing(facesContext, PhaseId.INVOKE_APPLICATION);
 
         if (FacesContextImpl.isResponseComplete(facesContext))
         {
@@ -398,10 +385,6 @@ public class LifecycleImpl
             getViewHandler().renderView(facesContext);
         }
         catch (IOException e)
-        {
-            throw new FacesException(e.getMessage(), e);
-        }
-        catch (ServletException e)
         {
             throw new FacesException(e.getMessage(), e);
         }
@@ -431,12 +414,31 @@ public class LifecycleImpl
         }
     }
 
+    private static final String ACTION_LISTENER_FLAG
+        = LifecycleImpl.class.getName() + ".ACTION_LISTENER";
+
+    private void traverseAndRegisterActionListener(ActionListener actionListener,
+                                                   UIComponent uiComponent)
+    {
+        if (uiComponent instanceof UICommand &&
+            uiComponent.getAttribute(ACTION_LISTENER_FLAG) == null)
+        {
+            ((UICommand)uiComponent).addActionListener(actionListener);
+            uiComponent.setAttribute(ACTION_LISTENER_FLAG, Boolean.TRUE);
+        }
+
+        for (Iterator it = uiComponent.getFacetsAndChildren(); it.hasNext(); )
+        {
+            traverseAndRegisterActionListener(actionListener,
+                                              (UIComponent)it.next());
+        }
+    }
 
 
     public static String getTreeId(FacesContext facesContext)
     {
-        ServletRequest request = facesContext.getServletRequest();
-        ServletContext servletContext = facesContext.getServletContext();
+        ServletRequest request = (ServletRequest)facesContext.getExternalContext().getRequest();
+        ServletContext servletContext = (ServletContext)facesContext.getExternalContext().getContext();
         ServletMappingFactory servletMappingFactory = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
         ServletMapping sm = servletMappingFactory.getServletMapping(servletContext);
         return sm.getTreeIdFromRequest(request);

@@ -18,10 +18,12 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UIInput;
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.component.UIInput;
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.HiddenRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
 import net.sourceforge.myfaces.renderkit.html.HiddenRenderer;
-import net.sourceforge.myfaces.renderkit.attr.*;
 
 import javax.faces.component.UIComponent;
 
@@ -37,9 +39,9 @@ public class InputHiddenTag
                UserRoleAttributes,
                HiddenRendererAttributes
 {
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        return new UIInput();
+        return "Input";
     }
 
     public String getRendererType()

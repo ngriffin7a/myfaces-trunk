@@ -18,11 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UIOutput;
-import net.sourceforge.myfaces.renderkit.html.TextRenderer;
 import net.sourceforge.myfaces.renderkit.attr.TextRendererAttributes;
-
-import javax.faces.component.UIComponent;
+import net.sourceforge.myfaces.renderkit.html.TextRenderer;
 
 
 /**
@@ -34,10 +31,9 @@ public class OutputTextTag
     extends MyFacesTag
     implements TextRendererAttributes
 {
-    //MyFaces tag extensions:
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        return new UIOutput();
+        return "Output";
     }
 
     public String getRendererType()

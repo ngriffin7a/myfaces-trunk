@@ -47,6 +47,7 @@ public class HiddenRenderer
         return TYPE;
     }
 
+    /*
     public boolean supportsComponentType(String s)
     {
         return s.equals(UIInput.TYPE);
@@ -62,6 +63,7 @@ public class HiddenRenderer
         addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_hidden", INPUT_HIDDEN_ATTRIBUTES);
         addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_hidden", USER_ROLE_ATTRIBUTES);
     }
+    */
 
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
@@ -76,7 +78,7 @@ public class HiddenRenderer
         writer.write(" id=\"");
         writer.write(coumpoundId);
         writer.write("\"");
-        String currentValue = getStringValue(facesContext, uiComponent);
+        String currentValue = getStringValue(facesContext, (UIInput)uiComponent);
         if (currentValue != null)
         {
             writer.write(" value=\"");

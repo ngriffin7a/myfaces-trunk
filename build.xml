@@ -73,6 +73,10 @@
             <zipfileset dir="${temp.dir}/myfaces-jar"
                         includes="*.tld"
                         prefix="META-INF/"/>
+            <!-- faces-config.xml -->
+            <zipfileset dir="${project.dir}/doc"
+                        includes="faces-config.xml"
+                        prefix="META-INF/"/>
         </jar>
 
         <!-- remove temporary files -->

@@ -27,11 +27,11 @@ package net.sourceforge.myfaces.renderkit.attr;
 public interface ErrorsRendererAttributes
     extends CommonRendererAttributes
 {
-    public static final String CLIENT_ID_ATTR = "errorsClientId"; //Error in Spec.: Cannot be "clientId" because components already have a clientId property!
+    public static final String FOR_ATTR = "for";
 
     public static final String[] OUTPUT_ERRORS_ATTRIBUTES = {
         OUTPUT_CLASS_ATTR,
-        CLIENT_ID_ATTR
+        FOR_ATTR
     };
 
 }

@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib.core;
 
-import javax.faces.validator.Validator;
 import javax.faces.validator.LengthValidator;
+import javax.faces.validator.Validator;
 import javax.faces.webapp.ValidatorTag;
 import javax.servlet.jsp.JspException;
 
@@ -36,7 +36,7 @@ public class ValidateLengthTag
     private int _minimum;
     private int _maximum;
 
-    private static final String TYPE = LengthValidator.class.getName();
+    //private static final String TYPE = LengthValidator.class.getName();
 
     public ValidateLengthTag()
     {
@@ -77,7 +77,7 @@ public class ValidateLengthTag
     protected Validator createValidator()
         throws JspException
     {
-        setType(TYPE);
+        //setType(TYPE);
         LengthValidator validator = (LengthValidator)super.createValidator();
         if(_isMinSet)
         {

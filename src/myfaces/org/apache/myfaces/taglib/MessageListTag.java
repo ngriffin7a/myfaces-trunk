@@ -32,10 +32,9 @@ import javax.faces.component.UIComponent;
 public class MessageListTag
         extends MyFacesTag
 {
-    //MyFaces tag extensions:
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        return new UIOutput();
+        return "Output";
     }
 
     public String getRendererType()

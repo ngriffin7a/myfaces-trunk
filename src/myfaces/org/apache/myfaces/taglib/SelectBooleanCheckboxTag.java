@@ -18,12 +18,9 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UISelectBoolean;
 import net.sourceforge.myfaces.renderkit.attr.CheckboxRendererAttributes;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLInputAttributes;
 import net.sourceforge.myfaces.renderkit.html.CheckboxRenderer;
-
-import javax.faces.component.UIComponent;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLInputAttributes;
 
 /**
  * see "selectboolean_checkbox" tag in myfaces_html.tld
@@ -35,10 +32,9 @@ public class SelectBooleanCheckboxTag
     implements HTMLInputAttributes,
                CheckboxRendererAttributes
 {
-    //MyFaces tag extensions:
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        return new UISelectBoolean();
+        return "SelectBoolean";
     }
 
     public String getRendererType()

@@ -21,8 +21,6 @@ package net.sourceforge.myfaces.taglib.ext;
 import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
 
-import javax.faces.component.UIComponent;
-
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
@@ -31,9 +29,9 @@ import javax.faces.component.UIComponent;
 public class SaveStateTag
     extends MyFacesTag
 {
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        return new UISaveState();
+        return "SaveState";
     }
 
     public String getRendererType()

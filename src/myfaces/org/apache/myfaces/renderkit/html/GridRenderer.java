@@ -30,7 +30,6 @@ import net.sourceforge.myfaces.renderkit.html.attr.HTMLTableAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIPanel;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
@@ -65,6 +64,7 @@ public class GridRenderer
         return TYPE;
     }
 
+    /*
     public boolean supportsComponentType(UIComponent uiComponent)
     {
         return uiComponent instanceof javax.faces.component.UIPanel;
@@ -83,6 +83,7 @@ public class GridRenderer
         addAttributeDescriptors(UIPanel.TYPE, TLD_HTML_URI, "panel_grid", PANEL_GRID_ATTRIBUTES);
         addAttributeDescriptors(UIPanel.TYPE, TLD_HTML_URI, "panel_grid", USER_ROLE_ATTRIBUTES);
     }
+    */
 
 
 

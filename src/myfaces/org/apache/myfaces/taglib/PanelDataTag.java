@@ -19,19 +19,14 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIComponentUtils;
-import net.sourceforge.myfaces.component.UIPanel;
-import net.sourceforge.myfaces.renderkit.html.DataRenderer;
 import net.sourceforge.myfaces.renderkit.attr.DataRendererAttributes;
-import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.renderkit.html.DataRenderer;
 
 import javax.faces.FacesException;
-import javax.faces.context.FacesContext;
 import javax.faces.component.UIComponent;
+import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Collection;
-import java.util.Arrays;
 
 /**
  * see "panel_data" tag in myfaces_html.tld
@@ -42,12 +37,15 @@ public class PanelDataTag
     extends MyFacesTag
     implements DataRendererAttributes
 {
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        UIPanel panel = new UIPanel(false);
-        // donot save State
-        UIComponentUtils.setTransient(panel, true);
-        return panel;
+        return "Panel";
+    }
+
+    public void overrideProperties(UIComponent uiComponent)
+    {
+        super.overrideProperties(uiComponent);
+        UIComponentUtils.setTransient(uiComponent, true);
     }
 
     public String getRendererType()
@@ -111,10 +109,10 @@ public class PanelDataTag
 
     /**
      * The encodeBegin method of the corresponding component must store the
-     * current iteration item as a model value named according to the "var"
+     * current iteration item as a request attribute named according to the "var"
      * attribute. If there are no more rows left, this model value must be
      * removed from the context.
-     * @return true, if there is a model value for an attribute with the
+     * @return true, if there is a request attribute for an attribute with the
      *         name determined from the "var" renderer attribute
      */
     protected boolean hasNext()
@@ -122,7 +120,8 @@ public class PanelDataTag
         String varAttr = (String)getComponent().getAttribute(DataRenderer.VAR_ATTR);
         try
         {
-            return getFacesContext().getModelValue(varAttr) != null;
+            return ((ServletRequest)getFacesContext().getExternalContext().getRequest())
+                        .getAttribute(varAttr) != null;
         }
         catch (FacesException e)
         {

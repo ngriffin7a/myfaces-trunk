@@ -23,6 +23,9 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.PhaseId;
 import javax.faces.context.FacesContext;
+import javax.faces.application.ApplicationFactory;
+import javax.faces.FactoryFinder;
+import javax.faces.el.ValueBinding;
 
 /**
  * DOCUMENT ME!
@@ -37,7 +40,9 @@ public class CarConfiguratorActionListener
         String commandName = event.getActionCommand();
         FacesContext context = FacesContext.getCurrentInstance();
 
-        CarConfigurator list = (CarConfigurator)context.getModelValue("carconf");
+        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+        ValueBinding vb = af.getApplication().getValueBinding("carconf");
+        CarConfigurator list = (CarConfigurator)vb.getValue(context);
         if (list != null && commandName.equals("calcPrice"))
         {
             list.calcPrice();

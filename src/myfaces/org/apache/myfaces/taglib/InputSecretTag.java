@@ -32,11 +32,18 @@ public class InputSecretTag
     extends InputTextTag
     implements SecretRendererAttributes
 {
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        UIComponent comp = super.createComponent();
-        comp.setAttribute(SecretRenderer.REDISPLAY_ATTR, Boolean.FALSE); //Default (JSF.7.6.4)
-        return comp;
+        return "Input";
+    }
+
+    public void overrideProperties(UIComponent uiComponent)
+    {
+        super.overrideProperties(uiComponent);
+        if (uiComponent.getAttribute(SecretRenderer.REDISPLAY_ATTR) == null)
+        {
+            uiComponent.setAttribute(SecretRenderer.REDISPLAY_ATTR, Boolean.FALSE); //Default (JSF.7.6.4)
+        }
     }
 
     public String getRendererType()

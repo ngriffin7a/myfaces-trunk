@@ -19,18 +19,15 @@
 package net.sourceforge.myfaces.renderkit.html.ext;
 
 import net.sourceforge.myfaces.component.UIComponentUtils;
+import net.sourceforge.myfaces.component.ext.UISortColumn;
 import net.sourceforge.myfaces.component.ext.UISortHeader;
 import net.sourceforge.myfaces.renderkit.attr.ext.SortColumnRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.HyperlinkRenderer;
-import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
-import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.event.ApplicationEvent;
-import javax.faces.event.CommandEvent;
 import java.io.IOException;
 
 /**
@@ -54,7 +51,9 @@ public class SortColumnRenderer
 
     public void decode(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
-        if (decodeValue(facesContext, uiComponent))
+        /*
+        TODO:
+        if (decodeValue(facesContext, (UICommand)uiComponent))
         {
             if (!(uiComponent instanceof UICommand))
             {
@@ -62,14 +61,10 @@ public class SortColumnRenderer
                 return;
             }
 
-            //Old event processing:
-            ApplicationEvent event = new CommandEvent(uiComponent,
-                                                      ((UICommand)uiComponent).getCommandName());
-            facesContext.addApplicationEvent(event);
-
             //New event processing:
             ((UICommand)uiComponent).fireActionEvent(facesContext);
         }
+        */
     }
 
 
@@ -89,7 +84,7 @@ public class SortColumnRenderer
     {
         super.encodeEnd(facesContext, uiComponent);
 
-        Boolean asc = getSortAscending(facesContext, uiComponent);
+        Boolean asc = getSortAscending(facesContext, (UISortColumn)uiComponent);
         if (asc != null)
         {
             if (asc.booleanValue())
@@ -105,15 +100,18 @@ public class SortColumnRenderer
         }
     }
 
-    private Boolean getSortAscending(FacesContext facesContext, UIComponent uiComponent)
+    private Boolean getSortAscending(FacesContext facesContext, UISortColumn uiSortColumn)
     {
-        UIComponent parent = UIComponentUtils.getParentOrFacetOwner(uiComponent);
+        /*
+        TODO:
+
+        UIComponent parent = UIComponentUtils.getParentOrFacetOwner(uiSortColumn);
         if (!(parent instanceof UISortHeader))
         {
             throw new FacesException("UISortHeader expected.");
         }
 
-        String column = (String)uiComponent.currentValue(facesContext);
+        String column = (String)uiSortColumn.currentValue(facesContext);
         String currentSortColumn = (String)parent.currentValue(facesContext);
         boolean ascending = ((UISortHeader)parent).currentAscending(facesContext);
 
@@ -125,6 +123,8 @@ public class SortColumnRenderer
         {
             return null;
         }
+        */
+        return null;
     }
 
 

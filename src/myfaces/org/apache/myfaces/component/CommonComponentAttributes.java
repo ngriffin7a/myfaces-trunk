@@ -18,6 +18,7 @@ public interface CommonComponentAttributes
     public static final String VALID_ATTR = "valid";
     public static final String PARENT_ATTR = "parent";
     public static final String COMPONENT_ID_ATTR = "componentId";
+    public static final String CLIENT_ID_ATTR = "clientId";
 
     //MyFaces internal
     public static final String STRING_VALUE_ATTR = "stringValue";

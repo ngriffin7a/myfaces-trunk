@@ -33,7 +33,6 @@ import javax.faces.component.UIGraphic;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -56,6 +55,7 @@ public class ImageRenderer
         return TYPE;
     }
 
+    /*
     public boolean supportsComponentType(UIComponent uiComponent)
     {
         return uiComponent instanceof UIGraphic;
@@ -74,6 +74,7 @@ public class ImageRenderer
         addAttributeDescriptors(UIGraphic.TYPE, TLD_HTML_URI, "graphic_image", GRAPHIC_IMAGE_ATTRIBUTES);
         addAttributeDescriptors(UIGraphic.TYPE, TLD_HTML_URI, "graphic_image", USER_ROLE_ATTRIBUTES);
     }
+    */
 
 
 
@@ -102,7 +103,7 @@ public class ImageRenderer
         }
         else
         {
-            value = getStringValue(facesContext, uiComponent);
+            value = getStringValue(facesContext, (UIGraphic)uiComponent);
         }
 
         if (value != null && value.length() > 0)
@@ -112,7 +113,7 @@ public class ImageRenderer
             String src;
             if (value.startsWith("/"))
             {
-                HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
+                HttpServletRequest request = (HttpServletRequest)facesContext.getExternalContext().getRequest();
                 src = request.getContextPath() + value;
             }
             else
@@ -120,10 +121,10 @@ public class ImageRenderer
                 src = value;
             }
 
-            //Encode URL for those still using HttpSessions... ;-)
+            //Encode URL
             //Although this is an image url, encodeURL is no nonsense, because the
             //actual image url could also be a dynamic servlet request:
-            src = ((HttpServletResponse)facesContext.getServletResponse()).encodeURL(src);
+            src = facesContext.getExternalContext().encodeResourceURL(src);
 
             writer.write(src);
             writer.write("\"");

@@ -26,6 +26,10 @@ import net.sourceforge.myfaces.util.logging.LogUtil;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
+import javax.faces.application.ApplicationFactory;
+import javax.faces.FactoryFinder;
+import javax.faces.el.ValueBinding;
+import javax.servlet.ServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,14 +53,13 @@ public class SerializingStateRestorer
 
     public Tree getPreviousTree(FacesContext facesContext)
     {
+        ServletRequest servletRequest = (ServletRequest)facesContext.getExternalContext().getRequest();
         Tree restoredTree
-            = (Tree)facesContext.getServletRequest()
-                    .getAttribute(RESTORED_TREE_CONTEXT_ATTR);
+            = (Tree)servletRequest.getAttribute(RESTORED_TREE_CONTEXT_ATTR);
         if (restoredTree == null)
         {
             String serializedTree
-                = facesContext.getServletRequest()
-                        .getParameter(SerializingStateSaver.TREE_REQUEST_PARAM);
+                = servletRequest.getParameter(SerializingStateSaver.TREE_REQUEST_PARAM);
             if (serializedTree == null)
             {
                 //nothing to restore
@@ -64,8 +67,8 @@ public class SerializingStateRestorer
             }
 
             restoredTree = unzipTree(serializedTree);
-            facesContext.getServletRequest().setAttribute(RESTORED_TREE_CONTEXT_ATTR,
-                                                          restoredTree);
+            servletRequest.setAttribute(RESTORED_TREE_CONTEXT_ATTR,
+                                        restoredTree);
         }
         return restoredTree;
     }
@@ -126,7 +129,10 @@ public class SerializingStateRestorer
                 {
                     String modelRef = entry.getModelReference();
                     JspInfoUtils.checkModelInstance(facesContext, modelRef);
-                    facesContext.setModelValue(modelRef, entry.getValue());
+
+                    ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+                    ValueBinding vb = af.getApplication().getValueBinding(modelRef);
+                    vb.setValue(facesContext, entry.getValue());
                 }
             }
             root.setAttribute(SerializingStateSaver.MODEL_VALUES_COLL_ATTR, null);

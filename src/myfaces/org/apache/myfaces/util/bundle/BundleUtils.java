@@ -19,9 +19,11 @@
 package net.sourceforge.myfaces.util.bundle;
 
 import net.sourceforge.myfaces.util.logging.LogUtil;
-import net.sourceforge.myfaces.context.FacesContextImpl;
 
+import javax.faces.FactoryFinder;
+import javax.faces.application.ApplicationFactory;
 import javax.faces.context.FacesContext;
+import javax.faces.el.VariableResolver;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -40,8 +42,9 @@ public class BundleUtils
         //TODO: Could be JSTL LocalizationContext bundle?
 
         //Lookup as attribute (try different scopes)
-        ResourceBundle bundle
-            = (ResourceBundle)FacesContextImpl.findBean(facesContext, bundleName);
+        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+        VariableResolver vr = af.getApplication().getVariableResolver();
+        ResourceBundle bundle = (ResourceBundle)vr.resolveVariable(facesContext, bundleName);
         if (bundle == null)
         {
             try

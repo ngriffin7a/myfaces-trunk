@@ -18,13 +18,15 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UICommand;
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.component.UICommand;
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.UserRoleAttributes;
 import net.sourceforge.myfaces.renderkit.html.HyperlinkRenderer;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLAnchorAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
 import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
-import net.sourceforge.myfaces.renderkit.attr.*;
 
 import javax.faces.component.UIComponent;
 import javax.servlet.jsp.JspException;
@@ -39,16 +41,15 @@ public class CommandHyperlinkTag
     extends MyFacesBodyTag
     implements CommonComponentAttributes,
                CommonRendererAttributes,
-    HTMLUniversalAttributes,
-    HTMLEventHandlerAttributes,
-    HTMLAnchorAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLAnchorAttributes,
                UserRoleAttributes,
                HyperlinkRendererAttributes
 {
-    //MyFaces tag extensions:
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        return new UICommand();
+        return "Command";
     }
 
     public String getRendererType()
@@ -146,12 +147,5 @@ public class CommandHyperlinkTag
 
     // user role attributes --> already implemented in MyFacesTag
 
-
-
-
-    public void setCommandReference(String v)
-    {
-        setComponentPropertyString(UICommand.COMMAND_REFERENCE_ATTR, v);
-    }
 
 }

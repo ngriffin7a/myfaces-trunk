@@ -16,16 +16,37 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.html;
-
-
+package net.sourceforge.myfaces.config;
 
 /**
  * DOCUMENT ME!
- * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public abstract class AbstractPanelRenderer
-        extends HTMLRenderer
+public class ValidatorConfig
+    implements Config
 {
+    private String _validatorId;
+    private String _validatorClass;
+
+    public String getValidatorId()
+    {
+        return _validatorId;
+    }
+
+    public void setValidatorId(String validatorId)
+    {
+        _validatorId = validatorId;
+    }
+
+    public String getValidatorClass()
+    {
+        return _validatorClass;
+    }
+
+    public void setValidatorClass(String validatorClass)
+    {
+        _validatorClass = validatorClass;
+    }
+
 }

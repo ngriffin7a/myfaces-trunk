@@ -24,17 +24,19 @@ import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.convert.impl.StringArrayConverter;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
-import net.sourceforge.myfaces.taglib.core.ActionListenerTag;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.FacesException;
+import javax.faces.FactoryFinder;
+import javax.faces.application.ApplicationFactory;
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
+import javax.faces.el.ValueBinding;
 import javax.faces.event.ActionListener;
 import javax.faces.event.FacesListener;
 import javax.faces.event.ValueChangedListener;
@@ -127,7 +129,7 @@ public class MinimizingStateRestorer
         //remap tagHash
         TagHashHack.convertUniqueIdsBackToComponents(facesContext, tree);
 
-        facesContext.getServletRequest()
+        ((ServletRequest)facesContext.getExternalContext().getRequest())
             .setAttribute(PREVIOUS_TREE_REQUEST_ATTR, tree);
         return tree;
     }
@@ -192,18 +194,18 @@ public class MinimizingStateRestorer
 
     protected Map getStateMap(FacesContext facesContext)
     {
-        Map map = (Map)facesContext.getServletRequest().getAttribute(STATE_MAP_REQUEST_ATTR);
+        Map map = (Map)((ServletRequest)facesContext.getExternalContext().getRequest()).getAttribute(STATE_MAP_REQUEST_ATTR);
         if (map == null)
         {
             map = restoreStateMap(facesContext);
-            facesContext.getServletRequest().setAttribute(STATE_MAP_REQUEST_ATTR, map);
+            ((ServletRequest)facesContext.getExternalContext().getRequest()).setAttribute(STATE_MAP_REQUEST_ATTR, map);
         }
         return map;
     }
 
     protected Map restoreStateMap(FacesContext facesContext)
     {
-        return facesContext.getServletRequest().getParameterMap();
+        return ((ServletRequest)facesContext.getExternalContext().getRequest()).getParameterMap();
     }
 
     protected String getStateParameter(Map stateMap, String paramName)
@@ -375,25 +377,6 @@ public class MinimizingStateRestorer
 
 
 
-    /**
-     * Register all listeners that would normally by added via f:action_listener tags.
-     * @deprecated
-     */
-    protected void registerTagCreatedActionListeners(FacesContext facesContext,
-                                                     Map stateMap,
-                                                     UIComponent uiComponent)
-    {
-        List lst = JspInfo.getActionListenersTypeList(uiComponent);
-        if (lst != null)
-        {
-            for (Iterator it = lst.iterator(); it.hasNext();)
-            {
-                String type = (String)it.next();
-                ActionListenerTag.addActionListener(uiComponent, type);
-            }
-        }
-    }
-
 
 
     protected void restoreModelValues(FacesContext facesContext,
@@ -404,19 +387,19 @@ public class MinimizingStateRestorer
                                                        facesContext.getTree().getTreeId());
         while (it.hasNext())
         {
-            UIComponent uiSaveState = (UIComponent)it.next();
+            UISaveState uiSaveState = (UISaveState)it.next();
             if (!onlyGlobal ||
-                ((UISaveState)uiSaveState).isGlobal())
+                uiSaveState.isGlobal())
             {
                 restoreModelValue(facesContext, stateMap, uiSaveState);
             }
         }
     }
 
-    public void restoreModelValue(FacesContext facesContext, Map stateMap, UIComponent uiSaveState)
+    public void restoreModelValue(FacesContext facesContext, Map stateMap, UISaveState uiSaveState)
     {
-        String modelRef = uiSaveState.getModelReference();
-        if (modelRef == null)
+        String valueRef = uiSaveState.getValueRef();
+        if (valueRef == null)
         {
             throw new FacesException("UISaveState " + uiSaveState.getComponentId() + " has no model reference");
         }
@@ -428,13 +411,16 @@ public class MinimizingStateRestorer
         JspInfoUtils.checkModelInstance(facesContext, modelRef);
         */
 
-        String paramName = RequestParameterNames.getModelValueStateParameterName(modelRef);
+        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+        ValueBinding vb = af.getApplication().getValueBinding(valueRef);
+
+        String paramName = RequestParameterNames.getModelValueStateParameterName(valueRef);
         String paramValue = getStateParameter(stateMap, paramName);
         if (paramValue != null)
         {
             if (paramValue.equals(MinimizingStateSaver.NULL_DUMMY_VALUE))
             {
-                facesContext.setModelValue(modelRef, null);
+                vb.setValue(facesContext, null);
                 return;
             }
 
@@ -448,7 +434,7 @@ public class MinimizingStateRestorer
                 }
                 catch (ConverterException e)
                 {
-                    throw new FacesException("Error restoring state of model value " + modelRef + ": Converter exception!", e);
+                    throw new FacesException("Error restoring state of model value " + valueRef + ": Converter exception!", e);
                 }
             }
             else
@@ -456,7 +442,7 @@ public class MinimizingStateRestorer
                 propValue = ConverterUtils.deserializeAndDecodeBase64(paramValue);
             }
 
-            facesContext.setModelValue(modelRef, propValue);
+            vb.setValue(facesContext, propValue);
         }
     }
 
@@ -610,7 +596,7 @@ public class MinimizingStateRestorer
 
     public Tree getPreviousTree(FacesContext facesContext)
     {
-        ServletRequest request = facesContext.getServletRequest();
+        ServletRequest request = (ServletRequest)facesContext.getExternalContext().getRequest();
         Tree tree = (Tree)request.getAttribute(PREVIOUS_TREE_REQUEST_ATTR);
         if (tree != null)
         {

@@ -19,15 +19,12 @@
 package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.ext.UINavigation;
-import net.sourceforge.myfaces.component.UICommand;
-import net.sourceforge.myfaces.renderkit.html.ext.NavigationItemRenderer;
-import net.sourceforge.myfaces.renderkit.html.attr.HTMLAnchorAttributes;
-import net.sourceforge.myfaces.renderkit.attr.ext.NavigationItemRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.ext.NavigationItemRendererAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLAnchorAttributes;
+import net.sourceforge.myfaces.renderkit.html.ext.NavigationItemRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
-
-import javax.faces.component.UIComponent;
 
 /**
  * see "navigation_item" tag in myfaces_ext.tld
@@ -42,9 +39,9 @@ public class NavigationItemTag
                HyperlinkRendererAttributes
 
 {
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        return new UINavigation.UINavigationItem();
+        return "NavigationItem";
     }
 
     public String getRendererType()
@@ -159,13 +156,5 @@ public class NavigationItemTag
     // key and bundle attributes --> already implemented in MyFacesTag
 
     // user role attributes --> already implemented in MyFacesTag
-
-
-
-
-    public void setCommandReference(String v)
-    {
-        setComponentPropertyString(UICommand.COMMAND_REFERENCE_ATTR, v);
-    }
 
 }

@@ -34,10 +34,9 @@ public class OutputErrorsTag
     extends MyFacesTag
     implements ErrorsRendererAttributes
 {
-    //MyFaces tag extensions:
-    public UIComponent createComponent()
+    public String getComponentType()
     {
-        return new UIOutput();
+        return "Output";
     }
 
     public String getRendererType()

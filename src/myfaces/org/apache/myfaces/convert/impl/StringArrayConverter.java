@@ -22,10 +22,10 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
-import java.util.StringTokenizer;
-import java.net.URLEncoder;
-import java.net.URLDecoder;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.StringTokenizer;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)

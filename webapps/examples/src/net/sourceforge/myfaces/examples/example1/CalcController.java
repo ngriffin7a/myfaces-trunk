@@ -18,10 +18,14 @@
  */
 package net.sourceforge.myfaces.examples.example1;
 
-import net.sourceforge.myfaces.examples.example1.CalcForm;
-
+import javax.faces.FactoryFinder;
+import javax.faces.application.ApplicationFactory;
 import javax.faces.context.FacesContext;
-import javax.faces.event.*;
+import javax.faces.el.ValueBinding;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.ActionListener;
+import javax.faces.event.PhaseId;
 
 /**
  * DOCUMENT ME!
@@ -36,7 +40,9 @@ public class CalcController
         String commandName = event.getActionCommand();
         FacesContext facesContext = FacesContext.getCurrentInstance();
 
-        CalcForm form = (CalcForm)facesContext.getModelValue("calcForm");
+        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+        ValueBinding vb = af.getApplication().getValueBinding("calcForm");
+        CalcForm form = (CalcForm)vb.getValue(facesContext);
         if (commandName.equals("add"))
         {
             form.add();

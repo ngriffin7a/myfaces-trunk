@@ -29,12 +29,15 @@ import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.*;
 import net.sourceforge.myfaces.taglib.MyFacesBodyTag;
 import net.sourceforge.myfaces.taglib.MyFacesTag;
 import net.sourceforge.myfaces.taglib.MyFacesTagBaseIF;
+import net.sourceforge.myfaces.taglib.UIComponentTagHacks;
 import net.sourceforge.myfaces.taglib.core.ActionListenerTag;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 import org.xml.sax.Attributes;
 
 import javax.faces.FacesException;
+import javax.faces.FactoryFinder;
+import javax.faces.application.ApplicationFactory;
 import javax.faces.component.NamingContainer;
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
@@ -44,7 +47,9 @@ import javax.faces.event.ActionListener;
 import javax.faces.validator.Validator;
 import javax.faces.webapp.FacesTag;
 import javax.faces.webapp.FacetTag;
+import javax.faces.webapp.UIComponentTag;
 import javax.faces.webapp.ValidatorTag;
+import javax.servlet.ServletContext;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagAttributeInfo;
@@ -346,7 +351,7 @@ public class MyParseEventListener
             throw new RuntimeException("Class for tag " + ti.getTagName() + " not found!", e);
         }
 
-        if (FacesTag.class.isAssignableFrom(c) ||
+        if (UIComponentTag.class.isAssignableFrom(c) ||
             ActionListenerTag.class.isAssignableFrom(c) ||
             ValidatorTag.class.isAssignableFrom(c) ||
             FacetTag.class.isAssignableFrom(c))
@@ -384,9 +389,9 @@ public class MyParseEventListener
         {
             return;
         }
-        else if (tag instanceof FacesTag)
+        else if (tag instanceof UIComponentTag)
         {
-            handleFacesTag(ti, (FacesTag)tag, attrs, filename, startLine, endLine);
+            handleUIComponentTag(ti, (UIComponentTag)tag, attrs, filename, startLine, endLine);
         }
         else if (tag instanceof ActionListenerTag)
         {
@@ -403,10 +408,10 @@ public class MyParseEventListener
     }
 
 
-    private void handleFacesTag(TagInfo ti,
-                                FacesTag facesTag,
-                                Attributes attrs,
-                                String filename, int startLine, int endLine)
+    private void handleUIComponentTag(TagInfo ti,
+                                      UIComponentTag facesTag,
+                                      Attributes attrs,
+                                      String filename, int startLine, int endLine)
     {
         String id = null;
 
@@ -467,7 +472,9 @@ public class MyParseEventListener
             }
         }
 
-        UIComponent comp = facesTag.createComponent(); //Tag is instanceof FacesTag
+        String componentType = UIComponentTagHacks.getComponentType(facesTag);
+        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+        UIComponent comp = af.getApplication().getComponent(componentType);
         if (comp == null)
         {
             LogUtil.getLogger().warning("Tag class " + facesTag.getClass().getName() + " did not create a component.");
@@ -501,7 +508,7 @@ public class MyParseEventListener
                   facesTag instanceof MyFacesBodyTag))
             {
                 FacesContext facesContext = FacesContext.getCurrentInstance();
-                int mode = MyFacesConfig.getStateSavingMode(facesContext.getServletContext());
+                int mode = MyFacesConfig.getStateSavingMode(((ServletContext)facesContext.getExternalContext().getContext()));
                 if (mode == MyFacesConfig.STATE_SAVING_MODE__CLIENT_MINIMIZED ||
                     mode == MyFacesConfig.STATE_SAVING_MODE__CLIENT_MINIMIZED_ZIPPED)
                 {
@@ -543,7 +550,7 @@ public class MyParseEventListener
         {
             ((MyFacesTagBaseIF)facesTag).setCreated(true);
         }
-        overrideProperties(facesTag, comp);
+        UIComponentTagHacks.overrideProperties(facesTag, comp);
         facesTag.release(); //Just to be sure
 
         _currentComponent = comp;
@@ -557,7 +564,7 @@ public class MyParseEventListener
                                         new Integer(startLine),
                                         new Integer(endLine)});
 
-        if (comp.getComponentType().equals(UISaveState.TYPE))
+        if (comp instanceof UISaveState)
         {
             _jspInfo.addUISaveStateComponent(comp);
         }
@@ -597,82 +604,6 @@ public class MyParseEventListener
     }
 
 
-
-    /**
-     * Hack to access the protected FacesTag method "overrideProperties".
-     * @param tag
-     * @param comp
-     */
-    private void overrideProperties(Object tag, UIComponent comp)
-    {
-        if (tag instanceof MyFacesTagBaseIF)
-        {
-            ((MyFacesTagBaseIF)tag).overrideProperties(comp);
-        }
-        else
-        {
-            try
-            {
-                Method m = null;
-                Class c = tag.getClass();
-                while (m == null && c != null && !c.equals(Object.class))
-                {
-                    try
-                    {
-                        m = c.getDeclaredMethod("overrideProperties",
-                                                new Class[] {UIComponent.class});
-                    }
-                    catch (NoSuchMethodException e) {}
-                    c = c.getSuperclass();
-                }
-
-                if (m == null)
-                {
-                    throw new NoSuchMethodException();
-                }
-
-                if (m.isAccessible())
-                {
-                    m.invoke(tag, new Object[] {comp});
-                }
-                else
-                {
-                    final Method finalM = m;
-                    AccessController.doPrivileged(
-                        new PrivilegedAction()
-                        {
-                            public Object run()
-                            {
-                                finalM.setAccessible(true);
-                                return null;
-                            }
-                        });
-                    m.invoke(tag, new Object[]{comp});
-                    m.setAccessible(false);
-                }
-            }
-            catch (NoSuchMethodException e)
-            {
-                throw new RuntimeException(e);
-            }
-            catch (SecurityException e)
-            {
-                throw new RuntimeException(e);
-            }
-            catch (IllegalAccessException e)
-            {
-                throw new RuntimeException(e);
-            }
-            catch (IllegalArgumentException e)
-            {
-                throw new RuntimeException(e);
-            }
-            catch (InvocationTargetException e)
-            {
-                throw new RuntimeException(e);
-            }
-        }
-    }
 
 
     private Object convertStringToTargetType(PropertyDescriptor propertyDescriptor,
@@ -826,24 +757,6 @@ public class MyParseEventListener
                                          ActionListenerTag actionListenerTag,
                                          Attributes attrs)
     {
-        /*
-        List lst = (List)_currentComponent.getAttribute(JspInfo.ACTION_LISTENERS_TYPE_LIST_ATTR);
-        if (lst == null)
-        {
-            lst = new ArrayList();
-            _currentComponent.setAttribute(JspInfo.ACTION_LISTENERS_TYPE_LIST_ATTR, lst);
-        }
-
-        String type = attrs.getValue(ACTION_LISTENER_TAG_TYPE_ATTR);
-        if (type == null)
-        {
-            LogUtil.getLogger().severe("action_listener tag has no " + ACTION_LISTENER_TAG_TYPE_ATTR + " attribute!");
-            return;
-        }
-
-        lst.add(type);
-        */
-
         String type = attrs.getValue(ACTION_LISTENER_TAG_TYPE_ATTR);
         if (type == null)
         {

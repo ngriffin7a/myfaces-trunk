@@ -25,6 +25,7 @@ import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfoUtils;
 import net.sourceforge.myfaces.renderkit.html.state.StateRestorer;
 
 import javax.faces.context.FacesContext;
+import javax.servlet.ServletContext;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -40,7 +41,7 @@ public abstract class ClientStateRestorer
     protected void recreateRequestScopeBeans(FacesContext facesContext)
     {
         //autocreate request scope beans
-        if (MyFacesConfig.isAutoCreateRequestScopeBeans(facesContext.getServletContext()))
+        if (MyFacesConfig.isAutoCreateRequestScopeBeans(((ServletContext)facesContext.getExternalContext().getContext())))
         {
             Iterator it = JspInfo.getJspBeanInfos(facesContext,
                                                   facesContext.getTree().getTreeId());

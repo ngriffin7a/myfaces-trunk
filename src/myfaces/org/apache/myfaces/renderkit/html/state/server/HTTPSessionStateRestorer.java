@@ -27,8 +27,13 @@ import net.sourceforge.myfaces.renderkit.html.state.StateRestorer;
 
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
+import javax.faces.application.ApplicationFactory;
+import javax.faces.FactoryFinder;
+import javax.faces.el.ValueBinding;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -48,7 +53,7 @@ public class HTTPSessionStateRestorer
 
     public void restoreState(FacesContext facesContext) throws IOException
     {
-        HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
+        HttpServletRequest request = (HttpServletRequest)facesContext.getExternalContext().getRequest();
 
         //get Session
         HttpSession session = request.getSession(false);
@@ -71,7 +76,7 @@ public class HTTPSessionStateRestorer
         if (savedTree != null)
         {
             //autocreate request scope beans
-            if (MyFacesConfig.isAutoCreateRequestScopeBeans(facesContext.getServletContext()))
+            if (MyFacesConfig.isAutoCreateRequestScopeBeans(((ServletContext)facesContext.getExternalContext().getContext())))
             {
                 Iterator it = JspInfo.getJspBeanInfos(facesContext,
                                                       facesContext.getTree().getTreeId());
@@ -99,7 +104,7 @@ public class HTTPSessionStateRestorer
             }
 
             session.removeAttribute(HTTPSessionStateSaver.TREE_SESSION_ATTR);
-            facesContext.getServletRequest().setAttribute(PREVIOUS_TREE_REQUEST_ATTR,
+            ((ServletRequest)facesContext.getExternalContext().getRequest()).setAttribute(PREVIOUS_TREE_REQUEST_ATTR,
                                                           savedTree);
         }
 
@@ -110,7 +115,7 @@ public class HTTPSessionStateRestorer
                                     HttpSession session,
                                     boolean onlyGlobal)
     {
-        if (!MyFacesConfig.isDisableJspParser(facesContext.getServletContext()))
+        if (!MyFacesConfig.isDisableJspParser(((ServletContext)facesContext.getExternalContext().getContext())))
         {
             Collection modelValuesColl
                 = (Collection)session.getAttribute(HTTPSessionStateSaver.MODEL_VALUES_COLL_SESSION_ATTR);
@@ -123,7 +128,10 @@ public class HTTPSessionStateRestorer
                     {
                         String modelRef = entry.getModelReference();
                         JspInfoUtils.checkModelInstance(facesContext, modelRef);
-                        facesContext.setModelValue(modelRef, entry.getValue());
+
+                        ApplicationFactory af = (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+                        ValueBinding vb = af.getApplication().getValueBinding(modelRef);
+                        vb.setValue(facesContext, entry.getValue());
                     }
                 }
                 session.removeAttribute(HTTPSessionStateSaver.MODEL_VALUES_COLL_SESSION_ATTR);
@@ -134,7 +142,7 @@ public class HTTPSessionStateRestorer
 
     public Tree getPreviousTree(FacesContext facesContext)
     {
-        return (Tree)facesContext.getServletRequest()
+        return (Tree)((ServletRequest)facesContext.getExternalContext().getRequest())
                         .getAttribute(PREVIOUS_TREE_REQUEST_ATTR);
     }
 
@@ -143,7 +151,7 @@ public class HTTPSessionStateRestorer
     /*
     public void restoreComponentState(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
-        HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
+        HttpServletRequest request = (HttpServletRequest)facesContext.getExternalContext().getRequest();
         HttpSession session = request.getSession(false);
         if (session == null)
         {

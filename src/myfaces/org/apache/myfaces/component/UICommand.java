@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.component;
 
 import javax.faces.component.UIComponent;
-import javax.faces.component.NamingContainer;
 import javax.faces.context.FacesContext;
 import java.util.List;
 import java.util.Map;
@@ -31,56 +30,14 @@ import java.util.Map;
  */
 public class UICommand
     extends javax.faces.component.UICommand
-    implements CommonComponentAttributes
+    //implements CommonComponentAttributes
 {
     public static final String COMMAND_NAME_ATTR = "commandName";
-
-    //MyFaces extensions
-    public static final String COMMAND_REFERENCE_ATTR = "commandReference";
-
-    private Map _parameters = null;
-
 
     public UICommand()
     {
         setValid(true);
     }
-
-    public void setAttribute(String name, Object value)
-    {
-        if (name.equals(COMMAND_NAME_ATTR))
-        {
-            setAttribute(VALUE_ATTR, value);
-        }
-        else
-        {
-            super.setAttribute(name, value);
-        }
-    }
-
-    public Object getAttribute(String name)
-    {
-        if (name.equals(COMMAND_NAME_ATTR))
-        {
-            return getAttribute(VALUE_ATTR);
-        }
-        else
-        {
-            return super.getAttribute(name);
-        }
-    }
-
-
-    public String getCommandReference()
-    {
-        return (String)getAttribute(COMMAND_REFERENCE_ATTR);
-    }
-
-    public void setCommandReference(String commandReference)
-    {
-        setAttribute(COMMAND_REFERENCE_ATTR, commandReference);
-    }
-
 
     public List[] getListeners()
     {

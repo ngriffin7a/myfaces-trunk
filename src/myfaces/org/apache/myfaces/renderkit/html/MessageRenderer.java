@@ -48,8 +48,8 @@ public class MessageRenderer
     extends HTMLRenderer
     implements CommonComponentAttributes,
                CommonRendererAttributes,
-    HTMLUniversalAttributes,
-    HTMLEventHandlerAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
                MessageRendererAttributes,
                UserRoleAttributes
 {
@@ -62,6 +62,7 @@ public class MessageRenderer
         return TYPE;
     }
 
+    /*
     public boolean supportsComponentType(String s)
     {
         return s.equals(UIOutput.TYPE);
@@ -79,6 +80,7 @@ public class MessageRenderer
         addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_message", OUTPUT_MESSAGE_ATTRIBUTES);
         addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_message", USER_ROLE_ATTRIBUTES);
     }
+    */
 
 
 
@@ -114,7 +116,7 @@ public class MessageRenderer
         }
         else
         {
-            pattern = getStringValue(facesContext, uiComponent);
+            pattern = getStringValue(facesContext, (UIOutput)uiComponent);
         }
 
         MessageFormat format = new MessageFormat(pattern, facesContext.getLocale());
@@ -125,13 +127,13 @@ public class MessageRenderer
         while (children.hasNext())
         {
             UIComponent child = (UIComponent)children.next();
-            if (child.getComponentType().equals(UIParameter.TYPE))
+            if (child instanceof UIParameter)
             {
                 if (params == null)
                 {
                     params = new ArrayList();
                 }
-                params.add(child.currentValue(facesContext));
+                params.add(((UIParameter)child).currentValue(facesContext));
             }
         }
 

@@ -18,7 +18,8 @@
  */
 package net.sourceforge.myfaces.convert;
 
-import javax.faces.context.Message;
+import javax.faces.application.Message;
+
 
 /**
  * DOCUMENT ME!
