@@ -35,6 +35,7 @@ public class TreeTag extends UIComponentTagBase //UIComponentBodyTagBase
     private String _varNodeToggler;
     private String _showLines;
     private String _showNav;
+    private String _clientSideToggle;
 
     public void release()
     {
@@ -45,6 +46,7 @@ public class TreeTag extends UIComponentTagBase //UIComponentBodyTagBase
         _varNodeToggler=null;
         _showLines = null;
         _showNav = null;
+        _clientSideToggle = null;
     }
 
     public String getComponentType()
@@ -85,6 +87,11 @@ public class TreeTag extends UIComponentTagBase //UIComponentBodyTagBase
         _showNav = showNav;
     }
 
+    public void setClientSideToggle(String clientSideToggle)
+    {
+        _clientSideToggle = clientSideToggle;
+    }
+
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
@@ -109,5 +116,6 @@ public class TreeTag extends UIComponentTagBase //UIComponentBodyTagBase
 
         setBooleanProperty(component, JSFAttr.SHOW_NAV, _showNav);
         setBooleanProperty(component, JSFAttr.SHOW_LINES, _showLines);
+        setBooleanProperty(component, JSFAttr.CLIENT_SIDE_TOGGLE, _clientSideToggle);
     }
 }

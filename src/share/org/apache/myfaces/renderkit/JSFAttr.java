@@ -118,7 +118,7 @@ public class JSFAttr
     // Tree attributes
     public static final String SHOW_NAV                    = "org.apache.myfaces.tree.SHOW_NAV";
     public static final String SHOW_LINES                  = "org.apache.myfaces.tree.SHOW_LINES";
-
+    public static final String CLIENT_SIDE_TOGGLE          = "org.apache.myfaces.tree.CLIENT_SIDE_TOGGLE";
 
     //~ Myfaces Extensions -------------------------------------------------------------------------------
 

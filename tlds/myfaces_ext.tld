@@ -1742,15 +1742,23 @@
             <name>showNav</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
-            <description>Show the "plus" and "minus" navigation icons (default is true)</description>
+            <description>
+                Show the "plus" and "minus" navigation icons (default is true.) Value is ignored if
+                clientSideToggle is true.
+            </description>
         </attribute>
         <attribute>
             <name>showLines</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
-            <description>Show the connecting lines (default is true)</description>
+            <description>Show the connecting lines (default is true.)</description>
         </attribute>
-
+        <attribute>
+            <name>clientSideToggle</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>Perform client-side toggling of expand/collapse state via javascript (default is true.)</description>
+        </attribute>
     </tag>
 
     <!-- panelStack -->
