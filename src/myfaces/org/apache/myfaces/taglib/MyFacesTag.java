@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.MyFacesUIOutput;
+import net.sourceforge.myfaces.component.JSFProp;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.util.logging.LogUtil;
@@ -271,6 +272,11 @@ public abstract class MyFacesTag
     public void setRendered(Boolean rendered)
     {
         super.setRendered(rendered.booleanValue());
+    }
+
+    public void setRendererType(String s)
+    {
+        setComponentPropertyString(JSFProp.RENDERER_TYPE_PROP, s);
     }
 
 

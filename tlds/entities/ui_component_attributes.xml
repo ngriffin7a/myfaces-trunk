@@ -13,6 +13,12 @@
             <description>If false, this component will not be rendered.</description>
         </attribute>
         <attribute>
+            <name>rendererType</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>Override default rendererType.</description>
+        </attribute>
+        <attribute>
             <name>converter</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
