@@ -42,6 +42,9 @@ import java.util.List;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.5  2004/05/10 01:24:51  o_rossmueller
+ *          added iconClass attribute
+ *
  *          Revision 1.4  2004/05/04 12:19:13  o_rossmueller
  *          added icon provider
  *
@@ -107,6 +110,8 @@ public class HtmlTreeRenderer
                                   int maxLevel,
                                   IconProvider iconProvider) throws IOException
     {
+        String iconClass = tree.getIconClass();
+
         for (Iterator it = children.iterator(); it.hasNext();)
         {
             HtmlTreeNode child = (HtmlTreeNode) it.next();
@@ -199,6 +204,9 @@ public class HtmlTreeRenderer
             if ((url != null) && (url.length() > 0))
             {
                 writer.startElement(HTML.TD_ELEM, null);
+                if (iconClass != null) {
+                    writer.writeAttribute(HTML.CLASS_ATTR, iconClass, null);
+                }
                 writeImageElement(url, facesContext, writer, child);
                 writer.endElement(HTML.TD_ELEM);
             } else

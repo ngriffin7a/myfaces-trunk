@@ -38,6 +38,9 @@ import javax.servlet.jsp.JspException;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.4  2004/05/10 01:24:51  o_rossmueller
+ *          added iconClass attribute
+ *
  *          Revision 1.3  2004/05/05 00:18:57  o_rossmueller
  *          various fixes/modifications in model event handling and tree update
  *
@@ -70,6 +73,7 @@ public class TreeTag
     private String styleClass;
     private String nodeClass;
     private String selectedNodeClass;
+    private String iconClass;
     private boolean expandRoot;
 
 
@@ -301,6 +305,18 @@ public class TreeTag
     }
 
 
+    public String getIconClass()
+    {
+        return iconClass;
+    }
+
+
+    public void setIconClass(String iconClass)
+    {
+        this.iconClass = iconClass;
+    }
+
+
     public boolean isExpandRoot()
     {
         return expandRoot;
@@ -393,5 +409,6 @@ public class TreeTag
         setStringProperty(component, "styleClass", styleClass);
         setStringProperty(component, "nodeClass", nodeClass);
         setStringProperty(component, "selectedNodeClass", selectedNodeClass);
+        setStringProperty(component, "iconClass", iconClass);
     }
 }

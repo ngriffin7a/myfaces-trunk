@@ -47,6 +47,9 @@ import net.sourceforge.myfaces.custom.tree.model.TreePath;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.11  2004/05/10 01:24:51  o_rossmueller
+ *          added iconClass attribute
+ *
  *          Revision 1.10  2004/05/05 00:18:57  o_rossmueller
  *          various fixes/modifications in model event handling and tree update
  *
@@ -91,6 +94,7 @@ public class HtmlTree
     private String styleClass;
     private String nodeClass;
     private String selectedNodeClass;
+    private String iconClass;
     private String iconLine = "images/tree/line.gif";
     private String iconNoline = "images/tree/noline.gif";
     private String iconChild = "images/tree/noline.gif";
@@ -358,6 +362,18 @@ public class HtmlTree
     }
 
 
+    public String getIconClass()
+    {
+        return iconClass;
+    }
+
+
+    public void setIconClass(String iconClass)
+    {
+        this.iconClass = iconClass;
+    }
+
+
     public String getFamily()
     {
         return "net.sourceforge.myfaces.HtmlTree";
@@ -490,7 +506,7 @@ public class HtmlTree
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[19];
+        Object values[] = new Object[20];
         values[0] = super.saveState(context);
         values[1] = iconChild;
         values[2] = iconChildFirst;
@@ -510,6 +526,7 @@ public class HtmlTree
         values[16] = selectedNodeClass;
         values[17] = new Integer(uniqueIdCounter);
         values[18] = selectedPath;
+        values[19] = iconClass;
         return ((Object) (values));
     }
 
@@ -536,6 +553,7 @@ public class HtmlTree
         selectedNodeClass = (String) values[16];
         uniqueIdCounter = ((Integer) values[17]).intValue();
         selectedPath = (int[]) values[18];
+        iconClass = (String)values[19];
         addToModelListeners();
     }
 
