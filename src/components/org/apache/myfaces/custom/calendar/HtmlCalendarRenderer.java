@@ -40,9 +40,13 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.List;
 
 /**
  * $Log$
+ * Revision 1.10  2004/11/29 13:57:56  mmarinschek
+ * changes for input-calendar bugs
+ *
  * Revision 1.9  2004/10/13 11:50:57  matze
  * renamed packages to org.apache
  *
@@ -107,7 +111,26 @@ public class HtmlCalendarRenderer
                     inputCalendar.getPopupDateFormat());
 
             Application application = facesContext.getApplication();
-            HtmlInputText inputText = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+
+            HtmlInputText inputText = null;
+
+            List li = inputCalendar.getChildren();
+
+            for (int i = 0; i < li.size(); i++)
+            {
+                UIComponent uiComponent = (UIComponent) li.get(i);
+
+                if(uiComponent instanceof HtmlInputText)
+                {
+                    inputText = (HtmlInputText) uiComponent;
+                    break;
+                }
+            }
+
+            if(inputText == null)
+            {
+                inputText = (HtmlInputText) application.createComponent(HtmlInputText.COMPONENT_TYPE);
+            }
 
             RendererUtils.copyHtmlInputTextAttributes(inputCalendar, inputText);
 
