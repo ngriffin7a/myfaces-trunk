@@ -28,7 +28,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class HTMLResponseStateManager
-        implements ResponseStateManager
+        extends ResponseStateManager
 {
     public void writeState(FacesContext facescontext,
                            StateManager.SerializedView serializedview) throws IOException
