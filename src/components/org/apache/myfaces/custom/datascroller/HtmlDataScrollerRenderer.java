@@ -35,6 +35,10 @@ import java.util.Map;
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.14  2004/08/25 16:02:12  manolito
+ * Prevent division by zero in getPageIndex
+ *
  */
 public class HtmlDataScrollerRenderer
     extends HtmlRenderer
@@ -425,7 +429,16 @@ public class HtmlDataScrollerRenderer
     protected int getPageIndex(UIData uiData)
     {
         int rows = uiData.getRows();
-        int pageIndex = uiData.getFirst() / rows + 1;
+        int pageIndex;
+        if (rows > 0)
+        {
+            pageIndex = uiData.getFirst() / rows + 1;
+        }
+        else
+        {
+            log.warn("DataTable " + uiData.getClientId(FacesContext.getCurrentInstance()) + " has invalid rows attribute.");
+            pageIndex = 0;
+        }
         if (uiData.getFirst() % rows > 0)
         {
             pageIndex++;
