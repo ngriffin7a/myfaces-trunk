@@ -12,6 +12,11 @@
 		<jscookmenu label="JSCook Menu" href="jscookmenu.html"/>
 		<tree label="Tree2" href="tree2.html"/>
 		<treTable label="Tree Table" href="treeTable.html"/>
+		<validateCreditCard label="validateCreditCard" href="validateCreditCard.html"/>
+		<validateISBN label="validateISBN" href="validateISBN.html"/>
+		<validateRegExpr label="validateRegExpr" href="validateRegExpr.html"/>
+		<validateEmail label="validateEmail" href="validateEmail.html"/>
+		<validateEqual label="validateEqual" href="validateEqual.html"/>
 	</components>
 	<docu href="docs/" label="Documentation" tab="documentation">
 		<gettingstarted label="Getting Started" href="gettingstarted.html"/>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+
+<!--
+This is a standard template meant to be used for the documentation of all custom
+components.
+-->
+<document>
+    <!-- component name -->
+    <header>
+        <!-- ex. JSCook Menu -->
+        <title>Validate a CreditCard</title>
+        <!-- ex. &lt;x:jsCookMenu> -->
+        <subtitle>&lt;x:validateCreditCard/></subtitle>
+    </header>
+    <body>
+        <!-- Description -->
+        <section>
+            <title>Description</title>
+            <p>
+                A validator, that validates credit card format for:
+				</p>
+				<table>
+					<tr>
+						<td>American Express</td>
+					</tr>
+					<tr>
+						<td>Discover</td>
+					</tr>
+					<tr>
+						<td>Mastercard</td>
+					</tr>
+					<tr>
+						<td>Visa</td>
+					</tr>
+					<tr>
+						<td>or even none of that cards</td>
+					</tr>
+				</table>
+
+        </section>
+        <!-- API -->
+        <section>
+            <title>API</title>
+            <table>
+                <tr>
+                    <td>validatorId</td>
+                    <td>org.myfaces.validator.CreditCard</td>
+                </tr>
+                <tr>
+                    <td>component-class</td>
+                    <td>org.apache.myfaces.custom.creditcardvalidator.CreditCardValidator</td>
+                </tr>
+                <tr>
+                    <td>tag-class</td>
+                    <td>org.apache.myfaces.custom.creditcardvalidator.ValidateCreditCardTag</td>
+                </tr>
+            </table>
+        </section>
+        <!-- Syntax -->
+        <section>
+            <title>Syntax</title>
+            <note label="&lt;x:validateCreditCard/>">
+                <code>none [true|false]</code><br/>
+                <code>amex [true|false]</code><br/>
+                <code>visa [true|false]</code><br/>
+                <code>mastercard [true|false]</code><br/>
+                <code>discover [true|false]</code><br/>
+            </note>
+        </section>
+        <!-- Instructions -->
+        <section>
+            <title>Instructions</title>
+            <p>By default, all cards are allowed. You can disable one with card="false".
+Note if you specify none="true", all cardtypes will be ignored. It is based
+upon Jakarta Commons' Validator.
+
+See "examples/validate.jsp" for an example!</p>
+        </section>
+    </body>
+    <footer>
+    	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
+	&copy; 2004 - 2005, Apache Software Foundation
+	</legal>
+    </footer>
+
+</document>

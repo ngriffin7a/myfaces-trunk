@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+
+<!--
+This is a standard template meant to be used for the documentation of all custom
+components.
+-->
+<document>
+    <!-- component name -->
+    <header>
+        <!-- ex. JSCook Menu -->
+        <title>Validate email addresses</title>
+        <!-- ex. &lt;x:jsCookMenu> -->
+        <subtitle>&lt;x:validateEmail/></subtitle>
+    </header>
+    <body>
+        <!-- Description -->
+        <section>
+            <title>Description</title>
+            <p>
+				A custom validator for email addresses, based upons Jakarta Commons.
+            </p>
+        </section>
+        <!-- screen shot -->
+
+        <!-- API -->
+        <section>
+            <title>API</title>
+            <table>
+                <tr>
+                    <td>validatorId</td>
+                    <td>org.apache.myfaces.validator.Email</td>
+                </tr>
+                <tr>
+                    <td>component-class</td>
+                    <td>org.apache.myfaces.custom.emailvalidator.EmailValidator</td>
+                </tr>
+                <tr>
+                    <td>tag-class</td>
+                    <td>org.apache.myfaces.custom.emailvalidator.ValidateEmailTag</td>
+                </tr>
+            </table>
+        </section>
+        <!-- Syntax -->
+        <section>
+            <title>Syntax</title>
+            <note label="&lt;x:validateEmail/>">
+                <code>no attributes</code><br/>
+            </note>
+        </section>
+        <!-- Instructions -->
+        <section>
+            <title>Instructions</title>
+            <p>A validator, that validates email address format. It is based upon Jakarta Commons' Validator. See "examples/validate.jsp" for an example! 
+</p>
+        </section>
+    </body>
+    <footer>
+    	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
+	&copy; 2004 - 2005, Apache Software Foundation
+	</legal>
+    </footer>
+
+</document>
