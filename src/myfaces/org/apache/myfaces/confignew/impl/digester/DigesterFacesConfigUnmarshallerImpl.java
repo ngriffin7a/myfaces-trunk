@@ -22,11 +22,15 @@ package net.sourceforge.myfaces.confignew.impl.digester;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.faces.context.ExternalContext;
+
 import net.sourceforge.myfaces.confignew.FacesConfigUnmarshaller;
 import net.sourceforge.myfaces.confignew.impl.digester.elements.*;
 import net.sourceforge.myfaces.confignew.impl.dom.FacesConfigEntityResolver;
 import org.apache.commons.digester.Digester;
 import org.xml.sax.SAXException;
+import org.xml.sax.Locator;
+import org.xml.sax.InputSource;
 
 
 /**
@@ -38,12 +42,12 @@ public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshal
     private Digester digester;
 
 
-    public DigesterFacesConfigUnmarshallerImpl()
+    public DigesterFacesConfigUnmarshallerImpl(ExternalContext externalContext)
     {
         digester = new Digester();
         digester.setValidating(true);
         digester.setNamespaceAware(true);
-        digester.setEntityResolver(new FacesConfigEntityResolver());
+        digester.setEntityResolver(new FacesConfigEntityResolver(externalContext));
         digester.setUseContextClassLoader(true);
 
         digester.addObjectCreate("faces-config", FacesConfig.class);
@@ -157,7 +161,11 @@ public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshal
 
     public Object getFacesConfig(InputStream in, String systemId) throws IOException, SAXException
     {
-          return digester.parse(in);
+        InputSource is = new InputSource(in);
+        is.setSystemId(systemId);
+        is.setEncoding("ISO-8859-1");
+
+        return digester.parse(is);
     }
 
 

@@ -102,6 +102,9 @@ public class FacesConfigEntityResolver
             }
         }
 
+        if (stream == null) {
+            return null;
+        }
         InputSource is = new InputSource(stream);
         is.setPublicId(publicId);
         is.setSystemId(systemId);

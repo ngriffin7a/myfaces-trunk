@@ -74,6 +74,9 @@ import org.xml.sax.SAXException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.5  2004/06/17 23:23:48  o_rossmueller
+ *          fix: entity resolver
+ *
  *          Revision 1.4  2004/06/16 23:02:24  o_rossmueller
  *          merged confignew_branch
  *
@@ -142,7 +145,7 @@ public class FacesConfigurator
         throws FacesException
     {
         //TODO: create via Factory !
-        _unmarshaller = new DigesterFacesConfigUnmarshallerImpl();
+        _unmarshaller = new DigesterFacesConfigUnmarshallerImpl(_externalContext);
         //TODO: create via Factory !
         _dispenser = new DigesterFacesConfigDispenserImpl();
 
