@@ -24,6 +24,7 @@
     <navigation-handler>net.sourceforge.myfaces.application.NavigationHandlerImpl</navigation-handler>
     <variable-resolver>net.sourceforge.myfaces.el.VariableResolverImpl</variable-resolver>
     <property-resolver>net.sourceforge.myfaces.el.PropertyResolverImpl</property-resolver>
+    <message-bundle><!--TODO--></message-bundle>
   </application>
 
   <!-- Standard Components -->
@@ -373,6 +374,8 @@
         <converter-id>net.sourceforge.myfaces.component.ext.UploadedFile</converter-id>
         <converter-class>net.sourceforge.myfaces.convert.impl.UploadedFileConverter</converter-class>
     </converter>
+
+
 
 <!-- standard message-resources -->
   <!--TODO: move message-resources-->
