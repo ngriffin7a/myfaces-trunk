@@ -19,9 +19,11 @@
 package net.sourceforge.myfaces.util.logging;
 
 import net.sourceforge.myfaces.tree.TreeUtils;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
+import javax.faces.component.UIComponent;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -92,5 +94,22 @@ public class LogUtil
         }
     }
 
+    public static void printComponentToConsole(UIComponent component)
+    {
+        printComponentToConsole(component, null);
+    }
+
+    public static void printComponentToConsole(UIComponent component, String label)
+    {
+        if (getLogger().getLevel().intValue() <= Level.FINEST.intValue())
+        {
+            if (label != null)
+            {
+                System.out.print(label);
+                System.out.print(": ");
+            }
+            System.out.println(UIComponentUtils.toString(component));
+        }
+    }
 
 }

@@ -107,23 +107,23 @@ public class ButtonRenderer
             ApplicationEvent appEvent;
 
             //Form suchen
-            String formName = null;
+            UIForm form = null;
             for (UIComponent parent = uiComponent.getParent(); parent != null; parent = parent.getParent())
             {
                 if (parent instanceof UIForm)
                 {
-                    formName = ((UIForm)parent).getFormName();
+                    form = (UIForm)parent;
                     break;
                 }
             }
 
-            if (formName == null)
+            if (form == null)
             {
                 appEvent = new CommandEvent(uiComponent, commandName);
             }
             else
             {
-                appEvent = new FormEvent(uiComponent, formName, commandName);
+                appEvent = new FormEvent(uiComponent, form.getFormName(), commandName);
             }
 
             facesContext.addApplicationEvent(appEvent);

@@ -36,29 +36,15 @@ import javax.faces.event.PhaseId;
  * @version $Revision$ $Date$
  */
 public class UISortHeader
-//    extends UIPanel
     extends UIComponentBase
     implements ActionListener
 {
-    public static final String COLUMN_ATTR = "column";
-    public static final String COLUMN_REFERENCE_ATTR = "columnReference";
     public static final String ASCENDING_ATTR = "ascending";
     public static final String ASCENDING_REFERENCE_ATTR = "ascendingReference";
 
     public String getComponentType()
     {
         return UIPanel.TYPE;
-    }
-
-    public UISortHeader()
-    {
-        super();
-
-        UIComponentUtils.setTransient(this, false); //Always remember current sort column
-        //TODO: We must always save at least the information if there was a value or not
-        //so that the overrideProperties works well.
-
-        setValid(true); //Value is always valid (necessary for updateModel)
     }
 
     public boolean isAscending()
@@ -98,14 +84,18 @@ public class UISortHeader
 
     public void updateModel(FacesContext facesContext)
     {
-        super.updateModel(facesContext);
+        String column = (String)getValue();
+        if (column != null)
+        {
+            String modelRef = getModelReference();
+            facesContext.setModelValue(modelRef, column);
+        }
+
         Boolean asc = (Boolean)getAttribute(ASCENDING_ATTR);
         if (asc != null)
         {
             String ascRef = getAscendingReference();
             facesContext.setModelValue(ascRef, asc);
-            //we do not set it null, so that state saver is able to save the ascending state
-            //setAttribute(ASCENDING_ATTR, null);
         }
     }
 
@@ -132,7 +122,6 @@ public class UISortHeader
             else
             {
                 setValue(sortColumn);
-                setValid(true);
 
                 Boolean defaultAscending = (Boolean)source.getAttribute(SortColumnRenderer.DEFAULT_ASCENDING_ATTR);
                 if (defaultAscending != null)

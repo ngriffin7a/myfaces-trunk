@@ -42,6 +42,11 @@ public class MyFacesLogger
         internalExiting(null, Level.FINER);
     }
 
+    public void exiting(Level level)
+    {
+        internalExiting(null, level);
+    }
+
     public void exiting(String msg)
     {
         internalExiting(msg, Level.FINER);
@@ -74,7 +79,12 @@ public class MyFacesLogger
 
     public void entering()
     {
-        internalExiting(null, Level.FINER);
+        internalEntering(null, Level.FINER);
+    }
+
+    public void entering(Level level)
+    {
+        internalEntering(null, level);
     }
 
     private void internalEntering(String msg, Level level)

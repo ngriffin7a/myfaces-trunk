@@ -18,23 +18,21 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.component.UIComponentUtils;
-import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
-import net.sourceforge.myfaces.tree.TreeUtils;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
 import javax.faces.tree.Tree;
 import javax.faces.webapp.FacesTag;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
+import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.util.*;
+import java.util.logging.Level;
 
 /**
  * DOCUMENT ME!
@@ -157,60 +155,69 @@ public class MyFacesTagHelper
      */
     protected void overrideProperties(UIComponent uiComponent)
     {
-        FacesContext facesContext = null;
-        if (getPageContext() != null)
-        {
-            facesContext = (FacesContext)getPageContext()
-                                    .getAttribute("javax.faces.context.FacesContext",
-                                                  PageContext.REQUEST_SCOPE);
-        }
+        //FacesContext facesContext = FacesContext.getCurrentInstance();
 
         if (_attributes != null)
         {
             for (Iterator it = _attributes.iterator(); it.hasNext();)
             {
                 Attribute attr = (Attribute)it.next();
+                /*
                 if (facesContext != null
                     && attr.isComponentAttribute
                     && attr.name.equals(CommonComponentAttributes.VALUE_ATTR))
                 {
-                    if (uiComponent.currentValue(facesContext) == null)
+                    Object rtValue = attr.value;
+                    if (rtValue instanceof String)
                     {
-                        Object rtValue = attr.value;
-                        if (rtValue instanceof String)
+                        Converter conv = ConverterUtils.findValueConverter(facesContext,
+                                                                      uiComponent);
+                        if (conv != null)
                         {
-                            Converter conv = ConverterUtils.findValueConverter(facesContext,
-                                                                          uiComponent);
-                            if (conv != null)
-                            {
-                                UIComponentUtils.convertAndSetValue(facesContext,
-                                                                    uiComponent,
-                                                                    (String)rtValue,
-                                                                    conv,
-                                                                    false);    //No error message
-                            }
-                            else
-                            {
-                                UIComponentUtils.setComponentValue(uiComponent, rtValue);
-                            }
+                            UIComponentUtils.convertAndSetValue(facesContext,
+                                                                uiComponent,
+                                                                (String)rtValue,
+                                                                conv,
+                                                                false);    //No error message
                         }
                         else
                         {
                             UIComponentUtils.setComponentValue(uiComponent, rtValue);
                         }
                     }
+                    else
+                    {
+                        UIComponentUtils.setComponentValue(uiComponent, rtValue);
+                    }
                 }
-                else if (attr.isComponentAttribute)
+                else */
+                if (attr.isComponentAttribute)
                 {
                     //Try bean property setter first
-                    try
+                    PropertyDescriptor pd = BeanUtils.findPropertyDescriptor(uiComponent,
+                                                                             attr.name);
+                    if (pd != null &&
+                        pd.getReadMethod() != null &&
+                        pd.getWriteMethod() != null)
                     {
-                        if (BeanUtils.getBeanPropertyValue(uiComponent, attr.name) == null)
+                        try
                         {
-                            BeanUtils.setBeanPropertyValue(uiComponent, attr.name, attr.value);
+                            if (BeanUtils.getBeanPropertyValue(uiComponent, pd) == null)
+                            {
+                                BeanUtils.setBeanPropertyValue(uiComponent, pd, attr.value);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            LogUtil.getLogger().warning("Exception in property getter or setter of component " + UIComponentUtils.toString(uiComponent) + ": " + e.getMessage() + ". Attribute will be set directly.");
+                            //Alternativly set by attribute name:
+                            if (uiComponent.getAttribute(attr.name) == null)
+                            {
+                                uiComponent.setAttribute(attr.name, attr.value);
+                            }
                         }
                     }
-                    catch (IllegalArgumentException e)
+                    else
                     {
                         //Component does not have this property!
                         LogUtil.getLogger().severe("Component " + UIComponentUtils.toString(uiComponent) + " does not have valid property setter and getter methods for property '" + attr.name + "'.");
@@ -246,22 +253,21 @@ public class MyFacesTagHelper
         }
         else
         {
-            LogUtil.getLogger().warning("FacesTag " + _tag.getClass().getName() + ": Corresponding component in parsed tree could not be found!");
+            throw new IllegalStateException("FacesTag " + _tag.getClass().getName() + ": Corresponding component in parsed tree could not be found!");
+            /*
+            LogUtil.getLogger().severe("FacesTag " + _tag.getClass().getName() + ": Corresponding component in parsed tree could not be found!");
             return null;
+            */
         }
     }
 
-    private static final String PARSED_COMPONENT_ATTR
-        = MyFacesTagHelper.class.getName() + ".PARSED_COMPONENT";
-
-    private static final String LAST_PARSED_CHILD_INDEX_MAP
-        = MyFacesTagHelper.class.getName() + ".LAST_PARSED_CHILD_INDEX_MAP";
 
     protected static UIComponent findComponentInParsedTree(FacesContext facesContext,
                                                            FacesTag facesTag,
                                                            UIComponent compToFind)
     {
-        System.out.println("findComponentInParsedTree " + UIComponentUtils.toString(compToFind));
+        LogUtil.getLogger().entering(Level.FINEST);
+        LogUtil.printComponentToConsole(compToFind, "compToFind");
 
         //determine parent
         Tag parentTag = facesTag.getParent();
@@ -273,63 +279,62 @@ public class MyFacesTagHelper
         }
         FacesTag parentFacesTag = (FacesTag)parentTag;
         UIComponent parent;
+        String parentClientId;
         UIComponent parsedParent;
         if (parentFacesTag == null)
         {
             parent = facesContext.getTree().getRoot();
+            parentClientId = "";
             Tree parsedTree = JspInfo.getTree(facesContext,
                                               facesContext.getTree().getTreeId());
             parsedParent = parsedTree.getRoot();
         }
         else
         {
-            parent = parentFacesTag.getComponent();
             //only parent tags that have a component are searched in loop above
-            parsedParent = (UIComponent)parent.getAttribute(PARSED_COMPONENT_ATTR);
+            parent = parentFacesTag.getComponent();
+            parentClientId = parent.getClientId(facesContext);
+            Map componentMap = JspInfo.getComponentMap(facesContext,
+                                                       facesContext.getTree().getTreeId());
+            parsedParent = (UIComponent)componentMap.get(parentClientId);
             if (parsedParent == null)
             {
-                //parent was not created by a MyFacesTag
-                //no parent or grand-parent or ... must have a null id:
-                UIComponent check = parent;
-                while (check != null)
-                {
-                    if (check.getComponentId() == null)
-                    {
-                        throw new IllegalStateException("Component " + UIComponentUtils.toString(check) + " was not created by a subclass of MyFacesTag and must therefore have a fixed component id!");
-                    }
-                    check = check.getParent();
-                }
+                throw new IllegalStateException("Component with clientId " + parentClientId + " not found in parsed tree.");
+                /*
                 Tree parsedTree = JspInfo.getTree(facesContext,
                                                   facesContext.getTree().getTreeId());
-                parsedParent = parsedTree.getRoot().findComponent(parent.getClientId(facesContext));
+                parsedParent = parsedTree.getRoot().findComponent(parentClientId);
                 if (parsedParent == null)
                 {
                     throw new IllegalStateException("Corresponding parsed parent for parent " + parent + " not found!");
                 }
+                */
             }
         }
 
-        int startSearchAt;
-        String parentId = parsedParent.getComponentId();
-        Map lastParsedChildMap = getLastParsedChildIndexMap(facesContext);
-        Integer indexObj = (Integer)lastParsedChildMap.get(parentId);
-        if (indexObj == null)
-        {
-            if (parsedParent.getChildCount() == 0)
-            {
-                throw new IllegalStateException("Corresponding parsed parent has no children?!");
-            }
-            startSearchAt = 0;
-        }
-        else
-        {
-            startSearchAt = indexObj.intValue() + 1;
-        }
+        return findParsedChild(facesContext,
+                               facesTag,
+                               parsedParent,
+                               parentClientId,
+                               compToFind);
+    }
 
+
+    private static UIComponent findParsedChild(FacesContext facesContext,
+                                               FacesTag facesTag,
+                                               UIComponent parsedParent,
+                                               String parentClientId,
+                                               UIComponent compToFind)
+    {
         UIComponent foundParsedComp = null;
         int foundIdx = 0;
-        int len = parsedParent.getChildCount();
-        for (int i = startSearchAt; i < len; i++)
+
+        int lastChildIdx = getLastChildIndexForParent(facesContext,
+                                                      parentClientId);
+        int startSearchAt = lastChildIdx + 1;
+
+        int childCount = parsedParent.getChildCount();
+        for (int i = startSearchAt; i < childCount; i++)
         {
             UIComponent child = parsedParent.getChild(i);
             if (equalsParsedChild(facesTag, child, compToFind))
@@ -358,32 +363,30 @@ public class MyFacesTagHelper
 
         if (foundParsedComp != null)
         {
-            //TODO: Check if there would also be another ambigous component
-            compToFind.setAttribute(PARSED_COMPONENT_ATTR, foundParsedComp);
-            lastParsedChildMap.put(parentId, new Integer(foundIdx));
+            //Check if next component would also match --> ambigous component
+            if (foundIdx + 1 < childCount)
+            {
+                UIComponent child = parsedParent.getChild(foundIdx + 1);
+                if (equalsParsedChild(facesTag, child, compToFind))
+                {
+                    LogUtil.getLogger().warning("Component " + UIComponentUtils.toString(compToFind) + " is ambigous. This component must have an id when it is rendered conditional (i.e. within if-Block in JSP, or within conditional JSTL-tag).");
+                }
+            }
 
-            //find in current tree
-            String componentId = foundParsedComp.getComponentId();
-            if (componentId == null)
-            {
-                throw new IllegalStateException();
-            }
-            if (parent.findComponent(componentId) == null)
-            {
-                //add to parent
-                compToFind.setComponentId(componentId);
-                parent.addChild(compToFind);
-            }
+            rememberChildIndexForParent(facesContext, parentClientId, foundIdx);
         }
         else
         {
-            System.out.println("not found");
+            LogUtil.getLogger().exiting("Not found!", Level.FINEST);
         }
 
         return foundParsedComp;
     }
 
 
+
+    private static final String LAST_PARSED_CHILD_INDEX_MAP
+        = MyFacesTagHelper.class.getName() + ".LAST_PARSED_CHILD_INDEX_MAP";
     private static Map getLastParsedChildIndexMap(FacesContext facesContext)
     {
         Map map = (Map)facesContext.getServletRequest().getAttribute(LAST_PARSED_CHILD_INDEX_MAP);
@@ -396,13 +399,38 @@ public class MyFacesTagHelper
         return map;
     }
 
+    private static void rememberChildIndexForParent(FacesContext facesContext,
+                                                    String parsedParentClientId,
+                                                    int childIdx)
+    {
+        getLastParsedChildIndexMap(facesContext).put(parsedParentClientId,
+                                                     new Integer(childIdx));
+    }
+
+    private static int getLastChildIndexForParent(FacesContext facesContext,
+                                                  String parsedParentClientId)
+    {
+        Integer idxObj = (Integer)getLastParsedChildIndexMap(facesContext)
+                                .get(parsedParentClientId);
+        if (idxObj == null)
+        {
+            return -1;
+        }
+        else
+        {
+            return idxObj.intValue();
+        }
+    }
+
+
+
 
     protected static boolean equalsParsedChild(FacesTag facesTag,
                                                UIComponent parsedChild,
                                                UIComponent compToCompare)
     {
-        System.out.print("   equalsParsedChild ");
-        TreeUtils.printComponent(parsedChild, System.out);
+        LogUtil.getLogger().entering(Level.FINEST);
+        LogUtil.printComponentToConsole(parsedChild, "parsedChild");
 
         Tag creatorTag = (Tag)parsedChild.getAttribute(JspInfo.CREATOR_TAG_ATTR);
         if (!(creatorTag.getClass().getName().equals(facesTag.getClass().getName())))
@@ -411,29 +439,66 @@ public class MyFacesTagHelper
             return false;
         }
 
-        /*
-        Won't function properly because overrideProperties leaves later changed attributes alone!
-        for (Iterator it = parsedChild.getAttributeNames(); it.hasNext();)
+        //check all hardcoded attributes for equality
+        if (!isEqualAttributes(parsedChild.getAttributeNames(),
+                               parsedChild,
+                               compToCompare))
         {
-            String attrName = (String)it.next();
-            if (attrName.equals("componentId") ||
-                attrName.equals("clientId") ||
-                attrName.equals("parent") ||
-                UIComponentUtils.isInternalAttribute(attrName))
+            return false;
+        }
+
+        return true;
+    }
+
+
+    private static boolean isEqualAttributes(Iterator attributes,
+                                             UIComponent parsedChild,
+                                             UIComponent compToCompare)
+    {
+        while (attributes.hasNext())
+        {
+            String attrName = (String)attributes.next();
+            if (attrName.equals(JspInfo.HARDCODED_ID_ATTR))
             {
-                // - component to find has no componentId yet
-                // - parent must not be compared
-                // - internal attributes must not be compared
-                continue;
+                String hardcodedId = (String)parsedChild.getAttribute(attrName);
+                if (!compToCompare.getComponentId().equals(hardcodedId))
+                {
+                    LogUtil.getLogger().finest("      diff: hardcoded id / " + compToCompare.getComponentId() + " <> " + hardcodedId);
+                    return false;
+                }
             }
-            Object value = parsedChild.getAttribute(attrName);
-            if (!value.equals(compToCompare.getAttribute(attrName)))
+            else
             {
-                System.out.println("      diff: " + attrName + " / " + compToCompare.getAttribute(attrName) + " <> " + value);
-                return false;
+                if (attrName.equals("componentId") ||
+                    attrName.equals("clientId") ||
+                    attrName.equals("parent") ||
+                    UIComponentUtils.isInternalAttribute(attrName))
+                {
+                    // - component to find has no componentId or clientId yet
+                    // - parent must not be compared
+                    // - internal attributes must not be compared
+                }
+                else
+                {
+                    Object parsedValue = parsedChild.getAttribute(attrName);
+                    Object actualValue = compToCompare.getAttribute(attrName);
+                    if (parsedValue == null)
+                    {
+                        if (actualValue != null)
+                        {
+                            LogUtil.getLogger().finest("      diff: " + attrName + " / " + actualValue + " <> " + parsedValue);
+                            return false;
+                        }
+                    }
+                    else if (actualValue == null ||
+                             !parsedValue.equals(actualValue))
+                    {
+                        LogUtil.getLogger().finest("      diff: " + attrName + " / " + actualValue + " <> " + parsedValue);
+                        return false;
+                    }
+                }
             }
         }
-        */
         return true;
     }
 

@@ -32,8 +32,8 @@
 <f:use_faces>
 
 <jsp:useBean id="list" class="net.sourceforge.myfaces.examples.listexample.SimpleSortableCarList" scope="request" />
-<x:save_state id="ss1" modelReference="list.sort" />
-<x:save_state id="ss2" modelReference="list.ascending" />
+<!--x:save_state id="ss1" modelReference="list.sort" /-->
+<!--x:save_state id="ss2" modelReference="list.ascending" /-->
 
     <x:page_layout id="page" layoutReference="pageLayout" cssClass="pageLayout" >
         <%@include file="inc/page_header.jsp" %>

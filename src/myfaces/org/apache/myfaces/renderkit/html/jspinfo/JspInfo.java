@@ -42,11 +42,13 @@ public class JspInfo
 {
     public static final String CREATOR_TAG_ATTR = JspInfo.class.getName() + ".CREATOR_TAG";
     public static final String ACTION_LISTENERS_TYPE_LIST_ATTR = JspInfo.class.getName() + ".LISTENERS";
+    public static final String HARDCODED_ID_ATTR = JspInfo.class.getName() + ".HARDCODED_ID";
 
 
     private Tree _tree = null;
     private Map _jspBeanInfosMap = new HashMap();
     private List _saveStateComponents = new ArrayList();
+    private Map _componentMap = new HashMap();
     //private boolean _clientIdsCreated = false;
 
     public JspInfo(Tree tree)
@@ -88,6 +90,11 @@ public class JspInfo
     public Iterator getUISaveStateComponents()
     {
         return _saveStateComponents.iterator();
+    }
+
+    public Map getComponentMap()
+    {
+        return _componentMap;
     }
 
 
@@ -146,6 +153,11 @@ public class JspInfo
         return getJspInfo(facesContext, treeId).getUISaveStateComponents();
     }
 
+    public static Map getComponentMap(FacesContext facesContext,
+                                      String treeId)
+    {
+        return getJspInfo(facesContext, treeId).getComponentMap();
+    }
 
 
     private static JspInfo getJspInfo(FacesContext facesContext,

@@ -18,19 +18,25 @@
  */
 package net.sourceforge.myfaces.renderkit.html.jspinfo;
 
+import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.component.ext.UISaveState;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.*;
+import net.sourceforge.myfaces.taglib.MyFacesBodyTag;
+import net.sourceforge.myfaces.taglib.MyFacesTag;
 import net.sourceforge.myfaces.taglib.core.ActionListenerTag;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 import org.xml.sax.Attributes;
 
+import javax.faces.FacesException;
+import javax.faces.component.NamingContainer;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIComponentBase;
+import javax.faces.context.FacesContext;
 import javax.faces.webapp.FacesTag;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
@@ -474,9 +480,24 @@ public class MyParseEventListener
         if (id != null)
         {
             comp.setComponentId(id);
+            comp.setAttribute(JspInfo.HARDCODED_ID_ATTR, id);
         }
         else
         {
+            if (!(facesTag instanceof MyFacesTag ||
+                  facesTag instanceof MyFacesBodyTag))
+            {
+                FacesContext facesContext = FacesContext.getCurrentInstance();
+                int mode = MyFacesConfig.getStateSavingMode(facesContext.getServletContext());
+                if (mode == MyFacesConfig.STATE_SAVING_MODE__CLIENT_MINIMIZED ||
+                    mode == MyFacesConfig.STATE_SAVING_MODE__CLIENT_MINIMIZED_ZIPPED)
+                {
+                    //Only subclasses of MyFacesTag or MyFacesBodyTag can make
+                    //sure that each component without and id is assigned the
+                    //proper auto-id from the static tree.
+                    throw new FacesException("Tag handler for '" + ti.getTagName() + "' is no subclass of MyFacesTag and has no id. When using state saving mode \"client_minimized\" or \"client_minimized_zipped\" you must assign an id to each non-MyFacesTag!");
+                }
+            }
             String newAutoId = AUTO_ID_PREFIX + (++_autoId);
             comp.setComponentId(newAutoId);
             LogUtil.getLogger().finest("Tag '" + ti.getTagName() + "' has no id, assigning auto id '" + newAutoId + "' to component.");
@@ -501,6 +522,39 @@ public class MyParseEventListener
         if (comp.getComponentType().equals(UISaveState.TYPE))
         {
             _jspInfo.addUISaveStateComponent(comp);
+        }
+
+        //We can be sure, that each parent has a valid componentId, so
+        //getClientId should not have a side-effect
+        _jspInfo.getComponentMap().put(getClientId(comp), comp);
+    }
+
+
+    private String getClientId(UIComponent comp)
+    {
+        UIComponent findContainerComp = comp.getParent();
+        while (findContainerComp != null && !(findContainerComp instanceof NamingContainer))
+        {
+            findContainerComp = findContainerComp.getParent();
+        }
+        if (findContainerComp == null)
+        {
+            throw new IllegalArgumentException("Root is no naming container?");
+        }
+
+        String componentId = comp.getComponentId();
+        if (componentId == null)
+        {
+            throw new IllegalStateException("Component has no id?!");
+        }
+        if (findContainerComp.getParent() == null)
+        {
+            //container is root
+            return componentId;
+        }
+        else
+        {
+            return getClientId(findContainerComp) + UIComponent.SEPARATOR_CHAR + componentId;
         }
     }
 

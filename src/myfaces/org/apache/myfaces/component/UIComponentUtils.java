@@ -209,7 +209,7 @@ public class UIComponentUtils
         if (trans == null)
         {
             //return MyFacesConfig.isComponentsTransientByDefault();
-            return true; //Components always transient by default
+            return false; //Components never transient by default
         }
         else
         {

@@ -278,6 +278,8 @@ public class MinimizingStateSaver
             visitedAttributes.add(CommonComponentAttributes.VALID_ATTR);
         }
 
+        /*
+        Problems! e.g. components with modelRef to a var
         if (!visitedAttributes.contains(CommonComponentAttributes.VALUE_ATTR) &&
             uiComponent.getModelReference() != null &&
             !UIComponentUtils.isTransient(uiComponent))
@@ -289,6 +291,7 @@ public class MinimizingStateSaver
                                    uiComponent.currentValue(facesContext),
                                    null);
         }
+        */
     }
 
 
