@@ -23,6 +23,8 @@ import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import net.sourceforge.myfaces.util.NullEnumeration;
+
 /**
  * HttpSession attibutes as Map.
  * 
@@ -32,40 +34,43 @@ import javax.servlet.http.HttpSession;
 public class SessionMap extends AbstractAttributeMap
 {
     private final HttpServletRequest _httpRequest;
-    private HttpSession _httpSession;
 
     SessionMap(HttpServletRequest httpRequest)
     {
         _httpRequest = httpRequest;
-        _httpSession = httpRequest.getSession(false);
     }
 
     protected Object getAttribute(String key)
     {
-        return _httpSession == null 
-        ? null : _httpSession.getAttribute(key.toString());
+        HttpSession httpSession = getSession();
+        return (httpSession == null) 
+            ? null : httpSession.getAttribute(key.toString());
     }
 
     protected void setAttribute(String key, Object value)
     {
-        if (_httpSession == null)
-        {
-            _httpSession = _httpRequest.getSession(true);
-        }
-
-        _httpSession.setAttribute(key, value);
+        _httpRequest.getSession(true).setAttribute(key, value);
     }
 
     protected void removeAttribute(String key)
     {
-        if (_httpSession != null)
+        HttpSession httpSession = getSession();
+        if (httpSession != null)
         {
-            _httpSession.removeAttribute(key);
+            httpSession.removeAttribute(key);
         }
     }
 
     protected Enumeration getAttributeNames()
     {
-        return _httpSession.getAttributeNames();
+        HttpSession httpSession = getSession();
+        return (httpSession == null)
+            ? NullEnumeration.instance()
+            : httpSession.getAttributeNames();
+    }
+    
+    private HttpSession getSession()
+    {
+        return _httpRequest.getSession(false);
     }
 }
