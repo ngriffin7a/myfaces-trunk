@@ -126,7 +126,7 @@ public class HTMLUtil
         throws IOException
     {
         Object value = component.getAttributes().get(rendererAttrName);
-        if (value != null)
+        if (!RendererUtils.isDefaultAttributeValue(value))
         {
             writer.writeAttribute(htmlAttrName, value, rendererAttrName);
             return true;
@@ -450,4 +450,6 @@ public class HTMLUtil
 
         return row;
     }
+
+
 }
