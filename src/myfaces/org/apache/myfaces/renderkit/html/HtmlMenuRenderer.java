@@ -31,6 +31,7 @@ import java.io.IOException;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl
  * @version $Revision$ $Date$
  */
 public class HtmlMenuRenderer
@@ -43,15 +44,15 @@ public class HtmlMenuRenderer
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, null);
 
-        if (uiComponent instanceof HtmlSelectManyMenu)
+        if (uiComponent instanceof UISelectMany)
         {
             HtmlRendererUtils.renderMenu(facesContext,
-                                         (HtmlSelectManyMenu)uiComponent);
+                                         (UISelectMany)uiComponent);
         }
-        else if (uiComponent instanceof HtmlSelectOneMenu)
+        else if (uiComponent instanceof UISelectOne)
         {
             HtmlRendererUtils.renderMenu(facesContext,
-                                         (HtmlSelectOneMenu)uiComponent);
+                                         (UISelectOne)uiComponent);
         }
         else
         {

@@ -27,7 +27,6 @@ import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 
 /**
- * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
  * @author Manfred Geiler
  * @version $Revision$ $Date$

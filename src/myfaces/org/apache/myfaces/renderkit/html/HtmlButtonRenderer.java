@@ -24,6 +24,7 @@ import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
+import javax.faces.component.ValueHolder;
 import javax.faces.component.html.HtmlCommandButton;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -33,8 +34,8 @@ import java.util.Map;
 
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl
  * @author Anton Koinov
  * @version $Revision$ $Date$
  */
@@ -101,8 +102,7 @@ extends HtmlRenderer
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlCommandButton.class);
 
-        HtmlCommandButton htmlCommand = (HtmlCommandButton) uiComponent;
-        String clientId = htmlCommand.getClientId(facesContext);
+        String clientId = uiComponent.getClientId(facesContext);
 
         ResponseWriter writer = facesContext.getResponseWriter();
 
@@ -113,7 +113,7 @@ extends HtmlRenderer
         writer.writeAttribute(HTML.ID_ATTR, clientId, null);
         writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
 
-        String image = htmlCommand.getImage();
+        String image = getImage(uiComponent);
 
         if (image != null)
         {
@@ -122,14 +122,14 @@ extends HtmlRenderer
         }
         else
         {
-            String type = htmlCommand.getType();
+            String type = getType(uiComponent);
 
             if (type == null)
             {
                 type = HTML.INPUT_TYPE_SUBMIT;
             }
             writer.writeAttribute(HTML.TYPE_ATTR, type, JSFAttr.TYPE_ATTR);
-            Object value = htmlCommand.getValue();
+            Object value = getValue(uiComponent);
             if (value != null)
             {
                 writer.writeAttribute(HTML.VALUE_ATTR, value, null);
@@ -152,5 +152,32 @@ extends HtmlRenderer
             writer.write("\">");
         }
         */
+    }
+
+    private String getImage(UIComponent uiComponent)
+    {
+        if (uiComponent instanceof HtmlCommandButton)
+        {
+            return ((HtmlCommandButton)uiComponent).getImage();
+        }
+        return (String)uiComponent.getAttributes().get(JSFAttr.IMAGE_ATTR);
+    }
+
+    private String getType(UIComponent uiComponent)
+    {
+        if (uiComponent instanceof HtmlCommandButton)
+        {
+            return ((HtmlCommandButton)uiComponent).getType();
+        }
+        return (String)uiComponent.getAttributes().get(JSFAttr.TYPE_ATTR);
+    }
+
+    private Object getValue(UIComponent uiComponent)
+    {
+        if (uiComponent instanceof ValueHolder)
+        {
+            return ((ValueHolder)uiComponent).getValue();
+        }
+        return uiComponent.getAttributes().get(JSFAttr.VALUE_ATTR);
     }
 }

@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.RendererUtils;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,7 +32,6 @@ import java.io.IOException;
 
 
 /**
- * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
@@ -46,15 +46,21 @@ extends HtmlRenderer
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlGraphicImage.class);
 
-        HtmlGraphicImage img = (HtmlGraphicImage) uiComponent;
-
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        String url = img.getUrl();
+        String url;
+        if (uiComponent instanceof HtmlGraphicImage)
+        {
+            url = ((HtmlGraphicImage)uiComponent).getUrl();
+        }
+        else
+        {
+            url = (String)uiComponent.getAttributes().get(JSFAttr.URL_ATTR);
+        }
 
         if ((url != null) && (url.length() > 0))
         {
-            writer.startElement(HTML.IMG_ELEM, img);
+            writer.startElement(HTML.IMG_ELEM, uiComponent);
 
             String src;
             if (url.startsWith(HTML.HREF_PATH_SEPARATOR))
@@ -78,7 +84,7 @@ extends HtmlRenderer
         }
         else
         {
-            if (log.isWarnEnabled()) log.warn("Graphic with id " + img.getClientId(facesContext) + " has no value (url).");
+            if (log.isWarnEnabled()) log.warn("Graphic with id " + uiComponent.getClientId(facesContext) + " has no value (url).");
         }
     }
 }

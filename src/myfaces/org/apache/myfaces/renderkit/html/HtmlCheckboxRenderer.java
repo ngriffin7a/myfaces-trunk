@@ -19,12 +19,14 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.RendererUtils;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectBoolean;
+import javax.faces.component.UISelectMany;
 import javax.faces.component.html.HtmlSelectBooleanCheckbox;
 import javax.faces.component.html.HtmlSelectManyCheckbox;
 import javax.faces.context.FacesContext;
@@ -39,8 +41,8 @@ import java.util.Set;
 
 
 /**
- * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Thomas Spiegl
  * @author Anton Koinov
  * @version $Revision$ $Date$
  */
@@ -58,14 +60,17 @@ public class HtmlCheckboxRenderer
             throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, null);
-        if (uiComponent instanceof HtmlSelectBooleanCheckbox)
+        if (uiComponent instanceof UISelectBoolean)
         {
-            HtmlRendererUtils.renderCheckbox(facesContext, uiComponent, EXTERNAL_TRUE_VALUE, null,
+            HtmlRendererUtils.renderCheckbox(facesContext,
+                                             uiComponent,
+                                             EXTERNAL_TRUE_VALUE,
+                                             null,
                                              ((UISelectBoolean)uiComponent).isSelected());
         }
-        else if (uiComponent instanceof HtmlSelectManyCheckbox)
+        else if (uiComponent instanceof UISelectMany)
         {
-            renderCheckboxList(facesContext, (HtmlSelectManyCheckbox)uiComponent);
+            renderCheckboxList(facesContext, (UISelectMany)uiComponent);
         }
         else
         {
@@ -74,10 +79,19 @@ public class HtmlCheckboxRenderer
     }
 
 
-    public void renderCheckboxList(FacesContext facesContext, HtmlSelectManyCheckbox selectMany)
+    public void renderCheckboxList(FacesContext facesContext, UISelectMany selectMany)
             throws IOException
     {
-        String layout = selectMany.getLayout();
+        String layout;
+        if (selectMany instanceof HtmlSelectManyCheckbox)
+        {
+            layout = ((HtmlSelectManyCheckbox)selectMany).getLayout();
+
+        }
+        else
+        {
+            layout = (String)selectMany.getAttributes().get(JSFAttr.LAYOUT_ATTR);
+        }
         boolean pageDirectionLayout = true; //TODO: Default to PAGE_DIRECTION ?
         if (layout != null)
         {
@@ -147,17 +161,17 @@ public class HtmlCheckboxRenderer
     public void decode(FacesContext facesContext, UIComponent uiComponent)
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, null);
-        if (uiComponent instanceof HtmlSelectBooleanCheckbox)
+        if (uiComponent instanceof UISelectBoolean)
         {
             HtmlRendererUtils.decodeUISelectBoolean(facesContext,
-                                                  (HtmlSelectBooleanCheckbox)uiComponent,
-                                                  true, //set to FALSE if request param absent,
-                                                  EXTERNAL_TRUE_VALUE);
+                                                    (UISelectBoolean)uiComponent,
+                                                    true, //set to FALSE if request param absent,
+                                                    EXTERNAL_TRUE_VALUE);
         }
         else if (uiComponent instanceof HtmlSelectManyCheckbox)
         {
             HtmlRendererUtils.decodeUISelectMany(facesContext,
-                                                 (HtmlSelectManyCheckbox)uiComponent);
+                                                 (UISelectMany)uiComponent);
         }
         else
         {

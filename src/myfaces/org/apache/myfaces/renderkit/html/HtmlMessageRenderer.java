@@ -19,19 +19,23 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.RendererUtils;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIMessage;
 import javax.faces.component.html.HtmlMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl
  * @version $Revision$ $Date$
  */
 public class HtmlMessageRenderer
@@ -55,19 +59,25 @@ public class HtmlMessageRenderer
         RendererUtils.checkParamValidity(facesContext, component, HtmlMessage.class);
         if (!RendererUtils.isVisibleOnUserRole(facesContext, component)) return;
 
-        renderMessage(facesContext, (HtmlMessage)component);
+        if (component instanceof UIMessage)
+        {
+            renderMessage(facesContext, (UIMessage)component);
+        }
+        else
+        {
+            throw new IllegalArgumentException("Unsupported component class " + component.getClass().getName());
+        }
     }
-
 
     /**
      * Identical to {@link HtmlMessagesRenderer#renderSingleMessage} functionality
      * but methods cannot be combined because of different component types.
      */
     private void renderMessage(FacesContext facesContext,
-                               HtmlMessage htmlMessage)
+                               UIMessage uiMessage)
             throws IOException
     {
-        String forClientId = htmlMessage.getFor();
+        String forClientId = uiMessage.getFor();
         if (forClientId == null)
         {
             throw new NullPointerException("Attribute 'for' of HtmlMessage must not be null");
@@ -84,15 +94,37 @@ public class HtmlMessageRenderer
         FacesMessage facesMessage = (FacesMessage)messageIterator.next();
 
         // determine style and style class
-        String[] tmp = getStyleAndStyleClass(htmlMessage, facesMessage.getSeverity());
+        String[] tmp;
+        if (uiMessage instanceof HtmlMessage)
+        {
+            tmp = getStyleAndStyleClass((HtmlMessage)uiMessage, facesMessage.getSeverity());
+        }
+        else
+        {
+            tmp = getStyleAndStyleClass(uiMessage, facesMessage.getSeverity());
+        }
+
         String style = tmp[0];
         String styleClass = tmp[1];
 
         String summary = facesMessage.getSummary();
         String detail = facesMessage.getDetail();
 
-        String title = htmlMessage.getTitle();
-        if (title == null && htmlMessage.isTooltip())
+        String title;
+        boolean tooltip;
+        if (uiMessage instanceof HtmlMessage)
+        {
+            title = ((HtmlMessage)uiMessage).getTitle();
+            tooltip = ((HtmlMessage)uiMessage).isTooltip();
+        }
+        else
+        {
+            Map attr = uiMessage.getAttributes();
+            title = (String)attr.get(JSFAttr.TITLE_ATTR);
+            tooltip = RendererUtils.getBooleanAttribute(uiMessage, JSFAttr.TOOLTIP_ATTR, false);
+        }
+
+        if (title == null && tooltip)
         {
             title = summary;
         }
@@ -103,14 +135,14 @@ public class HtmlMessageRenderer
         //Redirect output of span element to temporary writer
         StringWriter buf = new StringWriter();
         ResponseWriter bufWriter = writer.cloneWithWriter(buf);
-        bufWriter.startElement(HTML.SPAN_ELEM, htmlMessage);
+        bufWriter.startElement(HTML.SPAN_ELEM, uiMessage);
         //universal attributes
-        span |= HTMLUtil.renderHTMLAttribute(bufWriter, htmlMessage, HTML.DIR_ATTR, HTML.DIR_ATTR);
-        span |= HTMLUtil.renderHTMLAttribute(bufWriter, htmlMessage, HTML.LANG_ATTR, HTML.LANG_ATTR);
+        span |= HTMLUtil.renderHTMLAttribute(bufWriter, uiMessage, HTML.DIR_ATTR, HTML.DIR_ATTR);
+        span |= HTMLUtil.renderHTMLAttribute(bufWriter, uiMessage, HTML.LANG_ATTR, HTML.LANG_ATTR);
         span |= HTMLUtil.renderHTMLAttribute(bufWriter, HTML.TITLE_ATTR, HTML.TITLE_ATTR, title);
         span |= HTMLUtil.renderHTMLAttribute(bufWriter, HTML.STYLE_ATTR, HTML.STYLE_ATTR, style);
         span |= HTMLUtil.renderHTMLAttribute(bufWriter, HTML.STYLE_CLASS_ATTR, HTML.STYLE_CLASS_ATTR, styleClass);
-        span |= HTMLUtil.renderHTMLAttributes(bufWriter, htmlMessage, HTML.EVENT_HANDLER_ATTRIBUTES);
+        span |= HTMLUtil.renderHTMLAttributes(bufWriter, uiMessage, HTML.EVENT_HANDLER_ATTRIBUTES);
         bufWriter.close();
         if (span)
         {
@@ -118,8 +150,8 @@ public class HtmlMessageRenderer
             writer.write(buf.toString());
         }
 
-        boolean showSummary = (htmlMessage.isShowSummary() && summary != null);
-        boolean showDetail = (htmlMessage.isShowDetail() && detail != null);
+        boolean showSummary = (uiMessage.isShowSummary() && summary != null);
+        boolean showDetail = (uiMessage.isShowDetail() && detail != null);
 
         if (showSummary)
         {
@@ -184,5 +216,44 @@ public class HtmlMessageRenderer
         return new String[] {style, styleClass};
     }
 
-    
+    private String[] getStyleAndStyleClass(UIMessage uiMessage,
+                                           FacesMessage.Severity severity)
+    {
+        Map attr = uiMessage.getAttributes();
+        String style = null;
+        String styleClass = null;
+        if (severity == FacesMessage.SEVERITY_INFO)
+        {
+            style = (String)attr.get(JSFAttr.INFO_STYLE_ATTR);
+            styleClass = (String)attr.get(JSFAttr.INFO_CLASS_ATTR);
+        }
+        else if (severity == FacesMessage.SEVERITY_WARN)
+        {
+            style = (String)attr.get(JSFAttr.WARN_STYLE_ATTR);
+            styleClass = (String)attr.get(JSFAttr.WARN_CLASS_ATTR);
+        }
+        else if (severity == FacesMessage.SEVERITY_ERROR)
+        {
+            style = (String)attr.get(JSFAttr.ERROR_STYLE_ATTR);
+            styleClass = (String)attr.get(JSFAttr.ERROR_CLASS_ATTR);
+        }
+        else if (severity == FacesMessage.SEVERITY_FATAL)
+        {
+            style = (String)attr.get(JSFAttr.FATAL_STYLE_ATTR);
+            styleClass = (String)attr.get(JSFAttr.FATAL_CLASS_ATTR);
+        }
+
+        if (style == null)
+        {
+            style = (String)attr.get(JSFAttr.STYLE_CLASS_ATTR);
+        }
+
+        if (styleClass == null)
+        {
+            styleClass = (String)attr.get(JSFAttr.STYLE_CLASS_ATTR);
+        }
+
+        return new String[] {style, styleClass};
+    }
+
 }

@@ -29,7 +29,6 @@ import java.io.IOException;
 
 
 /**
- * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
  * @author Anton Koinov
  * @author Martin Marinschek
@@ -43,13 +42,12 @@ extends HtmlRenderer
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlOutputLabel.class);
         ResponseWriter writer = facesContext.getResponseWriter();
-        HtmlOutputLabel htmlOutputLabel = (HtmlOutputLabel)uiComponent;
 
         writer.startElement(HTML.LABEL_ELEM, uiComponent);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.LABEL_PASSTHROUGH_ATTRIBUTES);
 
         //MyFaces extension: Render a label text given by value
-        String text = RendererUtils.getStringValue(facesContext, htmlOutputLabel);
+        String text = RendererUtils.getStringValue(facesContext, uiComponent);
         if(text != null)
         {
             writer.writeText(text, "value");

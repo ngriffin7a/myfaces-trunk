@@ -23,8 +23,8 @@ import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIForm;
 import javax.faces.component.html.HtmlForm;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
@@ -32,6 +32,7 @@ import java.util.Map;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl
  * @author Anton Koinov
  * @version $Revision$ $Date$
  */
@@ -49,9 +50,8 @@ public class HtmlFormRenderer
     {
         RendererUtils.checkParamValidity(facesContext, component, HtmlForm.class);
 
-        HtmlForm htmlForm = (HtmlForm)component;
+        UIForm htmlForm = (HtmlForm)component;
 
-        ExternalContext externalContext = facesContext.getExternalContext();
         ResponseWriter writer = facesContext.getResponseWriter();
         ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
         String viewId = facesContext.getViewRoot().getViewId();
@@ -100,7 +100,7 @@ public class HtmlFormRenderer
         }
         */
 
-        HtmlForm htmlForm = (HtmlForm)component;
+        UIForm htmlForm = (UIForm)component;
 
         Map paramMap = facesContext.getExternalContext().getRequestParameterMap();
         String submittedValue = (String)paramMap.get(component.getClientId(facesContext) +

@@ -29,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIMessages;
 import javax.faces.component.html.HtmlMessages;
 import javax.faces.component.html.HtmlOutputLabel;
 import javax.faces.context.FacesContext;
@@ -41,6 +42,7 @@ import java.util.Map;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl
  * @version $Revision$ $Date$
  */
 public class HtmlMessagesRenderer
@@ -70,54 +72,70 @@ public class HtmlMessagesRenderer
         RendererUtils.checkParamValidity(facesContext, component, HtmlMessages.class);
         if (!RendererUtils.isVisibleOnUserRole(facesContext, component)) return;
 
-        HtmlMessages htmlMessages = (HtmlMessages)component;
-
-        MessageIterator messageIterator;
-
-        messageIterator = new MessageIterator(facesContext, htmlMessages.isGlobalOnly());
-
-        if (messageIterator.hasNext())
+        if (component instanceof UIMessages)
         {
-            String layout = htmlMessages.getLayout();
-            if (layout == null)
+            UIMessages uiMessages = (UIMessages)component;
+
+            MessageIterator messageIterator;
+
+            messageIterator = new MessageIterator(facesContext, uiMessages.isGlobalOnly());
+
+            if (messageIterator.hasNext())
             {
-                if (log.isDebugEnabled())
+                String layout;
+                if (uiMessages instanceof HtmlMessages)
                 {
-                    log.debug("No messages layout given, using default layout 'list'.");
+                    layout = ((HtmlMessages)uiMessages).getLayout();
                 }
-                renderList(facesContext, htmlMessages, messageIterator);
-            }
-            else if (layout.equalsIgnoreCase(LAYOUT_TABLE))
-            {
-                renderTable(facesContext, htmlMessages, messageIterator);
-            }
-            else
-            {
-                if (log.isWarnEnabled() && !layout.equalsIgnoreCase(LAYOUT_LIST))
+                else
                 {
-                    log.warn("Unsupported messages layout '" + layout + "' - using default layout 'list'.");
+                    layout = (String)uiMessages.getAttributes().get(JSFAttr.LAYOUT_ATTR);
                 }
-                renderList(facesContext, htmlMessages, messageIterator);
+
+                if (layout == null)
+                {
+                    if (log.isDebugEnabled())
+                    {
+                        log.debug("No messages layout given, using default layout 'list'.");
+                    }
+                    renderList(facesContext, uiMessages, messageIterator);
+                }
+                else if (layout.equalsIgnoreCase(LAYOUT_TABLE))
+                {
+                    renderTable(facesContext, uiMessages, messageIterator);
+                }
+                else
+                {
+                    if (log.isWarnEnabled() && !layout.equalsIgnoreCase(LAYOUT_LIST))
+                    {
+                        log.warn("Unsupported messages layout '" + layout + "' - using default layout 'list'.");
+                    }
+                    renderList(facesContext, uiMessages, messageIterator);
+                }
             }
+        }
+        else
+        {
+            throw new IllegalArgumentException("Unsupported component class " + component.getClass().getName());
         }
     }
 
 
     protected void renderList(FacesContext facesContext,
-                              HtmlMessages htmlMessages,
+                              UIMessages uiMessages,
                               MessageIterator messagesIterator)
             throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        writer.startElement("ul", htmlMessages);
+        writer.startElement("ul", uiMessages);
 
         while(messagesIterator.hasNext())
         {
-            writer.startElement("li", htmlMessages);
+            writer.startElement("li", uiMessages);
             renderSingleMessage(facesContext,
                                 writer,
-                                htmlMessages,
+                                uiMessages,
                                 (FacesMessage)messagesIterator.next(),
                                 messagesIterator.getClientId());
             writer.endElement("li");
@@ -128,21 +146,21 @@ public class HtmlMessagesRenderer
 
 
     protected void renderTable(FacesContext facesContext,
-                               HtmlMessages htmlMessages,
+                               UIMessages uiMessages,
                                MessageIterator messagesIterator)
             throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        writer.startElement("table", htmlMessages);
+        writer.startElement("table", uiMessages);
 
         while(messagesIterator.hasNext())
         {
-            writer.startElement("tr", htmlMessages);
-            writer.startElement("td", htmlMessages);
+            writer.startElement("tr", uiMessages);
+            writer.startElement("td", uiMessages);
             renderSingleMessage(facesContext,
                                 writer,
-                                htmlMessages,
+                                uiMessages,
                                 (FacesMessage)messagesIterator.next(),
                                 messagesIterator.getClientId());
             writer.endElement("td");
@@ -159,13 +177,22 @@ public class HtmlMessagesRenderer
      */
     private void renderSingleMessage(FacesContext facesContext,
                                      ResponseWriter writer,
-                                     HtmlMessages htmlMessages,
+                                     UIMessages uiMessages,
                                      FacesMessage facesMessage,
                                      String forClientId)
             throws IOException
     {
         // determine style and style class
-        String[] tmp = getStyleAndStyleClass(htmlMessages, facesMessage.getSeverity());
+        String[] tmp;
+        if (uiMessages instanceof HtmlMessages)
+        {
+            tmp = getStyleAndStyleClass((HtmlMessages)uiMessages, facesMessage.getSeverity());
+        }
+        else
+        {
+            tmp = getStyleAndStyleClass(uiMessages, facesMessage.getSeverity());
+        }
+
         String style = tmp[0];
         String styleClass = tmp[1];
 
@@ -173,18 +200,20 @@ public class HtmlMessagesRenderer
         String detail = facesMessage.getDetail();
 
         // tooltip property is missing in HtmlMessages API
+        String title;
         boolean tooltip;
-        if (htmlMessages instanceof MyFacesHtmlMessages)
+        if (uiMessages instanceof HtmlMessages)
         {
-            tooltip = ((MyFacesHtmlMessages)htmlMessages).isTooltip();
+            title = ((HtmlMessages)uiMessages).getTitle();
+            tooltip = ((HtmlMessages)uiMessages).isTooltip();
         }
         else
         {
-            Boolean b = (Boolean)htmlMessages.getAttributes().get(JSFAttr.TOOLTIP_ATTR);
-            tooltip = (b == null || b.booleanValue());
+            Map attr = uiMessages.getAttributes();
+            title = (String)attr.get(JSFAttr.TITLE_ATTR);
+            tooltip = RendererUtils.getBooleanAttribute(uiMessages, JSFAttr.TOOLTIP_ATTR, false);
         }
 
-        String title = htmlMessages.getTitle();
         if (title == null && tooltip)
         {
             title = summary;
@@ -194,14 +223,14 @@ public class HtmlMessagesRenderer
         //Redirect output of span element to temporary writer
         StringWriter buf = new StringWriter();
         ResponseWriter bufWriter = writer.cloneWithWriter(buf);
-        bufWriter.startElement(HTML.SPAN_ELEM, htmlMessages);
+        bufWriter.startElement(HTML.SPAN_ELEM, uiMessages);
         //universal attributes
-        span |= HTMLUtil.renderHTMLAttribute(bufWriter, htmlMessages, HTML.DIR_ATTR, HTML.DIR_ATTR);
-        span |= HTMLUtil.renderHTMLAttribute(bufWriter, htmlMessages, HTML.LANG_ATTR, HTML.LANG_ATTR);
+        span |= HTMLUtil.renderHTMLAttribute(bufWriter, uiMessages, HTML.DIR_ATTR, HTML.DIR_ATTR);
+        span |= HTMLUtil.renderHTMLAttribute(bufWriter, uiMessages, HTML.LANG_ATTR, HTML.LANG_ATTR);
         span |= HTMLUtil.renderHTMLAttribute(bufWriter, HTML.TITLE_ATTR, HTML.TITLE_ATTR, title);
         span |= HTMLUtil.renderHTMLAttribute(bufWriter, HTML.STYLE_ATTR, HTML.STYLE_ATTR, style);
         span |= HTMLUtil.renderHTMLAttribute(bufWriter, HTML.STYLE_CLASS_ATTR, HTML.STYLE_CLASS_ATTR, styleClass);
-        span |= HTMLUtil.renderHTMLAttributes(bufWriter, htmlMessages, HTML.EVENT_HANDLER_ATTRIBUTES);
+        span |= HTMLUtil.renderHTMLAttributes(bufWriter, uiMessages, HTML.EVENT_HANDLER_ATTRIBUTES);
         bufWriter.close();
         if (span)
         {
@@ -209,15 +238,15 @@ public class HtmlMessagesRenderer
             writer.write(buf.toString());
         }
 
-        boolean showSummary = (htmlMessages.isShowSummary() && summary != null);
-        boolean showDetail = (htmlMessages.isShowDetail() && detail != null);
+        boolean showSummary = (uiMessages.isShowSummary() && summary != null);
+        boolean showDetail = (uiMessages.isShowDetail() && detail != null);
 
         if (showSummary)
         {
             String inputLabel = null;
             if (forClientId != null &&
-                htmlMessages instanceof MyFacesHtmlMessages &&
-                ((MyFacesHtmlMessages)htmlMessages).isShowInputLabel())
+                uiMessages instanceof MyFacesHtmlMessages &&
+                ((MyFacesHtmlMessages)uiMessages).isShowInputLabel())
             {
                 inputLabel = findInputLabel(facesContext, forClientId);
             }
@@ -289,6 +318,45 @@ public class HtmlMessagesRenderer
         return new String[] {style, styleClass};
     }
 
+    private String[] getStyleAndStyleClass(UIMessages uiMessages,
+                                           FacesMessage.Severity severity)
+    {
+        Map attr = uiMessages.getAttributes();
+        String style = null;
+        String styleClass = null;
+        if (severity == FacesMessage.SEVERITY_INFO)
+        {
+            style = (String)attr.get(JSFAttr.INFO_STYLE_ATTR);
+            styleClass = (String)attr.get(JSFAttr.INFO_CLASS_ATTR);
+        }
+        else if (severity == FacesMessage.SEVERITY_WARN)
+        {
+            style = (String)attr.get(JSFAttr.WARN_STYLE_ATTR);
+            styleClass = (String)attr.get(JSFAttr.WARN_CLASS_ATTR);
+        }
+        else if (severity == FacesMessage.SEVERITY_ERROR)
+        {
+            style = (String)attr.get(JSFAttr.ERROR_STYLE_ATTR);
+            styleClass = (String)attr.get(JSFAttr.ERROR_CLASS_ATTR);
+        }
+        else if (severity == FacesMessage.SEVERITY_FATAL)
+        {
+            style = (String)attr.get(JSFAttr.FATAL_STYLE_ATTR);
+            styleClass = (String)attr.get(JSFAttr.FATAL_CLASS_ATTR);
+        }
+
+        if (style == null)
+        {
+            style = (String)attr.get(JSFAttr.STYLE_CLASS_ATTR);
+        }
+
+        if (styleClass == null)
+        {
+            styleClass = (String)attr.get(JSFAttr.STYLE_CLASS_ATTR);
+        }
+
+        return new String[] {style, styleClass};
+    }
 
     private String findInputLabel(FacesContext facesContext, String inputClientId)
     {

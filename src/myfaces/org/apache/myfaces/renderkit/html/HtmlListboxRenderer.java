@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.RendererUtils;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectMany;
@@ -31,7 +32,6 @@ import java.io.IOException;
 
 
 /**
- * DOCUMENT ME!
  * @author Thomas Spiegl (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
@@ -44,17 +44,37 @@ public class HtmlListboxRenderer
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, null);
 
-        if (uiComponent instanceof HtmlSelectManyListbox)
+        if (uiComponent instanceof UISelectMany)
         {
+            int size;
+            if (uiComponent instanceof HtmlSelectManyListbox)
+            {
+                size = ((HtmlSelectManyListbox)uiComponent).getSize();
+            }
+            else
+            {
+                Integer i = (Integer)uiComponent.getAttributes().get(JSFAttr.SIZE_ATTR);
+                size = i != null ? i.intValue() : 0;
+            }
             HtmlRendererUtils.renderListbox(facesContext,
-                                            (HtmlSelectManyListbox)uiComponent,
-                                            ((HtmlSelectManyListbox)uiComponent).getSize());
+                                            (UISelectMany)uiComponent,
+                                            size);
         }
         else if (uiComponent instanceof HtmlSelectOneListbox)
         {
+            int size;
+            if (uiComponent instanceof HtmlSelectOneListbox)
+            {
+                size = ((HtmlSelectOneListbox)uiComponent).getSize();
+            }
+            else
+            {
+                Integer i = (Integer)uiComponent.getAttributes().get(JSFAttr.SIZE_ATTR);
+                size = i != null ? i.intValue() : 0;
+            }
             HtmlRendererUtils.renderListbox(facesContext,
-                                            (HtmlSelectOneListbox)uiComponent,
-                                            ((HtmlSelectOneListbox)uiComponent).getSize());
+                                            (UISelectOne)uiComponent,
+                                            size);
         }
         else
         {

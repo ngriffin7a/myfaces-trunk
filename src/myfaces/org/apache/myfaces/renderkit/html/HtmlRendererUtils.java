@@ -146,7 +146,7 @@ public class HtmlRendererUtils
             {
                 try
                 {
-                    //TODO: 
+                    //TODO: deprecated
                     convertedValues[i]
                     = ConverterUtils.getAsObjectWithErrorHandling(facesContext,
                                                                   selectMany,

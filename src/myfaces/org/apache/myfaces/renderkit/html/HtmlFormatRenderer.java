@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,6 +35,7 @@ import java.util.List;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl
  * @version $Revision$ $Date$
  */
 public class HtmlFormatRenderer
@@ -59,13 +61,21 @@ public class HtmlFormatRenderer
         RendererUtils.checkParamValidity(facesContext, component, HtmlOutputFormat.class);
         if (!RendererUtils.isVisibleOnUserRole(facesContext, component)) return;
 
-        HtmlOutputFormat htmlOutputFormat = (HtmlOutputFormat)component;
-        String text = getOutputFormatText(facesContext, htmlOutputFormat);
-        HtmlTextRenderer.renderOutputText(facesContext, component, text, htmlOutputFormat.isEscape());
+        String text = getOutputFormatText(facesContext, component);
+        boolean isEscape;
+        if (component instanceof HtmlOutputFormat)
+        {
+            isEscape = ((HtmlOutputFormat)component).isEscape();
+        }
+        else
+        {
+            isEscape = RendererUtils.getBooleanAttribute(component, JSFAttr.ESCAPE_ATTR, true);
+        }
+        HtmlTextRenderer.renderOutputText(facesContext, component, text, isEscape);
     }
 
     private String getOutputFormatText(FacesContext facesContext,
-                                       HtmlOutputFormat htmlOutputFormat)
+                                       UIComponent htmlOutputFormat)
     {
         String pattern = RendererUtils.getStringValue(facesContext, htmlOutputFormat);
         Object[] args;

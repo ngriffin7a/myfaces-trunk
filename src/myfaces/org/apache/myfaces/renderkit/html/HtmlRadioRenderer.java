@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.RendererUtils;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -37,6 +38,7 @@ import java.util.List;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl
  * @version $Revision$ $Date$
  */
 public class HtmlRadioRenderer
@@ -51,9 +53,18 @@ public class HtmlRadioRenderer
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlSelectOneRadio.class);
 
-        HtmlSelectOneRadio selectOne = (HtmlSelectOneRadio)uiComponent;
+        UISelectOne selectOne = (UISelectOne)uiComponent;
 
-        String layout = selectOne.getLayout();
+        String layout;
+        if (selectOne instanceof HtmlSelectOneRadio)
+        {
+            layout = ((HtmlSelectOneRadio)selectOne).getLayout();
+        }
+        else
+        {
+            layout = (String)selectOne.getAttributes().get(JSFAttr.LAYOUT_ATTR);
+        }
+
         boolean pageDirectionLayout = true; //TODO: Default to PAGE_DIRECTION ?
         if (layout != null)
         {
@@ -124,7 +135,7 @@ public class HtmlRadioRenderer
     public void decode(FacesContext facesContext, UIComponent uiComponent)
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlSelectOneRadio.class);
-        HtmlRendererUtils.decodeUIInput(facesContext, (HtmlSelectOneRadio)uiComponent);
+        HtmlRendererUtils.decodeUIInput(facesContext, (UISelectOne)uiComponent);
     }
 
 

@@ -23,6 +23,7 @@ import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
 import javax.faces.component.html.HtmlInputSecret;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -33,6 +34,7 @@ import java.io.IOException;
 /**
  * see Spec.1.0 EA - JSF.7.6.4 Renderer Types for UIInput Components
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Thomas Spiegl
  * @author Anton Koinov
  * @version $Revision$ $Date$
  */
@@ -53,7 +55,16 @@ public class HtmlSecretRenderer
         writer.writeAttribute(HTML.ID_ATTR, clientId, null);
         writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
 
-        if (((HtmlInputSecret)uiComponent).isRedisplay())
+        boolean isRedisplay;
+        if (uiComponent instanceof HtmlInputSecret)
+        {
+            isRedisplay = ((HtmlInputSecret)uiComponent).isRedisplay();
+        }
+        else
+        {
+            isRedisplay = RendererUtils.getBooleanAttribute(uiComponent, JSFAttr.REDISPLAY_ATTR, false);
+        }
+        if (isRedisplay)
         {
             String strValue = RendererUtils.getStringValue(facesContext, uiComponent);
             writer.writeAttribute(HTML.VALUE_ATTR, strValue, JSFAttr.VALUE_ATTR);
@@ -69,14 +80,14 @@ public class HtmlSecretRenderer
     public void decode(FacesContext facesContext, UIComponent component)
     {
         RendererUtils.checkParamValidity(facesContext, component, HtmlInputSecret.class);
-        HtmlRendererUtils.decodeUIInput(facesContext, (HtmlInputSecret)component);
+        HtmlRendererUtils.decodeUIInput(facesContext, (UIInput)component);
     }
 
     public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlInputSecret.class);
         return RendererUtils.getConvertedUIOutputValue(facesContext,
-                                                       (HtmlInputSecret)uiComponent,
+                                                       (UIInput)uiComponent,
                                                        submittedValue);
     }
 
