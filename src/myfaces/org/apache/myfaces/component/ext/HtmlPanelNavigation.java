@@ -31,8 +31,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Panel, that includes navigation items ({@link HtmlCommandNavigation}) and separators
- * ({@link HtmlOutputNavigation}).
+ * Panel, that includes navigation items ({@link HtmlCommandNavigation}) and other
+ * components (separators).
  * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$

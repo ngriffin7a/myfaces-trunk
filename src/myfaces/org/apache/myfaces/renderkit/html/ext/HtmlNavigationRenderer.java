@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.renderkit.html.ext;
 
 import net.sourceforge.myfaces.component.ext.HtmlCommandNavigation;
-import net.sourceforge.myfaces.component.ext.HtmlOutputNavigation;
 import net.sourceforge.myfaces.component.ext.HtmlPanelNavigation;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HTML;
@@ -110,26 +109,10 @@ public class HtmlNavigationRenderer
                 writer.endElement(HTML.TD_ELEM);
                 writer.endElement(HTML.TR_ELEM);
             }
-            else if (child instanceof HtmlOutputNavigation)
-            {
-                //separator
-                writer.startElement(HTML.TR_ELEM, null);
-                writer.startElement(HTML.TD_ELEM, null);
-                writeSeparatorAttributes(writer, panelNav, (HtmlOutputNavigation)child);
-                indent(writer, level);
-                child.encodeBegin(facesContext);
-                child.encodeEnd(facesContext);
-                if (child.getChildCount() > 0)
-                {
-                    renderChildren(facesContext, writer, panelNav, child.getChildren(), level + 1);
-                }
-                writer.endElement(HTML.TD_ELEM);
-                writer.endElement(HTML.TR_ELEM);
-            }
             else
             {
                 //unknown
-                if (log.isWarnEnabled()) log.warn("Unsupported navigation item with id " + child.getClientId(facesContext) + " (renderer type " + child.getRendererType() + ").");
+                //if (log.isWarnEnabled()) log.warn("Unsupported navigation item with id " + child.getClientId(facesContext) + " (renderer type " + child.getRendererType() + ").");
                 writer.startElement(HTML.TR_ELEM, null);
                 writer.startElement(HTML.TD_ELEM, null);
                 indent(writer, level);
@@ -140,7 +123,7 @@ public class HtmlNavigationRenderer
 
             if (log.isDebugEnabled())
             {
-                writer.write("\n");    
+                writer.write("\n");
             }
         }
     }
@@ -180,25 +163,6 @@ public class HtmlNavigationRenderer
             style = navPanel.getItemStyle();
             styleClass = navPanel.getItemClass();
         }
-
-        if (style != null)
-        {
-            writer.writeAttribute(HTML.STYLE_ATTR, style, null);
-        }
-
-        if (styleClass != null)
-        {
-            writer.writeAttribute(HTML.STYLE_CLASS_ATTR, styleClass, null);
-        }
-    }
-
-    protected void writeSeparatorAttributes(ResponseWriter writer,
-                                             HtmlPanelNavigation navPanel,
-                                             HtmlOutputNavigation navItem)
-            throws IOException
-    {
-        String style = navPanel.getSeparatorStyle();
-        String styleClass = navPanel.getSeparatorClass();
 
         if (style != null)
         {
