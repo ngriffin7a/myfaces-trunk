@@ -22,6 +22,11 @@ import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
 
 /**
+ * $Log$
+ * Revision 1.6  2004/03/26 12:08:41  manolito
+ * Exceptions in getAsString now catched and
+ * more relaxed Number casting in all number converters
+ *
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

@@ -22,6 +22,11 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
 /**
+ * $Log$
+ * Revision 1.7  2004/03/26 12:08:41  manolito
+ * Exceptions in getAsString now catched and
+ * more relaxed Number casting in all number converters
+ *
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -77,6 +82,13 @@ public class BooleanConverter
         {
             return (String)value;
         }
-        return ((Boolean)value).toString();
+        try
+        {
+            return ((Boolean)value).toString();
+        }
+        catch (Exception e)
+        {
+            throw new ConverterException(e);
+        }
     }
 }

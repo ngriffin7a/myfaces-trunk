@@ -22,6 +22,11 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
 /**
+ * $Log$
+ * Revision 1.6  2004/03/26 12:08:41  manolito
+ * Exceptions in getAsString now catched and
+ * more relaxed Number casting in all number converters
+ *
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -66,7 +71,14 @@ public class CharacterConverter
         {
             return (String)value;
         }
-        return ((Character)value).toString();
+        try
+        {
+            return ((Character)value).toString();
+        }
+        catch (Exception e)
+        {
+            throw new ConverterException(e);
+        }
     }
 
 }

@@ -26,6 +26,11 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
+ * $Log$
+ * Revision 1.2  2004/03/26 12:08:42  manolito
+ * Exceptions in getAsString now catched and
+ * more relaxed Number casting in all number converters
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

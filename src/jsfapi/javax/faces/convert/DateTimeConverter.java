@@ -27,6 +27,11 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 /**
+ * $Log$
+ * Revision 1.7  2004/03/26 12:08:42  manolito
+ * Exceptions in getAsString now catched and
+ * more relaxed Number casting in all number converters
+ *
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
