@@ -24,6 +24,10 @@ import java.io.Serializable;
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.6  2004/04/07 08:15:41  manolito
+ * correct label handling
+ *
  */
 public class SelectItem implements Serializable
 {
@@ -42,6 +46,9 @@ public class SelectItem implements Serializable
     {
         if (value == null) throw new NullPointerException("value");
         _value = value;
+        _label = value.toString();
+        _description = null;
+        _disabled = false;
     }
 
     public SelectItem(Object value, String label)
@@ -50,6 +57,8 @@ public class SelectItem implements Serializable
         if (label == null) throw new NullPointerException("label");
         _value = value;
         _label = label;
+        _description = null;
+        _disabled = false;
     }
 
     public SelectItem(Object value, String label, String description)
@@ -59,6 +68,7 @@ public class SelectItem implements Serializable
         _value = value;
         _label = label;
         _description = description;
+        _disabled = false;
     }
 
     public SelectItem(Object value, String label, String description, boolean disabled)
