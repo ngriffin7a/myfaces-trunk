@@ -76,12 +76,14 @@
         <javac srcdir="${jsfapi.src}"
                destdir="${web-inf.classes.dir}"
                optimize="off"
+               debug="on"
                classpathref="project.class.path">
         </javac>
 
         <javac srcdir="${myfaces.src}"
                destdir="${web-inf.classes.dir}"
                optimize="off"
+               debug="on"
                classpathref="project.class.path">
         </javac>
 
@@ -95,6 +97,7 @@
         <javac srcdir="${examples.src}"
                destdir="${web-inf.classes.dir}"
                optimize="off"
+               debug="on"
                classpathref="project.class.path">
         </javac>
 

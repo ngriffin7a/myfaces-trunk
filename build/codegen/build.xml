@@ -30,8 +30,8 @@
         <mkdir dir="${codegen-classes.dir}"/>
         <javac srcdir="${codgen-src.dir}"
                destdir="${codegen-classes.dir}"
-               debug="on"
                optimize="off"
+               debug="on"
                classpathref="codegen.class.path">
         </javac>
         <copy todir="${codegen-classes.dir}">

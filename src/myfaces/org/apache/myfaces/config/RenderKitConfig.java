@@ -125,7 +125,7 @@ public class RenderKitConfig implements Config
 
         try
         {
-            return (RenderKit) _renderKitClass.newInstance();
+            return (RenderKit) clazz.newInstance();
         }
         catch (Exception e)
         {

@@ -51,6 +51,7 @@
         <javac srcdir="${examples.src}"
                destdir="${web-inf.classes.dir}"
                optimize="${javac.optimize}"
+               debug="${javac.debug}"
                classpathref="examples.class.path">
         </javac>
         <copy todir="${web-inf.classes.dir}">
@@ -118,6 +119,7 @@
         <javac srcdir="${examples.src}"
                destdir="${web-inf.classes.dir}"
                optimize="${javac.optimize}"
+               debug="${javac.debug}"
                classpathref="examples.class.path">
         </javac>
         <copy todir="${web-inf.classes.dir}">

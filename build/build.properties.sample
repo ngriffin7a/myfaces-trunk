@@ -29,10 +29,9 @@ myfaces.jar = ${project.dir}/lib/myfaces.jar
 # (if not set, environment variable "TEMP" will be used)
 #temp.dir = temp
 
-# Compiler optimize
+# Compiler optimize and debug flags
 javac.optimize = off
-javac.debug = off
-
+javac.debug = on
 
 # log4j library (only needed for examples application)
 log4j.jar = ${project.dir}/lib/log4j-1.2.8.jar
