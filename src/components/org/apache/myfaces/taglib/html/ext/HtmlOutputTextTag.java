@@ -16,15 +16,18 @@
 package org.apache.myfaces.taglib.html.ext;
 
 import org.apache.myfaces.component.UserRoleAware;
+import org.apache.myfaces.component.html.ext.HtmlOutputText;
 import org.apache.myfaces.taglib.html.HtmlOutputTextTagBase;
 
 import javax.faces.component.UIComponent;
-import javax.faces.component.html.HtmlOutputText;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2005/01/10 07:57:29  matzew
+ * closed MyFace-76. Thanks to sean schofield
+ *
  * Revision 1.6  2004/10/13 11:50:59  matze
  * renamed packages to org.apache
  *
