@@ -33,6 +33,9 @@ import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
 
 /**
  * $Log$
+ * Revision 1.3  2004/07/18 03:08:23  svieujot
+ * inputDate : add a type="date|time|both" similar as f:convertDateTime
+ *
  * Revision 1.2  2004/07/17 21:03:05  svieujot
  * Clean code
  *
@@ -56,6 +59,7 @@ public class HtmlDateRenderer extends HtmlRenderer {
 
         HtmlInputDate inputDate = (HtmlInputDate) uiComponent;
         Date date = inputDate.getDate();
+        String type = inputDate.getType();
         String clientId = uiComponent.getClientId(facesContext);
         Locale currentLocale = facesContext.getViewRoot().getLocale();
 
@@ -71,32 +75,45 @@ public class HtmlDateRenderer extends HtmlRenderer {
 
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
 
-        encodeInputDay(uiComponent, writer, clientId, calendar, disabled);
-        encodeInputMonth(uiComponent, writer, clientId, calendar, currentLocale, disabled);
-        encodeInputYear(uiComponent, writer, clientId, calendar, disabled);
-
-        // TODO Encode time fields
-
+        if( ! type.equals("time")){
+	        encodeInputDay(uiComponent, writer, clientId, calendar, disabled);
+	        encodeInputMonth(uiComponent, writer, clientId, calendar, currentLocale, disabled);
+	        encodeInputYear(uiComponent, writer, clientId, calendar, disabled);
+        }
+        if( type.equals("both") ){
+            writer.write(" ");
+        }
+        if( ! type.equals("date")){
+	        encodeInputHours(uiComponent, writer, clientId, calendar, disabled);
+	        writer.write(":");
+	        encodeInputMinutes(uiComponent, writer, clientId, calendar, disabled);
+	        writer.write(":");
+	        encodeInputSeconds(uiComponent, writer, clientId, calendar, disabled);
+        }
     }
     
-    private static void encodeInputDay(UIComponent uiComponent, ResponseWriter writer, String clientId, Calendar calendar, boolean disabled)
-            throws IOException {
+    private static void encodeInputField(UIComponent uiComponent, ResponseWriter writer, String id, int value, int size, boolean disabled)  throws IOException {
         writer.startElement(HTML.INPUT_ELEM, uiComponent);
         HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
         HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES); // TODO Check that
 
-        if (disabled) {
-            writer.writeAttribute(HTML.DISABLED_ATTR, Boolean.TRUE, null);
-        }
+		if (disabled) {
+		    writer.writeAttribute(HTML.DISABLED_ATTR, Boolean.TRUE, null);
+		}
 
-        writer.writeAttribute(HTML.ID_ATTR, clientId + ID_DAY_POSTFIX, null);
-        writer.writeAttribute(HTML.NAME_ATTR, clientId + ID_DAY_POSTFIX, null);
-        writer.writeAttribute(HTML.SIZE_ATTR, "2", null);
-        writer.writeAttribute(HTML.MAXLENGTH_ATTR, "2", null);
-        if (calendar != null) {
-            writer.writeAttribute(HTML.VALUE_ATTR, Integer.toString(calendar.get(Calendar.DAY_OF_MONTH)), null);
-        }
-        writer.endElement(HTML.INPUT_ELEM);
+		writer.writeAttribute(HTML.ID_ATTR, id, null);
+		writer.writeAttribute(HTML.NAME_ATTR, id, null);
+		writer.writeAttribute(HTML.SIZE_ATTR, Integer.toString(size), null);
+		writer.writeAttribute(HTML.MAXLENGTH_ATTR, Integer.toString(size), null);
+		if (value != -1) {
+		    writer.writeAttribute(HTML.VALUE_ATTR, Integer.toString(value), null);
+		}
+		writer.endElement(HTML.INPUT_ELEM);
+    }
+    
+    private static void encodeInputDay(UIComponent uiComponent, ResponseWriter writer, String clientId, Calendar calendar, boolean disabled)
+            throws IOException {
+        encodeInputField(uiComponent, writer, clientId + ID_DAY_POSTFIX, calendar == null ? -1 : calendar.get(Calendar.DAY_OF_MONTH), 2, disabled);
     }
 
     private static void encodeInputMonth(UIComponent uiComponent, ResponseWriter writer, String clientId, Calendar calendar, Locale currentLocale,
@@ -133,28 +150,22 @@ public class HtmlDateRenderer extends HtmlRenderer {
         writer.endElement(HTML.SELECT_ELEM);
     }
 
-    private static void encodeInputYear(UIComponent uiComponent, ResponseWriter writer, String clientId, Calendar calendar, boolean disabled)
-            throws IOException {
-        writer.startElement(HTML.INPUT_ELEM, uiComponent);
-        HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
-        HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES); // TODO
-        // Check
-        // that
-
-        if (disabled) {
-            writer.writeAttribute(HTML.DISABLED_ATTR, Boolean.TRUE, null);
-        }
-
-        writer.writeAttribute(HTML.ID_ATTR, clientId + ID_YEAR_POSTFIX, null);
-        writer.writeAttribute(HTML.NAME_ATTR, clientId + ID_YEAR_POSTFIX, null);
-        writer.writeAttribute(HTML.SIZE_ATTR, "4", null);
-        writer.writeAttribute(HTML.MAXLENGTH_ATTR, "4", null);
-        if (calendar != null) {
-            writer.writeAttribute(HTML.VALUE_ATTR, Integer.toString(calendar.get(Calendar.YEAR)), null);
-        }
-        writer.endElement(HTML.INPUT_ELEM);
+    private static void encodeInputYear(UIComponent uiComponent, ResponseWriter writer, String clientId, Calendar calendar, boolean disabled) throws IOException {
+        encodeInputField(uiComponent, writer, clientId + ID_YEAR_POSTFIX, calendar == null ? -1 : calendar.get(Calendar.YEAR), 4, disabled);
     }
-
+    
+    private static void encodeInputHours(UIComponent uiComponent, ResponseWriter writer, String clientId, Calendar calendar, boolean disabled) throws IOException {
+        encodeInputField(uiComponent, writer, clientId + ID_HOURS_POSTFIX, calendar == null ? -1 : calendar.get(Calendar.HOUR_OF_DAY), 2, disabled);
+    }
+    
+    private static void encodeInputMinutes(UIComponent uiComponent, ResponseWriter writer, String clientId, Calendar calendar, boolean disabled) throws IOException {
+        encodeInputField(uiComponent, writer, clientId + ID_MINUTES_POSTFIX, calendar == null ? -1 : calendar.get(Calendar.MINUTE), 2, disabled);
+    }
+    
+    private static void encodeInputSeconds(UIComponent uiComponent, ResponseWriter writer, String clientId, Calendar calendar, boolean disabled) throws IOException {
+        encodeInputField(uiComponent, writer, clientId + ID_SECONDS_POSTFIX, calendar == null ? -1 : calendar.get(Calendar.SECOND), 2, disabled);
+    }
+    
     private static String[] mapMonths(DateFormatSymbols symbols) {
         String[] months = new String[12];
 
@@ -179,23 +190,43 @@ public class HtmlDateRenderer extends HtmlRenderer {
     public void decode(FacesContext facesContext, UIComponent uiComponent) {
         RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlInputDate.class);
 
-        HtmlInputDate uiDate = (HtmlInputDate) uiComponent;
-        String clientId = uiDate.getClientId(facesContext);
-        Map requestMap = facesContext.getExternalContext().getRequestParameterMap();
-
-        String sDay = (String) requestMap.get(clientId + ID_DAY_POSTFIX);
-        String sMonth = (String) requestMap.get(clientId + ID_MONTH_POSTFIX);
-        String sYear = (String) requestMap.get(clientId + ID_YEAR_POSTFIX);
-
-        if (sDay == null || sMonth == null || sYear == null)
-            return;
-
+        HtmlInputDate inputDate = (HtmlInputDate) uiComponent;
+        Date initialDate = inputDate.getDate();
+        String clientId = inputDate.getClientId(facesContext);
+        String type = inputDate.getType();
         Locale currentLocale = facesContext.getViewRoot().getLocale();
         Calendar newValue = Calendar.getInstance(currentLocale);
-        newValue.set(Calendar.YEAR, Integer.parseInt(sYear));
-        newValue.set(Calendar.DAY_OF_YEAR, 1);
-        newValue.set(Calendar.MONTH, Integer.parseInt(sMonth));
-        newValue.set(Calendar.DAY_OF_MONTH, Integer.parseInt(sDay));
-        uiDate.setSubmittedValue(newValue.getTime());
+        Map requestMap = facesContext.getExternalContext().getRequestParameterMap();
+
+        if( ! type.equals("both") ){
+            Date date = inputDate.getDate();
+            if( date != null ){  // try to change only the specified part (time or date), and keep the initial value for the not specified part
+                newValue.setTime( date );
+            }
+        }
+
+        if( ! type.equals( "time" ) ){
+            String sDay = (String) requestMap.get(clientId + ID_DAY_POSTFIX);
+            String sMonth = (String) requestMap.get(clientId + ID_MONTH_POSTFIX);
+            String sYear = (String) requestMap.get(clientId + ID_YEAR_POSTFIX);
+        
+            newValue.set(Calendar.YEAR, Integer.parseInt(sYear));
+            newValue.set(Calendar.DAY_OF_YEAR, 1);
+            newValue.set(Calendar.MONTH, Integer.parseInt(sMonth));
+            newValue.set(Calendar.DAY_OF_MONTH, Integer.parseInt(sDay));
+        }
+        
+        if( ! type.equals( "date" ) ){
+            String sHours = (String) requestMap.get(clientId + ID_HOURS_POSTFIX);
+            String sMinutes = (String) requestMap.get(clientId + ID_MINUTES_POSTFIX);
+            String sSeconds = (String) requestMap.get(clientId + ID_SECONDS_POSTFIX);
+        
+            newValue.set(Calendar.HOUR_OF_DAY, Integer.parseInt(sHours));
+            newValue.set(Calendar.MINUTE, Integer.parseInt(sMinutes));
+            newValue.set(Calendar.SECOND, Integer.parseInt(sSeconds));            
+        }
+
+        
+        inputDate.setSubmittedValue(newValue.getTime());
     }
 }

@@ -8,4 +8,8 @@
     <component-type>net.sourceforge.myfaces.HtmlInputDate</component-type>
     <component-family>javax.faces.Input</component-family>
     <renderer-type>net.sourceforge.myfaces.Date</renderer-type>
+	<field>
+        <name>type</name>
+        <type>java.lang.String</type>
+    </field>
 </component>

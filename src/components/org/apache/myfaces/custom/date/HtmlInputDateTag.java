@@ -35,6 +35,9 @@ public class HtmlInputDateTag extends HtmlInputTagBase {
     public String getRendererType() {
         return "net.sourceforge.myfaces.Date";
     }
+    
+    // HtmlInputDate attributes
+    private String _type;
 
     // UIComponent attributes --> already implemented in UIComponentTagBase
 
@@ -54,13 +57,6 @@ public class HtmlInputDateTag extends HtmlInputTagBase {
 
     private String _visibleOnUserRole;
 
-    protected void setProperties(UIComponent component) {
-        super.setProperties(component);
-
-        setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
-        setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
-    }
-
     public void setEnabledOnUserRole(String enabledOnUserRole) {
         _enabledOnUserRole = enabledOnUserRole;
     }
@@ -69,4 +65,16 @@ public class HtmlInputDateTag extends HtmlInputTagBase {
         _visibleOnUserRole = visibleOnUserRole;
     }
     */
+    
+    protected void setProperties(UIComponent component) {
+        super.setProperties(component);
+
+        //setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
+        //setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
+        setStringProperty(component, "type", _type);
+    }
+    
+    public void setType(String type){
+        _type = type;
+    }
 }
