@@ -42,6 +42,9 @@ import java.util.*;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.19  2004/04/27 07:37:56  manolito
+ * bugfix: handleCharacterEncoding must be called before any request parameters are retrieved
+ *
  * Revision 1.18  2004/04/05 09:16:24  manolito
  * javadoc header
  *
@@ -210,13 +213,13 @@ public class JspViewHandlerImpl
 
     public UIViewRoot restoreView(FacesContext facesContext, String viewId)
     {
+        handleCharacterEncoding(facesContext);
         Application application = facesContext.getApplication();
         ViewHandler applicationViewHandler = application.getViewHandler();
         String renderKitId = applicationViewHandler.calculateRenderKitId(facesContext);
         UIViewRoot viewRoot = application.getStateManager().restoreView(facesContext,
                                                                         viewId,
                                                                         renderKitId);
-        handleCharacterEncoding(facesContext);
         return viewRoot;
     }
 
