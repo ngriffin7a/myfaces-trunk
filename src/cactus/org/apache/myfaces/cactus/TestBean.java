@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 public class TestBean
 {
     private long numberPrimitiveLong;
+    private int numberPrimitiveInt;
     private Long numberLong;
     private BigDecimal numberBigDecimal;
     private List list;
@@ -116,5 +117,17 @@ public class TestBean
     public void setDate(Date date)
     {
         this.date = date;
+    }
+
+
+    public int getNumberPrimitiveInt()
+    {
+        return numberPrimitiveInt;
+    }
+
+
+    public void setNumberPrimitiveInt(int numberPrimitiveInt)
+    {
+        this.numberPrimitiveInt = numberPrimitiveInt;
     }
 }

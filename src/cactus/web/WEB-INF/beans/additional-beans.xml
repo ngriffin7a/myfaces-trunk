@@ -8,6 +8,10 @@
             <value>5</value>
         </managed-property>
         <managed-property>
+            <property-name>numberPrimitiveInt</property-name>
+            <value>15</value>
+        </managed-property>
+        <managed-property>
             <property-name>numberLong</property-name>
             <value>#{testDataProvider.long}</value>
         </managed-property>
