@@ -38,6 +38,9 @@ import org.apache.myfaces.util.MessageUtils;
 
 /**
  * $Log$
+ * Revision 1.10  2004/12/09 05:13:02  svieujot
+ * Mark potential bugs where we use the backing bean's value, and do not check for submitted value
+ *
  * Revision 1.9  2004/10/13 11:50:57  matze
  * renamed packages to org.apache
  *
@@ -100,7 +103,7 @@ public class HtmlDateRenderer extends HtmlRenderer {
 
         HtmlInputDate inputDate = (HtmlInputDate) uiComponent;
         Locale currentLocale = facesContext.getViewRoot().getLocale();
-        UserData userData = inputDate.getUserData(currentLocale);
+        UserData userData = inputDate.getUserData(currentLocale); // TODO : Check if restores the submitted value
         String type = inputDate.getType();
         String clientId = uiComponent.getClientId(facesContext);
 
