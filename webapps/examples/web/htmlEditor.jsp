@@ -67,6 +67,10 @@
 						showTablesToolBox="#{editor.showTablesToolBox}"
 						showDebugToolBox="#{editor.showDebugToolBox}"/>
 					
+					<x:div>
+						<h:outputText value="Note : You can drag & drop images in the editor."/>
+					</x:div>
+					
 					<h:commandButton value="Submit"/>
 
 					<f:verbatim>
