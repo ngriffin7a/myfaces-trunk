@@ -170,6 +170,11 @@ public abstract class MyFacesBodyTag
         _helper.setComponentPropertyBoolean(attrName, attrValue);
     }
 
+    protected void setComponentPropertyInteger(String attrName, Object attrValue)
+    {
+        _helper.setComponentPropertyInteger(attrName, attrValue);
+    }
+
     protected void setRendererAttributeObject(String attrName, Object attrValue)
     {
         _helper.setRendererAttributeObject(attrName, attrValue);

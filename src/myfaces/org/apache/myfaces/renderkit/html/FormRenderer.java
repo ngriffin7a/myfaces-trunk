@@ -63,27 +63,6 @@ public class FormRenderer
         return TYPE;
     }
 
-    /*
-    public boolean supportsComponentType(String s)
-    {
-        return s.equals(UIForm.TYPE);
-    }
-
-    public boolean supportsComponentType(UIComponent uicomponent)
-    {
-        return uicomponent instanceof UIForm;
-    }
-
-    protected void initAttributeDescriptors()
-    {
-        addAttributeDescriptors(UIForm.TYPE, TLD_HTML_URI, "form", HTML_UNIVERSAL_ATTRIBUTES);
-        addAttributeDescriptors(UIForm.TYPE, TLD_HTML_URI, "form", HTML_EVENT_HANDLER_ATTRIBUTES);
-        addAttributeDescriptors(UIForm.TYPE, TLD_HTML_URI, "form", HTML_FORM_ATTRIBUTES);
-        addAttributeDescriptors(UIForm.TYPE, TLD_HTML_URI, "form", FORM_FORM_ATTRIBUTES);
-        addAttributeDescriptors(UIForm.TYPE, TLD_HTML_URI, "form", USER_ROLE_ATTRIBUTES);
-    }
-    */
-
 
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
             throws IOException

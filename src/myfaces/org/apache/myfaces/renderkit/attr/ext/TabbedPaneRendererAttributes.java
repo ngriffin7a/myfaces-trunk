@@ -19,16 +19,18 @@
 package net.sourceforge.myfaces.renderkit.attr.ext;
 
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.KeyBundleAttributes;
 
 /**
  * Constant definitions for the specified render dependent attributes of the
- * "Navigation" renderer type.
+ * "TabbedPane" renderer type.
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public interface TabbedPaneRendererAttributes
-    extends CommonRendererAttributes
+    extends CommonRendererAttributes, KeyBundleAttributes
 {
-    public static final String ACTIVE_HEADER_CLASS_ATTR     = "activeHeaderClass";
-    public static final String INACTIVE_HEADER_CLASS_ATTR   = "inactiveHeaderClass";
+    public static final String SELECTED_INDEX_ATTR  = "selectedIndex";
+
+    public static final String LABEL_ATTR   = "label";
 }

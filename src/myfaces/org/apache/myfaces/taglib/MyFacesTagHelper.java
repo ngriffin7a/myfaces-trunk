@@ -172,6 +172,25 @@ public class MyFacesTagHelper
         }
     }
 
+    protected void setComponentPropertyInteger(String attrName, Object attrValue)
+    {
+        Object val = evaluateSimpleELExpression(attrValue);
+        if (val instanceof Integer)
+        {
+            setComponentPropertyObject(attrName, val);
+        }
+        else if (val instanceof Number)
+        {
+            setComponentPropertyObject(attrName,
+                                       new Integer(((Number)val).intValue()));
+        }
+        else
+        {
+            setComponentPropertyObject(attrName,
+                                       new Integer(val.toString()));
+        }
+    }
+
 
 
     private void internalSetRendererAttribute(String attrName, Object attrValue)

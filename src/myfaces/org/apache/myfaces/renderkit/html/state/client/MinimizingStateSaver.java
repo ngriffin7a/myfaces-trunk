@@ -324,6 +324,7 @@ public class MinimizingStateSaver
             //lucky, we have a converter  :-)
             try
             {
+                //TODO: Whenever using a converter for state saving we should wrap the facesContext to return a fixed locale and apply a dummy component
                 strValue = conv.getAsString(facesContext, uiComponent, propValue);
             }
             catch (ConverterException e)
