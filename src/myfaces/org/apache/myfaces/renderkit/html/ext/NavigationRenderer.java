@@ -145,6 +145,12 @@ public class NavigationRenderer
         indent(writer, level);
     }
 
+    protected void closeColumn(ResponseWriter writer)
+        throws IOException
+    {
+        writer.write("</td>");
+    }
+
     protected void indent(ResponseWriter writer, int level)
         throws IOException
     {
@@ -161,7 +167,8 @@ public class NavigationRenderer
                                UIComponent uiComponent) throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
-        writer.write("</td></tr>");
+        closeColumn(writer);
+        writer.write("</tr>");
     }
 
 
