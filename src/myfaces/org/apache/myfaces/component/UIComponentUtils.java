@@ -20,7 +20,7 @@ package net.sourceforge.myfaces.component;
 
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
-import net.sourceforge.myfaces.tree.TreeUtils;
+import net.sourceforge.myfaces.util.DebugUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -171,7 +171,7 @@ public class UIComponentUtils
         try
         {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            TreeUtils.printComponent(comp, new PrintStream(baos));
+            DebugUtils.printComponent(comp, new PrintStream(baos));
             baos.close();
             return baos.toString();
         }

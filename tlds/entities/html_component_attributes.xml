@@ -1,0 +1,7 @@
+<!-- JSF common HtmlXxx component attributes -->
+        <attribute>
+            <name>styleClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>Corresponds to the HTML class attribute.</description>
+        </attribute>

@@ -69,7 +69,15 @@
         &ui_output_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
+        &html_component_attributes;
         &user_role_attributes;
+        <!-- HtmlOutputText attributes -->
+        <attribute>
+            <name>escape</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>Indicates whether rendered markup should be escaped.</description>
+        </attribute>
     </tag>
 
 <!-- form -->
@@ -81,6 +89,7 @@
         &ui_form_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
+        &html_component_attributes;
         &html_form_attributes;
         &user_role_attributes;
     </tag>
@@ -95,25 +104,28 @@
         &html_input_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
-        <attribute>
-            <name>maxlength</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
+        &html_component_attributes;
         &user_role_attributes;
+        <!-- HtmlInputText attributes -->
+        <attribute>
+            <name>escape</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>Indicates whether rendered markup should be escaped.</description>
+        </attribute>
     </tag>
 
-<!-- input_text -->
+<!-- output_message -->
     <tag>
-        <name>message</name>
-        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlMessageTag</tag-class>
+        <name>output_message</name>
+        <tag-class>net.sourceforge.myfaces.taglib.html.HtmlOutputMessageTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_message_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
         &user_role_attributes;
-        <!-- JSF HtmlMessage attributes -->
+        <!-- HtmlOutputMessage attributes -->
         <attribute>
             <name>errorClass</name>
             <required>false</required>
@@ -519,24 +531,6 @@
         &key_bundle_attributes;
         &user_role_attributes;
     </tag>
-
-<!-- output_message -->
-    <tag>
-        <name>output_message</name>
-        <tag-class>net.sourceforge.myfaces.taglib.legacy.OutputMessageTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-        &ui_output_attributes;
-        &converter_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        <!-- MessageRenderer attributes -->
-        &key_bundle_attributes;
-        &user_role_attributes;
-    </tag>
-
-<!-- output_number -->
-    <!-- TODO -->
 
 <!-- output_time -->
     <tag>

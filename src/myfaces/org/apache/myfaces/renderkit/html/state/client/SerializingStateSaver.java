@@ -66,7 +66,7 @@ public class SerializingStateSaver
 //        {
 //            Tree tree = facesContext.getTree();
 //
-//            if (log.isTraceEnabled()) DebugUtils.logTree(log, tree, "Tree to serialize");
+//            if (log.isTraceEnabled()) DebugUtils.traceView(log, tree, "Tree to serialize");
 //
 //            //discard internal attributes ("javax.*" and "net.sourceforge.*")
 //            StateUtils.discardInternalAttributes(facesContext, tree);

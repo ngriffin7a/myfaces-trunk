@@ -1,22 +1,8 @@
-<!-- JSF UIGraphic attributes -->
+<!-- UIGraphic attributes -->
         <attribute>
-            <name>url</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>URL of the image (see JSF.4.3).</description>
-        </attribute>
-        <attribute>
-            <name>valueRef</name>
+            <name>URL</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
             <type>java.lang.String</type>
-            <description>Reference to a bean or a bean property that gives the URL.</description>
-        </attribute>
-        <attribute>
-            <name>graphicClass</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>Corresponds to the HTML class attribute.</description>
+            <description>URL of the image (see JSF.4.1.5).</description>
         </attribute>

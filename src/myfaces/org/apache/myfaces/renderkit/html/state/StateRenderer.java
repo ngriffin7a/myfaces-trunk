@@ -127,7 +127,7 @@ public class StateRenderer
         {
             log.error("IOException when restoring state.", e);
         }
-        if (log.isTraceEnabled()) DebugUtils.logTree(log, "Current tree after restoring state");
+        if (log.isTraceEnabled()) DebugUtils.traceView(log, "Current tree after restoring state");
         FacesUtils.getRequestMap(facesContext).put(StateRestorer.STATE_RESTORER_REQUEST_ATTR, _stateRestorer);
     }
 
@@ -176,7 +176,7 @@ public class StateRenderer
     {
         if (_stateSaver == null) init(facesContext);
         _stateSaver.release(facesContext);
-        if (log.isTraceEnabled()) DebugUtils.logTree(log, "Current tree after saving state");
+        if (log.isTraceEnabled()) DebugUtils.traceView(log, "Current tree after saving state");
     }
 
 }

@@ -45,6 +45,11 @@
     <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlForm</component-class>
   </component>
 
+  <component>
+    <component-type>CommandButton</component-type>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlCommandButton</component-class>
+  </component>
+
     <!--
   <component>
     <component-type>Column</component-type>
@@ -406,10 +411,16 @@
           <supported-component-type><component-type>Form</component-type></supported-component-type>
       </renderer>
 
+      <renderer>
+          <renderer-type>Message</renderer-type>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.HtmlMessageRenderer</renderer-class>
+          <supported-component-type><component-type>Form</component-type></supported-component-type>
+      </renderer>
+
       <!--
       <renderer>
           <renderer-type>Button</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.ButtonRenderer</renderer-class>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.legacy.ButtonRenderer</renderer-class>
             <supported-component-type>
                 <component-type>Command</component-type>
             </supported-component-type>
@@ -458,7 +469,7 @@
 
       <renderer>
           <renderer-type>Errors</renderer-type>
-          <renderer-class>net.sourceforge.myfaces.renderkit.html.ErrorsRenderer</renderer-class>
+          <renderer-class>net.sourceforge.myfaces.renderkit.html.legacy.ErrorsRenderer</renderer-class>
             <supported-component-type>
                 <component-type>Output</component-type>
             </supported-component-type>

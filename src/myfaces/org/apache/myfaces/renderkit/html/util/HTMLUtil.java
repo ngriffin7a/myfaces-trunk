@@ -255,7 +255,7 @@ public class HTMLUtil
     }
 
 
-    /**@deprecated */
+    /**@deprecated use {@link #renderDisabledOnUserRole(javax.faces.context.ResponseWriter, javax.faces.component.UIComponent, javax.faces.context.FacesContext)} instead*/
     public static void renderDisabledOnUserRole(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {

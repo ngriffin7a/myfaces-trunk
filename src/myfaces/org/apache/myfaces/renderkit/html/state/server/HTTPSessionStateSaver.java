@@ -18,26 +18,10 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state.server;
 
-import net.sourceforge.myfaces.component.ext.UISaveState;
-import net.sourceforge.myfaces.renderkit.html.state.ModelValueEntry;
 import net.sourceforge.myfaces.renderkit.html.state.StateSaver;
-import net.sourceforge.myfaces.renderkit.html.state.StateUtils;
-import net.sourceforge.myfaces.tree.TreeUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
-import javax.faces.FactoryFinder;
-import javax.faces.application.ApplicationFactory;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.el.ValueBinding;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 
 /**
  * DOCUMENT ME!

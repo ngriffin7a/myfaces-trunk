@@ -1,38 +1,31 @@
-<!-- JSF standard component attributes -->
+<!-- UIComponent attributes -->
         <attribute>
             <name>id</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
             <description>Every component may have an unique id. Automatically created if omitted.</description>
         </attribute>
         <attribute>
             <name>rendered</name>
             <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
             <description>If false, this component will not be rendered.</description>
         </attribute>
         <attribute>
             <name>rendererType</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
             <description>Override default rendererType.</description>
         </attribute>
+
+<!-- UIComponentBase attributes -->
         <attribute>
             <name>transient</name>
             <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
             <description>If true, this component will not be saved during state saving.</description>
-        </attribute>
-
-        <attribute>
-            <name>styleClass</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>Corresponds to the HTML class attribute.</description>
-        </attribute>
-        <attribute>
-            <name>escape</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <description>Indicates whether rendered markup should be escaped.</description>
         </attribute>

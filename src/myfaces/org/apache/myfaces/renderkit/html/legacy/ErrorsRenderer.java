@@ -16,9 +16,12 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.html;
+package net.sourceforge.myfaces.renderkit.html.legacy;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
+import net.sourceforge.myfaces.renderkit.html.HTML;
+import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
+import net.sourceforge.myfaces.renderkit.html.LabelRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.NullIterator;
@@ -44,7 +47,7 @@ import java.util.Map;
  * @version $Revision$ $Date$
  */
 public class ErrorsRenderer
-extends HtmlRenderer
+    extends HtmlRenderer
 {
     //~ Static fields/initializers -----------------------------------------------------------------
     private static final Log log = LogFactory.getLog(ErrorsRenderer.class);
