@@ -18,9 +18,13 @@
  */
 package net.sourceforge.myfaces.examples.listexample;
 
+import javax.faces.component.UIOutput;
+import javax.faces.context.FacesContext;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * DOCUMENT ME!

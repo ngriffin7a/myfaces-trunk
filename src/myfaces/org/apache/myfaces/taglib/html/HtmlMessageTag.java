@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.taglib.html;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.html.HtmlMessage;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -33,7 +34,7 @@ public class HtmlMessageTag
 
     public String getComponentType()
     {
-        return "javax.faces.Message";
+        return HtmlMessage.COMPONENT_TYPE;
     }
 
     public String getDefaultRendererType()

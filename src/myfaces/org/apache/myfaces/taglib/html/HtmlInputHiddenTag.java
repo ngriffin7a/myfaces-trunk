@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.taglib.html;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.html.HtmlInputHidden;
 
 
 /**
@@ -34,7 +35,7 @@ public class HtmlInputHiddenTag
 {
     public String getComponentType()
     {
-        return "javax.faces.InputHidden";
+        return HtmlInputHidden.COMPONENT_TYPE;
     }
 
     public String getDefaultRendererType()

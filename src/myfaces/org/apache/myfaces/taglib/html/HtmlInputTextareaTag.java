@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.html.HtmlInputTextarea;
 
 
 /**
@@ -34,7 +35,7 @@ public class HtmlInputTextareaTag
 {
     public String getComponentType()
     {
-        return "javax.faces.InputTextarea";
+        return HtmlInputTextarea.COMPONENT_TYPE;
     }
 
     public String getDefaultRendererType()

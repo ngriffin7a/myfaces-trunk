@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.html.HtmlCommandLink;
 
 
 /**
@@ -37,7 +38,7 @@ public class HtmlCommandLinkTag
 
     public String getComponentType()
     {
-        return "javax.faces.CommandLink";
+        return HtmlCommandLink.COMPONENT_TYPE;
     }
 
     public String getDefaultRendererType()

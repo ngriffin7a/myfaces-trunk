@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.html.HtmlSelectManyCheckbox;
 
 
 /**
@@ -35,7 +36,7 @@ public class HtmlSelectManyCheckboxTag
 {
     public String getComponentType()
     {
-        return "javax.faces.SelectManyCheckbox";
+        return HtmlSelectManyCheckbox.COMPONENT_TYPE;
     }
 
     public String getDefaultRendererType()

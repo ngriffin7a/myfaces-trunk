@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.html.HtmlDataTable;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
@@ -34,7 +35,7 @@ public class HtmlDataTableTag
 
     protected String getDefaultRendererType()
     {
-        return "javax.faces.Table";
+        return HtmlDataTable.COMPONENT_TYPE;
     }
 
     public String getComponentType()

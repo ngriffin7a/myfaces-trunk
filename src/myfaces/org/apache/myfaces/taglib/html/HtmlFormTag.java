@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.taglib.html;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.html.HtmlForm;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -33,7 +34,7 @@ public class HtmlFormTag
 
     public String getComponentType()
     {
-        return "javax.faces.Form";
+        return HtmlForm.COMPONENT_TYPE;
     }
 
     protected String getDefaultRendererType()

@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.taglib.html;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.html.HtmlOutputLink;
 
 
 /**
@@ -34,7 +35,7 @@ public class HtmlOutputLinkTag
 {
     public String getComponentType()
     {
-        return "javax.faces.OutputLink";
+        return HtmlOutputLink.COMPONENT_TYPE;
     }
 
     public String getDefaultRendererType()

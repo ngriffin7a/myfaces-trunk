@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.html.HtmlPanelGrid;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -34,7 +35,7 @@ public class HtmlPanelGridTag
 
     protected String getDefaultRendererType()
     {
-        return "javax.faces.Grid";
+        return HtmlPanelGrid.COMPONENT_TYPE;
     }
 
     public String getComponentType()

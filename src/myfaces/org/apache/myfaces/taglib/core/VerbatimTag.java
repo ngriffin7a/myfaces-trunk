@@ -37,7 +37,7 @@ public class VerbatimTag
 
     public String getComponentType()
     {
-        return "javax.faces.OutputText";
+        return "javax.faces.Output";
     }
 
     protected String getDefaultRendererType()

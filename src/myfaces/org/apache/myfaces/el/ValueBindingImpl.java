@@ -110,7 +110,7 @@ public class ValueBindingImpl extends ValueBinding implements StateHolder
         }
         _application = application;
         _expressionString  = expression;
-        
+
         Object parsedExpression = s_expressions.get(expression);
         if (!(parsedExpression instanceof Expression))
         {

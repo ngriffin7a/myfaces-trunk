@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.taglib.html;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.html.HtmlOutputText;
 
 
 /**
@@ -33,7 +34,7 @@ public class HtmlOutputTextTag
 {
     public String getComponentType()
     {
-        return "javax.faces.OutputText";
+        return HtmlOutputText.COMPONENT_TYPE;
     }
 
     public String getDefaultRendererType()

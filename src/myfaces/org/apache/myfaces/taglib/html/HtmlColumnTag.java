@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.html;
 
+import javax.faces.component.UIColumn;
 
 
 /**
@@ -36,7 +37,7 @@ public class HtmlColumnTag
 
     public String getComponentType()
     {
-        return "javax.faces.Column";
+        return UIColumn.COMPONENT_TYPE;
     }
 
     // UIComponent attributes --> already implemented in MyfacesComponentTag

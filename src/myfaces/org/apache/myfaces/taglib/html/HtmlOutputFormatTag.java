@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.taglib.html;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.html.HtmlOutputFormat;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -33,7 +34,7 @@ public class HtmlOutputFormatTag
 
     public String getComponentType()
     {
-        return "javax.faces.OutputFormat";
+        return HtmlOutputFormat.COMPONENT_TYPE;
     }
 
     public String getDefaultRendererType()

@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib.html;
 
+import javax.faces.component.html.HtmlPanelGroup;
+
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
@@ -29,7 +31,7 @@ public class HtmlPanelGroupTag
 
     protected String getDefaultRendererType()
     {
-        return "javax.faces.Group";
+        return HtmlPanelGroup.COMPONENT_TYPE;
     }
 
     public String getComponentType()

@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib.html;
 
+import javax.faces.component.html.HtmlSelectOneListbox;
+
 /**
  * DOCUMENT ME!
  * @author Martin Marinschek (latest modification by $Author$)
@@ -28,7 +30,7 @@ public class HtmlSelectOneListboxTag
 {
     public String getComponentType()
     {
-        return "javax.faces.SelectOneListbox";
+        return HtmlSelectOneListbox.COMPONENT_TYPE;
     }
 
     public String getDefaultRendererType()

@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.html.HtmlOutputLabel;
 
 
 /**
@@ -35,7 +36,7 @@ public class HtmlOutputLabelTag
 {
     public String getComponentType()
     {
-        return "javax.faces.OutputLabel";
+        return HtmlOutputLabel.COMPONENT_TYPE;
     }
 
     public String getDefaultRendererType()
