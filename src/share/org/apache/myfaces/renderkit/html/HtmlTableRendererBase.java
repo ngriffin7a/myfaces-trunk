@@ -19,6 +19,7 @@ import org.apache.myfaces.renderkit.JSFAttr;
 import org.apache.myfaces.renderkit.RendererUtils;
 import org.apache.myfaces.util.ArrayUtils;
 import org.apache.myfaces.util.StringUtils;
+import org.apache.myfaces.component.UIColumns;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,6 +40,9 @@ import java.util.List;
  *
  *
  *          $Log$
+ *          Revision 1.9  2005/03/29 11:40:50  matzew
+ *          added new crosstable component (x:columns). Contributed by Mathias Broekelmann
+ *
  *          Revision 1.8  2005/02/11 16:03:00  mmarinschek
  *          solve bug in tabbed panel when datatable was displayed not on tab, but at the bottom of the datatable...
  *
@@ -148,10 +152,24 @@ public class HtmlTableRendererBase extends HtmlRenderer
             for (int j = 0, size = component.getChildCount(); j < size; j++)
             {
                 UIComponent child = (UIComponent) children.get(j);
-                if (child instanceof UIColumn && ((UIColumn) child).isRendered())
+                if(child.isRendered())
                 {
-                	String columnStyle = styles.getColumnStyle(j);
-                    renderColumnBody(facesContext, writer, uiData, (UIColumn) child, columnStyle);
+                    if (child instanceof UIColumn)
+                    {
+                        String columnStyle = styles.getColumnStyle(j);
+                          renderColumnBody(facesContext, writer, uiData, child, columnStyle);
+                    }
+                    else if (child instanceof UIColumns)
+                    {
+                        UIColumns columns = (UIColumns) child;
+                        for (int k = 0, colSize = columns.getRowCount(); k < colSize; k++)
+                        {
+                            columns.setRowIndex(k);
+                            String columnStyle = styles.getColumnStyle(j);
+                            renderColumnBody(facesContext, writer, uiData, child, columnStyle);
+                        }
+                        columns.setRowIndex(-1);
+                    }
                 }
             }
             renderRowEnd(facesContext, writer, uiData);
@@ -166,7 +184,7 @@ public class HtmlTableRendererBase extends HtmlRenderer
      * @param facesContext the <code>FacesContext</code>.
      * @param writer the <code>ResponseWriter</code>.
      * @param uiData the <code>UIData</code> being rendered.
-     * @param column the <code>UIColumn</code> to render.
+     * @param component the <code>UIComponent</code> to render.
      * @param columnStyleClass the styleClass of the <code>UIColumn</code> or <code>null</code> if
      * there is none.
      * @throws IOException if an exception occurs.
@@ -175,7 +193,7 @@ public class HtmlTableRendererBase extends HtmlRenderer
 		FacesContext facesContext,
 		ResponseWriter writer,
 		UIData uiData,
-		UIColumn column,
+		UIComponent component,
 		String columnStyleClass) throws IOException
 	{
 		writer.startElement(HTML.TD_ELEM, uiData);
@@ -184,7 +202,7 @@ public class HtmlTableRendererBase extends HtmlRenderer
 			writer.writeAttribute(HTML.CLASS_ATTR, columnStyleClass, null);
 		}
 		
-        RendererUtils.renderChild(facesContext, column);
+        RendererUtils.renderChild(facesContext, component);
         writer.endElement(HTML.TD_ELEM);
 	}
     
@@ -291,14 +309,26 @@ public class HtmlTableRendererBase extends HtmlRenderer
         for (Iterator it = component.getChildren().iterator(); it.hasNext();)
         {
             UIComponent uiComponent = (UIComponent) it.next();
-            if (uiComponent instanceof UIColumn && ((UIColumn) uiComponent).isRendered())
+            if(uiComponent.isRendered())
             {
-                colspan++;
-                if (!hasColumnFacet)
-                {
-                    hasColumnFacet = header ? ((UIColumn) uiComponent).getHeader() != null : ((UIColumn) uiComponent)
-                            .getFooter() != null;
-                }
+              if (uiComponent instanceof UIColumn)
+              {
+                  colspan++;
+                  if (!hasColumnFacet)
+                  {
+                      hasColumnFacet = header ? ((UIColumn) uiComponent).getHeader() != null : ((UIColumn) uiComponent)
+                              .getFooter() != null;
+                  }
+              }
+              else if (uiComponent instanceof UIColumns)
+              {
+                  UIColumns columns = (UIColumns) uiComponent;
+                  colspan += columns.getRowCount();
+                  if (!hasColumnFacet)
+                  {
+                      hasColumnFacet = header ? columns.getHeader() != null : columns.getFooter() != null;
+                  }
+              }
             }
         }
 
@@ -420,8 +450,8 @@ public class HtmlTableRendererBase extends HtmlRenderer
         writer.endElement(HTML.TR_ELEM);
     }
 
-    private void renderColumnHeaderOrFooterRow(FacesContext facesContext, ResponseWriter writer, UIComponent component,
-            String styleClass, boolean header) throws IOException
+    private void renderColumnHeaderOrFooterRow(FacesContext facesContext, ResponseWriter writer, 
+            UIComponent component, String styleClass, boolean header) throws IOException
     {
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
 
@@ -429,35 +459,76 @@ public class HtmlTableRendererBase extends HtmlRenderer
         for (Iterator it = component.getChildren().iterator(); it.hasNext();)
         {
             UIComponent uiComponent = (UIComponent) it.next();
-            if (uiComponent instanceof UIColumn && ((UIColumn) uiComponent).isRendered())
+            if(uiComponent.isRendered())
             {
-                if (header)
-                {
-                    renderColumnHeaderCell(facesContext, writer, (UIColumn) uiComponent, styleClass, 0);
-                }
-                else
-                {
-                    renderColumnFooterCell(facesContext, writer, (UIColumn) uiComponent, styleClass, 0);
-                }
+              if (uiComponent instanceof UIColumn)
+              {
+                  if (header)
+                  {
+                      renderColumnHeaderCell(facesContext, writer, uiComponent, 
+                          ((UIColumn) uiComponent).getHeader(), styleClass, 0);
+                  }
+                  else
+                  {
+                      renderColumnFooterCell(facesContext, writer, uiComponent, 
+                          ((UIColumn) uiComponent).getFooter(), styleClass, 0);
+                  }
+              }
+              else if (uiComponent instanceof UIColumns)
+              {
+                  UIColumns columns = (UIColumns) uiComponent;
+                  for (int i = 0, size = columns.getRowCount(); i < size; i++)
+                  {
+                      columns.setRowIndex(i);
+                      if (header)
+                      {
+                          renderColumnHeaderCell(facesContext, writer, columns, columns.getHeader(),
+                              styleClass, 0);
+                      }
+                      else
+                      {
+                          renderColumnFooterCell(facesContext, writer, columns, columns.getFooter(),
+                              styleClass, 0);
+                      }
+                  }
+                  columns.setRowIndex(-1);
+              }
             }
         }
         writer.endElement(HTML.TR_ELEM);
     }
 
-	/**
+    /**
+     * Renders the header facet for the given <code>UIColumn</code>.
+     * @param facesContext the <code>FacesContext</code>.
+     * @param writer the <code>ResponseWriter</code>.
+     * @param uiColumn the <code>UIColumn</code>.
+     * @param headerStyleClass the styleClass of the header facet.
+     * @param colspan the colspan for the tableData element in which the header facet
+     * will be wrapped.
+     * @throws IOException
+     */
+    protected void renderColumnHeaderCell(FacesContext facesContext, ResponseWriter writer, UIColumn uiColumn, 
+            String headerStyleClass, int colspan) throws IOException
+    {
+      renderColumnHeaderCell(facesContext, writer, uiColumn, uiColumn.getHeader(), headerStyleClass, colspan);
+    }
+
+    /**
 	 * Renders the header facet for the given <code>UIColumn</code>.
 	 * @param facesContext the <code>FacesContext</code>.
 	 * @param writer the <code>ResponseWriter</code>.
-	 * @param uiColumn the <code>UIColumn</code>.
+	 * @param uiComponent the <code>UIComponent</code> to render the facet for.
+     * @param facet the <code>UIComponent</code> to render as facet.
 	 * @param headerStyleClass the styleClass of the header facet.
 	 * @param colspan the colspan for the tableData element in which the header facet
 	 * will be wrapped.
 	 * @throws IOException
 	 */
-    protected void renderColumnHeaderCell(FacesContext facesContext, ResponseWriter writer, UIColumn uiColumn,
-            String headerStyleClass, int colspan) throws IOException
+    protected void renderColumnHeaderCell(FacesContext facesContext, ResponseWriter writer, UIComponent uiComponent, 
+            UIComponent facet, String headerStyleClass, int colspan) throws IOException
     {
-        writer.startElement(HTML.TH_ELEM, uiColumn);
+        writer.startElement(HTML.TH_ELEM, uiComponent);
         if (colspan > 1)
         {
             writer.writeAttribute(HTML.COLSPAN_ATTR, new Integer(colspan), null);
@@ -466,7 +537,6 @@ public class HtmlTableRendererBase extends HtmlRenderer
         {
             writer.writeAttribute(HTML.CLASS_ATTR, headerStyleClass, null);
         }
-        UIComponent facet = uiColumn.getHeader();
         if (facet != null)
         {
             RendererUtils.renderChild(facesContext, facet);
@@ -474,20 +544,37 @@ public class HtmlTableRendererBase extends HtmlRenderer
         writer.endElement(HTML.TH_ELEM);
     }
 
+    /**
+     * Renders the footer facet for the given <code>UIColumn</code>.
+     * @param facesContext the <code>FacesContext</code>.
+     * @param writer the <code>ResponseWriter</code>.
+     * @param uiColumn the <code>UIComponent</code>.
+     * @param footerStyleClass the styleClass of the footer facet.
+     * @param colspan the colspan for the tableData element in which the footer facet
+     * will be wrapped.
+     * @throws IOException
+     */
+    protected void renderColumnFooterCell(FacesContext facesContext, ResponseWriter writer, UIColumn uiColumn, 
+        String footerStyleClass, int colspan) throws IOException
+    {      
+      renderColumnFooterCell(facesContext, writer, uiColumn, uiColumn.getFooter(), footerStyleClass, colspan);
+    }
+    
 	/**
 	 * Renders the footer facet for the given <code>UIColumn</code>.
 	 * @param facesContext the <code>FacesContext</code>.
 	 * @param writer the <code>ResponseWriter</code>.
-	 * @param uiColumn the <code>UIColumn</code>.
+	 * @param uiComponent the <code>UIComponent</code> to render the facet for.
+     * @param facet the <code>UIComponent</code> to render as facet.
 	 * @param footerStyleClass the styleClass of the footer facet.
 	 * @param colspan the colspan for the tableData element in which the footer facet
 	 * will be wrapped.
 	 * @throws IOException
 	 */
-    protected void renderColumnFooterCell(FacesContext facesContext, ResponseWriter writer, UIColumn uiColumn,
-            String footerStyleClass, int colspan) throws IOException
+    protected void renderColumnFooterCell(FacesContext facesContext, ResponseWriter writer, UIComponent uiComponent, 
+        UIComponent facet, String footerStyleClass, int colspan) throws IOException
     {
-        writer.startElement(HTML.TD_ELEM, uiColumn);
+        writer.startElement(HTML.TD_ELEM, uiComponent);
         if (colspan > 1)
         {
             writer.writeAttribute(HTML.COLSPAN_ATTR, new Integer(colspan), null);
@@ -496,7 +583,6 @@ public class HtmlTableRendererBase extends HtmlRenderer
         {
             writer.writeAttribute(HTML.CLASS_ATTR, footerStyleClass, null);
         }
-        UIComponent facet = uiColumn.getFooter();
         if (facet != null)
         {
             RendererUtils.renderChild(facesContext, facet);

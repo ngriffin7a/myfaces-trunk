@@ -13,6 +13,7 @@ Changes in Release 1.0.9
 * added caching to the ExtensionsFilter
 * rename x:htmlEditor to x:inputHtml
 * add a fallback textarea mode to inputHtml
+* added crosstable component (x:columns)
 * closed MYFACES-38 in Jira
 * closed MYFACES-85 in Jira
 * closed MYFACES-96 in Jira (Jason Hoo)

@@ -241,7 +241,15 @@
         <managed-bean-class>java.util.HashMap</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
+    
+    
+    <!-- Managed Beans for crosstable example -->
 
+    <managed-bean>
+        <managed-bean-name>crossDataTable</managed-bean-name>
+        <managed-bean-class>org.apache.myfaces.examples.crosstable.DataBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
 
 
     <navigation-rule>
@@ -411,6 +419,11 @@
         <navigation-case>
             <from-outcome>go_selectOneCountry</from-outcome>
             <to-view-id>/selectOneCountry.jsp</to-view-id>
+        </navigation-case>
+
+        <navigation-case>
+            <from-outcome>go_crossDataTable</from-outcome>
+            <to-view-id>/crossDataTable.jsp</to-view-id>
         </navigation-case>
 
     </navigation-rule>

@@ -17,6 +17,7 @@ package org.apache.myfaces.component.html.ext;
 
 import org.apache.myfaces.component.UserRoleAware;
 import org.apache.myfaces.component.UserRoleUtils;
+import org.apache.myfaces.component.UIColumns;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -28,6 +29,7 @@ import javax.faces.event.AbortProcessingException;
 import javax.faces.event.FacesEvent;
 import javax.faces.model.DataModel;
 import javax.faces.render.Renderer;
+
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.util.Iterator;
@@ -39,6 +41,9 @@ import java.util.Map;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.20  2005/03/29 11:40:50  matzew
+ * added new crosstable component (x:columns). Contributed by Mathias Broekelmann
+ *
  * Revision 1.19  2005/03/21 12:33:46  svieujot
  * Set x:dataTable preserveDataModel default value to false.
  *
@@ -93,6 +98,10 @@ public class HtmlDataTable
         implements UserRoleAware
 {
     private static final Log log = LogFactory.getLog(HtmlDataTable.class);
+
+    private static final int PROCESS_DECODES = 1;
+    private static final int PROCESS_VALIDATORS = 2;
+    private static final int PROCESS_UPDATES = 3;
 
     private static final boolean DEFAULT_SORTASCENDING = true;
     private static final Class OBJECT_ARRAY_CLASS = (new Object[0]).getClass();
@@ -186,12 +195,122 @@ public class HtmlDataTable
 
     public void processDecodes(FacesContext context)
     {
+        if(!isRendered())
+        {
+          return;
+        }
         super.processDecodes(context);
+        setRowIndex(-1);
+        processColumnsFacets(context, PROCESS_DECODES);
+        processColumnsChildren(context, PROCESS_DECODES);
+        setRowIndex(-1);
+    }
+
+    /**
+     * @param context
+     * @param processAction
+     */
+    private void processColumnsChildren(FacesContext context, int processAction)
+    {
+      int first = getFirst();
+      int rows = getRows();
+      int last;
+      if (rows == 0)
+      {
+        last = getRowCount();
+      }
+      else
+      {
+        last = first + rows;
+      }
+      for (int rowIndex = first; rowIndex < last; rowIndex++)
+      {
+        setRowIndex(rowIndex);
+        if (isRowAvailable())
+        {
+          for (Iterator it = getChildren().iterator(); it.hasNext();)
+          {
+            UIComponent child = (UIComponent) it.next();
+            if (child instanceof UIColumns)
+            {
+              if (child.isRendered())
+              {
+                UIColumns columns = (UIColumns) child;
+                for (int colIndex = 0, size = columns.getRowCount(); colIndex < size; colIndex++)
+                {
+                  columns.setRowIndex(colIndex);
+                  for (Iterator columnChildIter = child.getChildren().iterator(); columnChildIter
+                      .hasNext();)
+                  {
+                    UIComponent columnChild = (UIComponent) columnChildIter.next();
+                    process(context, columnChild, processAction);
+                  }
+                }
+                columns.setRowIndex(-1);
+              }
+            }
+          }
+        }
+      }
+    }
+
+
+    /**
+     * @param context
+     * @param processAction
+     */
+    private void processColumnsFacets(FacesContext context, int processAction)
+    {
+      for (Iterator childIter = getChildren().iterator(); childIter.hasNext();)
+      {
+        UIComponent child = (UIComponent) childIter.next();
+        if (child instanceof UIColumns)
+        {
+          if(child.isRendered())
+          {
+            UIColumns columns = (UIColumns) child;
+            for (int i = 0, size = columns.getRowCount(); i < size; i++)
+            {
+              columns.setRowIndex(i);
+              for (Iterator facetsIter = child.getFacets().values().iterator(); facetsIter.hasNext();)
+              {
+                UIComponent facet = (UIComponent) facetsIter.next();
+                process(context, facet, processAction);
+              }
+            }
+            columns.setRowIndex(-1);
+          }
+        }
+      }
+    }
+
+    private void process(FacesContext context, UIComponent component, int processAction)
+    {
+      switch (processAction)
+      {
+        case PROCESS_DECODES :
+          component.processDecodes(context);
+          break;
+        case PROCESS_VALIDATORS :
+          component.processValidators(context);
+          break;
+        case PROCESS_UPDATES :
+          component.processUpdates(context);
+          break;
+      }
     }
 
     public void processValidators(FacesContext context)
     {
-        super.processValidators(context);
+      if(!isRendered())
+      {
+        return;
+      }
+      super.processValidators(context);
+      setRowIndex(-1);
+      processColumnsFacets(context, PROCESS_VALIDATORS);
+      processColumnsChildren(context, PROCESS_VALIDATORS);
+      setRowIndex(-1);
     }
 
     public Object processSaveState(FacesContext context)
@@ -206,7 +325,15 @@ public class HtmlDataTable
 
     public void processUpdates(FacesContext context)
     {
+        if(!isRendered())
+        {
+          return;
+        }
         super.processUpdates(context);
+        setRowIndex(-1);
+        processColumnsFacets(context, PROCESS_UPDATES);
+        processColumnsChildren(context, PROCESS_UPDATES);
+        setRowIndex(-1);
 
         if (_isDataModelRestored)
         {
