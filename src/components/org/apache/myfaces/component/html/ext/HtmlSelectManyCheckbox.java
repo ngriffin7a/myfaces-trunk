@@ -28,6 +28,9 @@ import javax.faces.el.ValueBinding;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/05/18 14:31:36  manolito
+ * user role support completely moved to components source tree
+ *
  * Revision 1.1  2004/04/02 13:57:09  manolito
  * extended HtmlSelectManyCheckbox with layout "spread" and custom Checkbox component
  *
@@ -75,7 +78,7 @@ public class HtmlSelectManyCheckbox
 
     public boolean isRendered()
     {
-        if (!UserRoleUtils.isUserInRole(this)) return false;
+        if (!UserRoleUtils.isVisibleOnUserRole(this)) return false;
         return super.isRendered();
     }
 

@@ -18,10 +18,10 @@
  */
 package net.sourceforge.myfaces.renderkit.html.ext;
 
+import net.sourceforge.myfaces.component.UserRoleUtils;
 import net.sourceforge.myfaces.custom.checkbox.HtmlCheckbox;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HtmlCheckboxRendererBase;
-import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
@@ -38,6 +38,9 @@ import java.util.Set;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/05/18 14:31:38  manolito
+ * user role support completely moved to components source tree
+ *
  * Revision 1.2  2004/04/05 09:11:03  manolito
  * extended exception messages
  *
@@ -59,7 +62,7 @@ public class HtmlCheckboxRenderer
 
         if (component instanceof HtmlCheckbox)
         {
-            renderCheckbox(context, (HtmlCheckbox)component);
+            renderSingleCheckbox(context, (HtmlCheckbox)component);
         }
         else if (component instanceof UISelectMany)
         {
@@ -80,7 +83,7 @@ public class HtmlCheckboxRenderer
     }
 
 
-    private void renderCheckbox(FacesContext facesContext, HtmlCheckbox checkbox) throws IOException
+    private void renderSingleCheckbox(FacesContext facesContext, HtmlCheckbox checkbox) throws IOException
     {
         String forAttr = checkbox.getFor();
         if (forAttr == null)
@@ -135,10 +138,23 @@ public class HtmlCheckboxRenderer
         //TODO: we must cache this Set!
         Set lookupSet = RendererUtils.getSelectedValuesAsSet(uiSelectMany);
 
-        HtmlRendererUtils.renderCheckbox(facesContext,
-                                         uiSelectMany,
-                                         itemStrValue,
-                                         selectItem.getLabel(),
-                                         lookupSet.contains(itemValue));
+        renderCheckbox(facesContext,
+                       uiSelectMany,
+                       itemStrValue,
+                       selectItem.getLabel(),
+                       lookupSet.contains(itemValue));
+    }
+
+
+    protected boolean isDisabled(FacesContext facesContext, UIComponent uiComponent)
+    {
+        if (!UserRoleUtils.isEnabledOnUserRole(uiComponent))
+        {
+            return false;
+        }
+        else
+        {
+            return super.isDisabled(facesContext, uiComponent);
+        }
     }
 }

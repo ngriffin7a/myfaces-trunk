@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.custom.calendar;
 
-import net.sourceforge.myfaces.renderkit.JSFAttr;
+import net.sourceforge.myfaces.component.UserRoleAware;
 import net.sourceforge.myfaces.taglib.html.HtmlInputTagBase;
 
 import javax.faces.component.UIComponent;
@@ -27,6 +27,9 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/05/18 14:31:36  manolito
+ * user role support completely moved to components source tree
+ *
  * Revision 1.3  2004/04/05 11:04:51  manolito
  * setter for renderer type removed, no more default renderer type needed
  *
@@ -83,8 +86,8 @@ public class HtmlInputCalendarTag
         setStringProperty(component, "dayCellClass", _dayCellClass);
         setStringProperty(component, "currentDayCellClass", _currentDayCellClass);
 
-        setStringProperty(component, JSFAttr.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
-        setStringProperty(component, JSFAttr.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
+        setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
+        setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
     }
 
     public void setMonthYearRowClass(String monthYearRowClass)

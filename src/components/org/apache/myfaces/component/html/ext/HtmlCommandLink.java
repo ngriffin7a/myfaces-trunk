@@ -87,7 +87,7 @@ public class HtmlCommandLink
 
     public boolean isRendered()
     {
-        if (!UserRoleUtils.isUserInRole(this)) return false;
+        if (!UserRoleUtils.isVisibleOnUserRole(this)) return false;
         return super.isRendered();
     }
 

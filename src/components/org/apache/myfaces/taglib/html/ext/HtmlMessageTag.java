@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib.html.ext;
 
+import net.sourceforge.myfaces.component.UserRoleAware;
 import net.sourceforge.myfaces.component.html.ext.HtmlMessage;
-import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.taglib.html.HtmlMessageTagBase;
 
 import javax.faces.component.UIComponent;
@@ -28,6 +28,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/05/18 14:31:38  manolito
+ * user role support completely moved to components source tree
+ *
  * Revision 1.5  2004/04/05 11:04:55  manolito
  * setter for renderer type removed, no more default renderer type needed
  *
@@ -70,8 +73,8 @@ public class HtmlMessageTag
 
         setStringProperty(component, "summaryFormat", _summaryFormat);
         setStringProperty(component, "detailFormat", _detailFormat);
-        setStringProperty(component, JSFAttr.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
-        setStringProperty(component, JSFAttr.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
+        setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
+        setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
     }
 
     public void setSummaryFormat(String summaryFormat)

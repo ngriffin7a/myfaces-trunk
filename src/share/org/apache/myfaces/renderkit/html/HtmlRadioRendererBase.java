@@ -26,9 +26,9 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
 import javax.faces.component.UIOutput;
 import javax.faces.component.UISelectOne;
-import javax.faces.component.UIInput;
 import javax.faces.component.html.HtmlSelectOneRadio;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -44,6 +44,9 @@ import java.util.List;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/05/18 14:31:39  manolito
+ * user role support completely moved to components source tree
+ *
  * Revision 1.2  2004/03/31 15:15:58  royalts
  * no message
  *
@@ -119,12 +122,12 @@ public class HtmlRadioRendererBase
             writer.write("\t\t");
             if (pageDirectionLayout) writer.startElement(HTML.TR_ELEM, selectOne);
             writer.startElement(HTML.TD_ELEM, selectOne);
-            HtmlRendererUtils.renderRadio(facesContext,
-                                          selectOne,
-                                          itemStrValue,
-                                          selectItem.getLabel(),
-                                          currentValue == null && itemValue == null ||
-                                          currentValue != null && currentValue.equals(itemValue));
+            renderRadio(facesContext,
+                        selectOne,
+                        itemStrValue,
+                        selectItem.getLabel(),
+                        currentValue == null && itemValue == null ||
+                        currentValue != null && currentValue.equals(itemValue));
             writer.endElement(HTML.TD_ELEM);
             if (pageDirectionLayout) writer.endElement(HTML.TR_ELEM);
         }
@@ -143,6 +146,62 @@ public class HtmlRadioRendererBase
         else
         {
             return (String)selectOne.getAttributes().get(JSFAttr.LAYOUT_ATTR);
+        }
+    }
+
+
+    protected void renderRadio(FacesContext facesContext,
+                               UIInput uiComponent,
+                               String value,
+                               String label,
+                               boolean checked)
+            throws IOException
+    {
+        String clientId = uiComponent.getClientId(facesContext);
+
+        ResponseWriter writer = facesContext.getResponseWriter();
+
+        writer.startElement(HTML.INPUT_ELEM, uiComponent);
+        writer.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_RADIO, null);
+        writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
+        writer.writeAttribute(HTML.ID_ATTR, clientId, null);
+
+        if (checked)
+        {
+            writer.writeAttribute(HTML.CHECKED_ATTR, HTML.CHECKED_ATTR, null);
+        }
+
+        if ((value != null) && (value.length() > 0))
+        {
+            writer.writeAttribute(HTML.VALUE_ATTR, value, null);
+        }
+
+        HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED);
+        if (isDisabled(facesContext, uiComponent))
+        {
+            writer.writeAttribute(HTML.DISABLED_ATTR, Boolean.TRUE, null);
+        }
+
+        if ((label != null) && (label.length() > 0))
+        {
+            writer.write(HTML.NBSP_ENTITY);
+            writer.writeText(label, null);
+        }
+
+        writer.endElement(HTML.INPUT_ELEM);
+    }
+
+
+    protected boolean isDisabled(FacesContext facesContext, UIComponent uiComponent)
+    {
+        //TODO: overwrite in extended HtmlRadioRenderer and check for enabledOnUserRole
+        if (uiComponent instanceof HtmlSelectOneRadio)
+        {
+            return ((HtmlSelectOneRadio)uiComponent).isDisabled();
+        }
+        else
+        {
+            return RendererUtils.getBooleanAttribute(uiComponent, HTML.DISABLED_ATTR, false);
         }
     }
 

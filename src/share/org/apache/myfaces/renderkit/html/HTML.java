@@ -27,6 +27,9 @@ import net.sourceforge.myfaces.util.ArrayUtils;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/05/18 14:31:39  manolito
+ * user role support completely moved to components source tree
+ *
  * Revision 1.5  2004/05/18 11:58:16  manolito
  * typing error fixed
  *
@@ -113,13 +116,16 @@ public class HTML
     public static final String ACCESSKEY_ATTR   = "accesskey";
     public static final String TABINDEX_ATTR    = "tabindex";
     public static final String DISABLED_ATTR = "disabled";
-    public static final String[] COMMON_FIELD_ATTRIBUTES =
+    public static final String[] COMMON_FIELD_ATTRIBUTES_WITHOUT_DISABLED =
     {
         ACCESSKEY_ATTR,
-        TABINDEX_ATTR,
-        DISABLED_ATTR,
+        TABINDEX_ATTR
     };
-    
+    public static final String[] COMMON_FIELD_ATTRIBUTES =
+        (String[]) ArrayUtils.concat(
+            COMMON_FIELD_ATTRIBUTES_WITHOUT_DISABLED,
+            new String[] {DISABLED_ATTR});
+
     // Common Attributes    
     public static final String[] COMMON_PASSTROUGH_ATTRIBUTES = 
         (String[]) ArrayUtils.concat(
@@ -129,10 +135,10 @@ public class HTML
         (String[]) ArrayUtils.concat(
             EVENT_HANDLER_ATTRIBUTES,
             UNIVERSAL_ATTRIBUTES_WITHOUT_STYLE);
-    public static final String[] COMMON_FIELD_PASSTROUGH_ATTRIBUTES =
+    public static final String[] COMMON_FIELD_PASSTROUGH_ATTRIBUTES_WITHOUT_DISABLED =
         (String[]) ArrayUtils.concat(
-            COMMON_PASSTROUGH_ATTRIBUTES, 
-            COMMON_FIELD_ATTRIBUTES,
+            COMMON_PASSTROUGH_ATTRIBUTES,
+            COMMON_FIELD_ATTRIBUTES_WITHOUT_DISABLED,
             COMMON_FIELD_EVENT_ATTRIBUTES);
 
     // <a>
@@ -230,11 +236,11 @@ public class HTML
         READONLY_ATTR,
         SIZE_ATTR,
     };
-    public static final String[] INPUT_PASSTHROUGH_ATTRIBUTES = 
+    public static final String[] INPUT_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED =
         (String[]) ArrayUtils.concat(
                 INPUT_ATTRIBUTES,
-                COMMON_FIELD_PASSTROUGH_ATTRIBUTES);
-        
+                COMMON_FIELD_PASSTROUGH_ATTRIBUTES_WITHOUT_DISABLED);
+
     //values for input-type attribute
     public static final String INPUT_TYPE_SUBMIT = "submit";
     public static final String INPUT_TYPE_IMAGE = "image";
@@ -253,10 +259,10 @@ public class HTML
         DATASRC_ATTR,
         DATAFORMATAS_ATTR,
     };
-    public static final String[] BUTTON_PASSTHROUGH_ATTRIBUTES = 
+    public static final String[] BUTTON_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED =
         (String[]) ArrayUtils.concat(
             BUTTON_ATTRIBUTES,
-            COMMON_FIELD_PASSTROUGH_ATTRIBUTES);
+            COMMON_FIELD_PASSTROUGH_ATTRIBUTES_WITHOUT_DISABLED);
     
     // <label>
     public static final String FOR_ATTR = "for";
@@ -281,10 +287,10 @@ public class HTML
         DATASRC_ATTR,
         DATAFORMATAS_ATTR,
     };
-    public static final String[] SELECT_PASSTHROUGH_ATTRIBUTES =
+    public static final String[] SELECT_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED =
         (String[]) ArrayUtils.concat(
             SELECT_ATTRIBUTES,
-            COMMON_FIELD_PASSTROUGH_ATTRIBUTES);
+            COMMON_FIELD_PASSTROUGH_ATTRIBUTES_WITHOUT_DISABLED);
 
     // <table>
     public static final String BGCOLOR_ATTR = "bgcolor";
@@ -324,10 +330,10 @@ public class HTML
         READONLY_ATTR,
         ROWS_ATTR,
     };
-    public static final String[] TEXTAREA_PASSTHROUGH_ATTRIBUTES =
+    public static final String[] TEXTAREA_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED =
         (String[]) ArrayUtils.concat(
             TEXTAREA_ATTRIBUTES,
-            COMMON_FIELD_PASSTROUGH_ATTRIBUTES);
+            COMMON_FIELD_PASSTROUGH_ATTRIBUTES_WITHOUT_DISABLED);
 
     // <input type=file>
     public static final String[] INPUT_FILE_UPLOAD_ATTRIBUTES =
@@ -335,10 +341,10 @@ public class HTML
         ACCEPT_ATTR,
         MAXLENGTH_ATTR
     };
-    public static final String[] INPUT_FILE_PASSTHROUGH_ATTRIBUTES =
+    public static final String[] INPUT_FILE_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED =
         (String[]) ArrayUtils.concat(
             INPUT_FILE_UPLOAD_ATTRIBUTES,
-            INPUT_PASSTHROUGH_ATTRIBUTES);
+            INPUT_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED);
 
 
 

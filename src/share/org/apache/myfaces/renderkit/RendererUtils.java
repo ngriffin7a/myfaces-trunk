@@ -38,6 +38,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2004/05/18 14:31:40  manolito
+ * user role support completely moved to components source tree
+ *
  * Revision 1.9  2004/04/28 10:38:33  tinytoony
  * child is of type added to exception message
  *
@@ -120,32 +123,6 @@ public class RendererUtils
         else
         {
             return converter.getAsString(facesContext, component, value);
-        }
-    }
-    
-    public static boolean isEnabledOnUserRole(FacesContext facesContext, UIComponent component)
-    {
-        String userRole;
-        /*
-        TODO: optimize components by implementing UserRoleSupport interface
-        if (component instanceof UserRoleSupport)
-        {
-            userRole = ((UserRoleSupport)component).getEnabledOnUserRole();
-        }
-        else
-        {
-        */
-            userRole = (String)component.getAttributes().get(JSFAttr.ENABLED_ON_USER_ROLE_ATTR);
-        //}
-
-        if (userRole == null)
-        {
-            //no restriction
-            return true;
-        }
-        else
-        {
-            return facesContext.getExternalContext().isUserInRole(userRole);
         }
     }
 

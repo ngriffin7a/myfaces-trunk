@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.custom.sortheader;
 
+import net.sourceforge.myfaces.component.UserRoleUtils;
 import net.sourceforge.myfaces.component.html.ext.HtmlDataTable;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HtmlLinkRendererBase;
@@ -31,6 +32,9 @@ import java.io.IOException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/05/18 14:31:38  manolito
+ * user role support completely moved to components source tree
+ *
  * Revision 1.2  2004/04/22 09:20:55  manolito
  * derive from HtmlLinkRendererBase instead of HtmlLinkRenderer
  *
@@ -44,7 +48,7 @@ public class HtmlSortHeaderRenderer
     {
         RendererUtils.checkParamValidity(facesContext, component, HtmlCommandSortHeader.class);
 
-        if (RendererUtils.isEnabledOnUserRole(facesContext, component))
+        if (UserRoleUtils.isEnabledOnUserRole(component))
         {
             HtmlCommandSortHeader sortHeader = (HtmlCommandSortHeader)component;
             HtmlDataTable dataTable = sortHeader.findParentDataTable();

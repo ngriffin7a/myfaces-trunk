@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.taglib.html.ext;
 
+import net.sourceforge.myfaces.component.UserRoleAware;
 import net.sourceforge.myfaces.component.html.ext.HtmlSelectOneRadio;
-import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.taglib.html.HtmlSelectOneRadioTagBase;
 
 import javax.faces.component.UIComponent;
@@ -29,6 +29,9 @@ import javax.faces.component.UIComponent;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/05/18 14:31:38  manolito
+ * user role support completely moved to components source tree
+ *
  * Revision 1.4  2004/04/05 11:04:55  manolito
  * setter for renderer type removed, no more default renderer type needed
  *
@@ -61,8 +64,8 @@ public class HtmlSelectOneRadioTag
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
-        setStringProperty(component, JSFAttr.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
-        setStringProperty(component, JSFAttr.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
+        setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
+        setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
     }
 
     public void setEnabledOnUserRole(String enabledOnUserRole)

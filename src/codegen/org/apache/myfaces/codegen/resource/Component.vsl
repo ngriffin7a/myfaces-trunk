@@ -88,7 +88,7 @@ $I#end
 $I#if ($c.isGenerateUserRoleMethods() )
     public boolean isRendered()
     {
-        if (!UserRoleUtils.isUserInRole(this)) return false;
+        if (!UserRoleUtils.isVisibleOnUserRole(this)) return false;
         return super.isRendered();
     }
 $I#end

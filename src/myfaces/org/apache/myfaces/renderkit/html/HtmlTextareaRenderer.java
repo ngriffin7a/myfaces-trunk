@@ -18,60 +18,18 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.renderkit.RendererUtils;
 
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
-import javax.faces.component.UIOutput;
-import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
-import javax.faces.convert.ConverterException;
-import java.io.IOException;
 
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
- * @author Anton Koinov
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.10  2004/05/18 14:31:39  manolito
+ * user role support completely moved to components source tree
+ *
  */
 public class HtmlTextareaRenderer
-        extends HtmlRenderer
+        extends HtmlTextareaRendererBase
 {
-    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
-            throws IOException
-    {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, UIInput.class);
-
-        ResponseWriter writer = facesContext.getResponseWriter();
-        writer.startElement(HTML.TEXTAREA_ELEM, uiComponent);
-
-        String clientId = uiComponent.getClientId(facesContext);
-        writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
-        writer.writeAttribute(HTML.ID_ATTR, clientId, null);
-
-        HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.TEXTAREA_PASSTHROUGH_ATTRIBUTES);
-        HtmlRendererUtils.renderDisabledOnUserRole(writer, uiComponent, facesContext);
-
-        String strValue = RendererUtils.getStringValue(facesContext, uiComponent);
-        writer.writeText(strValue, JSFAttr.VALUE_ATTR);
-
-        writer.endElement(HTML.TEXTAREA_ELEM);
-    }
-
-    public void decode(FacesContext facesContext, UIComponent component)
-    {
-        RendererUtils.checkParamValidity(facesContext, component, UIInput.class);
-        HtmlRendererUtils.decodeUIInput(facesContext, component);
-    }
-
-    public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException
-    {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, UIOutput.class);
-        return RendererUtils.getConvertedUIOutputValue(facesContext,
-                                                       (UIOutput)uiComponent,
-                                                       submittedValue);
-    }
-
 }

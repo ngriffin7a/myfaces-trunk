@@ -26,12 +26,18 @@ package net.sourceforge.myfaces.component;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/05/18 14:31:36  manolito
+ * user role support completely moved to components source tree
+ *
  * Revision 1.1  2004/03/31 07:19:20  manolito
  * changed name from UserRoleSupport
  *
  */
 public interface UserRoleAware
 {
+    public static final String ENABLED_ON_USER_ROLE_ATTR = "enabledOnUserRole";
+    public static final String VISIBLE_ON_USER_ROLE_ATTR = "visibleOnUserRole";
+
     public String getEnabledOnUserRole();
     public void setEnabledOnUserRole(String userRole);
 

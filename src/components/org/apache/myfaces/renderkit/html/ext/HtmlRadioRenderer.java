@@ -18,10 +18,10 @@
  */
 package net.sourceforge.myfaces.renderkit.html.ext;
 
+import net.sourceforge.myfaces.component.UserRoleUtils;
 import net.sourceforge.myfaces.custom.radio.HtmlRadio;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HtmlRadioRendererBase;
-import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
@@ -38,6 +38,9 @@ import java.util.List;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/05/18 14:31:38  manolito
+ * user role support completely moved to components source tree
+ *
  * Revision 1.4  2004/04/05 09:11:03  manolito
  * extended exception messages
  *
@@ -139,11 +142,25 @@ public class HtmlRadioRenderer
             itemStrValue = converter.getAsString(facesContext, uiSelectOne, itemValue);
         }
 
-        HtmlRendererUtils.renderRadio(facesContext,
-                                      uiSelectOne,
-                                      itemStrValue,
-                                      selectItem.getLabel(),
-                                      currentValue == null && itemValue == null ||
-                                      currentValue != null && currentValue.equals(itemValue));
+        renderRadio(facesContext,
+                    uiSelectOne,
+                    itemStrValue,
+                    selectItem.getLabel(),
+                    currentValue == null && itemValue == null ||
+                    currentValue != null && currentValue.equals(itemValue));
     }
+
+
+    protected boolean isDisabled(FacesContext facesContext, UIComponent uiComponent)
+    {
+        if (!UserRoleUtils.isEnabledOnUserRole(uiComponent))
+        {
+            return false;
+        }
+        else
+        {
+            return super.isDisabled(facesContext, uiComponent);
+        }
+    }
+
 }

@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.custom.layout;
 
-import net.sourceforge.myfaces.renderkit.JSFAttr;
+import net.sourceforge.myfaces.component.UserRoleAware;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.taglib.html.HtmlComponentBodyTagBase;
 
@@ -28,6 +28,9 @@ import javax.faces.component.UIComponent;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/05/18 14:31:37  manolito
+ * user role support completely moved to components source tree
+ *
  * Revision 1.3  2004/04/05 11:04:53  manolito
  * setter for renderer type removed, no more default renderer type needed
  *
@@ -115,8 +118,8 @@ public class HtmlPanelLayoutTag
         setStringProperty(component, HTML.SUMMARY_ATTR, _summary);
         setStringProperty(component, HTML.WIDTH_ATTR, _width);
 
-        setStringProperty(component, JSFAttr.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
-        setStringProperty(component, JSFAttr.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
+        setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
+        setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
     }
 
     public void setLayout(String layout)

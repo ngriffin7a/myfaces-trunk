@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.JavascriptUtils;
 
@@ -27,7 +26,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
-import javax.faces.component.*;
+import javax.faces.component.EditableValueHolder;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UISelectMany;
+import javax.faces.component.UISelectOne;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.convert.Converter;
@@ -40,6 +42,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2004/05/18 14:31:39  manolito
+ * user role support completely moved to components source tree
+ *
  * Revision 1.8  2004/05/03 11:34:27  manolito
  * bug #945118 (Checkbox session state) fixed
  *
@@ -208,6 +213,7 @@ public class HtmlRendererUtils
     }
 
 
+    /*
     public static void renderCheckbox(FacesContext facesContext,
                                       UIComponent uiComponent,
                                       String value,
@@ -245,36 +251,42 @@ public class HtmlRendererUtils
 
         writer.endElement(HTML.INPUT_ELEM);
     }
+    */
 
 
     public static void renderListbox(FacesContext facesContext,
                                      UISelectOne selectOne,
+                                     boolean disabled,
                                      int size) throws IOException
     {
-        internalRenderSelect(facesContext, selectOne, size, false);
+        internalRenderSelect(facesContext, selectOne, disabled, size, false);
     }
 
     public static void renderListbox(FacesContext facesContext,
                                      UISelectMany selectMany,
+                                     boolean disabled,
                                      int size) throws IOException
     {
-        internalRenderSelect(facesContext, selectMany, size, true);
-    }
-    
-    public static void renderMenu(FacesContext facesContext,
-                                  UISelectOne selectOne) throws IOException
-    {
-        internalRenderSelect(facesContext, selectOne, 1, false);
+        internalRenderSelect(facesContext, selectMany, disabled, size, true);
     }
 
     public static void renderMenu(FacesContext facesContext,
-                                  UISelectMany selectMany) throws IOException
+                                  UISelectOne selectOne,
+                                  boolean disabled) throws IOException
     {
-        internalRenderSelect(facesContext, selectMany, 1, true);
+        internalRenderSelect(facesContext, selectOne, disabled, 1, false);
+    }
+
+    public static void renderMenu(FacesContext facesContext,
+                                  UISelectMany selectMany,
+                                  boolean disabled) throws IOException
+    {
+        internalRenderSelect(facesContext, selectMany, disabled, 1, true);
     }
 
     private static void internalRenderSelect(FacesContext facesContext,
                                              UIComponent uiComponent,
+                                             boolean disabled,
                                              int size,
                                              boolean selectMany)
             throws IOException
@@ -325,8 +337,11 @@ public class HtmlRendererUtils
         {
             writer.writeAttribute(HTML.SIZE_ATTR, Integer.toString(size), null);
         }
-        renderHTMLAttributes(writer, uiComponent, HTML.SELECT_PASSTHROUGH_ATTRIBUTES);
-        renderDisabledOnUserRole(writer, uiComponent, facesContext);
+        renderHTMLAttributes(writer, uiComponent, HTML.SELECT_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED);
+        if (disabled)
+        {
+            writer.writeAttribute(HTML.DISABLED_ATTR, Boolean.TRUE, null);
+        }
 
         Set lookupSet;
         boolean lookupSubmittedValue;
@@ -444,7 +459,7 @@ public class HtmlRendererUtils
 
 
 
-
+    /*
     public static void renderRadio(FacesContext facesContext,
                                    UIInput uiComponent,
                                    String value,
@@ -482,6 +497,7 @@ public class HtmlRendererUtils
 
         writer.endElement(HTML.INPUT_ELEM);
     }
+    */
 
 
     public static void writePrettyLineSeparator(FacesContext facesContext)
@@ -606,18 +622,7 @@ public class HtmlRendererUtils
         }
         return startElementWritten;
     }
-
-    public static void renderDisabledOnUserRole(ResponseWriter writer,
-                                                UIComponent uiComponent,
-                                                FacesContext facesContext)
-        throws IOException
-    {
-        if (!RendererUtils.isEnabledOnUserRole(facesContext, uiComponent))
-        {
-            writer.writeAttribute(HTML.DISABLED_ATTR, Boolean.TRUE, JSFAttr.ENABLED_ON_USER_ROLE_ATTR);
-        }
-    }
-
+    
 
     public static class LinkParameter
     {

@@ -33,6 +33,9 @@ import java.util.List;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/05/18 14:31:36  manolito
+ * user role support completely moved to components source tree
+ *
  * Revision 1.3  2004/05/18 11:22:44  manolito
  * optimized local value handling, so that getValue of UIData is only called when needed
  *
@@ -391,7 +394,7 @@ public class HtmlDataTable
 
     public boolean isRendered()
     {
-        if (!UserRoleUtils.isUserInRole(this)) return false;
+        if (!UserRoleUtils.isVisibleOnUserRole(this)) return false;
         return super.isRendered();
     }
 

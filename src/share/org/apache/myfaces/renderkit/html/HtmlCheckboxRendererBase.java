@@ -28,6 +28,7 @@ import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UISelectBoolean;
 import javax.faces.component.UISelectMany;
+import javax.faces.component.html.HtmlSelectBooleanCheckbox;
 import javax.faces.component.html.HtmlSelectManyCheckbox;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -44,6 +45,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/05/18 14:31:39  manolito
+ * user role support completely moved to components source tree
+ *
  * Revision 1.4  2004/05/05 18:03:00  o_rossmueller
  * fix #948110: render span element for styleClass
  *
@@ -70,11 +74,11 @@ public class HtmlCheckboxRendererBase
         RendererUtils.checkParamValidity(facesContext, uiComponent, null);
         if (uiComponent instanceof UISelectBoolean)
         {
-            HtmlRendererUtils.renderCheckbox(facesContext,
-                                             uiComponent,
-                                             EXTERNAL_TRUE_VALUE,
-                                             null,
-                                             ((UISelectBoolean)uiComponent).isSelected());
+            renderCheckbox(facesContext,
+                           uiComponent,
+                           EXTERNAL_TRUE_VALUE,
+                           null,
+                           ((UISelectBoolean)uiComponent).isSelected());
         }
         else if (uiComponent instanceof UISelectMany)
         {
@@ -150,11 +154,11 @@ public class HtmlCheckboxRendererBase
             writer.write("\t\t");
             if (pageDirectionLayout) writer.startElement(HTML.TR_ELEM, selectMany);
             writer.startElement(HTML.TD_ELEM, selectMany);
-            HtmlRendererUtils.renderCheckbox(facesContext,
-                                           selectMany,
-                                           itemStrValue,
-                                           selectItem.getLabel(),
-                                           lookupSet.contains(itemValue));
+            renderCheckbox(facesContext,
+                           selectMany,
+                           itemStrValue,
+                           selectItem.getLabel(),
+                           lookupSet.contains(itemValue));
             writer.endElement(HTML.TD_ELEM);
             if (pageDirectionLayout) writer.endElement(HTML.TR_ELEM);
         }
@@ -180,16 +184,75 @@ public class HtmlCheckboxRendererBase
     }
 
     protected String getStyleClass(UISelectMany selectMany)
+    {
+        if (selectMany instanceof HtmlSelectManyCheckbox)
         {
-            if (selectMany instanceof HtmlSelectManyCheckbox)
-            {
-                return ((HtmlSelectManyCheckbox)selectMany).getStyleClass();
-            }
-            else
-            {
-                return (String)selectMany.getAttributes().get(JSFAttr.STYLE_CLASS_ATTR);
-            }
+            return ((HtmlSelectManyCheckbox)selectMany).getStyleClass();
         }
+        else
+        {
+            return (String)selectMany.getAttributes().get(JSFAttr.STYLE_CLASS_ATTR);
+        }
+    }
+
+
+    protected void renderCheckbox(FacesContext facesContext,
+                                  UIComponent uiComponent,
+                                  String value,
+                                  String label,
+                                  boolean checked) throws IOException
+    {
+        String clientId = uiComponent.getClientId(facesContext);
+
+        ResponseWriter writer = facesContext.getResponseWriter();
+
+        writer.startElement(HTML.INPUT_ELEM, uiComponent);
+        writer.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_CHECKBOX, null);
+        writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
+        writer.writeAttribute(HTML.ID_ATTR, clientId, null);
+
+        if (checked)
+        {
+            writer.writeAttribute(HTML.CHECKED_ATTR, HTML.CHECKED_ATTR, null);
+        }
+
+        if ((value != null) && (value.length() > 0))
+        {
+            writer.writeAttribute(HTML.VALUE_ATTR, value, null);
+        }
+
+        HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED);
+        if (isDisabled(facesContext, uiComponent))
+        {
+            writer.writeAttribute(HTML.DISABLED_ATTR, Boolean.TRUE, null);
+        }
+
+        if ((label != null) && (label.length() > 0))
+        {
+            writer.write(HTML.NBSP_ENTITY);
+            writer.writeText(label, null);
+        }
+
+        writer.endElement(HTML.INPUT_ELEM);
+    }
+
+
+    protected boolean isDisabled(FacesContext facesContext, UIComponent uiComponent)
+    {
+        //TODO: overwrite in extended HtmlCheckboxRenderer and check for enabledOnUserRole
+        if (uiComponent instanceof HtmlSelectBooleanCheckbox)
+        {
+            return ((HtmlSelectBooleanCheckbox)uiComponent).isDisabled();
+        }
+        else if (uiComponent instanceof HtmlSelectManyCheckbox)
+        {
+            return ((HtmlSelectManyCheckbox)uiComponent).isDisabled();
+        }
+        else
+        {
+            return RendererUtils.getBooleanAttribute(uiComponent, HTML.DISABLED_ATTR, false);
+        }
+    }
 
 
     public void decode(FacesContext facesContext, UIComponent uiComponent)

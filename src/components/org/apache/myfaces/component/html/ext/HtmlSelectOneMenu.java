@@ -28,6 +28,9 @@ import javax.faces.el.ValueBinding;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/05/18 14:31:36  manolito
+ * user role support completely moved to components source tree
+ *
  * Revision 1.1  2004/04/01 09:23:12  manolito
  * more extended components
  *
@@ -75,7 +78,7 @@ public class HtmlSelectOneMenu
 
     public boolean isRendered()
     {
-        if (!UserRoleUtils.isUserInRole(this)) return false;
+        if (!UserRoleUtils.isVisibleOnUserRole(this)) return false;
         return super.isRendered();
     }
 

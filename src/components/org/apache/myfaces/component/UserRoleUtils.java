@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.component;
 
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import java.util.StringTokenizer;
 
@@ -25,6 +26,9 @@ import java.util.StringTokenizer;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/05/18 14:31:36  manolito
+ * user role support completely moved to components source tree
+ *
  * Revision 1.1  2004/03/31 11:58:33  manolito
  * custom component refactoring
  *
@@ -40,21 +44,72 @@ public class UserRoleUtils
      * @return true if no user roles are defined for this component or
      *              user is in one of these roles, false otherwise
      */
-    public static boolean isUserInRole(UserRoleAware component)
+    public static boolean isVisibleOnUserRole(UIComponent component)
     {
-        String userRole = component.getVisibleOnUserRole();
-        if (userRole != null)
+        String userRole;
+        if (component instanceof UserRoleAware)
         {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            StringTokenizer st = new StringTokenizer(userRole, ",");
-            while (st.hasMoreTokens())
+            userRole = ((UserRoleAware)component).getVisibleOnUserRole();
+        }
+        else
+        {
+            userRole = (String)component.getAttributes().get(UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR);
+        }
+
+        if (userRole == null)
+        {
+            // no restriction
+            return true;
+        }
+
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        StringTokenizer st = new StringTokenizer(userRole, ",");
+        while (st.hasMoreTokens())
+        {
+            if (facesContext.getExternalContext().isUserInRole(st.nextToken().trim()))
             {
-                if (!facesContext.getExternalContext().isUserInRole(st.nextToken().trim()))
-                {
-                    return false;
-                }
+                return true;
             }
         }
-        return true;
+        return false;
     }
+
+
+    /**
+     * Gets the comma separated list of enabling user roles from the given component
+     * and checks if current user is in one of these roles.
+     * @param component a user role aware component
+     * @return true if no user roles are defined for this component or
+     *              user is in one of these roles, false otherwise
+     */
+    public static boolean isEnabledOnUserRole(UIComponent component)
+    {
+        String userRole;
+        if (component instanceof UserRoleAware)
+        {
+            userRole = ((UserRoleAware)component).getEnabledOnUserRole();
+        }
+        else
+        {
+            userRole = (String)component.getAttributes().get(UserRoleAware.ENABLED_ON_USER_ROLE_ATTR);
+        }
+
+        if (userRole == null)
+        {
+            // no restriction
+            return true;
+        }
+
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        StringTokenizer st = new StringTokenizer(userRole, ",");
+        while (st.hasMoreTokens())
+        {
+            if (facesContext.getExternalContext().isUserInRole(st.nextToken().trim()))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

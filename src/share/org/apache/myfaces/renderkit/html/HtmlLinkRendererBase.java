@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormResponseWriter;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
@@ -39,6 +38,9 @@ import java.util.Iterator;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.10  2004/05/18 14:31:39  manolito
+ * user role support completely moved to components source tree
+ *
  * Revision 1.9  2004/05/18 12:02:29  manolito
  * getActionURL and getResourceURL must not call encodeActionURL or encodeResourceURL
  *
@@ -178,31 +180,22 @@ public abstract class HtmlLinkRendererBase
     {
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        if (RendererUtils.isEnabledOnUserRole(facesContext, component)) //TODO: Move to extended renderer
+        if (MyFacesConfig.isAllowJavascript(facesContext.getExternalContext()))
         {
-            if (MyFacesConfig.isAllowJavascript(facesContext.getExternalContext()))
-            {
-                renderJavaScriptAnchorStart(facesContext, writer, component, clientId);
-            }
-            else
-            {
-                renderNonJavaScriptAnchorStart(facesContext, writer, component, clientId);
-            }
-
-            writer.writeAttribute(HTML.ID_ATTR, clientId, null);
-            HtmlRendererUtils.renderHTMLAttributes(writer, component,
-                                                   HTML.ANCHOR_PASSTHROUGH_ATTRIBUTES_WITHOUT_STYLE);
-            HtmlRendererUtils.renderHTMLAttribute(writer, HTML.STYLE_ATTR, HTML.STYLE_ATTR,
-                                                  style);
-            HtmlRendererUtils.renderHTMLAttribute(writer, HTML.STYLE_CLASS_ATTR, HTML.STYLE_CLASS_ATTR,
-                                                  styleClass);
+            renderJavaScriptAnchorStart(facesContext, writer, component, clientId);
+        }
+        else
+        {
+            renderNonJavaScriptAnchorStart(facesContext, writer, component, clientId);
         }
 
-        //MyFaces extension: Render text of given by value.  TODO: Move to extended renderer
-        if(value != null)
-        {
-            writer.writeText(value.toString(), JSFAttr.VALUE_ATTR);
-        }
+        writer.writeAttribute(HTML.ID_ATTR, clientId, null);
+        HtmlRendererUtils.renderHTMLAttributes(writer, component,
+                                               HTML.ANCHOR_PASSTHROUGH_ATTRIBUTES_WITHOUT_STYLE);
+        HtmlRendererUtils.renderHTMLAttribute(writer, HTML.STYLE_ATTR, HTML.STYLE_ATTR,
+                                              style);
+        HtmlRendererUtils.renderHTMLAttribute(writer, HTML.STYLE_CLASS_ATTR, HTML.STYLE_CLASS_ATTR,
+                                              styleClass);
     }
 
     protected void renderJavaScriptAnchorStart(FacesContext facesContext,
@@ -365,17 +358,10 @@ public abstract class HtmlLinkRendererBase
         }
     }
 
-    public void renderOutputLinkStart(FacesContext facesContext, UIOutput output)
+    protected void renderOutputLinkStart(FacesContext facesContext, UIOutput output)
             throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
-
-        if (!RendererUtils.isEnabledOnUserRole(facesContext, output))
-        {
-            //if link is disabled we render the nested components without the anchor
-            RendererUtils.renderChildren(facesContext, output);
-            return;
-        }
 
         //calculate href
         String href = RendererUtils.getStringValue(facesContext, output);
@@ -443,26 +429,12 @@ public abstract class HtmlLinkRendererBase
         }
     }
 
-    /*
-    private static void renderHiddenParam(ResponseWriter writer, String paramName)
-        throws IOException
-    {
-        writer.startElement(HTML.INPUT_ELEM, null);
-        writer.writeAttribute(HTML.TYPE_ATTR, "hidden", null);
-        writer.writeAttribute(HTML.NAME_ATTR, paramName, null);
-        writer.endElement(HTML.INPUT_ELEM);
-    }
-    */
 
-    private static void renderLinkEnd(FacesContext facesContext, UIComponent component)
+    protected void renderLinkEnd(FacesContext facesContext, UIComponent component)
             throws IOException
     {
-        if (RendererUtils.isEnabledOnUserRole(facesContext, component))
-        {
-            ResponseWriter writer = facesContext.getResponseWriter();
-            writer.endElement(HTML.ANCHOR_ELEM);
-        }
+        ResponseWriter writer = facesContext.getResponseWriter();
+        writer.endElement(HTML.ANCHOR_ELEM);
     }
-
 
 }

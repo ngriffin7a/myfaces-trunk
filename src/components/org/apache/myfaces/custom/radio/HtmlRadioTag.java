@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.custom.radio;
 
-import net.sourceforge.myfaces.renderkit.JSFAttr;
+import net.sourceforge.myfaces.component.UserRoleAware;
 import net.sourceforge.myfaces.taglib.UIComponentTagBase;
 
 import javax.faces.component.UIComponent;
@@ -27,6 +27,9 @@ import javax.faces.component.UIComponent;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2004/05/18 14:31:38  manolito
+ * user role support completely moved to components source tree
+ *
  * Revision 1.4  2004/04/05 11:04:54  manolito
  * setter for renderer type removed, no more default renderer type needed
  *
@@ -73,8 +76,8 @@ public class HtmlRadioTag
         setStringProperty(component, HtmlRadio.FOR_ATTR, _for);
         setIntegerProperty(component, HtmlRadio.INDEX_ATTR, _index);
 
-        setStringProperty(component, JSFAttr.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
-        setStringProperty(component, JSFAttr.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
+        setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
+        setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
     }
 
     public String getFor()
