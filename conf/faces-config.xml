@@ -49,7 +49,7 @@
 
   <component>
     <component-type>Column</component-type>
-    <component-class>net.sourceforge.myfaces.component.MyFacesUIColumn</component-class>
+    <component-class>javax.faces.component.UIColumn</component-class>
   </component>
 
   <component>
@@ -106,7 +106,7 @@
 
   <component>
     <component-type>OutputMessage</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlOutputMessage</component-class>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlOutputFormat</component-class>
   </component>
 
   <component>
@@ -132,7 +132,7 @@
 
   <component>
     <component-type>SelectManyCheckboxList</component-type>
-    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlSelectManyCheckboxList</component-class>
+    <component-class>net.sourceforge.myfaces.component.html.MyFacesHtmlSelectManyCheckbox</component-class>
   </component>
 
   <component>
@@ -166,7 +166,7 @@
 
   <component>
     <component-type>Parameter</component-type>
-    <component-class>net.sourceforge.myfaces.component.MyFacesUIParameter</component-class>
+    <component-class>javax.faces.component.UIParameter</component-class>
   </component>
 
   <component>
@@ -176,7 +176,7 @@
 
   <component>
     <component-type>SelectItems</component-type>
-    <component-class>net.sourceforge.myfaces.component.MyFacesUISelectItems</component-class>
+    <component-class>javax.faces.component.UISelectItems</component-class>
   </component>
 
   <component>

@@ -18,10 +18,11 @@
  */
 package net.sourceforge.myfaces.context.servlet;
 
-import net.sourceforge.myfaces.util.FacesUtils;
 import net.sourceforge.myfaces.util.NullIterator;
 
+import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
+import javax.faces.application.ApplicationFactory;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
@@ -68,10 +69,11 @@ public class ServletFacesContextImpl
                                    ServletRequest servletRequest,
                                    ServletResponse servletResponse)
     {
-        _application         = FacesUtils.getApplication();
-        _externalContext     = new ServletExternalContextImpl(servletContext,
-                                                              servletRequest,
-                                                              servletResponse);
+        _application = ((ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY))
+                            .getApplication();
+        _externalContext = new ServletExternalContextImpl(servletContext,
+                                                          servletRequest,
+                                                          servletResponse);
         FacesContext.setCurrentInstance(this);  //protected method, therefore must be called from here
     }
 
@@ -85,14 +87,6 @@ public class ServletFacesContextImpl
     public FacesMessage.Severity getMaximumSeverity()
     {
         return _maximumSeverity;
-    }
-
-    /**
-     * MyFaces extension.
-     */
-    public int getMessageCount()
-    {
-        return (_messages == null) ? 0 : _messages.size();
     }
 
     public Iterator getMessages()
@@ -249,17 +243,6 @@ public class ServletFacesContextImpl
         {
             _maximumSeverity = message.getSeverity();
         }
-    }
-
-    /**
-     * MyFaces extension.
-     */
-    public void clearMessages()
-    {
-        // TODO: not called from anywhere, should remove
-        _messages             = null;
-        _messageClientIds     = null;
-        _maximumSeverity      = FacesMessage.SEVERITY_INFO;
     }
 
     public void release()

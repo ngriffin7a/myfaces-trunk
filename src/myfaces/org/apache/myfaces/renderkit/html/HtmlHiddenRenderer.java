@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
+import net.sourceforge.myfaces.renderkit.RendererUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlInputHidden;

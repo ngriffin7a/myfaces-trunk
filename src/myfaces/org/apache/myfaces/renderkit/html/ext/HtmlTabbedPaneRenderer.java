@@ -235,17 +235,8 @@ public class HtmlTabbedPaneRenderer
     {
         ExternalContext externalContext = facesContext.getExternalContext();
         ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
-        String actionURL;
-        String contextPath = externalContext.getRequestContextPath();
         String viewId = facesContext.getViewRoot().getViewId();
-        if (contextPath == null)
-        {
-            actionURL = viewHandler.getViewIdPath(facesContext, viewId);
-        }
-        else
-        {
-            actionURL = contextPath + viewHandler.getViewIdPath(facesContext, viewId);
-        }
+        String actionURL = viewHandler.getActionURL(facesContext, viewId);
 
         //write out auto form
         writer.startElement(HTML.FORM_ELEM, null);

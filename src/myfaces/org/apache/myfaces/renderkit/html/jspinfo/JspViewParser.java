@@ -72,7 +72,7 @@ public class JspViewParser
     {
         UIViewRoot viewRoot = new UIViewRoot();
         viewRoot.setViewId(viewId);
-        viewRoot.setRenderKitId(RenderKitFactory.DEFAULT_RENDER_KIT);
+        viewRoot.setRenderKitId(RenderKitFactory.HTML_BASIC_RENDER_KIT);
 
         _jspInfo = new JspInfo(viewRoot);
 

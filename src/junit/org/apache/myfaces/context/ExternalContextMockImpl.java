@@ -23,6 +23,8 @@ import javax.faces.context.ExternalContext;
 import javax.servlet.http.Cookie;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.Principal;
 import java.util.*;
 
@@ -234,6 +236,27 @@ public class ExternalContextMockImpl extends ExternalContext
     }
 
     public void log(String value, Throwable arg1)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+
+    public void dispatch(String s) throws IOException
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    public Iterator getRequestLocales()
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    public URL getResource(String s) throws MalformedURLException
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    public void redirect(String s) throws IOException
     {
         throw new UnsupportedOperationException();
     }

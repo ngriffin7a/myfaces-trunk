@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
 import net.sourceforge.myfaces.renderkit.html.state.StateSaver;
-import net.sourceforge.myfaces.util.FacesUtils;
 import net.sourceforge.myfaces.util.StringUtils;
 
 import javax.faces.context.FacesContext;
@@ -77,7 +76,7 @@ public abstract class ClientStateSaver
     public void release(FacesContext facesContext)
         throws IOException
     {
-        Map requestMap = FacesUtils.getRequestMap(facesContext);
+        Map requestMap = null; //FIXME: FacesUtils.getRequestMap(facesContext);
         BodyContent bodyContent = (BodyContent)(requestMap.get(ClientStateSaver.BODY_CONTENT_REQUEST_ATTR));
         if (bodyContent == null)
         {

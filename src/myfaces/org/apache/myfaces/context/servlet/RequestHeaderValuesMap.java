@@ -18,8 +18,6 @@
  */
 package net.sourceforge.myfaces.context.servlet;
 
-import net.sourceforge.myfaces.context.servlet.AbstractAttributeMap;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 

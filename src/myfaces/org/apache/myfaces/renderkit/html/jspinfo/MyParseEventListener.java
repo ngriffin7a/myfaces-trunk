@@ -18,41 +18,26 @@
  */
 package net.sourceforge.myfaces.renderkit.html.jspinfo;
 
-import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.component.UIComponentUtils;
-import net.sourceforge.myfaces.component.ext.UISaveState;
-import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.Constants;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.*;
 import net.sourceforge.myfaces.taglib.core.ActionListenerTag;
-import net.sourceforge.myfaces.taglib.legacy.MyFacesBodyTag;
-import net.sourceforge.myfaces.taglib.legacy.MyFacesTag;
-import net.sourceforge.myfaces.taglib.legacy.UIComponentTagHacks;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
-import net.sourceforge.myfaces.util.DebugUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xml.sax.Attributes;
 
-import javax.faces.FacesException;
-import javax.faces.FactoryFinder;
-import javax.faces.application.ApplicationFactory;
 import javax.faces.component.NamingContainer;
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIComponentBase;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionListener;
 import javax.faces.validator.Validator;
 import javax.faces.webapp.FacetTag;
 import javax.faces.webapp.UIComponentTag;
 import javax.faces.webapp.ValidatorTag;
-import javax.servlet.ServletContext;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
-import javax.servlet.jsp.tagext.TagAttributeInfo;
 import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagLibraryInfo;
 import java.beans.BeanInfo;
@@ -422,6 +407,9 @@ public class MyParseEventListener
                                       Attributes attrs,
                                       String filename, int startLine, int endLine)
     {
+        /*
+        FIXME:
+
         if (_currentComponent == null)
         {
             //This must be the UseFacesTag, which represents the root component
@@ -586,6 +574,7 @@ public class MyParseEventListener
         //We can be sure, that each parent has a valid componentId, so
         //getClientId should not have a side-effect
         _jspInfo.getComponentMap().put(getClientId(comp), comp);
+        */
     }
 
 

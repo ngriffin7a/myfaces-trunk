@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.context.servlet;
 
+import net.sourceforge.myfaces.util.EnumerationIterator;
+
 import javax.faces.FacesException;
 import javax.faces.context.ExternalContext;
 import javax.servlet.*;
@@ -26,6 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.Principal;
 import java.util.*;
 
@@ -257,10 +261,12 @@ public class ServletExternalContextImpl
         return ((HttpServletRequest)_servletRequest).getContextPath();
     }
 
+    /*
     public Cookie[] getRequestCookies()
     {
         return new Cookie[0];  //To change body of implemented methods use Options | File Templates.
     }
+    */
 
     public String getInitParameter(String s)
     {
@@ -273,7 +279,7 @@ public class ServletExternalContextImpl
         {
             // We cache it as an attribute in ServletContext itself (is this circular reference a problem?)
             if ((_initParameterMap = (Map) _servletContext.getAttribute(INIT_PARAMETER_MAP_ATTRIBUTE)) == null)
-            {    
+            {
                 _initParameterMap = new InitParameterMap(_servletContext);
                 _servletContext.setAttribute(INIT_PARAMETER_MAP_ATTRIBUTE, _initParameterMap);
             }
@@ -314,7 +320,7 @@ public class ServletExternalContextImpl
         return s;
     }
 
-    public void dispatchMessage(String requestURI) throws IOException, FacesException
+    public void dispatch(String requestURI) throws IOException, FacesException
     {
         RequestDispatcher requestDispatcher
             = _servletRequest.getRequestDispatcher(requestURI);
@@ -381,5 +387,31 @@ public class ServletExternalContextImpl
 
     public void log(String message, Throwable t) {
         _servletContext.log(message, t);
+    }
+
+    public void redirect(String url) throws IOException
+    {
+        if (_servletResponse instanceof HttpServletResponse)
+        {
+            ((HttpServletResponse)_servletResponse).sendRedirect(url);
+        }
+        else
+        {
+            throw new IllegalArgumentException("Only HttpServletResponse supported");
+        }
+    }
+
+    public Iterator getRequestLocales()
+    {
+        if (!_isHttpServletRequest)
+        {
+            throw new IllegalArgumentException("Only HttpServletRequest supported");
+        }
+        return new EnumerationIterator(((HttpServletRequest)_servletRequest).getLocales());
+    }
+
+    public URL getResource(String s) throws MalformedURLException
+    {
+        return _servletContext.getResource(s);
     }
 }

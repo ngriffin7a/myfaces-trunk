@@ -72,7 +72,7 @@ public class ViewTag
             throw new JspException(e);
         }
 
-        StateManager stateManager = facesContext.getApplication().getViewHandler().getStateManager();
+        StateManager stateManager = facesContext.getApplication().getStateManager();
         if (stateManager.isSavingStateInClient(facesContext))
         {
             if (log.isTraceEnabled()) log.trace("leaving ViewTag.doStartTag");
@@ -105,7 +105,7 @@ public class ViewTag
             throw new JspException(e);
         }
 
-        StateManager stateManager = facesContext.getApplication().getViewHandler().getStateManager();
+        StateManager stateManager = facesContext.getApplication().getStateManager();
         if (!stateManager.isSavingStateInClient(facesContext))
         {
             //save state in server
@@ -125,7 +125,7 @@ public class ViewTag
             if (bodyContent != null)
             {
                 FacesContext facesContext = FacesContext.getCurrentInstance();
-                StateManager stateManager = facesContext.getApplication().getViewHandler().getStateManager();
+                StateManager stateManager = facesContext.getApplication().getStateManager();
                 StateManager.SerializedView serializedView = stateManager.saveSerializedView(facesContext);
                 if (serializedView != null)
                 {

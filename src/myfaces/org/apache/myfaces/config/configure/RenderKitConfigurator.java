@@ -51,7 +51,9 @@ public class RenderKitConfigurator
             String         rendererType   = (String) it.next();
             RendererConfig rendererConfig = _renderKitConfig.getRendererConfig(rendererType);
             Renderer       renderer       = rendererConfig.newRenderer();
-            renderKit.addRenderer(rendererType, renderer);
+            renderKit.addRenderer(rendererConfig.getComponentFamily(),
+                                  rendererType,
+                                  renderer);
         }
     }
 

@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces;
 
 import java.io.IOException;
-
 import java.util.Properties;
 
 

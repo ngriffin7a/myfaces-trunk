@@ -59,21 +59,27 @@ public class HtmlRenderKitImpl
 
     //~ Methods ------------------------------------------------------------------------------------
 
-    public Renderer getRenderer(String rendererType)
+    private String key(String componentFamily, String rendererType)
     {
-        Renderer renderer = (Renderer) _renderers.get(rendererType);
+        return componentFamily + "." + rendererType;
+    }
+
+
+    public Renderer getRenderer(String componentFamily, String rendererType)
+    {
+        Renderer renderer = (Renderer) _renderers.get(key(componentFamily, rendererType));
 
         if (renderer == null)
         {
-            throw new IllegalArgumentException("Unsupported renderer type: " + rendererType);
+            throw new IllegalArgumentException("Unsupported component family / renderer type: " + componentFamily + "/" + rendererType);
         }
 
         return renderer;
     }
 
-    public void addRenderer(String rendererType, Renderer renderer)
+    public void addRenderer(String componentFamily, String rendererType, Renderer renderer)
     {
-        _renderers.put(rendererType, renderer);
+        _renderers.put(key(componentFamily, rendererType), renderer);
     }
 
     public ResponseStateManager getResponseStateManager()

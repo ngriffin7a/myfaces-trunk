@@ -46,12 +46,14 @@ public class HtmlListboxRenderer
         if (uiComponent instanceof HtmlSelectManyListbox)
         {
             HtmlRendererUtils.renderListbox(facesContext,
-                                            (HtmlSelectManyListbox)uiComponent);
+                                            (HtmlSelectManyListbox)uiComponent,
+                                            ((HtmlSelectManyListbox)uiComponent).getSize());
         }
         else if (uiComponent instanceof HtmlSelectOneListbox)
         {
             HtmlRendererUtils.renderListbox(facesContext,
-                                            (HtmlSelectOneListbox)uiComponent);
+                                            (HtmlSelectOneListbox)uiComponent,
+                                            ((HtmlSelectManyListbox)uiComponent).getSize());
         }
         else
         {

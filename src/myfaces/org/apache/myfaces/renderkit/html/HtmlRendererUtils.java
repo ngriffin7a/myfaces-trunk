@@ -66,8 +66,6 @@ public class HtmlRendererUtils
             return;
         }
 
-        input.setPrevious(input.getValue());
-
         String[] reqValues = (String[])paramValuesMap.get(clientId);
 
         Converter converter;
@@ -143,13 +141,10 @@ public class HtmlRendererUtils
             //request parameter not found
             if (setFalseOnAbsentParam)
             {
-                selectBoolean.setPrevious(selectBoolean.getValue());
                 selectBoolean.setSelected(false);  //no request param means false
             }
             return;
         }
-
-        selectBoolean.setPrevious(selectBoolean.getValue());
 
         String[] reqValues = (String[])paramValuesMap.get(clientId);
         if (reqValues.length > 0 && reqValues[0].equals(externalTrueValue))
@@ -173,8 +168,6 @@ public class HtmlRendererUtils
             //request parameter not found, nothing to decode
             return;
         }
-
-        selectMany.setPrevious(selectMany.getValue());
 
         String[] reqValues = (String[])paramValuesMap.get(clientId);
 
@@ -270,29 +263,29 @@ public class HtmlRendererUtils
 
 
     public static void renderListbox(FacesContext facesContext,
-                                     UISelectOne selectOne) throws IOException
-    {
-        internalRenderSelect(facesContext, selectOne, 0, false);
-    }
-
-    public static void renderListbox(FacesContext facesContext,
-                                     UISelectMany selectMany) throws IOException
-    {
-        internalRenderSelect(facesContext, selectMany, 0, true);
-    }
-    
-    public static void renderMenu(FacesContext facesContext,
-                                  UISelectOne selectOne,
-                                  int size) throws IOException
+                                     UISelectOne selectOne,
+                                     int size) throws IOException
     {
         internalRenderSelect(facesContext, selectOne, size, false);
     }
 
-    public static void renderMenu(FacesContext facesContext,
-                                  UISelectMany selectMany,
-                                  int size) throws IOException
+    public static void renderListbox(FacesContext facesContext,
+                                     UISelectMany selectMany,
+                                     int size) throws IOException
     {
         internalRenderSelect(facesContext, selectMany, size, true);
+    }
+    
+    public static void renderMenu(FacesContext facesContext,
+                                  UISelectOne selectOne) throws IOException
+    {
+        internalRenderSelect(facesContext, selectOne, 1, false);
+    }
+
+    public static void renderMenu(FacesContext facesContext,
+                                  UISelectMany selectMany) throws IOException
+    {
+        internalRenderSelect(facesContext, selectMany, 1, true);
     }
 
     private static void internalRenderSelect(FacesContext facesContext,

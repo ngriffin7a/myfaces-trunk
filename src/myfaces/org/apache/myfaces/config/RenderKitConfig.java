@@ -49,7 +49,7 @@ public class RenderKitConfig implements Config
 //    private IconConfig _iconConfig;
     private Class  _renderKitClass;
     private Map    _rendererConfigMap;
-    private String _renderKitId = RenderKitFactory.DEFAULT_RENDER_KIT;
+    private String _renderKitId = RenderKitFactory.HTML_BASIC_RENDER_KIT;
 
     //~ Methods ------------------------------------------------------------------------------------
 

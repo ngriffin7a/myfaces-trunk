@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -16,47 +16,39 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.component;
+package net.sourceforge.myfaces.util;
 
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import java.util.List;
+import java.util.Enumeration;
+import java.util.Iterator;
 
 /**
- * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * @deprecated TODO: remove
  */
-public class MyFacesUIInput
-        extends javax.faces.component.UIInput
+public class EnumerationIterator
+        implements Iterator
 {
-    public MyFacesUIInput()
+    //private static final Log log = LogFactory.getLog(EnumerationIterator.class);
+
+    private Enumeration _enumeration;
+
+    public EnumerationIterator(Enumeration enumeration)
     {
-        setValid(true);
+        _enumeration = enumeration;
     }
 
-    public List[] getListeners()
+    public boolean hasNext()
     {
-        //FIXME
-        //return listeners;
-        return null;
+        return _enumeration.hasMoreElements();
     }
 
-
-//------------------------------------------------------------------------------
-
-    public String getClientId(FacesContext context)
+    public Object next()
     {
-        return UIComponentUtils.getClientId(context, this);
+        return _enumeration.nextElement();
     }
 
-    public void addFacet(String facetName, UIComponent facet)
+    public void remove()
     {
-        //FIXME
-        //super.addFacet(facetName, facet);
-        UIComponentUtils.ensureComponentInNamingContainer(facet);
+        throw new UnsupportedOperationException();
     }
-
-//------------------------------------------------------------------------------
 }

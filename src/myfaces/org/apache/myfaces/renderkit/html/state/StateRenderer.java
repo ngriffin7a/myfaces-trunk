@@ -20,12 +20,10 @@ package net.sourceforge.myfaces.renderkit.html.state;
 
 import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
-import net.sourceforge.myfaces.renderkit.html.legacy.FormRenderer;
 import net.sourceforge.myfaces.renderkit.html.state.client.*;
 import net.sourceforge.myfaces.renderkit.html.state.server.HTTPSessionStateRestorer;
 import net.sourceforge.myfaces.renderkit.html.state.server.HTTPSessionStateSaver;
 import net.sourceforge.myfaces.util.DebugUtils;
-import net.sourceforge.myfaces.util.FacesUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -87,11 +85,6 @@ public class StateRenderer
         }
     }
 
-    public String getRendererType()
-    {
-        return TYPE;
-    }
-
     /*
     public boolean supportsComponentType(String s)
     {
@@ -116,7 +109,6 @@ public class StateRenderer
      *
      * @param facesContext
      * @param comp  component that should be restored or null if full tree should be restored
-     * @throws java.io.IOException
      */
     public void decode(FacesContext facesContext, UIComponent comp)
     {
@@ -134,7 +126,7 @@ public class StateRenderer
             //Note: DebugUtils Logger must also be in trace level
             DebugUtils.traceView("Current tree after restoring state");
         }
-        FacesUtils.getRequestMap(facesContext).put(StateRestorer.STATE_RESTORER_REQUEST_ATTR, _stateRestorer);
+        //FIXME: FacesUtils.getRequestMap(facesContext).put(StateRestorer.STATE_RESTORER_REQUEST_ATTR, _stateRestorer);
     }
 
     /**
@@ -162,6 +154,8 @@ public class StateRenderer
     public void encodeChildren(FacesContext facesContext, UIComponent commandComponent)
         throws IOException
     {
+        /*
+        FIXME
         if (_stateSaver == null) init(facesContext);
         String commandRendererType = commandComponent.getRendererType();
         if (commandRendererType.equals(FormRenderer.TYPE))
@@ -172,6 +166,7 @@ public class StateRenderer
         {
             _stateSaver.encodeState(facesContext, StateSaver.URL_ENCODING);
         }
+        */
     }
 
     /**

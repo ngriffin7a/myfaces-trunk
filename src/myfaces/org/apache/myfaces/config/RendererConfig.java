@@ -43,6 +43,7 @@ public class RendererConfig implements Config
     private Map    _attributeConfigMap         = null;
     private Set    _supportedComponentClassSet = null;
     private Set    _supportedComponentTypeSet  = null;
+    private String _componentFamily            = null;
     private String _rendererType               = null;
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -94,6 +95,16 @@ public class RendererConfig implements Config
     public String getRendererType()
     {
         return _rendererType;
+    }
+
+    public void setComponentFamily(String componentFamily)
+    {
+        _componentFamily = componentFamily.intern();
+    }
+
+    public String getComponentFamily()
+    {
+        return _componentFamily;
     }
 
     public Iterator getSupportedComponentClassNames()

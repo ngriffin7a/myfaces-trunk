@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -16,49 +16,17 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.component;
+package net.sourceforge.myfaces.component.html;
 
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
+import javax.faces.component.html.HtmlSelectManyCheckbox;
 
 /**
  * DOCUMENT ME!
+ * 
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class MyFacesUISelectMany
-    extends javax.faces.component.UISelectMany
+public class MyFacesHtmlSelectManyCheckbox
+    extends HtmlSelectManyCheckbox
 {
-    public MyFacesUISelectMany()
-    {
-        setValid(true);
-    }
-
-    public boolean getRendersSelf()
-    {
-        return false;
-    }
-
-    public boolean getRendersChildren()
-    {
-        return true;
-    }
-
-
-
-//------------------------------------------------------------------------------
-
-    public String getClientId(FacesContext context)
-    {
-        return UIComponentUtils.getClientId(context, this);
-    }
-
-    public void addFacet(String facetName, UIComponent facet)
-    {
-        //FIXME
-        //super.addFacet(facetName, facet);
-        UIComponentUtils.ensureComponentInNamingContainer(facet);
-    }
-
-//------------------------------------------------------------------------------
 }

@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.model;
 
-import javax.faces.component.StateHolderSaver;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.model.DataModel;
@@ -122,7 +121,8 @@ public class MyfacesListDataModel
             return;
         }
 
-        if (previousIndex != _index && listeners != null)
+        DataModelListener[] listeners = getDataModelListeners();
+        if (previousIndex != _index && listeners != null && listeners.length > 0)
         {
             Object rowData = null;
             if (isRowAvailable())
@@ -130,10 +130,9 @@ public class MyfacesListDataModel
                 rowData = getRowData();
             }
             DataModelEvent event = new DataModelEvent(this, _index, rowData);
-            int n = listeners.size();
-            for (int i = 0; i < n; i++)
+            for (int i = 0, len = listeners.length; i < len; i++)
             {
-                ((DataModelListener)listeners.get(i)).rowSelected(event);
+                listeners[i].rowSelected(event);
             }
         }
     }
@@ -164,12 +163,10 @@ public class MyfacesListDataModel
     private void writeObject(java.io.ObjectOutputStream out)
          throws IOException
     {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-
-        out.writeObject(listeners);
+        out.writeObject(getDataModelListeners());
 
         out.writeObject(_valueBinding != null ?
-                        new StateHolderSaver(facesContext, _valueBinding) :
+                        _valueBinding.getExpressionString() :
                         null);
 
         List lst = (List)getWrappedData();
@@ -190,12 +187,16 @@ public class MyfacesListDataModel
     {
         FacesContext facesContext = FacesContext.getCurrentInstance();
 
-        listeners = (List)in.readObject();
-
-        StateHolderSaver valueBindingState = (StateHolderSaver)in.readObject();
-        if (valueBindingState != null)
+        DataModelListener[] listeners = (DataModelListener[])in.readObject();
+        for (int i = 0, len = listeners.length; i < len; i++)
         {
-            _valueBinding = (ValueBinding)valueBindingState.restore(facesContext);
+            addDataModelListener(listeners[i]);
+        }
+
+        String vb = (String)in.readObject();
+        if (vb != null)
+        {
+            _valueBinding = facesContext.getApplication().createValueBinding(vb);
         }
         else
         {

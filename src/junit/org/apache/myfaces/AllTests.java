@@ -1,9 +1,9 @@
 package net.sourceforge.myfaces;
 
-import net.sourceforge.myfaces.application.ApplicationTest;
-import net.sourceforge.myfaces.el.ValueBindingTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import net.sourceforge.myfaces.application.ApplicationTest;
+import net.sourceforge.myfaces.el.ValueBindingTest;
 
 
 public class AllTests {

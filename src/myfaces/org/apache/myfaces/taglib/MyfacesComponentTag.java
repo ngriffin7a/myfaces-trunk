@@ -106,34 +106,34 @@ public abstract class MyfacesComponentTag
 
     protected void setIntegerProperty(UIComponent component, String propName, String value)
     {
-        MyfacesTagUtils.setIntegerProperty(context, component, propName, value);
+        MyfacesTagUtils.setIntegerProperty(getFacesContext(), component, propName, value);
     }
 
     protected void setStringProperty(UIComponent component, String propName, String value)
     {
-        MyfacesTagUtils.setStringProperty(context, component, propName, value);
+        MyfacesTagUtils.setStringProperty(getFacesContext(), component, propName, value);
     }
 
     protected void setBooleanProperty(UIComponent component, String propName, String value)
     {
-        MyfacesTagUtils.setBooleanProperty(context, component, propName, value);
+        MyfacesTagUtils.setBooleanProperty(getFacesContext(), component, propName, value);
     }
 
     private void setValueProperty(UIComponent component, String value)
     {
-        MyfacesTagUtils.setValueProperty(context, component, value);
+        MyfacesTagUtils.setValueProperty(getFacesContext(), component, value);
     }
 
     private void setConverterIdProperty(UIComponent component, String value)
     {
-        MyfacesTagUtils.setConverterIdProperty(context, component, value);
+        MyfacesTagUtils.setConverterIdProperty(getFacesContext(), component, value);
     }
 
     public void setValueBinding(UIComponent component,
                                 String propName,
                                 String value)
     {
-        MyfacesTagUtils.setValueBinding(context, component, propName, value);
+        MyfacesTagUtils.setValueBinding(getFacesContext(), component, propName, value);
     }
 
     protected void setValueChangedListenerProperty(UIComponent component, String valueChangedListener)

@@ -18,9 +18,10 @@
  */
 package net.sourceforge.myfaces.examples.listexample;
 
-import net.sourceforge.myfaces.examples.listexample.SimpleCar;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * DOCUMENT ME!

@@ -75,7 +75,7 @@ public class RenderKitFactoryConfigurator
             RenderKit rk;
             if (renderKitFactoryContains(rkf, id))
             {
-                rk = rkf.getRenderKit(id);
+                rk = rkf.getRenderKit(null, id);    //FIXME: We need a facesContext!
             }
             else
             {

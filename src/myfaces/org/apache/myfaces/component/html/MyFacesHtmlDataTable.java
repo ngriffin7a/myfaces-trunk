@@ -57,7 +57,7 @@ public class MyFacesHtmlDataTable
     {
         if (getPreserveDataModel())
         {
-            Object value = getLocalValue();
+            Object value = getValue();
             if (value instanceof SerializableDataModel &&
                 getValueBinding("value") != null)
             {
@@ -105,7 +105,7 @@ public class MyFacesHtmlDataTable
 
     private void updateModelFromPreservedDataModel(FacesContext context)
     {
-        Object value = getLocalValue();
+        Object value = getValue();
         if (value instanceof SerializableDataModel)
         {
             ValueBinding vb = getValueBinding("value");
@@ -154,7 +154,7 @@ public class MyFacesHtmlDataTable
     {
         if (getPreserveDataModel())
         {
-            Object value = getLocalValue();
+            Object value = getValue();
             if (value instanceof SerializableDataModel)
             {
                 return ((SerializableDataModel)value).getFirst();
@@ -167,7 +167,7 @@ public class MyFacesHtmlDataTable
     {
         if (getPreserveDataModel())
         {
-            Object value = getLocalValue();
+            Object value = getValue();
             if (value instanceof SerializableDataModel)
             {
                 return ((SerializableDataModel)value).getRows();

@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state;
 
-import javax.faces.context.FacesContext;
 import javax.faces.component.UIViewRoot;
+import javax.faces.context.FacesContext;
 import java.io.IOException;
 
 /**

@@ -60,17 +60,8 @@ public class DummyFormResponseWriter
         FacesContext facesContext = FacesContext.getCurrentInstance();
         ExternalContext externalContext = facesContext.getExternalContext();
         ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
-        String actionURL;
-        String contextPath = externalContext.getRequestContextPath();
         String viewId = facesContext.getViewRoot().getViewId();
-        if (contextPath == null)
-        {
-            actionURL = viewHandler.getViewIdPath(facesContext, viewId);
-        }
-        else
-        {
-            actionURL = contextPath + viewHandler.getViewIdPath(facesContext, viewId);
-        }
+        String actionURL = viewHandler.getActionURL(facesContext, viewId);
 
         //write out dummy form
         _responseWriter.startElement(HTML.FORM_ELEM, null);
@@ -85,7 +76,7 @@ public class DummyFormResponseWriter
             renderHiddenParam(_responseWriter, (String)it.next());
         }
 
-        StateManager stateManager = facesContext.getApplication().getViewHandler().getStateManager();
+        StateManager stateManager = facesContext.getApplication().getStateManager();
         if (stateManager.isSavingStateInClient(facesContext))
         {
             //render state parameters

@@ -19,7 +19,9 @@
 package net.sourceforge.myfaces.config;
 
 import javax.faces.event.PhaseListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 
 
 /**

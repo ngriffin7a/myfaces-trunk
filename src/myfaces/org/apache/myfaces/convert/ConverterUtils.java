@@ -20,10 +20,10 @@ package net.sourceforge.myfaces.convert;
 
 import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.application.MessageUtils;
-import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.config.*;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.util.Base64;
+import net.sourceforge.myfaces.util.DebugUtils;
 import net.sourceforge.myfaces.util.MyFacesObjectInputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -219,7 +219,7 @@ public class ConverterUtils
         if (rendererType == null)
         {
             //Each component must have a rendererType since Spec. 1.0 PRD2
-            log.warn("Component " + UIComponentUtils.toString(uiComponent) + " has no renderer type!");
+            log.warn("Component " + DebugUtils.componentAsString(uiComponent) + " has no renderer type!");
             return null;
         }
 
@@ -234,7 +234,7 @@ public class ConverterUtils
         AttributeConfig ac = rc.getAttributeConfig(attrName);
         if (ac == null)
         {
-            log.info("Could not find an attribute descriptor for attribute '" + attrName + "' of component " + UIComponentUtils.toString(uiComponent) + ".");
+            log.info("Could not find an attribute descriptor for attribute '" + attrName + "' of component " + DebugUtils.componentAsString(uiComponent) + ".");
             return null;
         }
         return findConverter(ac.getAttributeClass());
@@ -301,7 +301,7 @@ public class ConverterUtils
         }
 
         //As the last resort we do a toString
-        log.warn("Cannot convert Object to String for component " + UIComponentUtils.toString(uiOutput) + ": No converter found for class " + obj.getClass().getName() + ".");
+        log.warn("Cannot convert Object to String for component " + DebugUtils.componentAsString(uiOutput) + ": No converter found for class " + obj.getClass().getName() + ".");
         return obj.toString();
     }
 

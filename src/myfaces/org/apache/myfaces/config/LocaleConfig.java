@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.config;
 
 import net.sourceforge.myfaces.util.StringUtils;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

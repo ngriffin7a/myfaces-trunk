@@ -74,22 +74,7 @@ public class HtmlMessagesRenderer
 
         MessageIterator messageIterator;
 
-        String forClientId = htmlMessages.getFor();
-        if (forClientId == null)
-        {
-            if (htmlMessages.isGlobalOnly())
-            {
-                messageIterator = new MessageIterator(facesContext, null);
-            }
-            else
-            {
-                messageIterator = new MessageIterator(facesContext);
-            }
-        }
-        else
-        {
-            messageIterator = new MessageIterator(facesContext,forClientId);
-        }
+        messageIterator = new MessageIterator(facesContext, htmlMessages.isGlobalOnly());
 
         if (messageIterator.hasNext())
         {
@@ -365,32 +350,20 @@ public class HtmlMessagesRenderer
         private Iterator _componentMessagesIterator = null;
         private String _clientId = null;
 
-        public MessageIterator(FacesContext facesContext)
+        public MessageIterator(FacesContext facesContext, boolean globalOnly)
         {
             _facesContext = facesContext;
             _globalMessagesIterator = facesContext.getMessages(null);
-            _clientIdsWithMessagesIterator = facesContext.getClientIdsWithMessages();
-            _componentMessagesIterator = null;
-            _clientId = null;
-        }
-
-        public MessageIterator(FacesContext facesContext, String forClientId)
-        {
-            _facesContext = facesContext;
-            if (forClientId != null)
+            if (globalOnly)
             {
-                _globalMessagesIterator = NullIterator.instance();
                 _clientIdsWithMessagesIterator = NullIterator.instance();
-                _componentMessagesIterator = _facesContext.getMessages(forClientId);
-                _clientId = forClientId;
             }
             else
             {
-                _globalMessagesIterator = facesContext.getMessages(null);
-                _clientIdsWithMessagesIterator = NullIterator.instance();
-                _componentMessagesIterator = null;
-                _clientId = null;
+                _clientIdsWithMessagesIterator = facesContext.getClientIdsWithMessages();
             }
+            _componentMessagesIterator = null;
+            _clientId = null;
         }
 
         public boolean hasNext()

@@ -18,8 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.html.MyFacesHtmlOutputMessage;
-import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import org.apache.commons.logging.Log;
@@ -29,7 +27,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIParameter;
 import javax.faces.component.html.HtmlMessage;
-import javax.faces.component.html.HtmlOutputMessage;
+import javax.faces.component.html.HtmlOutputFormat;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
@@ -69,20 +67,11 @@ public class HtmlMessageRenderer
         String text;
         boolean escape;
 
-        if (component instanceof HtmlOutputMessage)
+        if (component instanceof HtmlOutputFormat)
         {
-            HtmlOutputMessage htmlOutputMessage = (HtmlOutputMessage)component;
+            HtmlOutputFormat htmlOutputMessage = (HtmlOutputFormat)component;
             text = getOutputMessageText(facesContext, htmlOutputMessage);
-            // escape property is missing in HtmlOutputMessage API
-            if (component instanceof MyFacesHtmlOutputMessage)
-            {
-                escape = (((MyFacesHtmlOutputMessage)component).isEscape());
-            }
-            else
-            {
-                Boolean b = (Boolean)component.getAttributes().get(JSFAttr.ESCAPE_ATTR);
-                escape = (b == null || b.booleanValue());
-            }
+            escape = ((HtmlOutputFormat)component).isEscape();
             HtmlTextRenderer.renderOutputText(facesContext, component, text, escape);
         }
         else if (component instanceof HtmlMessage)
@@ -98,7 +87,7 @@ public class HtmlMessageRenderer
 
 
     private String getOutputMessageText(FacesContext facesContext,
-                                        HtmlOutputMessage htmlOutputMessage)
+                                        HtmlOutputFormat htmlOutputMessage)
     {
         String pattern = RendererUtils.getStringValue(facesContext, htmlOutputMessage);
         Object[] args;

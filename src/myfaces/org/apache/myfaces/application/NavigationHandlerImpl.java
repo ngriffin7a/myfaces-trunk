@@ -33,7 +33,6 @@ import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
@@ -120,31 +119,17 @@ public class NavigationHandlerImpl
             if (navigationCase.isRedirect())
             {
                 ExternalContext externalContext = facesContext.getExternalContext();
-                Object responseObj = (HttpServletResponse)externalContext.getResponse();
-                if (responseObj instanceof HttpServletResponse)
+                ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
+                String redirectPath = viewHandler.getActionURL(facesContext, navigationCase.getToViewId());
+                try
                 {
-                    HttpServletResponse response = (HttpServletResponse)externalContext.getResponse();
-
-                    ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
-                    String redirectPath =
-                        externalContext.getRequestContextPath() +
-                        viewHandler.getViewIdPath(facesContext, navigationCase.getToViewId());
-                    try
-                    {
-                        response.sendRedirect(redirectPath);
-                    }
-                    catch (IOException e)
-                    {
-                        throw new FacesException(e.getMessage(), e);
-                    }
-                    facesContext.responseComplete();
+                    externalContext.redirect(redirectPath);
                 }
-                else
+                catch (IOException e)
                 {
-                    log.warn("Response is no HttpServletResponse. No redirection to "
-                             + navigationCase.getToViewId() + " possible!");
-                    facesContext.renderResponse();
+                    throw new FacesException(e.getMessage(), e);
                 }
+                facesContext.responseComplete();
             }
             else
             {

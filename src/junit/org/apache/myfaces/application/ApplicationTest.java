@@ -20,15 +20,9 @@ package net.sourceforge.myfaces.application;
 
 import net.sourceforge.myfaces.MyFacesTest;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-
 import javax.faces.application.Application;
 import javax.faces.el.ValueBinding;
+import java.util.*;
 
 
 /**

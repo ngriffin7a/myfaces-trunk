@@ -46,19 +46,14 @@ public class RendererUtils
     public static String getStringValue(FacesContext facesContext,
                                         UIComponent component)
     {
-        if (!(component instanceof ConvertibleValueHolder))
+        if (!(component instanceof ValueHolder))
         {
-            if (component instanceof ValueHolder)
-            {
-                Object value = ((ValueHolder)component).getValue();
-                return value != null ? value.toString() : "";
-            }
             throw new IllegalArgumentException("Component is not a ValueHolder");
         }
 
-        Object value = ((ConvertibleValueHolder)component).getValue();
+        Object value = ((ValueHolder)component).getValue();
 
-        Converter converter = ((ConvertibleValueHolder)component).getConverter();
+        Converter converter = ((ValueHolder)component).getConverter();
         if (converter == null  && value != null)
         {
             if (value instanceof String)

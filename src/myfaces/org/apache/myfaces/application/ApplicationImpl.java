@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.application;
 
+import net.sourceforge.myfaces.application.jsp.JspStateManagerImpl;
 import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
 import net.sourceforge.myfaces.el.MethodBindingImpl;
 import net.sourceforge.myfaces.el.PropertyResolverImpl;
@@ -31,6 +32,7 @@ import org.apache.commons.logging.LogFactory;
 import javax.faces.FacesException;
 import javax.faces.application.Application;
 import javax.faces.application.NavigationHandler;
+import javax.faces.application.StateManager;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -73,6 +75,8 @@ public class ApplicationImpl
     private VariableResolver     _variableResolver;
     private PropertyResolver     _propertyResolver;
     private ActionListener       _actionListener;
+    private String               _defaultRenderKitId;
+    private StateManager         _stateManager;
 
     // components, converters, and validators can be added at runtime--must synchronize
     private final Map _converterMap = Collections.synchronizedMap(new HashMap());
@@ -92,6 +96,8 @@ public class ApplicationImpl
         _variableResolver = new VariableResolverImpl();
         _propertyResolver = new PropertyResolverImpl();
         _actionListener = new ActionListenerImpl();
+        _defaultRenderKitId = null;
+        _stateManager = new JspStateManagerImpl(); 
         if (log.isTraceEnabled()) log.trace("New Application instance created");
     }
 
@@ -559,4 +565,24 @@ public class ApplicationImpl
         return (ValueBinding) _valueBindingCache.get(reference);
     }
 
+
+    public String getDefaultRenderKitId()
+    {
+        return _defaultRenderKitId;
+    }
+
+    public void setDefaultRenderKitId(String defaultRenderKitId)
+    {
+        _defaultRenderKitId = defaultRenderKitId;
+    }
+
+    public StateManager getStateManager()
+    {
+        return _stateManager;
+    }
+
+    public void setStateManager(StateManager stateManager)
+    {
+        _stateManager = stateManager;
+    }
 }

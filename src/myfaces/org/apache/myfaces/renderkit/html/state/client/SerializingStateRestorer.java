@@ -18,29 +18,9 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state.client;
 
-import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfoUtils;
-import net.sourceforge.myfaces.renderkit.html.state.ModelValueEntry;
-import net.sourceforge.myfaces.util.Base64;
-import net.sourceforge.myfaces.util.MyFacesObjectInputStream;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.faces.FactoryFinder;
-import javax.faces.application.ApplicationFactory;
-import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
-import javax.faces.context.ExternalContext;
-import javax.faces.el.ValueBinding;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.zip.GZIPInputStream;
 
 /**
  * StateRestorer that restores state info saved by the SerializingStateSaver.

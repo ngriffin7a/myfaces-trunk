@@ -50,7 +50,7 @@ extends HtmlRenderer
 
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        String url = img.getURL();
+        String url = img.getUrl();
 
         if ((url != null) && (url.length() > 0))
         {

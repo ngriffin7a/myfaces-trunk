@@ -19,14 +19,13 @@
 package net.sourceforge.myfaces.application;
 
 import junit.framework.TestCase;
-
-import javax.faces.context.FacesContext;
-import javax.faces.application.ViewHandler;
-
-import net.sourceforge.myfaces.context.FacesContextMockImpl;
-import net.sourceforge.myfaces.context.ExternalContextMockImpl;
-import net.sourceforge.myfaces.webapp.webxml.WebXml;
 import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
+import net.sourceforge.myfaces.context.ExternalContextMockImpl;
+import net.sourceforge.myfaces.context.FacesContextMockImpl;
+import net.sourceforge.myfaces.webapp.webxml.WebXml;
+
+import javax.faces.application.ViewHandler;
+import javax.faces.context.FacesContext;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
@@ -65,7 +64,7 @@ public class ViewHandlerTest
         ViewHandler viewHandler = new JspViewHandlerImpl();
         externalContext.setRequestServletPath(servletPath);
         externalContext.setRequestPathInfo(pathInfo);
-        String viewpath= viewHandler.getViewIdPath(_facesContext, viewId);
+        String viewpath = null; //FIXME: viewHandler.getViewIdPath(_facesContext, viewId);
         assertEquals(viewIdexp, viewpath);
     }
 

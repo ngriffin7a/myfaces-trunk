@@ -6,7 +6,6 @@ import net.sourceforge.myfaces.renderkit.MyfacesResponseStateManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
@@ -41,18 +40,6 @@ public class JspStateManagerImpl
     }
 
 
-    protected Object getTreeStructureToSave(FacesContext facesContext)
-    {
-        UIViewRoot viewRoot = facesContext.getViewRoot();
-        if (viewRoot.isTransient())
-        {
-            return null;
-        }
-        TreeStructureManager tsm = new TreeStructureManager();
-        return tsm.buildTreeStructureToSave(viewRoot);
-    }
-
-
     protected Object getComponentStateToSave(FacesContext facesContext)
     {
         UIViewRoot viewRoot = facesContext.getViewRoot();
@@ -66,69 +53,25 @@ public class JspStateManagerImpl
         return serializedComponentStates;
     }
 
-    public SerializedView saveSerializedView(FacesContext facesContext) throws IllegalStateException
+    protected Object getTreeStructureToSave(FacesContext facesContext)
     {
-        //Sun's UIComponentBase has a bug:
-        //Component state saving and restoring does not work right if there
-        //are transient components. So, we must remove transient components
-        //before calling viewRoots processSaveState method.
-        removeTransientComponents(facesContext.getViewRoot());
-
-        Object treeStruct = getTreeStructureToSave(facesContext);
-        Object compStates = getComponentStateToSave(facesContext);
-        SerializedView serializedView = new SerializedView(treeStruct, compStates);
-        if (isSavingStateInClient(facesContext))
+        UIViewRoot viewRoot = facesContext.getViewRoot();
+        if (viewRoot.isTransient())
         {
-            return serializedView;
-        }
-        else
-        {
-            //save state in server session
-            ExternalContext externalContext = facesContext.getExternalContext();
-            Map sessionViewMap = getSessionViewMap(externalContext);
-            sessionViewMap.put(facesContext.getViewRoot().getViewId(), serializedView);
             return null;
         }
+        TreeStructureManager tsm = new TreeStructureManager();
+        return tsm.buildTreeStructureToSave(viewRoot);
     }
 
-
-    protected UIViewRoot restoreTreeStructure(FacesContext facesContext, String viewId)
-    {
-        if (isSavingStateInClient(facesContext))
-        {
-            //reconstruct tree structure from request
-            //TODO: We do not know the former renderKitId !?
-            RenderKit rk = getRenderKitFactory().getRenderKit(RenderKitFactory.DEFAULT_RENDER_KIT, facesContext);
-            ResponseStateManager responseStateManager = rk.getResponseStateManager();
-            Object treeStructure = responseStateManager.getTreeStructureToRestore(facesContext, viewId);
-            if (treeStructure != null)
-            {
-                TreeStructureManager tsm = new TreeStructureManager();
-                return tsm.restoreTreeStructure((TreeStructureManager.TreeStructComponent)treeStructure);
-            }
-            if (log.isDebugEnabled()) log.debug("No tree structure state found in client request!");
-        }
-        else
-        {
-            //get component tree from server session
-            Map sessionViewMap = getSessionViewMap(facesContext.getExternalContext());
-            SerializedView serializedView = (SerializedView)sessionViewMap.get(viewId);
-            if (serializedView != null && serializedView.getStructure() != null)
-            {
-                TreeStructureManager tsm = new TreeStructureManager();
-                return tsm.restoreTreeStructure((TreeStructureManager.TreeStructComponent)serializedView.getStructure());
-            }
-            if (log.isDebugEnabled()) log.debug("No tree structure state found in server session!");
-        }
-        return null;
-    }
-
-    protected void restoreComponentState(FacesContext facesContext, UIViewRoot uiViewRoot) throws IOException
+    protected void restoreComponentState(FacesContext facesContext,
+                                         UIViewRoot uiViewRoot,
+                                         String renderKitId)
     {
         Object serializedComponentStates;
         if (isSavingStateInClient(facesContext))
         {
-            RenderKit renderKit = getRenderKitFactory().getRenderKit(uiViewRoot.getRenderKitId(), facesContext);
+            RenderKit renderKit = getRenderKitFactory().getRenderKit(facesContext, renderKitId);
             ResponseStateManager responseStateManager = renderKit.getResponseStateManager();
             serializedComponentStates = responseStateManager.getComponentStateToRestore(facesContext);
             if (serializedComponentStates == null)
@@ -156,27 +99,85 @@ public class JspStateManagerImpl
                 return;
             }
         }
+
+        if (uiViewRoot.getRenderKitId() == null)
+        {
+            //Just to be sure...
+            uiViewRoot.setRenderKitId(renderKitId);
+        }
+
         uiViewRoot.processRestoreState(facesContext, serializedComponentStates);
     }
 
-    public UIViewRoot restoreView(FacesContext facescontext, String viewId)
+    protected UIViewRoot restoreTreeStructure(FacesContext facesContext,
+                                              String viewId,
+                                              String renderKitId)
     {
-        UIViewRoot uiViewRoot = restoreTreeStructure(facescontext, viewId);
+        UIViewRoot uiViewRoot = null;
+        if (isSavingStateInClient(facesContext))
+        {
+            //reconstruct tree structure from request
+            RenderKit rk = getRenderKitFactory().getRenderKit(facesContext, renderKitId);
+            ResponseStateManager responseStateManager = rk.getResponseStateManager();
+            Object treeStructure = responseStateManager.getTreeStructureToRestore(facesContext, viewId);
+            if (treeStructure != null)
+            {
+                TreeStructureManager tsm = new TreeStructureManager();
+                uiViewRoot = tsm.restoreTreeStructure((TreeStructureManager.TreeStructComponent)treeStructure);
+            }
+            if (log.isDebugEnabled()) log.debug("No tree structure state found in client request!");
+        }
+        else
+        {
+            //get component tree from server session
+            Map sessionViewMap = getSessionViewMap(facesContext.getExternalContext());
+            SerializedView serializedView = (SerializedView)sessionViewMap.get(viewId);
+            if (serializedView != null && serializedView.getStructure() != null)
+            {
+                TreeStructureManager tsm = new TreeStructureManager();
+                uiViewRoot = tsm.restoreTreeStructure((TreeStructureManager.TreeStructComponent)serializedView.getStructure());
+            }
+            if (log.isDebugEnabled()) log.debug("No tree structure state found in server session!");
+        }
+
+        return uiViewRoot;
+    }
+
+    public UIViewRoot restoreView(FacesContext facescontext, String viewId, String renderKitId)
+    {
+        UIViewRoot uiViewRoot = restoreTreeStructure(facescontext, viewId, renderKitId);
         if (uiViewRoot != null)
         {
-            try
-            {
-                uiViewRoot.setViewId(viewId);
-                restoreComponentState(facescontext, uiViewRoot);
-            }
-            catch (IOException e)
-            {
-                throw new FacesException(e);
-            }
+            uiViewRoot.setViewId(viewId);
+            restoreComponentState(facescontext, uiViewRoot, renderKitId);
         }
         return uiViewRoot;
     }
 
+    public SerializedView saveSerializedView(FacesContext facesContext) throws IllegalStateException
+    {
+        //Sun's UIComponentBase has a bug:
+        //Component state saving and restoring does not work right if there
+        //are transient components. So, we must remove transient components
+        //before calling viewRoots processSaveState method.
+        removeTransientComponents(facesContext.getViewRoot()); //TODO: still necessary?
+
+        Object treeStruct = getTreeStructureToSave(facesContext);
+        Object compStates = getComponentStateToSave(facesContext);
+        SerializedView serializedView = new SerializedView(treeStruct, compStates);
+        if (isSavingStateInClient(facesContext))
+        {
+            return serializedView;
+        }
+        else
+        {
+            //save state in server session
+            ExternalContext externalContext = facesContext.getExternalContext();
+            Map sessionViewMap = getSessionViewMap(externalContext);
+            sessionViewMap.put(facesContext.getViewRoot().getViewId(), serializedView);
+            return null;
+        }
+    }
 
     public void writeState(FacesContext facesContext,
                            SerializedView serializedView) throws IOException
@@ -188,7 +189,7 @@ public class JspStateManagerImpl
 
         UIViewRoot uiViewRoot = facesContext.getViewRoot();
         //save state in response (client)
-        RenderKit renderKit = getRenderKitFactory().getRenderKit(uiViewRoot.getRenderKitId(), facesContext);
+        RenderKit renderKit = getRenderKitFactory().getRenderKit(facesContext, uiViewRoot.getRenderKitId());
         renderKit.getResponseStateManager().writeState(facesContext, serializedView);
     }
 
@@ -208,7 +209,7 @@ public class JspStateManagerImpl
 
         UIViewRoot uiViewRoot = facesContext.getViewRoot();
         //save state in response (client)
-        RenderKit renderKit = getRenderKitFactory().getRenderKit(uiViewRoot.getRenderKitId(), facesContext);
+        RenderKit renderKit = getRenderKitFactory().getRenderKit(facesContext, uiViewRoot.getRenderKitId());
         ResponseStateManager responseStateManager = renderKit.getResponseStateManager();
         if (responseStateManager instanceof MyfacesResponseStateManager)
         {

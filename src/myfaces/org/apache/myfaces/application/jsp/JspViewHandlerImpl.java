@@ -19,7 +19,6 @@
 
 package net.sourceforge.myfaces.application.jsp;
 
-import net.sourceforge.myfaces.application.MyfacesViewHandler;
 import net.sourceforge.myfaces.util.DebugUtils;
 import net.sourceforge.myfaces.webapp.webxml.ServletMapping;
 import net.sourceforge.myfaces.webapp.webxml.WebXml;
@@ -27,11 +26,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
-import javax.faces.application.StateManager;
+import javax.faces.application.Application;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.render.RenderKitFactory;
 import javax.servlet.ServletRequest;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -44,7 +44,7 @@ import java.util.*;
  * @version $Revision$ $Date$
  */
 public class JspViewHandlerImpl
-    implements ViewHandler, MyfacesViewHandler
+        extends ViewHandler
 {
     private static final Log log = LogFactory.getLog(JspViewHandlerImpl.class);
     public static final String VIEW_ROOT_TYPE        = "ViewRoot";
@@ -53,17 +53,47 @@ public class JspViewHandlerImpl
     public static final String URL_STATE_MARKER      = "JSF_URL_STATE_MARKER=DUMMY";
     public static final int    URL_STATE_MARKER_LEN  = URL_STATE_MARKER.length();
 
-    private StateManager _stateManager;
-
     public JspViewHandlerImpl()
     {
-        _stateManager = new JspStateManagerImpl();
         if (log.isTraceEnabled()) log.trace("New ViewHandler instance created");
     }
 
+    public Locale calculateLocale(FacesContext facesContext)
+    {
+        //ExternalContext.getLocales() is missing. Next Spec will define it.
+        //But since we are in a JSP specific impl we can cast...
+        Enumeration locales = ((ServletRequest)facesContext.getExternalContext().getRequest()).getLocales();
+        while (locales.hasMoreElements())
+        {
+            Locale locale = (Locale) locales.nextElement();
+            for (Iterator it = facesContext.getApplication().getSupportedLocales(); it.hasNext();)
+            {
+                Locale supportLocale = (Locale)it.next();
+                // higher priority to a language match over an exact match
+                // that occures further down (see Jstl Reference 1.0 8.3.1)
+                if (locale.getLanguage().equals(supportLocale.getLanguage()) &&
+                    (supportLocale.getCountry() == null ||
+                     supportLocale.getCountry().length() == 0))
+                {
+                    return supportLocale;
+                }
+                else if (supportLocale.equals(locale))
+                {
+                    return supportLocale;
+                }
+            }
+        }
+
+        Locale defaultLocale = facesContext.getApplication().getDefaultLocale();
+        return defaultLocale != null ? defaultLocale : Locale.getDefault();
+    }
+
+    public String calculateRenderKitId(FacesContext facesContext)
+    {
+        return RenderKitFactory.HTML_BASIC_RENDER_KIT;  //TODO: how to calculate from client?
+    }
+
     /**
-     * MyFaces extension: if there is a current locale, this locale will be set in
-     * the newly created ViewRoot instead of calling calculateLocale.
      * @param facesContext
      * @param viewId
      * @return
@@ -71,11 +101,13 @@ public class JspViewHandlerImpl
     public UIViewRoot createView(FacesContext facesContext, String viewId)
     {
         Locale currentLocale = null;
+        String currentRenderKitId = null;
         UIViewRoot uiViewRoot = facesContext.getViewRoot();
         if (uiViewRoot != null)
         {
-            //Remember current locale
+            //Remember current locale and renderKitId
             currentLocale = uiViewRoot.getLocale();
+            currentRenderKitId = uiViewRoot.getRenderKitId();
         }
 
         uiViewRoot = (UIViewRoot)facesContext.getApplication().createComponent(VIEW_ROOT_TYPE);
@@ -92,15 +124,122 @@ public class JspViewHandlerImpl
             uiViewRoot.setLocale(calculateLocale(facesContext));
         }
 
+        if (currentRenderKitId != null)
+        {
+            //set old locale
+            uiViewRoot.setRenderKitId(currentRenderKitId);
+        }
+        else
+        {
+            //calculate locale
+            uiViewRoot.setRenderKitId(calculateRenderKitId(facesContext));
+        }
+
         if (log.isTraceEnabled()) log.trace("Created view " + viewId);
         return uiViewRoot;
     }
 
+    public String getActionURL(FacesContext facesContext, String viewId)
+    {
+        String path = getViewIdPath(facesContext, viewId);
+        return getResourceURL(facesContext, path);
+    }
+
+    public String getResourceURL(FacesContext facesContext, String path)
+    {
+        String url;
+        if (path.length() > 0 && path.charAt(0) == '/')
+        {
+            url = facesContext.getExternalContext().getRequestContextPath() + path;
+        }
+        else
+        {
+            url = path;
+        }
+
+        url = facesContext.getExternalContext().encodeResourceURL(url);
+        if (facesContext.getApplication().getStateManager().isSavingStateInClient(facesContext))
+        {
+            if (url.indexOf('?') == -1)
+            {
+                return url + '?' + URL_STATE_MARKER;
+            }
+            else
+            {
+                return url + '&' + URL_STATE_MARKER;
+            }
+        }
+        else
+        {
+            return url;
+        }
+    }
+
+    public void renderView(FacesContext facesContext, UIViewRoot viewToRender)
+            throws IOException, FacesException
+    {
+        if (viewToRender == null)
+        {
+            log.fatal("viewToRender must not be null");
+            throw new NullPointerException("viewToRender must not be null");
+        }
+
+        ExternalContext externalContext = facesContext.getExternalContext();
+
+        String viewId = facesContext.getViewRoot().getViewId();
+        ServletMapping servletMapping = getServletMapping(externalContext);
+        if (servletMapping.isExtensionMapping())
+        {
+            String defaultSuffix = externalContext.getInitParameter(ViewHandler.DEFAULT_SUFFIX_PARAM_NAME);
+            String suffix = defaultSuffix != null ? defaultSuffix : ViewHandler.DEFAULT_SUFFIX;
+            DebugUtils.assertError(suffix.charAt(0) == '.',
+                                   log, "Default suffix must start with a dot!");
+            if (!viewId.endsWith(suffix))
+            {
+                int dot = viewId.lastIndexOf('.');
+                if (dot == -1)
+                {
+                    if (log.isTraceEnabled()) log.trace("Current viewId has no extension, appending default suffix " + suffix);
+                    viewId = viewId + suffix;
+                }
+                else
+                {
+                    if (log.isTraceEnabled()) log.trace("Replacing extension of current viewId by suffix " + suffix);
+                    viewId = viewId.substring(0, dot) + suffix;
+                }
+                facesContext.getViewRoot().setViewId(viewId);
+            }
+        }
+
+        if (log.isTraceEnabled()) log.trace("Dispatching to " + viewId);
+        externalContext.dispatch(viewId);
+    }
+
+
     public UIViewRoot restoreView(FacesContext facesContext, String viewId)
     {
-        UIViewRoot viewRoot = getStateManager().restoreView(facesContext, viewId);
+        Application application = facesContext.getApplication();
+        ViewHandler applicationViewHandler = application.getViewHandler();
+        String renderKitId = applicationViewHandler.calculateRenderKitId(facesContext);
+        UIViewRoot viewRoot = application.getStateManager().restoreView(facesContext,
+                                                                        viewId,
+                                                                        renderKitId);
         handleCharacterEncoding(facesContext);
         return viewRoot;
+    }
+
+    /**
+     * Writes a state marker that is replaced later by one or more hidden form
+     * inputs.
+     * @param facesContext
+     * @throws IOException
+     */
+    public void writeState(FacesContext facesContext) throws IOException
+    {
+        if (facesContext.getApplication().getStateManager().isSavingStateInClient(facesContext))
+        {
+            facesContext.getResponseWriter().write(FORM_STATE_MARKER);
+        }
     }
 
     /**
@@ -176,44 +315,7 @@ public class JspViewHandlerImpl
     }
 
 
-    public Locale calculateLocale(FacesContext facesContext)
-    {
-        //ExternalContext.getLocales() is missing. Next Spec will define it.
-        //But since we are in a JSP specific impl we can cast...
-        Enumeration locales = ((ServletRequest)facesContext.getExternalContext().getRequest()).getLocales();
-        while (locales.hasMoreElements())
-        {
-            Locale locale = (Locale) locales.nextElement();
-            for (Iterator it = facesContext.getApplication().getSupportedLocales(); it.hasNext();)
-            {
-                Locale supportLocale = (Locale)it.next();
-                // higher priority to a language match over an exact match
-                // that occures further down (see Jstl Reference 1.0 8.3.1)
-                if (locale.getLanguage().equals(supportLocale.getLanguage()) &&
-                    (supportLocale.getCountry() == null ||
-                     supportLocale.getCountry().length() == 0))
-                {
-                    return supportLocale;
-                }
-                else if (supportLocale.equals(locale))
-                {
-                    return supportLocale;
-                }
-            }
-        }
-
-        Locale defaultLocale = facesContext.getApplication().getDefaultLocale();
-        return defaultLocale != null ? defaultLocale : Locale.getDefault();
-    }
-
-
-    public StateManager getStateManager()
-    {
-        return _stateManager;
-    }
-
-
-    public String getViewIdPath(FacesContext facescontext, String viewId)
+    private String getViewIdPath(FacesContext facescontext, String viewId)
     {
         if (viewId == null)
         {
@@ -267,6 +369,7 @@ public class JspViewHandlerImpl
         }
     }
 
+
     private static ServletMapping getServletMapping(ExternalContext externalContext)
     {
         String servletPath = externalContext.getRequestServletPath();
@@ -308,92 +411,6 @@ public class JspViewHandlerImpl
                   " requestPathInfo = " + requestPathInfo);
         throw new IllegalArgumentException("could not find pathMapping for servletPath = " + servletPath +
                   " requestPathInfo = " + requestPathInfo);
-    }
-
-
-    public void renderView(FacesContext facesContext, UIViewRoot viewToRender)
-            throws IOException, FacesException
-    {
-        if (viewToRender == null)
-        {
-            log.fatal("viewToRender must not be null");
-            throw new NullPointerException("viewToRender must not be null");
-        }
-
-        ExternalContext externalContext = facesContext.getExternalContext();
-
-        String viewId = facesContext.getViewRoot().getViewId();
-        ServletMapping servletMapping = getServletMapping(externalContext);
-        if (servletMapping.isExtensionMapping())
-        {
-            String defaultSuffix = externalContext.getInitParameter(ViewHandler.DEFAULT_SUFFIX_PARAM_NAME);
-            String suffix = defaultSuffix != null ? defaultSuffix : ViewHandler.DEFAULT_SUFFIX;
-            DebugUtils.assertError(suffix.charAt(0) == '.',
-                                   log, "Default suffix must start with a dot!");
-            if (!viewId.endsWith(suffix))
-            {
-                int dot = viewId.lastIndexOf('.');
-                if (dot == -1)
-                {
-                    if (log.isTraceEnabled()) log.trace("Current viewId has no extension, appending default suffix " + suffix);
-                    viewId = viewId + suffix;
-                }
-                else
-                {
-                    if (log.isTraceEnabled()) log.trace("Replacing extension of current viewId by suffix " + suffix);
-                    viewId = viewId.substring(0, dot) + suffix;
-                }
-                facesContext.getViewRoot().setViewId(viewId);
-            }
-        }
-
-        if (log.isTraceEnabled()) log.trace("Dispatching to " + viewId);
-        externalContext.dispatchMessage(viewId);
-    }
-
-
-    /**
-     * Writes a state marker that is replaced later by one or more hidden form
-     * inputs.
-     * @param facesContext
-     * @throws IOException
-     */
-    public void writeState(FacesContext facesContext) throws IOException
-    {
-        if (getStateManager().isSavingStateInClient(facesContext))
-        {
-            facesContext.getResponseWriter().write(FORM_STATE_MARKER);
-        }
-    }
-
-
-    /**
-     * MyFaces extension: Should be called from HyperlinkRenderers to encode
-     * the href attribute. If client state saving is used, we add a state marker
-     * to the url.
-     * @param facesContext
-     * @param url
-     * @return
-     * @throws IOException
-     */
-    public String encodeURL(FacesContext facesContext, String url) throws IOException
-    {
-        url = facesContext.getExternalContext().encodeResourceURL(url);
-        if (getStateManager().isSavingStateInClient(facesContext))
-        {
-            if (url.indexOf('?') == -1)
-            {
-                return url + '?' + URL_STATE_MARKER;
-            }
-            else
-            {
-                return url + '&' + URL_STATE_MARKER;
-            }
-        }
-        else
-        {
-            return url;
-        }
     }
 
 }

@@ -18,7 +18,6 @@
  */
 package net.sourceforge.myfaces.renderkit.html.util;
 
-import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HTML;
@@ -420,13 +419,17 @@ public class HTMLUtil
         return buf.toString();
     }
 
+    /** @deprecated */
     public static boolean isDisabled(UIComponent component)
     {
-        return UIComponentUtils.getBooleanAttribute(component, HTML.DISABLED_ATTR, false);
+        //TODO: support all component types with isDisabled method...
+        return false;
     }
 
+    /** @deprecated */
     public static boolean isReadOnly(UIComponent component)
     {
-        return UIComponentUtils.getBooleanAttribute(component, HTML.READONLY_ATTR, false);
+        //TODO: support all component types with isReadOnly method...
+        return false;
     }
 }

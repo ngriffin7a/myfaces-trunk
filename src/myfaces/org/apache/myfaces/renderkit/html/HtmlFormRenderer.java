@@ -58,19 +58,10 @@ public class HtmlFormRenderer
         String viewId = facesContext.getViewRoot().getViewId();
         String clientId = htmlForm.getClientId(facesContext);
 
-        String actionURL;
-        String contextPath = externalContext.getRequestContextPath();
-        if (contextPath == null)
-        {
-            actionURL = viewHandler.getViewIdPath(facesContext, viewId);
-        }
-        else
-        {
-            actionURL = contextPath + viewHandler.getViewIdPath(facesContext, viewId);
-        }
+        String actionURL = viewHandler.getActionURL(facesContext, viewId);
 
         writer.startElement(HTML.FORM_ELEM, htmlForm);
-        writer.writeAttribute(HTML.ID_ATTR, clientId, null);
+        writer.writeAttribute(HTML.ID_ATTR, convertClientId(facesContext, clientId), null);
         writer.writeAttribute(HTML.NAME_ATTR, MyFacesHtmlForm.getFormName(facesContext, htmlForm), null);
         writer.writeAttribute(HTML.METHOD_ATTR, "post", null);
         writer.writeAttribute(HTML.ACTION_ATTR,

@@ -53,24 +53,18 @@ public class RenderKitFactoryImpl
         }
     }
 
-    public RenderKit getRenderKit(String id)
+    public RenderKit getRenderKit(FacesContext facescontext, String renderKitId)
             throws FacesException
     {
         synchronized (_lock)
         {
-            RenderKit renderkit = (RenderKit)_renderkits.get(id);
+            RenderKit renderkit = (RenderKit)_renderkits.get(renderKitId);
             if (renderkit == null)
             {
-                throw new IllegalArgumentException("Unknown renderkit '" + id + "'.");
+                throw new IllegalArgumentException("Unknown renderkit '" + renderKitId + "'.");
             }
             return renderkit;
         }
-    }
-
-    public RenderKit getRenderKit(String s, FacesContext facescontext)
-            throws FacesException
-    {
-        return getRenderKit(s);
     }
 
     public Iterator getRenderKitIds()

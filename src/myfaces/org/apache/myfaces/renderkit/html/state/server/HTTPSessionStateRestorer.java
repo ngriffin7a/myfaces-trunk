@@ -18,26 +18,11 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state.server;
 
-import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.JspBeanInfo;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
-import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfoUtils;
-import net.sourceforge.myfaces.renderkit.html.state.ModelValueEntry;
 import net.sourceforge.myfaces.renderkit.html.state.StateRestorer;
-import net.sourceforge.myfaces.util.FacesUtils;
 
-import javax.faces.FactoryFinder;
 import javax.faces.component.UIViewRoot;
-import javax.faces.application.ApplicationFactory;
 import javax.faces.context.FacesContext;
-import javax.faces.el.ValueBinding;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
 
 
 /**

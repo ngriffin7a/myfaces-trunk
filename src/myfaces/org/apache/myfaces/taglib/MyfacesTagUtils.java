@@ -22,7 +22,6 @@ import net.sourceforge.myfaces.renderkit.JSFAttr;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.faces.component.ConvertibleValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.component.ValueHolder;
 import javax.faces.context.FacesContext;
@@ -140,7 +139,7 @@ public class MyfacesTagUtils
     {
         if (value != null)
         {
-            if (component instanceof ConvertibleValueHolder)
+            if (component instanceof ValueHolder)
             {
                 if (isValueReference(value))
                 {
@@ -151,7 +150,7 @@ public class MyfacesTagUtils
                 {
                     FacesContext facesContext = FacesContext.getCurrentInstance();
                     Converter converter = facesContext.getApplication().createConverter(value);
-                    ((ConvertibleValueHolder)component).setConverter(converter);
+                    ((ValueHolder)component).setConverter(converter);
                 }
             }
             else

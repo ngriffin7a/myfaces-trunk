@@ -45,14 +45,12 @@ public class HtmlMenuRenderer
         if (uiComponent instanceof HtmlSelectManyMenu)
         {
             HtmlRendererUtils.renderMenu(facesContext,
-                                         (HtmlSelectManyMenu)uiComponent,
-                                         ((HtmlSelectManyMenu)uiComponent).getSize());
+                                         (HtmlSelectManyMenu)uiComponent);
         }
         else if (uiComponent instanceof HtmlSelectOneMenu)
         {
             HtmlRendererUtils.renderMenu(facesContext,
-                                         (HtmlSelectOneMenu)uiComponent,
-                                         ((HtmlSelectOneMenu)uiComponent).getSize());
+                                         (HtmlSelectOneMenu)uiComponent);
         }
         else
         {

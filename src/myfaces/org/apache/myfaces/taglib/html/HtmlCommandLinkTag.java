@@ -103,7 +103,7 @@ public class HtmlCommandLinkTag
             MethodBinding mb;
             if (isValueReference(_action))
             {
-                mb = context.getApplication().createMethodBinding(_action, null);
+                mb = getFacesContext().getApplication().createMethodBinding(_action, null);
             }
             else
             {

@@ -18,15 +18,13 @@
  */
 package net.sourceforge.myfaces.component.html;
 
-import javax.faces.component.html.HtmlSelectManyCheckboxList;
+import javax.faces.component.html.HtmlOutputFormat;
 
 /**
- * DOCUMENT ME!
- * 
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class MyFacesHtmlSelectManyCheckboxList
-    extends HtmlSelectManyCheckboxList
+public class MyFacesHtmlOutputFormat
+    extends HtmlOutputFormat
 {
 }

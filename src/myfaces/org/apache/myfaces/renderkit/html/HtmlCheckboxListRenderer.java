@@ -24,7 +24,7 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
-import javax.faces.component.html.HtmlSelectManyCheckboxList;
+import javax.faces.component.html.HtmlSelectManyCheckbox;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.convert.Converter;
@@ -53,9 +53,9 @@ public class HtmlCheckboxListRenderer
             throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent,
-                                         HtmlSelectManyCheckboxList.class);
+                                         HtmlSelectManyCheckbox.class);
 
-        HtmlSelectManyCheckboxList selectMany = (HtmlSelectManyCheckboxList)uiComponent;
+        HtmlSelectManyCheckbox selectMany = (HtmlSelectManyCheckbox)uiComponent;
 
         String layout = selectMany.getLayout();
         boolean pageDirectionLayout = true; //TODO: Default to PAGE_DIRECTION ?
@@ -127,9 +127,9 @@ public class HtmlCheckboxListRenderer
     public void decode(FacesContext facesContext, UIComponent uiComponent)
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent,
-                                         HtmlSelectManyCheckboxList.class);
+                                         HtmlSelectManyCheckbox.class);
         HtmlRendererUtils.decodeSelectMany(facesContext,
-                                           (HtmlSelectManyCheckboxList)uiComponent);
+                                           (HtmlSelectManyCheckbox)uiComponent);
     }
 
 }

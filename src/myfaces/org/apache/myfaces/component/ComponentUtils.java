@@ -25,6 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import javax.faces.component.*;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
+import javax.faces.el.ValueBinding;
 import javax.faces.model.SelectItem;
 import java.util.Collection;
 
@@ -37,6 +38,8 @@ public class ComponentUtils
     private static final Log log = LogFactory.getLog(ComponentUtils.class);
 
     /**
+     * TODO: cross-check with spec and JSF API
+     *
      * Utility method to get the model SelectItem that a UISelectItem component represents.
      */
     public static SelectItem getSelectItemFromUISelectItem(UISelectItem uiSelectItem)
@@ -52,36 +55,69 @@ public class ComponentUtils
         }
         else
         {
-            Converter converter;
-            UIComponent parent = uiSelectItem.getParent();
             FacesContext facesContext = FacesContext.getCurrentInstance();
-            if (parent instanceof UISelectMany)
+            Object itemValue = uiSelectItem.getItemValue();
+            Object convertedItemValue;
+
+            if (itemValue == null)
             {
-                converter = RendererUtils.findUISelectManyConverter(facesContext,
-                                                                    (UISelectMany)parent);
-            }
-            else if (parent instanceof UISelectOne)
-            {
-                converter = RendererUtils.findUIOutputConverter(facesContext,
-                                                                (UISelectOne)parent);
+                convertedItemValue = null;
             }
             else
             {
-                log.error("UISelectItem with id " + uiSelectItem.getClientId(facesContext) + " not nested within UISelectOne or UISelectMany");
-                converter = null;
+                UIComponent parent = uiSelectItem.getParent();
+                ValueBinding vb = parent.getValueBinding("value");
+                if (vb == null)
+                {
+                    //Nothing known about expected type, no conversion needed
+                    convertedItemValue = itemValue;
+                }
+                else
+                {
+                    Class expectedType = vb.getType(facesContext);
+                    if (expectedType.isInstance(itemValue))
+                    {
+                        //already of expected type
+                        convertedItemValue = itemValue;
+                    }
+                    else
+                    {
+                        if (!(itemValue instanceof String))
+                        {
+                            throw new IllegalArgumentException("Item value of UISelectItem with id " + uiSelectItem.getClientId(facesContext) + " is not of proper type and not a convertible String");
+                        }
+
+                        //find converter of corresponding UISelectMany/UISelectOne
+                        Converter converter;
+                        if (parent instanceof UISelectMany)
+                        {
+                            converter = RendererUtils.findUISelectManyConverter(facesContext,
+                                                                                (UISelectMany)parent);
+                        }
+                        else if (parent instanceof UISelectOne)
+                        {
+                            converter = RendererUtils.findUIOutputConverter(facesContext,
+                                                                            (UISelectOne)parent);
+                        }
+                        else
+                        {
+                            log.error("UISelectItem with id " + uiSelectItem.getClientId(facesContext) + " not nested within UISelectOne or UISelectMany");
+                            converter = null;
+                        }
+
+                        if (converter == null)
+                        {
+                            convertedItemValue = itemValue;
+                        }
+                        else
+                        {
+                            convertedItemValue = converter.getAsObject(facesContext, uiSelectItem, itemValue.toString());
+                        }
+                    }
+                }
             }
 
-            Object convertedValue;
-            if (converter == null)
-            {
-                convertedValue = uiSelectItem.getItemValue();
-            }
-            else
-            {
-                convertedValue = converter.getAsObject(facesContext, uiSelectItem, uiSelectItem.getItemValue());
-            }
-
-            return new SelectItem(convertedValue,
+            return new SelectItem(convertedItemValue,
                                   uiSelectItem.getItemLabel(),
                                   uiSelectItem.getItemDescription(),
                                   MyFacesUISelectItem.isDisabled(uiSelectItem));
@@ -133,5 +169,6 @@ public class ComponentUtils
             throw new IllegalArgumentException("Unsupported UISelectItems value of type " + value.getClass().getName());
         }
     }
+
 
 }

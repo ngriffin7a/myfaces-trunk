@@ -87,7 +87,7 @@ public class LifecycleImpl
             return;
         }
 
-        renderResponse(facesContext);
+        render(facesContext);
     }
 
 
@@ -139,7 +139,7 @@ public class LifecycleImpl
 
         if (facesContext.getRenderResponse())
         {
-            renderResponse(facesContext);
+            render(facesContext);
             if (log.isDebugEnabled()) log.debug("exiting restoreView in " + LifecycleImpl.class.getName() + " (after render response)");
             return true;
         }
@@ -172,7 +172,7 @@ public class LifecycleImpl
 
         if (facesContext.getRenderResponse())
         {
-            renderResponse(facesContext);
+            render(facesContext);
             if (log.isDebugEnabled()) log.debug("exiting applyRequestValues in " + LifecycleImpl.class.getName() + " (after render response)");
             return true;
         }
@@ -206,19 +206,10 @@ public class LifecycleImpl
 
         if (facesContext.getRenderResponse())
         {
-            renderResponse(facesContext);
+            render(facesContext);
             if (log.isDebugEnabled()) log.debug("exiting processValidations in " + LifecycleImpl.class.getName() + " (after render response)");
             return true;
         }
-
-        /*
-        if (getMessageCount(facesContext) > messageCountBefore)
-        {
-            renderResponse(facesContext);
-            if (log.isDebugEnabled()) log.debug("exiting processValidations in " + LifecycleImpl.class.getName() + " (after render response - because of messages during validation!)");
-            return true;
-        }
-        */
 
         if (log.isTraceEnabled()) log.trace("exiting processValidations in " + LifecycleImpl.class.getName());
         return false;
@@ -247,7 +238,7 @@ public class LifecycleImpl
 
         if (facesContext.getRenderResponse())
         {
-            renderResponse(facesContext);
+            render(facesContext);
             if (log.isDebugEnabled()) log.debug("exiting updateModelValues in " + LifecycleImpl.class.getName() + " (after render response)");
             return true;
         }
@@ -282,13 +273,16 @@ public class LifecycleImpl
         return false;
     }
 
-    /**
-     * Render Response (JSF.2.2.6)
-     */
-    private void renderResponse(FacesContext facesContext)
-        throws FacesException
+
+    public void render(FacesContext facesContext) throws FacesException
     {
         if (log.isTraceEnabled()) log.trace("entering renderResponse in " + LifecycleImpl.class.getName());
+
+        if (facesContext.getResponseComplete())
+        {
+            if (log.isDebugEnabled()) log.debug("exiting renderResponse in " + LifecycleImpl.class.getName() + " (response complete)");
+            return;
+        }
 
         informPhaseListenersBefore(facesContext, PhaseId.RENDER_RESPONSE);
 

@@ -30,14 +30,6 @@ public abstract class MyfacesStateManager
         extends StateManager
 {
     /**
-     * Writes hidden form inputs with the state info to be saved.
-     * For every form state marker this method is called once from
-     * {@link net.sourceforge.myfaces.taglib.core.ViewTag#doAfterBody()}.
-     */
-    public abstract void writeState(FacesContext facesContext,
-                                    SerializedView serializedView) throws IOException;
-
-    /**
      * Writes url parameters with the state info to be saved.
      * For every url state marker this method is called once from
      * {@link net.sourceforge.myfaces.taglib.core.ViewTag#doAfterBody()}.

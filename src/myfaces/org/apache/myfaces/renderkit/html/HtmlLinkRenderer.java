@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.MyFacesConfig;
-import net.sourceforge.myfaces.application.MyfacesViewHandler;
 import net.sourceforge.myfaces.component.html.MyFacesHtmlForm;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
@@ -32,7 +31,6 @@ import javax.faces.component.UIForm;
 import javax.faces.component.UIParameter;
 import javax.faces.component.html.HtmlCommandLink;
 import javax.faces.component.html.HtmlOutputLink;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.event.ActionEvent;
@@ -132,19 +130,9 @@ public class HtmlLinkRenderer
                                                 HtmlCommandLink commandLink)
         throws IOException
     {
-        String path;
         ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
-        ExternalContext externalContext = facesContext.getExternalContext();
         String viewId = facesContext.getViewRoot().getViewId();
-        String contextPath = externalContext.getRequestContextPath();
-        if (contextPath == null)
-        {
-            path = viewHandler.getViewIdPath(facesContext, viewId);
-        }
-        else
-        {
-            path = contextPath + viewHandler.getViewIdPath(facesContext, viewId);
-        }
+        String path = viewHandler.getActionURL(facesContext, viewId);
 
         StringBuffer hrefBuf = new StringBuffer(path);
 
@@ -170,14 +158,7 @@ public class HtmlLinkRenderer
         }
 
         String href = hrefBuf.toString();
-        if (viewHandler instanceof MyfacesViewHandler)
-        {
-            href = ((MyfacesViewHandler)viewHandler).encodeURL(facesContext, href);
-        }
-        else
-        {
-            href = externalContext.encodeResourceURL(href);    //TODO: or encodeActionURL ?
-        }
+        href = viewHandler.getResourceURL(facesContext, href);//TODO: or getActionURL ?
 
         writer.startElement(HTML.ANCHOR_ELEM, commandLink);
         writer.writeURIAttribute(HTML.HREF_ATTR, href, null);

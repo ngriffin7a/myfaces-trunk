@@ -20,13 +20,12 @@ package net.sourceforge.myfaces.el;
 
 import net.sourceforge.myfaces.MyFacesTest;
 
+import javax.faces.el.ReferenceSyntaxException;
+import javax.faces.el.ValueBinding;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.faces.el.ReferenceSyntaxException;
-import javax.faces.el.ValueBinding;
 
 
 /**

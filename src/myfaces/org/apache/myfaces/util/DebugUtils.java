@@ -30,6 +30,7 @@ import javax.faces.el.ValueBinding;
 import java.beans.BeanInfo;
 import java.beans.PropertyDescriptor;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -286,6 +287,21 @@ public class DebugUtils
         for (int i = 0; i < depth; i++)
         {
             stream.print("  ");
+        }
+    }
+
+    public static String componentAsString(UIComponent comp)
+    {
+        try
+        {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            printComponent(comp, new PrintStream(baos));
+            baos.close();
+            return baos.toString();
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.renderkit.html.util;
 
-import java.text.CharacterIterator;
+
 
 
 /**
