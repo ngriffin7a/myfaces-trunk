@@ -1,66 +1,50 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<project name="myfaces" default="all">
-
-    <!-- allow some of the properties to be overridden -->
-    <property file="build.properties"/>
-
-    <!-- Manifest-Infos -->
-    <property name="manifest.impl.title" value="MyFaces"/>
-    <property name="manifest.impl.version" value="0.3.1"/>
-    <property name="manifest.impl.vendor" value="MyFaces Project Team"/>
-
-    <property name="project.dir" value="${basedir}"/>
+<project name="myfaces-release" default="all">
 
     <property environment="env"/>
 
-    <!-- dir for temporary files -->
-    <property name="temp.dir" value="${project.dir}/temp"/>
+    <!-- Constants -->
+    <property name="project.dir" location="${basedir}"/>
+    <property name="myfaces.src" location="${project.dir}/src/myfaces"/>
+    <property name="tlds.dir" location="${project.dir}/tlds"/>
+    <property name="doc.dir" location="${project.dir}/doc"/>
 
-    <!-- source dir for compiling -->
-    <property name="main.src.dir" value="${project.dir}\src\myfaces"/>
+    <!-- Properties -->
+    <property file="build.properties"/>
+    <property file="manifest.properties"/>
 
-    <!-- destination dir for compiling -->
-    <property name="main.classes.dir" value="${temp.dir}/main_classes"/>
-
-    <!-- dir with the TLDs -->
-    <property name="tlds.dir" value="${project.dir}\tlds"/>
-
-    <!-- examples dir -->
-    <property name="webapps.dir" value="${project.dir}/webapps"/>
-
-    <!-- destination dir for compiling -->
-    <property name="examples.classes.dir" value="${temp.dir}/examples_classes"/>
-
-    <!-- path to the "jsf-api.jar" file -->
-    <property name="jsf-api.jar" value="must be specified in build.properties"/>
-
-    <!-- path to the "mail.jar" file -->
-    <property name="mail.jar" value="must be specified in build.properties"/>
-
-    <!-- path to the "servlet.jar" file -->
-    <property name="servlet.jar" value="must be specified in build.properties"/>
-
+    <!-- Temporary dir. May be overridden in build.properties -->
+    <property name="temp.dir" value="${env.TEMP}"/>
 
     <!-- classpath for compiling -->
     <path id="project.class.path">
-        <pathelement location="${jsf-api.jar}" />
+        <pathelement location="${jsf-api.jar}"/>
         <pathelement location="${mail.jar}"/>
         <pathelement location="${servlet.jar}"/>
     </path>
 
-    <target name="-compile-main">
-        <mkdir dir="${main.classes.dir}"/>
-        <javac srcdir="${main.src.dir}"
-               destdir="${main.classes.dir}"
+
+    <target name="myfaces-jar"
+            description="builds the myfaces.jar file">
+
+        <!-- temporary dir -->
+        <mkdir dir="${temp.dir}/myfaces-jar"/>
+
+        <!-- compile main classes (meanwhile optimize is off for better debugging) -->
+        <mkdir dir="${temp.dir}/myfaces-jar/classes"/>
+        <javac srcdir="${myfaces.src}"
+               destdir="${temp.dir}/myfaces-jar/classes"
                optimize="off"
                classpathref="project.class.path">
         </javac>
-    </target>
 
-    <target name="-jar-main" depends="-compile-main, -timestamp">
-        <mkdir dir="${temp.dir}"/>
+        <!-- timestamp for the manifest -->
+        <tstamp>
+            <format property="TODAY_DE" pattern="dd.MM.yyyy HH:mm" locale="de"/>
+        </tstamp>
 
-        <manifest file="${temp.dir}/MANIFEST.MF">
+        <!-- create manifest -->
+        <manifest file="${temp.dir}/myfaces-jar/MANIFEST.MF">
             <attribute name="Built-By" value="${user.name}"/>
             <section name="myfaces.sourceforge.net">
                 <attribute name="Implementation-Title" value="${manifest.impl.title}"/>
@@ -69,151 +53,85 @@
             </section>
         </manifest>
 
-        <jar destfile="${temp.dir}/myfaces.jar"
-            manifest="${temp.dir}/MANIFEST.MF">
-            <fileset dir="${main.classes.dir}" includes="**"
-                excludes=".dependency-info/**/*"/>
-            <fileset dir="${main.src.dir}" includes="**"
-                excludes="**/*.java"/>
-            <zipfileset dir="${tlds.dir}" includes="*.tld" prefix="META-INF/"/>
+        <!-- build the jar -->
+        <jar destfile="${myfaces.jar}"
+             manifest="${temp.dir}/myfaces-jar/MANIFEST.MF">
+            <!-- classes -->
+            <fileset dir="${temp.dir}/myfaces-jar/classes"
+                     includes="**"
+                     excludes=".dependency-info/**/*"/>
+            <!-- properties, DTDs, XMLs -->
+            <fileset dir="${myfaces.src}"
+                     includes="**"
+                     excludes="**/*.java
+                               **/package.html"/>
+            <!-- TLDs -->
+            <zipfileset dir="${tlds.dir}"
+                        includes="*.tld"
+                        prefix="META-INF/"/>
         </jar>
-    </target>
 
-
-
-    <target name="-compile-examples" depends="-jar-main" >
-        <ant antfile="${webapps.dir}/examples/build.xml"
-             target="compile">
-            <property name="dest.classes.dir" value="${examples.classes.dir}"/>
-            <property name="myfaces.jar" value="${temp.dir}/myfaces.jar"/>
-            <property name="basedir" value="${webapps.dir}/examples"/>
-        </ant>
-    </target>
-
-    <target name="-jar-examples" depends="-compile-examples">
-        <mkdir dir="${temp.dir}"/>
-        <jar destfile="${temp.dir}/myfaces-examples.jar">
-            <fileset dir="${examples.classes.dir}" includes="**"
-                excludes=".dependency-info/**/*"/>
-        </jar>
-    </target>
-
-
-
-    <target name="-timestamp">
-        <tstamp>
-            <format property="TODAY_DE" pattern="dd.MM.yyyy HH:mm" locale="de"/>
-        </tstamp>
-    </target>
-
-
-    <target name="makeclean">
-        <delete quiet="true" failonerror="false" includeEmptyDirs="true">
-            <fileset dir="${main.classes.dir}"/>
-            <fileset dir="${examples.classes.dir}"/>
-            <fileset dir="${temp.dir}"/>
+        <!-- remove temporary files -->
+        <delete includeEmptyDirs="true">
+            <fileset dir="${temp.dir}/myfaces-jar"/>
         </delete>
+
     </target>
 
 
-    <target name="release" depends="makeclean, -jar-main, -jar-examples">
-        <mkdir dir="${temp.dir}/api"/>
-        <javadoc sourcepath="${main.src.dir}"
-                 destdir="${temp.dir}/api"
+    <target name="apidoc"
+            description="creates javadoc for the api">
+        <mkdir dir="${doc.dir}/api"/>
+        <javadoc sourcepath="${myfaces.src}"
+                 destdir="${doc.dir}/api"
                  packagenames="net.sourceforge.myfaces.*"
                  classpathref="project.class.path"
-                 failonerror="true" />
+                 failonerror="true"/>
+    </target>
 
-        <ant antfile="${webapps.dir}/examples/build.xml"
-             target="copy-web_clientsaving">
-            <property name="dest.web.dir" value="${temp.dir}/examples_cs"/>
-            <property name="basedir" value="${webapps.dir}/examples"/>
-        </ant>
-        <replace file="${temp.dir}/examples_cs/WEB-INF/web.xml">
-            <replacetoken><![CDATA[<!-- @develop_only:start@ -->]]></replacetoken>
-            <replacevalue><![CDATA[<!--]]></replacevalue>
-        </replace>
-        <replace file="${temp.dir}/examples_cs/WEB-INF/web.xml">
-            <replacetoken><![CDATA[<!-- @develop_only:end@ -->]]></replacetoken>
-            <replacevalue><![CDATA[-->]]></replacevalue>
-        </replace>
 
-        <ant antfile="${webapps.dir}/examples/build.xml"
-            target="copy-web_serversaving">
-            <property name="dest.web.dir" value="${temp.dir}/examples_ss"/>
-            <property name="basedir" value="${webapps.dir}/examples"/>
-        </ant>
-        <replace file="${temp.dir}/examples_ss/WEB-INF/web.xml">
-            <replacetoken><![CDATA[<!-- @develop_only:start@ -->]]></replacetoken>
-            <replacevalue><![CDATA[<!--]]></replacevalue>
-        </replace>
-        <replace file="${temp.dir}/examples_ss/WEB-INF/web.xml">
-            <replacetoken><![CDATA[<!-- @develop_only:end@ -->]]></replacetoken>
-            <replacevalue><![CDATA[-->]]></replacevalue>
-        </replace>
-
-        <tar destfile="${temp.dir}/myfaces-${manifest.impl.version}.tgz"
+    <target name="bin-release"
+            depends="myfaces-jar, apidoc"
+            description="creates the binary release file myfaces-x.x.x.tgz (don't forget to adjust manifest.properties!)">
+        <tar destfile="myfaces-${manifest.impl.version}.tgz"
              compression="gzip">
-
-            <tarfileset dir="${project.dir}/doc"
+            <tarfileset dir="${doc.dir}"
                         prefix="myfaces-${manifest.impl.version}/doc"/>
-            <tarfileset dir="${temp.dir}/api"
-                        prefix="myfaces-${manifest.impl.version}/doc/api" />
-            <tarfileset dir="${temp.dir}"
-                        includes="myfaces.jar,myfaces-examples.jar"
+            <tarfileset file="${myfaces.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
-            <tarfileset file="${mail.jar}"
-                        prefix="myfaces-${manifest.impl.version}/lib"/>
-
-            <tarfileset dir="${temp.dir}/examples_cs"
-                        prefix="myfaces-${manifest.impl.version}/webapps/examples_cs"/>
-            <tarfileset dir="${temp.dir}/examples_ss"
-                        prefix="myfaces-${manifest.impl.version}/webapps/examples_ss"/>
-
         </tar>
     </target>
 
 
-
-    <!--
-    Convenient targets to deploy to tomcat (added by Bill Dudney [bdudney@mac.com]).
-    See "tomcat-install-with-ant-readme.txt" for details.
-    Comment out, if you do not have the necessary catalina-ant.jar file.
-    -->
-	<!-- must have 'catalina-ant.jar' in your ant class path for these to work. -->
-    <taskdef name="list" classname="org.apache.catalina.ant.ListTask"/>
-    <taskdef name="install" classname="org.apache.catalina.ant.InstallTask"/>
-    <taskdef name="reload" classname="org.apache.catalina.ant.ReloadTask"/>
-    <taskdef name="remove" classname="org.apache.catalina.ant.RemoveTask"/>
-
-    <!-- these properties need to be overridable in a properties file -->
-    <property name="tomcat.manager.url" value="http://localhost:8080/manager"/>
-    <property name="tomcat.admin.user" value="admin"/>
-    <property name="tomcat.admin.passwd" value="password"/>
-    <property name="tomcat.example.context.path" value="/myFacesExample"/>
-
-	<target name="list" description="List applications installed on tomcat" >
-	  <list url="${tomcat.manager.url}" username="${tomcat.admin.user}"
-	        password="${tomcat.admin.passwd}" />
-	</target>
-
-	<target name="install" description="Install example web application on tomcat">
-	  <install url="${tomcat.manager.url}" username="${tomcat.admin.user}"
-	           password="${tomcat.admin.passwd}"
-               path="${tomcat.example.context.path}"
-               war="file:${project.dir}/web" />
+    <target name="src-release"
+            depends="apidoc"
+            description="creates the source release file myfaces-x.x.x-src.tgz (don't forget to adjust manifest.properties!)">
+        <tar destfile="myfaces-${manifest.impl.version}-src.tgz"
+             compression="gzip">
+            <tarfileset dir="${doc.dir}"
+                        prefix="myfaces-${manifest.impl.version}/doc"/>
+            <tarfileset dir="${myfaces.src}"
+                        prefix="myfaces-${manifest.impl.version}/src/myfaces"/>
+            <tarfileset dir="${tlds.dir}"
+                        prefix="myfaces-${manifest.impl.version}/tlds"/>
+        </tar>
     </target>
 
-	<target name="reload" description="Reload example web application on tomcat">
-	  <reload  url="${tomcat.manager.url}" username="${tomcat.admin.user}"
-	           password="${tomcat.admin.passwd}"
-	           path="${tomcat.example.context.path}"/>
-	</target>
 
-    <target name="remove" description="Remove example web application from tomcat">
-	  <remove url="${tomcat.manager.url}" username="${tomcat.admin.user}"
-	          password="${tomcat.admin.passwd}"
-	          path="${tomcat.example.context.path}"/>
-	</target>
+    <target name="all"
+            depends="bin-release, src-release"
+            description="builds all release files">
+    </target>
+
+
+    <target name="clean"
+        description="deletes all files that were built">
+        <delete quiet="true" failonerror="false" includeEmptyDirs="true">
+            <fileset file="${myfaces.jar}" />
+            <fileset file="myfaces-*.tgz" />
+            <fileset dir="${doc.dir}/api" />
+        </delete>
+    </target>
+
 
 </project>

@@ -1,129 +1,149 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<project name="myfaces-examples" default="all" basedir="." >
+<project name="myfaces-examples" default="all">
 
-    <!-- allow some of the properties to be overridden -->
+    <property environment="env"/>
+
+    <!-- Constants -->
+    <property name="project.dir" location="${basedir}/../.."/>
+    <property name="examples.src" location="${basedir}/src"/>
+    <property name="examples.web" location="${basedir}/web"/>
+    <property name="examples.doc" location="${basedir}/doc"/>
+    <property name="web-inf.classes.dir" location="${examples.web}/WEB-INF/classes"/>
+    <property name="web-inf.lib.dir" location="${examples.web}/WEB-INF/lib"/>
+    <property name="myfaces.doc" location="${project.dir}/doc"/>
+
+    <!-- Properties -->
+    <property file="../../build.properties"/>
+    <property file="../../manifest.properties"/>
     <property file="build.properties"/>
 
-    <!-- destination web dir -->
-    <property name="dest.web.dir" value="must be specified in build.properties"/>
+    <!-- Temporary dir. May be overridden in build.properties -->
+    <property name="temp.dir" value="${env.TEMP}"/>
 
-    <!-- destination dir for compiling -->
-    <property name="dest.classes.dir" value="must be specified in build.properties"/>
-
-    <!-- path to the "jsf-api.jar" file -->
-    <property name="jsf-api.jar" value="must be specified in build.properties"/>
-
-    <!-- path to the "servlet.jar" file -->
-    <property name="servlet.jar" value="must be specified in build.properties"/>
-
-    <!-- path to the "mail.jar" file -->
-    <property name="mail.jar" value="must be specified in build.properties"/>
-
-    <!-- path to the "myfaces.jar" file -->
-    <property name="myfaces.jar" value="must be specified in build.properties"/>
-
-    <!-- source dir for compiling -->
-    <property name="tlds.dir" value="${basedir}/../../tlds"/>
-    <property name="web_common.dir" value="${basedir}/web_common"/>
-    <property name="web_clientsaving.dir" value="${basedir}/web_clientsaving"/>
-    <property name="web_serversaving.dir" value="${basedir}/web_serversaving"/>
-    <property name="examples.src.dir" value="${basedir}/src"/>
 
     <!-- classpath for compiling -->
-    <path id="project.class.path">
+    <path id="examples.class.path">
         <pathelement location="${jsf-api.jar}"/>
-        <pathelement location="${servlet.jar}"/>
         <pathelement location="${mail.jar}"/>
+        <pathelement location="${servlet.jar}"/>
         <pathelement location="${myfaces.jar}"/>
     </path>
 
-    <target name="compile">
-        <mkdir dir="${dest.classes.dir}"/>
-        <javac srcdir="${examples.src.dir}"
-            destdir="${dest.classes.dir}"
-            optimize="off"
-            classpathref="project.class.path">
+
+    <target name="-myfaces-jar" unless="myfaces.jar.available">
+        <!-- creates myfaces.jar via main buildfile if it does not exist -->
+        <ant dir="../.."
+             antfile="build.xml"
+             target="myfaces-jar"
+             inheritall="false"/>
+    </target>
+
+    <target name="-check-myfaces-jar">
+        <!-- check if myfaces.jar exist -->
+        <available file="${myfaces.jar}" property="myfaces.jar.available"/>
+        <antcall target="-myfaces-jar"/>
+    </target>
+
+
+    <target name="compile"
+            depends="-check-myfaces-jar"
+            description="compiles the examples java classes to WEB-INF/classes">
+        <mkdir dir="${web-inf.classes.dir}"/>
+        <javac srcdir="${examples.src}"
+               destdir="${web-inf.classes.dir}"
+               optimize="off"
+               classpathref="examples.class.path">
         </javac>
-        <copy todir="${dest.classes.dir}">
-            <fileset dir="${examples.src.dir}" includes="**"
-                                      excludes="**/*.java"/>
+        <copy todir="${web-inf.classes.dir}">
+            <fileset dir="${examples.src}"
+                     includes="**"
+                     excludes="**/*.java
+                               **/package.html"/>
         </copy>
     </target>
 
 
-    <target name="-copy-web_common">
-        <!--
-        Copies the files from web_common to the specified destination dir.
-        -->
-        <mkdir dir="${dest.web.dir}"/>
-        <copy todir="${dest.web.dir}">
-            <fileset dir="${web_common.dir}" includes="**"/>
+    <target name="copy-libs"
+            depends="-check-myfaces-jar"
+            description="copies all needed libs to WEB-INF/lib" >
+        <mkdir dir="${web-inf.lib.dir}"/>
+        <copy todir="${web-inf.lib.dir}">
+            <fileset file="${mail.jar}"/>
+            <fileset file="${jsf-api.jar}"/>
+            <fileset file="${myfaces.jar}"/>
         </copy>
     </target>
 
-    <target name="copy-web_clientsaving" depends="-copy-web_common">
-        <!--
-        Copies the files from web_clientsaving to the specified destination dir
-        and replaces session scope by request scope in all JSPs.
-        -->
-        <mkdir dir="${dest.web.dir}/WEB-INF"/>
-        <copy todir="${dest.web.dir}/WEB-INF" overwrite="true">
-            <fileset dir="${web_clientsaving.dir}/WEB-INF" includes="web.xml"/>
-        </copy>
-        <replace dir="${dest.web.dir}" includes="**/*.jsp,**/*.inc">
-            <replacetoken><![CDATA[scope="session"]]></replacetoken>
-            <replacevalue><![CDATA[scope="request"]]></replacevalue>
-        </replace>
-        <replace dir="${dest.web.dir}" includes="**/*.jsp,**/*.inc">
-            <replacetoken><![CDATA[<%@ page session="true"]]></replacetoken>
-            <replacevalue><![CDATA[<%@ page session="false"]]></replacevalue>
-        </replace>
-    </target>
 
-    <target name="copy-web_serversaving" depends="-copy-web_common">
-        <!--
-        Copies the files from web_serversaving to the specified destination dir
-        and replaces request scope by session scope in all JSPs.
-        -->
-        <mkdir dir="${dest.web.dir}/WEB-INF"/>
-        <copy todir="${dest.web.dir}/WEB-INF" overwrite="true">
-            <fileset dir="${web_serversaving.dir}/WEB-INF" includes="web.xml"/>
+
+    <target name="web_ss"
+            depends="compile, copy-libs"
+            description="copies the examples web application to a new dir and adjusts all options to 'save state in server sessions'." >
+
+        <mkdir dir="${web_ss.dir}"/>
+        <copy todir="${web_ss.dir}">
+            <fileset dir="${examples.web}"
+                     includes="**"
+                     excludes="WEB-INF/web.xml
+                               WEB-INF/web_ss.xml" />
         </copy>
-        <replace dir="${dest.web.dir}" includes="**/*.jsp,**/*.inc">
-            <replacetoken><![CDATA[scope="request"]]></replacetoken>
-            <replacevalue><![CDATA[scope="session"]]></replacevalue>
-        </replace>
-        <replace dir="${dest.web.dir}" includes="**/*.jsp,**/*.inc">
+        <copy file="${examples.web}/WEB-INF/web_ss.xml"
+              tofile="${web_ss.dir}/WEB-INF/web.xml" />
+
+        <replace dir="${web_ss.dir}" includes="**/*.jsp,**/*.inc">
             <replacetoken><![CDATA[<%@ page session="false"]]></replacetoken>
             <replacevalue><![CDATA[<%@ page session="true"]]></replacevalue>
         </replace>
+        <replace dir="${web_ss.dir}" includes="**/*.jsp,**/*.inc">
+            <replacetoken><![CDATA[scope="request"]]></replacetoken>
+            <replacevalue><![CDATA[scope="session"]]></replacevalue>
+        </replace>
+
     </target>
 
 
-    <target name="-copy-libs_and_tlds">
-        <mkdir dir="${dest.web.dir}/WEB-INF/lib"/>
-        <copy todir="${dest.web.dir}/WEB-INF/lib" file="${mail.jar}"/>
-        <copy todir="${dest.web.dir}/WEB-INF/lib" file="${jsf-api.jar}"/>
-        <copy todir="${dest.web.dir}/WEB-INF/lib" file="${myfaces.jar}" failonerror="false"/>
-        <copy todir="${dest.web.dir}/WEB-INF">
-            <fileset dir="${tlds.dir}" includes="**"/>
-        </copy>
+    <target name="release"
+            depends="compile, copy-libs, web_ss"
+            description="creates the examples release file myfaces-x.x.x-examples.tgz (don't forget to adjust manifest.properties!)">
+        <tar destfile="${project.dir}/myfaces-${manifest.impl.version}-examples.tgz"
+             compression="gzip">
+            <tarfileset dir="${myfaces.doc}"
+                        excludes="api/**"
+                        prefix="myfaces-${manifest.impl.version}/doc"/>
+            <tarfileset dir="${examples.doc}"
+                        prefix="myfaces-${manifest.impl.version}/webapps/examples/doc"/>
+            <tarfileset dir="${examples.src}"
+                        prefix="myfaces-${manifest.impl.version}/webapps/examples/src"/>
+            <tarfileset dir="${examples.web}"
+                        excludes="WEB-INF/lib/jsf-api.jar,
+                                  WEB-INF/web_ss.xml"
+                        prefix="myfaces-${manifest.impl.version}/webapps/examples/web"/>
+            <tarfileset dir="${web_ss.dir}"
+                        excludes="WEB-INF/lib/jsf-api.jar"
+                        prefix="myfaces-${manifest.impl.version}/webapps/examples/web_ss"/>
+        </tar>
     </target>
 
 
-    <target name="build-web_clientsaving-workdir"
-            depends="compile, copy-web_clientsaving, -copy-libs_and_tlds"/>
-
-    <target name="build-web_serversaving-workdir"
-            depends="compile, copy-web_serversaving, -copy-libs_and_tlds"/>
 
 
-    <target name="clean">
+    <target name="all"
+            depends="compile, copy-libs, web_ss"
+            description="establish everything to make the examples webapp runnable in a servlet container">
+    </target>
+
+
+
+    <target name="clean"
+            description="deletes all files that were built">
         <delete quiet="true" failonerror="false" includeEmptyDirs="true">
-            <fileset dir="${dest.classes.dir}" />
-            <fileset dir="${dest.web.dir}" />
+            <fileset dir="${web-inf.classes.dir}"/>
+            <fileset dir="${web-inf.lib.dir}"/>
+            <fileset dir="${web_ss.dir}"/>
+            <fileset file="${project.dir}/myfaces-*-examples.tgz"/>
         </delete>
     </target>
+
 
 
 </project>

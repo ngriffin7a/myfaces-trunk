@@ -1,0 +1,6 @@
+# Don't forget to use double-backslashes in windows paths!
+
+tomcat.manager.url=<url to the manager on tomcat>
+tomcat.admin.user=<user name that has admin & manager rights on tomcat>
+tomcat.admin.passwd=<manager passwd>
+tomcat.example.context.path=<context path to deploy the example under>

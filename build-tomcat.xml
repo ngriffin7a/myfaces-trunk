@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<project name="myfaces-tomcat" default="all">
+
+    <!-- allow some of the properties to be overridden -->
+    <property file="build-tomcat.properties"/>
+
+    <!--
+    Convenient targets to deploy to tomcat (added by Bill Dudney [bdudney@mac.com]).
+    See "tomcat-install-with-ant-readme.txt" for details.
+    Comment out, if you do not have the necessary catalina-ant.jar file.
+    -->
+	<!-- must have 'catalina-ant.jar' in your ant class path for these to work. -->
+    <taskdef name="list" classname="org.apache.catalina.ant.ListTask"/>
+    <taskdef name="install" classname="org.apache.catalina.ant.InstallTask"/>
+    <taskdef name="reload" classname="org.apache.catalina.ant.ReloadTask"/>
+    <taskdef name="remove" classname="org.apache.catalina.ant.RemoveTask"/>
+
+    <!-- these properties need to be overridable in a properties file -->
+    <property name="tomcat.manager.url" value="http://localhost:8080/manager"/>
+    <property name="tomcat.admin.user" value="admin"/>
+    <property name="tomcat.admin.passwd" value="password"/>
+    <property name="tomcat.example.context.path" value="/myFacesExample"/>
+
+	<target name="list" description="List applications installed on tomcat" >
+	  <list url="${tomcat.manager.url}" username="${tomcat.admin.user}"
+	        password="${tomcat.admin.passwd}" />
+	</target>
+
+	<target name="install" description="Install example web application on tomcat">
+	  <install url="${tomcat.manager.url}" username="${tomcat.admin.user}"
+	           password="${tomcat.admin.passwd}"
+               path="${tomcat.example.context.path}"
+               war="file:${project.dir}/web" />
+    </target>
+
+	<target name="reload" description="Reload example web application on tomcat">
+	  <reload  url="${tomcat.manager.url}" username="${tomcat.admin.user}"
+	           password="${tomcat.admin.passwd}"
+	           path="${tomcat.example.context.path}"/>
+	</target>
+
+    <target name="remove" description="Remove example web application from tomcat">
+	  <remove url="${tomcat.manager.url}" username="${tomcat.admin.user}"
+	          password="${tomcat.admin.passwd}"
+	          path="${tomcat.example.context.path}"/>
+	</target>
+
+</project>

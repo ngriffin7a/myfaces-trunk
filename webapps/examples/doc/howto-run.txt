@@ -1,0 +1,17 @@
+HOWTO - Run the Examples-Application
+-----------------------------------
+To run the examples you must add the myfaces context to your Tomcat's configuration in the file conf/server.xml.
+- Copy the file "jsf-api.jar" from the "JSF Reference Implementation EA 3" to the directory webapps/examples/web/WEB-INF/lib.
+- Add the following lines to Tomcat's server.xml right after the "Tomcat Manager Context":
+
+        <!-- MyFaces Context -->
+        <Context path="/myfaces" docBase="<myfaces-working-dir>/webapps/examples/web" debug="0" privileged="true" reloadable="true">
+                              <!--        |
+                                          +-- Adjust to the path of your installation! -->
+          <Logger className="org.apache.catalina.logger.FileLogger"
+                  prefix="localhost_myfaces_log." suffix=".txt" timestamp="true"/>
+          <Loader checkInterval="5" className="org.apache.catalina.loader.WebappLoader"/>
+        </Context>
+
+- (Re)start Tomcat
+- Enter "http://localhost:8080/myfaces/" into the adress field of your browser.

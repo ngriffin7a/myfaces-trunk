@@ -1,10 +1,18 @@
 # Don't forget to use double-backslashes in windows paths!
 
-mail.jar = <path to Java Mail API archiv version 1.1>
-servlet.jar = <path to Java Servlet API archiv version 2.3>
-jsf-api.jar = <path to JavaServer Faces API archiv version 1.0 EA3>
+# File path to Java Mail API archiv version 1.1
+mail.jar = lib/mail.jar
 
-tomcat.manager.url=<url to the manager on tomcat>
-tomcat.admin.user=<user name that has admin & manager rights on tomcat>
-tomcat.admin.passwd=<manager passwd>
-tomcat.example.context.path=<context path to deploy the example under>
+# File path to Java Servlet API archiv version 2.3
+servlet.jar = lib/servlet.jar
+
+# File path to JavaServer Faces API archiv version 1.0 EA3
+# (not included, please download from http://java.sun.com/j2ee/javaserverfaces/download.html)
+jsf-api.jar = lib/jsf-api.jar
+
+# File path of MyFaces archiv to be created
+myfaces.jar = lib/myfaces.jar
+
+# Temporary directory
+# (if not set, environment variable "TEMP" will be used)
+#temp.dir = temp
