@@ -22,9 +22,12 @@ import javax.servlet.jsp.JspException;
 import org.apache.myfaces.custom.isbnvalidator.ISBNValidator;
 
 /**
- * @author <a href="mailto:matzew@apache.org">Matthias Weßendorf</a> (latest modification by $Author$)
+ * @author <a href="mailto:matzew@apache.org">Matthias Weï¿½endorf</a> (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/11/23 04:59:23  svieujot
+ * Remove "unmappable character for encoding UTF8" warning.
+ *
  * Revision 1.1  2004/11/20 20:17:05  matzew
  * added new validator for ISBN codes
  *
