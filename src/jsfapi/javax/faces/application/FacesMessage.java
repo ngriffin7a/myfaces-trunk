@@ -94,6 +94,12 @@ public class FacesMessage
 
     public String getDetail()
     {
+        if (_detail == null)
+        {
+            // Javadoc:
+            // If no localized detail text has been defined for this message, return the localized summary text instead
+            return _summary;
+        }
         return _detail;
     }
 
