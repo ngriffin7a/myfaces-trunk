@@ -322,14 +322,14 @@
 
     <target name="tlddoc"
             description="creates tlddoc for the extension tld"
-            depends="resolve-tld-entities" >
+            depends="resolve-tld-entities,codegen" >
         <mkdir dir="${doc.dir}/tlddoc"/>
         <java fork="true" jar="${tlddoc.jar}" failonerror="true">
             <arg line="-doctitle 'Tag library for Apache MyFaces'" />
-            <arg line="-d ${doc.dir}/tlddoc"/>
+            <arg line="-d /${doc.dir}/tlddoc"/>
             <arg value="${resolved-tlds.dir}/myfaces_ext.tld"/>
             <arg value="${generated.src}/myfaces_wap.tld"/>
-            </java>
+		</java>
     </target>
 
 
