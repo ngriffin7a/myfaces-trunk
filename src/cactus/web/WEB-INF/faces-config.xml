@@ -8,6 +8,14 @@
 
 <faces-config>
 
+    <application>
+        <view-handler>net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl</view-handler>
+    </application>
+
+    <lifecycle>
+        <phase-listener>net.sourceforge.myfaces.confignew.TestPhaseListenerA</phase-listener>
+    </lifecycle>
+
     <managed-bean>
         <description>This bean is used in the cactus test for bug 925693</description>
         <managed-bean-name>invoice</managed-bean-name>
@@ -22,5 +30,24 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 
+    <managed-bean>
+        <description>This bean can be used by multiple tests</description>
+        <managed-bean-name>commonSessionScopeBean</managed-bean-name>
+        <managed-bean-class>net.sourceforge.myfaces.cactus.CommonModelBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+
+
+    <application>
+        <view-handler>net.sourceforge.myfaces.confignew.TestViewHandlerA</view-handler>
+    </application>
+
+    <lifecycle>
+        <phase-listener>net.sourceforge.myfaces.confignew.TestPhaseListenerB</phase-listener>
+    </lifecycle>
+
+    <factory>
+        <application-factory>net.sourceforge.myfaces.confignew.TestApplicationFactory</application-factory>
+    </factory>
 
 </faces-config>
