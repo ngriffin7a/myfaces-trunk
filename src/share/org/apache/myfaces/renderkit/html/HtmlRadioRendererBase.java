@@ -40,6 +40,9 @@ import java.util.List;
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2005/01/19 13:34:12  mmarinschek
+ * handle case that converter is null
+ *
  * Revision 1.12  2005/01/19 13:18:04  mmarinschek
  * better logging of component information
  *
@@ -134,7 +137,18 @@ public class HtmlRadioRendererBase
         }
 
         Object currentValue = selectOne.getValue();
-        String currentValueStr = currentValue==null ? null : converter.getAsString(facesContext, selectOne, currentValue);
+
+
+        String currentValueStr = null;
+
+        if(converter==null)
+        {
+            currentValueStr = currentValue==null ? null : currentValue.toString();
+        }
+        else
+        {
+            currentValueStr = currentValue==null?null:converter.getAsString(facesContext, selectOne, currentValue);
+        }
 
         for (Iterator it = selectItemList.iterator(); it.hasNext(); )
         {
