@@ -11,6 +11,7 @@
 		<gettingstarted label="Getting Started" href="gettingstarted.html"/>
 		<ri label="MyFaces and RI" href="risamples.html"/>
 		<tomcat55 label="MyFaces and Tomcat5.5" href="tomcat55.html"/>
+		<portlet label="MyFaces' Portlet Support" href="portlet.html"/>
 		<compatibility label="Compatibility" href="compatibility.html"/>
 		<faq label="FAQ" href="faq.html" />
 		<jars label="JARs" href="jars.html" />
@@ -24,6 +25,7 @@
     <status label="Status" href="status.html" />
     <bylaws label="Project Bylaws" href="bylaws.html"/>
 	<issue label="Tracking System" href="issue.html"/>
+	<powered label="Powered by MyFaces" href="poweredbymyfaces.html"/>
 	<cvs label="CVS" href="versioning.html"/>
     <wiki label="Wiki" href="http://wiki.apache.org/myfaces"/>
     <getinvolved label="Get Involved" href="http://jakarta.apache.org/site/getinvolved.html"/>

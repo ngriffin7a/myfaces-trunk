@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+
+<document>
+
+<header>
+    <title>Apache MyFaces - MyFaces and Portlet Containers </title>
+</header>
+
+<body>
+
+<section>
+<title>How to create a JSF Portlet using MyFaces:</title>
+	<ol>
+		<li>Make sure your JSF MyFaces application runs as a stand-alone servlet.</li>
+		<li>Remove any redirects from your faces-config.xml.  Portlets can not handle these.</li>
+		<li>Create a Portlet WAR as per the instructions for your Portlet container.  Make sure it contains everything that was included in step 1.</li>
+		<li>Update your portlet.xml file as follows:</li>
+		</ol>
+		<source>
+<![CDATA[
+<!-- You must use this Portlet impl class -->
+<portlet-class>org.apache.myfaces.portlet.MyFacesGenericPortlet</portlet-class>
+
+<!-- The "home page" of your JSF application -->
+<!-- This is a required param.               -->
+<init-param>
+   <name>default-view</name>
+   <value>/some_view_id_from_faces-config</value>
+</init-param>
+
+<!-- A class name that implements org.apache.myfaces.portlet.DefaultViewSelector -->
+<!-- This optional param is used if your want to choose different default views  -->
+<!-- based on some condition.  You still must specify default-view above, but    -->
+<!-- this impl will take precedence.                                             -->
+<init-param>
+   <name>default-view-selector</name>
+   <value>com.foo.MyViewSelector</value>
+</init-param>
+		]]></source>
+</section>
+
+
+
+</body>
+    
+<footer>
+    	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
+	&copy; 2004, Apache Software Foundation
+	</legal>
+</footer>
+
+</document>

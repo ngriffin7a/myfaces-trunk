@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+
+<document>
+
+<header>
+    <title>Apache MyFaces - Powered by MyFaces logo </title>
+</header>
+
+<body>
+
+<section>
+<title>Have you used MyFaces successfully?</title>
+      <p>Add the logo to your page and link to us!
+		  <br/>
+		  <img src="images/poweredby_myface.gif" alt="Powered by MyFaces"/>
+	  </p>
+</section>
+
+
+
+</body>
+    
+<footer>
+    	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
+	&copy; 2004, Apache Software Foundation
+	</legal>
+</footer>
+
+</document>
