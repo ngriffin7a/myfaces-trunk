@@ -47,6 +47,8 @@ public class StartupServletContextListener
     {
         try
         {
+            //TODO: Add default factories to FactoryFinder before parsing config!
+            
             ServletContext servletContext = event.getServletContext();
             ExternalContext externalContext = new ServletExternalContextImpl(servletContext,
                                                                              null,

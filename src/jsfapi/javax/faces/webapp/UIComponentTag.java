@@ -40,9 +40,9 @@ import java.util.*;
 public abstract class UIComponentTag
         implements Tag
 {
-    private static final String FORMER_CHILD_IDS_SET_ATTR = UIComponentTag.class + ".FORMER_CHILD_IDS";
-    private static final String FORMER_FACET_NAMES_SET_ATTR = UIComponentTag.class + ".FORMER_FACET_NAMES";
-    private static final String COMPONENT_STACK_ATTR =  UIComponentTag.class + ".COMPONENT_STACK";
+    private static final String FORMER_CHILD_IDS_SET_ATTR = UIComponentTag.class.getName() + ".FORMER_CHILD_IDS";
+    private static final String FORMER_FACET_NAMES_SET_ATTR = UIComponentTag.class.getName() + ".FORMER_FACET_NAMES";
+    private static final String COMPONENT_STACK_ATTR =  UIComponentTag.class.getName() + ".COMPONENT_STACK";
 
     protected PageContext _pageContext = null;
     private String _binding = null;
@@ -347,6 +347,7 @@ public abstract class UIComponentTag
             _componentInstance = parent.getFacet(facetName);
             if (_componentInstance == null)
             {
+System.out.println("UIComponentTag: Facet " + facetName + " not found in parent component " + parent.getClientId(context) + " - creating new");
                 _componentInstance = createComponentInstance(context);
                 _componentInstance.setId(getOrCreateUniqueId(context)); //TODO: spec says nothing about facet ids
                 setProperties(_componentInstance);
@@ -362,8 +363,9 @@ public abstract class UIComponentTag
             _componentInstance = parent.findComponent(id);
             if (_componentInstance == null)
             {
+System.out.println("UIComponentTag: Child " + id + " not found in parent component " + parent.getClientId(context) + " - creating new");
                 _componentInstance = createComponentInstance(context);
-                _componentInstance.setId(getOrCreateUniqueId(context));
+                _componentInstance.setId(id);
                 setProperties(_componentInstance);
                 parent.getChildren().add(_componentInstance);
             }

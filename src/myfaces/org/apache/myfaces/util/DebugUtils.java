@@ -23,10 +23,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIViewRoot;
+import javax.faces.component.*;
 import javax.faces.context.FacesContext;
+import javax.faces.el.MethodBinding;
 import javax.faces.el.ValueBinding;
+import javax.faces.event.FacesListener;
 import java.beans.BeanInfo;
 import java.beans.PropertyDescriptor;
 import java.io.ByteArrayOutputStream;
@@ -59,6 +60,8 @@ public class DebugUtils
         IGNORE_ATTRIBUTES.add("facets");
         IGNORE_ATTRIBUTES.add("facetsAndChildren");
         IGNORE_ATTRIBUTES.add("parent");
+        IGNORE_ATTRIBUTES.add("actionListeners");
+        IGNORE_ATTRIBUTES.add("valueChangeListeners");
         IGNORE_ATTRIBUTES.add("javax.faces.webapp.COMPONENT_IDS");
         IGNORE_ATTRIBUTES.add("javax.faces.webapp.FACET_NAMES");
         IGNORE_ATTRIBUTES.add("javax.faces.webapp.CURRENT_VIEW_ROOT");
@@ -180,7 +183,7 @@ public class DebugUtils
             Map.Entry entry = (Map.Entry)it.next();
             if (!"id".equals(entry.getKey()))
             {
-                printAttribute(stream, entry.getKey(), entry.getValue());
+                printAttribute(stream, (String)entry.getKey(), entry.getValue());
             }
         }
 
@@ -201,16 +204,50 @@ public class DebugUtils
                 }
                 else
                 {
-                    Object value = comp.getAttributes().get(name);
-                    if (value != null)
+                    if (name.equals("value") && comp instanceof ValueHolder)
                     {
-                        printAttribute(stream, name, value);
+                        //-> localValue
+                    }
+                    else
+                    {
+                        Object value = comp.getAttributes().get(name);
+                        if (value != null)
+                        {
+                            printAttribute(stream, name, value);
+                        }
                     }
                 }
             }
         }
 
-        //TODO: listeners, ...
+        if (comp instanceof UICommand)
+        {
+            FacesListener[] listeners = ((UICommand)comp).getActionListeners();
+            for (int i = 0; i < listeners.length; i++)
+            {
+                FacesListener listener = listeners[i];
+                stream.println();
+                printIndent(stream, indent + 2);
+                stream.print('<');
+                stream.print(listener.getClass().getName());
+                stream.print("/>");
+                printIndent(stream, indent);
+            }
+        }
+        if (comp instanceof UIInput)
+        {
+            FacesListener[] listeners = ((UIInput)comp).getValueChangeListeners();
+            for (int i = 0; i < listeners.length; i++)
+            {
+                FacesListener listener = listeners[i];
+                stream.println();
+                printIndent(stream, indent + 2);
+                stream.print('<');
+                stream.print(listener.getClass().getName());
+                stream.print("/>");
+                printIndent(stream, indent);
+            }
+        }
 
         if (withChildrenAndFacets)
         {
@@ -254,10 +291,14 @@ public class DebugUtils
     }
 
     private static void printAttribute(PrintStream stream,
-                                       Object name,
+                                       String name,
                                        Object value)
     {
         if (IGNORE_ATTRIBUTES.contains(name)) return;
+        if (name.startsWith("javax.faces.webapp.UIComponentTag."))
+        {
+            name = name.substring("javax.faces.webapp.UIComponentTag.".length());
+        }
         stream.print(' ');
         stream.print(name.toString());
         stream.print("=\"");
@@ -268,6 +309,10 @@ public class DebugUtils
                 stream.print("[id:");
                 stream.print(((UIComponent)value).getId());
                 stream.print("]");
+            }
+            else if (value instanceof MethodBinding)
+            {
+                ((MethodBinding)value).getExpressionString();
             }
             else
             {

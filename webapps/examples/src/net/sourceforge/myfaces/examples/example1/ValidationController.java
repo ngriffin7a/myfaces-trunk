@@ -81,4 +81,36 @@ public class ValidationController
         return "ok";
     }
 
+
+
+    public String getNumber1ValidationLabel()
+    {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        UIInput number1 = (UIInput)facesContext.getViewRoot().findComponent("form1:number1");
+        Validator[] validators = number1.getValidators();
+        if (validators != null && validators.length > 0)
+        {
+            return " (with validation)";
+        }
+        else
+        {
+            return "";
+        }
+    }
+
+    public String getTextValidationLabel()
+    {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        UIInput number1 = (UIInput)facesContext.getViewRoot().findComponent("form2:text");
+        Validator[] validators = number1.getValidators();
+        if (validators != null && validators.length > 0)
+        {
+            return " (with validation)";
+        }
+        else
+        {
+            return "";
+        }
+    }
+
 }

@@ -66,7 +66,9 @@ managed beans used:
                 </f:verbatim>
 
                 <h:form id="form1" name="calcForm">
-                    <h:outputLabel for="form1:number1" value="Number 1" /><f:verbatim>: </f:verbatim>
+                    <h:outputLabel for="form1:number1" value="Number 1" />
+                    <h:outputText value="#{validationController.number1ValidationLabel}"/>
+                    <f:verbatim>: </f:verbatim>
                     <h:inputText id="number1" value="#{calcForm.number1}" maxlength="10" size="25" >
                        <f:validateLongRange minimum="1" maximum="10" />
                     </h:inputText>
@@ -102,6 +104,9 @@ managed beans used:
                 </f:verbatim>
 
                 <h:form id="form2" name="ucaseForm">
+                    <h:outputLabel for="form2:text" value="Text" />
+                    <h:outputText value="#{validationController.textValidationLabel}"/>
+                    <f:verbatim>: </f:verbatim>
                     <h:inputText id="text" value="#{ucaseForm.text}"/>
                     <h:message id="textError" for="form2:text" styleClass="error" /><f:verbatim><br></f:verbatim>
                     <h:commandButton id="ucaseButton" value="Make it uppercase" action="none">
