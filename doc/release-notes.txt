@@ -3,8 +3,13 @@ MyFaces Release Notes
 
 ----------------------------------------------------------------------
 Changes in Release 1.0.9 
+* added support for portlet api (MYFACES-86). Thanks to Stan Silver (JBoss Group)
 * new CollapsiblePanel Component
 * added forceId to <x:inputText for better reuse of legacy JavaScript
+* closed MYFACES-90 in Jira (i18n support)
+* closed MYFACES-86 in Jira (portlet)
+* closed MYFACES-83 in Jira (Refactored HtmlTableRendererBase)
+* closed MYFACES-81 in Jira (StateManager.SerializedView should not implement Serializable)
 * closed MFACES-76 in Jira
 * closed MFACES-74 in Jira
 ----------------------------------------------------------------------
