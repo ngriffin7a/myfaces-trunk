@@ -24,6 +24,9 @@ import org.apache.myfaces.util.ArrayUtils;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.19  2004/12/04 03:22:45  svieujot
+ * Bugfix for BR_ELEM
+ *
  * Revision 1.18  2004/12/02 15:34:43  svieujot
  * Add iframe attributes
  *
@@ -470,7 +473,7 @@ public final class HTML
 
 
     //HTML simple element constants
-    public static final String BR_ELEM = "<br>";
+    public static final String BR_ELEM = "br";
 
 
     //HTML entities
