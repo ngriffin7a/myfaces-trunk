@@ -19,12 +19,11 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.component.UIComponentUtils;
-import net.sourceforge.myfaces.component.UIInput;
 import net.sourceforge.myfaces.renderkit.attr.SecretRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 
 import javax.faces.component.UIComponent;
-import javax.faces.component.UITextEntry;
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
@@ -54,7 +53,7 @@ public class SecretRenderer
 
     public boolean supportsComponentType(UIComponent uicomponent)
     {
-        return uicomponent instanceof UITextEntry; //FINAL: javax.faces.component.UIInput instead with final API release
+        return uicomponent instanceof UIInput;
     }
 
     public void decode(FacesContext facescontext, UIComponent uicomponent)
@@ -69,7 +68,7 @@ public class SecretRenderer
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<input type=\"password\"");
         writer.write(" name=\"");
-        writer.write(uiComponent.getCompoundId());
+        writer.write(uiComponent.getClientId(facesContext));
         writer.write("\"");
         if (UIComponentUtils.getBooleanAttribute(uiComponent,
                                                  SecretRenderer.REDISPLAY_ATTR,

@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.lifecycle;
 
 import javax.faces.FacesException;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.lifecycle.Lifecycle;
 
@@ -34,19 +33,23 @@ public class HandleRequestEventsPhase
     private Lifecycle _lifecycle;
     public HandleRequestEventsPhase(Lifecycle lifecycle)
     {
+        super(null);
         _lifecycle = lifecycle;
     }
 
     public int execute(FacesContext facescontext) throws FacesException
     {
+        /*
         int eventsCount = facescontext.getRequestEventsCount();
         if (eventsCount > 0)
         {
             return super.execute(facescontext, _action);
         }
+        */
         return GOTO_NEXT;
     }
 
+    /*
     private PhaseAction _action = new PhaseAction()
     {
         public int doActionForComponent(FacesContext facescontext, UIComponent uicomponent)
@@ -62,5 +65,6 @@ public class HandleRequestEventsPhase
             }
         }
     };
+    */
 
 }

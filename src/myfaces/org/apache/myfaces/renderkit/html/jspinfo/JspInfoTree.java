@@ -16,12 +16,13 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.tree;
+package net.sourceforge.myfaces.renderkit.html.jspinfo;
 
-import javax.faces.FacesException;
-import javax.faces.context.FacesContext;
+import net.sourceforge.myfaces.component.UIRoot;
+
+import javax.faces.component.UIComponent;
+import javax.faces.render.RenderKitFactory;
 import javax.faces.tree.Tree;
-import javax.faces.tree.TreeFactory;
 import javax.servlet.ServletContext;
 
 /**
@@ -29,12 +30,36 @@ import javax.servlet.ServletContext;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class TreeFactoryImpl
-        extends TreeFactory
+public class JspInfoTree
+        extends Tree
 {
-    public Tree getTree(FacesContext facesContext, String treeId)
-            throws FacesException
+    private String _treeId;
+    private UIComponent _root;
+
+    public JspInfoTree(String treeId)
     {
-        return new TreeImpl(treeId);
+        _treeId = treeId;
+        _root = new UIRoot();
     }
+
+    public String getTreeId()
+    {
+        return _treeId;
+    }
+
+    public UIComponent getRoot()
+    {
+        return _root;
+    }
+
+    public void setRenderKitId(String s)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    public String getRenderKitId()
+    {
+        throw new UnsupportedOperationException();
+    }
+
 }

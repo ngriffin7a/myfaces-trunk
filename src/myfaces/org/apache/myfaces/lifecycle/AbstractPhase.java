@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.lifecycle;
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.event.PhaseId;
 import javax.faces.lifecycle.Phase;
 import java.util.Collections;
 import java.util.Iterator;
@@ -33,11 +34,18 @@ import java.util.Iterator;
 public abstract class AbstractPhase
         extends Phase
 {
+    private PhaseId _phaseId;
+
+    public AbstractPhase(PhaseId phaseId)
+    {
+        _phaseId = phaseId;
+    }
+
     public abstract int execute(FacesContext facescontext) throws FacesException;
 
     protected int execute(FacesContext facescontext, PhaseAction action) throws FacesException
     {
-        UIComponent root = facescontext.getRequestTree().getRoot();
+        UIComponent root = facescontext.getTree().getRoot();
         //Iterator children = root.getChildren();
         Iterator children = Collections.singleton(root).iterator();
         return traverse(facescontext, children, action);

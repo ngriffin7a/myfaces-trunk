@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html.state;
 
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 
 /**
  * DOCUMENT ME!
@@ -34,16 +35,18 @@ public class RequestParameterNames
         return "SM_" + modelRef;
     }
 
-    protected static String getUIComponentStateParameterName(UIComponent uiComponent,
+    protected static String getUIComponentStateParameterName(FacesContext facesContext,
+                                                             UIComponent uiComponent,
                                                              String attributeName)
     {
-        return "SC_" + uiComponent.getCompoundId() + "." + attributeName;
+        return "SC_" + uiComponent.getClientId(facesContext) + "." + attributeName;
     }
 
-    protected static String restoreUIComponentStateParameterAttributeName(UIComponent uiComponent,
+    protected static String restoreUIComponentStateParameterAttributeName(FacesContext facesContext,
+                                                                          UIComponent uiComponent,
                                                                           String paramName)
     {
-        String prefix = "SC_" + uiComponent.getCompoundId() + ".";
+        String prefix = "SC_" + uiComponent.getClientId(facesContext) + ".";
         if (paramName.startsWith(prefix))
         {
             return paramName.substring(prefix.length());

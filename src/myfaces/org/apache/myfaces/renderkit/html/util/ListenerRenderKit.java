@@ -101,7 +101,7 @@ public class ListenerRenderKit
 
     protected static void wrapRenderKit(FacesContext facesContext)
     {
-        Tree tree = facesContext.getResponseTree();
+        Tree tree = facesContext.getTree();
         String originalRenderKitId = tree.getRenderKitId();
 
         if (originalRenderKitId.equals(ID))
@@ -144,7 +144,7 @@ public class ListenerRenderKit
     protected static void unwrapRenderKit(FacesContext facesContext)
     {
         String originalRenderKitId = (String)facesContext.getServletRequest().getAttribute(ORIGINAL_RENDER_KIT_ID_ATTR);
-        facesContext.getResponseTree().setRenderKitId(originalRenderKitId);
+        facesContext.getTree().setRenderKitId(originalRenderKitId);
     }
 
 
@@ -180,7 +180,7 @@ public class ListenerRenderKit
         wrapRenderKit(facesContext);
 
         Map map = getListenerMap(facesContext);
-        map.put(component.getCompoundId(),
+        map.put(component.getClientId(facesContext),
                 new ListenerItem(component,
                                  listener,
                                  false));
@@ -191,7 +191,7 @@ public class ListenerRenderKit
                                       RendererListener listener)
     {
         Map map = getListenerMap(facesContext);
-        map.remove(component.getCompoundId());
+        map.remove(component.getClientId(facesContext));
         if (map.isEmpty())
         {
             unwrapRenderKit(facesContext);
@@ -213,7 +213,7 @@ public class ListenerRenderKit
         wrapRenderKit(facesContext);
 
         Map map = getListenerMap(facesContext);
-        map.put(component.getCompoundId(),
+        map.put(component.getClientId(facesContext),
                 new ListenerItem(component,
                                  listener,
                                  true));
@@ -337,6 +337,12 @@ public class ListenerRenderKit
         public boolean supportsComponentType(String s)
         {
             throw new UnsupportedOperationException();
+        }
+
+        public String getClientId(FacesContext facesContext, UIComponent uiComponent)
+        {
+            Renderer renderer = getOriginalRenderKit(facesContext).getRenderer(_rendererType);
+            return renderer.getClientId(facesContext, uiComponent);
         }
     };
 

@@ -77,7 +77,7 @@ public class StateRenderer
 
 
     /**
-     * Method decode is called directly from the ReconstituteRequestTreePhase with a null
+     * Method decode is called directly from the ReconstituteComponentTreePhase with a null
      * UIComponent parameter.
      * Additionally, Renderers can call this method with a component argument to explicitly
      * restore the state of a single component. e.g. The NavigationItemRenderer calls this

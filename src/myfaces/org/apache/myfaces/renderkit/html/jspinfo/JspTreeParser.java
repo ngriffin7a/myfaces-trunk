@@ -26,14 +26,12 @@ import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
 import javax.faces.FacesException;
-import javax.faces.FactoryFinder;
 import javax.faces.tree.Tree;
-import javax.faces.tree.TreeFactory;
 import javax.servlet.ServletContext;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.io.IOException;
 import java.util.Stack;
 
 /**
@@ -67,8 +65,7 @@ public class JspTreeParser
 
     protected void init(String treeId)
     {
-        TreeFactory tf = (TreeFactory)FactoryFinder.getFactory(FactoryFinder.TREE_FACTORY);
-        Tree tree = tf.getTree(_servletContext, treeId);
+        Tree tree = new JspInfoTree(treeId);
 
         _jspInfo = new JspInfo(tree);
 

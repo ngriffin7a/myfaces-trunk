@@ -135,7 +135,7 @@ public class ConverterUtils
     }
 
 
-    public static String getAsString(FacesContext facescontext, UIComponent component, Object obj)
+    public static String getAsString(FacesContext facesContext, UIComponent component, Object obj)
         throws ConverterException
     {
         if (obj == null)
@@ -143,10 +143,10 @@ public class ConverterUtils
             return null;
         }
 
-        Converter converter = ConverterUtils.findConverter(facescontext, component);
+        Converter converter = ConverterUtils.findConverter(facesContext, component);
         if (converter != null)
         {
-            return converter.getAsString(facescontext, component, obj);
+            return converter.getAsString(facesContext, component, obj);
         }
         else
         {
@@ -156,7 +156,7 @@ public class ConverterUtils
             }
             else
             {
-                throw new IllegalArgumentException("Cannot convert Object to String for component " + component.getCompoundId() + ": No converter found for class " + obj.getClass().getName() + ".");
+                throw new IllegalArgumentException("Cannot convert Object to String for component " + component.getClientId(facesContext) + ": No converter found for class " + obj.getClass().getName() + ".");
             }
         }
     }

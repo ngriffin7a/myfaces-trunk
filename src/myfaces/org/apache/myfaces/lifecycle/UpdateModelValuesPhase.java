@@ -19,6 +19,7 @@
 package net.sourceforge.myfaces.lifecycle;
 
 import javax.faces.FacesException;
+import javax.faces.event.PhaseId;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.lifecycle.Lifecycle;
@@ -35,6 +36,7 @@ public class UpdateModelValuesPhase
     private Lifecycle _lifecycle;
     public UpdateModelValuesPhase(Lifecycle lifecycle)
     {
+        super(PhaseId.UPDATE_MODEL_VALUES);
         _lifecycle = lifecycle;
     }
 

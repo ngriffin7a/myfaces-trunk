@@ -62,7 +62,7 @@ public class UseFacesTag
     {
         if (MyFacesConfig.isStateEncodingOnTheFly())
         {
-            ResponseWriter writer = new JspResponseWriter(super.pageContext.getOut());
+            ResponseWriter writer = new JspResponseWriter(super.pageContext);
             getFacesContext().setResponseWriter(writer);
             return BodyTag.EVAL_BODY_INCLUDE;
         }
@@ -75,7 +75,7 @@ public class UseFacesTag
 
     public void doInitBody() throws JspException
     {
-        ResponseWriter writer = new JspResponseWriter(getBodyContent());
+        ResponseWriter writer = new JspResponseWriter(super.pageContext);
         getFacesContext().setResponseWriter(writer);
     }
 
@@ -90,7 +90,7 @@ public class UseFacesTag
             FacesContext facesContext = getFacesContext();
 
             RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-            RenderKit renderKit = rkFactory.getRenderKit(facesContext.getResponseTree().getRenderKitId());
+            RenderKit renderKit = rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
             Renderer renderer = renderKit.getRenderer(StateRenderer.TYPE);
             if (renderer == null)
             {

@@ -84,7 +84,7 @@ public class ErrorsRenderer
             UIComponent comp = null;
             try
             {
-                comp = facesContext.getResponseTree().getRoot().findComponent(compoundId);
+                comp = facesContext.getTree().getRoot().findComponent(compoundId);
             }
             catch (IllegalArgumentException e) {}
             if (comp != null)

@@ -137,7 +137,7 @@ public class UIComponentUtils
             }
             else
             {
-                throw new FacesException("Error converting value of component " + uiComponent.getCompoundId() + " from String to Object: Converter Exception.", e);
+                throw new FacesException("Error converting value of component " + uiComponent.getClientId(facesContext) + " from String to Object: Converter Exception.", e);
             }
         }
     }

@@ -26,9 +26,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UIForm;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.event.CommandEvent;
 import javax.faces.event.FacesEvent;
-import javax.faces.event.FormEvent;
 import java.io.IOException;
 
 /**
@@ -46,16 +44,16 @@ public class ButtonRenderer
         return TYPE;
     }
 
-    private String getHiddenValueParamName(UIComponent uiComponent)
+    private String getHiddenValueParamName(FacesContext facesContext, UIComponent uiComponent)
     {
-        return uiComponent.getCompoundId() + ".VALUE";
+        return uiComponent.getClientId(facesContext) + ".VALUE";
     }
 
     public void decode(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
         //super.decode must not be called, because value is handled here
 
-        String paramName = uiComponent.getCompoundId();
+        String paramName = uiComponent.getClientId(facesContext);
         String paramValue = facesContext.getServletRequest().getParameter(paramName);
         boolean submitted = false;
         if (paramValue == null)
@@ -76,7 +74,9 @@ public class ButtonRenderer
         if (submitted)
         {
             String commandName;
-            String hiddenValue = facesContext.getServletRequest().getParameter(getHiddenValueParamName(uiComponent));
+            String hiddenValue = facesContext.getServletRequest()
+                                    .getParameter(getHiddenValueParamName(facesContext,
+                                                                          uiComponent));
             if (hiddenValue != null)
             {
                 commandName = hiddenValue;
@@ -106,6 +106,8 @@ public class ButtonRenderer
                 }
             }
 
+            /*
+            TODO: new event processing
             if (formName == null)
             {
                 event = new CommandEvent(uiComponent, commandName);
@@ -116,6 +118,7 @@ public class ButtonRenderer
             }
 
             facesContext.addApplicationEvent(event);
+            */
         }
     }
 
@@ -131,13 +134,13 @@ public class ButtonRenderer
             writer.write(imageSrc);
             writer.write("\"");
             writer.write(" name=\"");
-            writer.write(uiComponent.getCompoundId());
+            writer.write(uiComponent.getClientId(facesContext));
             writer.write("\"");
         }
         else
         {
             writer.write("\"submit\" name=\"");
-            writer.write(uiComponent.getCompoundId());
+            writer.write(uiComponent.getClientId(facesContext));
             writer.write("\"");
             writer.write(" value=\"");
             String label = (String)uiComponent.getAttribute(LABEL_ATTR);
@@ -164,7 +167,7 @@ public class ButtonRenderer
         if (hiddenParam)
         {
             writer.write("<input type=\"hidden\" name=\"");
-            writer.write(getHiddenValueParamName(uiComponent));
+            writer.write(getHiddenValueParamName(facesContext, uiComponent));
             writer.write("\" value=\"");
             String strVal = getStringValue(facesContext, uiComponent);
             writer.write(HTMLEncoder.encode(strVal, false, false));

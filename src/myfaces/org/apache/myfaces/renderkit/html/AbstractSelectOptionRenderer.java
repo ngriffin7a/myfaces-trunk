@@ -48,19 +48,19 @@ public abstract class AbstractSelectOptionRenderer
     {
     }
 
-    public void encodeEnd(FacesContext facescontext, UIComponent uicomponent, int size)
+    public void encodeEnd(FacesContext facesContext, UIComponent uicomponent, int size)
             throws IOException
     {
-        ResponseWriter writer = facescontext.getResponseWriter();
+        ResponseWriter writer = facesContext.getResponseWriter();
 
         boolean multipleSelect = uicomponent.getComponentType() == UISelectMany.TYPE ? true : false;
 
-        Iterator it = getSelectItems(facescontext, uicomponent);
+        Iterator it = getSelectItems(facesContext, uicomponent);
         if (it.hasNext())
         {
             writer.write("<select ");
             writer.write(" name=\"");
-            writer.write(uicomponent.getCompoundId());
+            writer.write(uicomponent.getClientId(facesContext));
             writer.write("\"");
 
             if (size > 0)
@@ -73,7 +73,7 @@ public abstract class AbstractSelectOptionRenderer
             if (multipleSelect) writer.write(" multiple ");
             writer.write(">\n");
 
-            Object currentValue = uicomponent.currentValue(facescontext);
+            Object currentValue = uicomponent.currentValue(facesContext);
 
             while (it.hasNext())
             {

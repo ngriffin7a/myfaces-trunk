@@ -101,9 +101,12 @@ public class UINavigation
             if (treeId != null)
             {
                 TreeFactory tf = (TreeFactory)FactoryFinder.getFactory(FactoryFinder.TREE_FACTORY);
-                Tree responseTree = tf.getTree(context.getServletContext(), treeId);
-                context.setResponseTree(responseTree);
-                responseTree.getRoot().setAttribute(NavigationRenderer.GET_CHILDREN_FROM_REQUEST_ATTR, Boolean.TRUE);
+                Tree responseTree = tf.getTree(context, treeId);
+                context.setTree(responseTree);
+                //Save current navigation with all it's children in request context, so that
+                //current state of children can be accessed when rendering new tree
+                context.getServletRequest().setAttribute(NavigationRenderer.CURRENT_NAVIGATION_ATTR,
+                                                         this);
                 return true;
             }
 

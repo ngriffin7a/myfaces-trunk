@@ -18,15 +18,14 @@
  */
 package net.sourceforge.myfaces.renderkit.html.state;
 
-import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.JspInfo;
+import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
 import javax.faces.webapp.FacesTag;
 import java.util.Iterator;
-import java.util.Map;
 
 /**
  * DOCUMENT ME!
@@ -35,9 +34,6 @@ import java.util.Map;
  */
 public class TreeCopier
 {
-    public static final String CREATOR_TAG_ATTR = TreeCopier.class.getName() + ".CREATOR_TAG";
-    public static final String HARDCODED_VALUE_ATTR = TreeCopier.class.getName() + ".HARDCODED_VALUE";
-
     private FacesContext _facesContext;
     private boolean _overwriteComponents = false;
     private boolean _overwriteAttributes = false;
@@ -101,7 +97,7 @@ public class TreeCopier
 
             if (clone == null)
             {
-                clone = cloneComponent(fromTreeId, child);
+                clone = cloneComponent(child);
 
                 clone.setComponentId(child.getComponentId());
                 toComp.addChild(childIndex, clone);
@@ -111,16 +107,16 @@ public class TreeCopier
         }
     }
 
-    private UIComponent cloneComponent(String fromTreeId, UIComponent toBeCloned)
+    private UIComponent cloneComponent(UIComponent toBeCloned)
     {
-        FacesTag tag = JspInfo.getCreatorTag(_facesContext, fromTreeId, toBeCloned);
+        FacesTag tag = (FacesTag)toBeCloned.getAttribute(JspInfo.CREATOR_TAG_ATTR);
         if (tag != null)
         {
             UIComponent clone = tag.createComponent();
             return clone;
         }
 
-        LogUtil.getLogger().severe("No creator tag found for component " + toBeCloned.getCompoundId() + ".");
+        LogUtil.getLogger().severe("Component " + toBeCloned.getClientId(_facesContext) + " has no creator tag attribute.");
 
         try
         {

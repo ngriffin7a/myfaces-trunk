@@ -203,7 +203,7 @@ public class MyFacesTagHelper
                     catch (IllegalArgumentException e)
                     {
                         //Component does not have this property!
-                        LogUtil.getLogger().severe("Component " + uiComponent.getCompoundId() + " does not have valid property setter and getter methods for property '" + attr.name + "'.");
+                        LogUtil.getLogger().severe("Component " + uiComponent.getClientId(facesContext) + " does not have valid property setter and getter methods for property '" + attr.name + "'.");
                         //Alternativly set by attribute name:
                         if (uiComponent.getAttribute(attr.name) == null)
                         {

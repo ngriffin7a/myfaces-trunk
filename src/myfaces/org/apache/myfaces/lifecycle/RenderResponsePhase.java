@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
+import javax.faces.event.PhaseId;
 import javax.faces.context.FacesContext;
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.render.RenderKit;
@@ -41,6 +42,7 @@ public class RenderResponsePhase
     private Lifecycle _lifecycle;
     public RenderResponsePhase(Lifecycle lifecycle)
     {
+        super(null);
         _lifecycle = lifecycle;
     }
 

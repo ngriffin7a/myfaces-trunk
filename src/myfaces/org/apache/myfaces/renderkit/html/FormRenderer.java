@@ -68,7 +68,7 @@ public class FormRenderer
         ServletContext servletContext = facesContext.getServletContext();
         ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
         ServletMapping sm = smf.getServletMapping(servletContext);
-        String treeURL = sm.encodeTreeIdForURL(facesContext, facesContext.getResponseTree().getTreeId());
+        String treeURL = sm.encodeTreeIdForURL(facesContext, facesContext.getTree().getTreeId());
 
         String action = request.getContextPath() + treeURL;
 
@@ -82,7 +82,7 @@ public class FormRenderer
             throws IOException
     {
         RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        RenderKit renderKit = rkFactory.getRenderKit(facesContext.getResponseTree().getRenderKitId());
+        RenderKit renderKit = rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
         Renderer renderer = renderKit.getRenderer(StateRenderer.TYPE);
         renderer.encodeChildren(facesContext, component);
 

@@ -23,7 +23,6 @@ import net.sourceforge.myfaces.MyFacesConfig;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
-import javax.faces.webapp.FacesTag;
 import java.util.*;
 
 /**
@@ -40,9 +39,11 @@ import java.util.*;
  */
 public class JspInfo
 {
+    public static final String CREATOR_TAG_ATTR = JspInfo.class.getName() + ".CREATOR_TAG";
+
     private Tree _tree = null;
     private Map _jspBeanInfosMap = new HashMap();
-    private Map _creatorTagsMap = new HashMap();
+    //private Map _creatorTagsMap = new HashMap();
     private List _saveStateComponents = new ArrayList();
 
     public JspInfo(Tree tree)
@@ -72,6 +73,7 @@ public class JspInfo
     }
 
 
+    /*
     public void setCreatorTag(String compoundId, FacesTag tag)
     {
         _creatorTagsMap.put(compoundId, tag);
@@ -81,6 +83,7 @@ public class JspInfo
     {
         return (FacesTag)_creatorTagsMap.get(compoundId);
     }
+    */
 
 
     public void addUISaveStateComponent(UIComponent uiSaveState)
@@ -117,6 +120,7 @@ public class JspInfo
         return getJspInfo(facesContext, treeId).getJspBeanInfos();
     }
 
+    /*
     public static FacesTag getCreatorTag(FacesContext facesContext,
                                          String treeId,
                                          String compoundId)
@@ -130,6 +134,7 @@ public class JspInfo
     {
         return getJspInfo(facesContext, treeId).getCreatorTag(uiComponent.getCompoundId());
     }
+    */
 
     public static Iterator getUISaveStateComponents(FacesContext facesContext,
                                                     String treeId)

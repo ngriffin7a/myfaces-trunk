@@ -55,7 +55,7 @@ public class StateRestorer
 
     public void restoreState(FacesContext facesContext) throws IOException
     {
-        Tree requestTree = facesContext.getRequestTree();
+        Tree requestTree = facesContext.getTree();
         Map stateMap = getStateMap(facesContext);
 
         String previousTreeId = getStateParameter(stateMap,
@@ -150,7 +150,8 @@ public class StateRestorer
         //restore value:
         String savedValue = getStateParameter(stateMap,
                                               RequestParameterNames
-                                                .getUIComponentStateParameterName(uiComponent,
+                                                .getUIComponentStateParameterName(facesContext,
+                                                                                  uiComponent,
                                                                                   CommonComponentAttributes.VALUE_ATTR));
         if (savedValue != null)
         {
@@ -174,8 +175,9 @@ public class StateRestorer
         for (Iterator it = stateMap.entrySet().iterator(); it.hasNext();)
         {
             Map.Entry entry = (Map.Entry)it.next();
-            String attrName = RequestParameterNames.restoreUIComponentStateParameterAttributeName(uiComponent,
-                                                                            (String)entry.getKey());
+            String attrName = RequestParameterNames.restoreUIComponentStateParameterAttributeName(facesContext,
+                                                                                                  uiComponent,
+                                                                                                  (String)entry.getKey());
             if (attrName != null && !attrName.equals(CommonComponentAttributes.VALUE_ATTR))
             {
                 Object paramValue = entry.getValue();
@@ -200,7 +202,7 @@ public class StateRestorer
                 }
                 catch (IllegalArgumentException e)
                 {
-                    LogUtil.getLogger().warning("Component " + uiComponent.getCompoundId() + " does not have a getter method for attribute '" + attrName + "'.");
+                    LogUtil.getLogger().warning("Component " + uiComponent.getClientId(facesContext) + " does not have a getter method for attribute '" + attrName + "'.");
                 }
 
                 Object objValue;
@@ -226,12 +228,12 @@ public class StateRestorer
                                 paramValue = StringArrayConverter.getAsString((String[])paramValue);
                             }
                             objValue = conv.getAsObject(facesContext,
-                                                        facesContext.getResponseTree().getRoot(), //dummy UIComponent
+                                                        facesContext.getTree().getRoot(), //dummy UIComponent
                                                         (String)paramValue);
                         }
                         catch (ConverterException e)
                         {
-                            throw new FacesException("Error restoring state of attribute '" + attrName + "' of component " + uiComponent.getCompoundId() + ": Converter exception!", e);
+                            throw new FacesException("Error restoring state of attribute '" + attrName + "' of component " + uiComponent.getClientId(facesContext) + ": Converter exception!", e);
                         }
                     }
                 }
@@ -253,7 +255,7 @@ public class StateRestorer
     protected void restoreModelValues(FacesContext facesContext, Map stateMap)
     {
         Iterator it = JspInfo.getUISaveStateComponents(facesContext,
-                                                       facesContext.getRequestTree().getTreeId());
+                                                       facesContext.getTree().getTreeId());
         while (it.hasNext())
         {
             UIComponent uiSaveState = (UIComponent)it.next();
@@ -321,7 +323,7 @@ public class StateRestorer
         }
 
         JspBeanInfo jspBeanInfo = JspInfo.getJspBeanInfo(facesContext,
-                                                         facesContext.getRequestTree().getTreeId(),
+                                                         facesContext.getTree().getTreeId(),
                                                          modelId);
         if (jspBeanInfo == null)
         {

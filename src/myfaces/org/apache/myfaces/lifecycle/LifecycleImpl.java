@@ -25,6 +25,7 @@ import javax.faces.lifecycle.Lifecycle;
 import javax.faces.lifecycle.Phase;
 import javax.faces.lifecycle.ViewHandler;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -35,75 +36,45 @@ import java.util.List;
 public class LifecycleImpl
         extends Lifecycle
 {
+
     private ApplicationHandler _applicationHandler = null;
     private ViewHandler _viewHandler = null;
 
-    private static final int[] PHASE_IDS = {
-        RECONSTITUTE_REQUEST_TREE_PHASE,
-        APPLY_REQUEST_VALUES_PHASE,
-        HANDLE_REQUEST_EVENTS_PHASE,
-        PROCESS_VALIDATIONS_PHASE,
-        UPDATE_MODEL_VALUES_PHASE,
-        INVOKE_APPLICATION_PHASE,
-        RENDER_RESPONSE_PHASE,
-    };
-    private List _phases = null;
+    private List _phases;
+    private AbstractPhase _renderResponsePhase;
 
     public LifecycleImpl()
     {
+        initPhases();
     }
 
     private void initPhases()
     {
         _phases = new ArrayList();
-        _phases.add(new ReconstituteRequestTreePhase(this));
+        _phases.add(new ReconstituteComponentTreePhase(this));
         _phases.add(new ApplyRequestValuesPhase(this));
-        _phases.add(new HandleRequestEventsPhase(this));
+        //_phases.add(new HandleRequestEventsPhase(this));
         _phases.add(new ProcessValidationsPhase(this));
         _phases.add(new UpdateModelValuesPhase(this));
         _phases.add(new InvokeApplicationPhase(this));
-        _phases.add(new RenderResponsePhase(this));
+        _phases.add(_renderResponsePhase = new RenderResponsePhase(this));
     }
 
-    private Phase getPhaseByIndex(int phaseIdx)
-    {
-        if (_phases == null)
-        {
-            initPhases();
-        }
-        return (Phase)_phases.get(phaseIdx);
-    }
 
-    private Phase getPhaseById(int phaseId)
-    {
-        if (_phases == null)
-        {
-            initPhases();
-        }
-        for (int i = 0; i < PHASE_IDS.length; i++)
-        {
-            if (PHASE_IDS[i] == phaseId)
-            {
-                return (Phase)_phases.get(i);
-            }
-        }
-        throw new IllegalArgumentException();
-    }
-
-    public void execute(FacesContext facescontext)
+    public void execute(FacesContext facesContext)
             throws FacesException
     {
-        for (int i = 0; i < PHASE_IDS.length; i++)
+        for (Iterator it = _phases.iterator(); it.hasNext();)
         {
-            Phase phase = getPhaseByIndex(i);
-            int result = executePhase(facescontext, phase);
+            AbstractPhase phase = (AbstractPhase)it.next();
+            int result = phase.execute(facesContext);
             if (result == Phase.GOTO_EXIT)
             {
                 return;
             }
             else if (result == Phase.GOTO_RENDER)
             {
-                executePhase(facescontext, getPhaseById(RENDER_RESPONSE_PHASE));
+                _renderResponsePhase.execute(facesContext);
                 return;
             }
         }

@@ -82,14 +82,14 @@ public class NavigationItemRenderer
         uiComponent.setAttribute(DECODED_ATTR, Boolean.TRUE);
 
         //decode
-        String paramName = uiComponent.getCompoundId();
+        String paramName = uiComponent.getClientId(facesContext);
         String paramValue = facesContext.getServletRequest().getParameter(paramName);
         if (paramValue != null)
         {
             //link was clicked
             String commandName = paramValue;
             FacesEvent event = new CommandEvent(uiComponent, commandName);
-            facesContext.addApplicationEvent(event);
+            // facesContext.addApplicationEvent(event); TODO: new request processing model
 
             //find parent UINavigation
             UINavigation uiNavigation = findUINavigation(uiComponent);
@@ -98,7 +98,10 @@ public class NavigationItemRenderer
                 throw new FacesException("No parent UINavigation found!");
             }
 
+            /*
+            TODO: new request processing model
             facesContext.addRequestEvent(uiNavigation, new UINavigation.ClickEvent(uiComponent));
+            */
         }
     }
 
@@ -134,7 +137,7 @@ public class NavigationItemRenderer
             //There was no decoding, so we can assume that the state has not been restored yet and we can
             //explicitly restore state for that component
             RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-            RenderKit renderKit = rkFactory.getRenderKit(facesContext.getResponseTree().getRenderKitId());
+            RenderKit renderKit = rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
             Renderer stateRenderer = null;
             try
             {
@@ -158,7 +161,7 @@ public class NavigationItemRenderer
         ServletContext servletContext = facesContext.getServletContext();
         ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
         ServletMapping sm = smf.getServletMapping(servletContext);
-        String treeURL = sm.encodeTreeIdForURL(facesContext, facesContext.getResponseTree().getTreeId());
+        String treeURL = sm.encodeTreeIdForURL(facesContext, facesContext.getTree().getTreeId());
 
         HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
         String href = request.getContextPath() + treeURL;
@@ -170,12 +173,12 @@ public class NavigationItemRenderer
 
         //value
         writer.write('?');
-        writer.write(uiComponent.getCompoundId());
+        writer.write(uiComponent.getClientId(facesContext));
         writer.write("=1");
 
         //state:
         RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory("javax.faces.render.RenderKitFactory");
-        RenderKit renderKit = rkFactory.getRenderKit(facesContext.getResponseTree().getRenderKitId());
+        RenderKit renderKit = rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
         Renderer renderer = renderKit.getRenderer(StateRenderer.TYPE);
         renderer.encodeChildren(facesContext, uiComponent);
 
@@ -201,7 +204,7 @@ public class NavigationItemRenderer
             }
             if (bundle == null)
             {
-                LogUtil.getLogger().warning("No bundle defined for component " + uiComponent.getCompoundId());
+                LogUtil.getLogger().warning("No bundle defined for component " + uiComponent.getClientId(facesContext));
                 label = key;
             }
             else

@@ -23,7 +23,6 @@ import net.sourceforge.myfaces.component.UIRoot;
 import javax.faces.component.UIComponent;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.tree.Tree;
-import javax.servlet.ServletContext;
 
 /**
  * DOCUMENT ME!
@@ -33,14 +32,12 @@ import javax.servlet.ServletContext;
 public class TreeImpl
         extends Tree
 {
-    private ServletContext _servletContext;
     private String _treeId;
     private String _renderKitId;
     private UIComponent _root;
 
-    public TreeImpl(ServletContext servletContext, String treeId)
+    public TreeImpl(String treeId)
     {
-        _servletContext = servletContext;
         _treeId = treeId;
         setRenderKitId(RenderKitFactory.DEFAULT_RENDER_KIT);
         _root = new UIRoot();

@@ -111,7 +111,11 @@ public class UISortHeader
         }
         else
         {
+            /*
+            TODO: new event processing model
             return super.processEvent(facesContext, event);
+            */
+            return false;
         }
     }
 

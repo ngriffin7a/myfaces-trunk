@@ -53,14 +53,14 @@ public class SortColumnRenderer
     {
         //super.decode must not be called, because value never comes from request
 
-        String paramName = uiComponent.getCompoundId();
+        String paramName = uiComponent.getClientId(facesContext);
         String paramValue = facesContext.getServletRequest().getParameter(paramName);
         if (paramValue != null)
         {
             //link was clicked
             String commandName = paramValue;    // = columnName
             FacesEvent event = new CommandEvent(uiComponent, commandName);
-            facesContext.addApplicationEvent(event);
+            //facesContext.addApplicationEvent(event); TODO: new request processing model
 
 
             UIComponent uiSortHeader = uiComponent.getParent();
@@ -69,8 +69,11 @@ public class SortColumnRenderer
                 throw new FacesException("UISortHeader expected.");
             }
 
+            /*
+            TODO: new request processing model
             facesContext.addRequestEvent(uiSortHeader,
                                          new FacesEvent(uiComponent));
+                                         */
         }
     }
 

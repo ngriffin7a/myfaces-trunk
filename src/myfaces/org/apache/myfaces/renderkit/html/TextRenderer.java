@@ -18,13 +18,12 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.component.UIInput;
 import net.sourceforge.myfaces.renderkit.attr.TextRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
-import javax.faces.component.UITextEntry;
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
@@ -52,7 +51,7 @@ public class TextRenderer
 
     public boolean supportsComponentType(UIComponent uicomponent)
     {
-        return uicomponent instanceof UITextEntry ||   //FINAL: javax.faces.component.UIInput instead!
+        return uicomponent instanceof UIInput ||
                uicomponent instanceof UIOutput;
     }
 
@@ -76,7 +75,7 @@ public class TextRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<input type=\"text\"");
-        String coumpoundId = uiComponent.getCompoundId();
+        String coumpoundId = uiComponent.getClientId(facesContext);
         writer.write(" name=\"");
         writer.write(coumpoundId);
         writer.write("\"");

@@ -31,14 +31,13 @@ import org.xml.sax.Attributes;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIComponentBase;
 import javax.faces.webapp.FacesTag;
+import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagAttributeInfo;
 import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagLibraryInfo;
-import javax.servlet.jsp.PageContext;
 import java.beans.BeanInfo;
 import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditor;
-import java.beans.Beans;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.AccessController;
@@ -459,11 +458,14 @@ public class MyParseEventListener
             _currentComponent.addChild(comp);
             _currentComponent = comp;
 
-            String compoundId = comp.getCompoundId();
+            /*
+            String compoundId = comp.getCompoundId();   //TODO: We need a context independent getClientId() method
             if (compoundId != null)
             {
                 _jspInfo.setCreatorTag(compoundId, tag);
             }
+            */
+            comp.setAttribute(JspInfo.CREATOR_TAG_ATTR, tag);
 
             if (comp.getComponentType().equals(UISaveState.TYPE))
             {

@@ -30,8 +30,6 @@ import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.event.CommandEvent;
-import javax.faces.event.FacesEvent;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
@@ -61,14 +59,17 @@ public class HyperlinkRenderer
     {
         //super.decode must not be called, because value never comes from request
 
-        String paramName = uiComponent.getCompoundId();
+        String paramName = uiComponent.getClientId(facesContext);
         String paramValue = facesContext.getServletRequest().getParameter(paramName);
         if (paramValue != null)
         {
             //link was clicked
             String commandName = paramValue;
+            /*
+            TODO: New event processing model
             FacesEvent event = new CommandEvent(uiComponent, commandName);
             facesContext.addApplicationEvent(event);
+            */
         }
     }
 
@@ -83,7 +84,7 @@ public class HyperlinkRenderer
             ServletContext servletContext = facesContext.getServletContext();
             ServletMappingFactory smf = MyFacesFactoryFinder.getServletMappingFactory(servletContext);
             ServletMapping sm = smf.getServletMapping(servletContext);
-            String treeURL = sm.encodeTreeIdForURL(facesContext, facesContext.getResponseTree().getTreeId());
+            String treeURL = sm.encodeTreeIdForURL(facesContext, facesContext.getTree().getTreeId());
 
             HttpServletRequest request = (HttpServletRequest)facesContext.getServletRequest();
             href = request.getContextPath() + treeURL;
@@ -103,7 +104,7 @@ public class HyperlinkRenderer
         {
             writer.write('&');
         }
-        writer.write(uiComponent.getCompoundId());
+        writer.write(uiComponent.getClientId(facesContext));
         writer.write('=');
         writer.write(URLEncoder.encode(getStringValue(facesContext, uiComponent), "UTF-8"));
 
@@ -117,7 +118,7 @@ public class HyperlinkRenderer
                 String name = ((UIParameter)child).getName();
                 if (name == null)
                 {
-                    name = child.getCompoundId();
+                    name = child.getClientId(facesContext);
                 }
                 writer.write('&');
                 writer.write(name);
@@ -128,7 +129,7 @@ public class HyperlinkRenderer
 
         //state:
         RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        RenderKit renderKit = rkFactory.getRenderKit(facesContext.getResponseTree().getRenderKitId());
+        RenderKit renderKit = rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
         Renderer renderer = renderKit.getRenderer(StateRenderer.TYPE);
         renderer.encodeChildren(facesContext, uiComponent);
 

@@ -18,14 +18,12 @@
  */
 package net.sourceforge.myfaces.component;
 
-import javax.faces.component.UITextEntry;
-
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class UIInput
-        extends UITextEntry     //Spec 1.0 names it UIInput instead of UITextEntry
+        extends javax.faces.component.UIInput
 {
 }

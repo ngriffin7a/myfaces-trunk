@@ -26,6 +26,7 @@ import net.sourceforge.myfaces.MyFacesFactoryFinder;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
+import javax.faces.event.PhaseId;
 import javax.faces.context.FacesContext;
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.render.RenderKit;
@@ -36,20 +37,22 @@ import javax.faces.tree.TreeFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.ServletContext;
 import java.io.IOException;
+import java.util.Locale;
 
 /**
  * DOCUMENT ME!
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ReconstituteRequestTreePhase
+public class ReconstituteComponentTreePhase
         extends AbstractPhase
 {
     private Lifecycle _lifecycle;
     private TreeFactory _treeFactory;
 
-    public ReconstituteRequestTreePhase(Lifecycle lifecycle)
+    public ReconstituteComponentTreePhase(Lifecycle lifecycle)
     {
+        super(PhaseId.RECONSTITUTE_REQUEST);
         _lifecycle = lifecycle;
         _treeFactory = (TreeFactory)FactoryFinder.getFactory(FactoryFinder.TREE_FACTORY);
     }
@@ -65,12 +68,22 @@ public class ReconstituteRequestTreePhase
         ServletMapping sm = smf.getServletMapping(servletContext);
         String treeId = sm.getTreeIdFromRequest(request);
 
-        Tree requestTree = _treeFactory.getTree(facesContext.getServletContext(), treeId);
-        facesContext.setRequestTree(requestTree);
+        Tree tree = _treeFactory.getTree(facesContext, treeId);
+        facesContext.setTree(tree);
+
+        //Set locale
+        if (request.getLocale() != null)
+        {
+            facesContext.setLocale(request.getLocale());
+        }
+        else
+        {
+            facesContext.setLocale(Locale.getDefault());
+        }
 
         //Restore state
         RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-        RenderKit renderKit = rkFactory.getRenderKit(facesContext.getResponseTree().getRenderKitId());
+        RenderKit renderKit = rkFactory.getRenderKit(tree.getRenderKitId());
 
         Renderer stateRenderer = null;
         try

@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.lifecycle;
 import javax.faces.FacesException;
 import javax.faces.context.FacesContext;
 import javax.faces.event.FacesEvent;
+import javax.faces.event.PhaseId;
 import javax.faces.lifecycle.ApplicationHandler;
 import javax.faces.lifecycle.Lifecycle;
 import java.util.Iterator;
@@ -36,6 +37,7 @@ public class InvokeApplicationPhase
     private Lifecycle _lifecycle;
     public InvokeApplicationPhase(Lifecycle lifecycle)
     {
+        super(null);
         _lifecycle = lifecycle;
     }
 

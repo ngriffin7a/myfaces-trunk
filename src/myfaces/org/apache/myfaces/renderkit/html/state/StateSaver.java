@@ -164,13 +164,13 @@ public class StateSaver
     {
         saveParameter(stateMap,
                       StateRenderer.TREE_ID_REQUEST_PARAM,
-                      facesContext.getResponseTree().getTreeId());
+                      facesContext.getTree().getTreeId());
     }
 
 
     protected void saveComponents(FacesContext facesContext, Map stateMap)
     {
-        Iterator treeIt = TreeUtils.treeIterator(facesContext.getResponseTree());
+        Iterator treeIt = TreeUtils.treeIterator(facesContext.getTree());
         while (treeIt.hasNext())
         {
             UIComponent comp = (UIComponent)treeIt.next();
@@ -201,7 +201,8 @@ public class StateSaver
                         {
                             saveParameter(stateMap,
                                           RequestParameterNames
-                                            .getUIComponentStateParameterName(comp,
+                                            .getUIComponentStateParameterName(facesContext,
+                                                                              comp,
                                                                               CommonComponentAttributes.STRING_VALUE_ATTR),
                                           (String)attrValue);
                         }
@@ -235,11 +236,11 @@ public class StateSaver
                                       Object attrValue)
     {
         Tree parsedTree = JspInfo.getTree(facesContext,
-                                                facesContext.getResponseTree().getTreeId());
+                                                facesContext.getTree().getTreeId());
         UIComponent parsedComp = null;
         try
         {
-            parsedComp = parsedTree.getRoot().findComponent(uiComponent.getCompoundId());
+            parsedComp = parsedTree.getRoot().findComponent(uiComponent.getClientId(facesContext));
         }
         catch (IllegalArgumentException e)
         {
@@ -265,7 +266,7 @@ public class StateSaver
             }
             catch (ConverterException e)
             {
-                throw new FacesException("Error saving state of value of component " + uiComponent.getCompoundId() + ": Converter exception!", e);
+                throw new FacesException("Error saving state of value of component " + uiComponent.getClientId(facesContext) + ": Converter exception!", e);
             }
         }
         else
@@ -276,13 +277,14 @@ public class StateSaver
             }
             else
             {
-                LogUtil.getLogger().warning("Value of component " + uiComponent.getCompoundId() + " is not serializable - cannot save state!");
+                LogUtil.getLogger().warning("Value of component " + uiComponent.getClientId(facesContext) + " is not serializable - cannot save state!");
                 return;
             }
         }
 
         saveParameter(stateMap,
-                      RequestParameterNames.getUIComponentStateParameterName(uiComponent,
+                      RequestParameterNames.getUIComponentStateParameterName(facesContext,
+                                                                             uiComponent,
                                                                              CommonComponentAttributes.VALUE_ATTR),
                       strValue);
     }
@@ -295,11 +297,11 @@ public class StateSaver
                                           Object attrValue)
     {
         Tree parsedTree = JspInfo.getTree(facesContext,
-                                                facesContext.getResponseTree().getTreeId());
+                                                facesContext.getTree().getTreeId());
         UIComponent parsedComp = null;
         try
         {
-            parsedComp = parsedTree.getRoot().findComponent(uiComponent.getCompoundId());
+            parsedComp = parsedTree.getRoot().findComponent(uiComponent.getClientId(facesContext));
         }
         catch (IllegalArgumentException e)
         {
@@ -327,7 +329,7 @@ public class StateSaver
         catch (IllegalArgumentException e)
         {
             //probably not a component attribute but a render dependent attribute
-            LogUtil.getLogger().info("Component " + uiComponent.getCompoundId() + " does not have a getter method for attribute '" + attrName + "', assuming renderer dependent attribute.");
+            LogUtil.getLogger().info("Component " + uiComponent.getClientId(facesContext) + " does not have a getter method for attribute '" + attrName + "', assuming renderer dependent attribute.");
         }
 
         String strValue;
@@ -336,12 +338,12 @@ public class StateSaver
             try
             {
                 strValue = conv.getAsString(facesContext,
-                                            facesContext.getResponseTree().getRoot(), //dummy UIComponent
+                                            facesContext.getTree().getRoot(), //dummy UIComponent
                                             attrValue);
             }
             catch (ConverterException e)
             {
-                throw new FacesException("Error saving state of attribute '" + attrName + "' of component " + uiComponent.getCompoundId() + ": Converter exception!", e);
+                throw new FacesException("Error saving state of attribute '" + attrName + "' of component " + uiComponent.getClientId(facesContext) + ": Converter exception!", e);
             }
         }
         else
@@ -354,14 +356,16 @@ public class StateSaver
             }
             else
             {
-                LogUtil.getLogger().warning("Attribute '" + attrName + "' of component " + uiComponent.getCompoundId() + " is not serializable - cannot save state!");
+                LogUtil.getLogger().warning("Attribute '" + attrName + "' of component " + uiComponent.getClientId(facesContext) + " is not serializable - cannot save state!");
                 return;
             }
 
         }
 
         saveParameter(stateMap,
-                      RequestParameterNames.getUIComponentStateParameterName(uiComponent, attrName),
+                      RequestParameterNames.getUIComponentStateParameterName(facesContext,
+                                                                             uiComponent,
+                                                                             attrName),
                       strValue);
     }
 
@@ -370,7 +374,7 @@ public class StateSaver
     protected void saveModelValues(FacesContext facesContext, Map stateMap)
     {
         Iterator it = JspInfo.getUISaveStateComponents(facesContext,
-                                                       facesContext.getResponseTree().getTreeId());
+                                                       facesContext.getTree().getTreeId());
         while (it.hasNext())
         {
             UIComponent uiSaveState = (UIComponent)it.next();

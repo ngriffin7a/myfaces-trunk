@@ -5,7 +5,6 @@ MyFaces Release Notes
 Changes in Release 0.1.4
 
 * tons of adds, changes and fixes to better conform to the specification.
-* Patch to make javax.faces.webapp.FacesBodyTag work (see developer-notes).
 * List- and GridRenderer, new sample pages
 
 ----------------------------------------------------------------------

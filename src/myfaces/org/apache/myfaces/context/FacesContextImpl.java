@@ -26,6 +26,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.Message;
 import javax.faces.context.ResponseStream;
 import javax.faces.context.ResponseWriter;
+import javax.faces.event.ApplicationEvent;
 import javax.faces.event.FacesEvent;
 import javax.faces.lifecycle.ApplicationHandler;
 import javax.faces.lifecycle.Lifecycle;
@@ -54,13 +55,12 @@ public class FacesContextImpl
     private ServletResponse _servletresponse;
     private Lifecycle _lifecycle;
     private Locale _locale = Locale.getDefault();
-    private Tree _requestTree = null;
-    private Tree _responseTree = null;
+    private Tree _tree = null;
     private List _applicationEvents = null;
+    private List _facesEvents = null;
     private List _messages = null;
     private List _messageComponents = null;
     private int _maximumSeverity = 0;
-    private Map _requestEvents = null;
     private ResponseStream _responseStream = null;
     private ResponseWriter _responseWriter = null;
 
@@ -127,33 +127,19 @@ public class FacesContextImpl
     }
 
     //JSF.5.1.3
-    public void setRequestTree(Tree tree)
+    public void setTree(Tree tree)
     {
-        if (_requestTree != null)
-        {
-            throw new IllegalStateException("Call release() first!");
-        }
-        _requestTree = tree;
+        _tree = tree;
     }
 
-    public Tree getRequestTree()
+    public Tree getTree()
     {
-        return _requestTree;
-    }
-
-    public void setResponseTree(Tree tree)
-    {
-        _responseTree = tree;
-    }
-
-    public Tree getResponseTree()
-    {
-        return _responseTree != null ? _responseTree : _requestTree;
+        return _tree;
     }
 
     public void release()
     {
-        _requestTree = null;
+        _tree = null;
     }
 
 
@@ -172,13 +158,13 @@ public class FacesContextImpl
                 : 0;
     }
 
-    public void addApplicationEvent(FacesEvent facesevent)
+    public void addApplicationEvent(ApplicationEvent event)
     {
         if (_applicationEvents == null)
         {
             _applicationEvents = new ArrayList();
         }
-        _applicationEvents.add(facesevent);
+        _applicationEvents.add(event);
     }
 
     //JSF.5.1.5
@@ -299,65 +285,20 @@ public class FacesContextImpl
 
 
     //JSF.5.1.8
-    public Iterator getRequestEvents(UIComponent uicomponent)
+    public Iterator getFacesEvents()
     {
-        Collection c = getRequestEventsCollection(uicomponent);
-        return c != null
-                ? c.iterator()
+        return _facesEvents != null
+                ? _facesEvents.iterator()
                 : Collections.EMPTY_LIST.iterator();
     }
 
-    public int getRequestEventsCount(UIComponent uicomponent)
+    public void addFacesEvent(FacesEvent facesevent)
     {
-        Collection c = getRequestEventsCollection(uicomponent);
-        return c != null
-                ? c.size()
-                : 0;
-    }
-
-    private Collection getRequestEventsCollection(UIComponent uicomponent)
-    {
-        Collection c = null;
-        if (_requestEvents != null)
+        if (_facesEvents == null)
         {
-            c = (Collection)_requestEvents.get(uicomponent.getCompoundId());
+            _facesEvents = new ArrayList();
         }
-        return c;
-    }
-
-    public int getRequestEventsCount()
-    {
-        int count = 0;
-        if (_requestEvents != null)
-        {
-            for (Iterator it = _requestEvents.values().iterator(); it.hasNext();)
-            {
-                Collection c = (Collection)it.next();
-                count += c.size();
-            }
-        }
-        return count;
-    }
-
-    public void addRequestEvent(UIComponent uicomponent, FacesEvent facesevent)
-    {
-        Collection c = null;
-        if (_requestEvents == null)
-        {
-            _requestEvents = new HashMap();
-        }
-        else
-        {
-            c = getRequestEventsCollection(uicomponent);
-        }
-
-        if (c == null)
-        {
-            c = new ArrayList();
-            _requestEvents.put(uicomponent.getCompoundId(), c);
-        }
-
-        c.add(facesevent);
+        _facesEvents.add(facesevent);
     }
 
 
@@ -383,6 +324,19 @@ public class FacesContextImpl
         _responseWriter = responsewriter;
     }
 
+    //JSF.5.1.10
+
+    public void renderResponse()
+    {
+        //TODO
+        throw new UnsupportedOperationException();
+    }
+
+    public void responseComplete()
+    {
+        //TODO
+        throw new UnsupportedOperationException();
+    }
 
     //Helpers
 

@@ -119,7 +119,7 @@ public class JspDataRenderer
             }
             else
             {
-                throw new IllegalArgumentException("Value of component " + uiComponent.getCompoundId() + " is neither collection nor array.");
+                throw new IllegalArgumentException("Value of component " + uiComponent.getClientId(facesContext) + " is neither collection nor array.");
             }
             uiComponent.setAttribute(ITERATOR_ATTR, iterator);
         }

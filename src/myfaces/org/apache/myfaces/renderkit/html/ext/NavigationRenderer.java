@@ -20,9 +20,8 @@ package net.sourceforge.myfaces.renderkit.html.ext;
 
 import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.ext.UINavigation;
-import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.attr.ext.NavigationRendererAttributes;
+import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
@@ -40,7 +39,7 @@ public class NavigationRenderer
     extends HTMLRenderer
     implements NavigationRendererAttributes
 {
-    public static final String GET_CHILDREN_FROM_REQUEST_ATTR
+    public static final String CURRENT_NAVIGATION_ATTR
         = NavigationRenderer.class.getName() + ".GET_CHILDREN_FROM_REQUEST";
 
     public static final String TYPE = "Navigation";
@@ -77,9 +76,8 @@ public class NavigationRenderer
     public void encodeChildren(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
-        Boolean b = (Boolean)facesContext.getResponseTree().getRoot().getAttribute(GET_CHILDREN_FROM_REQUEST_ATTR);
-        facesContext.getResponseTree().getRoot().setAttribute(GET_CHILDREN_FROM_REQUEST_ATTR, null);
-        if (b != null && b.booleanValue())
+        UIComponent oldNavigation = (UIComponent)facesContext.getServletRequest().getAttribute(CURRENT_NAVIGATION_ATTR);
+        if (oldNavigation != null)
         {
             //Remove all children:
             while(uiComponent.getChildCount() > 0)
@@ -87,11 +85,8 @@ public class NavigationRenderer
                 uiComponent.removeChild(0);
             }
 
-            //Add all children from same component in request
-            UIComponent requestNav
-                = facesContext.getRequestTree().getRoot()
-                    .findComponent(uiComponent.getCompoundId());
-            for (Iterator it = requestNav.getChildren(); it.hasNext();)
+            //Add all children from old navigation
+            for (Iterator it = oldNavigation.getChildren(); it.hasNext();)
             {
                 uiComponent.addChild((UIComponent)it.next());
             }

@@ -103,7 +103,7 @@ public abstract class AbstractPanelRenderer
     {
 
         UIComponent listComponent = peekListComponent(context);
-        String renderKitId = context.getResponseTree().getRenderKitId();
+        String renderKitId = context.getTree().getRenderKitId();
 
         RenderKitFactory renderkitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
         RenderKit renderKit = renderkitFactory.getRenderKit(renderKitId, context);
@@ -118,7 +118,7 @@ public abstract class AbstractPanelRenderer
             renderkitFactory.addRenderKit(ListRenderer.ListRenderKitImpl.ID, listRenderKit);
         }
 
-        context.getResponseTree().setRenderKitId(ListRenderer.ListRenderKitImpl.ID);
+        context.getTree().setRenderKitId(ListRenderer.ListRenderKitImpl.ID);
 
         listComponent.setAttribute(RENDERKIT_ATTR, renderKitId);
     }
@@ -126,7 +126,7 @@ public abstract class AbstractPanelRenderer
     protected void restoreRenderKit(FacesContext context, UIComponent uicomponent)
     {
         String renderKitId = getOriginalRenderKitId(context, uicomponent);
-        context.getResponseTree().setRenderKitId(renderKitId);
+        context.getTree().setRenderKitId(renderKitId);
     }
 
     private String getOriginalRenderKitId(FacesContext context, UIComponent uicomponent)
@@ -147,7 +147,7 @@ public abstract class AbstractPanelRenderer
     {
         restoreRenderKit(context, uicomponent);
 
-        String renderKitId = context.getResponseTree().getRenderKitId();
+        String renderKitId = context.getTree().getRenderKitId();
         RenderKitFactory renderkitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
         RenderKit renderKit = renderkitFactory.getRenderKit(renderKitId, context);
         Renderer renderer = renderKit.getRenderer(uicomponent.getRendererType());
@@ -161,7 +161,7 @@ public abstract class AbstractPanelRenderer
     {
         restoreRenderKit(context, uicomponent);
 
-        String renderKitId = context.getResponseTree().getRenderKitId();
+        String renderKitId = context.getTree().getRenderKitId();
         RenderKitFactory renderkitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
         RenderKit renderKit = renderkitFactory.getRenderKit(renderKitId, context);
         Renderer renderer = renderKit.getRenderer(uicomponent.getRendererType());
