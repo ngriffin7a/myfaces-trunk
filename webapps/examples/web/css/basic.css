@@ -13,34 +13,37 @@
 	font-size: 12px;
 	color: #000000;
     padding: 2;
+    border-style: solid;
+    border-width: 1px;
 }
 
 .standardTable_Header {
-	color: #FFFFFF;
-    background-color: #333366;
+	color: #000000;
+    background-color: #FFDD00;
+    padding: 3;
     text-align: center;
     border: none;
 }
 
 .standardTable_SortHeader {
-	color: #000000;
-    background-color: #CCCCCC;
+    background-color: #FFDD00;
+    color: #000000;
+    padding: 3;
     text-align: center;
-    font-size: medium;
+    border: none;
     font-weight: bold;
 }
 
 .standardTable_Footer {
-	color: #FFFFFF;
-    background-color: #666699;
+    background-color: #FFFFE0;
 }
 
 .standardTable_Row1 {
-    background-color: #CCCCFF;
+    background-color: #FFFFE0;
 }
 
 .standardTable_Row2 {
-    background-color: #9999CC;
+    background-color: #FFFFE0;
 }
 
 .standardTable_Column {
@@ -82,14 +85,16 @@ a:hover
     vertical-align: middle;
     height:1px;
     overflow:visible;
-    background-color: #CCCCFF;
+    background-color: #6392C6;
+    color: #FFFFFF;
 }
 
 .pageNavigation {
     text-align: left;
     vertical-align: top;
     width: 240px;
-    background-color: #9999CC;
+    background-color: #E7EFF7;
+    border: 1px solid #6392C6;
     padding: 10px;
 }
 
@@ -106,7 +111,7 @@ a:hover
     font-size: xx-small;
     height:1px;
     overflow:visible;
-    background-color: #333366;
+    background-color: #6392C6;
     color: #FFFFFF;
 }
 
@@ -131,8 +136,8 @@ a.navigation_link {
 }
 
 a.navigation_link:hover,active {
-    text-decoration : none;
-    color: #FFFFFF;
+    color: #ff9000;
+	text-decoration: none;
 }
 
 .navlevel1 {
