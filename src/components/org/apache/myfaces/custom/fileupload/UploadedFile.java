@@ -28,31 +28,16 @@ import org.apache.commons.fileupload.FileItem;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.4  2004/05/24 22:48:10  svieujot
+ *          Making UploadedFile an interface, and adjusting the renderer.
+ *
  *          Revision 1.3  2004/05/10 22:17:24  o_rossmueller
  *          max file size configurable by filter init parameter 'maxFileSize'
  *          removed default creation of file contents byte array
  *
  */
-public class UploadedFile
+public interface UploadedFile
 {
-
-    private String _name = null;
-    private String _contentType = null;
-    private FileItem fileItem;
-
-
-    public UploadedFile()
-    {
-    }
-
-
-    public UploadedFile(FileItem fileItem)
-    {
-        this.fileItem = fileItem;
-
-        _name = fileItem.getName();
-        _contentType = fileItem.getContentType();
-    }
 
 
     /**
@@ -60,12 +45,7 @@ public class UploadedFile
      *
      * @return file contents
      */
-    public byte[] getBytes() throws IOException
-    {
-        byte[] bytes = new byte[(int) fileItem.getSize()];
-        fileItem.getInputStream().read(bytes);
-        return bytes;
-    }
+    public byte[] getBytes() throws IOException;
 
 
     /**
@@ -74,35 +54,25 @@ public class UploadedFile
      * @return
      * @throws IOException
      */
-    public InputStream getInputStream() throws IOException
-    {
-        return fileItem.getInputStream();
-    }
+    public InputStream getInputStream() throws IOException;
 
 
     /**
      * @return Returns the _contentType.
      */
-    public String getContentType()
-    {
-        return _contentType;
-    }
+    public String getContentType();
+
 
 
     /**
      * @return Returns the _name.
      */
-    public String getName()
-    {
-        return _name;
-    }
+    public String getName();
 
 
     /**
      * Answer the size of this file.
      * @return
      */
-    public long getSize() {
-        return fileItem.getSize();
-    }
+    public long getSize();
 }

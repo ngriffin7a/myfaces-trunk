@@ -37,6 +37,9 @@ import java.io.IOException;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2004/05/24 22:48:10  svieujot
+ * Making UploadedFile an interface, and adjusting the renderer.
+ *
  * Revision 1.8  2004/05/18 14:26:49  manolito
  * added UserRoleAware support
  *
@@ -143,7 +146,7 @@ public class HtmlFileUploadRenderer
             	{
             		if( fileItem.getName().length() > 0 )
 	            	{
-                     UploadedFile upFile = new UploadedFile( fileItem );
+                     UploadedFile upFile = new UploadedFileDefaultImpl(fileItem);
                      ((HtmlInputFileUpload)uiComponent).setSubmittedValue(upFile);
                      ((HtmlInputFileUpload)uiComponent).setValid(true);
 	            	}
