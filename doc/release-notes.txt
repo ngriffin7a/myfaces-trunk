@@ -4,6 +4,7 @@ MyFaces Release Notes
 ----------------------------------------------------------------------
 Changes in Release 1.0.6 beta
 * switch to apache license
+* bug #991234 command links not working with javascript disabled
 * bug #990395 myfaces.jar has bad taglib descriptor
 * bug #990302 Navigation-Rule redirect
 * bug #985274 f:view locale does not always work

@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.renderkit.html.util.DummyFormResponseWriter;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
 
 import javax.faces.application.ViewHandler;
+import javax.faces.application.StateManager;
 import javax.faces.component.*;
 import javax.faces.component.html.HtmlCommandLink;
 import javax.faces.context.FacesContext;
@@ -36,6 +37,9 @@ import java.util.Iterator;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.15  2004/07/18 21:25:30  o_rossmueller
+ * fix #991234: use hidden field name in link url
+ *
  * Revision 1.14  2004/07/01 22:00:56  mwessendorf
  * ASF switch
  *
@@ -336,7 +340,8 @@ public abstract class HtmlLinkRendererBase
         {
             hrefBuf.append('&');
         }
-        hrefBuf.append(clientId);
+        String hiddenFieldName = HtmlRendererUtils.getHiddenCommandLinkFieldName(HtmlRendererUtils.getFormName(component, facesContext));
+        hrefBuf.append(hiddenFieldName);
         hrefBuf.append('=');
         hrefBuf.append(clientId);
 
@@ -347,10 +352,13 @@ public abstract class HtmlLinkRendererBase
                                      writer.getCharacterEncoding());
         }
 
-        hrefBuf.append("&");
-        hrefBuf.append(URL_STATE_MARKER);
-
-        String href = hrefBuf.toString();
+        StateManager stateManager = facesContext.getApplication().getStateManager();
+        if (stateManager.isSavingStateInClient(facesContext))
+        {
+            hrefBuf.append("&");
+            hrefBuf.append(URL_STATE_MARKER);
+        }
+        String href = facesContext.getExternalContext().encodeActionURL(hrefBuf.toString());
         writer.startElement(HTML.ANCHOR_ELEM, component);
         writer.writeURIAttribute(HTML.HREF_ATTR,
                                  facesContext.getExternalContext().encodeActionURL(href),
