@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.config;
 
-import net.sourceforge.myfaces.renderkit.html.RenderKitImpl;
+import net.sourceforge.myfaces.renderkit.html.HTMLRenderKitImpl;
 
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
@@ -35,7 +35,7 @@ import java.util.Map;
 public class RenderKitConfig
     implements Config
 {
-    private static final String DEFAULT_RENDER_KIT_CLASS = RenderKitImpl.class.getName();
+    private static final String DEFAULT_RENDER_KIT_CLASS = HTMLRenderKitImpl.class.getName();
 
     private String _renderKitId = RenderKitFactory.DEFAULT_RENDER_KIT;
     private String _renderKitClass = null;

@@ -39,7 +39,7 @@ public class RenderKitFactoryImpl
 
     public RenderKitFactoryImpl()
     {
-        //_renderkits.put(DEFAULT_RENDER_KIT, new RenderKitImpl());
+        //_renderkits.put(DEFAULT_RENDER_KIT, new HTMLRenderKitImpl());
     }
 
     public void addRenderKit(String id, RenderKit renderkit)
