@@ -46,6 +46,9 @@ import org.apache.myfaces.webapp.webxml.WebXml;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.35  2005/03/10 15:44:59  matzew
+ * Patch for supporting Strut-Faces form Mike Traum (MYFACES-121)
+ *
  * Revision 1.34  2005/02/10 20:31:21  matzew
  * organized import statements
  *
@@ -374,7 +377,6 @@ public class JspViewHandlerImpl
         }
     }
 
-
     private static ServletMapping getServletMapping(ExternalContext externalContext)
     {
         String servletPath = externalContext.getRequestServletPath();
@@ -412,10 +414,18 @@ public class JspViewHandlerImpl
                 }
             }
         }
-        log.error("could not find pathMapping for servletPath = " + servletPath +
-                  " requestPathInfo = " + requestPathInfo);
-        throw new IllegalArgumentException("could not find pathMapping for servletPath = " + servletPath +
-                  " requestPathInfo = " + requestPathInfo);
+
+        // handle cases as best possible where servletPath is not a faces servlet, 
+        // such as when coming through struts-faces
+        if (mappings.size() > 0) {
+            return (ServletMapping) mappings.get(0);
+        }
+        else {
+            log.error("no faces servlet mappings found");
+            throw new IllegalArgumentException("could not find pathMapping for servletPath = " + servletPath +
+                      " requestPathInfo = " + requestPathInfo);
+        }
     }
+
 
 }
