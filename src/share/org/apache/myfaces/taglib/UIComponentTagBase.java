@@ -24,6 +24,9 @@ import javax.faces.webapp.UIComponentTag;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2005/01/25 22:15:53  matzew
+ * JavaDoc patch form Sean Schofield
+ *
  * Revision 1.8  2005/01/10 08:08:12  matzew
  * added patch form sean schofield. forceId for reuse of "legacy JavaScript" (MyFaces-70)
  *
@@ -73,11 +76,25 @@ public abstract class UIComponentTagBase
         setConverterProperty(component, _converter);
     }
 
+    /**
+     * Sets the transient attribute of the tag.  NOTE: Not every tag that extends this class will 
+     * actually make use of this attribute.  Check the TLD to see which components actually 
+     * implement it.
+     * 
+     * @param aTransient The value of the transient attribute.
+     */
     public void setTransient(String aTransient)
     {
         _transient = aTransient;
     }
-    
+
+    /**
+     * Sets the forceId attribute of the tag.  NOTE: Not every tag that extends this class will 
+     * actually make use of this attribute.  Check the TLD to see which components actually 
+     * implement it.
+     * 
+     * @param aForceId The value of the forceId attribute.
+     */
     public void setForceId(String aForceId)
     {
         _forceId = aForceId;
