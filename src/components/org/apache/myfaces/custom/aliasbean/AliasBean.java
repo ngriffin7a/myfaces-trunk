@@ -46,6 +46,9 @@ import org.apache.commons.logging.LogFactory;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2005/03/10 15:11:00  svieujot
+ * Fix MYFACES-125 thanks to Mathias Broekelmann.
+ *
  * Revision 1.7  2005/01/27 16:00:30  svieujot
  * *** empty log message ***
  *
@@ -203,6 +206,13 @@ public class AliasBean extends UIComponentBase {
         removeAlias(context);
     }
 
+	public void processDecodes(FacesContext context) {
+		log.debug("processDecodes");
+		makeAlias(context);
+		super.processDecodes(context);
+		removeAlias(context);
+	}
+	
     public void processUpdates(FacesContext context) {
         log.debug("processUpdates");
         makeAlias(context);
@@ -211,9 +221,9 @@ public class AliasBean extends UIComponentBase {
     }
 
     public void queueEvent(FacesEvent event) {
-        makeAlias();
-        super.queueEvent(new FacesEventWrapper(event, this));
-        removeAlias();
+		makeAlias();
+		super.queueEvent(new FacesEventWrapper(event, this));
+		removeAlias();
     }
 
     public void broadcast(FacesEvent event) throws AbortProcessingException {
