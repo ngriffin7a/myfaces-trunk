@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormResponseWriter;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
 
@@ -38,6 +39,9 @@ import java.util.Iterator;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12  2004/06/08 01:34:44  o_rossmueller
+ * render link value if available as required by JSF 1.1 renderkitdocs
+ *
  * Revision 1.11  2004/06/03 12:57:03  o_rossmueller
  * modified link renderer to use one hidden field for all links according to 1.1 renderkit docs
  * added onclick=clear_XXX to button
@@ -202,6 +206,12 @@ public abstract class HtmlLinkRendererBase
                                               style);
         HtmlRendererUtils.renderHTMLAttribute(writer, HTML.STYLE_CLASS_ATTR, HTML.STYLE_CLASS_ATTR,
                                               styleClass);
+
+        // render value as required by JSF 1.1 renderkitdocs
+        if(value != null)
+        {
+            writer.writeText(value.toString(), JSFAttr.VALUE_ATTR);
+        }
     }
 
     protected void renderJavaScriptAnchorStart(FacesContext facesContext,
