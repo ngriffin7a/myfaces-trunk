@@ -31,9 +31,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -44,14 +42,14 @@ public abstract class UIComponentTag
 {
     private static final String FORMER_CHILD_IDS_SET_ATTR = UIComponentTag.class + ".FORMER_CHILD_IDS";
     private static final String FORMER_FACET_NAMES_SET_ATTR = UIComponentTag.class + ".FORMER_FACET_NAMES";
+    private static final String COMPONENT_STACK_ATTR =  UIComponentTag.class + ".COMPONENT_STACK";
 
-    protected PageContext pageContext = null;
+    protected PageContext _pageContext = null;
     private String _binding = null;
     private String _id = null;
     private String _rendered = null;
     private UIComponent _componentInstance = null;
     private boolean _created = false;
-    private UIComponentTag _parentUIComponentTag = null;
     private Tag _parent = null;
     private FacesContext _facesContext = null;
     private Boolean _suppressed = null;
@@ -102,21 +100,47 @@ public abstract class UIComponentTag
         return _created;
     }
 
-    public UIComponentTag getParentUIComponentTag()
+    public static UIComponentTag getParentUIComponentTag(PageContext pageContext)
     {
-        if (_parentUIComponentTag == null)
+        List list = (List)pageContext.getAttribute(COMPONENT_STACK_ATTR,
+                                                   PageContext.REQUEST_SCOPE);
+        if (list != null)
         {
-            Tag parentTag = getParent();
-            while (parentTag != null)
+            return (UIComponentTag)list.get(list.size() - 1);
+        }
+        return null;
+    }
+
+    private void popTag()
+    {
+        List list = (List)_pageContext.getAttribute(COMPONENT_STACK_ATTR,
+                                                    PageContext.REQUEST_SCOPE);
+        if (list != null)
+        {
+            int size = list.size();
+            list.remove(size -1);
+            if (size <= 1)
             {
-                if (parentTag instanceof UIComponentTag)
-                {
-                    return (_parentUIComponentTag = (UIComponentTag)parentTag);
-                }
+                _pageContext.removeAttribute(COMPONENT_STACK_ATTR,
+                                             PageContext.REQUEST_SCOPE);
             }
         }
-        return _parentUIComponentTag;
     }
+
+    private void pushTag()
+    {
+        List list = (List)_pageContext.getAttribute(COMPONENT_STACK_ATTR,
+                                                    PageContext.REQUEST_SCOPE);
+        if (list == null)
+        {
+            list = new ArrayList();
+            _pageContext.setAttribute(COMPONENT_STACK_ATTR,
+                                      list,
+                                      PageContext.REQUEST_SCOPE);
+        }
+        list.add(this);
+    }
+
 
     public abstract String getRendererType();
 
@@ -129,7 +153,7 @@ public abstract class UIComponentTag
 
     public void setPageContext(PageContext pageContext)
     {
-        this.pageContext = pageContext;
+        this._pageContext = pageContext;
     }
 
     public Tag getParent()
@@ -148,7 +172,7 @@ public abstract class UIComponentTag
         setupResponseWriter();
         FacesContext facesContext = getFacesContext();
         UIComponent component = findComponent(facesContext);
-        UIComponentTag parentTag = getParentUIComponentTag();
+        UIComponentTag parentTag = getParentUIComponentTag(_pageContext);
         if (parentTag != null)
         {
             UIComponent parent = parentTag.getComponentInstance();
@@ -167,12 +191,14 @@ public abstract class UIComponentTag
                 throw new JspException(e.getMessage(), e);
             }
         }
+        pushTag();
         return getDoStartValue();
     }
 
     public int doEndTag()
             throws JspException
     {
+        popTag();
         UIComponent component = getComponentInstance();
         removeFormerChildren(component);
         removeFormerFacets(component);
@@ -270,7 +296,6 @@ public abstract class UIComponentTag
         _rendered = null;
         _componentInstance = null;
         _created = false;
-        _parentUIComponentTag = null;
         _parent = null;
         _facesContext = null;
         _suppressed = null;
@@ -281,7 +306,7 @@ public abstract class UIComponentTag
 
     public void release()
     {
-        pageContext = null;
+        _pageContext = null;
         internalRelease();
     }
 
@@ -307,7 +332,7 @@ public abstract class UIComponentTag
             throws JspException
     {
         if (_componentInstance != null) return _componentInstance;
-        UIComponentTag parentTag = getParentUIComponentTag();
+        UIComponentTag parentTag = getParentUIComponentTag(_pageContext);
         if (parentTag == null)
         {
             //This is the root
@@ -498,7 +523,7 @@ public abstract class UIComponentTag
 
             ServletRequest request = (ServletRequest)facesContext.getExternalContext().getRequest();
 
-            _writer = renderKit.createResponseWriter(pageContext.getOut(),
+            _writer = renderKit.createResponseWriter(_pageContext.getOut(),
                                                     request.getContentType(),
                                                     request.getCharacterEncoding());
             facesContext.setResponseWriter(_writer);
