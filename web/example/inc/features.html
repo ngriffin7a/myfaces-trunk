@@ -2,7 +2,7 @@
 
 <h4>Saving the full tree and model state information in the client response</h4>
 
-Traditional JSP Applications save their state information within HttpSession 
+Traditional JSP Applications save their state information within HttpSession
 objects. This is an easy to use but poor approach:
 <ul>
   <li>HttpSession objects must have an expiration date (timeout) that prevents the
@@ -41,7 +41,7 @@ Example (see "sample1.jsp"):
 The current values of the three properties number1, number2 and result get
 automatically saved within the client response and restored from the
 following client request.
-    
+
 <p>You can also save the whole bean.<br>
   Example:
     <pre><code>
@@ -55,32 +55,13 @@ following client request.
         &lt;x:save_state id="save1" modelReference="calcForm" /&gt;
         ...</code></pre>
 The whole bean automatically is saved (serialized) and restored by MyFaces.
-    
+
 <p>Keep in mind that to be able to save and restore the value of a bean property
 or the bean itself, it must either be serializable or have a type that is
 supported by a Converter (see package myfaces/converter/map).
-    
 
-<h4>State Saving Methods</h4>
 
-MyFaces supports two ways of saving client state information:
-<ul>
-<li>"On the fly"<br>
-    State info is encoded within HREFs and FORMs at once.<br>
-    Drawback: The state of dynamic request time attributes that
-              are calculated during JSP processing will not be
-              saved correctly. Also the state of dynamically added
-              or removed UIComponents will not be saved correctly.
-<li>"Tokens"<br>
-    State info is encoded within HREFs and FORMs as tokens (placeholders)
-    that are replaced by the real state info after the JSP processing
-    of MyFaces tags has finished.<br>
-    Drawback: The usefaces tag must buffer all produced HTML code
-              within it's body (see javax.servlet.jsp.tagext.BodyContent)
-              and must do a search'n'replace before writing the
-              content out to the response stream.
-</ul>
-
+<h4>State Saving</h4>
 MyFaces supports two methods of encoding the state information:
 <ul>
 <li>"Normal"<br>
@@ -94,8 +75,37 @@ MyFaces supports two methods of encoding the state information:
 </ul>
 
 
-<h4>UINavigation</h4>
+<h4>ServletMapping</h4>
+MyFaces supports two methods of mapping requests to the FacesServlet:
+<ul>
+<li>Virtual path<br>
+    This is Suns method that is described in the specification. All requests to
+    "/faces/*" are mapped to the FacesServlet.
+<li>File extension<br>
+    MyFaces offers an alternative mapping. You can map all "*.jsf" requests to
+    the FacesServlet. This makes linking much easier, because you can write
+    relative urls exactly as you would do to link to another JSP. Just replace
+    the extension ".jsp" by ".jsf". You could even write a HTML design prototype
+    in "pure" JSP and then do a search-and-replace over your JSPs to run it in
+    JSF.
+</ul>
+
+
+<h4>UINavigation / NavigationRenderer (navigation and navigation_item tags)</h4>
 A simple navigation component to build a vertical menu structure.<br>
 (see web\example\inc\navigation.jsp for an example)
 
+<h4>UISortHeader / SortColumnRenderer (sortheader and sortcolumn tags)</h4>
+Convenient support for writing lists, that can be (re)sorted by a click on
+a column header.
+(see web\example\simpleSortList.jsp for an example)
 
+<h4>LayoutRenderer (page_layout, page_header, page_body and page_footer tags)</h4>
+Support for switchable page layout.
+Try the example and change the layout under "Options" to see the magic!
+
+<h4>ListRenderer supports nested HTML and JSP</h4>
+MyFaces ListRenderer does not render it's children, but rather lets child components
+and embedded HTML or JSP code the chance to render. This is achieved by our magic
+CallbackRenderer support.
+(see list examples)

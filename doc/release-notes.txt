@@ -6,6 +6,8 @@ Changes in Release 0.3.0
 
 * This is a major release, that has lots of changes to make MyFaces
   conform to the new EA3 specification.
+* UISortHeader with SortColumnRenderer (see features.html)
+* LayoutRenderer (see features.html)
 
 ----------------------------------------------------------------------
 Changes in Release 0.1.4
