@@ -82,15 +82,26 @@ public class StateRenderer
 
 
     /**
-     * Method decode is not called by a component but directly from the
-     * ReconstituteRequestTreePhase.
+     * Method decode is called directly from the ReconstituteRequestTreePhase with a null
+     * UIComponent parameter.
+     * Additionally, Renderers can call this method with a component argument to explicitly
+     * restore the state of a single component. e.g. The NavigationItemRenderer calls this
+     * method for each UINavigationItem to restore state of the Navigation independent of
+     * the tree restoring.
      * @param facesContext
-     * @param none
+     * @param comp  component that should be restored or null if full tree should be restored
      * @throws java.io.IOException
      */
-    public void decode(FacesContext facesContext, UIComponent none) throws IOException
+    public void decode(FacesContext facesContext, UIComponent comp) throws IOException
     {
-        _stateRestorer.restoreState(facesContext);
+        if (comp == null)
+        {
+            _stateRestorer.restoreState(facesContext);
+        }
+        else
+        {
+            _stateRestorer.restoreComponentState(facesContext, comp);
+        }
     }
 
     /**

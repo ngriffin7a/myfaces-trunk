@@ -79,6 +79,8 @@ public class StateSaver
     {
         if (MyFacesConfig.isStateEncodingOnTheFly())
         {
+            //state encoding on the fly (without tokens)
+            //means that we must prebuild a new response tree from the parsed JspInfo
             String requestTreeId = facesContext.getRequestTree().getTreeId();
             Tree responseTree = facesContext.getResponseTree();
             String responseTreeId = responseTree.getTreeId();
@@ -95,6 +97,15 @@ public class StateSaver
                 treeCopier.setOverwriteComponents(true);
                 treeCopier.copyStaticTree(staticTree, facesContext.getResponseTree());
             }
+        }
+        else
+        {
+            //state encoding with tokens
+            //means we can create the components on the fly
+            //TODO: BUT, what about components that rely on underlying child components?
+            //e.g. a UIParameter under a Hyperlink-UICommand would not exist when the
+            // HyperlinkRenderer would need it already during encodeBegin !?
+            //So, should we always prebuild the tree from the static tree before rendering?
         }
     }
 

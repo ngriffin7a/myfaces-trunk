@@ -35,6 +35,7 @@ import javax.faces.tree.Tree;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  * TODO: description
@@ -43,11 +44,12 @@ import java.util.Map;
  */
 public class StateRestorer
 {
+    private static final String STATE_MAP_REQUEST_ATTR = StateRestorer.class.getName() + ".STATE_MAP";
 
     public void restoreState(FacesContext facesContext) throws IOException
     {
         Tree requestTree = facesContext.getRequestTree();
-        Map stateMap = restoreStateMap(facesContext);
+        Map stateMap = getStateMap(facesContext);
 
         String previousTreeId = getStateParameter(stateMap,
                                                   StateRenderer.TREE_ID_REQUEST_PARAM);
@@ -81,6 +83,16 @@ public class StateRestorer
         restoreModelValues(facesContext, stateMap);
     }
 
+    protected Map getStateMap(FacesContext facesContext)
+    {
+        Map map = (Map)facesContext.getServletRequest().getAttribute(STATE_MAP_REQUEST_ATTR);
+        if (map == null)
+        {
+            map = restoreStateMap(facesContext);
+            facesContext.getServletRequest().setAttribute(STATE_MAP_REQUEST_ATTR, map);
+        }
+        return map;
+    }
 
     protected Map restoreStateMap(FacesContext facesContext)
     {
@@ -265,5 +277,11 @@ public class StateRestorer
         }
     }
 
+
+    public void restoreComponentState(FacesContext facesContext, UIComponent uiComponent) throws IOException
+    {
+        Map stateMap = getStateMap(facesContext);
+        restoreComponent(facesContext, stateMap, uiComponent);
+    }
 
 }

@@ -18,13 +18,13 @@
  */
 package net.sourceforge.myfaces.renderkit.html.ext;
 
+import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.component.ext.UINavigation;
 import net.sourceforge.myfaces.component.ext.UINavigationItem;
 import net.sourceforge.myfaces.renderkit.html.HTMLRenderer;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
-import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 import net.sourceforge.myfaces.webapp.ServletMapping;
-import net.sourceforge.myfaces.MyFacesFactoryFinder;
+import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -36,9 +36,9 @@ import javax.faces.event.FacesEvent;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletContext;
 import java.io.IOException;
 
 /**
@@ -50,6 +50,7 @@ public class NavigationItemRenderer
     extends HTMLRenderer
 {
     public static final String TYPE = "NavigationItemRenderer";
+    private static final String DECODED_ATTR = NavigationItemRenderer.class.getName() + ".DECODED";
 
     public String getRendererType()
     {
@@ -71,6 +72,10 @@ public class NavigationItemRenderer
     {
         //super.decode must not be called, because value never comes from request
 
+        //Remember, that we have decoded
+        uiComponent.setAttribute(DECODED_ATTR, Boolean.TRUE);
+
+        //decode
         String paramName = uiComponent.getCompoundId();
         String paramValue = facesContext.getServletRequest().getParameter(paramName);
         if (paramValue != null)
@@ -84,7 +89,7 @@ public class NavigationItemRenderer
             UINavigation uiNavigation = findUINavigation(uiComponent);
             if (uiNavigation == null)
             {
-                throw new FacesException("No parent UINavigation not found!");
+                throw new FacesException("No parent UINavigation found!");
             }
 
             facesContext.addRequestEvent(uiNavigation, new UINavigation.ClickEvent(uiComponent));
@@ -117,6 +122,29 @@ public class NavigationItemRenderer
      */
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
+        Boolean b = (Boolean)uiComponent.getAttribute(DECODED_ATTR);
+        if (b == null || !b.booleanValue())
+        {
+            //There was no decoding, so we can assume that the sate has not been restored and we can
+            //explicitly restore state for that component
+            RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+            RenderKit renderKit = rkFactory.getRenderKit(facesContext.getResponseTree().getRenderKitId());
+            Renderer stateRenderer = null;
+            try
+            {
+                stateRenderer = renderKit.getRenderer(StateRenderer.TYPE);
+            }
+            catch (Exception e)
+            {
+                //No StateRenderer
+            }
+            if (stateRenderer != null)
+            {
+                stateRenderer.decode(facesContext, uiComponent);
+            }
+        }
+
+
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.write("<a href=\"");
 
