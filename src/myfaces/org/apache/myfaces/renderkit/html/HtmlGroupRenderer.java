@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -53,7 +52,7 @@ public class HtmlGroupRenderer
             throws IOException
     {
         ResponseWriter writer = context.getResponseWriter();
-        boolean span = HTMLUtil.renderHTMLAttributesWithOptionalStartElement(writer,
+        boolean span = HtmlRendererUtils.renderHTMLAttributesWithOptionalStartElement(writer,
                                                                              component,
                                                                              HTML.SPAN_ELEM,
                                                                              HTML.COMMON_PASSTROUGH_ATTRIBUTES);

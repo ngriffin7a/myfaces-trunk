@@ -16,19 +16,16 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.html.ext;
+package net.sourceforge.myfaces.custom.fileupload;
 
 import com.oreilly.servlet.MultipartWrapper;
-import net.sourceforge.myfaces.component.ext.HtmlInputFileUpload;
-import net.sourceforge.myfaces.model.UploadedFile;
-import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
+import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.render.Renderer;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.File;
@@ -39,12 +36,12 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class HtmlFileUploadRenderer
-    extends HtmlRenderer
+    extends Renderer
 {
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlInputFileUpload.class);
+        super.encodeEnd(facesContext, uiComponent); //check for NP
 
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.startElement(HTML.INPUT_ELEM, uiComponent);
@@ -57,14 +54,14 @@ public class HtmlFileUploadRenderer
         {
             writer.writeAttribute(HTML.VALUE_ATTR, value.getFilePath(), null);
         }
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_FILE_PASSTHROUGH_ATTRIBUTES);
+        HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_FILE_PASSTHROUGH_ATTRIBUTES);
         writer.endElement(HTML.INPUT_ELEM);
     }
 
 
     public void decode(FacesContext facesContext, UIComponent uiComponent)
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlInputFileUpload.class);
+        super.decode(facesContext, uiComponent); //check for NP
 
         //MultipartWrapper might have been wrapped again by one or more additional
         //Filters. We try to find the MultipartWrapper, but if a filter has wrapped

@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib.html;
 
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.taglib.MyfacesComponentTag;
+import net.sourceforge.myfaces.taglib.UIComponentTagBase;
 
 import javax.faces.component.UIComponent;
 
@@ -28,7 +28,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public abstract class HtmlComponentTag
-        extends MyfacesComponentTag
+        extends UIComponentTagBase
 {
     //private static final Log log = LogFactory.getLog(HtmlComponentTag.class);
 

@@ -20,7 +20,6 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -57,7 +56,7 @@ public class HtmlTableRenderer
 
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
         writer.startElement(HTML.TABLE_ELEM, uiComponent);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.TABLE_PASSTHROUGH_ATTRIBUTES);
+        HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.TABLE_PASSTHROUGH_ATTRIBUTES);
 
         renderFacet(facesContext, writer, (UIData)uiComponent, true);
     }

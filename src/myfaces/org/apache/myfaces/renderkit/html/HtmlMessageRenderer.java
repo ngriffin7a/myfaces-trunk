@@ -18,9 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
+import net.sourceforge.myfaces.renderkit.RendererUtils;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -137,12 +136,12 @@ public class HtmlMessageRenderer
         ResponseWriter bufWriter = writer.cloneWithWriter(buf);
         bufWriter.startElement(HTML.SPAN_ELEM, uiMessage);
         //universal attributes
-        span |= HTMLUtil.renderHTMLAttribute(bufWriter, uiMessage, HTML.DIR_ATTR, HTML.DIR_ATTR);
-        span |= HTMLUtil.renderHTMLAttribute(bufWriter, uiMessage, HTML.LANG_ATTR, HTML.LANG_ATTR);
-        span |= HTMLUtil.renderHTMLAttribute(bufWriter, HTML.TITLE_ATTR, HTML.TITLE_ATTR, title);
-        span |= HTMLUtil.renderHTMLAttribute(bufWriter, HTML.STYLE_ATTR, HTML.STYLE_ATTR, style);
-        span |= HTMLUtil.renderHTMLAttribute(bufWriter, HTML.STYLE_CLASS_ATTR, HTML.STYLE_CLASS_ATTR, styleClass);
-        span |= HTMLUtil.renderHTMLAttributes(bufWriter, uiMessage, HTML.EVENT_HANDLER_ATTRIBUTES);
+        span |= HtmlRendererUtils.renderHTMLAttribute(bufWriter, uiMessage, HTML.DIR_ATTR, HTML.DIR_ATTR);
+        span |= HtmlRendererUtils.renderHTMLAttribute(bufWriter, uiMessage, HTML.LANG_ATTR, HTML.LANG_ATTR);
+        span |= HtmlRendererUtils.renderHTMLAttribute(bufWriter, HTML.TITLE_ATTR, HTML.TITLE_ATTR, title);
+        span |= HtmlRendererUtils.renderHTMLAttribute(bufWriter, HTML.STYLE_ATTR, HTML.STYLE_ATTR, style);
+        span |= HtmlRendererUtils.renderHTMLAttribute(bufWriter, HTML.STYLE_CLASS_ATTR, HTML.STYLE_CLASS_ATTR, styleClass);
+        span |= HtmlRendererUtils.renderHTMLAttributes(bufWriter, uiMessage, HTML.EVENT_HANDLER_ATTRIBUTES);
         bufWriter.close();
         if (span)
         {

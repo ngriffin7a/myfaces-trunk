@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib.core;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.taglib.MyfacesComponentTag;
+import net.sourceforge.myfaces.taglib.UIComponentTagBase;
 
 import javax.faces.component.UIComponent;
 
@@ -28,7 +28,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class SelectItemTag
-        extends MyfacesComponentTag
+        extends UIComponentTagBase
 {
     //private static final Log log = LogFactory.getLog(SelectItemTag.class);
 

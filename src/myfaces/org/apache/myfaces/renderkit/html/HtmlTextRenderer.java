@@ -20,7 +20,6 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
@@ -91,7 +90,7 @@ public class HtmlTextRenderer
         {
             ResponseWriter writer = facesContext.getResponseWriter();
 
-            boolean span = HTMLUtil.renderHTMLAttributesWithOptionalStartElement(
+            boolean span = HtmlRendererUtils.renderHTMLAttributesWithOptionalStartElement(
                     writer, component, HTML.SPAN_ELEM, HTML.COMMON_PASSTROUGH_ATTRIBUTES);
 
             if (escape)
@@ -128,8 +127,8 @@ public class HtmlTextRenderer
             writer.writeAttribute(HTML.VALUE_ATTR, value, JSFAttr.VALUE_ATTR);
         }
 
-        HTMLUtil.renderHTMLAttributes(writer, uiInput, HTML.INPUT_PASSTHROUGH_ATTRIBUTES);
-        HTMLUtil.renderDisabledOnUserRole(writer, uiInput, facesContext);
+        HtmlRendererUtils.renderHTMLAttributes(writer, uiInput, HTML.INPUT_PASSTHROUGH_ATTRIBUTES);
+        HtmlRendererUtils.renderDisabledOnUserRole(writer, uiInput, facesContext);
 
         writer.endElement(HTML.INPUT_ELEM);
     }

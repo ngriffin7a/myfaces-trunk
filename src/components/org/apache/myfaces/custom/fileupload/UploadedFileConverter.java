@@ -16,30 +16,37 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.component;
+package net.sourceforge.myfaces.custom.fileupload;
 
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
+import javax.faces.convert.ConverterException;
 
 /**
- * Constant declarations for JSF tags
- * @author Anton Koinov (latest modification by $Author$)
+ * DOCUMENT ME!
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class JSFProp
+public class UploadedFileConverter
+    implements Converter
 {
-    //~ Static fields/initializers -----------------------------------------------------------------
-
-    //Standard properties
-    public static final String COMPONENT_ID_PROP  = "componentId";
-    public static final String CONVERTER_PROP     = "converter";
-    public static final String PARENT_PROP        = "parent";
-    public static final String RENDERED_PROP      = "rendered";
-    public static final String RENDERER_TYPE_PROP = "rendererType";
-    public static final String VALID_PROP         = "valid";
-
-    //~ Constructors -------------------------------------------------------------------------------
-
-    protected JSFProp()
+    public Object getAsObject(FacesContext facescontext, UIComponent uicomponent, String s)
+        throws ConverterException
     {
-        // disable
+        return null;
+    }
+
+    public String getAsString(FacesContext facescontext, UIComponent uicomponent, Object obj)
+        throws ConverterException
+    {
+        if (obj instanceof UploadedFile)
+        {
+            return ((UploadedFile)obj).getFilePath();
+        }
+        else
+        {
+            return null;
+        }
     }
 }

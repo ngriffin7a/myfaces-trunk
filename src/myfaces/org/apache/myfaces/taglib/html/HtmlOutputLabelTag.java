@@ -44,9 +44,9 @@ public class HtmlOutputLabelTag
         return "javax.faces.Label";
     }
 
-    // UIComponent attributes --> already implemented in MyfacesComponentTag
+    // UIComponent attributes --> already implemented in UIComponentTagBase
 
-    // user role attributes --> already implemented in MyfacesComponentTag
+    // user role attributes --> already implemented in UIComponentTagBase
 
     // HTML universal attributes --> already implemented in HtmlComponentTag
 
@@ -58,7 +58,7 @@ public class HtmlOutputLabelTag
     private String _onfocus;
 
     // UIOutput attributes
-    // value and converterId --> already implemented in MyfacesComponentTag
+    // value and converterId --> already implemented in UIComponentTagBase
 
     //HTMLOutputLabel attributes
     private String _for;

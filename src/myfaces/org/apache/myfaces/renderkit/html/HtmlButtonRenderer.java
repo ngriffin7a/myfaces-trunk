@@ -20,7 +20,6 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.component.UICommand;
 import javax.faces.component.UIComponent;
@@ -136,8 +135,8 @@ extends HtmlRenderer
             }
         }
 
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.BUTTON_PASSTHROUGH_ATTRIBUTES);
-        HTMLUtil.renderDisabledOnUserRole(writer, uiComponent, facesContext);
+        HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.BUTTON_PASSTHROUGH_ATTRIBUTES);
+        HtmlRendererUtils.renderDisabledOnUserRole(writer, uiComponent, facesContext);
 
         writer.endElement(HTML.INPUT_ELEM);
         

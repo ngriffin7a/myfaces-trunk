@@ -268,7 +268,7 @@
 
   <component>
     <component-type>net.sourceforge.myfaces.HtmlInputFileUpload</component-type>
-    <component-class>net.sourceforge.myfaces.component.ext.HtmlInputFileUpload</component-class>
+    <component-class>net.sourceforge.myfaces.custom.fileupload.HtmlInputFileUpload</component-class>
   </component>
 
   <component>
@@ -477,8 +477,8 @@
     </converter>
 
     <converter>
-        <converter-for-class>net.sourceforge.myfaces.model.UploadedFile</converter-for-class>
-        <converter-class>net.sourceforge.myfaces.convert.impl.UploadedFileConverter</converter-class>
+        <converter-for-class>net.sourceforge.myfaces.custom.fileupload.UploadedFile</converter-for-class>
+        <converter-class>net.sourceforge.myfaces.custom.fileupload.UploadedFileConverter</converter-class>
     </converter>
 
 
@@ -671,7 +671,7 @@
         <renderer>
             <component-family>javax.faces.Input</component-family>
             <renderer-type>net.sourceforge.myfaces.FileUpload</renderer-type>
-            <renderer-class>net.sourceforge.myfaces.renderkit.html.ext.HtmlFileUploadRenderer</renderer-class>
+            <renderer-class>net.sourceforge.myfaces.custom.fileupload.HtmlFileUploadRenderer</renderer-class>
         </renderer>
 
         <renderer>

@@ -18,20 +18,21 @@
  */
 package net.sourceforge.myfaces.taglib;
 
-import net.sourceforge.myfaces.component.UserRoleSupport;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 
 import javax.faces.component.UIComponent;
 import javax.faces.webapp.UIComponentTag;
 
 /**
+ *
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public abstract class MyfacesComponentTag
+public abstract class UIComponentTagBase
         extends UIComponentTag
 {
-    //private static final Log log = LogFactory.getLog(MyfacesComponentTag.class);
+    //private static final Log log = LogFactory.getLog(UIComponentTagBase.class);
 
     /**
      * Must be implemented by sub classes.
@@ -48,14 +49,17 @@ public abstract class MyfacesComponentTag
 
         UIComponent component = getComponentInstance();
         String userRole;
+        /*
+        TODO: optimize extended standard components by implementing UserRoleSupport
         if (component instanceof UserRoleSupport)
         {
             userRole = ((UserRoleSupport)component).getVisibleOnUserRole();
         }
         else
         {
+        */
             userRole = (String)component.getAttributes().get(JSFAttr.VISIBLE_ON_USER_ROLE_ATTR);
-        }
+        //}
 
         if (userRole == null) return false; //no user role --> not suppressed
 
@@ -132,49 +136,49 @@ public abstract class MyfacesComponentTag
 
     protected void setIntegerProperty(UIComponent component, String propName, String value)
     {
-        MyfacesTagUtils.setIntegerProperty(getFacesContext(), component, propName, value);
+        UIComponentTagUtils.setIntegerProperty(getFacesContext(), component, propName, value);
     }
 
     protected void setStringProperty(UIComponent component, String propName, String value)
     {
-        MyfacesTagUtils.setStringProperty(getFacesContext(), component, propName, value);
+        UIComponentTagUtils.setStringProperty(getFacesContext(), component, propName, value);
     }
 
     protected void setBooleanProperty(UIComponent component, String propName, String value)
     {
-        MyfacesTagUtils.setBooleanProperty(getFacesContext(), component, propName, value);
+        UIComponentTagUtils.setBooleanProperty(getFacesContext(), component, propName, value);
     }
 
     private void setValueProperty(UIComponent component, String value)
     {
-        MyfacesTagUtils.setValueProperty(getFacesContext(), component, value);
+        UIComponentTagUtils.setValueProperty(getFacesContext(), component, value);
     }
 
     private void setConverterProperty(UIComponent component, String value)
     {
-        MyfacesTagUtils.setConverterProperty(getFacesContext(), component, value);
+        UIComponentTagUtils.setConverterProperty(getFacesContext(), component, value);
     }
 
     protected void setActionProperty(UIComponent component, String action)
     {
-        MyfacesTagUtils.setActionProperty(getFacesContext(), component, action);
+        UIComponentTagUtils.setActionProperty(getFacesContext(), component, action);
     }
 
     protected void setActionListenerProperty(UIComponent component, String actionListener)
     {
-        MyfacesTagUtils.setActionListenerProperty(getFacesContext(), component, actionListener);
+        UIComponentTagUtils.setActionListenerProperty(getFacesContext(), component, actionListener);
     }
 
     protected void setValueChangedListenerProperty(UIComponent component, String valueChangedListener)
     {
-        MyfacesTagUtils.setValueChangedListenerProperty(getFacesContext(), component, valueChangedListener);
+        UIComponentTagUtils.setValueChangedListenerProperty(getFacesContext(), component, valueChangedListener);
     }
 
     protected void setValueBinding(UIComponent component,
                                    String propName,
                                    String value)
     {
-        MyfacesTagUtils.setValueBinding(getFacesContext(), component, propName, value);
+        UIComponentTagUtils.setValueBinding(getFacesContext(), component, propName, value);
     }
 
 

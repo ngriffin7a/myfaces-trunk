@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.examples.misc;
 
-import net.sourceforge.myfaces.model.UploadedFile;
+import net.sourceforge.myfaces.custom.fileupload.UploadedFile;
 
 import javax.faces.context.FacesContext;
 import javax.faces.el.VariableResolver;

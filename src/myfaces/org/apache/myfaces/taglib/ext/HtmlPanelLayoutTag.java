@@ -42,13 +42,13 @@ public class HtmlPanelLayoutTag
         return "net.sourceforge.myfaces.Layout";
     }
 
-    // UIComponent attributes --> already implemented in MyfacesComponentBodyTag
+    // UIComponent attributes --> already implemented in UIComponentBodyTagBase
 
     // HTML universal attributes --> already implemented in MyFacesTag
 
     // HTML event handler attributes --> already implemented in MyFacesTag
 
-    // UIPanel attributes --> value attribute already implemented in MyfacesComponentBodyTag
+    // UIPanel attributes --> value attribute already implemented in UIComponentBodyTagBase
 
     // HtmlPanelLayout attributes
     private String _layout;

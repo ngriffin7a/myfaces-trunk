@@ -5,8 +5,10 @@
 
     <!-- Constants -->
     <property name="project.dir" location="${basedir}/.."/>
-    <property name="myfaces.src" location="${project.dir}/src/myfaces"/>
     <property name="jsfapi.src" location="${project.dir}/src/jsfapi"/>
+    <property name="share.src" location="${project.dir}/src/share"/>
+    <property name="myfaces.src" location="${project.dir}/src/myfaces"/>
+    <property name="components.src" location="${project.dir}/src/components"/>
     <property name="tlds.dir" location="${project.dir}/tlds"/>
     <property name="doc.dir" location="${project.dir}/doc"/>
     <property name="build.dir" location="${project.dir}/build"/>
@@ -28,16 +30,38 @@
         <pathelement location="${jstl.jar}"/>
     </path>
 
+    <!-- classpath for compiling shared classes -->
+    <path id="share.class.path">
+        <pathelement location="${jsfapi.src}"/>
+        <pathelement location="${servlet-api.jar}"/>
+        <pathelement location="${jsp-api.jar}"/>
+        <pathelement location="${jstl.jar}"/>
+        <pathelement location="${commons-logging.jar}"/>
+        <pathelement location="${commons-el.jar}"/>
+    </path>
+
     <!-- classpath for compiling impl classes -->
     <path id="myfaces.class.path">
         <pathelement location="${jsfapi.src}"/>
+        <pathelement location="${share.src}"/>
+        <pathelement location="${servlet-api.jar}"/>
+        <pathelement location="${jsp-api.jar}"/>
+        <pathelement location="${jstl.jar}"/>
+        <pathelement location="${cos.jar}"/>    <!-- Base64 classes -->
+        <pathelement location="${commons-logging.jar}"/>
+        <pathelement location="${commons-el.jar}"/>
+    </path>
+
+    <!-- classpath for compiling component classes -->
+    <path id="components.class.path">
+        <pathelement location="${jsfapi.src}"/>
+        <pathelement location="${share.src}"/>
         <pathelement location="${servlet-api.jar}"/>
         <pathelement location="${jsp-api.jar}"/>
         <pathelement location="${jstl.jar}"/>
         <pathelement location="${cos.jar}"/>
         <pathelement location="${commons-logging.jar}"/>
         <pathelement location="${commons-el.jar}"/>
-        <pathelement location="${cglib.jar}"/>
     </path>
 
     <!-- classpath for javadoc creation -->
@@ -53,15 +77,11 @@
 
     <target name="myfaces-jar"
             description="builds the myfaces.jar file"
-            depends="-resolve-tld-entities" >
-
-        <!-- temporary dir -->
-        <mkdir dir="${temp.dir}/myfaces-jar"/>
-
-        <!-- compile classes -->
-        <antcall target="-compile-api"/>
-        <antcall target="-compile-impl"/>
-
+            depends="-compile-api,
+                     -compile-share,
+                     -compile-impl,
+                     -compile-components,
+                     -resolve-tld-entities" >
         <!-- timestamp for the manifest -->
         <tstamp>
             <format property="TODAY_DE" pattern="dd.MM.yyyy HH:mm" locale="de"/>
@@ -101,11 +121,6 @@
                         prefix="META-INF/"/>
         </jar>
 
-        <!-- remove temporary files -->
-        <delete includeEmptyDirs="true">
-            <fileset dir="${temp.dir}/myfaces-jar"/>
-        </delete>
-
     </target>
 
 
@@ -130,11 +145,13 @@
         </java>
     </target>
 
+
     <target name="bin-release"
             depends="myfaces-jar, javadoc, tlddoc"
             description="creates the binary release file myfaces-x.x.x.tgz (don't forget to adjust manifest.properties!)">
-        <tar destfile="${project.dir}/myfaces-${manifest.impl.version}.tgz"
-             compression="gzip">
+
+        <tar destfile="${project.dir}/myfaces-${manifest.impl.version}.tgz">
+             <!--compression="gzip"-->
             <tarfileset dir="${doc.dir}"
                         prefix="myfaces-${manifest.impl.version}/doc"/>
             <tarfileset dir="${conf.dir}"
@@ -203,7 +220,7 @@
             <fileset file="${project.dir}/myfaces-*.tgz" />
             <fileset dir="${doc.dir}/javadoc" />
             <fileset dir="${doc.dir}/tlddoc" />
-            <fileset dir="${temp.dir}/myfaces-jar"/>  <!-- in case of interrupted builds -->
+            <fileset dir="${temp.dir}/myfaces-jar"/>
             <fileset dir="${resolved-tlds.dir}"/>     <!-- in case of interrupted builds -->
         </delete>
         <ant dir="${build.dir}/examples-webapp"
@@ -227,13 +244,33 @@
         </javac>
     </target>
 
-    <target name="-compile-impl">
+    <target name="-compile-share" depends="-compile-api" >
+        <mkdir dir="${temp.dir}/myfaces-jar/classes"/>
+        <javac srcdir="${share.src}"
+               destdir="${temp.dir}/myfaces-jar/classes"
+               optimize="${javac.optimize}"
+               debug="${javac.debug}"
+               classpathref="share.class.path">
+        </javac>
+    </target>
+
+    <target name="-compile-impl" depends="-compile-api,-compile-share" >
         <mkdir dir="${temp.dir}/myfaces-jar/classes"/>
         <javac srcdir="${myfaces.src}"
                destdir="${temp.dir}/myfaces-jar/classes"
                optimize="${javac.optimize}"
                debug="${javac.debug}"
                classpathref="myfaces.class.path">
+        </javac>
+    </target>
+
+    <target name="-compile-components" depends="-compile-api,-compile-share">
+        <mkdir dir="${temp.dir}/myfaces-jar/classes"/>
+        <javac srcdir="${components.src}"
+               destdir="${temp.dir}/myfaces-jar/classes"
+               optimize="${javac.optimize}"
+               debug="${javac.debug}"
+               classpathref="components.class.path">
         </javac>
     </target>
 

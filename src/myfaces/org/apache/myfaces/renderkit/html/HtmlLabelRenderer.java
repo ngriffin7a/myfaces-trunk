@@ -19,11 +19,9 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
-import javax.faces.component.html.HtmlOutputLabel;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
@@ -45,7 +43,7 @@ extends HtmlRenderer
         ResponseWriter writer = facesContext.getResponseWriter();
 
         writer.startElement(HTML.LABEL_ELEM, uiComponent);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.LABEL_PASSTHROUGH_ATTRIBUTES);
+        HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.LABEL_PASSTHROUGH_ATTRIBUTES);
 
         //MyFaces extension: Render a label text given by value
         String text = RendererUtils.getStringValue(facesContext, uiComponent);

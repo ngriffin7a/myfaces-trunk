@@ -43,9 +43,9 @@ public class HtmlDataTableTag
         return "javax.faces.Table";
     }
 
-    // UIComponent attributes --> already implemented in MyfacesComponentTag
+    // UIComponent attributes --> already implemented in UIComponentTagBase
 
-    // user role attributes --> already implemented in MyfacesComponentTag
+    // user role attributes --> already implemented in UIComponentTagBase
 
     // HTML universal attributes --> already implemented in HtmlComponentTag
 
@@ -66,7 +66,7 @@ public class HtmlDataTableTag
     private String _width;
 
     // UIPanel attributes
-    // value and converterId --> already implemented in MyfacesComponentTag
+    // value and converterId --> already implemented in UIComponentTagBase
 
     // HtmlPanelGrid attributes
     private String _columnClasses;

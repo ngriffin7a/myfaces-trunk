@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.core;
 
-import net.sourceforge.myfaces.taglib.MyfacesComponentTag;
+import net.sourceforge.myfaces.taglib.UIComponentTagBase;
 
 import javax.faces.component.UIComponent;
 
@@ -28,7 +28,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class ParamTag
-    extends MyfacesComponentTag
+    extends UIComponentTagBase
 {
     public String getComponentType()
     {
@@ -40,10 +40,10 @@ public class ParamTag
         return null;
     }
 
-    // UIComponent attributes --> already implemented in MyfacesComponentTag
+    // UIComponent attributes --> already implemented in UIComponentTagBase
 
     // UIParameter attributes
-    // value already implemented in MyfacesComponentTag
+    // value already implemented in UIComponentTagBase
     private String _name;
 
     protected void setProperties(UIComponent component)

@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib.core;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.taglib.MyfacesComponentBodyTag;
+import net.sourceforge.myfaces.taglib.UIComponentBodyTagBase;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
@@ -31,7 +31,7 @@ import javax.servlet.jsp.tagext.BodyContent;
  * @version $Revision$ $Date$
  */
 public class VerbatimTag
-        extends MyfacesComponentBodyTag
+        extends UIComponentBodyTagBase
 {
     //private static final Log log = LogFactory.getLog(VerbatimTag.class);
 

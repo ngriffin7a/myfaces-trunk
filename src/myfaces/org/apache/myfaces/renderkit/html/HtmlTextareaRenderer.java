@@ -20,7 +20,6 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
@@ -52,8 +51,8 @@ public class HtmlTextareaRenderer
         writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
         writer.writeAttribute(HTML.ID_ATTR, clientId, null);
 
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.TEXTAREA_PASSTHROUGH_ATTRIBUTES);
-        HTMLUtil.renderDisabledOnUserRole(writer, uiComponent, facesContext);
+        HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.TEXTAREA_PASSTHROUGH_ATTRIBUTES);
+        HtmlRendererUtils.renderDisabledOnUserRole(writer, uiComponent, facesContext);
 
         String strValue = RendererUtils.getStringValue(facesContext, uiComponent);
         writer.writeText(strValue, JSFAttr.VALUE_ATTR);

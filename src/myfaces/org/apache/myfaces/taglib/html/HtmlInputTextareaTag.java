@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib.html;
 
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.taglib.UIInputTag;
+import net.sourceforge.myfaces.taglib.UIInputTagBase;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlInputTextarea;
@@ -31,7 +31,7 @@ import javax.faces.component.html.HtmlInputTextarea;
  * @version $Revision$ $Date$
  */
 public class HtmlInputTextareaTag
-        extends UIInputTag
+        extends UIInputTagBase
 {
     public String getComponentType()
     {
@@ -43,9 +43,9 @@ public class HtmlInputTextareaTag
         return "javax.faces.Textarea";
     }
 
-    // UIComponent attributes --> already implemented in MyfacesComponentTag
+    // UIComponent attributes --> already implemented in UIComponentTagBase
 
-    // user role attributes --> already implemented in MyfacesComponentTag
+    // user role attributes --> already implemented in UIComponentTagBase
 
     // HTML universal attributes --> already implemented in HtmlComponentTag
 
@@ -67,10 +67,10 @@ public class HtmlInputTextareaTag
     private String _tabindex;
 
     // UIOutput attributes
-    // value and converter --> already implemented in MyfacesComponentTag
+    // value and converter --> already implemented in UIComponentTagBase
 
     // UIInput attributes
-    // --> already implemented in UIInputTag
+    // --> already implemented in UIInputTagBase
 
     //HtmlTextArea attributes
     // FIXME: is in RI, but not in HTML 4.0. what to do?

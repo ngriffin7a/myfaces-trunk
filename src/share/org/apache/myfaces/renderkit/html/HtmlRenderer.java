@@ -1,4 +1,4 @@
-/**
+/*
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -16,39 +16,43 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.convert.impl;
+package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.model.UploadedFile;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
-import javax.faces.convert.ConverterException;
+import javax.faces.render.Renderer;
+import java.io.IOException;
+
 
 /**
- * DOCUMENT ME!
+ * $Log$
+ * Revision 1.1  2004/03/29 14:57:00  manolito
+ * refactoring for implementation and non-standard component split
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UploadedFileConverter
-    implements Converter
+public abstract class HtmlRenderer
+        extends Renderer
 {
-    public Object getAsObject(FacesContext facescontext, UIComponent uicomponent, String s)
-        throws ConverterException
-    {
-        return null;
-    }
+    private static final Log log = LogFactory.getLog(HtmlRenderer.class);
 
-    public String getAsString(FacesContext facescontext, UIComponent uicomponent, Object obj)
-        throws ConverterException
+    public void encodeChildren(FacesContext facescontext, UIComponent uicomponent)
+            throws IOException
     {
-        if (obj instanceof UploadedFile)
+        if (log.isWarnEnabled())
         {
-            return ((UploadedFile)obj).getFilePath();
-        }
-        else
-        {
-            return null;
+            if (getRendersChildren())
+            {
+                log.warn("Renderer " + getClass().getName() + " renders its children and should therefore implement encodeChildren.");
+            }
+            else
+            {
+                log.warn("Renderer " + getClass().getName() + " does not render its children. Method encodeChildren should not be called.");
+            }
         }
     }
 }

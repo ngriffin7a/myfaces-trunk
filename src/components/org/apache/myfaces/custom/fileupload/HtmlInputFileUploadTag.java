@@ -16,11 +16,10 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib.ext;
+package net.sourceforge.myfaces.custom.fileupload;
 
-import net.sourceforge.myfaces.component.ext.HtmlInputFileUpload;
 import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.taglib.UIInputTag;
+import net.sourceforge.myfaces.taglib.UIInputTagBase;
 
 import javax.faces.component.UIComponent;
 
@@ -29,7 +28,7 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class HtmlInputFileUploadTag
-        extends UIInputTag
+        extends UIInputTagBase
 {
     //private static final Log log = LogFactory.getLog(HtmlInputFileUploadTag.class);
 
@@ -43,9 +42,9 @@ public class HtmlInputFileUploadTag
         return "net.sourceforge.myfaces.FileUpload";
     }
 
-    // UIComponent attributes --> already implemented in MyfacesComponentTag
+    // UIComponent attributes --> already implemented in UIComponentTagBase
 
-    // user role attributes --> already implemented in MyfacesComponentTag
+    // user role attributes --> already implemented in UIComponentTagBase
 
     // HTML universal attributes --> already implemented in HtmlComponentTag
 
@@ -69,10 +68,10 @@ public class HtmlInputFileUploadTag
     private String _tabindex;
 
     // UIOutput attributes
-    // value and converterId --> already implemented in MyfacesComponentTag
+    // value and converterId --> already implemented in UIComponentTagBase
 
     // UIInput attributes
-    // --> already implemented in UIInputTag
+    // --> already implemented in UIInputTagBase
 
     // HtmlInputFileUpload attributes
     private String _accept;

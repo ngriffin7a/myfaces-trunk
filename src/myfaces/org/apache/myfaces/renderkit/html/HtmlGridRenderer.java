@@ -20,7 +20,6 @@ package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 import net.sourceforge.myfaces.util.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,6 +37,9 @@ import java.util.StringTokenizer;
  * X-CHECKED: tlddoc h:panelGrid 1.0 final
  *
  * $Log$
+ * Revision 1.7  2004/03/29 14:56:55  manolito
+ * refactoring for implementation and non-standard component split
+ *
  * Revision 1.6  2004/03/25 12:42:24  manolito
  * x-checked and corrected GridRenderer
  *
@@ -92,7 +94,7 @@ public class HtmlGridRenderer
 
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.startElement(HTML.TABLE_ELEM, component);
-        HTMLUtil.renderHTMLAttributes(writer, component, HTML.TABLE_PASSTHROUGH_ATTRIBUTES);
+        HtmlRendererUtils.renderHTMLAttributes(writer, component, HTML.TABLE_PASSTHROUGH_ATTRIBUTES);
         writer.flush();
 
         renderHeaderOrFooter(facesContext, writer, component, columns, true);   //Header facet

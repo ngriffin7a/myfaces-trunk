@@ -42,16 +42,16 @@ public class HtmlOutputFormatTag
         return "javax.faces.Format";
     }
 
-    // UIComponent attributes --> already implemented in MyfacesComponentTag
+    // UIComponent attributes --> already implemented in UIComponentTagBase
 
-    // user role attributes --> already implemented in MyfacesComponentTag
+    // user role attributes --> already implemented in UIComponentTagBase
 
     // HTML universal attributes --> already implemented in HtmlComponentTag
 
     // HTML event handler attributes --> already implemented in HtmlComponentTag
 
     // UIOutput attributes
-    // value and converterId --> already implemented in MyfacesComponentTag
+    // value and converterId --> already implemented in UIComponentTagBase
 
     // HtmlOutputMessage attributes
     private String _escape;

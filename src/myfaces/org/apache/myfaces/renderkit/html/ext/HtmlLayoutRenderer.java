@@ -22,7 +22,7 @@ import net.sourceforge.myfaces.component.ext.HtmlPanelLayout;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
+import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -97,7 +97,7 @@ public class HtmlLayoutRenderer
         UIComponent footer = panelLayout.getFooter();
 
         writer.startElement(HTML.TABLE_ELEM, null);
-        HTMLUtil.renderHTMLAttributes(writer, panelLayout, HTML.TABLE_PASSTHROUGH_ATTRIBUTES);
+        HtmlRendererUtils.renderHTMLAttributes(writer, panelLayout, HTML.TABLE_PASSTHROUGH_ATTRIBUTES);
         if (header != null)
         {
             writer.startElement(HTML.TR_ELEM, null);
@@ -147,7 +147,7 @@ public class HtmlLayoutRenderer
         UIComponent footer = panelLayout.getFooter();
 
         writer.startElement(HTML.TABLE_ELEM, null);
-        HTMLUtil.renderHTMLAttributes(writer, panelLayout, HTML.TABLE_PASSTHROUGH_ATTRIBUTES);
+        HtmlRendererUtils.renderHTMLAttributes(writer, panelLayout, HTML.TABLE_PASSTHROUGH_ATTRIBUTES);
         if (header != null)
         {
             writer.startElement(HTML.TR_ELEM, null);
@@ -197,7 +197,7 @@ public class HtmlLayoutRenderer
         UIComponent footer = panelLayout.getFooter();
 
         writer.startElement(HTML.TABLE_ELEM, null);
-        HTMLUtil.renderHTMLAttributes(writer, panelLayout, HTML.TABLE_PASSTHROUGH_ATTRIBUTES);
+        HtmlRendererUtils.renderHTMLAttributes(writer, panelLayout, HTML.TABLE_PASSTHROUGH_ATTRIBUTES);
         if (footer != null)
         {
             writer.startElement(HTML.TR_ELEM, null);

@@ -1,4 +1,4 @@
-/*
+/**
  * MyFaces - the free JSF implementation
  * Copyright (C) 2003, 2004  The MyFaces Team (http://myfaces.sourceforge.net)
  *
@@ -16,19 +16,39 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.component;
+package net.sourceforge.myfaces.custom.fileupload;
 
-
+import java.io.File;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- *
- * @deprecated TODO: remove
  */
-public class ComponentUtils
+public class UploadedFile
 {
-    //private static final Log log = LogFactory.getLog(ComponentUtils.class);
+    private String _filePath;
+    private String _contentType;
+    private File _file;
 
+    public UploadedFile(String filePath, String contentType, File file)
+    {
+        _filePath = filePath;
+        _contentType = contentType;
+        _file = file;
+    }
 
+    public String getFilePath()
+    {
+        return _filePath;
+    }
+
+    public String getContentType()
+    {
+        return _contentType;
+    }
+
+    public File getFile()
+    {
+        return _file;
+    }
 }

@@ -25,7 +25,6 @@ import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.application.ViewHandler;
 import javax.faces.component.NamingContainer;
@@ -259,7 +258,7 @@ public class HtmlTabbedPaneRenderer
 
         writer.startElement(HTML.TABLE_ELEM, tabbedPane);
         writer.writeAttribute(HTML.CELLSPACING_ATTR, "0", null);
-        HTMLUtil.renderHTMLAttributes(writer, tabbedPane, HTML.TABLE_PASSTHROUGH_ATTRIBUTES);
+        HtmlRendererUtils.renderHTMLAttributes(writer, tabbedPane, HTML.TABLE_PASSTHROUGH_ATTRIBUTES);
         writer.flush();
 
         tabbedPane.setStyle(oldStyle);

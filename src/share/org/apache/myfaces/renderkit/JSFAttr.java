@@ -31,19 +31,6 @@ public class JSFAttr
     // MyFaces Extended Attributes
     public static final String   ENABLED_ON_USER_ROLE_ATTR      = "enabledOnUserRole";
     public static final String   VISIBLE_ON_USER_ROLE_ATTR      = "visibleOnUserRole";
-    /**@deprecated directly access attribute instead and use value binding mechanism */
-    public static final String   ALT_KEY_ATTR                   = "altKey";
-    /**@deprecated directly access attribute instead and use value binding mechanism */
-    public static final String   ALT_BUNDLE_ATTR                = "altBundle";
-    /**@deprecated directly access attribute instead and use value binding mechanism */
-    public static final String   TITLE_KEY_ATTR                 = "titleKey";
-    /**@deprecated directly access attribute instead and use value binding mechanism */
-    public static final String   TITLE_BUNDLE_ATTR              = "titleBundle";
-    // Key/Bundle attributes
-    /**@deprecated directly access attribute instead and use value binding mechanism */
-    public static final String   KEY_ATTR                       = "key";
-    /**@deprecated directly access attribute instead and use value binding mechanism */
-    public static final String   BUNDLE_ATTR                    = "bundle";
 
     // Common Attributes
     public static final String   ID_ATTR                        = "id";
@@ -52,28 +39,8 @@ public class JSFAttr
     public static final String   STYLE_CLASS_ATTR               = "styleClass";
     public static final String   ESCAPE_ATTR                    = "escape";
     public static final String   TRANSIENT_ATTR                 = "transient";
-    /**@deprecated */
-    public static final String   DATE_STYLE_ATTR                = "dateStyle";
-    /**@deprecated */
-    public static final String   FORMAT_PATTERN_ATTR            = "formatPattern";
-    /**@deprecated */
-    public static final String   NUMBER_STYLE_ATTR              = "numberStyle";
-
-    // Common Class Attributes
-    /**@deprecated */
-    public static final String   SELECT_BOOLEAN_CLASS_ATTR      = "selectBooleanClass";
-    /**@deprecated */
-    public static final String   SELECT_MANY_CLASS_ATTR         = "selectManyClass";
-    /**@deprecated */
-    public static final String   SELECT_ONE_CLASS_ATTR          = "selectOneClass";
-    /**@deprecated */
-    public static final String   FORM_CLASS_ATTR                = "formClass";
-    /**@deprecated */
-    public static final String   GRAPHIC_CLASS_ATTR             = "graphicClass";
 
     // Common Output Attributes
-    /**@deprecated */
-    public static final String   OUTPUT_CLASS_ATTR              = "outputClass";
     public static final String   FOR_ATTR                       = "for";
     public static final String   CONVERTER_ATTR                 = "converter";
 
@@ -82,10 +49,6 @@ public class JSFAttr
     public static final String   TIMEZONE_ATTR                  = "timezone";
 
     // Common Input Attributes
-    /**@deprecated */
-    public static final String   INPUT_CLASS_ATTR               = "inputClass";
-    /**@deprecated */
-    public static final String   MAXLENGTH_ATTR                 = "maxlength";
     public static final String   REQUIRED_ATTR                  = "required";
     public static final String   VALIDATOR_ATTR                 = "validator";
 

@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.RendererUtils;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIComponent;
@@ -64,7 +63,7 @@ public class HtmlFormRenderer
         writer.writeAttribute(HTML.METHOD_ATTR, "post", null);
         writer.writeURIAttribute(HTML.ACTION_ATTR, actionURL, null);
 
-        HTMLUtil.renderHTMLAttributes(writer, htmlForm, HTML.FORM_PASSTHROUGH_ATTRIBUTES);
+        HtmlRendererUtils.renderHTMLAttributes(writer, htmlForm, HTML.FORM_PASSTHROUGH_ATTRIBUTES);
         writer.write(""); // forse start element tag to be closed
     }
 

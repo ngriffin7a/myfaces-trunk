@@ -25,6 +25,9 @@ import java.lang.reflect.Array;
  * Utility class for managing arrays
  *
  * $Log$
+ * Revision 1.1  2004/03/29 14:57:01  manolito
+ * refactoring for implementation and non-standard component split
+ *
  * Revision 1.8  2004/03/25 12:41:19  manolito
  * convenient constants for empty arrays
  *

@@ -351,7 +351,7 @@
 <!-- input_fileupload -->
     <tag>
         <name>inputFileUpload</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ext.HtmlInputFileUploadTag</tag-class>
+        <tag-class>net.sourceforge.myfaces.custom.fileupload.HtmlInputFileUploadTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             You must enable O'Reillys MultiPart Filter to make this component

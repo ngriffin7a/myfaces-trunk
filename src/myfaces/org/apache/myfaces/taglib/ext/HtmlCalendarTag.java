@@ -18,21 +18,17 @@
  */
 package net.sourceforge.myfaces.taglib.ext;
 
-import net.sourceforge.myfaces.component.ext.HtmlInputFileUpload;
 import net.sourceforge.myfaces.component.ext.HtmlInputCalendar;
-import net.sourceforge.myfaces.renderkit.html.HTML;
-import net.sourceforge.myfaces.taglib.UIInputTag;
-import net.sourceforge.myfaces.taglib.MyfacesComponentTag;
+import net.sourceforge.myfaces.taglib.UIInputTagBase;
 
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
 
 /**
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class HtmlCalendarTag
-        extends UIInputTag
+        extends UIInputTagBase
 {
     //private static final Log log = LogFactory.getLog(HtmlCalendarTag.class);
 
@@ -46,17 +42,17 @@ public class HtmlCalendarTag
         return "net.sourceforge.myfaces.Calendar";
     }
 
-    // UIComponent attributes --> already implemented in MyfacesComponentTag
+    // UIComponent attributes --> already implemented in UIComponentTagBase
 
     // HTML universal attributes --> already implemented in HtmlComponentTag
 
     // HTML event handler attributes --> already implemented in MyFacesTag    
 
     // UIOutput attributes
-    // value and converterId --> already implemented in MyfacesComponentTag
+    // value and converterId --> already implemented in UIComponentTagBase
 
     // UIInput attributes
-    // --> already implemented in UIInputTag
+    // --> already implemented in UIInputTagBase
 
     // HtmlCalendar attributes
     private String _monthYearRowClass;

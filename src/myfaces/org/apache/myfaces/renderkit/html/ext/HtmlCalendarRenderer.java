@@ -6,10 +6,13 @@ import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HTML;
 import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
 import net.sourceforge.myfaces.renderkit.html.HtmlRendererUtils;
-import net.sourceforge.myfaces.renderkit.html.util.HTMLUtil;
 
+import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
+import javax.faces.component.UIParameter;
+import javax.faces.component.html.HtmlCommandLink;
+import javax.faces.component.html.HtmlOutputText;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.convert.Converter;
@@ -68,8 +71,8 @@ public class HtmlCalendarRenderer
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
 
         writer.startElement(HTML.TABLE_ELEM, component);
-        HTMLUtil.renderHTMLAttributes(writer, component, HTML.UNIVERSAL_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, component, HTML.EVENT_HANDLER_ATTRIBUTES);
+        HtmlRendererUtils.renderHTMLAttributes(writer, component, HTML.UNIVERSAL_ATTRIBUTES);
+        HtmlRendererUtils.renderHTMLAttributes(writer, component, HTML.EVENT_HANDLER_ATTRIBUTES);
         writer.flush();
 
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
@@ -255,7 +258,7 @@ public class HtmlCalendarRenderer
     private void writeLink(String content, UIInput component, FacesContext facesContext, Date valueForLink)
             throws IOException
     {
-
+        /*
         Converter converter = new CalendarDateTimeConverter();
 
         if (component.getConverter() != null)
@@ -271,6 +274,38 @@ public class HtmlCalendarRenderer
         HtmlRendererUtils.renderCommandLinkStart(facesContext, component,
                 facesContext.getViewRoot().createUniqueId(), content, null, params);
         HtmlRendererUtils.renderLinkEnd(facesContext, component);
+        */
+
+        Converter converter = component.getConverter();
+        if (converter == null)
+        {
+            converter = new CalendarDateTimeConverter();
+        }
+
+        Application application = facesContext.getApplication();
+        HtmlCommandLink link
+                = (HtmlCommandLink)application.createComponent(HtmlCommandLink.COMPONENT_TYPE);
+        link.setId(component.getId() + "_" + valueForLink.getTime() + "_link");
+        link.setTransient(true);
+
+        HtmlOutputText text
+                = (HtmlOutputText)application.createComponent(HtmlOutputText.COMPONENT_TYPE);
+        link.setId(component.getId() + "_" + valueForLink.getTime() + "_text");
+        link.setTransient(true);
+        link.setValue(content);
+
+        UIParameter parameter
+                = (UIParameter)application.createComponent(UIParameter.COMPONENT_TYPE);
+        parameter.setId(component.getId() + "_" + valueForLink.getTime() + "_param");
+        parameter.setTransient(true);
+        parameter.setName(component.getClientId(facesContext));
+        parameter.setValue(converter.getAsString(facesContext, component, valueForLink));
+
+        component.getChildren().add(link);
+        link.getChildren().add(parameter);
+        link.getChildren().add(text);
+
+        RendererUtils.renderChild(facesContext, link);
     }
 
     private int mapCalendarDayToCommonDay(int day)

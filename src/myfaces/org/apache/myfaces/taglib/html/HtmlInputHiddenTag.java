@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.taglib.html;
 
-import net.sourceforge.myfaces.taglib.UIInputTag;
+import net.sourceforge.myfaces.taglib.UIInputTagBase;
 
 import javax.faces.component.html.HtmlInputHidden;
 
@@ -30,7 +30,7 @@ import javax.faces.component.html.HtmlInputHidden;
  * @version $Revision$ $Date$
  */
 public class HtmlInputHiddenTag
-        extends UIInputTag
+        extends UIInputTagBase
 {
     public String getComponentType()
     {
@@ -42,9 +42,9 @@ public class HtmlInputHiddenTag
         return "javax.faces.Hidden";
     }
 
-    // UIComponent attributes --> already implemented in MyfacesComponentTag
+    // UIComponent attributes --> already implemented in UIComponentTagBase
 
-    // user role attributes --> already implemented in MyfacesComponentTag
+    // user role attributes --> already implemented in UIComponentTagBase
 
     // HTML universal attributes --> already implemented in HtmlComponentTag
 
@@ -54,9 +54,9 @@ public class HtmlInputHiddenTag
     //none relevant for hidden input
 
     // UIOutput attributes
-    // value and converterId --> already implemented in MyfacesComponentTag    
+    // value and converterId --> already implemented in UIComponentTagBase
 
     // UIInput attributes
-    // --> already implemented in UIInputTag
+    // --> already implemented in UIInputTagBase
 
 }

@@ -34,11 +34,11 @@ import javax.faces.webapp.UIComponentTag;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class MyfacesTagUtils
+public class UIComponentTagUtils
 {
-    private static final Log log = LogFactory.getLog(MyfacesTagUtils.class);
+    private static final Log log = LogFactory.getLog(UIComponentTagUtils.class);
 
-    private MyfacesTagUtils() {}    //util class, no instantiation allowed
+    private UIComponentTagUtils() {}    //util class, no instantiation allowed
 
 
     public static boolean isValueReference(String v)

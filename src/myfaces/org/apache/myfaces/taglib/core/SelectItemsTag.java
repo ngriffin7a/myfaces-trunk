@@ -18,14 +18,14 @@
  */
 package net.sourceforge.myfaces.taglib.core;
 
-import net.sourceforge.myfaces.taglib.MyfacesComponentTag;
+import net.sourceforge.myfaces.taglib.UIComponentTagBase;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class SelectItemsTag
-        extends MyfacesComponentTag
+        extends UIComponentTagBase
 {
     //private static final Log log = LogFactory.getLog(SelectItemsTag.class);
 
@@ -40,6 +40,6 @@ public class SelectItemsTag
     }
 
     // UISelectItems attributes
-    // --> binding, id, value already handled by MyfacesComponentTag
+    // --> binding, id, value already handled by UIComponentTagBase
 
 }

@@ -19,19 +19,18 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.taglib.html.HtmlComponentTag;
 
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
 
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UIInputTag
-    extends HtmlComponentTag
+public abstract class UIInputTagBase
+    extends UIComponentTagBase
 {
+    /*
     public String getComponentType()
     {
         return UIInput.COMPONENT_TYPE;
@@ -41,11 +40,12 @@ public class UIInputTag
     {
         return "javax.faces.Text";
     }
+    */
 
-    // UIComponent attributes --> already implemented in MyfacesComponentTag
+    // UIComponent attributes --> already implemented in UIComponentTagBase
 
     // UIOutput attributes
-    // value and converterId --> already implemented in MyfacesComponentTag
+    // value and converterId --> already implemented in UIComponentTagBase
 
     // UIInput attributes
     private String _immediate;
