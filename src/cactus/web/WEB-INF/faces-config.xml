@@ -33,6 +33,19 @@
     </managed-bean>
 
     <managed-bean>
+        <description>This bean is used in the cactus test for bug 973025</description>
+        <managed-bean-name>bug973025Bean</managed-bean-name>
+        <managed-bean-class>java.util.HashMap</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+        <map-entries>
+            <map-entry>
+                <key>imageURL</key>
+                <value>/bug973025/image.png</value>
+            </map-entry>
+        </map-entries>
+    </managed-bean>
+
+    <managed-bean>
         <description>This bean can be used by multiple tests</description>
         <managed-bean-name>commonRequestScopeBean</managed-bean-name>
         <managed-bean-class>net.sourceforge.myfaces.cactus.CommonModelBean</managed-bean-class>
