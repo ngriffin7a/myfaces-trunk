@@ -35,6 +35,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2004/09/10 14:13:52  manolito
+ * trivial change
+ *
  * Revision 1.7  2004/09/08 15:51:15  manolito
  * Autoscroll now also for horizontal scrolling
  *
@@ -61,7 +64,7 @@ public final class JavascriptUtils
 {
     private static final Log log = LogFactory.getLog(JavascriptUtils.class);
 
-    public static final String JAVASCRIPT_DETECTED = JavascriptUtils.class + ".JAVASCRIPT_DETECTED";
+    public static final String JAVASCRIPT_DETECTED = JavascriptUtils.class.getName() + ".JAVASCRIPT_DETECTED";
 
     private static final String AUTO_SCROLL_PARAM = "autoScroll";
     private static final String AUTO_SCROLL_FUNCTION = "getScrolling()";
