@@ -31,3 +31,11 @@
             <type>java.lang.String</type>
             <description>If true, this component will not be saved during state saving.</description>
         </attribute>
+
+        <attribute>
+            <name>forceId</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>If true, this component will force the use of the specified id when rendering.</description>
+        </attribute>        

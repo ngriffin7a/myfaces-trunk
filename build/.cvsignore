@@ -1,3 +1,6 @@
 build.properties
 temp
 build.local.properties
+site
+tmp
+webapp

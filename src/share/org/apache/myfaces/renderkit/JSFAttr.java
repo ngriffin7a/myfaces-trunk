@@ -32,7 +32,8 @@ public class JSFAttr
     public static final String   STYLE_CLASS_ATTR               = "styleClass";
     public static final String   ESCAPE_ATTR                    = "escape";
     public static final String   TRANSIENT_ATTR                 = "transient";
-
+    public static final String   FORCE_ID_ATTR                  = "forceId";
+    
     // Common Output Attributes
     public static final String   FOR_ATTR                       = "for";
     public static final String   CONVERTER_ATTR                 = "converter";

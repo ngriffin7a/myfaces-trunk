@@ -81,6 +81,14 @@
         <managed-bean-class>org.apache.myfaces.examples.listexample.TreeTable</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
+	    
+    <!-- Managed Beans for forceId.jsp -->
+
+    <managed-bean>
+        <managed-bean-name>forceIdBean</managed-bean-name>
+        <managed-bean-class>org.apache.myfaces.examples.misc.ForceIdBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
 
 
     <!-- Managed Beans for simpleSortList.jsp -->
@@ -350,6 +358,11 @@
         <navigation-case>
             <from-outcome>go_newspaperTable</from-outcome>
             <to-view-id>/newspaperTable.jsp</to-view-id>
+        </navigation-case>
+		
+		        <navigation-case>
+            <from-outcome>go_forceId</from-outcome>
+            <to-view-id>/forceId.jsp</to-view-id>
         </navigation-case>
 
         <navigation-case>

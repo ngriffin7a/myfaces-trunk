@@ -24,6 +24,9 @@ import javax.faces.webapp.UIComponentTag;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2005/01/10 08:08:12  matzew
+ * added patch form sean schofield. forceId for reuse of "legacy JavaScript" (MyFaces-70)
+ *
  * Revision 1.7  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -50,7 +53,8 @@ public abstract class UIComponentTagBase
 
     //UIComponent attributes
     private String _transient;
-
+    private String _forceId;
+    
     //Special UIComponent attributes (ValueHolder, ConvertibleValueHolder)
     private String _value;
     private String _converter;
@@ -61,6 +65,7 @@ public abstract class UIComponentTagBase
         super.setProperties(component);
 
         setBooleanProperty(component, JSFAttr.TRANSIENT_ATTR, _transient);
+        setBooleanProperty(component, JSFAttr.FORCE_ID_ATTR, _forceId);
 
         //rendererType already handled by UIComponentTag
 
@@ -71,6 +76,11 @@ public abstract class UIComponentTagBase
     public void setTransient(String aTransient)
     {
         _transient = aTransient;
+    }
+    
+    public void setForceId(String aForceId)
+    {
+        _forceId = aForceId;
     }
 
     public void setValue(String value)

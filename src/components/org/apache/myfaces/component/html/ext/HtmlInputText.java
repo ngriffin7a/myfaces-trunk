@@ -17,6 +17,7 @@ package org.apache.myfaces.component.html.ext;
 
 import org.apache.myfaces.component.UserRoleAware;
 import org.apache.myfaces.component.UserRoleUtils;
+import org.apache.myfaces.component.html.util.HtmlComponentUtils;
 
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
@@ -25,6 +26,9 @@ import javax.faces.el.ValueBinding;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.5  2005/01/10 08:08:14  matzew
+ * added patch form sean schofield. forceId for reuse of "legacy JavaScript" (MyFaces-70)
+ *
  * Revision 1.4  2004/10/13 11:50:56  matze
  * renamed packages to org.apache
  *
@@ -42,6 +46,18 @@ public class HtmlInputText
         extends javax.faces.component.html.HtmlInputText
         implements UserRoleAware
 {
+        
+    private String clientId;
+    
+    public String getClientId(FacesContext context)
+    {
+        if (clientId == null) 
+        {
+            clientId = HtmlComponentUtils.getClientId(this, getRenderer(context), context);
+        }
+        return clientId;
+    }
+    
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
     public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlInputText";
