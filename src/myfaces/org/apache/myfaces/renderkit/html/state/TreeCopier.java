@@ -28,6 +28,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.tree.Tree;
 import javax.faces.webapp.FacesTag;
+import javax.faces.validator.Validator;
 import java.beans.PropertyDescriptor;
 import java.util.Iterator;
 import java.util.Set;
@@ -90,6 +91,7 @@ public class TreeCopier
                                  UIComponent toComp)
     {
         copyAttributes(fromComp, toComp);
+        copyValidators(fromComp, toComp);
 
         //Real children
         for (Iterator it = fromComp.getChildren(); it.hasNext();)
@@ -213,6 +215,7 @@ public class TreeCopier
                 {
                     Object attrValue = fromComp.getAttribute(attrName);
 
+                    // TODO: check on mutable objects - clone necessary.
                     PropertyDescriptor pd = BeanUtils.findPropertyDescriptor(toComp, attrName);
                     if (pd != null && pd.getWriteMethod() != null)
                     {
@@ -226,6 +229,14 @@ public class TreeCopier
                     }
                 }
             }
+        }
+    }
+
+    protected void copyValidators(UIComponent fromComp, UIComponent toComp)
+    {
+        for (Iterator it = fromComp.getValidators(); it.hasNext(); )
+        {
+            toComp.addValidator((Validator)it.next());
         }
     }
 
