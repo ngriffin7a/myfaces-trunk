@@ -39,10 +39,4 @@ public interface FileUploadRendererAttributes
         MAX_LENGTH_ATTR
     };
 
-    public static final String[] HTML_INPUT_FILE_UPLOAD_ATTRIBUTES =
-    {
-        ACCEPT_ATTR,
-        MAX_LENGTH_ATTR
-    };
-
 }

@@ -55,27 +55,6 @@ public class FileUploadRenderer
         return TYPE;
     }
 
-    /*
-    public boolean supportsComponentType(String s)
-    {
-        return s.equals(UIFileUpload.TYPE);
-    }
-
-    public boolean supportsComponentType(UIComponent uicomponent)
-    {
-        return uicomponent instanceof UIFileUpload;
-    }
-
-    protected void initAttributeDescriptors()
-    {
-        addAttributeDescriptors(UIFileUpload.TYPE, TLD_EXT_URI, "file_upload", HTML_UNIVERSAL_ATTRIBUTES);
-        addAttributeDescriptors(UIFileUpload.TYPE, TLD_EXT_URI, "file_upload", HTML_EVENT_HANDLER_ATTRIBUTES);
-        addAttributeDescriptors(UIFileUpload.TYPE, TLD_EXT_URI, "file_upload", HTML_INPUT_ATTRIBUTES);
-        addAttributeDescriptors(UIFileUpload.TYPE, TLD_EXT_URI, "file_upload", FILE_UPLOAD_ATTRIBUTES);
-        addAttributeDescriptors(UIFileUpload.TYPE, TLD_EXT_URI, "file_upload", USER_ROLE_ATTRIBUTES);
-    }
-    */
-
 
 
     public void decode(FacesContext facescontext, UIComponent uiComponent)
@@ -150,7 +129,7 @@ public class FileUploadRenderer
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
         HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_ATTRIBUTES);
-        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML_INPUT_FILE_UPLOAD_ATTRIBUTES);
+        HTMLUtil.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_FILE_UPLOAD_ATTRIBUTES);
         HTMLUtil.renderDisabledOnUserRole(facesContext, uiComponent);
 
         writer.write(">");

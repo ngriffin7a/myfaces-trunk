@@ -71,27 +71,6 @@ public class LayoutRenderer
         return TYPE;
     }
 
-    /*
-    public boolean supportsComponentType(UIComponent component)
-    {
-        return component instanceof UIPanel;
-    }
-
-    public boolean supportsComponentType(String s)
-    {
-        return s.equals(UIPanel.TYPE);
-    }
-
-    protected void initAttributeDescriptors()
-    {
-        addAttributeDescriptors(UIPanel.TYPE, TLD_EXT_URI, "page_layout", HTML_UNIVERSAL_ATTRIBUTES);
-        addAttributeDescriptors(UIPanel.TYPE, TLD_EXT_URI, "page_layout", HTML_EVENT_HANDLER_ATTRIBUTES);
-        addAttributeDescriptors(UIPanel.TYPE, TLD_EXT_URI, "page_layout", HTML_TABLE_ATTRIBUTES);
-        addAttributeDescriptors(UIPanel.TYPE, TLD_EXT_URI, "page_layout", PAGE_LAYOUT_ATTRIBUTES);
-    }
-    */
-
-
 
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
         throws IOException

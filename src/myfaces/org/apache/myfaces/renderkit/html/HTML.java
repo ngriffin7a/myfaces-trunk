@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
+
+
 /**
  * Constant declarations for HTML rendering.
  * @author Manfred Geiler (latest modification by $Author$)
@@ -44,6 +46,7 @@ public class HTML
     public static final String WIDTH_ATTR = "width";
     public static final String ONSELECT_ATTR = "onselect";
     public static final String READONLY_ATTR = "readonly";
+    public static final String ACCEPT_ATTR = "accept";
 
     // Event handler attributes
     public static final String ONCLICK_ATTR     = "onclick";
@@ -122,7 +125,6 @@ public class HTML
     };
 
     // <form>
-    public static final String ACCEPT_ATTR = "accept";
     public static final String ACCEPT_CHARSET_ATTR = "accept-charset";
     public static final String ENCTYPE_ATTR = "enctype";
     public static final String ONRESET_ATTR = "onreset";
@@ -240,5 +242,12 @@ public class HTML
         TABINDEX_ATTR,
     };
 
+    // <input type=file>
+    public static final String MAX_LENGTH_ATTR = "maxlength";
+    public static final String[] INPUT_FILE_UPLOAD_ATTRIBUTES =
+    {
+        ACCEPT_ATTR,
+        MAX_LENGTH_ATTR
+    };
 
 }
