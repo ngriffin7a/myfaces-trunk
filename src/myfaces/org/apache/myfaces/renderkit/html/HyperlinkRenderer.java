@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.component.UIParameter;
 import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.renderkit.attr.HyperlinkRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
@@ -38,6 +39,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
+import javax.faces.convert.ConverterFactory;
 import javax.faces.event.ApplicationEvent;
 import javax.faces.event.CommandEvent;
 import javax.faces.render.RenderKit;
@@ -64,6 +66,9 @@ public class HyperlinkRenderer
         implements HyperlinkRendererAttributes
 {
     public static final String TYPE = "Hyperlink";
+
+    private static final String TYPE_SUFFIX = ".TYPE";
+
     public String getRendererType()
     {
         return TYPE;
@@ -129,7 +134,36 @@ public class HyperlinkRenderer
         {
             Object objValue;
             //find converter
-            Converter conv = ConverterUtils.findValueConverter(facesContext, uiParameter);
+            Converter conv = null;
+            ConverterFactory convFactory = (ConverterFactory)FactoryFinder.getFactory(FactoryFinder.CONVERTER_FACTORY);
+            String type = facesContext.getServletRequest().getParameter(name + TYPE_SUFFIX);
+            if (type != null)
+            {
+                try
+                {
+                    conv = convFactory.getConverter(Class.forName(type));
+                }
+                catch (ClassNotFoundException e)
+                {
+                    throw new RuntimeException(e);
+                }
+            }
+            else
+            {
+                Object converterAttr = uiParameter.getAttribute(CommonRendererAttributes.CONVERTER_ATTR);
+                if (converterAttr != null)
+                {
+                    if (converterAttr instanceof Converter)
+                    {
+                        conv = (Converter)converterAttr;
+                    }
+                    else
+                    {
+                        conv = convFactory.getConverter((String)converterAttr);
+                    }
+                }
+            }
+
             if (conv != null)
             {
                 try
@@ -262,25 +296,33 @@ public class HyperlinkRenderer
             writer.write(name);
             writer.write('=');
 
-            String strValue;
             Converter conv = ConverterUtils.findValueConverter(facesContext, uiParameter);
             if (conv != null)
             {
                 try
                 {
-                    strValue = conv.getAsString(facesContext, uiParameter, objValue);
+                    String strValue = conv.getAsString(facesContext, uiParameter, objValue);
+                    writer.write(URLEncoder.encode(strValue, "UTF-8"));
+
+                    if (uiParameter.getAttribute(CommonRendererAttributes.CONVERTER_ATTR) == null)
+                    {
+                        //send type of parameter
+                        writer.write('&');
+                        writer.write(name + TYPE_SUFFIX);
+                        writer.write('=');
+                        writer.write(objValue.getClass().getName());
+                    }
                 }
                 catch (ConverterException e)
                 {
-                    strValue = null;
                     LogUtil.getLogger().severe("Could not convert hyperlink parameter " + name + " to String.");
                 }
             }
             else
             {
-                strValue = ConverterUtils.serialize(objValue);
+                writer.write(URLEncoder.encode(ConverterUtils.serialize(objValue),
+                                               "UTF-8"));
             }
-            writer.write(URLEncoder.encode(strValue, "UTF-8"));
         }
     }
 

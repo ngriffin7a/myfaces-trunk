@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.examples.listexample;
 import net.sourceforge.myfaces.examples.listexample.SimpleCountry;
 
 import java.util.*;
+import java.math.BigDecimal;
 
 /**
  * DOCUMENT ME!
@@ -33,12 +34,12 @@ public class SimpleCountryList
 
     public SimpleCountryList()
     {
-        _countries.add(new SimpleCountry("AUSTRIA", "AT"));
-        _countries.add(new SimpleCountry("AZERBAIJAN", "AZ"));
-        _countries.add(new SimpleCountry("BAHAMAS", "BS"));
-        _countries.add(new SimpleCountry("BAHRAIN", "BH"));
-        _countries.add(new SimpleCountry("BANGLADESH", "BD"));
-        _countries.add(new SimpleCountry("BARBADOS", "BB"));
+        _countries.add(new SimpleCountry("AUSTRIA", "AT", new BigDecimal(123)));
+        _countries.add(new SimpleCountry("AZERBAIJAN", "AZ", new BigDecimal(535)));
+        _countries.add(new SimpleCountry("BAHAMAS", "BS", new BigDecimal(1345623)));
+        _countries.add(new SimpleCountry("BAHRAIN", "BH", new BigDecimal(346)));
+        _countries.add(new SimpleCountry("BANGLADESH", "BD", new BigDecimal(456)));
+        _countries.add(new SimpleCountry("BARBADOS", "BB", new BigDecimal(45645)));
     }
 
     public Iterator getCountries()

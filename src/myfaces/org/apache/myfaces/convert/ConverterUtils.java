@@ -98,7 +98,7 @@ public class ConverterUtils
         throws IllegalArgumentException
     {
         Object converterAttr = uicomponent.getAttribute(CommonRendererAttributes.CONVERTER_ATTR);
-        if (converterAttr instanceof Converter)
+        if (converterAttr != null && converterAttr instanceof Converter)
         {
             return (Converter)converterAttr;
         }

@@ -20,27 +20,28 @@ package net.sourceforge.myfaces.examples.listexample;
 
 import java.math.BigDecimal;
 
+
 /**
  * DOCUMENT ME!
- * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class SimpleCountry
+public class SimpleCountryForm
 {
-    private String _name;
-    private String _isoCode;
-    private BigDecimal _size;
+    private String _isoCode = null;
+    private String _name = null;
+    private BigDecimal _size = null;
 
-    public SimpleCountry(String name, String isoCode, BigDecimal size)
+    public void setIsoCode(String isoCode)
     {
-        _name = name;
         _isoCode = isoCode;
-        _size = size;
-    }
-
-    public String getName()
-    {
-        return _name;
+        /*
+        if (_name == null)
+        {
+            Locale currLocale = FacesContext.getCurrentInstance().getLocale();
+            _name = new Locale("", isoCode).getDisplayCountry(currLocale);
+        }
+        */
     }
 
     public String getIsoCode()
@@ -48,8 +49,23 @@ public class SimpleCountry
         return _isoCode;
     }
 
+    public String getName()
+    {
+        return _name;
+    }
+
+    public void setName(String name)
+    {
+        _name = name;
+    }
+
     public BigDecimal getSize()
     {
         return _size;
+    }
+
+    public void setSize(BigDecimal size)
+    {
+        _size = size;
     }
 }

@@ -46,17 +46,30 @@
                     headerClass="standardTable_Header"
                     footerClass="standardTable_Footer"
                     rowClasses="standardTable_Row1,standardTable_Row2"
-                    columnClasses="standardTable_Column,standardTable_ColumnCentered" >
+                    columnClasses="standardTable_Column,standardTable_ColumnCentered,standardTable_Column" >
                 <!-- HEADER -->
                 <h:group>
                     <h:output_text text="Country name" />
                     <h:output_text text="Iso-Code" />
+                    <h:output_text text="Size" />
                 </h:group>
                 <!-- DATA -->
                 <h:listrow var="country" modelReference="countryList.countries" >
-                    <h:output_text modelReference="country.name" />
+
+                    <h:command_hyperlink>
+                        <h:output_text modelReference="country.name" />
+
+                        <f:parameter name="isoCode" modelReference="country.isoCode" />
+                        <f:parameter name="name" modelReference="country.name" />
+                        <f:parameter name="size" modelReference="country.size" />
+                        <f:action_listener type="net.sourceforge.myfaces.examples.listexample.SimpleCountryController" />
+
+                    </h:command_hyperlink>
+
                     <h:output_text modelReference="country.isoCode" />
+                    <h:output_text modelReference="country.size" />
                     <% rows++; %>
+
                 </h:listrow>
                 <!-- FOOTER -->
                 <h:group>
@@ -70,6 +83,7 @@
                             <h:parameter value="<%=new Integer(cols)%>"/>
                         </h:output_message>
                     </h:group>
+                    <h:output_text text=""/>
                 </h:group>
             </h:list>
             <br>
