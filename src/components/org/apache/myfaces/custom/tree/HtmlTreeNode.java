@@ -26,6 +26,7 @@ import net.sourceforge.myfaces.custom.tree.model.TreePath;
 import javax.faces.component.html.HtmlCommandLink;
 import javax.faces.context.FacesContext;
 import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -35,6 +36,9 @@ import java.util.Iterator;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.5  2004/04/23 19:09:35  o_rossmueller
+ *          state transition magic
+ *
  *          Revision 1.4  2004/04/22 22:00:31  o_rossmueller
  *          implemented HtmlTree.expandPath
  *
@@ -163,6 +167,11 @@ public class HtmlTreeNode
 
     public void setExpanded(boolean expanded)
     {
+        if (this.expanded == expanded)
+        {
+            // no change
+            return;
+        }
         this.expanded = expanded;
 
         if (expanded)
@@ -234,8 +243,7 @@ public class HtmlTreeNode
         {
             if (clearSelection())
             {
-                // move selection from child to this node
-                selected = true;
+                setSelected(true);
             }
             getChildren().clear();
             layout[layout.length - 1] += OFFSET;
@@ -258,6 +266,10 @@ public class HtmlTreeNode
 
     public void setSelected(boolean selected)
     {
+        if (this.selected == selected) {
+            // no change
+            return;
+        }
         getTree().getRootNode().clearSelection();
         this.selected = selected;
         getTree().selectionChanged(this);
@@ -430,5 +442,19 @@ public class HtmlTreeNode
         }
         
         child.expandPath(translatedPath, current++);
+    }
+
+
+    public void restoreItemState(HtmlTreeNode node)
+    {
+        setExpanded(node.isExpanded());
+        selected = node.isSelected();
+        List children = getChildren();
+        List otherChildren = node.getChildren();
+        for (int i = 0; i < children.size(); i++)
+        {
+            HtmlTreeNode child = (HtmlTreeNode) children.get(i);
+            child.restoreItemState((HtmlTreeNode) otherChildren.get(i));
+        }
     }
 }

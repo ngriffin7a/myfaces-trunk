@@ -22,6 +22,7 @@ package net.sourceforge.myfaces.custom.tree.event;
 
 import javax.faces.event.FacesEvent;
 import javax.faces.event.FacesListener;
+import javax.faces.event.PhaseId;
 import javax.faces.component.UIComponent;
 
 import net.sourceforge.myfaces.custom.tree.model.TreePath;
@@ -33,6 +34,9 @@ import net.sourceforge.myfaces.custom.tree.model.TreePath;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.2  2004/04/23 19:09:34  o_rossmueller
+ *          state transition magic
+ *
  *          Revision 1.1  2004/04/22 21:14:54  o_rossmueller
  *          TreeSelectionListener support
  *

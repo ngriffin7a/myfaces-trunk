@@ -41,6 +41,9 @@ import java.util.List;
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.3  2004/04/23 19:09:34  o_rossmueller
+ *          state transition magic
+ *
  *          Revision 1.2  2004/04/22 12:57:39  o_rossmueller
  *          fixed leaf node layout
  *
@@ -61,11 +64,10 @@ public class HtmlTreeRenderer
     }
 
 
-//   public void encodeChildren(FacesContext facesContext, UIComponent component) throws IOException {
-//      if (component instanceof HtmlTreeNode) {
-//         super.encodeChildren(facesContext, component);
-//      }
-//   }
+   public void encodeChildren(FacesContext facesContext, UIComponent component) throws IOException
+   {
+      super.encodeChildren(facesContext, component);
+   }
 
 
     public void encodeEnd(FacesContext facesContext, UIComponent component) throws IOException
