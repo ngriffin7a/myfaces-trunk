@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.MyFacesConfig;
 import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -36,6 +37,9 @@ import java.util.*;
 
 /**
  * $Log$
+ * Revision 1.2  2004/04/01 12:43:18  manolito
+ * html nesting bug fixed
+ *
  * Revision 1.1  2004/03/29 14:57:00  manolito
  * refactoring for implementation and non-standard component split
  *
@@ -525,6 +529,26 @@ public class HtmlRendererUtils
         return somethingDone;
     }
 
+    public static boolean renderHTMLAttributeWithOptionalStartElement(ResponseWriter writer,
+                                                                      UIComponent component,
+                                                                      String elementName,
+                                                                      String attrName,
+                                                                      Object value,
+                                                                      boolean startElementWritten)
+            throws IOException
+    {
+        if (!RendererUtils.isDefaultAttributeValue(value))
+        {
+            if (!startElementWritten)
+            {
+                writer.startElement(elementName, component);
+                startElementWritten = true;
+            }
+            renderHTMLAttribute(writer, attrName, attrName, value);
+        }
+        return startElementWritten;
+    }
+    
     public static boolean renderHTMLAttributesWithOptionalStartElement(ResponseWriter writer,
                                                                        UIComponent component,
                                                                        String elementName,
@@ -543,11 +567,7 @@ public class HtmlRendererUtils
                     writer.startElement(elementName, component);
                     startElementWritten = true;
                 }
-
-                // render JSF "styleClass" attribute as "class"
-                String htmlAttrName =
-                    attrName.equals(HTML.STYLE_CLASS_ATTR) ? HTML.CLASS_ATTR : attrName;
-                writer.writeAttribute(htmlAttrName, value, attrName);
+                renderHTMLAttribute(writer, attrName, attrName, value);
             }
         }
         return startElementWritten;

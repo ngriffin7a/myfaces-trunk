@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.application.jsp.JspViewHandlerImpl;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormResponseWriter;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -178,7 +179,7 @@ public class HtmlResponseWriterImpl
             if (_startElementName != null &&
                 !name.equals(_startElementName))
             {
-                log.warn("HTML nesting warning: element " + _startElementName + " not explicitly closed");
+                log.warn("HTML nesting warning on closing " + name + ": element " + _startElementName + " not explicitly closed");
             }
         }
 

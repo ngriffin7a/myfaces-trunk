@@ -29,6 +29,7 @@ public class JSFAttr
     //~ Static fields/initializers -----------------------------------------------------------------
 
     // MyFaces Extended Attributes
+    //TODO: Move to UserRoleAware
     public static final String   ENABLED_ON_USER_ROLE_ATTR      = "enabledOnUserRole";
     public static final String   VISIBLE_ON_USER_ROLE_ATTR      = "visibleOnUserRole";
 

@@ -29,7 +29,6 @@ import javax.faces.component.html.HtmlMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -37,6 +36,9 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/04/01 12:43:18  manolito
+ * html nesting bug fixed
+ *
  * Revision 1.3  2004/03/31 14:51:47  manolito
  * summaryFormat and detailFormat support
  *
@@ -121,25 +123,11 @@ public abstract class HtmlMessageRendererBase
 
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        boolean span = false;
-        //Redirect output of span element to temporary writer
-        StringWriter buf = new StringWriter();
-        ResponseWriter bufWriter = writer.cloneWithWriter(buf);
-        bufWriter.startElement(HTML.SPAN_ELEM, message);
-        //universal attributes
-        span |= HtmlRendererUtils.renderHTMLAttribute(bufWriter, message, HTML.DIR_ATTR, HTML.DIR_ATTR);
-        span |= HtmlRendererUtils.renderHTMLAttribute(bufWriter, message, HTML.LANG_ATTR, HTML.LANG_ATTR);
-        span |= HtmlRendererUtils.renderHTMLAttribute(bufWriter, HTML.TITLE_ATTR, HTML.TITLE_ATTR, title);
-        span |= HtmlRendererUtils.renderHTMLAttribute(bufWriter, HTML.STYLE_ATTR, HTML.STYLE_ATTR, style);
-        span |= HtmlRendererUtils.renderHTMLAttribute(bufWriter, HTML.STYLE_CLASS_ATTR, HTML.STYLE_CLASS_ATTR, styleClass);
-        span |= HtmlRendererUtils.renderHTMLAttributes(bufWriter, message, HTML.EVENT_HANDLER_ATTRIBUTES);
-        bufWriter.flush();
-        bufWriter.close();
-        if (span)
-        {
-            //span attribute was written, so write out span element to real writer
-            writer.write(buf.toString());
-        }
+        boolean span = HtmlRendererUtils.renderHTMLAttributesWithOptionalStartElement(
+                            writer, message, HTML.SPAN_ELEM, HTML.MESSAGE_PASSTHROUGH_ATTRIBUTES);
+        span |= HtmlRendererUtils.renderHTMLAttributeWithOptionalStartElement(writer, message, HTML.SPAN_ELEM, HTML.TITLE_ATTR, title, span);
+        span |= HtmlRendererUtils.renderHTMLAttributeWithOptionalStartElement(writer, message, HTML.SPAN_ELEM, HTML.STYLE_ATTR, style, span);
+        span |= HtmlRendererUtils.renderHTMLAttributeWithOptionalStartElement(writer, message, HTML.SPAN_ELEM, HTML.STYLE_CLASS_ATTR, styleClass, span);
 
         boolean showSummary = isShowSummary(message) && (summary != null);
         boolean showDetail = isShowDetail(message) && (detail != null);
