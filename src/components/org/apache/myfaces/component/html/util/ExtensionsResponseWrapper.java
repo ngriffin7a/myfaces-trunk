@@ -18,8 +18,10 @@ package org.apache.myfaces.component.html.util;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -31,6 +33,9 @@ import org.xml.sax.InputSource;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2005/03/08 19:08:14  svieujot
+ * Fix some i18n issue (Marek Sikl comment on MYFACES-79)
+ *
  * Revision 1.5  2004/12/22 01:55:29  svieujot
  * Fix a buffering problem.
  *
@@ -50,7 +55,7 @@ import org.xml.sax.InputSource;
  */
 public class ExtensionsResponseWrapper extends HttpServletResponseWrapper {
     private ByteArrayOutputStream stream = null;
-    private PrintWriter writer = null;
+    private PrintWriter printWriter = null;
 
     public ExtensionsResponseWrapper(HttpServletResponse response){
         super( response );
@@ -74,9 +79,12 @@ public class ExtensionsResponseWrapper extends HttpServletResponseWrapper {
     /** This method is used by Tomcat.
      */
     public PrintWriter getWriter(){
-        if( writer == null )
-        	writer = new PrintWriter(stream, true); // autoFlush is true
-        return writer;
+        if( printWriter == null ){
+			OutputStreamWriter streamWriter = new OutputStreamWriter(stream, Charset.forName(getCharacterEncoding()));
+			printWriter = new PrintWriter(streamWriter, true);
+			//printWriter = new PrintWriter(stream, true); // autoFlush is true
+        }
+        return printWriter;
     }
     
 	/** This method is used by Jetty.
@@ -103,14 +111,15 @@ public class ExtensionsResponseWrapper extends HttpServletResponseWrapper {
     
     public void finishResponse() {
         try {
-            if (writer != null) {
-                writer.close();
+            if (printWriter != null) {
+				printWriter.close();
             } else {
                 if (stream != null) {
                     stream.close();
                 }
             }
         } catch (IOException e) {
+			e.printStackTrace();
         }
     }
     
