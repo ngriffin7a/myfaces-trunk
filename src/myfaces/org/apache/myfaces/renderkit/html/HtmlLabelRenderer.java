@@ -18,10 +18,13 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
+import net.sourceforge.myfaces.renderkit.JSFAttr;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 
+import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIOutput;
+import javax.faces.component.ValueHolder;
+import javax.faces.component.html.HtmlOutputLabel;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
@@ -32,6 +35,10 @@ import java.io.IOException;
  * @author Anton Koinov
  * @author Martin Marinschek
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.9  2004/04/05 15:02:47  manolito
+ * for-attribute issues
+ *
  */
 public class HtmlLabelRenderer
 extends HtmlRenderer
@@ -39,25 +46,61 @@ extends HtmlRenderer
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
     {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, UIOutput.class);
+        super.encodeBegin(facesContext, uiComponent);   //check for NP
+
         ResponseWriter writer = facesContext.getResponseWriter();
 
         writer.startElement(HTML.LABEL_ELEM, uiComponent);
         HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.LABEL_PASSTHROUGH_ATTRIBUTES);
 
-        //MyFaces extension: Render a label text given by value
-        String text = RendererUtils.getStringValue(facesContext, uiComponent);
-        if(text != null)
+        String forAttr = getFor(uiComponent);
+        if (forAttr == null)
         {
-            writer.writeText(text, "value");
+            throw new NullPointerException("Attribute 'for' of label component with id " + uiComponent.getClientId(facesContext));
+        }
+
+        UIComponent forComponent = uiComponent.findComponent(forAttr);
+        if (forComponent == null)
+        {
+            throw new FacesException("Unable to find component '" + forAttr + "' (calling findComponent on component '" + uiComponent.getClientId(facesContext) + "')");
+        }
+
+        writer.writeAttribute(HTML.FOR_ATTR, forComponent.getClientId(facesContext), JSFAttr.FOR_ATTR);
+
+
+        //MyFaces extension: Render a label text given by value
+        //TODO: Move to extended component
+        if (uiComponent instanceof ValueHolder)
+        {
+            String text = RendererUtils.getStringValue(facesContext, uiComponent);
+            if(text != null)
+            {
+                writer.writeText(text, "value");
+            }
         }
 
         writer.flush(); // close start tag
     }
 
+
+    protected String getFor(UIComponent component)
+    {
+        if (component instanceof HtmlOutputLabel)
+        {
+            return ((HtmlOutputLabel)component).getFor();
+        }
+        else
+        {
+            return (String)component.getAttributes().get(JSFAttr.FOR_ATTR);
+        }
+    }
+
+
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
             throws IOException
     {
+        super.encodeEnd(facesContext, uiComponent); //check for NP
+
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.endElement(HTML.LABEL_ELEM);
     }

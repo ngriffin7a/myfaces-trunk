@@ -260,8 +260,8 @@ public class HTML
     {
         ACCESSKEY_ATTR,
         ONBLUR_ATTR,
-        ONFOCUS_ATTR,
-        FOR_ATTR
+        ONFOCUS_ATTR
+        //FOR_ATTR is no pass through !
     };
     public static final String[] LABEL_PASSTHROUGH_ATTRIBUTES =
         (String[]) ArrayUtils.concat(

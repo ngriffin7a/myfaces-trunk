@@ -31,6 +31,7 @@ import javax.faces.convert.ConverterException;
 import javax.faces.el.ValueBinding;
 import javax.faces.model.SelectItem;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -493,8 +494,13 @@ public class RendererUtils
     private static Set internalSubmittedOrSelectedValuesAsSet(UISelectMany uiSelectMany,
                                                               Object values)
     {
-        if (values instanceof Object[])
+        if (values == null)
         {
+            return Collections.EMPTY_SET;
+        }
+        else if (values instanceof Object[])
+        {
+            //Object array
             Object[] ar = (Object[])values;
             if (ar.length == 0)
             {
@@ -509,6 +515,17 @@ public class RendererUtils
                 }
                 return set;
             }
+        }
+        else if (values.getClass().isArray())
+        {
+            //primitive array
+            int len = Array.getLength(values);
+            HashSet set = new HashSet(HashMapUtils.calcCapacity(len));
+            for (int i = 0; i < len; i++)
+            {
+                set.add(Array.get(values, i));
+            }
+            return set;
         }
         else if (values instanceof List)
         {
