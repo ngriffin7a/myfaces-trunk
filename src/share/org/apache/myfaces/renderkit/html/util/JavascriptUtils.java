@@ -25,6 +25,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/07/16 13:06:30  manolito
+ * encode javascript strings for jscook menu labels
+ *
  * Revision 1.3  2004/07/09 02:44:55  dave0000
  * More efficient implementation
  *
@@ -173,4 +176,51 @@ public final class JavascriptUtils
         
         return buf == null ? s : buf.toString();
     }
+
+
+    public static String encodeString(String string)
+    {
+        if (string == null)
+        {
+            return "";
+        }
+        StringBuffer sb = null;	//create later on demand
+        String app;
+        char c;
+        for (int i = 0; i < string.length (); ++i)
+        {
+            app = null;
+            c = string.charAt(i);
+            switch (c)
+            {
+                case '\\' : app = "\\";  break;
+                case '\"' : app = "\\\"";  break;
+                case '\'' : app = "\\'";  break;
+                case '\n' : app = "\\n";  break;
+            }
+            if (app != null)
+            {
+                if (sb == null)
+                {
+                    sb = new StringBuffer(string.substring(0, i));
+                }
+                sb.append(app);
+            } else {
+                if (sb != null)
+                {
+                    sb.append(c);
+                }
+            }
+        }
+
+        if (sb == null)
+        {
+            return string;
+        }
+        else
+        {
+            return sb.toString();
+        }
+    }
+
 }

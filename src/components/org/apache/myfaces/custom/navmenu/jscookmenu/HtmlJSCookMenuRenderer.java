@@ -20,8 +20,9 @@ import net.sourceforge.myfaces.custom.navmenu.NavigationMenuUtils;
 import net.sourceforge.myfaces.el.SimpleActionMethodBinding;
 import net.sourceforge.myfaces.renderkit.RendererUtils;
 import net.sourceforge.myfaces.renderkit.html.HtmlRenderer;
-import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormResponseWriter;
+import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
+import net.sourceforge.myfaces.renderkit.html.util.JavascriptUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -37,6 +38,9 @@ import java.util.Map;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.7  2004/07/16 13:06:30  manolito
+ *          encode javascript strings for jscook menu labels
+ *
  *          Revision 1.6  2004/07/05 08:28:24  royalts
  *          added example for <x:navigationMenuItems>
  *
@@ -132,7 +136,8 @@ public class HtmlJSCookMenuRenderer
                 "'<img src=\"" + item.getIcon() + "\"/>'" : "''";
             String action = item.getAction() != null ?
                 "'" + item.getAction() + "'" : "null";
-            writer.write("[" + icon + ", '" + item.getLabel() + "', " + action +", '#', null");
+            String label = JavascriptUtils.encodeString(item.getLabel());
+            writer.write("[" + icon + ", '" + label + "', " + action +", '#', null");
 
             NavigationMenuItem[] menuItems = item.getNavigationMenuItems();
             if (menuItems != null && menuItems.length > 0)
