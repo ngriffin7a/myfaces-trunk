@@ -120,7 +120,12 @@ public class UINavigationItem
             }
         }
 
-        return super.isRendered();
+        return true;
+    }
+
+    public void setRendered(boolean rendered)
+    {
+        //cannot be set explicitly
     }
 
 
