@@ -75,7 +75,7 @@ public class MyFacesConfig
     private static final String CONFIG_MAP_ATTR = MyFacesConfig.class.getName() + ".MAP";
 
     private static final String PARAM_wrapPageContext = "myfaces_WrapPageContext";
-    private static final boolean DEFAULT_wrapPageContext = true;
+    private static final boolean DEFAULT_wrapPageContext = false;
 
 
     private MyFacesConfig() {}

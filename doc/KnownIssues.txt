@@ -74,6 +74,10 @@ MyFaces Known Issues
   Will be fixed in 0.4.4, workaround for now is to set the
   "myfaces_DiscardInternalAttributes" option set to false.
 
+* JRun 4.x throws a ClassCastException when context parameter "myfaces_DefaultLanguage"
+  is set to "true".
+
+
 
 
 TODO... (Many others!)
