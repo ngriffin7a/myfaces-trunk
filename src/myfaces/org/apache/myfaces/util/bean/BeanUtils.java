@@ -64,6 +64,12 @@ public class BeanUtils
     public static PropertyDescriptor findPropertyDescriptor(Object bean,
                                                             String propertyName)
     {
+        return findPropertyDescriptor(getBeanInfo(bean), propertyName);
+    }
+
+    public static PropertyDescriptor findNestedPropertyDescriptor(Object bean,
+                                                                  String propertyName)
+    {
         if (isNestedPropertyName(propertyName))
         {
             Object[] nested = getNestedBeanAndPropertyName(bean, propertyName);
@@ -288,7 +294,7 @@ public class BeanUtils
                 return new Object[] {obj, nextProp};
             }
 
-            PropertyDescriptor propDescr = findPropertyDescriptor(obj, nextProp);
+            PropertyDescriptor propDescr = findNestedPropertyDescriptor(obj, nextProp);
             if (propDescr == null)
             {
                 throw new IllegalArgumentException("Bean " + obj + " (Class " + obj.getClass() + ") does not have a property of name '" + nextProp + "'.");

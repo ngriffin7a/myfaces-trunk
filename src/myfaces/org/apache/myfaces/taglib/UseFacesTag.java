@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.taglib;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.state.client.ClientStateSaver;
 import net.sourceforge.myfaces.util.logging.LogUtil;
+import net.sourceforge.myfaces.MyFacesConfig;
 
 import javax.faces.FactoryFinder;
 import javax.faces.context.FacesContext;
@@ -61,7 +62,15 @@ public class UseFacesTag
     public int doStartTag() throws JspException
     {
         //ResponseWriter will be set in doInitBody()
-        return BodyTag.EVAL_BODY_BUFFERED;
+        int mode = MyFacesConfig.getStateSavingMode(super.pageContext.getServletContext());
+        if (mode == MyFacesConfig.STATE_SAVING_MODE__SERVER_SESSION)
+        {
+            return BodyTag.EVAL_BODY_INCLUDE;
+        }
+        else
+        {
+            return BodyTag.EVAL_BODY_BUFFERED;
+        }
     }
 
     public void doInitBody() throws JspException
@@ -74,28 +83,36 @@ public class UseFacesTag
     {
         FacesContext facesContext = getFacesContext();
 
+        int mode = MyFacesConfig.getStateSavingMode(super.pageContext.getServletContext());
+
         RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
         RenderKit renderKit = rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
         Renderer renderer = renderKit.getRenderer(StateRenderer.TYPE);
         if (renderer == null)
         {
             LogUtil.getLogger().info("UseFacesTag.doAfterBody() - No StateRenderer found.");
-            BodyContent bodyContent = getBodyContent();
-            try
+            if (mode != MyFacesConfig.STATE_SAVING_MODE__SERVER_SESSION)
             {
-                bodyContent.writeOut(bodyContent.getEnclosingWriter());
-            }
-            catch (IOException e)
-            {
-                throw new JspException(e);
+                BodyContent bodyContent = getBodyContent();
+                try
+                {
+                    bodyContent.writeOut(bodyContent.getEnclosingWriter());
+                }
+                catch (IOException e)
+                {
+                    throw new JspException(e);
+                }
             }
         }
         else
         {
             try
             {
-                facesContext.getServletRequest().setAttribute(ClientStateSaver.BODY_CONTENT_REQUEST_ATTR,
-                                                              getBodyContent());
+                if (mode != MyFacesConfig.STATE_SAVING_MODE__SERVER_SESSION)
+                {
+                    facesContext.getServletRequest().setAttribute(ClientStateSaver.BODY_CONTENT_REQUEST_ATTR,
+                                                                  getBodyContent());
+                }
                 renderer.encodeEnd(facesContext, null);
             }
             catch (IOException e)
