@@ -29,6 +29,7 @@
         <pathelement location="${commons-beanutils.jar}"/>
         <pathelement location="${commons-collections.jar}"/>
         <pathelement location="${commons-digester.jar}"/>
+    	<pathelement location="${portlet.jar}"/>
     </path>
 
     <target name="junit" depends="-compile-for-junit,-myfaces-jsf-api-jar,-myfaces-jar">
