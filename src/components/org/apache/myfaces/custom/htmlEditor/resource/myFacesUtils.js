@@ -19,10 +19,14 @@
  * @version $Revision$ $Date$
  */
 var myFacesKupuTextToLoad;
-var myFacesKupuOriginalDocOnLoad;
+var myFacesKupuClientId;
+var myFacesKupuFormId;
+var myFacesKupuOriginalDocOnSubmit;
 
-function myFacesKupuSet(text) {
+function myFacesKupuSet(text, clientId, formId){
 	myFacesKupuTextToLoad = text;
+	myFacesKupuClientId = clientId;
+	myFacesKupuFormId = formId;
 	
 	var onLoadSrc;
     if( document.all ) // IE
@@ -32,6 +36,10 @@ function myFacesKupuSet(text) {
 
 	myFacesKupuOriginalDocOnLoad = onLoadSrc.onload;
 	onLoadSrc.onload = myFacesKupuInit;
+	
+	var form = document.forms[myFacesKupuFormId];
+	myFacesKupuOriginalDocOnSubmit = form.onsubmit;
+	form.onsubmit = myFacesKupuSubmit;
 }
 
 function myFacesKupuInit(){
@@ -40,4 +48,11 @@ function myFacesKupuInit(){
 
 	kupu = startKupu();
 	kupu.getInnerDocument().documentElement.getElementsByTagName('body')[0].innerHTML = myFacesKupuTextToLoad;
+}
+
+function myFacesKupuSubmit(){
+	kupu.prepareForm(document.forms[myFacesKupuFormId], myFacesKupuClientId);
+
+	if( myFacesKupuOriginalDocOnSubmit )
+		return myFacesKupuOriginalDocOnSubmit();
 }

@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIForm;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
@@ -32,6 +33,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.3  2004/12/03 12:55:30  svieujot
+ * Get ride of the save button / process.
+ *
  * Revision 1.2  2004/12/03 08:31:28  manolito
  * writer.append copy'n'paste error?
  *
@@ -46,6 +50,15 @@ public class HtmlEditorRenderer extends Renderer {
         RendererUtils.checkParamValidity(context, component, HtmlEditor.class);
         HtmlEditor editor = (HtmlEditor) component;
         String clientId = editor.getClientId(context);
+        String formId;
+        {
+            UIComponent tmpComponent = editor.getParent();
+            while(!(tmpComponent instanceof UIForm) ){
+                tmpComponent = tmpComponent.getParent();
+            }
+            formId = tmpComponent.getClientId(context);
+        }
+            
         
         AddResource.addStyleSheet(HtmlEditorRenderer.class, "kupustyles.css", context);
         AddResource.addStyleSheet(HtmlEditorRenderer.class, "kupudrawerstyles.css", context);
@@ -128,24 +141,7 @@ public class HtmlEditorRenderer extends Renderer {
     					writer.write("&#xA0;");
               		writer.endElement(HTML.BUTTON_ELEM);
             	writer.endElement(HTML.SPAN_ELEM);
-            	
-            	// Save button
-            	// TODO : Remove the need for this button
-            	writer.startElement(HTML.SPAN_ELEM,null);
-				writer.writeAttribute(HTML.CLASS_ATTR, "kupu-tb-buttongroup",null);
-					writer.startElement(HTML.BUTTON_ELEM,null);
-					writer.writeAttribute("xmlns:i18n", "http://xml.zope.org/namespaces/i18n", null);
-					writer.writeAttribute(HTML.TYPE_ATTR, "button", null);
-					writer.writeAttribute(HTML.CLASS_ATTR, "kupu-save", null);
-					writer.writeAttribute(HTML.ID_ATTR, "kupu-save-button", null);
-					writer.writeAttribute(HTML.TITLE_ATTR, "Save", null);
-					writer.writeAttribute("i18n:attributes", "title", null);
-					writer.writeAttribute(HTML.ACCESSKEY_ATTR, "s", null);
-					writer.writeAttribute(HTML.ONCLICK_ATTR, "kupu.prepareForm(this.form, '"+clientId+"');", null);
-						writer.write("&#xA0;");
-					writer.endElement(HTML.BUTTON_ELEM);
-                writer.endElement(HTML.SPAN_ELEM);
-            	
+
             	writer.startElement(HTML.SELECT_ELEM,null);
             	writer.writeAttribute(HTML.ID_ATTR, "kupu-tb-styles",null);
             		writer.startElement(HTML.OPTION_ELEM,null);
@@ -834,7 +830,7 @@ public class HtmlEditorRenderer extends Renderer {
         AddResource.addJavaScriptToHeader(HtmlEditorRenderer.class, "myFacesUtils.js", context);
         writer.startElement(HTML.SCRIPT_ELEM, null);
         writer.writeAttribute(HTML.SCRIPT_LANGUAGE_ATTR, HTML.SCRIPT_LANGUAGE_JAVASCRIPT, null);
-        	writer.write("myFacesKupuSet(\""+encodedText+"\");");
+        	writer.write("myFacesKupuSet(\""+encodedText+"\",\""+clientId+"\",\""+formId+"\");");
         writer.endElement(HTML.SCRIPT_ELEM);
     }
     

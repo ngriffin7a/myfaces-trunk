@@ -59,12 +59,6 @@
 				<h:form>
 					<x:htmlEditor value="#{editor.text}"/>
 					<h:commandButton value="Submit"/>
-					<f:verbatim>
-						<p><i>
-							Note : You need to press the Save button before submiting.<br/>
-							This need will hopefully be removed in a future version.
-						</i></p>
-					</f:verbatim>
 				</h:form>
 
             </h:panelGroup>
