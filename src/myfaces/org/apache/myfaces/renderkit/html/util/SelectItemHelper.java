@@ -20,13 +20,11 @@ package net.sourceforge.myfaces.renderkit.html.util;
 
 import net.sourceforge.myfaces.component.UISelectItem;
 import net.sourceforge.myfaces.component.UISelectItems;
-import net.sourceforge.myfaces.convert.ConverterUtils;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
 
 import javax.faces.component.SelectItem;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -49,7 +47,10 @@ public class SelectItemHelper
      * @param item
      * @return
      */
-    public static boolean isItemSelected(FacesContext facesContext, UIComponent uiComponent, Object currentValue, SelectItem item)
+    public static boolean isItemSelected(FacesContext facesContext,
+                                         UIComponent uiComponent,
+                                         Object currentValue,
+                                         SelectItem item)
     {
         Object itemValue = item.getValue();
         if (itemValue != null && currentValue != null)
@@ -59,42 +60,15 @@ public class SelectItemHelper
                 for (int i = 0; i < ((Object[])currentValue).length; i++)
                 {
                     Object currentValueObj = ((Object[])currentValue)[i];
-                    if (currentValueObj instanceof String &&
-                        !(itemValue instanceof String) &&
-                        itemValue.toString().equals(currentValueObj))
+                    if (itemValue.toString().equals(currentValueObj.toString()))
                     {
                         return true;
-                    }
-                    else
-                    {
-                        Converter converter = ConverterUtils.findConverter(currentValueObj.getClass());
-                        if (converter != null)
-                        {
-                            Object convObj = converter.getAsObject(facesContext, uiComponent, currentValueObj.toString());
-                            if (itemValue.equals(convObj))
-                            {
-                                return true;
-                            }
-                        }
-                        else if (itemValue.equals(currentValueObj))
-                        {
-                            return true;
-                        }
                     }
                 }
             }
             else
             {
-                Converter converter = ConverterUtils.findConverter(currentValue.getClass());
-                if (converter != null)
-                {
-                    Object convObj = converter.getAsObject(facesContext, uiComponent, currentValue.toString());
-                    if (itemValue.equals(convObj))
-                    {
-                        return true;
-                    }
-                }
-                else if (itemValue.equals(currentValue))
+                if (itemValue.toString().equals(currentValue.toString()))
                 {
                     return true;
                 }
