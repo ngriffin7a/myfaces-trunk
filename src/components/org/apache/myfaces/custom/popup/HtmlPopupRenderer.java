@@ -31,6 +31,9 @@ import java.util.List;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.7  2004/12/03 20:52:11  svieujot
+ * Defer script loading for additional performance.
+ *
  * Revision 1.6  2004/12/02 22:26:23  svieujot
  * Simplify the AddResource methods
  *
@@ -133,7 +136,7 @@ public class HtmlPopupRenderer
                                     Integer displayAtDistanceX, Integer displayAtDistanceY)
         throws IOException
     {
-        AddResource.addJavaScriptToHeader(HtmlPopupRenderer.class, "JSPopup.js", context);
+        AddResource.addJavaScriptToHeader(HtmlPopupRenderer.class, "JSPopup.js", true, context);
 
         String popupId = (clientId+"Popup").replace(':','_').replaceAll("_",
                 "popupIdSeparator");
