@@ -20,7 +20,6 @@ import net.sourceforge.myfaces.renderkit.html.util.DummyFormResponseWriter;
 import net.sourceforge.myfaces.renderkit.html.util.DummyFormUtils;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.JavascriptUtils;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -37,6 +36,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.26  2004/10/05 08:32:23  manolito
+ * #1038716 Empty h:selectManyCheckbox generates malformed HTML
+ *
  * Revision 1.25  2004/09/09 13:15:44  manolito
  * For textareas we must *not* map successive spaces to nbsp
  *
@@ -190,7 +192,7 @@ public class HtmlResponseWriterImpl
         {
             if (s_emptyHtmlElements.contains(_startElementName.toLowerCase()))
             {
-                _writer.write(" />");
+                _writer.write("/>");
                 // make null, this will cause NullPointer in some invalid element nestings
                 // (better than doing nothing)
                 _startElementName = null;
@@ -222,7 +224,16 @@ public class HtmlResponseWriterImpl
         if(_startTagOpen)
         {
             // we will get here only if no text or attribute was written after the start element was opened
-            _writer.write(" />");
+            if (s_emptyHtmlElements.contains(name.toLowerCase()))
+            {
+                _writer.write("/>");
+            }
+            else
+            {
+                _writer.write("></");
+                _writer.write(name);
+                _writer.write('>');
+            }
             _startTagOpen = false;
         }
         else
