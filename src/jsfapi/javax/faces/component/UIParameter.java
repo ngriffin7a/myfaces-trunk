@@ -74,7 +74,7 @@ public class UIParameter
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[2];
+        Object values[] = new Object[3];
         values[0] = super.saveState(context);
         values[1] = _name;
         values[2] = _value;

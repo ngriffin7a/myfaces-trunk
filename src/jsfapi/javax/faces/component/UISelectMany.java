@@ -63,7 +63,7 @@ public class UISelectMany
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[1];
+        Object values[] = new Object[2];
         values[0] = super.saveState(context);
         values[1] = _selectedValues;
         return ((Object) (values));

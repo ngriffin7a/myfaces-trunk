@@ -18,6 +18,7 @@
  */
 package javax.faces.component;
 
+import java.util.Iterator;
 
 
 /**
@@ -29,6 +30,63 @@ public class UIForm
 {
     //private static final Log log = LogFactory.getLog(UIForm.class);
 
+    private boolean _submitted;
+
+    public boolean isSubmitted()
+    {
+        return _submitted;
+    }
+
+    public void setSubmitted(boolean submitted)
+    {
+        _submitted = submitted;
+    }
+
+    public void processDecodes(javax.faces.context.FacesContext context)
+    {
+        if (context == null) throw new NullPointerException("context");
+        decode(context);
+        if (isSubmitted())
+        {
+            for (Iterator it = getChildren().iterator(); it.hasNext();)
+            {
+                UIComponent child = (UIComponent)it.next();
+                child.processDecodes(context);
+            }
+        }
+    }
+
+    public void processValidators(javax.faces.context.FacesContext context)
+    {
+        if (context == null) throw new NullPointerException("context");
+        if (isSubmitted())
+        {
+            for (Iterator it = getChildren().iterator(); it.hasNext();)
+            {
+                UIComponent child = (UIComponent)it.next();
+                child.processValidators(context);
+            }
+        }
+    }
+
+    public void processUpdates(javax.faces.context.FacesContext context)
+    {
+        if (context == null) throw new NullPointerException("context");
+        if (isSubmitted())
+        {
+            for (Iterator it = getChildren().iterator(); it.hasNext();)
+            {
+                UIComponent child = (UIComponent)it.next();
+                child.processUpdates(context);
+            }
+        }
+    }
+
+    public Object saveState(javax.faces.context.FacesContext context)
+    {
+        _submitted = false;
+        return super.saveState(context);
+    }
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 

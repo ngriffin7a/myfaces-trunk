@@ -36,6 +36,7 @@ public class Field
     private boolean _proprietary = false;
     private boolean _saveState = true;
     private boolean _proprietarySetter = false;
+    private int _saveStateFieldIndex;
 
     public Field(String name)
     {
@@ -106,6 +107,11 @@ public class Field
     public void setName(String name)
     {
         _name = name;
+    }
+
+    public String getSaveName()
+    {
+        return _name.equals("for") ? "forValue" : _name;
     }
 
     public String getUcaseName()
@@ -184,11 +190,6 @@ public class Field
         _fieldIndex = fieldIndex;
     }
 
-    public int getOneBasedFieldNumber()
-    {
-        return _fieldIndex + 1;
-    }
-
     public String getPrimitiveValueMethod()
     {
         if (!isPrimitiveType()) throw new UnsupportedOperationException();
@@ -224,6 +225,23 @@ public class Field
     {
         _proprietarySetter = proprietarySetter;
     }
+
+    public int getSaveStateFieldIndex()
+    {
+        return _saveStateFieldIndex;
+    }
+
+    public void setSaveStateFieldIndex(int saveStateFieldIndex)
+    {
+        _saveStateFieldIndex = saveStateFieldIndex;
+    }
+
+
+    public boolean isWrapForSavingState()
+    {
+        return _qualifiedType.equals("javax.faces.convert.Converter");
+    }
+
 
     public void toXml(PrintWriter writer) throws IOException
     {

@@ -31,7 +31,8 @@ public class Component
     public static final String[] IMPLICIT_PACKAGES = {"java.util",
                                                       "java.lang",
                                                       "javax.faces.el",
-                                                      "javax.faces.context"};
+                                                      "javax.faces.context",
+                                                      "javax.faces.convert"};
 
     private String _qualifiedClassName;
     private String _baseClassName;
@@ -164,15 +165,21 @@ public class Component
     public Collection getSaveStateFields()
     {
         List lst = new ArrayList();
+        int counter = 1;
         for (Iterator it = getFields().iterator(); it.hasNext(); )
         {
             Field field = (Field)it.next();
             if (field.isSaveState())
             {
+                field.setSaveStateFieldIndex(counter++);
                 lst.add(field);
             }
         }
         return lst;
     }
 
+    public int getSaveStateFieldsCountPlusOne()
+    {
+        return getSaveStateFields().size() + 1;
+    }
 }

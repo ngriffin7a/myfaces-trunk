@@ -88,7 +88,7 @@ public class UIViewRoot
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[3];
+        Object values[] = new Object[4];
         values[0] = super.saveState(context);
         values[1] = _locale;
         values[2] = _renderKitId;

@@ -29,6 +29,30 @@ package javax.faces.component;
 public class UIColumn
         extends UIComponentBase
 {
+    private static final String FOOTER_FACET_NAME = "footer";
+    private static final String HEADER_FACET_NAME = "header";
+    
+    public void setFooter(UIComponent footer)
+    {
+        getFacets().put(FOOTER_FACET_NAME, footer);
+    }
+
+    public UIComponent getFooter()
+    {
+        return (UIComponent)getFacets().get(FOOTER_FACET_NAME);
+    }
+
+    public void setHeader(UIComponent header)
+    {
+        getFacets().put(HEADER_FACET_NAME, header);
+    }
+
+    public UIComponent getHeader()
+    {
+        return (UIComponent)getFacets().get(HEADER_FACET_NAME);
+    }
+
+
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
     public static final String COMPONENT_TYPE = "javax.faces.Column";

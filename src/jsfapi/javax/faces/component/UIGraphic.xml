@@ -5,7 +5,7 @@
     <component-type>javax.faces.Graphic</component-type>
     <component-family>javax.faces.Graphic</component-family>
     <renderer-type>javax.faces.Image</renderer-type>
-    <field>
+    <field proprietary="true" saveState="false">
         <name>url</name>
         <type>java.lang.String</type>
     </field>

@@ -23,6 +23,8 @@ import javax.faces.el.ValueBinding;
 
 /**
  * see Javadoc of JSF Specification
+ *
+ * //TODO: javadoc says default for showDetail is false !?
  * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
@@ -52,9 +54,9 @@ public class UIMessage
         return COMPONENT_FAMILY;
     }
 
-    public void setFor(String for)
+    public void setFor(String forValue)
     {
-        _for = for;
+        _for = forValue;
     }
 
     public String getFor()
@@ -93,7 +95,7 @@ public class UIMessage
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[3];
+        Object values[] = new Object[4];
         values[0] = super.saveState(context);
         values[1] = _for;
         values[2] = _showDetail;

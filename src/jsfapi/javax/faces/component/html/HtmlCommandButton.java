@@ -389,7 +389,7 @@ public class HtmlCommandButton
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[26];
+        Object values[] = new Object[27];
         values[0] = super.saveState(context);
         values[1] = _accesskey;
         values[2] = _alt;

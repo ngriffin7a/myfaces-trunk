@@ -57,9 +57,9 @@
 
 #else
 #if ( !$f.isProprietarySetter() )
-    public void ${f.setterMethodName}($f.type $f.name)
+    public void ${f.setterMethodName}($f.type $f.saveName)
     {
-        _$f.name = $f.name;
+        _$f.name = $f.saveName;
     }
 #end
 
@@ -80,10 +80,14 @@
 #if ($c.saveStateFields.size() > 0)
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[${c.saveStateFields.size()}];
+        Object values[] = new Object[${c.getSaveStateFieldsCountPlusOne()}];
         values[0] = super.saveState(context);
 #foreach ($f in $c.saveStateFields)
-        values[$f.oneBasedFieldNumber] = _$f.name;
+#if ($f.isWrapForSavingState())
+        values[$f.saveStateFieldIndex] = wrapForStateSaving(context, _${f.name});
+#else
+        values[$f.saveStateFieldIndex] = _$f.name;
+#end
 #end
         return ((Object) (values));
     }
@@ -93,7 +97,11 @@
         Object values[] = (Object[])state;
         super.restoreState(context, values[0]);
 #foreach ($f in $c.saveStateFields)
-        _$f.name = ($f.fieldType)values[$f.oneBasedFieldNumber];
+#if ($f.isWrapForSavingState())
+        _$f.name = ($f.fieldType)unwrapForStateRestoring(context, values[$f.saveStateFieldIndex]);
+#else
+        _$f.name = ($f.fieldType)values[$f.saveStateFieldIndex];
+#end
 #end
     }
 #end

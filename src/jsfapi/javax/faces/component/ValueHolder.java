@@ -18,19 +18,21 @@
  */
 package javax.faces.component;
 
+import javax.faces.convert.Converter;
+
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public interface ValueHolder
 {
-    public java.lang.Object getLocalValue();
+    public Object getLocalValue();
 
-    public java.lang.Object getValue();
+    public Object getValue();
 
-    public void setValue(java.lang.Object value);
+    public void setValue(Object value);
 
-    public javax.faces.convert.Converter getConverter();
+    public Converter getConverter();
 
-    public void setConverter(javax.faces.convert.Converter converter);
+    public void setConverter(Converter converter);
 }

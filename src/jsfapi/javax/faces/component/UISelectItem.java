@@ -115,7 +115,7 @@ public class UISelectItem
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[5];
+        Object values[] = new Object[6];
         values[0] = super.saveState(context);
         values[1] = _itemDescription;
         values[2] = _itemDisabled;

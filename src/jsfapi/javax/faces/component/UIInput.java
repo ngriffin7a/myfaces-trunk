@@ -24,6 +24,8 @@ import javax.faces.el.ValueBinding;
 
 /**
  * see Javadoc of JSF Specification
+ *
+ * //TODO
  * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
@@ -151,7 +153,7 @@ public class UIInput
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[7];
+        Object values[] = new Object[8];
         values[0] = super.saveState(context);
         values[1] = _immediate;
         values[2] = _localValueSet;
