@@ -201,12 +201,12 @@ public class JspViewHandlerImpl
 
         if (servletMapping.isExtensionMapping())
         {
+            // extension mapping
             String urlpattern = servletMapping.getUrlPattern();
             if (urlpattern.startsWith("*"))
             {
                 urlpattern = urlpattern.substring(1, urlpattern.length());
             }
-            // extension mapping
             if (viewId.endsWith(urlpattern))
             {
                 return viewId;
@@ -227,12 +227,12 @@ public class JspViewHandlerImpl
         }
         else
         {
+            // prefix mapping
             String urlpattern = servletMapping.getUrlPattern();
             if (urlpattern.endsWith("/*"))
             {
                 urlpattern = urlpattern.substring(0, urlpattern.length() - 2);
             }
-            // prefix mapping
             return urlpattern + viewId;
         }
     }
