@@ -132,8 +132,8 @@
 
     <target name="bin-release"
             depends="myfaces-jar, javadoc, tlddoc"
-            description="creates the binary release file myfaces-x.x.x.tar.gz (don't forget to adjust manifest.properties!)">
-        <tar destfile="${project.dir}/myfaces-${manifest.impl.version}.tar.gz"
+            description="creates the binary release file myfaces-x.x.x.tgz (don't forget to adjust manifest.properties!)">
+        <tar destfile="${project.dir}/myfaces-${manifest.impl.version}.tgz"
              compression="gzip">
             <tarfileset dir="${doc.dir}"
                         prefix="myfaces-${manifest.impl.version}/doc"/>
@@ -150,17 +150,20 @@
                         prefix="myfaces-${manifest.impl.version}/lib"/>
             <tarfileset file="${jstl.jar}"
                         prefix="myfaces-${manifest.impl.version}/lib"/>
+            <tarfileset file="${jsp-api.jar}"
+                        prefix="myfaces-${manifest.impl.version}/lib"/>
         </tar>
     </target>
 
 
     <target name="src-release"
             depends="javadoc, tlddoc"
-            description="creates the source release file myfaces-x.x.x-src.tar.gz (don't forget to adjust manifest.properties!)">
-        <tar destfile="${project.dir}/myfaces-${manifest.impl.version}-src.tar.gz"
+            description="creates the source release file myfaces-x.x.x-src.tgz (don't forget to adjust manifest.properties!)">
+        <tar destfile="${project.dir}/myfaces-${manifest.impl.version}-src.tgz"
              compression="gzip">
             <tarfileset dir="${build.dir}"
-                        excludes="codegen/**/*"
+                        includes="*, develop/*"
+                        excludes="**/build.properties"
                         prefix="myfaces-${manifest.impl.version}/build"/>
             <tarfileset dir="${conf.dir}"
                         prefix="myfaces-${manifest.impl.version}/conf"/>
@@ -179,7 +182,7 @@
 
 
     <target name="examples-release"
-            description="creates the examples release file myfaces-x.x.x-examples.tar.gz (don't forget to adjust manifest.properties!)">
+            description="creates the examples release file myfaces-x.x.x-examples.tgz (don't forget to adjust manifest.properties!)">
         <ant dir="${project.dir}/build/examples-webapp"
              antfile="build.xml"
              inheritall="false"
@@ -197,7 +200,7 @@
         description="deletes all files that were built (including examples and tagunit)">
         <delete quiet="true" failonerror="false" includeEmptyDirs="true">
             <fileset file="${myfaces.jar}" />
-            <fileset file="${project.dir}/myfaces-*.tar.gz" />
+            <fileset file="${project.dir}/myfaces-*.tgz" />
             <fileset dir="${doc.dir}/javadoc" />
             <fileset dir="${doc.dir}/tlddoc" />
             <fileset dir="${temp.dir}/myfaces-jar"/>  <!-- in case of interrupted builds -->
