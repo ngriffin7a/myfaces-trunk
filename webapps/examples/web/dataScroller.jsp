@@ -45,7 +45,12 @@ managed beans used:
             bodyClass="pageBody"
             footerClass="pageFooter" >
 
-        <%@include file="inc/page_header.jsp" %>
+        <f:facet name="header">
+            <f:subview id="header">
+                <jsp:include page="inc/page_header.jsp" />
+            </f:subview>
+        </f:facet>
+
         <f:facet name="navigation">
             <f:subview id="menu" >
                 <jsp:include page="inc/navigation.jsp" />

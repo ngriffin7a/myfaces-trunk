@@ -29,6 +29,9 @@ import java.io.IOException;
 
 /**
  * $Log$
+ * Revision 1.2  2004/06/23 13:44:21  royalts
+ * no message
+ *
  * Revision 1.1  2004/03/29 14:57:00  manolito
  * refactoring for implementation and non-standard component split
  *
@@ -40,7 +43,7 @@ public abstract class HtmlRenderer
 {
     private static final Log log = LogFactory.getLog(HtmlRenderer.class);
 
-    public void encodeChildren(FacesContext facescontext, UIComponent uicomponent)
+    public void encodeChildren(FacesContext context, UIComponent component)
             throws IOException
     {
         if (log.isWarnEnabled())

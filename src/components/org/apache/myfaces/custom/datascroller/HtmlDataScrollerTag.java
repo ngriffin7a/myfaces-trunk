@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.custom.datascroller;
 
 import net.sourceforge.myfaces.component.UserRoleAware;
-import net.sourceforge.myfaces.taglib.html.HtmlComponentBodyTagBase;
+import net.sourceforge.myfaces.taglib.UIComponentTagBase;
 
 import javax.faces.component.UIComponent;
 
@@ -27,6 +27,9 @@ import javax.faces.component.UIComponent;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2004/06/23 13:44:30  royalts
+ * no message
+ *
  * Revision 1.3  2004/06/21 12:15:23  royalts
  * no message
  *
@@ -50,7 +53,7 @@ import javax.faces.component.UIComponent;
  *
  */
 public class HtmlDataScrollerTag
-        extends HtmlComponentBodyTagBase
+        extends UIComponentTagBase
 {
     //private static final Log log = LogFactory.getLog(HtmlDataScrollerTag.class);
 

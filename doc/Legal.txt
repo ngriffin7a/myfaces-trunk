@@ -16,7 +16,7 @@ This product includes software developed by:
 
 - The Apache Software Foundation (http://www.apache.org/)
 - Simon Brown (http://www.tagunit.org)
-
+- Heng Yuan (http://www.cs.ucla.edu/~heng/JSCookMenu)
 
 Trademarks
 ==========

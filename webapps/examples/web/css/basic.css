@@ -106,12 +106,23 @@ a:hover
 }
 
 .pageHeader {
+    background-color: #6392C6;
     text-align: center;
     vertical-align: middle;
     height:1px;
     overflow:visible;
-    background-color: #6392C6;
     color: #FFFFFF;
+    padding: 0px;
+    margin: 0px;
+}
+
+.pageHeader1 {
+}
+.pageHeader2 {
+    width:100%;
+}
+.pageHeader2col1 {
+    background-color: #FFFFFF;
 }
 
 .pageNavigation {

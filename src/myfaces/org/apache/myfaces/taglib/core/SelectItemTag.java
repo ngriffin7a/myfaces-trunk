@@ -18,71 +18,18 @@
  */
 package net.sourceforge.myfaces.taglib.core;
 
-import net.sourceforge.myfaces.renderkit.JSFAttr;
-import net.sourceforge.myfaces.taglib.UIComponentTagBase;
 
-import javax.faces.component.UIComponent;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ *          $Log$
+ *          Revision 1.7  2004/06/23 13:44:21  royalts
+ *          no message
+ * 
  */
 public class SelectItemTag
-        extends UIComponentTagBase
+        extends SelectItemTagBase
 {
     //private static final Log log = LogFactory.getLog(SelectItemTag.class);
-
-    public String getComponentType()
-    {
-        return "javax.faces.SelectItem";
-    }
-
-    public String getRendererType()
-    {
-        return null;
-    }
-
-    // UISelectItem attributes
-    private String _itemDisabled;
-    private String _itemDescription;
-    private String _itemLabel;
-    private String _itemValue;
-
-    protected void setProperties(UIComponent component)
-    {
-        super.setProperties(component);
-
-        setBooleanProperty(component, JSFAttr.ITEM_DISABLED_ATTR, _itemDisabled);
-        setStringProperty(component, JSFAttr.ITEM_DESCRIPTION_ATTR, _itemDescription);
-        setStringProperty(component, JSFAttr.ITEM_LABEL_ATTR, _itemLabel);
-        setStringProperty(component, JSFAttr.ITEM_VALUE_ATTR, _itemValue);
-
-        if (_itemValue == null &&
-            component.getValueBinding("binding") == null &&
-            component.getValueBinding("value") == null)
-        {
-            throw new IllegalArgumentException("SelectItem with no value");
-        }
-    }
-
-    public void setItemDisabled(String itemDisabled)
-    {
-        _itemDisabled = itemDisabled;
-    }
-
-    public void setItemDescription(String itemDescription)
-    {
-        _itemDescription = itemDescription;
-    }
-
-    public void setItemLabel(String itemLabel)
-    {
-        _itemLabel = itemLabel;
-    }
-
-    public void setItemValue(String itemValue)
-    {
-        _itemValue = itemValue;
-    }
-
 }
