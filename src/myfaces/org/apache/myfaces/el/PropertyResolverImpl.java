@@ -52,17 +52,19 @@ public class PropertyResolverImpl extends PropertyResolver
 
     //~ Public PropertyResolver Methods ------------------------------------------------------------
 
-    public Object getValue(Object base, String name)
+    public Object getValue(Object base, Object property)
+            throws EvaluationException, PropertyNotFoundException
     {
         try
         {
-            if ((base == null) || (name == null) || (name.length() == 0))
+            if (base == null || property == null ||
+                property instanceof String && ((String)property).length() == 0)
             {
                 return null;
             }
             if (base instanceof Map)
             {
-                return ((Map) base).get(name);
+                return ((Map) base).get(property);
             }
             if (base instanceof UIComponent)
             {
@@ -70,7 +72,7 @@ public class PropertyResolverImpl extends PropertyResolver
                 {
                     UIComponent child = (UIComponent) children.next();
 
-                    if (name.equals(child.getId()))
+                    if (property.equals(child.getId()))
                     {
                         return child;
                     }
@@ -80,18 +82,18 @@ public class PropertyResolverImpl extends PropertyResolver
             }
 
             // If none of the special bean types, then process as normal Bean
-            return getProperty(base, name);
+            return getProperty(base, property.toString());
         }
         catch (RuntimeException e)
         {
-            log.error("Exception getting value of property " + name + " of bean " +
+            log.error("Exception getting value of property " + property + " of bean " +
                       base != null ? base.getClass().getName() : "NULL", e);
             throw e;
         }
     }
 
     public Object getValue(Object base, int index)
-            throws PropertyNotFoundException
+            throws EvaluationException, PropertyNotFoundException
     {
         try
         {
@@ -133,45 +135,46 @@ public class PropertyResolverImpl extends PropertyResolver
         }
     }
 
-    public void setValue(Object base, String name, Object newValue)
-            throws PropertyNotFoundException
+    public void setValue(Object base, Object property, Object newValue)
+            throws EvaluationException, PropertyNotFoundException
     {
         try
         {
             // TODO: convert newValue to property type
             if (base == null)
             {
-                throw new PropertyNotFoundException("Null bean, property: " + name);
+                throw new PropertyNotFoundException("Null bean, property: " + property);
             }
-            if ((name == null) || (name.length() == 0))
+            if (property == null ||
+                property instanceof String && ((String)property).length() == 0)
             {
-                throw new PropertyNotFoundException("Bean: " + base.getClass() + ", null or empty property name");
+                throw new PropertyNotFoundException("Bean: " + base.getClass() + ", null or empty property property");
             }
 
             if (base instanceof Map)
             {
-                ((Map) base).put(name, newValue);
+                ((Map) base).put(property, newValue);
 
                 return;
             }
             if (base instanceof UIComponent)
             {
-                throw new PropertyNotFoundException("Bean must not be UIComponent, property: " + name);
+                throw new PropertyNotFoundException("Bean must not be UIComponent, property: " + property);
             }
 
             // If none of the special bean types, then process as normal Bean
-            setProperty(base, name, newValue);
+            setProperty(base, property.toString(), newValue);
         }
         catch (RuntimeException e)
         {
-            log.error("Exception setting value of property " + name + " of bean " +
+            log.error("Exception setting value of property " + property + " of bean " +
                       base != null ? base.getClass().getName() : "NULL", e);
             throw e;
         }
     }
 
     public void setValue(Object base, int index, Object newValue)
-            throws PropertyNotFoundException
+            throws EvaluationException, PropertyNotFoundException
     {
         try
         {
@@ -213,18 +216,19 @@ public class PropertyResolverImpl extends PropertyResolver
         }
     }
 
-    public boolean isReadOnly(Object base, String name)
-            throws PropertyNotFoundException
+    public boolean isReadOnly(Object base, Object property)
+            throws EvaluationException, PropertyNotFoundException
     {
         try
         {
             if (base == null)
             {
-                throw new PropertyNotFoundException("Null bean, property: " + name);
+                throw new PropertyNotFoundException("Null bean, property: " + property);
             }
-            if ((name == null) || (name.length() == 0))
+            if (property == null ||
+                property instanceof String && ((String)property).length() == 0)
             {
-                throw new PropertyNotFoundException("Bean: " + base.getClass() + ", null or empty property name");
+                throw new PropertyNotFoundException("Bean: " + base.getClass() + ", null or empty property property");
             }
 
             // Is there any way to determine whether Map.put() will fail?
@@ -238,20 +242,21 @@ public class PropertyResolverImpl extends PropertyResolver
             }
 
             // If none of the special bean types, then process as normal Bean
-            PropertyDescriptor propertyDescriptor = getPropertyDescriptor(base, name);
+            PropertyDescriptor propertyDescriptor = getPropertyDescriptor(base,
+                                                                          property.toString());
 
             return propertyDescriptor.getWriteMethod() == null;
         }
         catch (RuntimeException e)
         {
-            log.error("Exception determining readonly for property " + name + " of bean " +
+            log.error("Exception determining readonly for property " + property + " of bean " +
                       base != null ? base.getClass().getName() : "NULL", e);
             throw e;
         }
     }
 
     public boolean isReadOnly(Object base, int index)
-            throws PropertyNotFoundException
+            throws EvaluationException, PropertyNotFoundException
     {
         try
         {
@@ -280,23 +285,24 @@ public class PropertyResolverImpl extends PropertyResolver
         }
     }
 
-    public Class getType(Object base, String name)
-            throws PropertyNotFoundException
+    public Class getType(Object base, Object property)
+            throws EvaluationException, PropertyNotFoundException
     {
         try
         {
             if (base == null)
             {
-                throw new PropertyNotFoundException("Null bean, property: " + name);
+                throw new PropertyNotFoundException("Null bean, property: " + property);
             }
-            if ((name == null) || (name.length() == 0))
+            if (property == null ||
+                property instanceof String && ((String)property).length() == 0)
             {
-                throw new PropertyNotFoundException("Bean: " + base.getClass() + ", null or empty property name");
+                throw new PropertyNotFoundException("Bean: " + base.getClass() + ", null or empty property property");
             }
 
             if (base instanceof Map)
             {
-                Object value = ((Map) base).get(name);
+                Object value = ((Map) base).get(property);
 
                 return (value == null) ? Object.class : value.getClass(); // REVISIT: when generics are imlemented in JVM 1.5
             }
@@ -306,20 +312,21 @@ public class PropertyResolverImpl extends PropertyResolver
             }
 
             // If none of the special bean types, then process as normal Bean
-            PropertyDescriptor propertyDescriptor = getPropertyDescriptor(base, name);
+            PropertyDescriptor propertyDescriptor = getPropertyDescriptor(base,
+                                                                          property.toString());
 
             return propertyDescriptor.getPropertyType();
         }
         catch (RuntimeException e)
         {
-            log.error("Exception determining type of property " + name + " of bean " +
+            log.error("Exception determining type of property " + property + " of bean " +
                       base != null ? base.getClass().getName() : "NULL", e);
             throw e;
         }
     }
 
     public Class getType(Object base, int index)
-            throws PropertyNotFoundException
+            throws EvaluationException, PropertyNotFoundException
     {
         try
         {
