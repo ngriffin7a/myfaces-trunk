@@ -18,6 +18,7 @@
  */
 package net.sourceforge.myfaces.examples.listexample;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -26,6 +27,7 @@ import java.math.BigDecimal;
  * @version $Revision$ $Date$
  */
 public class SimpleCountry
+        implements Serializable
 {
     private long _id;
     private String _name;

@@ -169,7 +169,7 @@ public abstract class MyfacesComponentBodyTag
         MyfacesTagUtils.setBooleanProperty(context, component, propName, value);
     }
 
-    private void setValueProperty(UIComponent component, String value)
+    protected void setValueProperty(UIComponent component, String value)
     {
         MyfacesTagUtils.setValueProperty(context, component, value);
     }

@@ -109,6 +109,7 @@ public class HtmlDataTableTag
     }
 
 
+
     public void setAlign(String align)
     {
         _align = align;

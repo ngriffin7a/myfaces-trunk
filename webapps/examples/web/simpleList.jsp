@@ -51,7 +51,7 @@ managed beans used:
         <f:facet name="body">
             <h:panel_group id="body">
 
-               <h:command_link action="go_country" >
+               <h:command_link action="go_country" immediate="true">
                     <h:output_text value="#{example_messages['new_country']}" styleClass="standard" />
                </h:command_link>
                <f:verbatim><br><br>
@@ -70,7 +70,7 @@ managed beans used:
                        <f:facet name="header">
                           <h:output_text value="#{example_messages['label_country_name']}" />
                        </f:facet>
-                       <h:command_link actionListener="#{countryAction.initCountryForm}" action="go_country" immediate="true">
+                       <h:command_link actionListener="#{countryAction.initCountryForm}" action="go_country" immediate="true" >
                             <h:output_text value="#{country.name}" />
                             <f:parameter name="id" value="#{country.id}" />
                        </h:command_link>
