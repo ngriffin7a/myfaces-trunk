@@ -17,28 +17,56 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package net.sourceforge.myfaces.confignew;
+package net.sourceforge.myfaces.confignew.impl.digester.elements;
 
-import java.io.InputStream;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.xml.sax.SAXException;
 
 /**
- * Parses a single InputStream into an unmarshalled faces config Object, that can
- * be processed by a respective FacesConfigDispenser.
- *
- * @author Manfred Geiler (latest modification by $Author$)
- * @version $Revision$ $Date$
- * $Log$
- * Revision 1.2  2004/06/04 23:51:48  o_rossmueller
- * Digester-based config parser/dispenser
- *
- * Revision 1.1  2004/05/17 14:28:27  manolito
- * new configuration concept
- *
+ * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  */
-public interface FacesConfigUnmarshaller
+public class RenderKit
 {
-    public Object getFacesConfig(InputStream in, String systemId) throws IOException, SAXException;
+
+    private String id;
+    private String renderKitClass;
+    private List renderer = new ArrayList();
+
+
+    public String getId()
+    {
+        return id;
+    }
+
+
+    public void setId(String id)
+    {
+        this.id = id;
+    }
+
+
+    public String getRenderKitClass()
+    {
+        return renderKitClass;
+    }
+
+
+    public void setRenderKitClass(String renderKitClass)
+    {
+        this.renderKitClass = renderKitClass;
+    }
+
+
+    public List getRenderer()
+    {
+        return renderer;
+    }
+
+
+    public void addRenderer(Renderer value)
+    {
+        renderer.add(value);
+    }
+
 }

@@ -26,6 +26,7 @@ import net.sourceforge.myfaces.util.StringUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.xml.sax.SAXException;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -55,6 +56,9 @@ import java.util.jar.JarInputStream;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/06/04 23:51:48  o_rossmueller
+ * Digester-based config parser/dispenser
+ *
  * Revision 1.1  2004/05/17 14:28:28  manolito
  * new configuration concept
  *
@@ -89,11 +93,20 @@ public class FacesConfigurator
         //TODO: create via Factory !
         _dispenser = new DOMFacesConfigDispenserImpl();
 
-        feedStandardConfig();
-        feedMetaInfServicesFactories();
-        feedJarFileConfigurations();
-        feedContextSpecifiedConfig();
-        feedWebAppConfig();
+        try
+        {
+            feedStandardConfig();
+            feedMetaInfServicesFactories();
+            feedJarFileConfigurations();
+            feedContextSpecifiedConfig();
+            feedWebAppConfig();
+        } catch (IOException e)
+        {
+            throw new FacesException(e);
+        } catch (SAXException e)
+        {
+            throw new FacesException(e);
+        }
 
         configureFactories();
         configureApplication();
@@ -102,7 +115,7 @@ public class FacesConfigurator
         configureLifecycle();
     }
 
-    private void feedStandardConfig()
+    private void feedStandardConfig() throws IOException, SAXException
     {
         InputStream stream = ClassUtils.getResourceAsStream(STANDARD_FACES_CONFIG_RESOURCE);
         if (stream == null) throw new FacesException("Standard faces config " + STANDARD_FACES_CONFIG_RESOURCE + " not found");
@@ -286,13 +299,13 @@ public class FacesConfigurator
             {
                 if (log.isDebugEnabled()) log.debug("Jar " + jarPath + " contains no faces-config.xml");
             }
-        } catch (IOException e)
+        } catch (Exception e)
         {
             throw new FacesException(e);
         }
     }
 
-    private void feedContextSpecifiedConfig()
+    private void feedContextSpecifiedConfig() throws IOException, SAXException
     {
         String configFiles = _externalContext.getInitParameter(CONFIG_FILES_INIT_PARAM);
         if (configFiles != null)
@@ -315,7 +328,7 @@ public class FacesConfigurator
         }
     }
 
-    private void feedWebAppConfig()
+    private void feedWebAppConfig() throws IOException, SAXException
     {
         //web application config
         String systemId = "/WEB-INF/faces-config.xml";

@@ -94,6 +94,9 @@
             <lib file="${commons-fileupload.jar}"/>
             <lib file="${commons-logging.jar}"/>
             <lib file="${commons-validator.jar}"/>
+            <lib file="${commons-beanutils.jar}"/>
+            <lib file="${commons-collections.jar}"/>
+            <lib file="${commons-digester.jar}"/>            
             <lib file="${jakarta-oro.jar}"/>
             <lib file="${informa.jar}"/>
             <lib file="${jdom.jar}"/>

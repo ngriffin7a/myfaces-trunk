@@ -43,9 +43,12 @@ public class FacesConfigEntityResolver
 {
     private static final Log log = LogFactory.getLog(FacesConfigEntityResolver.class);
 
-    private static final String FACES_CONFIG_DTD_SYSTEM_ID = "http://java.sun.com/dtd/web-facesconfig_1_0.dtd";
-    private static final String FACES_CONFIG_DTD_RESOURCE
+    private static final String FACES_CONFIG_1_0_DTD_SYSTEM_ID = "http://java.sun.com/dtd/web-facesconfig_1_0.dtd";
+    private static final String FACES_CONFIG_1_0_DTD_RESOURCE
             = "net.sourceforge.myfaces.resource".replace('.', '/') + "/web-facesconfig_1_0.dtd";
+    private static final String FACES_CONFIG_1_1_DTD_SYSTEM_ID = "http://java.sun.com/dtd/web-facesconfig_1_1.dtd";
+    private static final String FACES_CONFIG_1_1_DTD_RESOURCE
+            = "net.sourceforge.myfaces.resource".replace('.', '/') + "/web-facesconfig_1_1.dtd";
 
     private ExternalContext _externalContext = null;
 
@@ -63,10 +66,15 @@ public class FacesConfigEntityResolver
         throws IOException
     {
         InputStream stream;
-        if (systemId.equals(FACES_CONFIG_DTD_SYSTEM_ID))
+        if (systemId.equals(FACES_CONFIG_1_0_DTD_SYSTEM_ID))
         {
-            stream = ClassUtils.getResourceAsStream(FACES_CONFIG_DTD_RESOURCE);
+            stream = ClassUtils.getResourceAsStream(FACES_CONFIG_1_0_DTD_RESOURCE);
         }
+        else if (systemId.equals(FACES_CONFIG_1_1_DTD_SYSTEM_ID))
+        {
+            stream = ClassUtils.getResourceAsStream(FACES_CONFIG_1_1_DTD_RESOURCE);
+        }
+
         else if (systemId.startsWith("jar:"))
         {
             URL url = new URL(systemId);

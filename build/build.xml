@@ -60,6 +60,9 @@
         <pathelement location="${commons-logging.jar}"/>
         <pathelement location="${commons-el.jar}"/>
         <pathelement location="${commons-codec.jar}"/>
+        <pathelement location="${commons-beanutils.jar}"/>
+        <pathelement location="${commons-collections.jar}"/>
+        <pathelement location="${commons-digester.jar}"/>
     </path>
  
     <!-- classpath for compiling component classes -->

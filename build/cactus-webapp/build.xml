@@ -70,6 +70,8 @@
         <copy todir="${cactus.classes.dir}">
             <fileset dir="${cactus.src.dir}"
                      includes="**/*.properties" />
+            <fileset dir="${cactus.src.dir}"
+                     includes="**/*.xml" />
         </copy>
         <copy file="${cactus.build.dir}/cactus.properties"
               toFile="${cactus.classes.dir}/cactus.properties"
@@ -100,6 +102,9 @@
         	<lib file="${commons-logging.jar}"/>
             <lib file="${commons-codec.jar}"/>
             <lib file="${commons-fileupload.jar}"/>
+            <lib file="${commons-beanutils.jar}"/>
+            <lib file="${commons-collections.jar}"/>
+            <lib file="${commons-digester.jar}"/>
         	<lib file="${cos.jar}"/>
             <lib file="${jstl.jar}"/>
             <lib file="${myfaces.jar}"/>
