@@ -3,11 +3,11 @@ package net.sourceforge.myfaces.application.jsp;
 import net.sourceforge.myfaces.application.MyfacesStateManager;
 import net.sourceforge.myfaces.application.TreeStructureManager;
 import net.sourceforge.myfaces.renderkit.MyfacesResponseStateManager;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FactoryFinder;
-import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -15,18 +15,19 @@ import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.ResponseStateManager;
 import java.io.IOException;
-import java.util.Iterator;
 
 /**
  * Default StateManager implementation.
  *
+ * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Manfred Geiler
+ * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12  2004/04/06 10:20:27  manolito
+ * no state restoring for different viewId
+ *
  * Revision 1.11  2004/03/25 08:52:40  manolito
  * fixed server state saving
- *
- * 
- * @author Thomas Spiegl (latest modification by $Author$)
- * @version $Revision$ $Date$
  */
 public class JspStateManagerImpl
     extends MyfacesStateManager
@@ -89,7 +90,8 @@ public class JspStateManagerImpl
         }
         else
         {
-            SerializedView serializedView = getSerializedViewFromServletSession(facesContext.getExternalContext());
+            SerializedView serializedView = getSerializedViewFromServletSession(facesContext.getExternalContext(),
+                                                                                null);
             if (serializedView == null)
             {
                 log.error("No serialized view found in server session!");
@@ -136,7 +138,8 @@ public class JspStateManagerImpl
         else
         {
             //reconstruct tree structure from ServletSession
-            SerializedView serializedView = getSerializedViewFromServletSession(facesContext.getExternalContext());
+            SerializedView serializedView = getSerializedViewFromServletSession(facesContext.getExternalContext(),
+                                                                                viewId);
             if (serializedView == null)
             {
                 if (log.isDebugEnabled()) log.debug("No serialized view found in server session!");
@@ -176,11 +179,7 @@ public class JspStateManagerImpl
 
     public SerializedView saveSerializedView(FacesContext facesContext) throws IllegalStateException
     {
-        //Sun's UIComponentBase has (had?) a bug:
-        //Component state saving and restoring does not work right if there
-        //are transient components. So, we must remove transient components
-        //before calling viewRoots processSaveState method.
-        removeTransientComponents(facesContext.getViewRoot()); //TODO: still necessary?
+        //removeTransientComponents(facesContext.getViewRoot());
 
         Object treeStruct = getTreeStructureToSave(facesContext);
         Object compStates = getComponentStateToSave(facesContext);
@@ -193,6 +192,7 @@ public class JspStateManagerImpl
         {
             //save state in server session
             saveSerializedViewInServletSession(facesContext.getExternalContext(),
+                                               facesContext.getViewRoot().getViewId(),
                                                serializedView);
             return null;    //return null to signal that saving is done
         }
@@ -255,14 +255,27 @@ public class JspStateManagerImpl
     }
     
     protected void saveSerializedViewInServletSession(ExternalContext externalContext,
+                                                      String viewId,
                                                       SerializedView serializedView)
     {
-        externalContext.getSessionMap().put(SERIALIZED_VIEW_PARAM, serializedView);
+        externalContext.getSessionMap().put(SERIALIZED_VIEW_PARAM,
+                                            new Object[] {viewId, serializedView});
     }
     
-    protected SerializedView getSerializedViewFromServletSession(ExternalContext externalContext)
+    protected SerializedView getSerializedViewFromServletSession(ExternalContext externalContext,
+                                                                 String viewId)
     {
-        return (SerializedView)externalContext.getSessionMap().get(SERIALIZED_VIEW_PARAM);
+        Object[] ar = (Object[])externalContext.getSessionMap().get(SERIALIZED_VIEW_PARAM);
+        String savedViewId = (String)ar[0];
+        if (viewId == null || viewId.equals(savedViewId))
+        {
+            return (SerializedView)ar[1];
+        }
+        else
+        {
+            //saved state applies to different viewId
+            return null;
+        }
     }
 
     protected void removeSerializedViewFromServletSession(ExternalContext externalContext)
@@ -285,10 +298,8 @@ public class JspStateManagerImpl
     */
 
 
-    /**
-     * @deprecated TODO: longer needed?
-     */
-    protected void removeTransientComponents(UIComponent root)
+    /*
+    private void removeTransientComponents(UIComponent root)
     {
         if (root.getChildCount() > 0)
         {
@@ -311,4 +322,5 @@ public class JspStateManagerImpl
             }
         }
     }
+    */
 }

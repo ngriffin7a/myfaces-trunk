@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.renderkit.MyfacesResponseStateManager;
 import net.sourceforge.myfaces.util.Base64;
 import net.sourceforge.myfaces.util.MyFacesObjectInputStream;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -37,6 +38,10 @@ import java.util.zip.GZIPOutputStream;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.2  2004/04/06 10:20:26  manolito
+ * no state restoring for different viewId
+ *
  */
 public class HtmlResponseStateManager
         extends MyfacesResponseStateManager
@@ -45,6 +50,7 @@ public class HtmlResponseStateManager
 
     private static final String TREE_PARAM = "jsf_tree";
     private static final String STATE_PARAM = "jsf_state";
+    private static final String VIEWID_PARAM = "jsf_viewid";
     private static final String BASE64_TREE_PARAM = "jsf_tree_64";
     private static final String BASE64_STATE_PARAM = "jsf_state_64";
     private static final String ZIP_CHARSET = "ISO-8859-1";
@@ -103,6 +109,12 @@ public class HtmlResponseStateManager
         {
             log.error("No component states to be saved in client response!");
         }
+
+        responseWriter.startElement(HTML.INPUT_ELEM, null);
+        responseWriter.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_HIDDEN, null);
+        responseWriter.writeAttribute(HTML.NAME_ATTR, VIEWID_PARAM, null);
+        responseWriter.writeAttribute(HTML.VALUE_ATTR, facescontext.getViewRoot().getViewId(), null);
+        responseWriter.endElement(HTML.INPUT_ELEM);
     }
 
     /**
@@ -153,6 +165,8 @@ public class HtmlResponseStateManager
         {
             log.error("No component states to be saved in client response!");
         }
+
+        writeStateParam(responseWriter, VIEWID_PARAM, facescontext.getViewRoot().getViewId());
     }
 
 
@@ -182,7 +196,14 @@ public class HtmlResponseStateManager
     public Object getTreeStructureToRestore(FacesContext facescontext, String viewId)
     {
         Map reqParamMap = facescontext.getExternalContext().getRequestParameterMap();
-        Object param = reqParamMap.get(TREE_PARAM);
+        Object param = reqParamMap.get(VIEWID_PARAM);
+        if (param == null || !param.equals(viewId))
+        {
+            //no saved state or state of different viewId
+            return null;
+        }
+
+        param = reqParamMap.get(TREE_PARAM);
         if (param != null)
         {
             return param;
