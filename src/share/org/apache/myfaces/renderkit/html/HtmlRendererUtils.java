@@ -15,31 +15,44 @@
  */
 package org.apache.myfaces.renderkit.html;
 
-import org.apache.myfaces.config.MyfacesConfig;
-import org.apache.myfaces.renderkit.RendererUtils;
-import org.apache.myfaces.renderkit.html.util.DummyFormUtils;
-import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.faces.FacesException;
-import javax.faces.component.*;
-import javax.faces.component.html.HtmlSelectBooleanCheckbox;
-import javax.faces.component.html.HtmlSelectManyCheckbox;
+import javax.faces.component.EditableValueHolder;
+import javax.faces.component.NamingContainer;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIForm;
+import javax.faces.component.UISelectMany;
+import javax.faces.component.UISelectOne;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.convert.Converter;
 import javax.faces.model.SelectItem;
 import javax.faces.model.SelectItemGroup;
-import java.io.IOException;
-import java.util.*;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.myfaces.config.MyfacesConfig;
+import org.apache.myfaces.renderkit.RendererUtils;
+import org.apache.myfaces.renderkit.html.util.DummyFormUtils;
+import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
- * @version $Revision$ $Date$ $Log:
- *          HtmlRendererUtils.java,v $ Revision 1.20 2004/10/13 11:51:01 matze
- *          renamed packages to org.apache
+ * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.27  2005/01/24 15:43:13  svieujot
+ * Adjust comments.
+ *
+ * Revision 1.20 2004/10/13 11:51:01 matze
+ * renamed packages to org.apache
  * 
  * Revision 1.19 2004/09/08 09:32:03 manolito MyfacesConfig moved to config
  * package
@@ -139,9 +152,7 @@ public final class HtmlRendererUtils {
             //if the component has not been disabled
             if(!isDisabledOrReadOnly(component))
             {
-                ((EditableValueHolder) component).setSubmittedValue(RendererUtils.EMPTY_STRING);
-                // This caused a bug when the component wasn't displayed
-                // (for example if it was in a TabPanel's Tab that wasn't displayed).
+                ((EditableValueHolder) component).setSubmittedValue( RendererUtils.EMPTY_STRING );
             }
         }
     }
@@ -179,9 +190,8 @@ public final class HtmlRendererUtils {
             //if the component has not been disabled
             if(!isDisabledOrReadOnly(component))
             {
-                ((EditableValueHolder) component).setSubmittedValue(Boolean.FALSE);
-                // This caused a bug when the component wasn't displayed
-                // (for example if it was in a TabPanel's Tab that wasn't displayed).
+                ((EditableValueHolder) component).setSubmittedValue( Boolean.FALSE );
+                // Necessary for unchecked chek box
             }
         }
     }
@@ -224,9 +234,8 @@ public final class HtmlRendererUtils {
             //if the component has not been disabled
             if(!isDisabledOrReadOnly(component))
             {
-                ((EditableValueHolder) component).setSubmittedValue(RendererUtils.EMPTY_STRING);
-                // This caused a bug when the component wasn't displayed
-                // (for example if it was in a TabPanel's Tab that wasn't displayed).
+                ((EditableValueHolder) component).setSubmittedValue( RendererUtils.EMPTY_STRING );
+                // Necessary for combo box / list with no selected item
             }
         }
     }
@@ -257,9 +266,8 @@ public final class HtmlRendererUtils {
 
             if(!isDisabledOrReadOnly(component))
             {
-                ((EditableValueHolder) component).setSubmittedValue(RendererUtils.EMPTY_STRING);
-                // This caused a bug when the component wasn't displayed
-                // (for example if it was in a TabPanel's Tab that wasn't displayed).
+                ((EditableValueHolder) component).setSubmittedValue( RendererUtils.EMPTY_STRING );
+                // Necessary for list with no selected item 
             }
         }
     }
@@ -518,9 +526,9 @@ public final class HtmlRendererUtils {
                     : attrName;
             writer.writeAttribute(htmlAttrName, value, componentProperty);
             return true;
-        } else {
-            return false;
         }
+        
+        return false;
     }
 
     /**
@@ -598,9 +606,9 @@ public final class HtmlRendererUtils {
         if (endElementNeeded) {
             writer.endElement(elementName);
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     public static void writeIdIfNecessary(ResponseWriter writer, UIComponent component,
@@ -726,11 +734,10 @@ public final class HtmlRendererUtils {
         if (parent != null) {
             //link is nested inside a form
             return ((UIForm) parent).getClientId(context);
-        } else {
-            //not nested in form, we must add a dummy form at the end of the
-            // document
-            return DummyFormUtils.DUMMY_FORM_NAME;
         }
+        //not nested in form, we must add a dummy form at the end of the
+        // document
+        return DummyFormUtils.DUMMY_FORM_NAME;
     }
 
     public static String getHiddenCommandLinkFieldName(String formName) {
