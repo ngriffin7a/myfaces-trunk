@@ -54,6 +54,7 @@
 <!ENTITY standard_command_link_attributes    SYSTEM "entities/standard_command_link_attributes.xml">
 <!ENTITY standard_data_table_attributes      SYSTEM "entities/standard_data_table_attributes.xml">
 <!ENTITY standard_input_text_attributes      SYSTEM "entities/standard_input_text_attributes.xml">
+<!ENTITY standard_message_attributes         SYSTEM "entities/standard_message_attributes.xml">
 <!ENTITY standard_messages_attributes        SYSTEM "entities/standard_messages_attributes.xml">
 <!ENTITY standard_output_label_attributes    SYSTEM "entities/standard_output_label_attributes.xml">
 <!ENTITY standard_panel_group_attributes     SYSTEM "entities/standard_panel_group_attributes.xml">
@@ -198,66 +199,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
             Renders the first FacesMessage that is assigned to the component
             referenced by the "for" attribute.
         </description>
-        &ui_message_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        <!-- HtmlMessage attributes -->
-        <attribute>
-            <name>infoClass</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>CSS class to be used for messages with severity "INFO".</description>
-        </attribute>
-        <attribute>
-            <name>infoStyle</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>CSS style to be used for messages with severity "INFO".</description>
-        </attribute>
-        <attribute>
-            <name>warnClass</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>CSS class to be used for messages with severity "WARN".</description>
-        </attribute>
-        <attribute>
-            <name>warnStyle</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>CSS style to be used for messages with severity "WARN".</description>
-        </attribute>
-        <attribute>
-            <name>errorClass</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>CSS class to be used for messages with severity "ERROR".</description>
-        </attribute>
-        <attribute>
-            <name>errorStyle</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>CSS style to be used for messages with severity "ERROR".</description>
-        </attribute>
-        <attribute>
-            <name>fatalClass</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>CSS class to be used for messages with severity "FATAL".</description>
-        </attribute>
-        <attribute>
-            <name>fatalStyle</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>CSS style to be used for messages with severity "FATAL".</description>
-        </attribute>
-        <attribute>
-            <name>tooltip</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>
-                If true, the message summary will be rendered as a tooltip (i.e. HTML title attribute).
-            </description>
-        </attribute>
+        &standard_message_attributes;
     </tag>
 
 <!-- messages -->

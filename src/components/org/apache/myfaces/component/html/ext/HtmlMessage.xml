@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE component PUBLIC
+  "-//MyFaces//DTD MyFaces component def 1.0//EN"
+  "http://myfaces.sourceforge.net/dtd/Component.dtd">
+<component>
+    <component-class>net.sourceforge.myfaces.component.html.ext.HtmlMessage</component-class>
+    <base-class>javax.faces.component.html.HtmlMessage</base-class>
+    <component-type>net.sourceforge.myfaces.HtmlMessage</component-type>
+    <component-family>javax.faces.Message</component-family>
+    <renderer-type>javax.faces.Message</renderer-type>
+    <field>
+        <name>showColon</name>
+        <type>boolean</type>
+        <default-value>true</default-value>
+    </field>
+</component>
