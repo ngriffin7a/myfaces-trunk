@@ -30,9 +30,13 @@ import java.util.*;
 /**
  * Create and initialize managed beans
  *
- * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
+ * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a> (latest modification by $Author$)
+ * @author Anton Koinov
  *
  * $Log$
+ * Revision 1.3  2004/10/05 22:34:22  dave0000
+ * bug 1021656 with related improvements
+ *
  * Revision 1.2  2004/08/10 10:57:38  manolito
  * fixed StackOverflow in ClassUtils and cleaned up ClassUtils methods
  *
@@ -42,7 +46,6 @@ import java.util.*;
  */
 public class ManagedBeanBuilder
 {
-
     public Object buildManagedBean(FacesContext facesContext, ManagedBean beanConfiguration) throws FacesException
     {
         Object bean = ClassUtils.newInstance(beanConfiguration.getManagedBeanClassName());
@@ -109,39 +112,26 @@ public class ManagedBeanBuilder
                     value = null;
                     break;
                 case ManagedProperty.TYPE_VALUE:
-                    ValueBinding valueBinding = property.getValueBinding();
-
-                    if (valueBinding == null)
-                    {
-                        if (UIComponentTag.isValueReference(property.getValue()))
-                        {
-                            valueBinding = facesContext.getApplication().createValueBinding(property.getValue());
-                            property.setValueBinding(valueBinding);
-                        }
-                    }
-
-                    if (valueBinding == null)
-                    {
-                        value = property.getValue();
-                    } else
-                    {
-                        value = valueBinding.getValue(facesContext);
-                    }
-
+                    value = property.getRuntimeValue(facesContext);
+                    break;
             }
-            PropertyResolver propertyResolver = facesContext.getApplication().getPropertyResolver();
+            PropertyResolver propertyResolver = 
+                facesContext.getApplication().getPropertyResolver();
             Class propertyClass = null;
 
             if (property.getPropertyClass() == null)
             {
-                propertyClass = propertyResolver.getType(bean, property.getPropertyName());
+                propertyClass = propertyResolver
+                    .getType(bean, property.getPropertyName());
             }
             else
             {
-                propertyClass = ClassUtils.simpleJavaTypeToClass(property.getPropertyClass());
+                propertyClass = ClassUtils
+                    .simpleJavaTypeToClass(property.getPropertyClass());
             }
             Object coercedValue = ClassUtils.convertToType(value, propertyClass);
-            propertyResolver.setValue(bean, property.getPropertyName(), coercedValue);
+            propertyResolver.setValue(
+                bean, property.getPropertyName(), coercedValue);
         }
     }
 
@@ -149,8 +139,10 @@ public class ManagedBeanBuilder
     private void initializeMap(FacesContext facesContext, MapEntries mapEntries, Map map)
     {
         Application application = facesContext.getApplication();
-        Class keyClass = mapEntries.getKeyClass() == null ? String.class : ClassUtils.simpleJavaTypeToClass(mapEntries.getKeyClass());
-        Class valueClass = mapEntries.getValueClass() == null ? String.class : ClassUtils.simpleJavaTypeToClass(mapEntries.getValueClass());
+        Class keyClass = (mapEntries.getKeyClass() == null) 
+            ? String.class : ClassUtils.simpleJavaTypeToClass(mapEntries.getKeyClass());
+        Class valueClass = (mapEntries.getValueClass() == null) 
+            ? String.class : ClassUtils.simpleJavaTypeToClass(mapEntries.getValueClass());
         ValueBinding valueBinding;
 
         for (Iterator iterator = mapEntries.getMapEntries(); iterator.hasNext();)
@@ -167,7 +159,8 @@ public class ManagedBeanBuilder
             if (entry.isNullValue())
             {
                 map.put(ClassUtils.convertToType(key, keyClass), null);
-            } else
+            } 
+            else
             {
                 Object value = entry.getValue();
                 if (UIComponentTag.isValueReference((String) value))
@@ -193,7 +186,8 @@ public class ManagedBeanBuilder
             if (entry.isNullValue())
             {
                 list.add(null);
-            } else
+            } 
+            else
             {
                 Object value = entry.getValue();
                 if (UIComponentTag.isValueReference((String) value))

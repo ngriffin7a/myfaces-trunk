@@ -15,125 +15,150 @@
  */
 package net.sourceforge.myfaces.config.impl.digester.elements;
 
+import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+import javax.faces.webapp.UIComponentTag;
 
 import net.sourceforge.myfaces.config.impl.digester.elements.ListEntries;
 
 
 /**
- * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
+ * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a> (latest modification by $Author$)
+ * @author Anton Koinov
+ *
+ * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.2  2004/10/05 22:34:21  dave0000
+ * bug 1021656 with related improvements
+ *
  */
 public class ManagedProperty implements net.sourceforge.myfaces.config.element.ManagedProperty
 {
+    private static final ValueBinding DUMMY_VB = new DummyValueBinding();
 
-    private String propertyName;
-    private String propertyClass;
-    private boolean nullValue = false;
-    private String value;
-    private MapEntries mapEntries;
-    private ListEntries listEntries;
-    private ValueBinding valueBinding;
-
+    private int                       _type    = TYPE_UNKNOWN;
+    private String                    _propertyName;
+    private String                    _propertyClass;
+    private ValueBinding              _valueBinding;
+    private String                    _value;
+    private MapEntries                _mapEntries;
+    private ListEntries               _listEntries;
 
     public int getType()
     {
-        if (mapEntries != null)
-        {
-            return TYPE_MAP;
-        }
-        if (listEntries != null)
-        {
-            return TYPE_LIST;
-        }
-        if (nullValue)
-        {
-            return TYPE_NULL;
-        }
-        return TYPE_VALUE;
+        return _type;
     }
 
 
     public net.sourceforge.myfaces.config.element.MapEntries getMapEntries()
     {
-        return mapEntries;
+        return _mapEntries;
     }
 
 
     public void setMapEntries(MapEntries mapEntries)
     {
-        this.mapEntries = mapEntries;
+        _mapEntries = mapEntries;
+        _type = TYPE_MAP;
     }
 
 
     public net.sourceforge.myfaces.config.element.ListEntries getListEntries()
     {
-        return listEntries;
+        return _listEntries;
     }
 
 
     public void setListEntries(ListEntries listEntries)
     {
-        this.listEntries = listEntries;
+        _listEntries = listEntries;
+        _type = TYPE_LIST;
     }
 
 
     public String getPropertyName()
     {
-        return propertyName;
+        return _propertyName;
     }
 
 
     public void setPropertyName(String propertyName)
     {
-        this.propertyName = propertyName;
+        _propertyName = propertyName;
     }
 
 
     public String getPropertyClass()
     {
-        return propertyClass;
+        return _propertyClass;
     }
 
 
     public void setPropertyClass(String propertyClass)
     {
-        this.propertyClass = propertyClass;
+        _propertyClass = propertyClass;
     }
 
 
     public boolean isNullValue()
     {
-        return nullValue;
+        return _type == TYPE_NULL;
     }
 
 
     public void setNullValue()
     {
-        this.nullValue = true;
-    }
-
-
-    public String getValue()
-    {
-        return value;
+        _type = TYPE_NULL;
     }
 
 
     public void setValue(String value)
     {
-        this.value = value;
+        _value = value;
+        _type = TYPE_VALUE;
     }
 
-
-    public ValueBinding getValueBinding()
+    
+    public Object getRuntimeValue(FacesContext facesContext)
     {
-        return valueBinding;
+        if (_valueBinding == null)
+        {
+            _valueBinding = 
+                UIComponentTag.isValueReference(_value)
+                ? facesContext.getApplication().createValueBinding(_value)
+                : DUMMY_VB;
+        }
+
+        return (_valueBinding == DUMMY_VB)
+            ? _value : _valueBinding.getValue(facesContext);
     }
 
 
-    public void setValueBinding(ValueBinding valueBinding)
+    private static class DummyValueBinding extends ValueBinding
     {
-        this.valueBinding = valueBinding;
-    }
+        public String getExpressionString()
+        {
+            throw new UnsupportedOperationException();
+        }
 
+        public Class getType(FacesContext facesContext) 
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        public Object getValue(FacesContext facesContext) 
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        public boolean isReadOnly(FacesContext facesContext) 
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        public void setValue(FacesContext facesContext, Object value) 
+        {
+            throw new UnsupportedOperationException();
+        }
+    }
 }

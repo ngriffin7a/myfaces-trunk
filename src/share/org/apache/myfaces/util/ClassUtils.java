@@ -33,6 +33,9 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2004/10/05 22:34:21  dave0000
+ * bug 1021656 with related improvements
+ *
  * Revision 1.8  2004/08/10 10:57:38  manolito
  * fixed StackOverflow in ClassUtils and cleaned up ClassUtils methods
  *
@@ -65,83 +68,77 @@ public class ClassUtils
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-    private static final Logger coerceLogger      = new Logger(System.out);
     private static final Log log                  = LogFactory.getLog(ClassUtils.class);
+    private static final Logger COERCION_LOGGER   = new Logger(System.out);
+    
+    public static final Class BOOLEAN_ARRAY_CLASS = boolean[].class;
     public static final Class BYTE_ARRAY_CLASS    = byte[].class;
     public static final Class CHAR_ARRAY_CLASS    = char[].class;
-    public static final Class DOUBLE_ARRAY_CLASS  = double[].class;
-    public static final Class FLOAT_ARRAY_CLASS   = float[].class;
+    public static final Class SHORT_ARRAY_CLASS   = short[].class;
     public static final Class INT_ARRAY_CLASS     = int[].class;
     public static final Class LONG_ARRAY_CLASS    = long[].class;
-    public static final Class SHORT_ARRAY_CLASS   = short[].class;
-    public static final Class BOOLEAN_ARRAY_CLASS = boolean[].class;
+    public static final Class FLOAT_ARRAY_CLASS   = float[].class;
+    public static final Class DOUBLE_ARRAY_CLASS  = double[].class;
     public static final Class OBJECT_ARRAY_CLASS  = Object[].class;
-    public static final Class STRING_ARRAY_CLASS  = String[].class;
+    public static final Class BOOLEAN_OBJECT_ARRAY_CLASS = Boolean[].class;
+    public static final Class BYTE_OBJECT_ARRAY_CLASS = Byte[].class;
+    public static final Class CHARACTER_OBJECT_ARRAY_CLASS = Character[].class;
+    public static final Class SHORT_OBJECT_ARRAY_CLASS = Short[].class;
+    public static final Class INTEGER_OBJECT_ARRAY_CLASS = Integer[].class;
+    public static final Class LONG_OBJECT_ARRAY_CLASS = Long[].class;
+    public static final Class FLOAT_OBJECT_ARRAY_CLASS = Float[].class;
+    public static final Class DOUBLE_OBJECT_ARRAY_CLASS = Double[].class;
+    public static final Class STRING_OBJECT_ARRAY_CLASS = String[].class;
 
-    private static final Map PRIMITIVE_TYPES_MAP = new HashMap();
+    public static final Map COMMON_TYPES = new HashMap(64);
     static
     {
-        PRIMITIVE_TYPES_MAP.put("byte", Byte.TYPE);
-        PRIMITIVE_TYPES_MAP.put("char", Character.TYPE);
-        PRIMITIVE_TYPES_MAP.put("double", Double.TYPE);
-        PRIMITIVE_TYPES_MAP.put("float", Float.TYPE);
-        PRIMITIVE_TYPES_MAP.put("int", Integer.TYPE);
-        PRIMITIVE_TYPES_MAP.put("long", Long.TYPE);
-        PRIMITIVE_TYPES_MAP.put("short", Short.TYPE);
-        PRIMITIVE_TYPES_MAP.put("boolean", Boolean.TYPE);
-        PRIMITIVE_TYPES_MAP.put("void", Void.TYPE);
-        PRIMITIVE_TYPES_MAP.put("byte[]", BYTE_ARRAY_CLASS);
-        PRIMITIVE_TYPES_MAP.put("char[]", CHAR_ARRAY_CLASS);
-        PRIMITIVE_TYPES_MAP.put("double[]", DOUBLE_ARRAY_CLASS);
-        PRIMITIVE_TYPES_MAP.put("float[]", FLOAT_ARRAY_CLASS);
-        PRIMITIVE_TYPES_MAP.put("int[]", INT_ARRAY_CLASS);
-        PRIMITIVE_TYPES_MAP.put("long[]", LONG_ARRAY_CLASS);
-        PRIMITIVE_TYPES_MAP.put("short[]", SHORT_ARRAY_CLASS);
-        PRIMITIVE_TYPES_MAP.put("boolean[]", BOOLEAN_ARRAY_CLASS);
-        // array of void is no valid type
+        COMMON_TYPES.put("byte", Byte.TYPE);
+        COMMON_TYPES.put("char", Character.TYPE);
+        COMMON_TYPES.put("double", Double.TYPE);
+        COMMON_TYPES.put("float", Float.TYPE);
+        COMMON_TYPES.put("int", Integer.TYPE);
+        COMMON_TYPES.put("long", Long.TYPE);
+        COMMON_TYPES.put("short", Short.TYPE);
+        COMMON_TYPES.put("boolean", Boolean.TYPE);
+        COMMON_TYPES.put("void", Void.TYPE);
+        COMMON_TYPES.put("java.lang.Object", Object.class);
+        COMMON_TYPES.put("java.lang.Boolean", Boolean.class);
+        COMMON_TYPES.put("java.lang.Byte", Byte.class);
+        COMMON_TYPES.put("java.lang.Character", Character.class);
+        COMMON_TYPES.put("java.lang.Short", Short.class);
+        COMMON_TYPES.put("java.lang.Integer", Integer.class);
+        COMMON_TYPES.put("java.lang.Long", Long.class);
+        COMMON_TYPES.put("java.lang.Float", Float.class);
+        COMMON_TYPES.put("java.lang.Double", Double.class);
+        COMMON_TYPES.put("java.lang.String", String.class);
+        
+        COMMON_TYPES.put("byte[]", BYTE_ARRAY_CLASS);
+        COMMON_TYPES.put("char[]", CHAR_ARRAY_CLASS);
+        COMMON_TYPES.put("double[]", DOUBLE_ARRAY_CLASS);
+        COMMON_TYPES.put("float[]", FLOAT_ARRAY_CLASS);
+        COMMON_TYPES.put("int[]", INT_ARRAY_CLASS);
+        COMMON_TYPES.put("long[]", LONG_ARRAY_CLASS);
+        COMMON_TYPES.put("short[]", SHORT_ARRAY_CLASS);
+        COMMON_TYPES.put("boolean[]", BOOLEAN_ARRAY_CLASS);
+        COMMON_TYPES.put("java.lang.Object[]", OBJECT_ARRAY_CLASS);
+        COMMON_TYPES.put("java.lang.Boolean[]", BOOLEAN_OBJECT_ARRAY_CLASS);
+        COMMON_TYPES.put("java.lang.Byte[]", BYTE_OBJECT_ARRAY_CLASS);
+        COMMON_TYPES.put("java.lang.Character[]", CHARACTER_OBJECT_ARRAY_CLASS);
+        COMMON_TYPES.put("java.lang.Short[]", SHORT_OBJECT_ARRAY_CLASS);
+        COMMON_TYPES.put("java.lang.Integer[]", INTEGER_OBJECT_ARRAY_CLASS);
+        COMMON_TYPES.put("java.lang.Long[]", LONG_OBJECT_ARRAY_CLASS);
+        COMMON_TYPES.put("java.lang.Float[]", FLOAT_OBJECT_ARRAY_CLASS);
+        COMMON_TYPES.put("java.lang.Double[]", DOUBLE_OBJECT_ARRAY_CLASS);
+        COMMON_TYPES.put("java.lang.String[]", STRING_OBJECT_ARRAY_CLASS);
+        // array of void is not a valid type
     }
-
-    /*
-    public static final Map s_javatypeLookupMap   =
-        new BiLevelCacheMap(90)
-        {
-            {
-                // Pre-initialize cache with built-in types
-                _cacheL1.put("byte", Byte.TYPE);
-                _cacheL1.put("char", Character.TYPE);
-                _cacheL1.put("double", Double.TYPE);
-                _cacheL1.put("float", Float.TYPE);
-                _cacheL1.put("int", Integer.TYPE);
-                _cacheL1.put("long", Long.TYPE);
-                _cacheL1.put("short", Short.TYPE);
-                _cacheL1.put("boolean", Boolean.TYPE);
-                _cacheL1.put("void", Void.TYPE);
-                _cacheL1.put("java.lang.Object", Object.class);
-                _cacheL1.put("java.lang.String", String.class);
-                _cacheL1.put("byte[]", BYTE_ARRAY_CLASS);
-                _cacheL1.put("char[]", CHAR_ARRAY_CLASS);
-                _cacheL1.put("double[]", DOUBLE_ARRAY_CLASS);
-                _cacheL1.put("float[]", FLOAT_ARRAY_CLASS);
-                _cacheL1.put("int[]", INT_ARRAY_CLASS);
-                _cacheL1.put("long[]", LONG_ARRAY_CLASS);
-                _cacheL1.put("short[]", SHORT_ARRAY_CLASS);
-                _cacheL1.put("boolean[]", BOOLEAN_ARRAY_CLASS);
-                _cacheL1.put("java.lang.Object[]", OBJECT_ARRAY_CLASS);
-                _cacheL1.put("java.lang.String[]", STRING_ARRAY_CLASS);
-            }
-
-            protected Object newInstance(Object key)
-            {
-                String className = (String) key;
-                // REVISIT: we could cache the Class itself (instead of the class name),
-                //          but not sure whether that would interfere with multiple ContextClassloaders
-                return (className.endsWith("[]"))
-                       ? ("[L" + className.substring(0, className.length() - 2) + ";")
-                       : className;
-            }
-        };
-        */
-
+    
+    /** utility class, do not instantiate */
+    private ClassUtils()
+    {
+        // utility class, disable instantiation
+    }
 
     //~ Methods ------------------------------------------------------------------------------------
 
@@ -149,27 +146,28 @@ public class ClassUtils
      * Tries a Class.forName with the context class loader of the current thread first and
      * automatically falls back to the ClassUtils class loader (i.e. the loader of the
      * myfaces.jar lib) if necessary.
+     * 
      * @param type fully qualified name of a non-primitive non-array class
      * @return the corresponding Class
-     * @throws ClassNotFoundException
      * @throws NullPointerException if type is null
+     * @throws ClassNotFoundException
      */
     public static Class classForName(String type)
-            throws ClassNotFoundException
+        throws ClassNotFoundException
     {
         if (type == null) throw new NullPointerException("type");
         try
         {
             // Try WebApp ClassLoader first
             return Class.forName(type,
-                                 false, // we do not initialize for faster startup
+                                 false, // do not initialize for faster startup
                                  Thread.currentThread().getContextClassLoader());
         }
         catch (ClassNotFoundException ignore)
         {
             // fallback: Try ClassLoader for ClassUtils (i.e. the myfaces.jar lib)
             return Class.forName(type,
-                                 false,// we do not initialize for faster startup
+                                 false, // do not initialize for faster startup
                                  ClassUtils.class.getClassLoader());
         }
     }
@@ -178,9 +176,10 @@ public class ClassUtils
     /**
      * Same as {@link #classForName(String)}, but throws a RuntimeException
      * (FacesException) instead of a ClassNotFoundException.
+     * 
      * @return the corresponding Class
-     * @throws FacesException if class not found
      * @throws NullPointerException if type is null
+     * @throws FacesException if class not found
      */
     public static Class simpleClassForName(String type)
     {
@@ -199,29 +198,31 @@ public class ClassUtils
     /**
      * Similar as {@link #classForName(String)}, but also supports primitive types
      * and arrays as specified for the JavaType element in the JavaServer Faces Config DTD.
+     * 
      * @param type fully qualified class name or name of a primitive type, both optionally
      *             followed by "[]" to indicate an array type
      * @return the corresponding Class
-     * @throws ClassNotFoundException
      * @throws NullPointerException if type is null
+     * @throws ClassNotFoundException
      */
     public static Class javaTypeToClass(String type)
-            throws ClassNotFoundException
+        throws ClassNotFoundException
     {
         if (type == null) throw new NullPointerException("type");
 
-        // try primitive and array of primitives first
-        Class clazz = (Class)PRIMITIVE_TYPES_MAP.get(type);
+        // try common types and arrays of common types first
+        Class clazz = (Class) COMMON_TYPES.get(type);
         if (clazz != null)
         {
             return clazz;
         }
 
-        if (type.endsWith("[]"))
+        int len = type.length();
+        if (len > 2 && type.charAt(len - 1) == ']' && type.charAt(len - 2) == '[')
         {
-            String pureType = type.substring(0, type.length() - 2);
-            Class pureClazz = classForName(pureType);
-            return Array.newInstance(pureClazz, 0).getClass();
+            String componentType = type.substring(0, len - 2);
+            Class componentTypeClass = classForName(componentType);
+            return Array.newInstance(componentTypeClass, 0).getClass();
         }
         else
         {
@@ -233,9 +234,10 @@ public class ClassUtils
     /**
      * Same as {@link #javaTypeToClass(String)}, but throws a RuntimeException
      * (FacesException) instead of a ClassNotFoundException.
+     * 
      * @return the corresponding Class
-     * @throws FacesException if class not found
      * @throws NullPointerException if type is null
+     * @throws FacesException if class not found
      */
     public static Class simpleJavaTypeToClass(String type)
     {
@@ -249,49 +251,6 @@ public class ClassUtils
             throw new FacesException(e);
         }
     }
-
-    /*
-    public static Class classForName(String type)
-            throws FacesException
-    {
-        try
-        {
-            return classForNameBasic(type);
-        }
-        catch (ClassNotFoundException e)
-        {
-            log.error(e.getMessage(), e);
-            throw new FacesException(e);
-        }
-    }
-
-    public static Class classForNameBasic(String type)
-            throws ClassNotFoundException
-    {
-        //Try primitive type first:
-        Class clazz = primitiveTypeToClass(type);
-        if (clazz != null)
-        {
-            return clazz;
-        }
-
-        try
-        {
-            // Try WebApp ClassLoader first
-            return Class.forName(type,
-                                 false, // we do not initialize for faster startup
-                                 Thread.currentThread().getContextClassLoader());
-        }
-        catch (ClassNotFoundException ignore)
-        {
-            // fallback: Try ClassLoader for ClassUtils (i.e. the myfaces.jar lib)
-            return Class.forName(type,
-                                 false,// we do not initialize for faster startup
-                                 ClassUtils.class.getClassLoader());
-        }
-    }
-    */
-
 
     public static InputStream getResourceAsStream(String resource)
     {
@@ -309,10 +268,7 @@ public class ClassUtils
     public static Object newInstance(String type)
         throws FacesException
     {
-        if (type == null)
-        {
-            return null;
-        }
+        if (type == null) return null;
         return newInstance(simpleClassForName(type));
     }
 
@@ -338,23 +294,20 @@ public class ClassUtils
 
     public static Object convertToType(Object value, Class desiredClass)
     {
-        if (value == null)
-        {
-            return null;
-        }
+        if (value == null) return null;
 
         try
         {
             // Use coersion implemented by JSP EL for consistency with EL
             // expressions. Additionally, it caches some of the coersions.
-            return Coercions.coerce(value, desiredClass, coerceLogger);
+            return Coercions.coerce(value, desiredClass, COERCION_LOGGER);
         }
         catch (ELException e)
         {
-            log.error("Cannot coerce " + value.getClass().getName()
-                + " to " + desiredClass.getName(), e);
-            throw new FacesException(e);
+            String message = "Cannot coerce " + value.getClass().getName()
+                + " to " + desiredClass.getName(); 
+            log.error(message, e);
+            throw new FacesException(message, e);
         }
     }
-
 }

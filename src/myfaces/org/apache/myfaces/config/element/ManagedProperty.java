@@ -15,15 +15,20 @@
  */
 package net.sourceforge.myfaces.config.element;
 
-import javax.faces.el.ValueBinding;
+import javax.faces.context.FacesContext;
 
 import net.sourceforge.myfaces.config.element.ListEntries;
 
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Anton Koinov
+
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2004/10/05 22:34:21  dave0000
+ * bug 1021656 with related improvements
+ *
  * Revision 1.1  2004/07/07 00:25:04  o_rossmueller
  * tidy up config/confignew package (moved confignew classes to package config)
  *
@@ -48,6 +53,7 @@ public interface ManagedProperty
 {
     // <!ELEMENT managed-property (description*, display-name*, icon*, property-name, property-class?, (map-entries|null-value|value|list-entries))>
 
+    public static final int TYPE_UNKNOWN = 0;
     public static final int TYPE_MAP = 1;
     public static final int TYPE_NULL = 2;
     public static final int TYPE_VALUE = 3;
@@ -58,10 +64,6 @@ public interface ManagedProperty
 
     public int getType();
     public MapEntries getMapEntries();
-    public String getValue();
     public ListEntries getListEntries();
-
-    // used to cache ValueBinding instances
-    public ValueBinding getValueBinding();
-    public void setValueBinding(ValueBinding valueBinding);
+    public Object getRuntimeValue(FacesContext facesContext);
 }

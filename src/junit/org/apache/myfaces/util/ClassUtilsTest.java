@@ -5,12 +5,14 @@ import junit.framework.TestCase;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * $Log$
+ * Revision 1.2  2004/10/05 22:34:20  dave0000
+ * bug 1021656 with related improvements
+ *
  */
 public class ClassUtilsTest
         extends TestCase
 {
-    //private static final Log log = LogFactory.getLog(ClassUtilsTest.class);
-
     public void testClassForName()
         throws ClassNotFoundException
     {
@@ -19,26 +21,32 @@ public class ClassUtilsTest
         try
         {
             ClassUtils.classForName("x.y.NotFound");
-            assertTrue("No ClassNotFoundException?", false);
+            assertTrue("ClassNotFoundException expected", false);
         }
         catch (ClassNotFoundException e)
-        {}
+        {
+            // ignore, must trow this exception
+        }
 
         try
         {
             ClassUtils.classForName("java.lang.String[]");
-            assertTrue("No ClassNotFoundException?", false);
+            assertTrue("ClassNotFoundException expected", false);
         }
         catch (ClassNotFoundException e)
-        {}
+        {
+            // ignore, must trow this exception
+        }
 
         try
         {
             ClassUtils.classForName("int");
-            assertTrue("No ClassNotFoundException?", false);
+            assertTrue("ClassNotFoundException expected", false);
         }
         catch (ClassNotFoundException e)
-        {}
+        {
+            // ignore, must trow this exception
+        }
     }
 
 
@@ -50,10 +58,12 @@ public class ClassUtilsTest
         try
         {
             ClassUtils.javaTypeToClass("x.y.NotFound");
-            assertTrue("No ClassNotFoundException?", false);
+            assertTrue("ClassNotFoundException expected", false);
         }
         catch (ClassNotFoundException e)
-        {}
+        {
+            // ignore, must trow this exception
+        }
 
         assertEquals(ClassUtils.javaTypeToClass("java.lang.String[]"), (new String[0]).getClass());
         assertEquals(ClassUtils.javaTypeToClass("int"), Integer.TYPE);
@@ -62,11 +72,11 @@ public class ClassUtilsTest
         try
         {
             ClassUtils.javaTypeToClass("int[][]");
-            assertTrue("No ClassNotFoundException?", false);
+            assertTrue("ClassNotFoundException expected", false);
         }
         catch (ClassNotFoundException e)
-        {}
+        {
+            // ignore, must trow this exception
+        }
     }
-
-
 }
