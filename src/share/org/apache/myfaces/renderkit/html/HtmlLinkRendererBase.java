@@ -39,6 +39,9 @@ import java.util.Iterator;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/05/04 06:36:21  manolito
+ * Bugfix #947302
+ *
  * Revision 1.5  2004/04/29 19:34:38  o_rossmueller
  * javascript for 'target' attribute handling
  *
@@ -174,6 +177,7 @@ public abstract class HtmlLinkRendererBase
                 renderNonJavaScriptAnchorStart(facesContext, writer, component, clientId);
             }
 
+            writer.writeAttribute(HTML.ID_ATTR, clientId, null);
             HtmlRendererUtils.renderHTMLAttributes(writer, component,
                                                    HTML.ANCHOR_PASSTHROUGH_ATTRIBUTES_WITHOUT_STYLE);
             HtmlRendererUtils.renderHTMLAttribute(writer, HTML.STYLE_ATTR, HTML.STYLE_ATTR,
@@ -339,6 +343,7 @@ public abstract class HtmlLinkRendererBase
                 Object value = ((UIParameter)child).getValue();
 
                 addParameterToHref(name, value, hrefBuf, firstParameter, charEncoding);
+                firstParameter = false;
             }
         }
     }
@@ -350,6 +355,7 @@ public abstract class HtmlLinkRendererBase
 
         if (!RendererUtils.isEnabledOnUserRole(facesContext, output))
         {
+            //if link is disabled we render the nested components without the anchor
             RendererUtils.renderChildren(facesContext, output);
             return;
         }
@@ -368,6 +374,7 @@ public abstract class HtmlLinkRendererBase
 
         //write anchor
         writer.startElement(HTML.ANCHOR_ELEM, output);
+        writer.writeAttribute(HTML.ID_ATTR, output.getClientId(facesContext), null);
         writer.writeURIAttribute(HTML.HREF_ATTR, href, null);
         HtmlRendererUtils.renderHTMLAttributes(writer, output, HTML.ANCHOR_PASSTHROUGH_ATTRIBUTES);
         writer.flush();
