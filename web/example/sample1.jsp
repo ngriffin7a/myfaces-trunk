@@ -64,7 +64,7 @@
                     Number 2: <h:textentry_input id="number2" modelReference="calcForm.number2" maxlength="10" size="25"/><h:input_errors id="number2Error" compoundId="/form1/number2" cssClass="error" /><br>
                     Result: <h:output_text id="result" modelReference="calcForm.result" /><br>
                     <h:command_button id="addButton" commandName="add" commandReference="calcCtrl.calc" label="Add them">
-                        <f:action_listener type="net.sourceforge.myfaces.examples.controller.ActionListenerTest" ></f:action_listener>
+                        <f:action_listener type="net.sourceforge.myfaces.examples.diverse.controller.ActionListenerTest" ></f:action_listener>
                     </h:command_button>
                     <h:command_button id="subtractButton" commandName="subtract" commandReference="calcCtrl.calc" label="Subtract them"/><br>
                 </h:form>
