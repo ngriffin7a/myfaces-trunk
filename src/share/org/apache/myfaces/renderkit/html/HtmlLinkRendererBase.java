@@ -38,6 +38,9 @@ import java.util.Iterator;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.19  2005/03/16 16:40:59  svieujot
+ * Call form.onsubmit in HtmlCommandLink (otherwise bypassed by calling directly form.submit.
+ *
  * Revision 1.18  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -324,6 +327,10 @@ public abstract class HtmlLinkRendererBase
             onClick.append(target);
             onClick.append("';");
         }
+		
+		// onSubmit
+		onClick.append("if("+jsForm+".onsubmit){"+jsForm+".onsubmit();}");
+		
         //submit
         onClick.append(jsForm);
         onClick.append(".submit();return false;");  //return false, so that browser does not handle the click
