@@ -18,6 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.attr;
 
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
+
 /**
  * Constant definitions for the specified render dependent attributes of the
  * "Textarea" renderer type.
@@ -25,7 +27,9 @@ package net.sourceforge.myfaces.renderkit.attr;
  * @version $Revision$ $Date$
  */
 public interface TextareaRendererAttributes
+    extends CommonComponentAttributes
 {
     public static final String[] INPUT_TEXTAREA_ATTRIBUTES = {
+        CONVERTER_ATTR
     };
 }

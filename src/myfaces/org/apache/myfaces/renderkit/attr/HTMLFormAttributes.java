@@ -22,7 +22,7 @@ package net.sourceforge.myfaces.renderkit.attr;
 
 /**
  * see /tlds/entities/html_form_attributes.xml
- * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public interface HTMLFormAttributes

@@ -57,5 +57,7 @@ public class InputSecretTag
         setRendererAttribute(REDISPLAY_ATTR, b);
     }
 
-    // setMaxLength() already defined in InoputTextTag
+    // converter attribute --> already implemented in MyFacesTag
+
+    // setMaxLength() already defined in InputTextTag
 }

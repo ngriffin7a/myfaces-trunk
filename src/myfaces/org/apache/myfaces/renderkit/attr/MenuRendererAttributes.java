@@ -28,25 +28,17 @@ public interface MenuRendererAttributes
     extends CommonRendererAttributes
 {
     public static final String SIZE_ATTR = "size";
-    public static final String DATAFLD_ATTR = "datafld";
-    public static final String DATASRC_ATTR = "datasrc";
-    public static final String DATAFORMATAS_ATTR = "dataformatas";
-    public static final String DISABLED_ATTR = "disabled";
-    public static final String ONBLUR_ATTR = "onblur";
-    public static final String ONCHANGE_ATTR = "onchange";
-    public static final String ONFOCUS_ATTR = "onfocus";
-    public static final String TABINDEX_ATTR = "tabindex";
-    public static final String[] COMMON_MENU_ATTRIBUTES =
+
+    public static final String[] SELECT_MANY_MENU_ATTRIBUTES =
     {
-        SIZE_ATTR,
-        DATAFLD_ATTR,
-        DATASRC_ATTR,
-        DATAFORMATAS_ATTR,
-        DISABLED_ATTR,
-        ONBLUR_ATTR,
-        ONCHANGE_ATTR,
-        ONFOCUS_ATTR,
-        TABINDEX_ATTR
+        SELECT_MANY_CLASS_ATTR,
+        SIZE_ATTR
+    };
+
+    public static final String[] SELECT_ONE_MENU_ATTRIBUTES =
+    {
+        SELECT_ONE_CLASS_ATTR,
+        SIZE_ATTR
     };
 
 }

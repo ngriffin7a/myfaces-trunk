@@ -27,23 +27,14 @@ package net.sourceforge.myfaces.renderkit.attr;
 public interface ListboxRendererAttributes
     extends CommonRendererAttributes
 {
-    public static final String DATAFLD_ATTR = "datafld";
-    public static final String DATASRC_ATTR = "datasrc";
-    public static final String DATAFORMATAS_ATTR = "dataformatas";
-    public static final String DISABLED_ATTR = "disabled";
-    public static final String ONBLUR_ATTR = "onblur";
-    public static final String ONCHANGE_ATTR = "onchange";
-    public static final String ONFOCUS_ATTR = "onfocus";
-    public static final String TABINDEX_ATTR = "tabindex";
-    public static final String[] COMMON_LISTBOX_ATTRIBUTES =
+    public static final String[] SELECT_MANY_LISTBOX_ATTRIBUTES =
     {
-        DATAFLD_ATTR,
-        DATASRC_ATTR,
-        DATAFORMATAS_ATTR,
-        DISABLED_ATTR,
-        ONBLUR_ATTR,
-        ONCHANGE_ATTR,
-        ONFOCUS_ATTR,
-        TABINDEX_ATTR
+        SELECT_MANY_CLASS_ATTR
     };
+
+    public static final String[] SELECT_ONE_LISTBOX_ATTRIBUTES =
+    {
+        SELECT_ONE_CLASS_ATTR
+    };
+
 }

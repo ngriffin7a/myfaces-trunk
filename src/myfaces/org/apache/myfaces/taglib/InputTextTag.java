@@ -26,7 +26,7 @@ import net.sourceforge.myfaces.renderkit.html.TextRenderer;
 import javax.faces.component.UIComponent;
 
 /**
- * DOCUMENT ME!
+ * see "input_text" tag in myfaces_html.tld
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -147,6 +147,8 @@ public class InputTextTag
     {
         setRendererAttribute(MAX_LENGTH_ATTR, v);
     }
+
+    // converter attribute --> already implemented in MyFacesTag
 
     // user role attributes --> already implemented in MyFacesTag
 

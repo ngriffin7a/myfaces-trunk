@@ -41,7 +41,7 @@
                         <h:output_message id="welcome" bundle="net.sourceforge.myfaces.examples.resource.example_messages" key="welcome" />
                     </td>
                     <td valign="middle">
-                        <h:image id="logo" url="images/logo.jpg"/>
+                        <h:graphic_image id="logo" url="images/logo.jpg"/>
                     </td>
                 </tr>
             </table>

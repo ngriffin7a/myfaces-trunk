@@ -16,35 +16,33 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.html;
-
-import net.sourceforge.myfaces.component.UIOutput;
-import net.sourceforge.myfaces.renderkit.attr.DateRendererAttributes;
-
+package net.sourceforge.myfaces.renderkit.attr;
 
 /**
- * DOCUMENT ME!
+ * see /tlds/entities/html_select_attributes.xml
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class DateRenderer
-    extends TextRenderer
-    implements DateRendererAttributes
+public interface HTMLSelectAttributes
 {
-    public static final String TYPE = "Date";
+    public static final String DATAFLD_ATTR = "datafld";
+    public static final String DATASRC_ATTR = "datasrc";
+    public static final String DATAFORMATAS_ATTR = "dataformatas";
+    public static final String DISABLED_ATTR = "disabled";
+    public static final String ONBLUR_ATTR = "onblur";
+    public static final String ONCHANGE_ATTR = "onchange";
+    public static final String ONFOCUS_ATTR = "onfocus";
+    public static final String TABINDEX_ATTR = "tabindex";
 
-    public String getRendererType()
+    public static final String[] HTML_SELECT_ATTRIBUTES =
     {
-        return TYPE;
-    }
-
-    protected void initAttributeDescriptors()
-    {
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_date", HTML_UNIVERSAL_ATTRIBUTES);
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_date", HTML_EVENT_HANDLER_ATTRIBUTES);
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_date", OUTPUT_DATE_ATTRIBUTES);
-        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_date", USER_ROLE_ATTRIBUTES);
-        //TODO: input
-    }
-
+        DATAFLD_ATTR,
+        DATASRC_ATTR,
+        DATAFORMATAS_ATTR,
+        DISABLED_ATTR,
+        ONBLUR_ATTR,
+        ONCHANGE_ATTR,
+        ONFOCUS_ATTR,
+        TABINDEX_ATTR
+    };
 }

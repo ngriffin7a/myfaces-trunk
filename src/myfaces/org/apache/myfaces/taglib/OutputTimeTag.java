@@ -20,17 +20,19 @@ package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIOutput;
 import net.sourceforge.myfaces.renderkit.html.TimeRenderer;
+import net.sourceforge.myfaces.renderkit.attr.TimeRendererAttributes;
 
 import javax.faces.component.UIComponent;
 
 
 /**
- * DOCUMENT ME!
+ * see "output_time" tag in myfaces_html.tld
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class OutputTimeTag
-        extends MyFacesTag
+    extends MyFacesTag
+    implements TimeRendererAttributes
 {
     //MyFaces tag extensions:
     public UIComponent createComponent()
@@ -45,18 +47,36 @@ public class OutputTimeTag
         return TimeRenderer.TYPE;
     }
 
+    // UIComponent attributes --> already implemented in MyFacesTag
+
+    // UIOutput attributes
+
+    public void setValue(Object v)
+    {
+        super.setValue(v);
+    }
+
     public void setOutputClass(String value)
     {
-        setRendererAttribute(TimeRenderer.OUTPUT_CLASS_ATTR, value);
+        setRendererAttribute(OUTPUT_CLASS_ATTR, value);
     }
+
+    // HTML universal attributes --> already implemented in MyFacesTag
+
+    // HTML event handler attributes --> already implemented in MyFacesTag
+
+    // Time Renderer attributes
 
     public void setTimeStyle(String value)
     {
-        setRendererAttribute(TimeRenderer.TIME_STYLE_ATTR, value);
+        setRendererAttribute(TIME_STYLE_ATTR, value);
     }
 
     public void setTimezone(String value)
     {
-        setRendererAttribute(TimeRenderer.TIMEZONE_ATTR, value);
+        setRendererAttribute(TIMEZONE_ATTR, value);
     }
+
+    // user role attributes --> already implemented in MyFacesTag
+
 }

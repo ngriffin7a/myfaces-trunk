@@ -26,7 +26,7 @@ import net.sourceforge.myfaces.renderkit.html.TextareaRenderer;
 import javax.faces.component.UIComponent;
 
 /**
- * DOCUMENT ME!
+ * see "input_textarea" tag in myfaces_html.tld
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -156,6 +156,8 @@ public class InputTextareaTag
     }
 
     // Textarea Renderer attributes
+
+    // converter attribute --> already implemented in MyFacesTag
 
     // user role attributes --> already implemented in MyFacesTag
 

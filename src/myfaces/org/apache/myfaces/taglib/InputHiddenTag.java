@@ -61,6 +61,8 @@ public class InputHiddenTag
         setRendererAttribute(INPUT_CLASS_ATTR, v);
     }
 
+    // converter attribute --> already implemented in MyFacesTag
+
     // user role attributes --> already implemented in MyFacesTag
 
 }

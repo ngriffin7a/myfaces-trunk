@@ -39,7 +39,7 @@
 
         <x:page_body id="body" cssClass="pageBody" >
 
-            <h:errors id="errors" />
+            <h:output_errors id="errors" />
 
             <h:form formName="countryForm">
                 <h:input_text id="isoCode" modelReference="countryForm.isoCode"></h:input_text><br>

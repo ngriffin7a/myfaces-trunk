@@ -19,42 +19,37 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIOutput;
-import net.sourceforge.myfaces.renderkit.attr.DateTimeRendererAttributes;
-import net.sourceforge.myfaces.renderkit.html.DateTimeRenderer;
+import net.sourceforge.myfaces.renderkit.attr.ErrorsRendererAttributes;
+import net.sourceforge.myfaces.renderkit.html.ErrorsRenderer;
 
 import javax.faces.component.UIComponent;
 
 
 /**
- * see "output_date_time" tag in myfaces_html.tld
+ * see "output_errors" tag in myfaces_html.tld
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class OutputDateTimeTag
+public class OutputErrorsTag
     extends MyFacesTag
-    implements DateTimeRendererAttributes
+    implements ErrorsRendererAttributes
 {
     //MyFaces tag extensions:
     public UIComponent createComponent()
     {
-        UIComponent uiComponent = new UIOutput();
-        uiComponent.setConverter("DateTimeConverter");
-        return uiComponent;
+        return new UIOutput();
     }
 
     public String getRendererType()
     {
-        return DateTimeRenderer.TYPE;
+        return ErrorsRenderer.TYPE;
     }
 
     // UIComponent attributes --> already implemented in MyFacesTag
 
     // UIOutput attributes
 
-    public void setValue(Object v)
-    {
-        super.setValue(v);
-    }
+    // output_errors does not have a "value"
 
     public void setOutputClass(String value)
     {
@@ -65,26 +60,11 @@ public class OutputDateTimeTag
 
     // HTML event handler attributes --> already implemented in MyFacesTag
 
-    // Date Renderer attributes
+    // Errors Renderer attributes
 
-    public void setDateStyle(String value)
+    public void setClientId(String v)
     {
-        setRendererAttribute(DATE_STYLE_ATTR, value);
-    }
-
-    public void setTimeStyle(String value)
-    {
-        setRendererAttribute(TIME_STYLE_ATTR, value);
-    }
-
-    public void setTimezone(String value)
-    {
-        setRendererAttribute(TIMEZONE_ATTR, value);
-    }
-
-    public void setFormatPattern(String value)
-    {
-        setRendererAttribute(FORMAT_PATTERN_ATTR, value);
+        setRendererAttribute(CLIENT_ID_ATTR, v);
     }
 
     // user role attributes --> already implemented in MyFacesTag

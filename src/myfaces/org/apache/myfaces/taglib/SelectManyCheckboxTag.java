@@ -20,17 +20,21 @@ package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UISelectMany;
 import net.sourceforge.myfaces.renderkit.html.CheckboxRenderer;
+import net.sourceforge.myfaces.renderkit.attr.HTMLInputAttributes;
+import net.sourceforge.myfaces.renderkit.attr.CheckboxRendererAttributes;
 
 import javax.faces.component.UIComponent;
 
 
 /**
- * DOCUMENT ME!
+ * see "select_many_checkbox" tag in myfaces_html.tld
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class SelectManyCheckboxListTag
+public class SelectManyCheckboxTag
     extends MyFacesTag
+    implements HTMLInputAttributes,
+               CheckboxRendererAttributes
 {
     public UIComponent createComponent()
     {
@@ -42,93 +46,103 @@ public class SelectManyCheckboxListTag
         return CheckboxRenderer.TYPE;
     }
 
-    public void setChecked(Boolean value)
+    // UIComponent attributes --> already implemented in MyFacesTag
+
+    // UISelectMany attributes
+
+    public void setValue(Object v)
     {
-        setValue(value);
+        super.setValue(v);
     }
 
-    public void setKey(String value)
+    public void setSelectManyClass(String value)
     {
-        setRendererAttribute(CheckboxRenderer.KEY_ATTR.getName(), value);
+        setRendererAttribute(SELECT_MANY_CLASS_ATTR, value);
     }
 
-    public void setBundle(String value)
-    {
-        setRendererAttribute(CheckboxRenderer.BUNDLE_ATTR, value);
-    }
+    // HTML universal attributes --> already implemented in MyFacesTag
 
-    public void setSelectmanyClass(String value)
-    {
-        setRendererAttribute(CheckboxRenderer.SELECT_BOOLEAN_CLASS_ATTR, value);
-    }
+    // HTML event handler attributes --> already implemented in MyFacesTag
+
+    // HTML input attributes
 
     public void setAccesskey(String value)
     {
-        setRendererAttribute(CheckboxRenderer.ACCESSKEY_ATTR, value);
+        setRendererAttribute(ACCESSKEY_ATTR, value);
     }
 
     public void setAlign(String value)
     {
-        setRendererAttribute(CheckboxRenderer.ALIGN_ATTR, value);
+        setRendererAttribute(ALIGN_ATTR, value);
     }
 
     public void setAlt(String value)
     {
-        setRendererAttribute(CheckboxRenderer.ALT_ATTR, value);
+        setRendererAttribute(ALT_ATTR, value);
     }
 
     public void setDatafld(String value)
     {
-        setRendererAttribute(CheckboxRenderer.DATAFLD_ATTR, value);
+        setRendererAttribute(DATAFLD_ATTR, value);
     }
 
     public void setDatasrc(String value)
     {
-        setRendererAttribute(CheckboxRenderer.DATASRC_ATTR, value);
+        setRendererAttribute(DATASRC_ATTR, value);
     }
 
     public void setDataformatas(String value)
     {
-        setRendererAttribute(CheckboxRenderer.DATAFORMATAS_ATTR, value);
+        setRendererAttribute(DATAFORMATAS_ATTR, value);
     }
 
-    public void setDisabled(Boolean value)
+    public void setDisabled(boolean value)
     {
-        setRendererAttribute(CheckboxRenderer.DISABLED_ATTR, value);
+        setRendererAttribute(DISABLED_ATTR, value);
     }
 
     public void setOnblur(String value)
     {
-        setRendererAttribute(CheckboxRenderer.ONBLUR_ATTR, value);
+        setRendererAttribute(ONBLUR_ATTR, value);
     }
 
     public void setOnchange(String value)
     {
-        setRendererAttribute(CheckboxRenderer.ONCHANGE_ATTR, value);
+        setRendererAttribute(ONCHANGE_ATTR, value);
     }
 
     public void setOnfocus(String value)
     {
-        setRendererAttribute(CheckboxRenderer.ONFOCUS_ATTR, value);
+        setRendererAttribute(ONFOCUS_ATTR, value);
     }
 
     public void setOnselect(String value)
     {
-        setRendererAttribute(CheckboxRenderer.ONSELECT_ATTR, value);
+        setRendererAttribute(ONSELECT_ATTR, value);
     }
 
-    public void setReadonly(Boolean value)
+    public void setReadonly(boolean value)
     {
-        setRendererAttribute(CheckboxRenderer.READONLY_ATTR, value);
+        setRendererAttribute(READONLY_ATTR, value);
     }
 
-    public void setTabindex(String value)
+    public void setSize(String value)
     {
-        setRendererAttribute(CheckboxRenderer.TABINDEX_ATTR, value);
+        setRendererAttribute(SIZE_ATTR, value);
     }
 
-    public void setValue(String value)
+    public void setTabindex(int value)
     {
-        setRendererAttribute(CheckboxRenderer.CB_VALUE_ATTR, value);
+        setRendererAttribute(TABINDEX_ATTR, value);
     }
+
+
+    // Checkbox Renderer attributes
+
+    public void setLayout(String value)
+    {
+        setRendererAttribute(LAYOUT_ATTR, value);
+    }
+
+    // user role attributes --> already implemented in MyFacesTag
 }

@@ -19,7 +19,8 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.component.UIParameter;
-import net.sourceforge.myfaces.renderkit.attr.MessageRendererAttributes;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
 import net.sourceforge.myfaces.util.logging.LogUtil;
@@ -40,8 +41,13 @@ import java.util.List;
  * @version $Revision$ $Date$
  */
 public class MessageRenderer
-        extends HTMLRenderer
-        implements MessageRendererAttributes
+    extends HTMLRenderer
+    implements CommonComponentAttributes,
+               CommonRendererAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               MessageRendererAttributes,
+               UserRoleAttributes
 {
     public static final String TYPE = "Message";
 
@@ -50,13 +56,6 @@ public class MessageRenderer
     public String getRendererType()
     {
         return TYPE;
-    }
-
-    public MessageRenderer()
-    {
-        super();
-        addAttributeDescriptor(UIOutput.TYPE, KEY_ATTR);
-        addAttributeDescriptor(UIOutput.TYPE, BUNDLE_ATTR);
     }
 
     public boolean supportsComponentType(String s)
@@ -68,6 +67,16 @@ public class MessageRenderer
     {
         return uicomponent instanceof javax.faces.component.UIOutput;
     }
+
+    protected void initAttributeDescriptors()
+    {
+        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_message", HTML_UNIVERSAL_ATTRIBUTES);
+        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_message", HTML_EVENT_HANDLER_ATTRIBUTES);
+        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_message", OUTPUT_MESSAGE_ATTRIBUTES);
+        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_message", USER_ROLE_ATTRIBUTES);
+    }
+
+
 
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
@@ -92,11 +101,11 @@ public class MessageRenderer
         }
 
         String pattern;
-        String key = (String)uiComponent.getAttribute(KEY_ATTR.getName());
+        String key = (String)uiComponent.getAttribute(KEY_ATTR);
         if (key != null)
         {
             pattern = BundleUtils.getString(facesContext,
-                                            (String)uiComponent.getAttribute(BUNDLE_ATTR.getName()),
+                                            (String)uiComponent.getAttribute(BUNDLE_ATTR),
                                             key);
         }
         else

@@ -18,13 +18,17 @@
  */
 package net.sourceforge.myfaces.renderkit.attr;
 
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
+
 /**
  * see JSF 7.4.4
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public interface HiddenRendererAttributes
+    extends CommonComponentAttributes
 {
     public static final String[] HIDDEN_RENDERER_ATTRIBUTES = {
+        CONVERTER_ATTR
     };
 }

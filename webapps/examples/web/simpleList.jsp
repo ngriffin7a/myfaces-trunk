@@ -39,7 +39,7 @@
 
         <x:page_body id="body" cssClass="pageBody" >
 
-            <h:errors id="errors" />
+            <h:output_errors id="errors" />
 
             <% int rows = 0, cols = 2; %>
             <h:list cssClass="standardTable"

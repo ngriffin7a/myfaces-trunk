@@ -18,9 +18,10 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.component.UISelectMany;
 import net.sourceforge.myfaces.component.UISelectOne;
-import net.sourceforge.myfaces.renderkit.attr.ListboxRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.html.util.SelectItemHelper;
 
 import javax.faces.component.UIComponent;
@@ -34,8 +35,14 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class ListboxRenderer
-        extends AbstractSelectOptionRenderer
-        implements ListboxRendererAttributes
+    extends AbstractSelectOptionRenderer
+    implements CommonComponentAttributes,
+               CommonRendererAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLSelectAttributes,
+               ListboxRendererAttributes,
+               UserRoleAttributes
 {
     public static final String TYPE = "Listbox";
 
@@ -53,6 +60,23 @@ public class ListboxRenderer
     {
         return uicomponent instanceof javax.faces.component.UISelectOne;
     }
+
+    protected void initAttributeDescriptors()
+    {
+        addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_listbox", HTML_UNIVERSAL_ATTRIBUTES);
+        addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_listbox", HTML_EVENT_HANDLER_ATTRIBUTES);
+        addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_listbox", HTML_SELECT_ATTRIBUTES);
+        addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_listbox", SELECT_MANY_LISTBOX_ATTRIBUTES);
+        addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_listbox", USER_ROLE_ATTRIBUTES);
+
+        addAttributeDescriptors(UISelectOne.TYPE, TLD_HTML_URI, "selectone_listbox", HTML_UNIVERSAL_ATTRIBUTES);
+        addAttributeDescriptors(UISelectOne.TYPE, TLD_HTML_URI, "selectone_listbox", HTML_EVENT_HANDLER_ATTRIBUTES);
+        addAttributeDescriptors(UISelectOne.TYPE, TLD_HTML_URI, "selectone_listbox", HTML_SELECT_ATTRIBUTES);
+        addAttributeDescriptors(UISelectOne.TYPE, TLD_HTML_URI, "selectone_listbox", SELECT_ONE_LISTBOX_ATTRIBUTES);
+        addAttributeDescriptors(UISelectOne.TYPE, TLD_HTML_URI, "selectone_listbox", USER_ROLE_ATTRIBUTES);
+    }
+
+
 
     public void encodeBegin(FacesContext facescontext, UIComponent uicomponent)
             throws IOException

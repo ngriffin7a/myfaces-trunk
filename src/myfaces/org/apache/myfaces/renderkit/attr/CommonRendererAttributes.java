@@ -40,6 +40,8 @@ public interface CommonRendererAttributes
     public static final String OUTPUT_CLASS_ATTR = "outputClass";
     public static final String COMMAND_CLASS_ATTR = "commandClass";
     public static final String SELECT_BOOLEAN_CLASS_ATTR = "selectBooleanClass";
+    public static final String SELECT_MANY_CLASS_ATTR = "selectManyClass";
+    public static final String SELECT_ONE_CLASS_ATTR = "selectOneClass";
     public static final String FORM_CLASS_ATTR = "formClass";
     public static final String PANEL_CLASS_ATTR = "panelClass";
     public static final String GRAPHIC_CLASS_ATTR = "graphicClass";

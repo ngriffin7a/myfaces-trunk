@@ -15,6 +15,9 @@ Changes in Release 0.3.2
 * "enabledOnUserRole" and "visibleOnUserRole" attributes for miscellaneous input
   and command components
 * "setBundle" tag
+* "errors" tag renamed to "output_errors"
+* "image" tag renamed to "graphic_image"
+* "input_errors" tag was removed (see "output_errors")
 
 ----------------------------------------------------------------------
 Changes in Release 0.3.1

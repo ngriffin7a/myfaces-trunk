@@ -16,41 +16,22 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib;
+package net.sourceforge.myfaces.renderkit.attr;
 
-import net.sourceforge.myfaces.component.UIOutput;
-import net.sourceforge.myfaces.renderkit.html.ErrorsRenderer;
-
-import javax.faces.component.UIComponent;
 
 
 /**
- * DOCUMENT ME!
+ * Constant definitions for the specified render dependent attributes of the
+ * "Date" renderer type.
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ErrorsTag
-        extends MyFacesTag
+public interface DateRendererAttributes
+    extends CommonRendererAttributes
 {
-    //MyFaces tag extensions:
-    public UIComponent createComponent()
-    {
-        return new UIOutput();
-    }
-
-    public String getRendererType()
-    {
-        return ErrorsRenderer.TYPE;
-    }
-
-    public void setClientId(String compoundId)
-    {
-        setRendererAttribute(ErrorsRenderer.CLIENT_ID_ATTR, compoundId);
-    }
-
-    public void setCssClass(String value)
-    {
-        setRendererAttribute(ErrorsRenderer.OUTPUT_CLASS_ATTR, value);
-    }
-
+    public static final String[] OUTPUT_DATE_ATTRIBUTES = {
+        OUTPUT_CLASS_ATTR,
+        DATE_STYLE_ATTR,
+        TIMEZONE_ATTR
+    };
 }

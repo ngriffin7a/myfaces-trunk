@@ -18,7 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.attr.TextRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.DateTimeRendererAttributes;
+import net.sourceforge.myfaces.component.UIOutput;
 
 
 /**
@@ -27,8 +28,8 @@ import net.sourceforge.myfaces.renderkit.attr.TextRendererAttributes;
  * @version $Revision$ $Date$
  */
 public class DateTimeRenderer
-        extends TextRenderer
-        implements TextRendererAttributes
+    extends TextRenderer
+    implements DateTimeRendererAttributes
 {
     public static final String TYPE = "DateTime";
 
@@ -36,4 +37,14 @@ public class DateTimeRenderer
     {
         return TYPE;
     }
+
+    protected void initAttributeDescriptors()
+    {
+        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_date_time", HTML_UNIVERSAL_ATTRIBUTES);
+        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_date_time", HTML_EVENT_HANDLER_ATTRIBUTES);
+        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_date_time", OUTPUT_DATE_TIME_ATTRIBUTES);
+        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_date_time", USER_ROLE_ATTRIBUTES);
+        //TODO: input
+    }
+
 }

@@ -19,41 +19,39 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIOutput;
-import net.sourceforge.myfaces.renderkit.attr.DateTimeRendererAttributes;
-import net.sourceforge.myfaces.renderkit.html.DateTimeRenderer;
+import net.sourceforge.myfaces.renderkit.attr.MessageRendererAttributes;
+import net.sourceforge.myfaces.renderkit.html.MessageRenderer;
 
 import javax.faces.component.UIComponent;
 
 
 /**
- * see "output_date_time" tag in myfaces_html.tld
+ * see "output_message" tag in myfaces_html.tld
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class OutputDateTimeTag
+public class OutputMessageTag
     extends MyFacesTag
-    implements DateTimeRendererAttributes
+    implements MessageRendererAttributes
 {
     //MyFaces tag extensions:
     public UIComponent createComponent()
     {
-        UIComponent uiComponent = new UIOutput();
-        uiComponent.setConverter("DateTimeConverter");
-        return uiComponent;
+        return new UIOutput();
     }
 
     public String getRendererType()
     {
-        return DateTimeRenderer.TYPE;
+        return MessageRenderer.TYPE;
     }
 
     // UIComponent attributes --> already implemented in MyFacesTag
 
     // UIOutput attributes
 
-    public void setValue(Object v)
+    public void setValue(Object value)
     {
-        super.setValue(v);
+        super.setValue(value);
     }
 
     public void setOutputClass(String value)
@@ -65,28 +63,12 @@ public class OutputDateTimeTag
 
     // HTML event handler attributes --> already implemented in MyFacesTag
 
-    // Date Renderer attributes
+    // Message Renderer attributes
 
-    public void setDateStyle(String value)
-    {
-        setRendererAttribute(DATE_STYLE_ATTR, value);
-    }
-
-    public void setTimeStyle(String value)
-    {
-        setRendererAttribute(TIME_STYLE_ATTR, value);
-    }
-
-    public void setTimezone(String value)
-    {
-        setRendererAttribute(TIMEZONE_ATTR, value);
-    }
-
-    public void setFormatPattern(String value)
-    {
-        setRendererAttribute(FORMAT_PATTERN_ATTR, value);
-    }
+    // converter attribute --> already implemented in MyFacesTag
 
     // user role attributes --> already implemented in MyFacesTag
+
+    // key and bundle attributes --> already implemented in MyFacesTag
 
 }

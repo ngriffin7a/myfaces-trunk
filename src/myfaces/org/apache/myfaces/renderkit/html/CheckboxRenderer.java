@@ -19,15 +19,13 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.component.UIComponentUtils;
-import net.sourceforge.myfaces.renderkit.attr.CheckboxRendererAttributes;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.SelectItemHelper;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
-import javax.faces.component.SelectItem;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UISelectBoolean;
-import javax.faces.component.UISelectMany;
+import javax.faces.component.*;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
@@ -40,7 +38,13 @@ import java.util.Iterator;
  */
 public class CheckboxRenderer
     extends HTMLRenderer
-    implements CheckboxRendererAttributes
+    implements CommonComponentAttributes,
+               CommonRendererAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLInputAttributes,
+               CheckboxRendererAttributes,
+               UserRoleAttributes
 {
     public static final String TYPE = "Checkbox";
     public String getRendererType()
@@ -57,6 +61,22 @@ public class CheckboxRenderer
     {
         return uicomponent instanceof UISelectBoolean;
     }
+
+    protected void initAttributeDescriptors()
+    {
+        addAttributeDescriptors(UISelectBoolean.TYPE, TLD_HTML_URI, "selectboolean_checkbox", HTML_UNIVERSAL_ATTRIBUTES);
+        addAttributeDescriptors(UISelectBoolean.TYPE, TLD_HTML_URI, "selectboolean_checkbox", HTML_EVENT_HANDLER_ATTRIBUTES);
+        addAttributeDescriptors(UISelectBoolean.TYPE, TLD_HTML_URI, "selectboolean_checkbox", HTML_INPUT_ATTRIBUTES);
+        addAttributeDescriptors(UISelectBoolean.TYPE, TLD_HTML_URI, "selectboolean_checkbox", SELECT_BOOLEAN_CHECKBOX_ATTRIBUTES);
+        addAttributeDescriptors(UISelectBoolean.TYPE, TLD_HTML_URI, "selectboolean_checkbox", USER_ROLE_ATTRIBUTES);
+
+        addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_checkbox", HTML_UNIVERSAL_ATTRIBUTES);
+        addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_checkbox", HTML_EVENT_HANDLER_ATTRIBUTES);
+        addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_checkbox", HTML_INPUT_ATTRIBUTES);
+        addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_checkbox", SELECT_MANY_CHECKBOX_ATTRIBUTES);
+        addAttributeDescriptors(UISelectMany.TYPE, TLD_HTML_URI, "selectmany_checkbox", USER_ROLE_ATTRIBUTES);
+    }
+
 
     public void decode(FacesContext facescontext, UIComponent uicomponent)
         throws IOException
@@ -158,16 +178,11 @@ public class CheckboxRenderer
             writer.write("\"");
         }
 
-        String css = (String)uiComponent.getAttribute(SELECT_BOOLEAN_CLASS_ATTR);
-        if (css != null)
-        {
-            writer.write(" class=\"");
-            writer.write(css);
-            writer.write("\"");
-        }
-        CommonAttributes.renderHTMLEventHandlerAttributes(facesContext, uiComponent);
-        CommonAttributes.renderHTMLUniversalAttributes(facesContext, uiComponent);
-        CommonAttributes.renderAttributes(facesContext, uiComponent, COMMON_CHECKBOX_ATTRIBUTES);
+        CommonAttributes.renderCssClass(writer, uiComponent, SELECT_BOOLEAN_CLASS_ATTR);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+        CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_INPUT_ATTRIBUTES);
+
         writer.write(">");
         if (label != null && label.length() > 0)
         {

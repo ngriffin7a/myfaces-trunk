@@ -20,6 +20,7 @@ package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIOutput;
 import net.sourceforge.myfaces.renderkit.html.TextRenderer;
+import net.sourceforge.myfaces.renderkit.attr.TextRendererAttributes;
 
 import javax.faces.component.UIComponent;
 
@@ -30,7 +31,8 @@ import javax.faces.component.UIComponent;
  * @version $Revision$ $Date$
  */
 public class OutputTextTag
-        extends MyFacesTag
+    extends MyFacesTag
+    implements TextRendererAttributes
 {
     //MyFaces tag extensions:
     public UIComponent createComponent()
@@ -43,23 +45,27 @@ public class OutputTextTag
         return TextRenderer.TYPE;
     }
 
-    public void setText(String value)
+    // UIComponent attributes --> already implemented in MyFacesTag
+
+    // UIOutput attributes
+
+    public void setValue(Object value)
     {
-        setValue(value);
+        super.setValue(value);
     }
 
     public void setOutputClass(String value)
     {
-        setRendererAttribute(TextRenderer.OUTPUT_CLASS_ATTR, value);
+        setRendererAttribute(OUTPUT_CLASS_ATTR, value);
     }
 
-    public void setKey(String value)
-    {
-        setRendererAttribute(TextRenderer.KEY_ATTR, value);
-    }
+    // HTML universal attributes --> already implemented in MyFacesTag
 
-    public void setBundle(String value)
-    {
-        setRendererAttribute(TextRenderer.BUNDLE_ATTR, value);
-    }
+    // HTML event handler attributes --> already implemented in MyFacesTag
+
+    // Message Renderer attributes
+
+    // converter attribute --> already implemented in MyFacesTag
+
+    // user role attributes --> already implemented in MyFacesTag
 }

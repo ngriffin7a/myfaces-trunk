@@ -18,7 +18,8 @@
  */
 package net.sourceforge.myfaces.renderkit.attr;
 
-import javax.faces.component.AttributeDescriptor;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
+
 
 /**
  * Constant definitions for the specified render dependent attributes of the
@@ -27,8 +28,15 @@ import javax.faces.component.AttributeDescriptor;
  * @version $Revision$ $Date$
  */
 public interface MessageRendererAttributes
-    extends CommonRendererAttributes
+    extends CommonRendererAttributes,
+            CommonComponentAttributes,
+            KeyBundleAttributes
 {
-    public static final AttributeDescriptor KEY_ATTR = new AttrDescrImpl("key");
-    public static final AttributeDescriptor BUNDLE_ATTR = new AttrDescrImpl("bundle");
+    public static final String[] OUTPUT_MESSAGE_ATTRIBUTES =
+    {
+        OUTPUT_CLASS_ATTR,
+        KEY_ATTR,
+        BUNDLE_ATTR,
+        CONVERTER_ATTR
+    };
 }

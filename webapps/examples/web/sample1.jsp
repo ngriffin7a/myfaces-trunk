@@ -53,15 +53,15 @@
             %>
             You entered this page on <h:output_text id="test" value="<%=test.toString()%>" /><br>
 
-            <h:errors id="messageList" />
+            <h:output_errors id="messageList" />
 
             <h4>A Form</h4>
             <table border="1"><tr><td>
                 <h:form id="form1" formName="calcForm">
                     Number 1: <h:input_text id="number1" modelReference="calcForm.number1" maxlength="10" size="25" />
-                              <h:input_errors id="number1Error" clientId="number1" cssClass="error" /><br>
+                              <h:output_errors id="number1Error" clientId="number1" outputClass="error" /><br>
                     Number 2: <h:input_text id="number2" modelReference="calcForm.number2" maxlength="10" size="25"/>
-                              <h:input_errors id="number2Error" clientId="number2" cssClass="error" /><br>
+                              <h:output_errors id="number2Error" clientId="number2" outputClass="error" /><br>
                     Result: <h:output_text id="result" modelReference="calcForm.result" /><br>
                     <h:command_button id="addButton" commandName="add" label="Add them">
                         <f:action_listener type="net.sourceforge.myfaces.examples.example1.CalcController" ></f:action_listener>

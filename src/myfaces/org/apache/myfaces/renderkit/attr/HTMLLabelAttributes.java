@@ -16,51 +16,26 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.taglib;
+package net.sourceforge.myfaces.renderkit.attr;
 
-import net.sourceforge.myfaces.component.UIOutput;
-import net.sourceforge.myfaces.renderkit.html.MessageRenderer;
-
-import javax.faces.component.UIComponent;
 
 
 /**
- * DOCUMENT ME!
+ * see /tlds/entities/html_label_attributes.xml
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class MessageTag
-        extends MyFacesTag
+public interface HTMLLabelAttributes
 {
-    //MyFaces tag extensions:
-    public UIComponent createComponent()
-    {
-        return new UIOutput();
-    }
+    public static final String ACCESSKEY_ATTR   = "accesskey";
+    public static final String ONBLUR_ATTR      = "onblur";
+    public static final String ONFOCUS_ATTR     = "onfocus";
 
-    public String getRendererType()
+    public static final String[] HTML_LABEL_ATTRIBUTES =
     {
-        return MessageRenderer.TYPE;
-    }
-
-    public void setMsg(String value)
-    {
-        setValue(value);
-    }
-
-    public void setKey(String value)
-    {
-        setRendererAttribute(MessageRenderer.KEY_ATTR.getName(), value);
-    }
-
-    public void setBundle(String value)
-    {
-        setRendererAttribute(MessageRenderer.BUNDLE_ATTR.getName(), value);
-    }
-
-    public void setOutputClass(String value)
-    {
-        setRendererAttribute(MessageRenderer.OUTPUT_CLASS_ATTR, value);
-    }
+        ACCESSKEY_ATTR,
+        ONBLUR_ATTR,
+        ONFOCUS_ATTR
+    };
 
 }

@@ -9,7 +9,7 @@
         <attribute>
             <name>graphicClass</name>
             <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
+            <rtexprvalue>true</rtexprvalue>
             <type>java.lang.String</type>
             <description>Corresponds to the HTML class attribute.</description>
         </attribute>

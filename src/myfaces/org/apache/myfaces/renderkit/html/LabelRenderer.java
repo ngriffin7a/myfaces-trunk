@@ -22,6 +22,7 @@ import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
 
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
@@ -36,9 +37,11 @@ import java.io.IOException;
  */
 public class LabelRenderer
     extends HTMLRenderer
-    implements CommonRendererAttributes,
+    implements CommonComponentAttributes,
+               CommonRendererAttributes,
                HTMLUniversalAttributes,
                HTMLEventHandlerAttributes,
+               HTMLLabelAttributes,
                LabelRendererAttributes,
                UserRoleAttributes
 {
@@ -47,12 +50,6 @@ public class LabelRenderer
     public String getRendererType()
     {
         return TYPE;
-    }
-
-    public LabelRenderer()
-    {
-        addAttributeDescriptor(UIOutput.TYPE, KEY_ATTR);
-        addAttributeDescriptor(UIOutput.TYPE, BUNDLE_ATTR);
     }
 
     public boolean supportsComponentType(UIComponent component)
@@ -64,6 +61,17 @@ public class LabelRenderer
     {
         return s.equals(UIOutput.TYPE);
     }
+
+    protected void initAttributeDescriptors()
+    {
+        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_label", HTML_UNIVERSAL_ATTRIBUTES);
+        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_label", HTML_EVENT_HANDLER_ATTRIBUTES);
+        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_label", HTML_LABEL_ATTRIBUTES);
+        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_label", OUTPUT_LABEL_ATTRIBUTES);
+        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_label", USER_ROLE_ATTRIBUTES);
+    }
+
+
 
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent)
         throws IOException
@@ -78,11 +86,11 @@ public class LabelRenderer
         writer.write(">");
 
         String text;
-        String key = (String)uiComponent.getAttribute(KEY_ATTR.getName());
+        String key = (String)uiComponent.getAttribute(KEY_ATTR);
         if (key != null)
         {
             text = BundleUtils.getString(facesContext,
-                                            (String)uiComponent.getAttribute(BUNDLE_ATTR.getName()),
+                                            (String)uiComponent.getAttribute(BUNDLE_ATTR),
                                             key);
         }
         else

@@ -18,7 +18,9 @@
  */
 package net.sourceforge.myfaces.renderkit.html;
 
-import net.sourceforge.myfaces.renderkit.attr.ErrorsRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.*;
+import net.sourceforge.myfaces.component.UIOutput;
+import net.sourceforge.myfaces.component.CommonComponentAttributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -30,12 +32,21 @@ import java.util.Iterator;
 
 /**
  * ErrorsRenderer as specified in JSF.7.6.5
+ *
+ * TODO: HTML universal and event handler attributes
+ * TODO: user role attributes
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class ErrorsRenderer
-        extends HTMLRenderer
-        implements ErrorsRendererAttributes
+    extends HTMLRenderer
+    implements CommonComponentAttributes,
+               CommonRendererAttributes,
+               HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               ErrorsRendererAttributes,
+               UserRoleAttributes
 {
     public static final String TYPE = "Errors";
     public String getRendererType()
@@ -52,6 +63,15 @@ public class ErrorsRenderer
     {
         return s.equals(javax.faces.component.UIOutput.TYPE);
     }
+
+    protected void initAttributeDescriptors()
+    {
+        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_errors", HTML_UNIVERSAL_ATTRIBUTES);
+        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_errors", HTML_EVENT_HANDLER_ATTRIBUTES);
+        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_errors", OUTPUT_ERRORS_ATTRIBUTES);
+        addAttributeDescriptors(UIOutput.TYPE, TLD_HTML_URI, "output_errors", USER_ROLE_ATTRIBUTES);
+    }
+
 
     public void encodeBegin(FacesContext facescontext, UIComponent uiComponent)
         throws IOException

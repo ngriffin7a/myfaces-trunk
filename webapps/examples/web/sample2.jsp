@@ -40,7 +40,7 @@
 
         <x:page_body id="body" cssClass="pageBody" >
 
-            <h:errors id="messageList" />
+            <h:output_errors id="messageList" />
 
             <h:form id="q_form" formName="q_form">
                 <h:input_textarea id="text"

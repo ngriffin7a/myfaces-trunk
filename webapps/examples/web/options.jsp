@@ -40,7 +40,7 @@
         <%@include file="inc/navigation.jsp"  %>
 
         <x:page_body id="body" cssClass="pageBody" >
-            <h:errors id="messageList" />
+            <h:output_errors id="messageList" />
 
             <h4>Options</h4>
             <table border="1"><tr><td>

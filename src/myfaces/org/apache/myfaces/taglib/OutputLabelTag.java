@@ -19,18 +19,22 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIOutput;
+import net.sourceforge.myfaces.renderkit.attr.HTMLLabelAttributes;
+import net.sourceforge.myfaces.renderkit.attr.LabelRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.LabelRenderer;
 
 import javax.faces.component.UIComponent;
 
 
 /**
- * DOCUMENT ME!
+ * see "output_label" tag in myfaces_html.tld
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class OutputLabelTag
-        extends MyFacesTag
+    extends MyFacesTag
+    implements HTMLLabelAttributes,
+               LabelRendererAttributes
 {
     //MyFaces tag extensions:
     public UIComponent createComponent()
@@ -43,42 +47,53 @@ public class OutputLabelTag
         return LabelRenderer.TYPE;
     }
 
-    public void setKey(String value)
-    {
-        setRendererAttribute(LabelRenderer.KEY_ATTR.getName(), value);
-    }
+    // UIComponent attributes --> already implemented in MyFacesTag
 
-    public void setBundle(String value)
-    {
-        setRendererAttribute(LabelRenderer.BUNDLE_ATTR.getName(), value);
-    }
+    // UIOutput attributes
 
-    public void setText(String value)
+    /**
+     * This is a MyFaces extension. JSF.7.4.5 says nothing about a value for label.
+     * @param value
+     */
+    public void setValue(Object value)
     {
-        setValue(value);
-    }
-
-    public void setAccesskey(String value)
-    {
-        setRendererAttribute(LabelRenderer.ACCESSKEY_ATTR, value);
-    }
-    public void setFor(String value)
-    {
-        setRendererAttribute(LabelRenderer.FOR_ATTR, value);
-    }
-
-    public void setOnblur(String value)
-    {
-        setRendererAttribute(LabelRenderer.ONBLUR_ATTR, value);
-    }
-
-    public void setOnfocus(String value)
-    {
-        setRendererAttribute(LabelRenderer.ONFOKUS_ATTR, value);
+        super.setValue(value);
     }
 
     public void setOutputClass(String value)
     {
-        setRendererAttribute(LabelRenderer.OUTPUT_CLASS_ATTR, value);
+        setRendererAttribute(OUTPUT_CLASS_ATTR, value);
     }
+
+    // HTML universal attributes --> already implemented in MyFacesTag
+
+    // HTML event handler attributes --> already implemented in MyFacesTag
+
+    // HTML label attributes
+
+    public void setAccesskey(String value)
+    {
+        setRendererAttribute(ACCESSKEY_ATTR, value);
+    }
+
+    public void setOnblur(String value)
+    {
+        setRendererAttribute(ONBLUR_ATTR, value);
+    }
+
+    public void setOnfocus(String value)
+    {
+        setRendererAttribute(ONFOCUS_ATTR, value);
+    }
+
+    // Label Renderer attributes
+
+    public void setFor(String value)
+    {
+        setRendererAttribute(FOR_ATTR, value);
+    }
+
+    // user role attributes --> already implemented in MyFacesTag
+
+    // key and bundle attributes --> already implemented in MyFacesTag
 }

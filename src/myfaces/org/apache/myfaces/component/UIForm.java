@@ -18,7 +18,7 @@
  */
 package net.sourceforge.myfaces.component;
 
-import javax.faces.context.FacesContext;
+
 
 /**
  * Derived class from javax.faces.UIForm.
@@ -46,18 +46,5 @@ public class UIForm
             super.setAttribute(s, o);
         }
     }
-
-
-    /*
-    public String getFormName()
-    {
-        String formName = super.getFormName();
-        if (formName == null)
-        {
-            return getClientId(FacesContext.getCurrentInstance());
-        }
-        return formName;
-    }
-    */
 
 }

@@ -32,15 +32,18 @@
 <!ENTITY html_select_attributes         SYSTEM "entities/html_select_attributes.xml">
 <!ENTITY html_textarea_attributes       SYSTEM "entities/html_textarea_attributes.xml">
 <!ENTITY html_universal_attributes      SYSTEM "entities/html_universal_attributes.xml">
-<!ENTITY key_bundle_attributes          SYSTEM "entities/key_bundle_attributes.xml">
 <!ENTITY ui_command_attributes          SYSTEM "entities/ui_command_attributes.xml">
 <!ENTITY ui_component_attributes        SYSTEM "entities/ui_component_attributes.xml">
 <!ENTITY ui_form_attributes             SYSTEM "entities/ui_form_attributes.xml">
 <!ENTITY ui_graphic_attributes          SYSTEM "entities/ui_graphic_attributes.xml">
 <!ENTITY ui_input_attributes            SYSTEM "entities/ui_input_attributes.xml">
 <!ENTITY ui_output_attributes           SYSTEM "entities/ui_output_attributes.xml">
-<!ENTITY ui_selectone_attributes        SYSTEM "entities/ui_selectone_attributes.xml">
+<!ENTITY ui_select_boolean_attributes   SYSTEM "entities/ui_select_boolean_attributes.xml">
+<!ENTITY ui_select_many_attributes      SYSTEM "entities/ui_select_many_attributes.xml">
+<!ENTITY ui_select_one_attributes       SYSTEM "entities/ui_select_one_attributes.xml">
+<!ENTITY key_bundle_attributes          SYSTEM "entities/key_bundle_attributes.xml">
 <!ENTITY user_role_attributes           SYSTEM "entities/user_role_attributes.xml">
+<!ENTITY converter_attribute            SYSTEM "entities/converter_attribute.xml">
 ]>
 
 <taglib>
@@ -199,6 +202,8 @@
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_input_attributes;
+        <!-- HiddenRenderer attributes -->
+        &converter_attribute;
     </tag>
 
 <!-- input_number -->
@@ -214,6 +219,8 @@
         &html_input_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
+        <!-- SecretRenderer attributes -->
+        &converter_attribute;
         <attribute>
             <name>maxlength</name>
             <required>false</required>
@@ -249,6 +256,8 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
+        <!-- TextRenderer attributes -->
+        &converter_attribute;
         &user_role_attributes;
     </tag>
 
@@ -262,26 +271,13 @@
         &html_textarea_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
+        <!-- TextareaRenderer attributes -->
+        &converter_attribute;
         &user_role_attributes;
    </tag>
 
 <!-- input_date_time -->
     <!-- TODO -->
-
-
-
-
-
-
-<!-- TODO: refactor from here... -->
-
-
-
-
-
-
-
-
 
 <!-- output_date -->
     <tag>
@@ -290,6 +286,9 @@
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_output_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &user_role_attributes;
         <!-- DateRenderer attributes -->
         <attribute>
             <name>dateStyle</name>
@@ -310,6 +309,9 @@
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_output_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &user_role_attributes;
         <!-- DateTimeRenderer attributes -->
         <attribute>
             <name>dateStyle</name>
@@ -326,6 +328,36 @@
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
+        <attribute>
+            <name>formatPattern</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+    </tag>
+
+<!-- output_errors -->
+    <tag>
+        <name>output_errors</name>
+        <tag-class>net.sourceforge.myfaces.taglib.OutputErrorsTag</tag-class>
+        <body-content>empty</body-content>
+        &ui_component_attributes;
+        <!-- ui_output_attributes not included because "output_errors" has no "value" -->
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &user_role_attributes;
+        <!-- ErrorsRenderer attributes -->
+        <attribute>
+            <name>outputClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>Corresponds to the HTML class attribute.</description>
+        </attribute>
+        <attribute>
+            <name>clientId</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
     </tag>
 
 <!-- output_label -->
@@ -333,19 +365,43 @@
         <name>output_label</name>
         <tag-class>net.sourceforge.myfaces.taglib.OutputLabelTag</tag-class>
         <body-content>JSP</body-content>
+        <description>
+            In addition to the JSF specification, MyFaces allows it to directly
+            give an output text via "value" or "key" and "bundle".
+        </description>
         &ui_component_attributes;
         &ui_output_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
         &html_label_attributes;
-        &key_bundle_attributes;
         <!-- LabelRenderer attributes -->
         <attribute>
           <name>for</name>
           <required>true</required>
           <rtexprvalue>false</rtexprvalue>
         </attribute>
+        <!-- MyFaces extensions -->
+        &key_bundle_attributes;
+        &user_role_attributes;
     </tag>
+
+<!-- output_message -->
+    <tag>
+        <name>output_message</name>
+        <tag-class>net.sourceforge.myfaces.taglib.OutputMessageTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_output_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        <!-- MessageRenderer attributes -->
+        &converter_attribute;
+        &key_bundle_attributes;
+        &user_role_attributes;
+    </tag>
+
+<!-- output_number -->
+    <!-- TODO -->
 
 <!-- output_text -->
     <tag>
@@ -354,7 +410,11 @@
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_output_attributes;
-        &key_bundle_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        <!-- TextRenderer attributes -->
+        &converter_attribute;
+        &user_role_attributes;
     </tag>
 
 <!-- output_time -->
@@ -364,6 +424,9 @@
         <body-content>JSP</body-content>
         &ui_component_attributes;
         &ui_output_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &user_role_attributes;
         <!-- TimeRenderer attributes -->
         <attribute>
             <name>timeStyle</name>
@@ -377,179 +440,132 @@
         </attribute>
     </tag>
 
-<!-- output_message -->
+<!-- selectboolean_checkbox -->
     <tag>
-        <name>output_message</name>
-        <tag-class>net.sourceforge.myfaces.taglib.MessageTag</tag-class>
+        <name>selectboolean_checkbox</name>
+        <!-- strictly speaking "select_boolean_checkbox", but Sun names it so in ref.impl.-->
+        <tag-class>net.sourceforge.myfaces.taglib.SelectBooleanCheckboxTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
-        &ui_output_attributes;
-        &key_bundle_attributes;
-    </tag>
-
-<!-- selectone_listbox -->
-    <tag>
-        <name>selectone_listbox</name>
-        <tag-class>net.sourceforge.myfaces.taglib.SelectOneListboxTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-        &ui_selectone_attributes;
+        &ui_select_boolean_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
-        &html_select_attributes;
+        &html_input_attributes;
+        &user_role_attributes;
     </tag>
 
-<!-- selectone_menu -->
+<!-- selectmany_checkbox -->
     <tag>
-        <name>selectone_menu</name>
-        <tag-class>net.sourceforge.myfaces.taglib.SelectOneMenuTag</tag-class>
+        <name>selectmany_checkbox</name>
+        <!-- strictly speaking "select_many_checkbox", but Sun names it so in ref.impl.-->
+        <tag-class>net.sourceforge.myfaces.taglib.SelectManyCheckboxTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
-        &ui_selectone_attributes;
+        &ui_select_many_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
-        &html_select_attributes;
-        <!-- MenuRenderer attributes -->
+        &html_input_attributes;
+        &user_role_attributes;
+        <!-- CheckboxRenderer attributes -->
         <attribute>
-            <name>size</name>
+            <name>layout</name>
             <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
+            <rtexprvalue>false</rtexprvalue>
+            <type>java.lang.String</type>
+            <description>see JSF.7.4.8</description>
         </attribute>
     </tag>
 
-<!--
-  ======================================================
-  selectmany_listbox
-  ======================================================
- -->
+<!-- selectmany_listbox -->
     <tag>
         <name>selectmany_listbox</name>
+        <!-- strictly speaking "select_many_listbox", but Sun names it so in ref.impl.-->
         <tag-class>net.sourceforge.myfaces.taglib.SelectManyListboxTag</tag-class>
         <body-content>JSP</body-content>
-        <!-- TODO attributes selectmanyClass -->
         &ui_component_attributes;
-        <attribute>
-            <name>value</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <!-- HTML 4.0 rendering attributes -->
-        <attribute>
-            <name>datafld</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>datasrc</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>dataformatas</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>disabled</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>onblur</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>onchange</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>onfocus</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>tabindex</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
+        &ui_select_many_attributes;
         &html_universal_attributes;
         &html_event_handler_attributes;
+        &html_select_attributes;
+        &user_role_attributes;
     </tag>
 
-<!--
-  ======================================================
-  selectmany_menu
-  ======================================================
- -->
+<!-- selectmany_menu -->
     <tag>
         <name>selectmany_menu</name>
+        <!-- strictly speaking "select_many_menu", but Sun names it so in ref.impl.-->
         <tag-class>net.sourceforge.myfaces.taglib.SelectManyMenuTag</tag-class>
         <body-content>JSP</body-content>
-        <!-- TODO attributes selectmanyClass -->
         &ui_component_attributes;
-        <attribute>
-            <name>value</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
+        &ui_select_many_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_select_attributes;
+        &user_role_attributes;
+        <!-- MenuRenderer attributes -->
         <attribute>
             <name>size</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
-        <!-- HTML 4.0 rendering attributes -->
-        <attribute>
-            <name>datafld</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>datasrc</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>dataformatas</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>disabled</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>onblur</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>onchange</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>onfocus</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>tabindex</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        &html_universal_attributes;
-        &html_event_handler_attributes;
     </tag>
 
-<!--
-  ======================================================
-  selectitem
-  TODO: check attributes
-  ======================================================
- -->
+<!-- selectone_listbox -->
+    <tag>
+        <name>selectone_listbox</name>
+        <!-- strictly speaking "select_one_listbox", but Sun names it so in ref.impl.-->
+        <tag-class>net.sourceforge.myfaces.taglib.SelectOneListboxTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_select_one_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_select_attributes;
+        &user_role_attributes;
+    </tag>
+
+<!-- selectone_menu -->
+    <tag>
+        <name>selectone_menu</name>
+        <!-- strictly speaking "select_one_menu", but Sun names it so in ref.impl.-->
+        <tag-class>net.sourceforge.myfaces.taglib.SelectOneMenuTag</tag-class>
+        <body-content>JSP</body-content>
+        &ui_component_attributes;
+        &ui_select_one_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_select_attributes;
+        &user_role_attributes;
+        <!-- MenuRenderer attributes -->
+        <attribute>
+            <name>size</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+        </attribute>
+    </tag>
+
+<!-- selectone_radio -->
+
+
+
+<!-- TODO: refactor from here... -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- selectitem -->
     <tag>
         <name>selectitem</name>
         <tag-class>net.sourceforge.myfaces.taglib.SelectItemTag</tag-class>
@@ -578,47 +594,12 @@
         &key_bundle_attributes;
     </tag>
 
-<!--
-  ======================================================
-  selectitems
-  TODO: check attributes
-  ======================================================
- -->
+<!-- selectitems -->
     <tag>
         <name>selectitems</name>
         <tag-class>net.sourceforge.myfaces.taglib.SelectItemsTag</tag-class>
         <body-content>JSP</body-content>
         &ui_component_attributes;
-    </tag>
-
-<!--
-  ======================================================
-  errors
-  TODO: check attributes
-  ======================================================
- -->
-    <tag>
-        <name>errors</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ErrorsTag</tag-class>
-        <body-content>empty</body-content>
-        &ui_component_attributes;
-    </tag>
-
-    <tag>
-        <name>input_errors</name>
-        <tag-class>net.sourceforge.myfaces.taglib.ErrorsTag</tag-class>
-        <body-content>empty</body-content>
-        &ui_component_attributes;
-        <attribute>
-            <name>clientId</name>
-            <required>true</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>cssClass</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
     </tag>
 
 <!--
@@ -733,197 +714,7 @@
         &ui_component_attributes;
     </tag>
 
-<!--
-  ======================================================
-  selectboolean_checkbox
-  ======================================================
- -->
-    <tag>
-        <name>selectboolean_checkbox</name>
-        <tag-class>net.sourceforge.myfaces.taglib.SelectBooleanCheckboxTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-        <attribute>
-            <name>checked</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        &key_bundle_attributes;
-        <attribute>
-          <name>selectbooleanClass</name>
-          <required>false</required>
-          <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>value</name>
-          <required>false</required>
-          <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <!-- HTML 4.0 rendering attributes -->
-        <attribute>
-          <name>accesskey</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>align</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>alt</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>datafld</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>datasrc</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>dataformatas</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>disabled</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>onblur</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>onchange</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>onfocus</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>onselect</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>readonly</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>tabindex</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-    </tag>
 
-<!--
-  ======================================================
-  selectmany_checkbox
-  ======================================================
- -->
-    <tag>
-        <name>selectmany_checkboxlist</name>
-        <tag-class>net.sourceforge.myfaces.taglib.SelectManyCheckboxListTag</tag-class>
-        <body-content>JSP</body-content>
-        &ui_component_attributes;
-        <attribute>
-            <name>checked</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        &key_bundle_attributes;
-        <attribute>
-          <name>selectmanyClass</name>
-          <required>false</required>
-          <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>value</name>
-          <required>false</required>
-          <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <!-- HTML 4.0 rendering attributes -->
-        <attribute>
-          <name>accesskey</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>align</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>alt</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>datafld</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>datasrc</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>dataformatas</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>disabled</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>onblur</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>onchange</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>onfocus</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>onselect</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>readonly</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-          <name>tabindex</name>
-          <required>false</required>
-          <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-    </tag>
 
 </taglib>
 

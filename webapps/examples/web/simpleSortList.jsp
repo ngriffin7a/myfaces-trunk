@@ -41,7 +41,7 @@
 
         <x:page_body id="body" cssClass="pageBody" >
 
-            <h:errors id="errors" />
+            <h:output_errors id="errors" />
 
             <h:list cssClass="standardTable"
                     headerClass="standardTable_SortHeader"

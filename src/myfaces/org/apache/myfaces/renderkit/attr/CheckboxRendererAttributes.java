@@ -18,48 +18,29 @@
  */
 package net.sourceforge.myfaces.renderkit.attr;
 
-import javax.faces.component.AttributeDescriptor;
+
 
 /**
- * DOCUMENT ME!
+ * Constant definitions for the specified render dependent attributes of the
+ * "Checkbox" renderer type.
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public interface CheckboxRendererAttributes
     extends CommonRendererAttributes
 {
-    public static final AttributeDescriptor KEY_ATTR = new AttrDescrImpl("key");
-    public static final String BUNDLE_ATTR = "bundle";
-    public static final String CB_VALUE_ATTR = "cbvalue";
-
-    public static final String ACCESSKEY_ATTR = "accesskey";
-    public static final String ALIGN_ATTR = "align";
-    public static final String ALT_ATTR = "alt";
-    public static final String DATAFLD_ATTR = "datafld";
-    public static final String DATASRC_ATTR = "datasrc";
-    public static final String DATAFORMATAS_ATTR = "dataformatas";
-    public static final String DISABLED_ATTR = "disabled";
-    public static final String ONBLUR_ATTR = "onblur";
-    public static final String ONCHANGE_ATTR = "onchange";
-    public static final String ONFOCUS_ATTR = "onfocus";
-    public static final String ONSELECT_ATTR = "onselect";
-    public static final String READONLY_ATTR = "readonly";
-    public static final String TABINDEX_ATTR = "tabindex";
-
-    public static final String[] COMMON_CHECKBOX_ATTRIBUTES =
+    public static final String[] SELECT_BOOLEAN_CHECKBOX_ATTRIBUTES =
     {
-        ACCESSKEY_ATTR,
-        ALIGN_ATTR,
-        ALT_ATTR,
-        DATAFLD_ATTR,
-        DATASRC_ATTR,
-        DATAFORMATAS_ATTR,
-        DISABLED_ATTR,
-        ONBLUR_ATTR,
-        ONCHANGE_ATTR,
-        ONFOCUS_ATTR,
-        ONSELECT_ATTR,
-        READONLY_ATTR,
-        TABINDEX_ATTR,
+        SELECT_BOOLEAN_CLASS_ATTR
     };
+
+
+    public static final String LAYOUT_ATTR = "layout";
+
+    public static final String[] SELECT_MANY_CHECKBOX_ATTRIBUTES =
+    {
+        SELECT_MANY_CLASS_ATTR,
+        LAYOUT_ATTR
+    };
+
 }

@@ -19,8 +19,7 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.component.UISelectMany;
-import net.sourceforge.myfaces.renderkit.attr.ListboxRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.MenuRendererAttributes;
+import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.SelectItemHelper;
@@ -33,12 +32,16 @@ import java.io.IOException;
 import java.util.Iterator;
 
 /**
- * DOCUMENT ME!
+ * Base class for ListboxRenderer and MenuRenderer (= renderers that write a HTML select).
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public abstract class AbstractSelectOptionRenderer
     extends HTMLRenderer
+    implements HTMLUniversalAttributes,
+               HTMLEventHandlerAttributes,
+               HTMLSelectAttributes,
+               CommonRendererAttributes
 {
 
     public void encodeBegin(FacesContext context, UIComponent uicomponent)
@@ -46,7 +49,10 @@ public abstract class AbstractSelectOptionRenderer
     {
     }
 
-    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent, int size, String rendererType)
+    protected void encodeEnd(FacesContext facesContext,
+                          UIComponent uiComponent,
+                          int size,
+                          String rendererType)
             throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
@@ -61,27 +67,19 @@ public abstract class AbstractSelectOptionRenderer
             writer.write(uiComponent.getClientId(facesContext));
             writer.write("\"");
 
-            CommonAttributes.renderHTMLEventHandlerAttributes(facesContext, uiComponent);
-            CommonAttributes.renderHTMLUniversalAttributes(facesContext, uiComponent);
             if (rendererType.equals(ListboxRenderer.TYPE))
             {
                 writer.write(" size=\"");
                 writer.write(new Integer(size).toString());
                 writer.write("\"");
-                CommonAttributes.renderAttributes(facesContext,
-                                                  uiComponent,
-                                                  ListboxRendererAttributes.COMMON_LISTBOX_ATTRIBUTES);
             }
-            else if (rendererType.equals(MenuRenderer.TYPE))
-            {
-                CommonAttributes.renderAttributes(facesContext,
-                                                  uiComponent,
-                                                  MenuRendererAttributes.COMMON_MENU_ATTRIBUTES);
-            }
-            else
-            {
-                throw new IllegalArgumentException("Unknown renderer-type " + rendererType);
-            }
+
+            CommonAttributes.renderCssClass(writer, uiComponent, multipleSelect
+                                                                 ? SELECT_MANY_CLASS_ATTR
+                                                                 : SELECT_ONE_CLASS_ATTR);
+            CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_UNIVERSAL_ATTRIBUTES);
+            CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_EVENT_HANDLER_ATTRIBUTES);
+            CommonAttributes.renderHTMLAttributes(writer, uiComponent, HTML_SELECT_ATTRIBUTES);
 
             if (multipleSelect) writer.write(" multiple ");
             writer.write(">\n");

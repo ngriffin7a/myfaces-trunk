@@ -19,18 +19,20 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIOutput;
+import net.sourceforge.myfaces.renderkit.attr.DateRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.DateRenderer;
 
 import javax.faces.component.UIComponent;
 
 
 /**
- * DOCUMENT ME!
+ * see "output_date" tag in myfaces_html.tld
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class OutputDateTag
-        extends MyFacesTag
+    extends MyFacesTag
+    implements DateRendererAttributes
 {
     //MyFaces tag extensions:
     public UIComponent createComponent()
@@ -45,18 +47,36 @@ public class OutputDateTag
         return DateRenderer.TYPE;
     }
 
+    // UIComponent attributes --> already implemented in MyFacesTag
+
+    // UIOutput attributes
+
+    public void setValue(Object v)
+    {
+        super.setValue(v);
+    }
+
     public void setOutputClass(String value)
     {
-        setRendererAttribute(DateRenderer.OUTPUT_CLASS_ATTR, value);
+        setRendererAttribute(OUTPUT_CLASS_ATTR, value);
     }
+
+    // HTML universal attributes --> already implemented in MyFacesTag
+
+    // HTML event handler attributes --> already implemented in MyFacesTag
+
+    // Date Renderer attributes
 
     public void setDateStyle(String value)
     {
-        setRendererAttribute(DateRenderer.DATE_STYLE_ATTR, value);
+        setRendererAttribute(DATE_STYLE_ATTR, value);
     }
 
     public void setTimezone(String value)
     {
-        setRendererAttribute(DateRenderer.TIMEZONE_ATTR, value);
+        setRendererAttribute(TIMEZONE_ATTR, value);
     }
+
+    // user role attributes --> already implemented in MyFacesTag
+
 }
