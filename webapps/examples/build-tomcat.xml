@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<project name="myfaces-tomcat" default="all">
+<project name="myfaces-tomcat" default="list">
 
     <!-- Constants -->
     <property name="examples.web" location="${basedir}/web"/>
@@ -12,7 +12,7 @@
         <!-- compile and copy necessary libs -->
         <ant dir="."
              antfile="build.xml"
-             target="all"
+             target="compile-and-copy-libs"
              inheritall="false"/>
     </target>
 
@@ -40,10 +40,11 @@
 
 	<target name="install" description="Install example web application on tomcat"
             depends="-prepare" >
+            <echo message="${examples.web}"/>
 	  <install url="${tomcat.manager.url}" username="${tomcat.admin.user}"
 	           password="${tomcat.admin.passwd}"
                path="${tomcat.example.context.path}"
-               war="file:${examples.web}" />
+               war="file://${examples.web}" />
     </target>
 
 	<target name="reload" description="Reload example web application on tomcat">
