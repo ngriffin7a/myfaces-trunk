@@ -18,8 +18,8 @@
  */
 package javax.faces.webapp;
 
-import javax.faces.FactoryFinder;
 import javax.faces.FacesException;
+import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -38,6 +38,9 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.19  2004/04/26 12:01:39  manolito
+ * more reluctant releasing of members for Resin compatibility
+ *
  * Revision 1.18  2004/04/20 11:16:23  royalts
  * no message
  *
@@ -64,14 +67,16 @@ public abstract class UIComponentTag
     private static final String COMPONENT_STACK_ATTR =  UIComponentTag.class.getName() + ".COMPONENT_STACK";
 
     protected PageContext pageContext = null;
+    private FacesContext _facesContext = null;
+    private Tag _parent = null;
 
+    //tag attributes
     private String _binding = null;
     private String _id = null;
     private String _rendered = null;
+
     private UIComponent _componentInstance = null;
     private boolean _created = false;
-    private Tag _parent = null;
-    private FacesContext _facesContext = null;
     private Boolean _suppressed = null;
     private ResponseWriter _writer = null;
     private Set _childrenAdded = null;
@@ -82,6 +87,40 @@ public abstract class UIComponentTag
     {
 
     }
+
+    public void release()
+    {
+        internalRelease();
+
+        //reset tag attribute members
+        _binding = null;
+        _id = null;
+        _rendered = null;
+
+        //members, that must/need only be reset when there is no more risk, that the container
+        //wants to reuse this tag
+        pageContext = null;
+        _facesContext = null;
+        _parent = null;
+    }
+
+
+    /**
+     * Reset any members that apply to the according component instance and
+     * must not be reused if the container wants to reuse this tag instance.
+     * This method is called when rendering for this tag is finished ( doEndTag() )
+     * or when the released from the container.
+     */
+    private void internalRelease()
+    {
+        _componentInstance = null;
+        _created = false;
+        _suppressed = null;
+        _writer = null;
+        _childrenAdded = null;
+        _facetsAdded = null;
+    }
+
 
     public void setBinding(String binding)
             throws JspException
@@ -309,26 +348,6 @@ public abstract class UIComponentTag
     }
 
 
-    private void internalRelease()
-    {
-        _binding = null;
-        _id = null;
-        _rendered = null;
-        _componentInstance = null;
-        _created = false;
-        _parent = null;
-        _facesContext = null;
-        _suppressed = null;
-        _writer = null;
-        _childrenAdded = null;
-        _facetsAdded = null;
-    }
-
-    public void release()
-    {
-        pageContext = null;
-        internalRelease();
-    }
 
     protected void encodeBegin()
             throws IOException
