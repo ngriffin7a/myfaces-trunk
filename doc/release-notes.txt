@@ -2,7 +2,11 @@ MyFaces Release Notes
 =====================
 
 ----------------------------------------------------------------------
-Changes in Release 1.0.4 alpha
+Changes in Release 1.0.5 beta
+* bug #955111	RestoreState of outputText with mixed ValueBinding attribute
+
+----------------------------------------------------------------------
+Changes in Release 1.0.4 beta
 
 IMPORTANT NOTE: because of fix for bug #952453 the context parameter
 javax.faces.application.CONFIG_FILES was changed to the spec-compliant
@@ -23,6 +27,7 @@ otherwise your config files will no longer be found and parsed.
 * bug #948626	hiddenInput does not decode and store value
 * bug #948110	h:selectManyCheckbox styleClass handling
 * bug #943587	<h:commandLink> does not recognize target attribute.
+* bug #943166	Managed bean properties cannot use native data types?
 * many bugfixes ;-)
 
 ----------------------------------------------------------------------
