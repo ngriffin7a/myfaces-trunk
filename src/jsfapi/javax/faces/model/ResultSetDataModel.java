@@ -19,68 +19,104 @@
 
 package javax.faces.model;
 
+import java.sql.ResultSet;
+
 /**
   * @author Thomas Spiegl (latest modification by $Author$)
   * @version $Revision$ $Date$
 */
-public class ResultSetDataModel extends DataModel {
+public class ResultSetDataModel extends DataModel
+{
+    // FIELDS
+    private int _rowIndex = -1;
+    private ResultSetMap _data;
 
-	// FIELDS
+    // CONSTRUCTORS
+    public ResultSetDataModel()
+    {
+        super();
+    }
 
-	// CONSTRUCTORS
-	public ResultSetDataModel()
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
-    
-	public ResultSetDataModel(java.sql.ResultSet result)
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
+    public ResultSetDataModel(ResultSet resultset)
+    {
+        if (resultset == null) throw new NullPointerException("resultset");
+        setWrappedData(resultset);
+        resultset.get
+        throw new UnsupportedOperationException();
+    }
 
-	// METHODS
-	public int getRowCount()
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
+    // METHODS
+    public int getRowCount()
+    {
+        if (_data == null)
+        {
+            return -1;
+        }
+        return _data.length;
+    }
 
-	public Object getRowData()
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
+    public Object getRowData()
+    {
+        if (_data == null)
+        {
+            return null;
+        }
+        if (!isRowAvailable())
+        {
+            throw new IllegalArgumentException("row is unavailable");
+        }
+        return _data[_rowIndex];
+    }
 
-	public int getRowIndex()
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
+    public int getRowIndex()
+    {
+        return _rowIndex;
+    }
 
-	public Object getWrappedData()
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
+    public Object getWrappedData()
+    {
+        return _data;
+    }
 
-	public boolean isRowAvailable()
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
+    public boolean isRowAvailable()
+    {
+        if (_data == null)
+        {
+            return false;
+        }
+        return _rowIndex >= 0 && _rowIndex < _data.length;
+    }
 
-	public void setRowIndex(int rowIndex)
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
+    public void setRowIndex(int rowIndex)
+    {
+        if (rowIndex < -1)
+        {
+            throw new IllegalArgumentException("illegal rowIndex " + rowIndex);
+        }
+        int oldRowIndex = _rowIndex;
+        _rowIndex = rowIndex;
+        if (_data != null && oldRowIndex != _rowIndex)
+        {
+            Object data = isRowAvailable() ? getRowData() : null;
+            DataModelEvent event = new DataModelEvent(this, _rowIndex, data);
+            DataModelListener[] listeners = getDataModelListeners();
+            for (int i = 0; i < listeners.length; i++)
+            {
+                listeners[i].rowSelected(event);
+            }
+        }
+    }
 
-	public void setWrappedData(Object data)
-	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
-
+    public void setWrappedData(Object data)
+    {
+        if (data == null)
+        {
+            setRowIndex(-1);
+        }
+        else
+        {
+            _data = ((Result)data).getRows();
+            setRowIndex(0);
+        }
+    }
 }

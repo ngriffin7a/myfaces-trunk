@@ -27,31 +27,32 @@ public class DataModelEvent
 {
 
 	// FIELDS
+    private DataModel _model;
+    private int _index;
+    private Object _data;
 
 	// CONSTRUCTORS
 	public DataModelEvent(DataModel model, int index, Object data)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		_model = model;
+        _index = index;
+        _data = data;
 	}
 
 	// METHODS
 	public DataModel getDataModel()
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		return _model;
 	}
 
 	public Object getRowData()
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		return _data;
 	}
 
 	public int getRowIndex()
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		return _index;
 	}
 
 }

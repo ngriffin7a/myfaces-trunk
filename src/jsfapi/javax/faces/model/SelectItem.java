@@ -38,17 +38,22 @@ public class SelectItem
 
     public SelectItem(Object value)
     {
+        if (value == null) throw new NullPointerException("value");
         _value = value;
     }
 
     public SelectItem(Object value, String label)
     {
+        if (value == null) throw new NullPointerException("value");
+        if (label == null) throw new NullPointerException("label");
         _value = value;
         _label = label;
     }
 
     public SelectItem(Object value, String label, String description)
     {
+        if (value == null) throw new NullPointerException("value");
+        if (label == null) throw new NullPointerException("label");
         _value = value;
         _label = label;
         _description = description;
@@ -56,6 +61,8 @@ public class SelectItem
 
     public SelectItem(Object value, String label, String description, boolean disabled)
     {
+        if (value == null) throw new NullPointerException("value");
+        if (label == null) throw new NullPointerException("label");
         _value = value;
         _label = label;
         _description = description;
@@ -90,6 +97,7 @@ public class SelectItem
 
     public void setLabel(String label)
     {
+        if (label == null) throw new NullPointerException("label");
         _label = label;
     }
 
@@ -100,6 +108,7 @@ public class SelectItem
 
     public void setValue(Object value)
     {
+        if (value == null) throw new NullPointerException("value");
         _value = value;
     }
 }

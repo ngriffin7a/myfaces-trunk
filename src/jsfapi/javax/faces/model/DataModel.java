@@ -19,6 +19,9 @@
 
 package javax.faces.model;
 
+import java.util.List;
+import java.util.ArrayList;
+
 /**
   * @author Thomas Spiegl (latest modification by $Author$)
   * @version $Revision$ $Date$
@@ -26,25 +29,32 @@ package javax.faces.model;
 public abstract class DataModel {
 
 	// FIELDS
+    private List _listeners;
 
 	// CONSTRUCTORS
 	public DataModel()
 	{
-		//TODO
-		throw new UnsupportedOperationException();
-	}
+		setWrappedData(null);
+ 	}
 
 	// METHODS
-	public void addDataModelListener(javax.faces.model.DataModelListener)
+	public void addDataModelListener(DataModelListener listener)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+        if (listener == null) throw new NullPointerException("listener");
+		if (_listeners == null)
+        {
+            _listeners = new ArrayList();
+        }
+        _listeners.add(listener);
 	}
 
 	public DataModelListener[] getDataModelListeners()
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+        if (_listeners == null)
+        {
+            return new DataModelListener[0];
+        }
+        return (DataModelListener[])_listeners.toArray(new DataModelListener[_listeners.size()]);
 	}
 
 	abstract public int getRowCount();
@@ -59,8 +69,11 @@ public abstract class DataModel {
 
 	public void removeDataModelListener(DataModelListener listener)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		if (listener == null) throw new NullPointerException("listener");
+		if (_listeners != null)
+        {
+            _listeners.remove(listener);
+        }
 	}
 
 	abstract public void setRowIndex(int rowIndex);

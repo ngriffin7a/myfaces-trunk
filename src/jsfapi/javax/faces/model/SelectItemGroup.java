@@ -23,38 +23,36 @@ package javax.faces.model;
   * @author Thomas Spiegl (latest modification by $Author$)
   * @version $Revision$ $Date$
 */
-public class SelectItemGroup extends SelectItem {
-
+public class SelectItemGroup extends SelectItem
+{
 	// FIELDS
-
+    private SelectItem[] _selectItems;
+    
 	// CONSTRUCTORS
 	public SelectItemGroup()
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+        super();
 	}
+
 	public SelectItemGroup(String label)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		super("", label, null);
 	}
 	public SelectItemGroup(String label, String description, boolean disabled, SelectItem[] selectItems)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+        super("", label, description, disabled);
+		_selectItems = selectItems;
 	}
 
 	// METHODS
 	public SelectItem[] getSelectItems()
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		return _selectItems;
 	}
 
 	public void setSelectItems(SelectItem[] selectItems)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		if (selectItems == null) throw new NullPointerException("selectItems");
+		_selectItems = selectItems;
 	}
-
 }
