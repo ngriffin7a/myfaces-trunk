@@ -22,6 +22,7 @@ import org.apache.myfaces.renderkit.RendererUtils;
 import org.apache.myfaces.renderkit.html.HTML;
 import org.apache.myfaces.renderkit.html.HtmlRenderer;
 import org.apache.myfaces.renderkit.html.HtmlRendererUtils;
+import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
@@ -45,6 +46,9 @@ import java.util.List;
 
 /**
  * $Log$
+ * Revision 1.12  2004/12/02 22:26:23  svieujot
+ * Simplify the AddResource methods
+ *
  * Revision 1.11  2004/12/01 20:25:10  svieujot
  * Make the Extensions filter support css and image resources.
  * Convert the popup calendar to use this new filter.
@@ -115,8 +119,22 @@ public class HtmlCalendarRenderer
             // Add the javascript and CSS pages
             AddResource.addStyleSheet(HtmlCalendarRenderer.class, "WH/theme.css", facesContext);
             AddResource.addStyleSheet(HtmlCalendarRenderer.class, "DB/theme.css", facesContext);
-            AddResource.addJavaScriptOncePerPage(HtmlCalendarRenderer.class, "popcalendar.js", facesContext,
-                    "jscalendarSetImageDirectory("+AddResource.getResourceMappedPath(HtmlCalendarRenderer.class, "DB", facesContext)+")");
+            AddResource.addJavaScriptToHeader(HtmlCalendarRenderer.class, "popcalendar.js", facesContext);
+            
+            ResponseWriter writer = facesContext.getResponseWriter();
+            
+            
+            writer.startElement(HTML.SCRIPT_ELEM, null);
+            writer.writeAttribute(HTML.SCRIPT_LANGUAGE_ATTR, HTML.SCRIPT_LANGUAGE_JAVASCRIPT, null);
+            writer.write(
+                    "jscalendarSetImageDirectory(\""
+                    	+JavascriptUtils.encodeString(
+                    	        AddResource.getResourceMappedPath(HtmlCalendarRenderer.class, "DB/", facesContext)
+                    	 )
+                    +"\")");
+            writer.endElement(HTML.SCRIPT_ELEM);
+            
+                    
             
             String dateFormat = CalendarDateTimeConverter.createJSPopupFormat(facesContext,
                     inputCalendar.getPopupDateFormat());
@@ -154,8 +172,6 @@ public class HtmlCalendarRenderer
             inputCalendar.getChildren().add(inputText);
 
             RendererUtils.renderChild(facesContext, inputText);
-
-            ResponseWriter writer = facesContext.getResponseWriter();
 
             writer.startElement(HTML.SCRIPT_ELEM,null);
             writer.writeAttribute(HTML.SCRIPT_LANGUAGE_ATTR,HTML.SCRIPT_LANGUAGE_JAVASCRIPT,null);

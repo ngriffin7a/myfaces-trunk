@@ -31,6 +31,9 @@ import java.util.List;
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.6  2004/12/02 22:26:23  svieujot
+ * Simplify the AddResource methods
+ *
  * Revision 1.5  2004/12/01 16:32:03  svieujot
  * Convert the Multipart filter in an ExtensionsFilter that provides an additional facility to include resources in a page.
  * Tested only with javascript resources right now, but should work fine with images too.
@@ -130,7 +133,7 @@ public class HtmlPopupRenderer
                                     Integer displayAtDistanceX, Integer displayAtDistanceY)
         throws IOException
     {
-        AddResource.addJavaScriptOncePerPage(HtmlPopupRenderer.class, "JSPopup.js", context);
+        AddResource.addJavaScriptToHeader(HtmlPopupRenderer.class, "JSPopup.js", context);
 
         String popupId = (clientId+"Popup").replace(':','_').replaceAll("_",
                 "popupIdSeparator");

@@ -41,6 +41,9 @@ import org.apache.myfaces.renderkit.html.HTML;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.9  2004/12/02 22:26:23  svieujot
+ * Simplify the AddResource methods
+ *
  * Revision 1.8  2004/12/02 11:53:27  svieujot
  * Replace java 1.5 code by 1.4 version.
  *
@@ -83,12 +86,11 @@ public class AddResource {
     private static final String ADDITIONAL_HEADER_INFO_REQUEST_ATTRUBITE_NAME = "myFacesHeaderResource2Render";
     
     // Methodes to Add resources
-    
-    public static void addJavaScript(Class componentClass, String resourceFileName, FacesContext context) throws IOException{
-        addJavaScript(componentClass, resourceFileName, context, null);
-    }
-    
-    public static void addJavaScript(Class componentClass, String resourceFileName, FacesContext context, String scriptBody) throws IOException{
+
+    /**
+     * Adds the given Javascript resource to the document body.
+     */
+    public static void addJavaScriptHere(Class componentClass, String resourceFileName, FacesContext context) throws IOException{
         ResponseWriter writer = context.getResponseWriter();
         
         writer.startElement(HTML.SCRIPT_ELEM,null);
@@ -96,32 +98,22 @@ public class AddResource {
         writer.writeURIAttribute(HTML.SRC_ATTR,
                 getResourceMappedPath(componentClass,resourceFileName, context),
                 null);
-        
-        if( scriptBody != null )
-            writer.writeText(scriptBody, null);
-
         writer.endElement(HTML.SCRIPT_ELEM);
     }
-    
-    public static void addJavaScriptOncePerPage(Class componentClass, String resourceFileName, FacesContext context) throws IOException{
-        addJavaScriptOncePerPage(componentClass, resourceFileName, context, null);
+
+    /**
+     * Adds the given Javascript resource to the document Header.
+     * If the script is already has already been referenced, it's added only once. 
+     */
+    public static void addJavaScriptToHeader(Class componentClass, String resourceFileName, FacesContext context){
+        AdditionalHeaderInfoToRender jsInfo = new AdditionalHeaderInfoToRender(AdditionalHeaderInfoToRender.TYPE_JS, componentClass, resourceFileName);
+        getAdditionalHeaderInfoToRender(context).add( jsInfo );
     }
 
-    public static void addJavaScriptOncePerPage(Class componentClass, String resourceFileName, FacesContext context, String scriptBody) throws IOException{
-        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
-        String javascriptRenderedAttributeName = "myFacesResourceRendered"+(componentClass.hashCode()+(resourceFileName+scriptBody).hashCode());
-        
-        if( request.getAttribute(javascriptRenderedAttributeName) == null ){
-            if (scriptBody == null) {
-                AdditionalHeaderInfoToRender jsInfo = new AdditionalHeaderInfoToRender(AdditionalHeaderInfoToRender.TYPE_JS, componentClass, resourceFileName);
-                getAdditionalHeaderInfoToRender(context).add( jsInfo );
-            } else {
-                addJavaScript(componentClass, resourceFileName, context);
-            }
-            request.setAttribute(javascriptRenderedAttributeName, Boolean.TRUE);
-        }
-    }
-    
+    /**
+     * Adds the given Style Sheet to the document Header.
+     * If the style sheet is already has already been referenced, it's added only once.
+     */
     public static void addStyleSheet(Class componentClass, String resourceFileName, FacesContext context){
         AdditionalHeaderInfoToRender cssInfo = new AdditionalHeaderInfoToRender(AdditionalHeaderInfoToRender.TYPE_CSS, componentClass, resourceFileName);
         getAdditionalHeaderInfoToRender(context).add( cssInfo );
