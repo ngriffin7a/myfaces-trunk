@@ -26,6 +26,9 @@ import javax.faces.el.ValueBinding;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.8  2004/12/06 03:34:57  svieujot
+ * Typo
+ *
  * Revision 1.7  2004/12/06 01:03:42  svieujot
  * Bugfix : getter now use boolean instead of Boolean, and setters created.
  *
@@ -149,7 +152,7 @@ public class HtmlEditor extends UIInput {
    		return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
     public void setStyleClass(String styleClass){
-   		this._style = styleClass;
+   		this._styleClass = styleClass;
     }
     
     public Boolean isAllowEditSource(){
