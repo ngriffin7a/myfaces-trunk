@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib.ext;
 
 import net.sourceforge.myfaces.component.ext.UIFileUpload;
-import net.sourceforge.myfaces.renderkit.attr.HTMLInputAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLInputAttributes;
 import net.sourceforge.myfaces.renderkit.attr.ext.FileUploadRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.ext.FileUploadRenderer;
 import net.sourceforge.myfaces.taglib.MyFacesTag;

@@ -19,7 +19,6 @@
 package net.sourceforge.myfaces.renderkit.html.util;
 
 import net.sourceforge.myfaces.renderkit.html.jspinfo.TLDInfo;
-import net.sourceforge.myfaces.renderkit.attr.AttrDescrImpl;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.AttributeDescriptor;
@@ -27,7 +26,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.jsp.tagext.TagAttributeInfo;
 
 /**
- * DOCUMENT ME!
+ * Utilities to create AttributeDescriptors from a TLD.
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -35,29 +34,72 @@ public class AttrDescriptorUtil
 {
     private AttrDescriptorUtil() {}
 
+    /**
+     * Gets the TagAttributeInfo from the given attribute in the specified
+     * taglib and returns a new AttributeDescriptor with the given
+     * renderer attribute name and the determined type.
+     * @param servletContext
+     * @param taglibURI
+     * @param tagName
+     * @param tagAttributeName
+     * @param rendererAttributeName
+     * @return a new AttributeDescriptor
+     */
     public static AttributeDescriptor getAttributeDescriptor(ServletContext servletContext,
                                                              String taglibURI,
-                                                             final String tagName,
-                                                             final String attributeName)
+                                                             String tagName,
+                                                             String tagAttributeName,
+                                                             String rendererAttributeName)
     {
         final TagAttributeInfo tagAttributeInfo
             = TLDInfo.getTagAttributeInfo(servletContext,
                                           taglibURI,
                                           tagName,
-                                          attributeName);
-        String type = tagAttributeInfo.getTypeName();
+                                          tagAttributeName);
         Class clazz;
-        try
+        String type = tagAttributeInfo.getTypeName();
+        if (type == null)
         {
-            clazz = Class.forName(type);
+            clazz = String.class;
         }
-        catch (ClassNotFoundException e)
+        else
         {
-            LogUtil.getLogger().severe("Attribute '" + attributeName + "' of tag '" + tagName + "' has illegal type:" + e.getMessage());
-            clazz = Object.class;
+            try
+            {
+                clazz = Class.forName(type);
+            }
+            catch (ClassNotFoundException e)
+            {
+                LogUtil.getLogger().severe("Attribute '" + tagAttributeName + "' of tag '" + tagName + "' has illegal type:" + e.getMessage());
+                clazz = Object.class;
+            }
         }
 
-        return new AttrDescrImpl(tagAttributeInfo.getName(), clazz);
+        return new AttrDescriptorImpl(rendererAttributeName, clazz);
     }
+
+    /**
+     * Identical to {@link #getAttributeDescriptor(javax.servlet.ServletContext, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * but for the (usual) case where the renderer attribute name is identical to the
+     * tag attribute name.
+     * @param servletContext
+     * @param taglibURI
+     * @param tagName
+     * @param attributeName
+     * @return
+     */
+    public static AttributeDescriptor getAttributeDescriptor(ServletContext servletContext,
+                                                             String taglibURI,
+                                                             final String tagName,
+                                                             final String attributeName)
+    {
+        return getAttributeDescriptor(servletContext,
+                                      taglibURI,
+                                      tagName,
+                                      attributeName,
+                                      attributeName);
+    }
+
+
 
 }

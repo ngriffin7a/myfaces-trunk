@@ -171,34 +171,94 @@ public class MyFacesTagHelper
     {
         if (_attributes != null)
         {
-            for (Iterator it = _attributes.iterator(); it.hasNext();)
+            if (_tag.getCreated())
             {
-                Attribute attr = (Attribute)it.next();
-                if (attr.isComponentProperty)
+                //component was just created, so no need to check for old values
+                //before setting the attributes
+                for (Iterator it = _attributes.iterator(); it.hasNext();)
                 {
-                    if (attr.name.equals(CommonComponentAttributes.VALUE_ATTR))
+                    Attribute attr = (Attribute)it.next();
+                    if (attr.isComponentProperty)
                     {
-                        overrideComponentValue(uiComponent,
-                                               attr.value);
+                        setComponentProperty(uiComponent, attr.name, attr.value);
                     }
                     else
-                    {
-                        overrideComponentProperty(uiComponent,
-                                                  attr.name,
-                                                  attr.value);
-                    }
-                }
-                else
-                {
-                    //override attribute
-                    if (uiComponent.getAttribute(attr.name) == null)
                     {
                         uiComponent.setAttribute(attr.name, attr.value);
                     }
                 }
             }
+            else
+            {
+                //component is NOT new, so we must only set (override) values
+                //that are null
+                for (Iterator it = _attributes.iterator(); it.hasNext();)
+                {
+                    Attribute attr = (Attribute)it.next();
+                    if (attr.isComponentProperty)
+                    {
+                        if (attr.name.equals(CommonComponentAttributes.VALUE_ATTR))
+                        {
+                            overrideComponentValue(uiComponent,
+                                                   attr.value);
+                        }
+                        else
+                        {
+                            overrideComponentProperty(uiComponent,
+                                                      attr.name,
+                                                      attr.value);
+                        }
+                    }
+                    else
+                    {
+                        //override attribute
+                        if (uiComponent.getAttribute(attr.name) == null)
+                        {
+                            uiComponent.setAttribute(attr.name, attr.value);
+                        }
+                    }
+                }
+            }
         }
     }
+
+
+    private void setComponentProperty(UIComponent uiComponent,
+                                      String propertyName,
+                                      Object propertyValue)
+    {
+        boolean errorOccured = false;
+
+        //Try bean property setter first
+        PropertyDescriptor pd = BeanUtils.findPropertyDescriptor(uiComponent,
+                                                                 propertyName);
+        if (pd != null &&
+            pd.getWriteMethod() != null)
+        {
+            try
+            {
+                BeanUtils.setBeanPropertyValue(uiComponent, pd, propertyValue);
+            }
+            catch (Exception e)
+            {
+                LogUtil.getLogger().warning("Exception in property setter of component " + UIComponentUtils.toString(uiComponent) + ": " + e.getMessage() + ". Attribute will be set directly.");
+                errorOccured = true;
+            }
+        }
+        else
+        {
+            //Component does not have a matching bean property!
+            LogUtil.getLogger().severe("Component " + UIComponentUtils.toString(uiComponent) + " does not have a valid property setter method for property '" + propertyName + "'.");
+            errorOccured = true;
+        }
+
+        if (errorOccured)
+        {
+            //Alternativly set by attribute name:
+            uiComponent.setAttribute(propertyName, propertyValue);
+        }
+    }
+
 
 
     private void overrideComponentProperty(UIComponent uiComponent,
@@ -248,6 +308,10 @@ public class MyFacesTagHelper
     private void overrideComponentValue(UIComponent uiComponent,
                                         Object propertyValue)
     {
+        //We must deal with value attribute special, because the value is always
+        //set to null after updating the model. So we must do the null check for
+        //the currentValue instead!
+
         Object currentValue;
         try
         {
@@ -291,6 +355,8 @@ public class MyFacesTagHelper
         //in the parsed tree.
         //First we create a temporary component...
         UIComponent tempComp = _tag.createComponent();
+        //...remember that we have created it (for overrideProperties)...
+        ((MyFacesTagBaseIF)_tag).setCreated(true);
         //...and set the hardcoded attributes...
         ((MyFacesTagBaseIF)_tag).overrideProperties(tempComp);
 

@@ -20,7 +20,7 @@ package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UICommand;
 import net.sourceforge.myfaces.renderkit.attr.ButtonRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.HTMLButtonAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLButtonAttributes;
 import net.sourceforge.myfaces.renderkit.html.ButtonRenderer;
 
 import javax.faces.component.UIComponent;

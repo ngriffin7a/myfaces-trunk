@@ -23,6 +23,9 @@ import net.sourceforge.myfaces.component.UISelectMany;
 import net.sourceforge.myfaces.component.UISelectOne;
 import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.html.util.SelectItemHelper;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLSelectAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -38,9 +41,9 @@ public class ListboxRenderer
     extends AbstractSelectOptionRenderer
     implements CommonComponentAttributes,
                CommonRendererAttributes,
-               HTMLUniversalAttributes,
-               HTMLEventHandlerAttributes,
-               HTMLSelectAttributes,
+    HTMLUniversalAttributes,
+    HTMLEventHandlerAttributes,
+    HTMLSelectAttributes,
                ListboxRendererAttributes,
                UserRoleAttributes
 {

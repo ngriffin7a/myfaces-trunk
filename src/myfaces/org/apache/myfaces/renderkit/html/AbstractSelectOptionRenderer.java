@@ -23,6 +23,9 @@ import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.SelectItemHelper;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLSelectAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 
 import javax.faces.component.SelectItem;
 import javax.faces.component.UIComponent;
@@ -39,8 +42,8 @@ import java.util.Iterator;
 public abstract class AbstractSelectOptionRenderer
     extends HTMLRenderer
     implements HTMLUniversalAttributes,
-               HTMLEventHandlerAttributes,
-               HTMLSelectAttributes,
+    HTMLEventHandlerAttributes,
+    HTMLSelectAttributes,
                CommonRendererAttributes
 {
 

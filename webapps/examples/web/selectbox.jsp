@@ -44,34 +44,34 @@
 
                 <h:grid columns="2">
 
-                <h:output_label for="selone_lb" key="label_cars" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
-                <h:selectone_listbox modelReference="carconf.car" >
-                    <h:selectitems id="selone_lb_cars" modelReference="carconf.cars" />
-                </h:selectone_listbox>
+                    <h:output_label for="selone_lb" key="label_cars" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
+                    <h:selectone_listbox modelReference="carconf.car" >
+                        <h:selectitems id="selone_lb_cars" modelReference="carconf.cars" />
+                    </h:selectone_listbox>
 
-                <h:output_label for="selone_menu" key="label_colors" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
-                <h:selectone_menu size="3" modelReference="carconf.color" >
-                    <h:selectitem key="empty_selitem" bundle="net.sourceforge.myfaces.examples.resource.example_messages" ></h:selectitem>
-                    <h:selectitems modelReference="carconf.colors" />
-                </h:selectone_menu>
+                    <h:output_label for="selone_menu" key="label_colors" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
+                    <h:selectone_menu size="3" modelReference="carconf.color" >
+                        <h:selectitem key="empty_selitem" bundle="net.sourceforge.myfaces.examples.resource.example_messages" ></h:selectitem>
+                        <h:selectitems modelReference="carconf.colors" />
+                    </h:selectone_menu>
 
-                <h:output_label for="selone_menu" key="label_extras" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
-                <br>
-                <h:selectmany_checkboxlist modelReference="carconf.extras" >
-                    <h:selectitems modelReference="carconf.extrasList" />
-                </h:selectmany_checkboxlist>
-
-                <h:group />
-                <h:group>
+                    <h:output_label for="selone_menu" key="label_extras" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
                     <br>
-                    <h:selectboolean_checkbox id="cb1" modelReference="carconf.discount"></h:selectboolean_checkbox>
-                    <h:output_label for="cb1" key="discount_1" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
-                </h:group>
+                    <h:selectmany_checkbox modelReference="carconf.extras" >
+                        <h:selectitems modelReference="carconf.extrasList" />
+                    </h:selectmany_checkbox>
 
-                <h:group />
-                <h:command_button commandName="calcPrice" key="button_calcprice" bundle="net.sourceforge.myfaces.examples.resource.example_messages">
-                    <f:action_listener type="net.sourceforge.myfaces.examples.common.CarConfiguratorActionListener" ></f:action_listener>
-                </h:command_button>
+                    <h:output_text value="" />
+                    <h:group >
+                        <br>
+                        <h:selectboolean_checkbox id="cb1" modelReference="carconf.discount"></h:selectboolean_checkbox>
+                        <h:output_label for="cb1" key="discount_1" bundle="net.sourceforge.myfaces.examples.resource.example_messages"></h:output_label>
+                    </h:group>
+
+                    <h:output_text value="" />
+                    <h:command_button commandName="calcPrice" key="button_calcprice" bundle="net.sourceforge.myfaces.examples.resource.example_messages">
+                        <f:action_listener type="net.sourceforge.myfaces.examples.common.CarConfiguratorActionListener" ></f:action_listener>
+                    </h:command_button>
 
                 </h:grid>
             </h:form>

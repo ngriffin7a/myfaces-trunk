@@ -26,9 +26,11 @@ import net.sourceforge.myfaces.component.CommonComponentAttributes;
  * @version $Revision$ $Date$
  */
 public interface HiddenRendererAttributes
-    extends CommonComponentAttributes
+    extends CommonComponentAttributes,
+            CommonRendererAttributes
 {
-    public static final String[] HIDDEN_RENDERER_ATTRIBUTES = {
+    public static final String[] INPUT_HIDDEN_ATTRIBUTES = {
+        INPUT_CLASS_ATTR,
         CONVERTER_ATTR
     };
 }

@@ -510,6 +510,10 @@ public class MyParseEventListener
 
         _currentComponent.addChild(comp);
 
+        if (facesTag instanceof MyFacesTagBaseIF)
+        {
+            ((MyFacesTagBaseIF)facesTag).setCreated(true);
+        }
         overrideProperties(facesTag, comp);
         facesTag.release(); //Just to be sure
 

@@ -18,8 +18,8 @@
  */
 package net.sourceforge.myfaces.convert;
 
-import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
+import net.sourceforge.myfaces.component.UIComponentUtils;
 import net.sourceforge.myfaces.renderkit.attr.CommonRendererAttributes;
 import net.sourceforge.myfaces.util.Base64;
 import net.sourceforge.myfaces.util.bean.BeanUtils;
@@ -36,6 +36,7 @@ import javax.faces.convert.ConverterFactory;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
+import java.beans.PropertyDescriptor;
 import java.io.*;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -170,42 +171,35 @@ public class ConverterUtils
                                                    UIComponent uiComponent,
                                                    String attrName)
     {
-        Converter conv = null;
-        try
+        //Is it a component property?
+        PropertyDescriptor pd = BeanUtils.findPropertyDescriptor(uiComponent,
+                                                                 attrName);
+        if (pd != null)
         {
-            Class c = BeanUtils.getBeanPropertyType(uiComponent, attrName);
-            if (c != null)
-            {
-                conv = ConverterUtils.findConverter(c);
-            }
+            return ConverterUtils.findConverter(pd.getPropertyType());
         }
-        catch (IllegalArgumentException e)
+
+        //probably not a component attribute but a render dependent attribute
+        String rendererType = uiComponent.getRendererType();
+        if (rendererType == null)
         {
-            //probably not a component attribute but a render dependent attribute
-            String rendererType = uiComponent.getRendererType();
-            if (rendererType != null)
-            {
-                //Lookup the attribute descriptor
-                RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-                RenderKit renderKit = rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
-                Renderer renderer = renderKit.getRenderer(rendererType);
-                AttributeDescriptor attrDescr = renderer.getAttributeDescriptor(uiComponent.getComponentType(),
-                                                                                attrName);
-                if (attrDescr != null)
-                {
-                    conv = ConverterUtils.findConverter(attrDescr.getType());
-                }
-                else
-                {
-                    LogUtil.getLogger().info("Could not find an attribute descriptor for attribute '" + attrName + "' of component " + UIComponentUtils.toString(uiComponent) + ".");
-                }
-            }
-            else
-            {
-                LogUtil.getLogger().info("Component " + UIComponentUtils.toString(uiComponent) + " has no bean getter method for attribute '" + attrName + "'.");
-            }
+            LogUtil.getLogger().info("Component " + UIComponentUtils.toString(uiComponent) + " has no bean getter method for attribute '" + attrName + "'.");
+            return null;
         }
-        return conv;
+
+        //Lookup the attribute descriptor
+        RenderKitFactory rkFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+        RenderKit renderKit = rkFactory.getRenderKit(facesContext.getTree().getRenderKitId());
+        Renderer renderer = renderKit.getRenderer(rendererType);
+        AttributeDescriptor attrDescr = renderer.getAttributeDescriptor(uiComponent.getComponentType(),
+                                                                        attrName);
+        if (attrDescr == null)
+        {
+            LogUtil.getLogger().info("Could not find an attribute descriptor for attribute '" + attrName + "' of component " + UIComponentUtils.toString(uiComponent) + ".");
+            return null;
+        }
+
+        return ConverterUtils.findConverter(attrDescr.getType());
     }
 
 

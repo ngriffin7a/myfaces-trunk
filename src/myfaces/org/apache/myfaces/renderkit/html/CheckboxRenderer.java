@@ -23,6 +23,9 @@ import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.SelectItemHelper;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLInputAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.faces.component.*;
@@ -40,9 +43,9 @@ public class CheckboxRenderer
     extends HTMLRenderer
     implements CommonComponentAttributes,
                CommonRendererAttributes,
-               HTMLUniversalAttributes,
-               HTMLEventHandlerAttributes,
-               HTMLInputAttributes,
+    HTMLUniversalAttributes,
+    HTMLEventHandlerAttributes,
+    HTMLInputAttributes,
                CheckboxRendererAttributes,
                UserRoleAttributes
 {

@@ -249,18 +249,9 @@ public class MinimizingStateRestorer
         }
 
         //Find proper converter to convert back from external String
-        Converter conv;
-        if (attrName.equals(CommonComponentAttributes.VALUE_ATTR))
-        {
-            conv = ConverterUtils.findValueConverter(facesContext,
-                                                     uiComponent);
-        }
-        else
-        {
-            conv = ConverterUtils.findAttributeConverter(facesContext,
-                                                         uiComponent,
-                                                         attrName);
-        }
+        Converter conv = UIComponentUtils.findConverterForAttribute(facesContext,
+                                                                    uiComponent,
+                                                                    attrName);
 
         Object objValue;
         if (conv != null)

@@ -19,7 +19,7 @@
 package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UIOutput;
-import net.sourceforge.myfaces.renderkit.attr.HTMLLabelAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLLabelAttributes;
 import net.sourceforge.myfaces.renderkit.attr.LabelRendererAttributes;
 import net.sourceforge.myfaces.renderkit.html.LabelRenderer;
 

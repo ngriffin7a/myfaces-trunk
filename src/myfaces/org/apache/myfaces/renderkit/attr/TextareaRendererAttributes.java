@@ -27,9 +27,11 @@ import net.sourceforge.myfaces.component.CommonComponentAttributes;
  * @version $Revision$ $Date$
  */
 public interface TextareaRendererAttributes
-    extends CommonComponentAttributes
+    extends CommonComponentAttributes,
+            CommonRendererAttributes
 {
     public static final String[] INPUT_TEXTAREA_ATTRIBUTES = {
+        INPUT_CLASS_ATTR,
         CONVERTER_ATTR
     };
 }

@@ -40,10 +40,6 @@ public class HiddenRenderer
                HiddenRendererAttributes,
                UserRoleAttributes
 {
-    private static final String[] INPUT_HIDDEN_ATTRIBUTES = {
-        INPUT_CLASS_ATTR
-    };
-
     public static final String TYPE = "Hidden";
 
     public String getRendererType()
@@ -63,9 +59,8 @@ public class HiddenRenderer
 
     protected void initAttributeDescriptors()
     {
-        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_hidden", HIDDEN_RENDERER_ATTRIBUTES);
-        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_hidden", USER_ROLE_ATTRIBUTES);
         addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_hidden", INPUT_HIDDEN_ATTRIBUTES);
+        addAttributeDescriptors(UIInput.TYPE, TLD_HTML_URI, "input_hidden", USER_ROLE_ATTRIBUTES);
     }
 
 

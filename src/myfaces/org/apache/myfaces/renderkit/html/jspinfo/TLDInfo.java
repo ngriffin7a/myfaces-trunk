@@ -21,6 +21,7 @@ package net.sourceforge.myfaces.renderkit.html.jspinfo;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JspCompilationContext;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.JasperException;
 import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.TagLibraryInfoImpl;
+import net.sourceforge.myfaces.renderkit.html.jspinfo.jasper.compiler.TldLocationsCache;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 
 import javax.servlet.ServletContext;
@@ -35,12 +36,14 @@ import javax.servlet.jsp.tagext.TagAttributeInfo;
  */
 public class TLDInfo
 {
+    private ServletContext _servletContext = null;
     private JspCompilationContext _jspCompilationContext = null;
     private String _uri = null;
     private TagLibraryInfo _tagLibraryInfo = null;
 
     private TLDInfo(ServletContext servletContext, String uri)
     {
+        _servletContext = servletContext;
         _jspCompilationContext = new MyJspCompilationContext(servletContext);
         _uri = uri;
     }
@@ -51,9 +54,12 @@ public class TLDInfo
         {
             try
             {
+                TldLocationsCache locCache = new TldLocationsCache(_servletContext);
+                String[] loc = locCache.getLocation(_uri);
                 _tagLibraryInfo = new TagLibraryInfoImpl(_jspCompilationContext,
                                                          "dummy",
-                                                         _uri);
+                                                         _uri,
+                                                         loc);
             }
             catch (JasperException e)
             {

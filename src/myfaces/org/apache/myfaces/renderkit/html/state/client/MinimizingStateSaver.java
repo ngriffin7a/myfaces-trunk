@@ -375,9 +375,9 @@ public class MinimizingStateSaver
 
         //convert attribute value to String
         String strValue;
-        Converter conv = findConverterForAttribute(facesContext,
-                                                   uiComponent,
-                                                   attrName);
+        Converter conv = UIComponentUtils.findConverterForAttribute(facesContext,
+                                                                    uiComponent,
+                                                                    attrName);
         if (conv != null)
         {
             //lucky, we have a converter  :-)
@@ -419,25 +419,6 @@ public class MinimizingStateSaver
                                                                              attrName),
                       strValue);
     }
-
-
-    protected Converter findConverterForAttribute(FacesContext facesContext,
-                                                  UIComponent uiComponent,
-                                                  String attrName)
-    {
-        if (attrName.equals(CommonComponentAttributes.VALUE_ATTR))
-        {
-            return ConverterUtils.findValueConverter(facesContext,
-                                                     uiComponent);
-        }
-        else
-        {
-            return ConverterUtils.findAttributeConverter(facesContext,
-                                                         uiComponent,
-                                                         attrName);
-        }
-    }
-
 
 
     protected void saveModelValues(FacesContext facesContext, Map stateMap)

@@ -22,6 +22,9 @@ import net.sourceforge.myfaces.MyFacesFactoryFinder;
 import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.html.state.StateRenderer;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLFormAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.webapp.ServletMapping;
 import net.sourceforge.myfaces.webapp.ServletMappingFactory;
 
@@ -46,9 +49,9 @@ import java.io.IOException;
 public class FormRenderer
         extends HTMLRenderer
         implements CommonRendererAttributes,
-                   HTMLUniversalAttributes,
-                   HTMLEventHandlerAttributes,
-                   HTMLFormAttributes,
+    HTMLUniversalAttributes,
+    HTMLEventHandlerAttributes,
+    HTMLFormAttributes,
                    FormRendererAttributes,
                    UserRoleAttributes
 {

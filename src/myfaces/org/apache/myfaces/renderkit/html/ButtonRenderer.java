@@ -21,6 +21,9 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLButtonAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.util.logging.LogUtil;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
 import net.sourceforge.myfaces.component.UIComponentUtils;
@@ -43,9 +46,9 @@ import java.io.IOException;
 public class ButtonRenderer
     extends HTMLRenderer
     implements CommonRendererAttributes,
-               HTMLUniversalAttributes,
-               HTMLEventHandlerAttributes,
-               HTMLButtonAttributes,
+    HTMLUniversalAttributes,
+    HTMLEventHandlerAttributes,
+    HTMLButtonAttributes,
                ButtonRendererAttributes,
                UserRoleAttributes
 {

@@ -21,6 +21,9 @@ package net.sourceforge.myfaces.renderkit.html;
 import net.sourceforge.myfaces.renderkit.attr.*;
 import net.sourceforge.myfaces.renderkit.html.util.CommonAttributes;
 import net.sourceforge.myfaces.renderkit.html.util.HTMLEncoder;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLImgAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.util.bundle.BundleUtils;
 
 import javax.faces.component.UIComponent;
@@ -38,9 +41,9 @@ import java.io.IOException;
 public class ImageRenderer
         extends HTMLRenderer
         implements CommonRendererAttributes,
-                   HTMLUniversalAttributes,
-                   HTMLEventHandlerAttributes,
-                   HTMLImgAttributes,
+    HTMLUniversalAttributes,
+    HTMLEventHandlerAttributes,
+    HTMLImgAttributes,
                    ImageRendererAttributes,
                    UserRoleAttributes
 {

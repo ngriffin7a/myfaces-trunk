@@ -19,6 +19,8 @@
 package net.sourceforge.myfaces.renderkit.html;
 
 import net.sourceforge.myfaces.renderkit.attr.*;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 import net.sourceforge.myfaces.component.UIOutput;
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
 
@@ -43,8 +45,8 @@ public class ErrorsRenderer
     extends HTMLRenderer
     implements CommonComponentAttributes,
                CommonRendererAttributes,
-               HTMLUniversalAttributes,
-               HTMLEventHandlerAttributes,
+    HTMLUniversalAttributes,
+    HTMLEventHandlerAttributes,
                ErrorsRendererAttributes,
                UserRoleAttributes
 {

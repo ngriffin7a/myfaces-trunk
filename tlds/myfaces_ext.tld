@@ -22,10 +22,28 @@
 <!DOCTYPE taglib
   PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
   "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd" [
-<!ENTITY html_universal_attributes      SYSTEM "entities/html_universal_attributes.xml">
+<!ENTITY html_anchor_attributes         SYSTEM "entities/html_anchor_attributes.xml">
+<!ENTITY html_button_attributes         SYSTEM "entities/html_button_attributes.xml">
 <!ENTITY html_event_handler_attributes  SYSTEM "entities/html_event_handler_attributes.xml">
+<!ENTITY html_form_attributes           SYSTEM "entities/html_form_attributes.xml">
+<!ENTITY html_img_attributes            SYSTEM "entities/html_img_attributes.xml">
 <!ENTITY html_input_attributes          SYSTEM "entities/html_input_attributes.xml">
+<!ENTITY html_label_attributes          SYSTEM "entities/html_label_attributes.xml">
+<!ENTITY html_select_attributes         SYSTEM "entities/html_select_attributes.xml">
+<!ENTITY html_textarea_attributes       SYSTEM "entities/html_textarea_attributes.xml">
+<!ENTITY html_universal_attributes      SYSTEM "entities/html_universal_attributes.xml">
+<!ENTITY ui_command_attributes          SYSTEM "entities/ui_command_attributes.xml">
+<!ENTITY ui_component_attributes        SYSTEM "entities/ui_component_attributes.xml">
+<!ENTITY ui_form_attributes             SYSTEM "entities/ui_form_attributes.xml">
+<!ENTITY ui_graphic_attributes          SYSTEM "entities/ui_graphic_attributes.xml">
 <!ENTITY ui_input_attributes            SYSTEM "entities/ui_input_attributes.xml">
+<!ENTITY ui_output_attributes           SYSTEM "entities/ui_output_attributes.xml">
+<!ENTITY ui_select_boolean_attributes   SYSTEM "entities/ui_select_boolean_attributes.xml">
+<!ENTITY ui_select_many_attributes      SYSTEM "entities/ui_select_many_attributes.xml">
+<!ENTITY ui_select_one_attributes       SYSTEM "entities/ui_select_one_attributes.xml">
+<!ENTITY key_bundle_attributes          SYSTEM "entities/key_bundle_attributes.xml">
+<!ENTITY user_role_attributes           SYSTEM "entities/user_role_attributes.xml">
+<!ENTITY converter_attribute            SYSTEM "entities/converter_attribute.xml">
 ]>
 
 <taglib>
@@ -160,6 +178,7 @@
              <type>java.lang.String</type>
              <description>
                  reference to the current sort column
+                 (alias for modelReference)
              </description>
          </attribute>
          <attribute>

@@ -16,15 +16,20 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.attr;
+package net.sourceforge.myfaces.renderkit.html.attr;
+
+
 
 /**
- * see /tlds/entities/html_select_attributes.xml
+ * see /tlds/entities/html_input_attributes.xml
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public interface HTMLSelectAttributes
+public interface HTMLInputAttributes
 {
+    public static final String ACCESSKEY_ATTR = "accesskey";
+    public static final String ALIGN_ATTR = "align";
+    public static final String ALT_ATTR = "alt";
     public static final String DATAFLD_ATTR = "datafld";
     public static final String DATASRC_ATTR = "datasrc";
     public static final String DATAFORMATAS_ATTR = "dataformatas";
@@ -32,10 +37,15 @@ public interface HTMLSelectAttributes
     public static final String ONBLUR_ATTR = "onblur";
     public static final String ONCHANGE_ATTR = "onchange";
     public static final String ONFOCUS_ATTR = "onfocus";
+    public static final String ONSELECT_ATTR = "onselect";
+    public static final String READONLY_ATTR = "readonly";
+    public static final String SIZE_ATTR = "size";
     public static final String TABINDEX_ATTR = "tabindex";
 
-    public static final String[] HTML_SELECT_ATTRIBUTES =
-    {
+    public static final String[] HTML_INPUT_ATTRIBUTES = {
+        ACCESSKEY_ATTR,
+        ALIGN_ATTR,
+        ALT_ATTR,
         DATAFLD_ATTR,
         DATASRC_ATTR,
         DATAFORMATAS_ATTR,
@@ -43,6 +53,9 @@ public interface HTMLSelectAttributes
         ONBLUR_ATTR,
         ONCHANGE_ATTR,
         ONFOCUS_ATTR,
-        TABINDEX_ATTR
+        ONSELECT_ATTR,
+        READONLY_ATTR,
+        SIZE_ATTR,
+        TABINDEX_ATTR,
     };
 }

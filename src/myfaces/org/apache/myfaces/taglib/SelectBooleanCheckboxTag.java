@@ -20,7 +20,7 @@ package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.UISelectBoolean;
 import net.sourceforge.myfaces.renderkit.attr.CheckboxRendererAttributes;
-import net.sourceforge.myfaces.renderkit.attr.HTMLInputAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLInputAttributes;
 import net.sourceforge.myfaces.renderkit.html.CheckboxRenderer;
 
 import javax.faces.component.UIComponent;

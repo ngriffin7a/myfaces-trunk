@@ -300,6 +300,33 @@ public class UIComponentUtils
 
 
 
+    /**
+     * DOCUMENT ME!
+     * @param facesContext
+     * @param uiComponent
+     * @param attrName
+     * @return
+     */
+    public static Converter findConverterForAttribute(FacesContext facesContext,
+                                                      UIComponent uiComponent,
+                                                      String attrName)
+    {
+        if (attrName.equals(CommonComponentAttributes.VALUE_ATTR))
+        {
+            return ConverterUtils.findValueConverter(facesContext,
+                                                     uiComponent);
+        }
+        else if (attrName.equals(CommonComponentAttributes.STRING_VALUE_ATTR))
+        {
+            return ConverterUtils.getConverter(String.class);
+        }
+        else
+        {
+            return ConverterUtils.findAttributeConverter(facesContext,
+                                                         uiComponent,
+                                                         attrName);
+        }
+    }
 
 
 }

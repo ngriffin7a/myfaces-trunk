@@ -26,7 +26,9 @@ package net.sourceforge.myfaces.renderkit.attr;
  * @version $Revision$ $Date$
  */
 public interface FormRendererAttributes
+    extends CommonRendererAttributes
 {
     public static final String[] FORM_FORM_ATTRIBUTES = {
+        FORM_CLASS_ATTR
     };
 }

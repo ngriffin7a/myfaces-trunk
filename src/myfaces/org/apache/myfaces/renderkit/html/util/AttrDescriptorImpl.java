@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package net.sourceforge.myfaces.renderkit.config;
+package net.sourceforge.myfaces.renderkit.html.util;
 
 import javax.faces.component.AttributeDescriptor;
 import java.util.Locale;
@@ -24,25 +24,26 @@ import java.util.ResourceBundle;
 
 /**
  * DOCUMENT ME!
- * @author Thomas Spiegl (latest modification by $Author$)
+ * @deprecated
+ * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class AttrDescrImpl
+public class AttrDescriptorImpl
     extends AttributeDescriptor
 {
-    private static final String RESOURCE = "net.sourceforge.myfaces.renderkit.attr.AttributeDescriptions";
+    private static final String RESOURCE = "net.sourceforge.myfaces.renderkit.html.util.AttrDescriptor";
     private static final String DESCRIPTION_NAME_SUFFIX = ".descr";
     private static final String DISPLAY_NAME_SUFFIX     = ".displ";
 
     private String _name;
     private Class _type;
 
-    public AttrDescrImpl(String name)
+    public AttrDescriptorImpl(String name)
     {
         this(name, String.class);
     }
 
-    public AttrDescrImpl(String name, Class type)
+    public AttrDescriptorImpl(String name, Class type)
     {
         _name = name;
         _type = type;
@@ -80,5 +81,27 @@ public class AttrDescrImpl
     public Class getType()
     {
         return _type;
+    }
+
+
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (!(o instanceof AttrDescriptorImpl)) return false;
+
+        final AttrDescriptorImpl attrDescr = (AttrDescriptorImpl)o;
+
+        if (!_name.equals(attrDescr._name)) return false;
+        if (!_type.equals(attrDescr._type)) return false;
+
+        return true;
+    }
+
+    public int hashCode()
+    {
+        int result;
+        result = _name.hashCode();
+        result = 29 * result + _type.hashCode();
+        return result;
     }
 }

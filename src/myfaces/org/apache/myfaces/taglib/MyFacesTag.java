@@ -20,6 +20,8 @@ package net.sourceforge.myfaces.taglib;
 
 import net.sourceforge.myfaces.component.CommonComponentAttributes;
 import net.sourceforge.myfaces.renderkit.attr.*;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLEventHandlerAttributes;
+import net.sourceforge.myfaces.renderkit.html.attr.HTMLUniversalAttributes;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -38,8 +40,8 @@ public abstract class MyFacesTag
     implements MyFacesTagBaseIF,
                CommonComponentAttributes,
                CommonRendererAttributes,
-               HTMLUniversalAttributes,
-               HTMLEventHandlerAttributes,
+    HTMLUniversalAttributes,
+    HTMLEventHandlerAttributes,
                KeyBundleAttributes,
                UserRoleAttributes
 {
