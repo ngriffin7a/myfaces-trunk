@@ -18,7 +18,7 @@
       	<tr><td>mmarinschek</td><td>Martin Marinschek</td><td /></tr>
       	<tr><td>matzew</td><td>Matthias We&szlig;endorf</td><td>FH Dortmund, Germany</td></tr>
       	<tr><td>svieujot</td><td>Sylvain Vieujot</td><td/></tr>
-      	<tr><td>grantsmith</td><td>Grant Smith</td><td/></tr>
+      	<tr><td>grantsmith</td><td>Grant Smith</td><td>Marathon Computer Systems, USA</td></tr>
       	<tr><td>bdudney</td><td>Bill Dudney</td><td/></tr>
       	<tr><td>anton</td><td>Anton Koinov</td><td/></tr>
       	<tr><td>treeder</td><td>Travis Reeder</td><td/></tr>
@@ -39,7 +39,7 @@
       	<tr><td>Dan Hodnett</td></tr>
        </table>
     </section>
-    
+
     <section>
     <title>Sponsors</title>
       <table>
@@ -49,10 +49,10 @@
 	</table>
     <p>as defined in <fork href="http://incubator.apache.org/incubation/Roles_and_Responsibilities.html">http://incubator.apache.org/incubation/Roles_and_Responsibilities.html</fork>
     </p>
-    </section>	
-	
+    </section>
+
     </body>
-    
+
     <footer>
     	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
 	&copy; 2004, Apache Software Foundation
