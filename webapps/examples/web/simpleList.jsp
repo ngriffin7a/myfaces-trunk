@@ -77,6 +77,8 @@ managed beans used:
                        </f:facet>
                        <x:commandLink action="go_country" immediate="true" >
                             <h:outputText value="#{country.name}" />
+                            <!-- for convenience: MyFaces extension. sets id of current row in countryForm -->
+                            <!-- you don't have to implement custom action! -->
                             <x:updateActionListener property="#{countryForm.id}" value="#{country.id}" />
                        </x:commandLink>
                    </h:column>
