@@ -144,6 +144,7 @@
             RuntimeException, because the default error handler only logs the
             execption message but not the stack trace. Enabling this option, the exception
             handling is enhanced by logging the full stack trace.
+            Default value is true.
         </description>
     </context-param>
 
