@@ -71,9 +71,7 @@ public class FacesUtils
 
     public static Renderer getRenderer(String rendererType)
     {
-        return getRenderer(
-            FacesContext.getCurrentInstance(),
-            rendererType);
+        return getRenderer(FacesContext.getCurrentInstance(), rendererType);
     }
 
     public static Renderer getRenderer(FacesContext ctx, String rendererType)
@@ -105,9 +103,7 @@ public class FacesUtils
 
     public static Object getSession(boolean create)
     {
-        return getSession(
-            FacesContext.getCurrentInstance(),
-            create);
+        return getSession(FacesContext.getCurrentInstance(), create);
     }
 
     public static Object getSession(FacesContext ctx, boolean create)
@@ -127,26 +123,22 @@ public class FacesUtils
 
     public static Tree getTree(String treeId)
     {
-        return getTreeFactory().getTree(
-            FacesContext.getCurrentInstance(),
-            treeId);
+        return getTreeFactory().getViewRoot(FacesContext.getCurrentInstance(), treeId);
     }
 
     public static Tree getTree(FacesContext ctx, String treeId)
     {
-        return getTreeFactory().getTree(ctx, treeId);
+        return getTreeFactory().getViewRoot(ctx, treeId);
     }
 
     public static Tree getTree(FacesContext ctx, TreeFactory treeFactory, String treeId)
     {
-        return treeFactory.getTree(ctx, treeId);
+        return treeFactory.getViewRoot(ctx, treeId);
     }
 
     public static Tree getTree(TreeFactory treeFactory, String treeId)
     {
-        return treeFactory.getTree(
-            FacesContext.getCurrentInstance(),
-            treeId);
+        return treeFactory.getViewRoot(FacesContext.getCurrentInstance(), treeId);
     }
 
     public static TreeFactory getTreeFactory()
@@ -167,9 +159,7 @@ public class FacesUtils
 
     public static void setValueRef(Application app, String valueRef, Object value)
     {
-        app.createValueBinding(valueRef).setValue(
-            FacesContext.getCurrentInstance(),
-            value);
+        app.createValueBinding(valueRef).setValue(FacesContext.getCurrentInstance(), value);
     }
 
     public static void setValueRef(FacesContext ctx, String valueRef, Object value)
@@ -179,9 +169,7 @@ public class FacesUtils
 
     public static void setValueRef(String valueRef, Object value)
     {
-        getValueBinding(valueRef).setValue(
-            FacesContext.getCurrentInstance(),
-            value);
+        getValueBinding(valueRef).setValue(FacesContext.getCurrentInstance(), value);
     }
 
     public static Object getValueRef(Application app, FacesContext ctx, String valueRef)
@@ -206,9 +194,7 @@ public class FacesUtils
 
     public static Object resolveVariable(String name)
     {
-        return _variableResolver.resolveVariable(
-            FacesContext.getCurrentInstance(),
-            name);
+        return _variableResolver.resolveVariable(FacesContext.getCurrentInstance(), name);
     }
 
     public static Object resolveVariable(FacesContext ctx, String name)
