@@ -52,7 +52,7 @@ public class UseFacesTag
         return "Root";
     }
 
-    public String getRendererType()
+    public String getDefaultRendererType()
     {
         return null;
     }

@@ -39,7 +39,7 @@ public class CommandHyperlinkTag
         return "Command";
     }
 
-    public String getRendererType()
+    public String getDefaultRendererType()
     {
         return HyperlinkRenderer.TYPE;
     }

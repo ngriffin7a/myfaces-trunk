@@ -37,7 +37,7 @@ extends MyFacesTag
         return "Graphic";
     }
 
-    public String getRendererType()
+    public String getDefaultRendererType()
     {
         return ImageRenderer.TYPE;
     }

@@ -34,7 +34,7 @@ public class TabTag
         return "Tab";
     }
 
-    public String getRendererType()
+    public String getDefaultRendererType()
     {
         return TabRenderer.TYPE;
     }

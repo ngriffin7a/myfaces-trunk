@@ -38,6 +38,7 @@ public interface MyFacesTagBaseIF
     public UIComponent getComponent();
     public boolean getCreated();
     public String getFacetName();
+    public String getDefaultRendererType();
 
     public UIComponentTag getParentUIComponentTag();
 }

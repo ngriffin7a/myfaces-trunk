@@ -36,7 +36,7 @@ extends MyFacesTag
         return "SelectOne";
     }
 
-    public String getRendererType()
+    public String getDefaultRendererType()
     {
         return MenuRenderer.TYPE;
     }

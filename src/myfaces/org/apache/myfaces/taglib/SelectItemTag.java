@@ -33,7 +33,7 @@ public class SelectItemTag
         return "SelectItem";
     }
 
-    public String getRendererType()
+    public String getDefaultRendererType()
     {
         return null;
     }

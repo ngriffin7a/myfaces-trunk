@@ -38,7 +38,7 @@ public class FileUploadTag
         return "FileUpload";
     }
 
-    public String getRendererType()
+    public String getDefaultRendererType()
     {
         return FileUploadRenderer.TYPE;
     }

@@ -38,7 +38,7 @@ public class PageLayoutTag
         return "Panel";
     }
 
-    public String getRendererType()
+    public String getDefaultRendererType()
     {
         return LayoutRenderer.TYPE;
     }

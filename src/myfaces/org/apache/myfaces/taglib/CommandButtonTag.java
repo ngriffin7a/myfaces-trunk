@@ -37,7 +37,7 @@ public class CommandButtonTag
         return "Command";
     }
 
-    public String getRendererType()
+    public String getDefaultRendererType()
     {
         return ButtonRenderer.TYPE;
     }

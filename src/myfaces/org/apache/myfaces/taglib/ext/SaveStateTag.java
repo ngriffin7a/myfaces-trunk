@@ -34,7 +34,7 @@ public class SaveStateTag
         return "SaveState";
     }
 
-    public String getRendererType()
+    public String getDefaultRendererType()
     {
         return null;
     }

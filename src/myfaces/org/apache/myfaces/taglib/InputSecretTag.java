@@ -45,7 +45,7 @@ extends InputTextTag
         }
     }
 
-    public String getRendererType()
+    public String getDefaultRendererType()
     {
         return SecretRenderer.TYPE;
     }

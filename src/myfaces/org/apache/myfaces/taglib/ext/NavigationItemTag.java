@@ -41,7 +41,7 @@ public class NavigationItemTag
         return "NavigationItem";
     }
 
-    public String getRendererType()
+    public String getDefaultRendererType()
     {
         return NavigationItemRenderer.TYPE;
     }

@@ -35,7 +35,7 @@ extends MyFacesTag
         return "Input";
     }
 
-    public String getRendererType()
+    public String getDefaultRendererType()
     {
         return TextRenderer.TYPE;
     }

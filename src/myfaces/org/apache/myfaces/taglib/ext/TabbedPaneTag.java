@@ -40,7 +40,7 @@ implements TabbedPaneRendererAttributes
         return "Panel";
     }
 
-    public String getRendererType()
+    public String getDefaultRendererType()
     {
         return TabbedPaneRenderer.TYPE;
     }

@@ -39,7 +39,7 @@ extends MyFacesTag
         return "Panel";
     }
 
-    public String getRendererType()
+    public String getDefaultRendererType()
     {
         return DataRenderer.TYPE;
     }

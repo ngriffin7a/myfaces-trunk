@@ -34,7 +34,7 @@ public class MessageListTag
         return "Output";
     }
 
-    public String getRendererType()
+    public String getDefaultRendererType()
     {
         return ErrorsRenderer.TYPE;
     }

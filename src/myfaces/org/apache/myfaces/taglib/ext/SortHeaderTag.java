@@ -36,7 +36,7 @@ public class SortHeaderTag
         return "SortHeader";
     }
 
-    public String getRendererType()
+    public String getDefaultRendererType()
     {
         return GroupRenderer.TYPE;
     }

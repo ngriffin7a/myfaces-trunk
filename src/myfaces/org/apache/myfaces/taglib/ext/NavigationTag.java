@@ -38,7 +38,7 @@ public class NavigationTag
         return "Navigation";
     }
 
-    public String getRendererType()
+    public String getDefaultRendererType()
     {
         return NavigationRenderer.TYPE;
     }

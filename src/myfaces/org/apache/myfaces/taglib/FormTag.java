@@ -37,7 +37,7 @@ extends MyFacesTag
         return "Form";
     }
 
-    public String getRendererType()
+    public String getDefaultRendererType()
     {
         return FormRenderer.TYPE;
     }

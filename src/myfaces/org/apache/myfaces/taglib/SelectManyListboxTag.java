@@ -36,7 +36,7 @@ extends MyFacesTag
         return "SelectMany";
     }
 
-    public String getRendererType()
+    public String getDefaultRendererType()
     {
         return ListboxRenderer.TYPE;
     }

@@ -37,7 +37,7 @@ public class SortColumnTag
         return "SortColumn";
     }
 
-    public String getRendererType()
+    public String getDefaultRendererType()
     {
         return SortColumnRenderer.TYPE;
     }

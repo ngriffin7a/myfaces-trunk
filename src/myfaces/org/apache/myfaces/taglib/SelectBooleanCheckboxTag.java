@@ -35,7 +35,7 @@ extends MyFacesTag
         return "SelectBoolean";
     }
 
-    public String getRendererType()
+    public String getDefaultRendererType()
     {
         return CheckboxRenderer.TYPE;
     }

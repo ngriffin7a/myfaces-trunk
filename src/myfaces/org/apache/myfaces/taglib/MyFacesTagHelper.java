@@ -60,6 +60,8 @@ public class MyFacesTagHelper
 
     private Boolean _suppressed;
 
+    private String _rendererType = null;
+
 
 
     MyFacesTagHelper(MyFacesTagBaseIF tag)
@@ -172,6 +174,23 @@ public class MyFacesTagHelper
         return tag;
     }
 
+
+    public void setRendererType(String rendererType)
+    {
+        _rendererType = rendererType;
+    }
+
+    public String getRendererType()
+    {
+        if (_rendererType == null)
+        {
+            return _tag.getDefaultRendererType();
+        }
+        else
+        {
+            return _rendererType;
+        }
+    }
 
 
 

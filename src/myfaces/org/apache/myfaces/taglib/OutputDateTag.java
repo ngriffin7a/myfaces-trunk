@@ -46,7 +46,7 @@ extends MyFacesTag
         }
     }
 
-    public String getRendererType()
+    public String getDefaultRendererType()
     {
         return DateRenderer.TYPE;
     }

@@ -34,7 +34,7 @@ public class ParameterTag
         return "Parameter";
     }
 
-    public String getRendererType()
+    public String getDefaultRendererType()
     {
         return null;
     }

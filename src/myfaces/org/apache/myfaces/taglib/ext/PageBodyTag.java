@@ -37,7 +37,7 @@ public class PageBodyTag
         return "Panel";
     }
 
-    public String getRendererType()
+    public String getDefaultRendererType()
     {
         return GroupRenderer.TYPE;
     }
