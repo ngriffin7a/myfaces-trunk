@@ -27,8 +27,11 @@
           <td><link href="mailto:myfaces-dev-unsubscribe@incubator.apache.org"> Unsubscribe</link></td>
           <td><fork href="http://nagoya.apache.org/eyebrowse/SummarizeList?listName=myfaces-dev@incubator.apache.org"> Archives</fork></td>
         </tr>
-	<tr>
+        <tr>
           <td><link href="mailto:myfaces-ppmc@incubator.apache.org"> MyFaces PPMC List</link></td>
+        </tr>
+        <tr>
+          <td><link href="http://www.mail-archive.com/"> Mail-Archive.com</link></td>
         </tr>
       </table>
     </section>
