@@ -703,7 +703,7 @@
         <mkdir dir="${release.dir}"/>
     </target>
 
-    <target name="app-dist" depends="myfaces-jar">
+    <target name="app-dist" depends="myfaces-jar, myfaces-wap-jar">
 
         <!-- build blank webapp -->
         <copy file="${conf.dir}/blank/web.xml" todir="${apps.dir}/blank/web/WEB-INF"/>
@@ -751,6 +751,8 @@
             <property name="web.dir" location="${apps.dir}/wap"/>
             <property name="webapp.dist.dir" location="${webapp.dist.dir}"/>
             <property name="src.dir" location="${apps.dir}/src/wap"/>
+            <property name="myfaces-wap.jar" location="${myfaces-wap.jar}">
+            </property>
         </ant>        
 
     </target>
