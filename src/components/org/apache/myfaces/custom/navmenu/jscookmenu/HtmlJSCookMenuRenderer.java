@@ -18,6 +18,7 @@ package org.apache.myfaces.custom.navmenu.jscookmenu;
 import org.apache.myfaces.component.html.util.AddResource;
 import org.apache.myfaces.custom.navmenu.NavigationMenuItem;
 import org.apache.myfaces.custom.navmenu.NavigationMenuUtils;
+import org.apache.myfaces.custom.navmenu.UINavigationMenuItem;
 import org.apache.myfaces.el.SimpleActionMethodBinding;
 import org.apache.myfaces.renderkit.RendererUtils;
 import org.apache.myfaces.renderkit.html.HtmlRenderer;
@@ -29,6 +30,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.el.MethodBinding;
+import javax.faces.el.ValueBinding;
 import javax.faces.event.ActionEvent;
 import javax.faces.webapp.UIComponentTag;
 import java.io.IOException;
@@ -39,6 +41,9 @@ import java.util.Map;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.13  2005/04/08 13:05:59  schof
+ *          Fixes MyFaces-20 (Patch by Martin Bosak)
+ *
  *          Revision 1.12  2004/12/27 04:11:11  mmarinschek
  *          Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
  *
@@ -91,6 +96,14 @@ public class HtmlJSCookMenuRenderer
         String actionParam = (String)parameter.get(JSCOOK_ACTION_PARAM);
         if (actionParam != null)
         {
+            String compId = component.getId();
+            int idx = actionParam.indexOf(':');
+            String actionId = actionParam.substring(0, idx);
+            if (! compId.equals(actionId)) {
+                return;
+            }
+            actionParam = actionParam.substring(idx + 1);
+            actionParam = decodeValueBinding(actionParam, context);
             MethodBinding mb;
             if (UIComponentTag.isValueReference(actionParam))
             {
@@ -106,6 +119,30 @@ public class HtmlJSCookMenuRenderer
         }
     }
 
+    private String decodeValueBinding(String actionParam, FacesContext context) 
+    {
+        int idx = actionParam.indexOf(";#{"); 
+        if (idx == -1) {
+            return actionParam;
+        }
+        
+        String newActionParam = actionParam.substring(0, idx);
+        String vbParam = actionParam.substring(idx + 1);
+        
+        idx = vbParam.indexOf('=');
+        if (idx == -1) {
+            return newActionParam;
+        }
+        String vbExpressionString = vbParam.substring(0, idx);
+        String vbValue = vbParam.substring(idx + 1);
+        
+        ValueBinding vb = 
+            context.getApplication().createValueBinding(vbExpressionString);        
+        vb.setValue(context, vbValue);
+        
+        return newActionParam;
+    }
+    
     public boolean getRendersChildren()
     {
         return true;
@@ -118,16 +155,21 @@ public class HtmlJSCookMenuRenderer
         List list = NavigationMenuUtils.getNavigationMenuItemList(component);
         if (list.size() > 0)
         {
+            List uiNavMenuItemList = component.getChildren();
             DummyFormResponseWriter dummyFormResponseWriter = DummyFormUtils.getDummyFormResponseWriter(context);
             dummyFormResponseWriter.addDummyFormParameter(JSCOOK_ACTION_PARAM);
             dummyFormResponseWriter.setWriteDummyForm(true);
 
+            String myId = component.getId();
+            
             ResponseWriter writer = context.getResponseWriter();
 
             writer.write("\n<script type=\"text/javascript\"><!--\n" +
                          "var myMenu =\n[");
             encodeNavigationMenuItems(context, writer,
-                                      (NavigationMenuItem[]) list.toArray(new NavigationMenuItem[list.size()]));
+                                      (NavigationMenuItem[]) list.toArray(new NavigationMenuItem[list.size()]),
+                                      uiNavMenuItemList,
+                                      myId);
 
             writer.write("];\n" +
                          "--></script>\n");
@@ -136,12 +178,25 @@ public class HtmlJSCookMenuRenderer
 
     private void encodeNavigationMenuItems(FacesContext context,
                                            ResponseWriter writer,
-                                           NavigationMenuItem[] items)
+                                           NavigationMenuItem[] items,
+                                           List uiNavMenuItemList,
+                                           String menuId)
         throws IOException
     {
         for (int i = 0; i < items.length; i++)
         {
             NavigationMenuItem item = (NavigationMenuItem)items[i];
+            Object tempObj = null;
+            UINavigationMenuItem uiNavMenuItem = null;
+            try {
+                tempObj = uiNavMenuItemList.get(i);
+            } catch (IndexOutOfBoundsException  e) {
+            }
+            if (tempObj != null) {
+                if (tempObj instanceof UINavigationMenuItem) {
+                    uiNavMenuItem = (UINavigationMenuItem) tempObj;
+                }
+            }
 
             if (! item.isRendered()) {
                 continue;
@@ -175,7 +230,12 @@ public class HtmlJSCookMenuRenderer
             if (item.getAction() != null && ! item.isDisabled())
             {
                 writer.write("'");
+                writer.write(menuId);
+                writer.write(':');
                 writer.write(item.getAction());
+                if (uiNavMenuItem != null) {
+                    encodeValueBinding(writer, uiNavMenuItem, item);
+                }
                 writer.write("'");
             }
             else
@@ -190,13 +250,36 @@ public class HtmlJSCookMenuRenderer
                 if (menuItems != null && menuItems.length > 0)
                 {
                     writer.write(",");
-                    encodeNavigationMenuItems(context, writer, menuItems);
+                    encodeNavigationMenuItems(context, writer, menuItems, 
+                            uiNavMenuItem.getChildren(), menuId);
                 }
             };
             writer.write("]");
         }
     }
 
+    private void encodeValueBinding(ResponseWriter writer, UINavigationMenuItem uiNavMenuItem, 
+            NavigationMenuItem item) throws IOException 
+    {
+        ValueBinding vb = uiNavMenuItem.getValueBinding("NavMenuItemValue");
+        if (vb == null) {
+            return;
+        }
+        String vbExpression = vb.getExpressionString();
+        if (vbExpression == null) {
+            return;
+        }
+        Object tempObj = item.getValue();
+        if (tempObj == null) {
+            return;
+        }
+        
+        writer.write(";");
+        writer.write(vbExpression);
+        writer.write("=");
+        writer.write(tempObj.toString());
+    }
+    
     public void encodeEnd(FacesContext context, UIComponent component) throws IOException
     {
         RendererUtils.checkParamValidity(context, component, HtmlCommandJSCookMenu.class);
