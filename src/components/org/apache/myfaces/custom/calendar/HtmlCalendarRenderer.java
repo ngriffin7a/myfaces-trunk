@@ -46,6 +46,9 @@ import java.util.List;
 
 /**
  * $Log$
+ * Revision 1.21  2005/04/08 02:02:26  schof
+ * Fixes MYFACES-167 (Thanks to David Heffelfinger for reporting the bug and supplying the patch.)
+ *
  * Revision 1.20  2005/02/11 14:11:04  mmarinschek
  * fixed jira 97
  *
@@ -128,7 +131,18 @@ public class HtmlCalendarRenderer
 
         Locale currentLocale = facesContext.getViewRoot().getLocale();
 
-        Date value = RendererUtils.getDateValue(inputCalendar);
+        
+        Date value;
+        
+        try
+        {
+            value = RendererUtils.getDateValue(inputCalendar);
+        }
+        catch (IllegalArgumentException illegalArgumentException)
+        {
+            value = null;
+        }
+       
 
         Calendar timeKeeper = Calendar.getInstance(currentLocale);
         timeKeeper.setTime(value!=null?value:new Date());
@@ -171,8 +185,16 @@ public class HtmlCalendarRenderer
             RendererUtils.copyHtmlInputTextAttributes(inputCalendar, inputText);
 
             inputText.setTransient(true);
-            inputText.setValue(getConverter(inputCalendar).getAsString(
-                    facesContext,inputCalendar,value));
+            
+            if (value == null && inputCalendar.getSubmittedValue() != null)
+            {
+                inputText.setValue(inputCalendar.getSubmittedValue());
+            }
+            else
+            {
+                inputText.setValue(getConverter(inputCalendar).getAsString(
+                        facesContext,inputCalendar,value));
+            }
             inputText.setEnabledOnUserRole(inputCalendar.getEnabledOnUserRole());
             inputText.setVisibleOnUserRole(inputCalendar.getVisibleOnUserRole());
 
