@@ -280,7 +280,7 @@
                      includes="**/*.class"/>
             <fileset dir="${components.classes}"
                      includes="**/*.class"/>
-                     
+
             <!-- properties, DTDs, XMLs -->
             <fileset dir="${myfaces.src}"
                      includes="**"
@@ -339,29 +339,29 @@
 
         <copy todir="${temp.dir}/${bin.release.bundle}/doc">
             <fileset dir="${doc.dir}"/>
-        </copy>        
+        </copy>
         <copy todir="${temp.dir}/${bin.release.bundle}/conf">
             <fileset dir="${conf.dir}"/>
-        </copy>        
+        </copy>
         <copy file="${commons-codec.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
-        <copy file="${commons-logging.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>        
+        <copy file="${commons-logging.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
         <copy file="${commons-el.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
         <copy file="${commons-fileupload.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
         <copy file="${commons-validator.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
         <copy file="${jakarta-oro.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
         <copy file="${commons-codec.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
         <copy file="${jstl.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
-        <copy file="${jsp-2.0.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>        
+        <copy file="${jsp-2.0.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
         <copy file="${commons-digester.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
         <copy file="${commons-beanutils.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
         <copy file="${commons-collections.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
         <copy file="${myfaces-jsf-api.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
         <copy file="${myfaces-impl.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
-        <copy file="${myfaces-extensions.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>        
+        <copy file="${myfaces-extensions.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
         <copy file="${myfaces.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
         <copy file="${myfaces-wap.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
         <copy file="${myfaces-xdoclet.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
-        
+
     </target>
 
     <target name="bin-release"
@@ -380,53 +380,53 @@
     <!-- get all the files in one location so they can be bundled -->
     <target name="prepare-src-release" depends="prepare">
         <copy todir="${temp.dir}/${src.release.bundle}/build">
-            <fileset dir="${build.dir}" 
-                     excludes= "**/codegen/**, 
-                                **/develop/**, 
-                                **/temp/**, 
-                                **tmp/**, 
-                                **/nightly/**, 
-                                **/release/**, 
-                                **/dist/**, 
-                                **/site/**, 
+            <fileset dir="${build.dir}"
+                     excludes= "**/codegen/**,
+                                **/develop/**,
+                                **/temp/**,
+                                **tmp/**,
+                                **/nightly/**,
+                                **/release/**,
+                                **/dist/**,
+                                **/site/**,
                                 **/webapp/**"/>
         </copy>
         <copy todir="${temp.dir}/${src.release.bundle}/conf">
             <fileset dir="${conf.dir}" excludes="develop-web.xml"/>
-        </copy>        
+        </copy>
         <copy todir="${temp.dir}/${src.release.bundle}/doc">
             <fileset dir="${doc.dir}" excludes="javadoc/**/*,tlddoc/**/*"/>
-        </copy>                
+        </copy>
         <copy todir="${temp.dir}/${src.release.bundle}/src/jsfapi">
             <fileset dir="${jsfapi.src}"/>
-        </copy>                        
+        </copy>
         <copy todir="${temp.dir}/${src.release.bundle}/src/share">
             <fileset dir="${share.src}"/>
-        </copy>              
+        </copy>
         <copy todir="${temp.dir}/${src.release.bundle}/src/myfaces">
             <fileset dir="${myfaces.src}"/>
-        </copy>              
+        </copy>
         <copy todir="${temp.dir}/${src.release.bundle}/src/wml">
             <fileset dir="${wml.src}"/>
-        </copy>                
+        </copy>
         <copy todir="${temp.dir}/${src.release.bundle}/src/xdoclet">
             <fileset dir="${xdoclet.src}"/>
-        </copy>                      
+        </copy>
         <copy todir="${temp.dir}/${src.release.bundle}/src/components">
             <fileset dir="${components.src}"/>
-        </copy>                              
+        </copy>
         <copy todir="${temp.dir}/${src.release.bundle}/src/cactus">
             <fileset dir="${cactus.src}"/>
-        </copy>                      
+        </copy>
         <copy todir="${temp.dir}/${src.release.bundle}/src/junit">
             <fileset dir="${junit.src}"/>
-        </copy>                              
+        </copy>
         <copy todir="${temp.dir}/${src.release.bundle}/tlds">
             <fileset dir="${tlds.dir}"/>
-        </copy>                              
+        </copy>
         <copy todir="${temp.dir}/${src.release.bundle}/webapps">
             <fileset dir="${apps.dir}" excludes="**/lib/**, **/classes/**"/>
-        </copy>                                      
+        </copy>
     </target>
 
     <target name="src-release"
@@ -742,7 +742,7 @@
             <property name="web.dir" location="${apps.dir}/examples"/>
             <property name="webapp.dist.dir" location="${webapp.dist.dir}"/>
         </ant>
-        
+
         <!-- build wap webapp -->
         <copy file="${conf.dir}/wap/web.xml" todir="${apps.dir}/wap/WEB-INF"/>
         <ant antfile="build-webapps.xml" inheritall="false" target="war">
@@ -751,9 +751,8 @@
             <property name="web.dir" location="${apps.dir}/wap"/>
             <property name="webapp.dist.dir" location="${webapp.dist.dir}"/>
             <property name="src.dir" location="${apps.dir}/src/wap"/>
-            <property name="myfaces-wap.jar" location="${myfaces-wap.jar}">
-            </property>
-        </ant>        
+            <property name="myfaces-wap.jar" location="${myfaces-wap.jar}"/>
+        </ant>
 
     </target>
 
@@ -762,25 +761,14 @@
         <tar destfile="${release.dir}/${app.release.bundle}.tgz" compression="gzip" >
             <tarfileset dir="${webapp.dist.dir}"/>
         </tar>
-        
+
         <zip destfile="${release.dir}/${app.release.bundle}.zip" compress="true">
             <zipfileset dir="${webapp.dist.dir}"/>
         </zip>
 
     </target>
 
-    <target name="release" depends="prepare, src-release, bin-release, app-release">
-
-        <!-- copy resulting builds to nightly directory -->
-<!--        
-        <copy file="${release.dir}/${src.release.bundle}.tgz" todir="${release.dir}"/>
-        <copy file="${release.dir}/${bin.release.bundle}.tgz" todir="${release.dir}"/>
-        <copy file="${release.dir}/${app.release.bundle}.tgz" todir="${release.dir}"/>
-        <copy file="${release.dir}/${src.release.bundle}.zip" todir="${release.dir}"/>
-        <copy file="${release.dir}/${bin.release.bundle}.zip" todir="${release.dir}"/>
-        <copy file="${release.dir}/${app.release.bundle}.zip" todir="${release.dir}"/>
--->
-    </target>
+    <target name="release" depends="prepare, src-release, bin-release, app-release"/>
 
 </project>
 
