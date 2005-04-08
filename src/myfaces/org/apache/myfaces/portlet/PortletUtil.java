@@ -26,7 +26,9 @@ import javax.portlet.RenderResponse;
  */
 public class PortletUtil {
     
-        // Signifies to MyFaces that the request is coming from a portlet.
+        /** This flag is imbedded in the request.
+         *  It signifies to MyFaces that the request is coming from a portlet.
+         */
         public static final String PORTLET_REQUEST_FLAG = 
            PortletUtil.class.getName() + ".PORTLET_REQUEST_FLAG";
     
@@ -34,15 +36,29 @@ public class PortletUtil {
         private PortletUtil() {
         }
         
+        /**
+         * Determine if we are processing a portlet RenderResponse.
+         *
+         * @param facesContext The current FacesContext.
+         * @return <code>true</code> if we are processing a RenderResponse,
+         *         <code>false</code> otherwise.
+         */
         public static boolean isRenderResponse(FacesContext facesContext) {
             if (!isPortletRequest(facesContext)) return false;
             
             return facesContext.getExternalContext().getResponse() instanceof RenderResponse;
         }
         
+        /**
+         * Determine if we are running as a portlet.
+         *
+         * @param facesContext The current FacesContext.
+         * @return <code>true</code> if we are running as a portlet,
+         *         <code>false</code> otherwise.
+         */
         public static boolean isPortletRequest(FacesContext facesContext) {
             return facesContext.getExternalContext()
-            .getSessionMap()
-            .get(PORTLET_REQUEST_FLAG) != null;
+                               .getSessionMap()
+                               .get(PORTLET_REQUEST_FLAG) != null;
         }
     }
