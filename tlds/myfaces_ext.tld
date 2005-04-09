@@ -370,15 +370,6 @@
         &standard_output_text_attributes;
         &user_role_attributes;
         &ext_forceId_attribute;
-        <attribute>
-            <name>encodeNewLines</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <description>
-            	Encodes new lines to br tags.
-            	Default is false.
-            </description>
-        </attribute>
     </tag>
 
     <!-- panelGroup -->
