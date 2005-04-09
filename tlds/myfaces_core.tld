@@ -201,7 +201,7 @@
             <name>type</name>
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
-            <description>number|currency|percent</description>
+            <description>number|currency|percentage</description>
         </attribute>
     </tag>
 

@@ -29,6 +29,9 @@ import java.util.Locale;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.12  2005/04/09 19:07:02  svieujot
+ * Closed MYFACES-177 thanks to Josh Holtzman.
+ *
  * Revision 1.11  2004/07/01 22:00:51  mwessendorf
  * ASF switch
  *
@@ -165,7 +168,7 @@ public class NumberConverter
         {
             return NumberFormat.getCurrencyInstance(lokale);
         }
-        else if (_type.equals("percent"))
+        else if (_type.equals("percentage"))
         {
             return NumberFormat.getPercentInstance(lokale);
         }
