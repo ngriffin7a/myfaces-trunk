@@ -46,7 +46,7 @@ components.
             </ul>
             <source>
             &lt;application>
-                &lt;view-handler>net.sourceforge.myfaces.application.jsp.JspTilesViewHandlerImpl&lt;view-handler>
+                &lt;view-handler>org.apache.myfaces.application.jsp.JspTilesViewHandlerImpl&lt;view-handler>
             &lt;/application>
             </source>
             <ul>

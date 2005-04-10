@@ -24,8 +24,9 @@
 	</p>
 </section>
 <section>
-	<title>Why is this useful?</title>
-	This design has several benefits :
+	<title>Why is this useful?</title><p>
+		
+	This design has several benefits :</p>
 	<ol>
 		<li>It provides a clean separation between MyFaces' components and your webapp.</li>
 		<li>You don't have to include additional MyFaces' components related code or resources in your pages or webapp.</li>
@@ -37,7 +38,7 @@
 </section>
 <section>
 	<title>How does it work?</title>
-	When a component needs a resource, is calls one of the org.apache.myfaces.component.html.util.AddResource methods
+<p>	When a component needs a resource, is calls one of the org.apache.myfaces.component.html.util.AddResource methods
 	(for example AddResource.addJavaScriptToHeader(InputHtmlRenderer.class, "sarissa.js", context); ).<br/>
 	This method add an attribute to the request so that the filter knows that is must include the given javascript, stylesheet
 	or resource link to the page.<br/>
@@ -45,12 +46,12 @@
 	The URL for an embedded resource	is constructed and always begins by /myfaces/ so that it can be intercepted by the filter
 	when the client need to load the resource.<br/>
 	When the clients fetches the resource, the filter decodes the URL, and serves the proper resource that is
-	embedded in MyFaces' jar.
+	embedded in MyFaces' jar.</p>
 </section>
 <section>
-	<title>How do I configure it?</title>
+	<title>How do I configure it?</title><p>
 	In your web.xml, map this filter to the path used for the JSF pages (most likely *.jsf)
-	AND to the /faces/* path as in the following example :
+	AND to the /faces/* path as in the following example :</p>
 	<source>
 <![CDATA[
 <filter>
@@ -80,17 +81,18 @@
 		]]></source>
 </section>
 <section>
-	<title>Under what circumstances am I *required* to use the extensions filter?</title>
+	<title>Under what circumstances am I *required* to use the extensions filter?</title><p>
 	If you just use standard JSF component, but don't use any MyFaces' extended component (beginning with x:),
 	then you don't need the Extensions Filter.<br/>
 	However, if you use some of the MyFaces' extended components like x:inputFileUpload, x:inputHTtml, x:inputCalendar, ...
 	then you most likely need to have this filter configured in your webapp.
+</p>
 </section>
 <section>
-	<title>Does this impact performance?</title>
+	<title>Does this impact performance?</title><p>
 	The filter hasn't any significant impact the response time.<br/>
 	However, as the filter has to cache the whole response in memory before writing it out to the client, it slightly increases the memory usage.
-</section>
+</p></section>
 </body>
     
 <footer>
