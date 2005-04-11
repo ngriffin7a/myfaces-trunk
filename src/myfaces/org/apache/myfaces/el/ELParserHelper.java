@@ -57,6 +57,10 @@ import org.apache.commons.logging.LogFactory;
  * @version $Revision$ $Date$
  * 
  * $Log$
+ * Revision 1.7  2005/04/11 17:39:36  svieujot
+ * ELParserHelper : Fix a String IndexOutOfBoundsException & several bugs in toJspELExpression.
+ * Add a JUnit Test.
+ *
  * Revision 1.6  2004/10/13 11:51:00  matze
  * renamed packages to org.apache
  *
@@ -127,25 +131,27 @@ public class ELParserHelper
     static String toJspElExpression(String expressionString)
     {
         StringBuffer sb = new StringBuffer(expressionString.length());
-        int oldPos = 0;
+        int remainsPos = 0;
 
-        for (int pos = expressionString.indexOf('{'); pos >= 0; 
-            pos = expressionString.indexOf('{', oldPos = (pos + 1)))
+        for (int posOpenBrace = expressionString.indexOf('{'); posOpenBrace >= 0; 
+            posOpenBrace = expressionString.indexOf('{', remainsPos))
         {
-            sb.append(expressionString.substring(oldPos, pos - 1));
-
-            if (pos > 0)
+            if (posOpenBrace > 0)
             {
-                if (expressionString.charAt(pos - 1) == '$')
+				if( posOpenBrace-1 > remainsPos )
+					sb.append(expressionString.substring(remainsPos, posOpenBrace - 1));
+
+                if (expressionString.charAt(posOpenBrace - 1) == '$')
                 {
                     sb.append("${'${'}");
-                    continue;
+					remainsPos = posOpenBrace+1;
+					continue;
                 }
-                else if (expressionString.charAt(pos - 1) == '#')
+                else if (expressionString.charAt(posOpenBrace - 1) == '#')
                 {
 //                    // TODO: should use \\ as escape for \ always, not just when before #{
 //                    // allow use of '\' as escape symbol for #{ (for compatibility with Sun's extended implementation)
-//                    if (isEscaped(expressionString, pos - 1)) 
+//                    if (isEscaped(expressionString, posOpenBrace - 1)) 
 //                    {
 //                      escapes: {
 //                            for (int i = sb.length() - 1; i >= 0; i--)
@@ -164,21 +170,26 @@ public class ELParserHelper
 //                    else
 //                    {
                         sb.append("${");
-                        oldPos = pos + 1;
-                        pos = indexOfMatchingClosingBrace(expressionString, pos);
-                        sb.append(expressionString.substring(oldPos, pos + 1));
+						int posCloseBrace = indexOfMatchingClosingBrace(expressionString, posOpenBrace);
+                        sb.append(expressionString.substring(posOpenBrace + 1, posCloseBrace + 1));
+						remainsPos = posCloseBrace + 1;
+						continue;
 //                    }
-                    continue;
+                }else{
+					if( posOpenBrace > remainsPos )
+						sb.append( expressionString.charAt(posOpenBrace - 1) );
                 }
             }
 
-            // Standalone brace
-            sb.append('{');
+			// Standalone brace
+			sb.append('{');
+			remainsPos = posOpenBrace + 1;
         }
 
+		sb.append(expressionString.substring(remainsPos));
+		
         // Create a new String to shrink mem size since we are caching
-        return new String(sb.append(expressionString.substring(oldPos))
-            .toString());
+        return new String(sb.toString());
     }
 
     private static int findQuote(String expressionString, int start)
