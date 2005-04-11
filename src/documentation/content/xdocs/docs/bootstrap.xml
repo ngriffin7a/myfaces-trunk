@@ -72,8 +72,8 @@
     </ul>
     <ul>
         <li>
-            A cron job similar to the following should be used on the destination server to purge files older than seven days <br/>
-            <code>03 04 * * * find /www/cvs.apache.org/builds/myfaces/nightly -mtime +7 -exec rm {\} \; >/dev/null 2>&amp;1</code>
+            A cron job similar to the following should be used on the destination server to purge files older than five days <br/>
+            <code>03 04 * * * find /www/cvs.apache.org/builds/myfaces/nightly -mtime +5 -exec rm {\} \; >/dev/null 2>&amp;1</code>
         </li>
     </ul>    
     <ul>

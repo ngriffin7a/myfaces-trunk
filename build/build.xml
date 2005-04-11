@@ -369,11 +369,13 @@
             description="creates the binary release file myfaces-x.x.x.tgz (don't forget to adjust manifest.properties!)">
 
         <tar destfile="${release.dir}/${bin.release.bundle}.tgz" compression="gzip" >
-             <tarfileset dir="${temp.dir}/${bin.release.bundle}"/>
+             <tarfileset prefix="${bin.release.bundle}" dir="${temp.dir}/${bin.release.bundle}"/>
         </tar>
         <zip destfile="${release.dir}/${bin.release.bundle}.zip" compress="true">
-            <zipfileset dir="${temp.dir}/${bin.release.bundle}"/>
+            <zipfileset prefix="${bin.release.bundle}" dir="${temp.dir}/${bin.release.bundle}"/>
         </zip>
+        <checksum file="${release.dir}/${bin.release.bundle}.tgz" forceOverwrite="yes"/>
+        <checksum file="${release.dir}/${bin.release.bundle}.zip" forceOverwrite="yes"/>
 
     </target>
 
@@ -434,11 +436,13 @@
             description="creates the source release file myfaces-x.x.x-src.tgz (don't forget to adjust manifest.properties!)">
 
         <tar destfile="${release.dir}/${src.release.bundle}.tgz" compression="gzip">
-             <tarfileset dir="${temp.dir}/${src.release.bundle}"/>
+             <tarfileset prefix="${src.release.bundle}" dir="${temp.dir}/${src.release.bundle}"/>
         </tar>
         <zip destfile="${release.dir}/${src.release.bundle}.zip" compress="true">
-            <zipfileset dir="${temp.dir}/${src.release.bundle}"/>
+            <zipfileset prefix="${src.release.bundle}" dir="${temp.dir}/${src.release.bundle}"/>
         </zip>
+        <checksum file="${release.dir}/${src.release.bundle}.tgz" forceOverwrite="yes"/>
+        <checksum file="${release.dir}/${src.release.bundle}.zip" forceOverwrite="yes"/>
 
     </target>
 
@@ -759,12 +763,16 @@
     <target name="app-release" depends="prepare, app-dist">
 
         <tar destfile="${release.dir}/${app.release.bundle}.tgz" compression="gzip" >
-            <tarfileset dir="${webapp.dist.dir}"/>
+            <tarfileset prefix="${app.release.bundle}" dir="${webapp.dist.dir}"/>
         </tar>
+        
+        <checksum file="${release.dir}/${app.release.bundle}.tgz" forceOverwrite="yes"/>
 
         <zip destfile="${release.dir}/${app.release.bundle}.zip" compress="true">
-            <zipfileset dir="${webapp.dist.dir}"/>
+            <zipfileset prefix="${app.release.bundle}" dir="${webapp.dist.dir}"/>
         </zip>
+        
+        <checksum file="${release.dir}/${app.release.bundle}.zip" forceOverwrite="yes"/>        
 
     </target>
 
