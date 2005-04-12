@@ -25,13 +25,17 @@
         <h:outputLink value="sample2.jsf" ><f:verbatim>Sample 2</f:verbatim></h:outputLink> <br/>
         <h:outputLink value="validate.jsf" ><f:verbatim>Validations</f:verbatim></h:outputLink> <br/>
         <h:outputLink value="aliasBean.jsf" ><f:verbatim>Alias Bean</f:verbatim></h:outputLink> <br/>
-        <h:outputLink value="dataTable.jsf" ><f:verbatim>Master/Detail Example</f:verbatim></h:outputLink> <br/>
-        <h:outputLink value="sortTable.jsf" ><f:verbatim>Sortable Table</f:verbatim></h:outputLink> <br/>
+        Data Table<br/>
+        &nbsp;&nbsp;&nbsp;<h:outputLink value="masterDetail.jsf" ><f:verbatim>Master-Detail</f:verbatim></h:outputLink><br/>
+        &nbsp;&nbsp;&nbsp;<h:outputLink value="dataScroller.jsf" ><f:verbatim>Data Scroller</f:verbatim></h:outputLink><br/>            
+        &nbsp;&nbsp;&nbsp;<h:outputLink value="sortTable.jsf" ><f:verbatim>Sortable</f:verbatim></h:outputLink><br/>            
+        &nbsp;&nbsp;&nbsp;<h:outputLink value="pagedSortTable.jsf" ><f:verbatim>Paged and Sortable</f:verbatim></h:outputLink><br/>            
         <h:outputLink value="selectbox.jsf" ><f:verbatim>Select boxes</f:verbatim></h:outputLink> <br/>
         <h:outputLink value="fileupload.jsf" ><f:verbatim>File upload</f:verbatim></h:outputLink> <br/>
         <h:outputLink value="tabbedPane.jsf" ><f:verbatim>Tabbed Pane</f:verbatim></h:outputLink> <br/>
         <h:outputLink value="calendar.jsf" ><f:verbatim>Calendar</f:verbatim></h:outputLink> <br/>
         <h:outputLink value="popup.jsf" ><f:verbatim>Popup</f:verbatim></h:outputLink> <br/>
+        <h:outputLink value="jscookmenu.jsf" ><f:verbatim>JSCookMenu</f:verbatim></h:outputLink> <br/>
         <h:outputLink value="jslistener.jsf" ><f:verbatim>Javascript Listener</f:verbatim></h:outputLink> <br/>
         <h:outputLink value="date.jsf" ><f:verbatim>Date</f:verbatim></h:outputLink> <br/>
         <h:outputLink value="inputHtml.jsf" ><f:verbatim>Html Editor</f:verbatim></h:outputLink> <br/>
@@ -40,7 +44,6 @@
         <h:outputLink value="treeTable.jsf" ><f:verbatim>Tree Table</f:verbatim></h:outputLink> <br/>
         <h:outputLink value="tree2.jsf" ><f:verbatim>Tree2</f:verbatim></h:outputLink> <br/>
         <h:outputLink value="rssTicker.jsf" ><f:verbatim>RSS Ticker</f:verbatim></h:outputLink> <br/>
-        <h:outputLink value="buffer.jsf" ><f:verbatim>Data Scroller</f:verbatim></h:outputLink> <br/>
         <h:outputLink value="panelstack.jsf" ><f:verbatim>Panel Stack</f:verbatim></h:outputLink> <br/>
         <h:outputLink value="css.jsf" ><f:verbatim>Style Sheet</f:verbatim></h:outputLink> <br/>
         <h:outputLink value="newspaperTable.jsf" ><f:verbatim>Newspaper Table</f:verbatim></h:outputLink> <br/>
