@@ -37,6 +37,10 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.17  2005/04/12 12:41:48  manolito
+ * PR: MYFACES-179
+ * Submitted by: Mathias Broekelmann
+ *
  * Revision 1.16  2005/03/04 00:28:45  mmarinschek
  * Changes in configuration due to missing Attribute/Property classes for the converter; not building in the functionality yet except for part of the converter properties
  *
@@ -252,6 +256,7 @@ public class UIInput
         catch (RuntimeException e)
         {
         	//Object[] args = {getId()};
+            context.getExternalContext().log(e.getMessage(), e);
             _MessageUtils.addErrorMessage(context, this,CONVERSION_MESSAGE_ID,new Object[]{getId()});
             setValid(false);
         }
