@@ -41,6 +41,9 @@ import java.util.Map;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.14  2005/04/12 17:47:51  schof
+ *          Fixes MYFACES-182 (Thanks to David Heffelfinger for reporting and fixing.)
+ *
  *          Revision 1.13  2005/04/08 13:05:59  schof
  *          Fixes MyFaces-20 (Patch by Martin Bosak)
  *
@@ -94,7 +97,7 @@ public class HtmlJSCookMenuRenderer
 
         Map parameter = context.getExternalContext().getRequestParameterMap();
         String actionParam = (String)parameter.get(JSCOOK_ACTION_PARAM);
-        if (actionParam != null)
+        if (actionParam != null && !actionParam.trim().equals(""))
         {
             String compId = component.getId();
             int idx = actionParam.indexOf(':');
@@ -250,8 +253,11 @@ public class HtmlJSCookMenuRenderer
                 if (menuItems != null && menuItems.length > 0)
                 {
                     writer.write(",");
-                    encodeNavigationMenuItems(context, writer, menuItems, 
-                            uiNavMenuItem.getChildren(), menuId);
+                    if (uiNavMenuItem != null)
+                    {
+                        encodeNavigationMenuItems(context, writer, menuItems, 
+                                uiNavMenuItem.getChildren(), menuId);
+                    } 
                 }
             };
             writer.write("]");
