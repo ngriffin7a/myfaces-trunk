@@ -5,12 +5,18 @@ We have a strong community and the user list is frequently used: about
 no reply at all.
 
 Management
-=========
-Our PMC consists of only me at the moment, but I would like see other
-committers in the MyFaces PMC as well. As I understand it, there are
-no special rules on how to include others (except for the 72 board ack
-think), right? Should we vote on that in public? Or is a two-thirds
-majority within the current PMC (i.e. me) enough?  ;-)
+==========
+As resolved by the board the MyFaces PMC consists of the following intial members:
+ Manfred Geiler (manolito@apache.org)
+ Thomas Spiegl (tomsp@apache.org)
+ Martin Marinschek (mmarinschek@apache.org)
+ Matthias Wessendorf (matzew@apache.org )
+ Sylvain Vieujot (svieujot@apache.org )
+ Grant Smith (grantsmith@apache.org )
+ Bill Dudney (bdudney@apache.org )
+ Anton Koinov (anton@apache.org )
+ Travis Reeder (treeder@apache.org)
+ Ted Husted (husted@apache.org)
 
 Domain
 ======
@@ -65,7 +71,6 @@ automatic forward or auto-reply to point people to the new lists
 * Move/rename repository from CVS incubator-myfaces to CVS/SVN
 myfaces (after everybody has committed his local changes)
 * Move/rename site docs (forrest) to new CVS/SVN module "myfaces-site"
-* Establish the new PMC (by voting?)
 * Split MyFaces into sub-projects: API, Main, Shared, Components, Sandbox(?)
 * Organize infrastructure and guidelines for official builds (release policy)
 * Customize our Wiki FrontPage
