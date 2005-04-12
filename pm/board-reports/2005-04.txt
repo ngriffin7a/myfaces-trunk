@@ -1,0 +1,71 @@
+Community
+========
+We have a strong community and the user list is frequently used: about
+10 new threads a day, 3 replies at an average, almost no thread with
+no reply at all.
+
+Management
+=========
+Our PMC consists of only me at the moment, but I would like see other
+committers in the MyFaces PMC as well. As I understand it, there are
+no special rules on how to include others (except for the 72 board ack
+think), right? Should we vote on that in public? Or is a two-thirds
+majority within the current PMC (i.e. me) enough?  ;-)
+
+Domain
+======
+I'm still owner of the myfaces.org domain and would like to point it
+to myfaces.apache.org if there is nothing to be said against this. It
+expires in february 2006 and we could discuss later if it makes sense
+to renew.
+
+Infrastructure
+=========
+On the technical layer we are not yet completely finished with moving
+out of the Incubator. Main reason for this is our current discussion
+about the future project structure, which is not yet finished. FYI,
+MyFaces consists of some parts that need to be separated and
+rearranged: the JSR-127 API, the base JSF implementation, common
+classes, additional non-standard components and extensions, a sandbox
+(not yet)...
+Before there is no full agreement here, we do not want to bother
+infrastructure with things like CVS/SVN, mailing lists, jira, and so
+on.
+
+Release
+======
+We are currently voting on rc3 of 1.0.9 beta. So in the next days we
+will publish our first official Apache TLP release "MyFaces 1.0.9
+beta".
+
+Tasks
+=====
+(Current status of all our tasks are tracked at
+http://wiki.apache.org/myfaces/ProjectManagement)
+
+Finished:
+* Move website from http://incubator.apache.org/myfaces/ to
+http://myfaces.apache.org
+* Organize the nightly builds
+
+Pending:
+* Move documentation content from tikiwiki at http://www.myfaces.org
+to forrest XMLs
+* Point http://www.myfaces.org to http://myfaces.apache.org and close
+tikiwiki site
+* Adapt our status on the Incubator Project Homepage
+* Adapt our status on the Homepage
+* Add a bylaw saying users should subscribe to mailing list(s) and
+not contact single persons for support
+* New mailing lists dev@myfaces.apache.org, user@myfaces.apache.org,
+pmc@myfaces.apache.org, cvs@myfaces.apache.org
+* Make old mailing lists "deprecated" and organize some kind of
+automatic forward or auto-reply to point people to the new lists
+* Make decision about CVS vs. SVN
+* Move/rename repository from CVS incubator-myfaces to CVS/SVN
+myfaces (after everybody has committed his local changes)
+* Move/rename site docs (forrest) to new CVS/SVN module "myfaces-site"
+* Establish the new PMC (by voting?)
+* Split MyFaces into sub-projects: API, Main, Shared, Components, Sandbox(?)
+* Organize infrastructure and guidelines for official builds (release policy)
+* Customize our Wiki FrontPage
