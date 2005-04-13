@@ -55,7 +55,7 @@ $I____#end
     {
         if (_$f.name != null) return _${f.name}.${f.primitiveValueMethod}();
         ValueBinding vb = getValueBinding("$f.name");
-        ${f.fieldType} v = vb != null ? (${f.fieldType})vb.getValue(getFacesContext()) : null;
+        ${f.baseFieldType} v = vb != null ? (${f.baseFieldType})vb.getValue(getFacesContext()) : null;
 $I____#if ($f.defaultValue)
         return v != null ? v.${f.primitiveValueMethod}() : DEFAULT_$f.ucaseName;
 $I____#else

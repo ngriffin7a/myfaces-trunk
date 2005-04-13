@@ -84,6 +84,19 @@ public class FieldDef
         }
     }
 
+    public String getBaseFieldType()
+    {
+        if (_qualifiedType.equals("int") ||
+            _qualifiedType.equals("long") ||
+            _qualifiedType.equals("short"))
+        {
+            return getSimpleType("java.lang.Number");
+        }
+        else
+        {
+            return getFieldType();
+        }
+    }
 
     private static String getSimpleType(String type)
     {

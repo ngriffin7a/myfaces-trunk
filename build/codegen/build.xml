@@ -26,7 +26,7 @@
     <path id="codegen.class.path">
         <pathelement location="${ant.jar}"/>
         <pathelement location="${velocity.jar}"/>
-        <pathelement location="${sun-jsf-api.jar}"/>
+        <pathelement location="${jsf-api.jar}"/>
         <pathelement location="${commons-logging.jar}"/>                
         <pathelement location="${codegen-classes.dir}"/>
     </path>

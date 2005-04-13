@@ -23,6 +23,10 @@ import javax.faces.el.ValueBinding;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2005/04/13 12:48:46  manolito
+ * MYFACES-186 x:radio and x:checkbox cause ClassCastException
+ * Since the proposed fix is within generated code block, I had to fix the generator instead!
+ *
  * Revision 1.3  2004/10/13 11:50:57  matze
  * renamed packages to org.apache
  *
@@ -82,7 +86,7 @@ public class HtmlCheckbox
     {
         if (_index != null) return _index.intValue();
         ValueBinding vb = getValueBinding("index");
-        Integer v = vb != null ? (Integer)vb.getValue(getFacesContext()) : null;
+        Number v = vb != null ? (Number)vb.getValue(getFacesContext()) : null;
         return v != null ? v.intValue() : Integer.MIN_VALUE;
     }
 
