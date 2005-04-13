@@ -41,6 +41,9 @@ import java.util.Map;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.15  2005/04/13 13:52:01  schof
+ *          Fixes MYFACES-185 (patch submitted by Martin Bosak)
+ *
  *          Revision 1.14  2005/04/12 17:47:51  schof
  *          Fixes MYFACES-182 (Thanks to David Heffelfinger for reporting and fixing.)
  *
@@ -97,10 +100,14 @@ public class HtmlJSCookMenuRenderer
 
         Map parameter = context.getExternalContext().getRequestParameterMap();
         String actionParam = (String)parameter.get(JSCOOK_ACTION_PARAM);
-        if (actionParam != null && !actionParam.trim().equals(""))
+        if (actionParam != null && !actionParam.trim().equals("") && 
+                !actionParam.trim().equals("null"))
         {
             String compId = component.getId();
             int idx = actionParam.indexOf(':');
+            if (idx == -1) {
+                return;
+            }
             String actionId = actionParam.substring(0, idx);
             if (! compId.equals(actionId)) {
                 return;
