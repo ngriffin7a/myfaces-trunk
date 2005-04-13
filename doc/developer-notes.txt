@@ -14,12 +14,9 @@ Component developer guidelines
 MyFaces developers guidelines
 
 * Code style
-  Basis for the code conventions of the MyFaces project are Suns Java Code
-  Conventions at
-  http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html
-  Well as the initiators of this project we take the liberty to postulate one
-  exception: Opening braces go on the next line and there is a new line after
-  closing braces before else/catch/finally/while(in do-while)!  ;-)
+  See http://www.apache.org/dev/styleguide.html for the Apache-Wide Coding Style Guide.
+  Everything that is not documented there should be written according to Suns Java Code
+  Conventions at http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html
 
 * Error and exception handling
   Whenever an exception is caught, the following applies:
@@ -90,6 +87,9 @@ MyFaces developers guidelines
  * @author Bug Rogers (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.17  2005/04/13 13:15:49  manolito
+ * link to Apache-Wide Coding Style Guide
+ *
  * Revision 1.16  2004/10/29 15:50:59  mmarinschek
  * Get rid of many of the outdated references to sourceforge. set myfaces extensions tld uri to http://myfaces.apache.org/extensions
  *
