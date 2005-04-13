@@ -43,6 +43,9 @@ import javax.servlet.jsp.jstl.sql.Result;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.31  2005/04/13 14:18:24  schof
+ * Fixes MYFACES-174 (Thanks to Mathias Broeklemann for the patch)
+ *
  * Revision 1.30  2005/03/24 16:46:02  matzew
  * MYFACES-142
  *
@@ -614,39 +617,40 @@ public class UIData extends UIComponentBase implements NamingContainer
 		super.encodeEnd(context);
 	}
 
-	private boolean isAllChildrenAndFacetsValid()
-	{
-		int first = getFirst();
-		int rows = getRows();
-		int last;
-		if (rows == 0)
-		{
-			last = getRowCount();
-		}
-		else
-		{
-			last = first + rows;
-		}
-		try
-		{
-			for (int rowIndex = first; rowIndex < last; rowIndex++)
-			{
-				setRowIndex(rowIndex);
-				if (isRowAvailable())
-				{
-					if (!isAllEditableValueHoldersValidRecursive(getFacetsAndChildren()))
-					{
-						return false;
-					}
-				}
-			}
-		}
-		finally
-		{
-			setRowIndex(-1);
-		}
-		return true;
-	}
+    private boolean isAllChildrenAndFacetsValid()
+    {
+        int first = getFirst();
+        int rows = getRows();
+        int last;
+        if (rows == 0)
+        {
+            last = getRowCount();
+        }
+        else
+        {
+            last = first + rows;
+        }
+        int setRowIndex = getRowIndex();
+        try
+        {
+            for (int rowIndex = first; rowIndex < last; rowIndex++)
+            {
+                setRowIndex(rowIndex);
+                if (isRowAvailable())
+                {
+                    if (!isAllEditableValueHoldersValidRecursive(getFacetsAndChildren()))
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        finally
+        {
+            setRowIndex(setRowIndex);
+        }
+        return true;
+    }
 
 	private boolean isAllEditableValueHoldersValidRecursive(Iterator facetsAndChildrenIterator)
 	{
