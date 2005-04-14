@@ -456,8 +456,8 @@
         <zip destfile="${src.release.zip}" compress="true">
             <zipfileset prefix="${src.release.bundle}" dir="${temp.dir}/${src.release.bundle}"/>
         </zip>
-        <checksum file="${release.dir}/${src.release.tgz}" forceOverwrite="yes" fileext=".md5"/>
-        <checksum file="${release.dir}/${src.release.zip}" forceOverwrite="yes" fileext=".md5"/>
+        <checksum file="${src.release.tgz}" forceOverwrite="yes" fileext=".md5"/>
+        <checksum file="${src.release.zip}" forceOverwrite="yes" fileext=".md5"/>
 
         <!-- generate/append script for pgp signing of bundle -->
         <echo file="${sign.script}" append="true">
