@@ -374,8 +374,8 @@
         <zip destfile="${release.dir}/${bin.release.bundle}.zip" compress="true">
             <zipfileset prefix="${bin.release.bundle}" dir="${temp.dir}/${bin.release.bundle}"/>
         </zip>
-        <checksum file="${release.dir}/${bin.release.bundle}.tgz" forceOverwrite="yes"/>
-        <checksum file="${release.dir}/${bin.release.bundle}.zip" forceOverwrite="yes"/>
+        <checksum file="${release.dir}/${bin.release.bundle}.tgz" forceOverwrite="yes" fileext=".md5"/>
+        <checksum file="${release.dir}/${bin.release.bundle}.zip" forceOverwrite="yes" fileext=".md5"/>
 
     </target>
 
@@ -441,8 +441,8 @@
         <zip destfile="${release.dir}/${src.release.bundle}.zip" compress="true">
             <zipfileset prefix="${src.release.bundle}" dir="${temp.dir}/${src.release.bundle}"/>
         </zip>
-        <checksum file="${release.dir}/${src.release.bundle}.tgz" forceOverwrite="yes"/>
-        <checksum file="${release.dir}/${src.release.bundle}.zip" forceOverwrite="yes"/>
+        <checksum file="${release.dir}/${src.release.bundle}.tgz" forceOverwrite="yes" fileext=".md5"/>
+        <checksum file="${release.dir}/${src.release.bundle}.zip" forceOverwrite="yes" fileext=".md5"/>
 
     </target>
 
@@ -762,17 +762,28 @@
 
     <target name="app-release" depends="prepare, app-dist">
 
-        <tar destfile="${release.dir}/${app.release.bundle}.tgz" compression="gzip" >
+        <property name="app.release.tgz" value="${release.dir}/${app.release.bundle}.tgz"/>
+        <property name="app.release.zip" value="${release.dir}/${app.release.bundle}.zip"/>
+
+        <tar destfile="${app.release.tgz}" compression="gzip" >
             <tarfileset prefix="${app.release.bundle}" dir="${webapp.dist.dir}"/>
         </tar>
         
-        <checksum file="${release.dir}/${app.release.bundle}.tgz" forceOverwrite="yes"/>
+        <checksum file="${app.release.tgz}" forceOverwrite="yes" fileext=".md5"/>
 
-        <zip destfile="${release.dir}/${app.release.bundle}.zip" compress="true">
+        <zip destfile="${app.release.zip}" compress="true">
             <zipfileset prefix="${app.release.bundle}" dir="${webapp.dist.dir}"/>
         </zip>
         
-        <checksum file="${release.dir}/${app.release.bundle}.zip" forceOverwrite="yes"/>        
+        <checksum file="${app.release.zip}" forceOverwrite="yes" fileext=".md5"/>        
+        
+        <!-- generate/append script for pgp signing of bundle -->
+        <echo file="${release.dir}/sign.sh" append="true">
+        gpg -o ${app.release.tgz}.asc --detach-sig ${app.release.tgz}
+        gpg --verify ${app.release.tgz}.asc ${app.release.tgz}
+        gpg -o ${app.release.zip}.asc --detach-sig ${app.release.zip}
+        gpg --verify ${app.release.zip}.asc ${app.release.zip}
+        </echo>                
 
     </target>
 

@@ -133,7 +133,7 @@ through the system path.
 
         <!-- publish the nightly bundles -->
         <scp todir="${apache.username}:${apache.password}@cvs.apache.org:/www/cvs.apache.org/builds/myfaces/nightly" trust="yes">
-            <fileset dir="${release.dir}"/>
+            <fileset dir="${release.dir}" excludes=".sh"/>
         </scp>
 
     </target>
@@ -147,14 +147,23 @@ through the system path.
         <echo message="build output directory: ${release.dir}"/>
         <mkdir dir="${release.dir}"/>
 
-        <!-- execute the nightly build file that was just checked out -->
+        <!-- execute the build file that was just checked out -->
         <ant dir="${build.dir}" target="release" inheritRefs="true"/>
 
+        <!-- copy files to local release dir -->
+        <copy todir="${release.dir}">
+            <fileset dir="${release.dir}"/>
+        </copy>
+        
+        <!-- sign files -->
+        <exec executable="sign" dir="${release.dir}"
+        
         <!-- publish the release bundles -->
+        <!--
         <scp todir="${apache.username}:${apache.password}@cvs.apache.org:/www/cvs.apache.org/builds/myfaces/release" trust="yes">
             <fileset dir="${release.dir}"/>
         </scp>
-
+        -->
     </target>
     
     <target name="check">
@@ -162,6 +171,10 @@ through the system path.
         <fail unless="build.version">
             The build.version property must be set.  (ex. ant -buildfile bootstrap.xml -Dbuild.version=1_0_9 clean release)
         </fail>
+        <!-- make sure user specified a release directory on their local machine (externally) -->
+        <fail unless="release.dir">
+            The release.dir property must be set (use command line or bootstrap.local.properies.)
+        </fail>        
     </target>
 
 </project>
