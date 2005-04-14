@@ -133,7 +133,7 @@ through the system path.
 
         <!-- publish the nightly bundles -->
         <scp todir="${apache.username}:${apache.password}@cvs.apache.org:/www/cvs.apache.org/builds/myfaces/nightly" trust="yes">
-            <fileset dir="${release.dir}" excludes=".sh"/>
+            <fileset dir="${release.dir}" excludes="**/*.sh"/>
         </scp>
 
     </target>
@@ -154,16 +154,7 @@ through the system path.
         <copy todir="${release.dir}">
             <fileset dir="${release.dir}"/>
         </copy>
-        
-        <!-- sign files -->
-        <exec executable="sign" dir="${release.dir}"
-        
-        <!-- publish the release bundles -->
-        <!--
-        <scp todir="${apache.username}:${apache.password}@cvs.apache.org:/www/cvs.apache.org/builds/myfaces/release" trust="yes">
-            <fileset dir="${release.dir}"/>
-        </scp>
-        -->
+
     </target>
     
     <target name="check">
