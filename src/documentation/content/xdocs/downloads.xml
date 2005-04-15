@@ -10,8 +10,16 @@
 <body>
 
 <section>
-    <title>Releases</title>
-    <p>Use this link for the latest stable release of MyFaces. <br /><br /></p>
+    <title>Certified Downloads</title>
+    <p>Currently, Apache MyFaces has no JSR-127 TCK certified releases.</p>
+</section>
+
+<section>
+    <title>Milestone Downloads</title>
+    <p>The following non-certified milestone releases are available.
+        We feel confident that MyFaces has reached a production stable state.
+        But keep in mind that these milestone releases are 'technology demonstrations'
+        and not offered as JSF 1.1-compatible implementation.</p>
     <ul>
         <li><link href="http://cvs.apache.org/builds/myfaces/release">Releases</link>.</li>
     </ul>
@@ -22,7 +30,6 @@
     <p> Automated builds of the latest source code.  These bundles contain the latest code and should be used at your own risk.<br/>
         Please report any issues using the binaries by following the instructions 
         <link href="community/issue.html">here</link>.
-        <br /><br />
     </p>
     <ul>
         <li><link href="http://cvs.apache.org/builds/myfaces/nightly">Nightly Builds</link>.</li>
