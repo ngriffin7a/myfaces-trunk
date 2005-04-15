@@ -3,19 +3,14 @@
 
     <project-information href="" label="Project" tab="project">
         <index_pm href="index.html" label="Welcome"/>
-	    <license label="License" href="license.html" />
-
-            <!--
-            Commented out by schof. I think we should move this link to a different tab later.
-	    <livesites label="Web apps using MyFaces" href="livesites.html"/>
-            -->
+        <license label="License" href="license.html" />
+        <downloads label="Downloads">
+            <bindownload label="Binary" href="http://myfaces.apache.org/binary.cgi"/>
+            <srcdownload label="Source" href="http://myfaces.apache.org/src.cgi"/>
+            <bindownload_html href="binary.html"/> <!-- these dummy links are necessary -->
+            <srcdownload_html href="source.html"/> <!-- these dummy links are necessary -->
+        </downloads>
      </project-information>
-     <downloads label="Downloads" tab="project">
-         <bindownload label="Binary" href="http://myfaces.apache.org/binary.cgi"/>
-         <bindownload_html href="binary.html"/><!-- so the page is part of a tab -->
-         <srcdownload label="Source" href="http://myfaces.apache.org/src.cgi"/>
-         <srcdownload_html href="source.html"/><!-- so the page is part of a tab -->
-     </downloads>
      <components href="components/" label="Components" tab="components">
          <overview label="Overview" href="overview.html"/>
          <jscookmenu label="JSCook Menu" href="jscookmenu.html"/>
@@ -52,5 +47,14 @@
         <wiki label="Wiki" href="http://wiki.apache.org/myfaces"/>
         <getinvolved label="Get Involved" href="http://jakarta.apache.org/site/getinvolved.html"/>
     </community>
-
+     <!--
+     NOTE: foo tab doesn't really exist (its label is empty String.)  This allows us to create bogus
+     links for the binary.xml and source.xml files.  These bogus links are necessary to trick
+     Forrest into converting them into html even though they are not linked anywhere.  The real
+     links are the cgi scripts tha will eventually make use of these html templates.
+     -->
+     <foo href="" label="" tab="foo">
+         <bindownload_html label="" href="binary.html"/>
+         <srcdownload_html label="" href="source.html"/>
+     </foo>
 </site>
