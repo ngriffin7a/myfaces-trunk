@@ -4,47 +4,53 @@
     <project-information href="" label="Project" tab="project">
         <index_pm href="index.html" label="Welcome"/>
 	    <license label="License" href="license.html" />
-	    <downloads label="Downloads" href="downloads.html" />
+
             <!--
             Commented out by schof. I think we should move this link to a different tab later.
 	    <livesites label="Web apps using MyFaces" href="livesites.html"/>
             -->
      </project-information>
-	<components href="components/" label="Components" tab="components">
-		<overview label="Overview" href="overview.html"/>
-		<jscookmenu label="JSCook Menu" href="jscookmenu.html"/>
-                <tree label="Tiles Support" href="tiles.html"/>
-		<tree label="Tree2" href="tree2.html"/>
-		<validateCreditCard label="validateCreditCard" href="validateCreditCard.html"/>
-		<validateISBN label="validateISBN" href="validateISBN.html"/>
-		<validateRegExpr label="validateRegExpr" href="validateRegExpr.html"/>
-		<validateEmail label="validateEmail" href="validateEmail.html"/>
-		<validateEqual label="validateEqual" href="validateEqual.html"/>
-	</components>
-	<docu href="docs/" label="Documentation" tab="documentation">
-		<gettingstarted label="Getting Started" href="gettingstarted.html"/>
-		<ri label="MyFaces and RI" href="risamples.html"/>
-		<tomcat55 label="MyFaces and Tomcat5.5" href="tomcat55.html"/>
-		<portlet label="MyFaces' Portlet Support" href="portlet.html"/>
-		<extensionsFilter label="MyFaces' Extensions Filter" href="extensionsFilter.html"/>
-		<compatibility label="Compatibility" href="compatibility.html"/>
-		<faq label="FAQ" href="faq.html" />
-		<jars label="JARs" href="jars.html" />
-		<javadoc label="Java Doc" href="http://myfaces.apache.org/javadoc/" />
-		<tlddoc label="Taglibs" href="http://myfaces.apache.org/tlddoc/" />
-                <bootstrap label="Bootstrap" href="bootstrap.html" />
-		<controlprogramming label="Homepage" href="sf.html" />
-	</docu>
-        <community href="community/" label="Community" tab="community">
-            <mailinglists label="Mailing Lists" href="mailinglists.html" />
-            <contributors label="Contributors" href="contributors.html" />
-            <status label="Status" href="status.html" />
-            <bylaws label="Project Bylaws" href="bylaws.html"/>
-            <issue label="Bug Reporting" href="issue.html"/>
-            <powered label="Powered by MyFaces" href="poweredbymyfaces.html"/>
-            <cvs label="CVS" href="versioning.html"/>
-            <wiki label="Wiki" href="http://wiki.apache.org/myfaces"/>
-            <getinvolved label="Get Involved" href="http://jakarta.apache.org/site/getinvolved.html"/>
-        </community>
+     <downloads label="Downloads" tab="project">
+         <bindownload label="Binary" href="http://myfaces.apache.org/binary.cgi"/>
+         <bindownload_html href="binary.html"/><!-- so the page is part of a tab -->
+         <srcdownload label="Source" href="http://myfaces.apache.org/src.cgi"/>
+         <srcdownload_html href="source.html"/><!-- so the page is part of a tab -->
+     </downloads>
+     <components href="components/" label="Components" tab="components">
+         <overview label="Overview" href="overview.html"/>
+         <jscookmenu label="JSCook Menu" href="jscookmenu.html"/>
+         <tree label="Tiles Support" href="tiles.html"/>
+         <tree label="Tree2" href="tree2.html"/>
+         <validateCreditCard label="validateCreditCard" href="validateCreditCard.html"/>
+         <validateISBN label="validateISBN" href="validateISBN.html"/>
+         <validateRegExpr label="validateRegExpr" href="validateRegExpr.html"/>
+         <validateEmail label="validateEmail" href="validateEmail.html"/>
+         <validateEqual label="validateEqual" href="validateEqual.html"/>
+     </components>
+     <docu href="docs/" label="Documentation" tab="documentation">
+         <gettingstarted label="Getting Started" href="gettingstarted.html"/>
+         <ri label="MyFaces and RI" href="risamples.html"/>
+         <tomcat55 label="MyFaces and Tomcat5.5" href="tomcat55.html"/>
+         <portlet label="MyFaces' Portlet Support" href="portlet.html"/>
+         <extensionsFilter label="MyFaces' Extensions Filter" href="extensionsFilter.html"/>
+         <compatibility label="Compatibility" href="compatibility.html"/>
+         <faq label="FAQ" href="faq.html" />
+         <jars label="JARs" href="jars.html" />
+         <javadoc label="Java Doc" href="http://myfaces.apache.org/javadoc/" />
+         <tlddoc label="Taglibs" href="http://myfaces.apache.org/tlddoc/" />
+         <bootstrap label="Bootstrap" href="bootstrap.html" />
+         <controlprogramming label="Homepage" href="sf.html" />
+     </docu>
+    <community href="community/" label="Community" tab="community">
+        <mailinglists label="Mailing Lists" href="mailinglists.html" />
+        <contributors label="Contributors" href="contributors.html" />
+        <status label="Status" href="status.html" />
+        <bylaws label="Project Bylaws" href="bylaws.html"/>
+        <issue label="Bug Reporting" href="issue.html"/>
+        <powered label="Powered by MyFaces" href="poweredbymyfaces.html"/>
+        <cvs label="CVS" href="versioning.html"/>
+        <wiki label="Wiki" href="http://wiki.apache.org/myfaces"/>
+        <getinvolved label="Get Involved" href="http://jakarta.apache.org/site/getinvolved.html"/>
+    </community>
 
 </site>
