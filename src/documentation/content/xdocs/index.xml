@@ -20,7 +20,7 @@ Look at <link href="http://java.sun.com/j2ee/javaserverfaces/">Sun's JavaServer(
     </section>
 
     <section>
-        <title>April 18, 2005 - MyFaces 1.0.9(m9) has been released</title>
+        <title>April 16, 2005 - MyFaces 1.0.9(m9) has been released</title>
         <p>
             MyFaces 1.0.9(m9) is now available.  The (m9) stands for milestone 9.  The license agreement covering JSF and all other JCP based
             specifications require that we use this terminology and avoid the word "final."  Once MyFaces passes the TCK we will be able to

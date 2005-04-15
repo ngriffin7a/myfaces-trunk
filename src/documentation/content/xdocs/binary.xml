@@ -25,7 +25,7 @@
         <section>
             <title><a name="how" />How to download</title>
             <p>
-                Use the links below to download a distribution of Apache Forrest from
+                Use the links below to download a distribution of Apache MyFaces from
                 one of our mirrors. It is good practice to verify the integrity of the
                 distribution files.
             </p>
@@ -63,7 +63,7 @@
             </form>
 
             <p>The current release is Apache MyFaces 1.0.9m9 (see the
-                <a href="[preferred]/forrest/RELEASE-NOTES-0.6.txt">release notes</a>).
+                <a href="RELEASE-NOTES-1.0.9.txt">release notes</a>).
             </p>
             <ul>
                 <li>For UNIX operating systems:</li>
@@ -131,7 +131,7 @@
                 <a href="http://www.pgpi.org/">PGP</a> or
                 <a href="http://www.gnupg.org/">GPG</a>.
                 First download the Apache MyFaces
-                <a href="http://cvs.apache.org/repos/asf/myfaces/KEYS">KEYS</a>
+                <a href="http://cvs.apache.org/viewcvs.cgi/*checkout*/incubator-myfaces/KEYS">KEYS</a>
                 as well as the <code>asc</code> signature file for the particular
                 distribution. It is important that you get these files from the ultimate
                 trusted source - the main ASF distribution site, rather than from a mirror.

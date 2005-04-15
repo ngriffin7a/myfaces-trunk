@@ -6,11 +6,25 @@
         <license label="License" href="license.html" />
         <downloads label="Downloads">
             <bindownload label="Binary" href="http://myfaces.apache.org/binary.cgi"/>
-            <srcdownload label="Source" href="http://myfaces.apache.org/src.cgi"/>
+            <srcdownload label="Source" href="http://myfaces.apache.org/source.cgi"/>
             <bindownload_html href="binary.html"/> <!-- these dummy links are necessary -->
             <srcdownload_html href="source.html"/> <!-- these dummy links are necessary -->
         </downloads>
      </project-information>
+    <docu href="docs/" label="Documentation" tab="documentation">
+        <gettingstarted label="Getting Started" href="gettingstarted.html"/>
+        <ri label="MyFaces and RI" href="risamples.html"/>
+        <tomcat55 label="MyFaces and Tomcat5.5" href="tomcat55.html"/>
+        <portlet label="MyFaces' Portlet Support" href="portlet.html"/>
+        <extensionsFilter label="MyFaces' Extensions Filter" href="extensionsFilter.html"/>
+        <compatibility label="Compatibility" href="compatibility.html"/>
+        <faq label="FAQ" href="faq.html"/>
+        <jars label="JARs" href="jars.html"/>
+        <javadoc label="Java Doc" href="http://myfaces.apache.org/javadoc/"/>
+        <tlddoc label="Taglibs" href="http://myfaces.apache.org/tlddoc/"/>
+        <bootstrap label="Bootstrap" href="bootstrap.html"/>
+        <controlprogramming label="Old Homepage" href="sf.html"/>
+    </docu>
      <components href="components/" label="Components" tab="components">
          <overview label="Overview" href="overview.html"/>
          <jscookmenu label="JSCook Menu" href="jscookmenu.html"/>
@@ -22,20 +36,6 @@
          <validateEmail label="validateEmail" href="validateEmail.html"/>
          <validateEqual label="validateEqual" href="validateEqual.html"/>
      </components>
-     <docu href="docs/" label="Documentation" tab="documentation">
-         <gettingstarted label="Getting Started" href="gettingstarted.html"/>
-         <ri label="MyFaces and RI" href="risamples.html"/>
-         <tomcat55 label="MyFaces and Tomcat5.5" href="tomcat55.html"/>
-         <portlet label="MyFaces' Portlet Support" href="portlet.html"/>
-         <extensionsFilter label="MyFaces' Extensions Filter" href="extensionsFilter.html"/>
-         <compatibility label="Compatibility" href="compatibility.html"/>
-         <faq label="FAQ" href="faq.html" />
-         <jars label="JARs" href="jars.html" />
-         <javadoc label="Java Doc" href="http://myfaces.apache.org/javadoc/" />
-         <tlddoc label="Taglibs" href="http://myfaces.apache.org/tlddoc/" />
-         <bootstrap label="Bootstrap" href="bootstrap.html" />
-         <controlprogramming label="Homepage" href="sf.html" />
-     </docu>
     <community href="community/" label="Community" tab="community">
         <mailinglists label="Mailing Lists" href="mailinglists.html" />
         <contributors label="Contributors" href="contributors.html" />
