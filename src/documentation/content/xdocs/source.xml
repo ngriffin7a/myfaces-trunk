@@ -69,8 +69,8 @@
                 <li>For UNIX operating systems:</li>
                 <ul>
                     <li><a href="[preferred]/myfaces/source/myfaces-1.0.9-src.tgz">myfaces-1.0.9-src.tgz</a></li>
-                    <li>[<a href="http://www.apache.org/myfaces/source/myfaces-1.0.9-src.tgz.asc">PGP</a>]</li>
-                    <li>[<a href="http://www.apache.org/myfaces/source/myfaces-1.0.9-src.tgz.md5">MD5</a>]</li>
+                    <li>[<a href="http://www.apache.org/dist/myfaces/source/myfaces-1.0.9-src.tgz.asc">PGP</a>]</li>
+                    <li>[<a href="http://www.apache.org/dist/myfaces/source/myfaces-1.0.9-src.tgz.md5">MD5</a>]</li>
                 </ul>
                 <li>For Windows operating systems:</li>
                 <ul>
@@ -115,7 +115,7 @@
                 <a href="http://www.pgpi.org/">PGP</a> or
                 <a href="http://www.gnupg.org/">GPG</a>.
                 First download the Apache MyFaces
-                <a href="http://cvs.apache.org/repos/asf/myfaces/KEYS">KEYS</a>
+                <a href="http://www.apache.org/dist/myfaces/KEYS">KEYS</a>
                 as well as the <code>asc</code> signature file for the particular
                 distribution. It is important that you get these files from the ultimate
                 trusted source - the main ASF distribution site, rather than from a mirror.
