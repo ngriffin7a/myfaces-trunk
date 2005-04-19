@@ -37,7 +37,6 @@
 	            <x:navigationMenuItem id="nav_2_4_81" itemLabel="#{example_messages['nav_InputHtml']}" action="go_inputHtml" icon="images/myfaces.gif" />
                 <x:navigationMenuItem id="nav_2_4_9" itemLabel="#{example_messages['nav_dataList']}" action="go_dataList" icon="images/myfaces.gif" />
                 <x:navigationMenuItem id="nav_2_4_10" itemLabel="#{example_messages['nav_tree']}" action="go_tree" icon="images/myfaces.gif" />
-                <x:navigationMenuItem id="nav_2_4_100" itemLabel="#{example_messages['nav_tree2']}" action="go_tree2" icon="images/myfaces.gif" />
                 <x:navigationMenuItem id="nav_2_4_11" itemLabel="#{example_messages['nav_treeTable']}" action="go_treeTable" icon="images/myfaces.gif" />
                 <x:navigationMenuItem id="nav_2_4_12" itemLabel="#{example_messages['nav_rssTicker']}" action="go_rssticker" icon="images/myfaces.gif" />
                 <x:navigationMenuItem id="nav_2_4_13" itemLabel="#{example_messages['nav_dataScroller']}" action="go_datascroller" icon="images/myfaces.gif" />
