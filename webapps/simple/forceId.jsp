@@ -52,6 +52,8 @@ managed beans used:
             <x:commandLink forceId="true" id="button" value="#{example_messages['button_submit']}" action="go_home"/>
             <h:panelGroup/>
 
+            <x:inputHidden forceId="true" id="hidden-foo"/>
+
         </h:panelGrid>
     </h:form>
 

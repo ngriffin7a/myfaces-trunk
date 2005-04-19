@@ -15,7 +15,7 @@
  */
 package org.apache.myfaces.taglib.html;
 
-import javax.faces.component.html.HtmlInputHidden;
+import org.apache.myfaces.component.html.ext.HtmlInputHidden;
 
 
 /**
@@ -23,6 +23,9 @@ import javax.faces.component.html.HtmlInputHidden;
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2005/04/19 15:14:27  schof
+ * Fixes MYFACES-193
+ *
  * Revision 1.1  2005/03/30 22:52:28  schof
  * Fixes MYFACES-146.  Tag needs to be in the shared source codebase because it is also used by extensions jar.  Thanks to Hal Deadman for reporting and investigating this bug.
  *
