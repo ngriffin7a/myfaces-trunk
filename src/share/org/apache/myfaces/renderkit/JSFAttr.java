@@ -115,11 +115,12 @@ public class JSFAttr
     public static final String VAR_ATTR                    = "var";
     public static final String FIRST_ATTR                  = "first";
 
-    // Tree attributes
-    public static final String SHOW_NAV                    = "org.apache.myfaces.tree.SHOW_NAV";
-    public static final String SHOW_LINES                  = "org.apache.myfaces.tree.SHOW_LINES";
-    public static final String CLIENT_SIDE_TOGGLE          = "org.apache.myfaces.tree.CLIENT_SIDE_TOGGLE";
-    public static final String SHOW_ROOT_NODE              = "org.apache.myfaces.tree.SHOW_ROOT_NODE";
+    // Tree2 attributes
+    public static final String SHOW_NAV                    = "org.apache.myfaces.tree2.SHOW_NAV";
+    public static final String SHOW_LINES                  = "org.apache.myfaces.tree2.SHOW_LINES";
+    public static final String CLIENT_SIDE_TOGGLE          = "org.apache.myfaces.tree2.CLIENT_SIDE_TOGGLE";
+    public static final String SHOW_ROOT_NODE              = "org.apache.myfaces.tree2.SHOW_ROOT_NODE";
+    public static final String PRESERVE_TOGGLE             = "org.apache.myfaces.tree2.PRESERVE_TOGGLE";
 
     // Alternate locations (instead of using AddResource)
     public static final String JAVASCRIPT_LOCATION         = "org.apache.myfaces.JAVASCRIPT_LOCATION";

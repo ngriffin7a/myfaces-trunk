@@ -84,6 +84,11 @@ public class HtmlTreeRenderer extends Renderer
 
         if (getBoolean(component, JSFAttr.CLIENT_SIDE_TOGGLE, true))
         {
+            if (!getBoolean(component, JSFAttr.PRESERVE_TOGGLE, true))
+            {
+                return;
+            }
+
             Map cookieMap = context.getExternalContext().getRequestCookieMap();
             Cookie treeCookie = (Cookie)cookieMap.get(component.getId());
             if (treeCookie == null || treeCookie.getValue() == null)
