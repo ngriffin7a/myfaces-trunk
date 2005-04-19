@@ -16,19 +16,19 @@
       <br/><br/></p>
       <table>
         <tr>
-          <td><link href="mailto:myfaces-user@incubator.apache.org"> MyFaces Users List</link></td>
-          <td><link href="mailto:myfaces-user-subscribe@incubator.apache.org"> Subscribe</link></td>
-          <td><link href="mailto:myfaces-user-unsubscribe@incubator.apache.org"> Unsubscribe</link></td>
+          <td><link href="mailto:users@myfaces.apache.org"> MyFaces Users List</link></td>
+          <td><link href="mailto:users-subscribe@incubator.apache.org"> Subscribe</link></td>
+          <td><link href="mailto:users-unsubscribe@incubator.apache.org"> Unsubscribe</link></td>
           <td><fork href="http://nagoya.apache.org/eyebrowse/SummarizeList?listName=myfaces-user@incubator.apache.org"> Archives</fork></td>
         </tr>
         <tr>
-          <td><link href="mailto:myfaces-dev@incubator.apache.org"> MyFaces Developer List</link></td>
-          <td><link href="mailto:myfaces-dev-subscribe@incubator.apache.org"> Subscribe</link></td>
-          <td><link href="mailto:myfaces-dev-unsubscribe@incubator.apache.org"> Unsubscribe</link></td>
+          <td><link href="mailto:dev@myfaces.apache.org"> MyFaces Developer List</link></td>
+          <td><link href="mailto:dev-subscribe@myfaces.apache.org"> Subscribe</link></td>
+          <td><link href="mailto:dev-unsubscribe@myfaces.apache.org"> Unsubscribe</link></td>
           <td><fork href="http://nagoya.apache.org/eyebrowse/SummarizeList?listName=myfaces-dev@incubator.apache.org"> Archives</fork></td>
         </tr>
         <tr>
-          <td><link href="mailto:myfaces-ppmc@incubator.apache.org"> MyFaces PPMC List</link></td>
+          <td><link href="mailto:pmc@myfaces.apache.org"> MyFaces PMC List</link></td>
         </tr>
         <tr>
           <td><link href="http://www.mail-archive.com/"> Mail-Archive.com</link></td>
