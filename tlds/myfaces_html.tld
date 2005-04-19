@@ -139,7 +139,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
 <!-- input_hidden -->
     <tag>
         <name>inputHidden</name>
-        <tag-class>org.apache.myfaces.taglib.html.HtmlInputHiddenTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.HtmlInputHiddenTagBase</tag-class>
         <body-content>JSP</body-content>
         &ui_input_attributes;
         <!-- HiddenRenderer attributes -->

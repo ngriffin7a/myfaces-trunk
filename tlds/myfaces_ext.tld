@@ -205,7 +205,7 @@
     <!-- inputHidden -->
     <tag>
         <name>inputHidden</name>
-        <tag-class>org.apache.myfaces.taglib.html.HtmlInputHiddenTag</tag-class>
+        <tag-class>org.apache.myfaces.taglib.html.ext.HtmlInputHiddenTag</tag-class>
         <body-content>JSP</body-content>
         <description>
             Extends standard inputHidden by providing additional MyFaces goodies.

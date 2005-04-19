@@ -13,16 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.myfaces.taglib.html;
+package org.apache.myfaces.taglib.html.ext;
 
 import org.apache.myfaces.component.html.ext.HtmlInputHidden;
-
+import org.apache.myfaces.taglib.html.HtmlInputHiddenTagBase;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.1  2005/04/19 20:51:45  schof
+ * Moved HtmlInputHiddenTag to the components package since I needed a tag for x:inputHidden.  It could not stay in the share directory since the component it references is not in the share package.  Since HtmlInputHiddenTagBase was not doing anything I changed it so it could serve as the tag for h:inputHidden.
+ *
  * Revision 1.2  2005/04/19 15:14:27  schof
  * Fixes MYFACES-193
  *
@@ -48,10 +51,5 @@ public class HtmlInputHiddenTag
     public String getComponentType()
     {
         return HtmlInputHidden.COMPONENT_TYPE;
-    }
-
-    public String getRendererType()
-    {
-        return "javax.faces.Hidden";
     }
 }

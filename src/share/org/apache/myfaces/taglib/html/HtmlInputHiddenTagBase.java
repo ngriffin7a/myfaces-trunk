@@ -15,14 +15,16 @@
  */
 package org.apache.myfaces.taglib.html;
 
-
-
+import javax.faces.component.html.HtmlInputHidden;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Martin Marinschek
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2005/04/19 20:51:45  schof
+ * Moved HtmlInputHiddenTag to the components package since I needed a tag for x:inputHidden.  It could not stay in the share directory since the component it references is not in the share package.  Since HtmlInputHiddenTagBase was not doing anything I changed it so it could serve as the tag for h:inputHidden.
+ *
  * Revision 1.3  2004/10/13 11:51:01  matze
  * renamed packages to org.apache
  *
@@ -52,5 +54,15 @@ public abstract class HtmlInputHiddenTagBase
 
     // UIInput attributes
     // --> already implemented in HtmlInputTagBase
+
+    public String getComponentType()
+    {
+        return HtmlInputHidden.COMPONENT_TYPE;
+    }
+
+    public String getRendererType()
+    {
+        return "javax.faces.Hidden";
+    }
 
 }
