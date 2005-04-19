@@ -43,7 +43,10 @@
         <h:outputLink value="dataList.jsf" ><f:verbatim>Dynamic Lists</f:verbatim></h:outputLink> <br/>
         <h:outputLink value="tree.jsf" ><f:verbatim>Tree</f:verbatim></h:outputLink> <br/>
         <h:outputLink value="treeTable.jsf" ><f:verbatim>Tree Table</f:verbatim></h:outputLink> <br/>
-        <h:outputLink value="tree2.jsf" ><f:verbatim>Tree2</f:verbatim></h:outputLink> <br/>
+        Tree2<br/>
+        &nbsp;&nbsp;&nbsp;<h:outputLink value="tree2.jsf" ><f:verbatim>Tree2 (client-side toggle, server-side toggle)</f:verbatim></h:outputLink><br/>
+        &nbsp;&nbsp;&nbsp;<h:outputLink value="tree2HideRoot.jsf" ><f:verbatim>Tree2 (hide root node)</f:verbatim></h:outputLink><br/>
+        &nbsp;&nbsp;&nbsp;<h:outputLink value="tree2NiceWrap.jsf" ><f:verbatim>Tree2 (nice wrap)</f:verbatim></h:outputLink><br/>
         <h:outputLink value="rssTicker.jsf" ><f:verbatim>RSS Ticker</f:verbatim></h:outputLink> <br/>
         <h:outputLink value="panelstack.jsf" ><f:verbatim>Panel Stack</f:verbatim></h:outputLink> <br/>
         <h:outputLink value="css.jsf" ><f:verbatim>Style Sheet</f:verbatim></h:outputLink> <br/>

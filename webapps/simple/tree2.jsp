@@ -37,7 +37,9 @@
 
     First child in the expand/collapse facet should be image (if any)
     --%>
-    <b>Client-Side Tree</b>
+    <span style="font-family:verdana">
+        <b>Tree2 w/client-side (default) toggle</b><br/>
+    </span>
     <br/>
 
     <x:tree2 id="clientTree" value="#{treeBacker.treeData}" var="node" varNodeToggler="t">
@@ -67,7 +69,7 @@
         <f:facet name="bar-folder">
             <h:panelGroup>
                 <f:facet name="expand">
-                    <h:graphicImage value="images/blue-folder-open.png" rendered="#{t.nodeExpanded}" border="0"/>
+                    <h:graphicImage value="images/blue-folder-open.gif" rendered="#{t.nodeExpanded}" border="0"/>
                 </f:facet>
                 <f:facet name="collapse">
                     <h:graphicImage value="images/blue-folder-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
@@ -87,9 +89,12 @@
         </f:facet>
     </x:tree2>
 
-    <b>Server-Side Tree</b>
     <br/>
-
+    <span style="font-family:verdana">
+        <b>Tree2 w/server-side toggle</b><br/>
+    </span>
+    <br/>
+    
     <!-- Expand/Collapse Handled By Server -->
     <x:tree2 id="serverTree" value="#{treeBacker.treeData}" var="node" varNodeToggler="t" clientSideToggle="false">
         <f:facet name="person">
@@ -114,7 +119,7 @@
         <f:facet name="bar-folder">
             <h:panelGroup>
                 <h:commandLink immediate="true" action="#{t.toggleExpanded}">
-                    <h:graphicImage value="/images/blue-folder-open.png" rendered="#{t.nodeExpanded}" border="0"/>
+                    <h:graphicImage value="/images/blue-folder-open.gif" rendered="#{t.nodeExpanded}" border="0"/>
                     <h:graphicImage value="/images/blue-folder-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
                 </h:commandLink>
                 <h:outputText value="#{node.description}" styleClass="nodeFolder"/>
