@@ -1,5 +1,2 @@
 This product includes software developed by:
 The Apache Software Foundation (http://www.apache.org/).
-
-Xdoclet project (http://xdoclet.sf.net) License for
-Xdoclet is BSD.

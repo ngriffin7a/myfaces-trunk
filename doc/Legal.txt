@@ -9,11 +9,12 @@ This product is developed and distributed under the terms of
 Acknowledgements
 ================
 
-This product includes software developed by:
+This product includes or is developed with software developed by:
 
 - The Apache Software Foundation (http://www.apache.org/)
 - Simon Brown (http://www.tagunit.org)
 - Heng Yuan (http://www.cs.ucla.edu/~heng/JSCookMenu)
+- Xdoclet project (http://xdoclet.sf.net) licensed under BSD
 
 Trademarks
 ==========

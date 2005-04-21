@@ -362,7 +362,10 @@
         <copy file="${myfaces.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
         <copy file="${myfaces-wap.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
         <copy file="${myfaces-xdoclet.jar}" todir="${temp.dir}/${bin.release.bundle}/lib"/>
-
+        <copy todir="${temp.dir}/${bin.release.bundle}">
+            <fileset file="${project.dir}/LICENSE.txt"/>
+            <fileset file="${project.dir}/NOTICE.txt"/>
+        </copy>
     </target>
 
     <target name="bin-release"
@@ -375,7 +378,7 @@
         <tar destfile="${bin.release.tgz}" compression="gzip" >
              <tarfileset prefix="${bin.release.bundle}" dir="${temp.dir}/${bin.release.bundle}"/>
         </tar>
-        <zip destfile="${bin.release.zip}" compress="true">
+        <zip destfile="${bin.release.zip}" compress="true" >
             <zipfileset prefix="${bin.release.bundle}" dir="${temp.dir}/${bin.release.bundle}"/>
         </zip>
         <checksum file="${bin.release.tgz}" forceOverwrite="yes" fileext=".md5"/>
@@ -440,6 +443,10 @@
         </copy>
         <copy todir="${temp.dir}/${src.release.bundle}/webapps">
             <fileset dir="${apps.dir}" excludes="**/lib/**, **/classes/**"/>
+        </copy>
+        <copy todir="${temp.dir}/${src.release.bundle}">
+            <fileset file="${project.dir}/LICENSE.txt"/>
+            <fileset file="${project.dir}/NOTICE.txt"/>
         </copy>
     </target>
 
