@@ -111,10 +111,9 @@ function jscalendarAddHoliday (d, m, y, desc){
 }
 
 if (jscalendarDom){
-	for	(i=0;i<jscalendarImgsrc.length;i++){
+	for	(i=0;i<jscalendarImgsrc.length;i++)
 		jscalendarImg[i] = new Image;
-		jscalendarImg[i].src = jscalendarImgDir + jscalendarImgsrc[i];
-	}
+
 	document.write ("<div onclick='jscalendarBShow=true' id='calendar'	class='"+jscalendarThemePrefix+"-div-style'><table	width="+((jscalendarShowWeekNumber==1)?250:220)+" class='"+jscalendarThemePrefix+"-table-style'><tr class='"+jscalendarThemePrefix+"-title-background-style'><td><table width='"+((jscalendarShowWeekNumber==1)?248:218)+"'><tr><td class='"+jscalendarThemePrefix+"-title-style'><span id='caption'></span></td><td align=right><a href='javascript:jscalendarHideCalendar()'><span id='jscalendarCloseButton'></span></a></td></tr></table></td></tr><tr><td class='"+jscalendarThemePrefix+"-body-style'><span id='content'></span></td></tr>")
 		
 	if (jscalendarShowToday==1)
