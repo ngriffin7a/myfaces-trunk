@@ -16,23 +16,51 @@
       <br/><br/></p>
       <table>
         <tr>
-          <td><link href="mailto:users@myfaces.apache.org"> MyFaces Users List</link></td>
-          <td><link href="mailto:users-subscribe@incubator.apache.org"> Subscribe</link></td>
-          <td><link href="mailto:users-unsubscribe@incubator.apache.org"> Unsubscribe</link></td>
-          <td><fork href="http://nagoya.apache.org/eyebrowse/SummarizeList?listName=myfaces-user@incubator.apache.org"> Archives</fork></td>
+            <th>Name</th>
+            <th>Archives</th>
+            <th>Purpose</th>
+            <th>Notes</th>
+            <th>Subscription</th>
         </tr>
         <tr>
-          <td><link href="mailto:dev@myfaces.apache.org"> MyFaces Developer List</link></td>
-          <td><link href="mailto:dev-subscribe@myfaces.apache.org"> Subscribe</link></td>
-          <td><link href="mailto:dev-unsubscribe@myfaces.apache.org"> Unsubscribe</link></td>
-          <td><fork href="http://nagoya.apache.org/eyebrowse/SummarizeList?listName=myfaces-dev@incubator.apache.org"> Archives</fork></td>
+          <td>users at myfaces.apache.org</td>
+          <td><fork href="http://www.mail-archive.com/users%40myfaces.apache.org/">mail-archive.com</fork> <br/>
+              <fork href="http://nagoya.apache.org/eyebrowse/SummarizeList?listName=myfaces-user@incubator.apache.org">nagoya eyebrowse (old Incubator mails)</fork> </td>
+          <td>MyFaces users help users</td>
+          <td>This is a subscriber-only list, so you must join before you can post.</td>
+          <td><link href="mailto:users-subscribe@myfaces.apache.org">subscribe</link> <br/>
+              <link href="mailto:users-unsubscribe@myfaces.apache.org">unsubscribe</link> </td>
         </tr>
         <tr>
-          <td><link href="mailto:pmc@myfaces.apache.org"> MyFaces PMC List</link></td>
+            <td>dev at myfaces.apache.org</td>
+            <td>
+                <fork href="http://www.mail-archive.com/dev%40myfaces.apache.org/">mail-archive.com</fork> <br/>
+                <fork href="http://nagoya.apache.org/eyebrowse/SummarizeList?listName=myfaces-dev@incubator.apache.org">nagoya eyebrowse (old Incubator mails)</fork>
+            </td>
+            <td>MyFaces developers and committers discussions</td>
+            <td>This is a subscriber-only list, so you must join before you can post.</td>
+            <td>
+                <link href="mailto:dev-subscribe@myfaces.apache.org">subscribe</link> <br/>
+                <link href="mailto:dev-unsubscribe@myfaces.apache.org">unsubscribe</link>
+            </td>
         </tr>
         <tr>
-          <td><link href="http://www.mail-archive.com/"> Mail-Archive.com</link></td>
+            <td>pmc at myfaces.apache.org</td>
+            <td></td>
+            <td>MyFaces Project Management Committee</td>
+            <td>This is a private list for MyFaces PMC members only.</td>
+            <td>N/A</td>
         </tr>
+          <tr>
+              <td>commits at myfaces.apache.org</td>
+              <td></td>
+              <td>Repository changes</td>
+              <td>Please do not post to this list.</td>
+              <td>
+                  <link href="mailto:commits-subscribe@myfaces.apache.org">subscribe</link> <br/>
+                  <link href="mailto:commits-unsubscribe@myfaces.apache.org">unsubscribe</link>
+              </td>
+          </tr>
       </table>
     </section>
     
