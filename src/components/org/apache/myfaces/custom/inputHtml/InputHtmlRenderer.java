@@ -38,6 +38,9 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2005/04/21 04:07:13  svieujot
+ * Kupu 1.2 update
+ *
  * Revision 1.1  2005/03/26 20:31:37  svieujot
  * Rename x:htmlEditor to x:inputHtml.
  *
@@ -337,7 +340,7 @@ public class InputHtmlRenderer extends HtmlRenderer {
             				writer.startElement(HTML.BUTTON_ELEM,null);
                             writer.writeAttribute(HTML.TYPE_ATTR, "button",null);
             				writer.writeAttribute(HTML.CLASS_ATTR, "kupu-logo",null);
-            				writer.writeAttribute(HTML.TITLE_ATTR, "Kupu 1.2rc2",null);
+            				writer.writeAttribute(HTML.TITLE_ATTR, "Kupu 1.2",null);
             				writer.writeAttribute(HTML.ACCESSKEY_ATTR, "k",null);
             				writer.writeAttribute(HTML.ONCLICK_ATTR, "window.open('http://kupu.oscom.org');",null);
             					writer.write("&#xA0;");
