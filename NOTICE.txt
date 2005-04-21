@@ -1,2 +1,10 @@
 This product includes software developed by:
 The Apache Software Foundation (http://www.apache.org/).
+
+------------------------------------------------------------------------
+See the file LICENSE.txt
+See licenses for accompanying products in the "doc/license" directory.
+------------------------------------------------------------------------
+
+This product includes software developed by Heng Yuan
+http://www.cs.ucla.edu/~heng/JSCookMenu
