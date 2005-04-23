@@ -9,6 +9,6 @@
   <tab label="Project" dir="" id="project" indexfile="index.html"/>
   <tab label="Documentation" dir="docs/" id="documentation" indexfile="gettingstarted.html"/>
   <tab label="Components" dir="components/" id="components" indexfile="overview.html"/>
-  <tab label="Community" dir="community/" id="community" indexfile="mailinglists.html"/>
+  <tab label="Community" dir="community/" id="community" indexfile="whoweare.html"/>
 
 </tabs>

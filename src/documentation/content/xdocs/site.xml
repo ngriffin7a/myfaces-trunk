@@ -37,8 +37,8 @@
          <validateEqual label="validateEqual" href="validateEqual.html"/>
      </components>
     <community href="community/" label="Community" tab="community">
+        <whoweare label="Who we are" href="whoweare.html"/>
         <mailinglists label="Mailing Lists" href="mailinglists.html" />
-        <contributors label="Contributors" href="contributors.html" />
         <status label="Status" href="status.html" />
         <bylaws label="Project Bylaws" href="bylaws.html"/>
         <issue label="Bug Reporting" href="issue.html"/>

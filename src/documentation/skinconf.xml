@@ -105,13 +105,6 @@ be used to configure the chosen Forrest skin.
       <width>88</width>
       <height>31</height>
     </credit>
-	<credit>
-      <name>YourKit</name>
-      <url>http://www.yourkit.com/</url>
-      <image>images/yjp.gif</image>
-	  <width>88</width>
-      <height>31</height>
-    </credit>
 	
     <!-- A credit with @role='pdf' will have its name and url displayed in the
     PDF page's footer. -->

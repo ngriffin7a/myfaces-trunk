@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+<document>
+
+<header>
+    <title>Apache MyFaces</title>
+</header>
+
+<body>
+
+    <section>
+        <title>MyFaces Project Management Committee Members</title>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>UID</th>
+                <th>Organization</th>
+                <th>TZ Offset</th>
+                <th>Roles</th>
+            </tr>
+            <tr>
+                <td>Anton Koinov</td>
+                <td>koinov</td>
+                <td/>
+                <td/>
+                <td/>
+            </tr>
+            <tr>
+                <td>Bill Dudney</td>
+                <td>bdudney</td>
+                <td/>
+                <td/>
+                <td/>
+            </tr>
+            <tr>
+                <td>Grant Smith</td>
+                <td>grantsmith</td>
+                <td>Marathon Computer Systems, USA</td>
+                <td/>
+                <td/>
+            </tr>
+            <tr>
+                <td>Manfred Geiler</td>
+                <td>manolito</td>
+                <td>
+                    <fork href="http://www.oekb.at">Oesterreichische Kontrollbank AG</fork>, Austria
+                </td>
+                <td>GMT+1</td>
+                <td>Founder, PMC Chair</td>
+            </tr>
+            <tr>
+                <td>Martin Marinschek</td>
+                <td>mmarinschek</td>
+                <td>
+                    <fork href="http://www.irian.at/index.jsp?lang=en">Irian</fork>, Austria
+                </td>
+                <td>GMT+1</td>
+                <td/>
+            </tr>
+            <tr>
+                <td>Matthias We&szlig;endorf</td>
+                <td>matzew</td>
+                <td>FH Dortmund, Germany</td>
+                <td>GMT+1</td>
+                <td/>
+            </tr>
+            <tr>
+                <td>Oliver Rossm&uuml;ller</td>
+                <td>oros</td>
+                <td></td>
+                <td>GMT+1</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Sylvain Vieujot</td>
+                <td>svieujot</td>
+                <td/>
+                <td/>
+                <td/>
+            </tr>
+            <tr>
+                <td>Ted Husted</td>
+                <td>husted</td>
+                <td/>
+                <td/>
+                <td>ASF Member, Struts PMC, Jakarta PMC</td>
+            </tr>
+            <tr>
+                <td>Thomas Spiegl</td>
+                <td>tomsp</td>
+                <td><fork href="http://www.irian.at/index.jsp?lang=en">Irian</fork>, Austria</td>
+                <td>GMT+1</td>
+                <td>Founder</td>
+            </tr>
+            <tr>
+                <td>Travis Reeder</td>
+                <td>prophecy</td>
+                <td/>
+                <td/>
+                <td/>
+            </tr>
+        </table>
+    </section>
+
+
+    <section>
+      <title>MyFaces Committers</title>
+      <table>
+          <tr>
+              <th>Name</th>
+              <th>UID</th>
+              <th>Organization</th>
+              <th>TZ Offset</th>
+              <th>Roles</th>
+          </tr>
+        <tr>
+            <td>Sean Schofield</td>
+            <td>schof</td>
+            <td/>
+            <td/>
+            <td/>
+        </tr>
+        <tr>
+            <td>Stan Silvert</td>
+            <td>ssilvert</td>
+            <td/>
+            <td/>
+            <td/>
+        </tr>
+       </table>
+    </section>
+
+    <section>
+      <title>MyFaces Contributors</title>
+      <table>
+    	<tr><th>Name</th></tr>
+		<tr><td>Dimitry D'hondt</td></tr>
+      	<tr><td>Robert J. Lebowitz</td></tr>
+      	<tr><td>Robert Gothan</td></tr>
+      	<tr><td>Christian Rueed</td></tr>
+      	<tr><td>Takashi Okamoto</td></tr>
+      	<tr><td>Spencer Uresk</td></tr>
+      	<tr><td>Louis Calisi</td></tr>
+      	<tr><td>Dan Hodnett</td></tr>
+      	<tr><td>Rogerio Pereira</td></tr>
+        <tr><td>Francesco Consumi</td></tr>
+		<tr><td>Jesse Wilson</td></tr>
+		<tr><td>Heath Borders-Wing</td></tr>
+		<tr><td>Bruno Aranda</td></tr>
+		<tr><td>Jiri Zaloudek (WML RenderKit)</td></tr>
+		<tr><td>Mike Traum</td></tr>
+		<tr><td>Mathias Broekelmann</td></tr>
+       </table>
+    </section>
+
+    </body>
+
+    <footer>
+    	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
+	&copy; 2004, Apache Software Foundation
+	</legal>
+    </footer>
+
+</document>
