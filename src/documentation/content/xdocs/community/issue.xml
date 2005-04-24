@@ -17,7 +17,7 @@
         MyFaces uses JIRA for reporting bugs, and for suggesting/requesting enhancements.  These issues 
         are automatically forwarded to the MyFaces development team.  Please provide as much information 
         as possible and include steps to reproduce the bug.  If you have a solution to the bug please include a patch file.  
-        <link href="http://cocoon.apache.org/2.1/howto/howto-patch.html">Here</link>  is a good link explaining some of the 
+        <link href="http://www.apache.org/dev/contributors.html#patches">Here</link> is a link explaining some of the
         details associated with patch files.                    
     </p>  
     

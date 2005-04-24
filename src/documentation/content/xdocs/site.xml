@@ -38,14 +38,13 @@
      </components>
     <community href="community/" label="Community" tab="community">
         <whoweare label="Who we are" href="whoweare.html"/>
+        <getinvolved label="Get Involved" href="http://www.apache.org/dev/contributors.html"/>
         <mailinglists label="Mailing Lists" href="mailinglists.html" />
-        <status label="Status" href="status.html" />
-        <bylaws label="Project Bylaws" href="bylaws.html"/>
         <issue label="Bug Reporting" href="issue.html"/>
-        <powered label="Powered by MyFaces" href="poweredbymyfaces.html"/>
         <cvs label="CVS" href="versioning.html"/>
         <wiki label="Wiki" href="http://wiki.apache.org/myfaces"/>
-        <getinvolved label="Get Involved" href="http://jakarta.apache.org/site/getinvolved.html"/>
+        <bylaws label="Project Bylaws" href="bylaws.html"/>
+        <powered label="Powered by MyFaces" href="poweredbymyfaces.html"/>
     </community>
      <!--
      NOTE: foo tab doesn't really exist (its label is empty String.)  This allows us to create bogus
