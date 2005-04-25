@@ -168,7 +168,7 @@ public class HtmlInputDate extends UIInput implements UserRoleAware {
         }
         
         public Date parse() throws ParseException{
-            SimpleDateFormat fullFormat = new SimpleDateFormat( "dd MM yyyy hh mm ss" );
+            SimpleDateFormat fullFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" );
             return fullFormat.parse(day+" "+month+" "+year+" "+hours+" "+minutes+" "+seconds);
         }
         
