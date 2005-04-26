@@ -23,7 +23,7 @@
     <property name="wml.src" location="${project.dir}/src/wml"/>
     <property name="xdoclet.src" location="${project.dir}/src/xdoclet"/>
     <property name="generated.src" location="${project.dir}/src/generated"/>
-    <property file="sign.script" location="${release.dir}/sign.sh"/>
+    <property name="sign.script" location="${release.dir}/sign.sh"/>
 
     <!-- Properties -->
     <property file="build.local.properties"/>
