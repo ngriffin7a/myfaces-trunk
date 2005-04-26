@@ -24,6 +24,19 @@
     <property name="xdoclet.src" location="${project.dir}/src/xdoclet"/>
     <property name="generated.src" location="${project.dir}/src/generated"/>
     <property name="sign.script" location="${release.dir}/sign.sh"/>
+    <property name="tlddoc.dir" location="${build.dir}/tld-doc"/>
+    <property name="tlddoc.dtd" location="${tlddoc.dir}/web-jsptaglibrary_1_2.dtd"/>
+
+<!--
+MLB:
+Suggestion for MYFACES-92.  Place the xslt files in a separate directory
+from the one create for MYFACES-197.  They probably could go in the same;
+but as picky as TLDDoc is; I didn't take the chance.
+-->
+<!--
+    <property name="tlddoc.xslt.dir" location="${build.dir}/TLDdoc-xslt"/>
+-->
+
 
     <!-- Properties -->
     <property file="build.local.properties"/>
@@ -331,6 +344,10 @@
         <java fork="true" jar="${tlddoc.jar}" failonerror="true">
             <arg line="-doctitle 'Tag library for Apache MyFaces'" />
             <arg line="-d ${doc.dir}/tlddoc"/>
+<!--
+MLB:  MYFACES-92
+            <arg line="-xslt ${tlddoc.xslt.dir}"/>
+-->
             <arg value="${resolved-tlds.dir}/myfaces_ext.tld"/>
             <arg value="${generated.src}/myfaces_wap.tld"/>
 		</java>
@@ -727,8 +744,8 @@
               style="${tlds.dir}/resolve_entities.xsl"
               extension=".tld">
             <xmlcatalog>
-                <dtd publicId="-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
-                     location="${tlds.dir}/web-jsptaglibrary_1_2.dtd"/>
+                <dtd publicid="-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+                     location="${tlddoc.dtd}"/>
             </xmlcatalog>
         </xslt>
     </target>
