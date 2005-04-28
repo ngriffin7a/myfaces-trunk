@@ -61,7 +61,7 @@
 					<p>
 						In this example, the customerAddress bean is a managed bean, but the address bean isn't defined anywhere.<br/>
 						After the aliasBean tag, we can use #{address.*} in place of #{custommerAddress.*}, so making it possible to have
-						a generic address subforms (ok, this one it a bite simple form, but here is the idea).
+						generic address subforms (ok, this one is a very simple form, but you get the idea).
 					</p>
 				</f:verbatim>
 
