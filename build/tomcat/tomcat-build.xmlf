@@ -34,7 +34,7 @@
             username="${tomcat.manager.username}"
             password="${tomcat.manager.password}"
             path="${tomcat.context.path}"
-            war="file://${tomcat.war.file}" update="true"/>
+            war="${tomcat.war.file}" update="true"/>
     </target>
 	<target name="tomcat-undeploy-app" description="Undeploy the App from Tomcat">
         <undeploy url="${tomcat.manager.url}"
