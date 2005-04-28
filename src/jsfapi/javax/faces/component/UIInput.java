@@ -37,6 +37,9 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.19  2005/04/28 20:58:03  grantsmith
+ * MYFACES-187 closed. Removed code suggested by user, ran cactus tests. No new failures.
+ *
  * Revision 1.18  2005/04/25 18:43:19  grantsmith
  * MYFACES-187 - Comment out submittedValue - testing required
  *
@@ -290,12 +293,6 @@ public class UIInput
         if (context == null) throw new NullPointerException("context");
         Object submittedValue = getSubmittedValue();
         if (submittedValue == null) return;
-
-//        if(submittedValue instanceof String && ((String) submittedValue).length()==0)
-//        {
-//            submittedValue = null;
-//        }
-//todo: Remove commented code if all tests pass
 
         Object convertedValue = getConvertedValue(context, submittedValue);
 
