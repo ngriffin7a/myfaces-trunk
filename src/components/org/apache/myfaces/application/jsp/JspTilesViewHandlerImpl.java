@@ -41,6 +41,9 @@ import java.util.Locale;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.13  2005/04/29 00:27:30  grantsmith
+ * MYFACES-220 closed. Patch from Jason Kissinger
+ *
  * Revision 1.12  2004/12/22 08:12:36  manolito
  * Use lastIndexOf instead of indexOf as suggested by sean.schofield@gmail.com on mailing list
  *
@@ -196,9 +199,26 @@ public class JspTilesViewHandlerImpl
                     tileContext.addMissing(definition.getAttributes());
                 }
                 viewId = definition.getPage();
+                // if a controller is defined for this tile, execute it
+                Controller tilesController = definition.getOrCreateController();
+                if (tilesController != null) {
+                    ServletResponse response = (ServletResponse) externalContext.getResponse();
+                    if (request instanceof HttpServletRequest && response instanceof HttpServletResponse) {
+                        try {
+                            tilesController.execute(tileContext, (HttpServletRequest) request,
+                                    (HttpServletResponse) response, servletContext);
+                        } catch (Exception e) {
+                            throw new FacesException(e);
+                        }
+                    } // else not executing controller for non-HTTP request/response (is this right??)
+                }
             }
         }
         catch (DefinitionsFactoryException e)
+        {
+            throw new FacesException(e);
+        }
+        catch (InstantiationException e)
         {
             throw new FacesException(e);
         }
