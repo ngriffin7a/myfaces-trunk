@@ -34,6 +34,7 @@ import javax.faces.el.ValueBinding;
 import javax.faces.event.ActionEvent;
 import javax.faces.webapp.UIComponentTag;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +42,9 @@ import java.util.Map;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  *          $Log$
+ *          Revision 1.16  2005/04/29 15:20:25  schof
+ *          Fixes MYFACE-196.  Patch by Martin Bosak
+ *
  *          Revision 1.15  2005/04/13 13:52:01  schof
  *          Fixes MYFACES-185 (patch submitted by Martin Bosak)
  *
@@ -198,9 +202,8 @@ public class HtmlJSCookMenuRenderer
             NavigationMenuItem item = (NavigationMenuItem)items[i];
             Object tempObj = null;
             UINavigationMenuItem uiNavMenuItem = null;
-            try {
+            if (i < uiNavMenuItemList.size()) {
                 tempObj = uiNavMenuItemList.get(i);
-            } catch (IndexOutOfBoundsException  e) {
             }
             if (tempObj != null) {
                 if (tempObj instanceof UINavigationMenuItem) {
@@ -264,7 +267,10 @@ public class HtmlJSCookMenuRenderer
                     {
                         encodeNavigationMenuItems(context, writer, menuItems, 
                                 uiNavMenuItem.getChildren(), menuId);
-                    } 
+                    } else {
+                        encodeNavigationMenuItems(context, writer, menuItems, 
+                                new ArrayList(1), menuId);
+                    }
                 }
             };
             writer.write("]");
