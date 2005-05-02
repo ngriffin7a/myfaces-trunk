@@ -23,6 +23,9 @@ import javax.faces.el.ValueBinding;
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2005/05/02 16:40:09  svieujot
+ * Slight code refactor for x:buffer
+ *
  * Revision 1.1  2005/01/04 15:41:06  svieujot
  * new x:buffer component.
  *
@@ -60,7 +63,7 @@ public class Buffer extends UIComponentBase{
         _intoExpression = (String) values[1];
     }
     
-    void fill(Object content, FacesContext facesContext){
+    void fill(String content, FacesContext facesContext){
         ValueBinding intoVB;
         
         if (_intoExpression == null) {
@@ -70,6 +73,6 @@ public class Buffer extends UIComponentBase{
             intoVB = facesContext.getApplication().createValueBinding( _intoExpression );
         }
 
-        intoVB.setValue(facesContext, content.toString());
+        intoVB.setValue(facesContext, content);
     }
 }

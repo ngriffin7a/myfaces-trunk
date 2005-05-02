@@ -38,6 +38,9 @@ import java.util.Set;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.2  2005/05/02 16:40:09  svieujot
+ * Slight code refactor for x:buffer
+ *
  * Revision 1.1  2005/02/01 16:51:48  svieujot
  * Move the HtmlResponseWriterImpl to the shared sources directory.
  *
@@ -526,6 +529,11 @@ public class HtmlResponseWriterImpl
 
     // DummyFormResponseWriter support
 
+    public boolean isWriteDummyForm()
+    {
+        return _writeDummyForm;
+    }
+	
     public void setWriteDummyForm(boolean writeDummyForm)
     {
         _writeDummyForm = writeDummyForm;

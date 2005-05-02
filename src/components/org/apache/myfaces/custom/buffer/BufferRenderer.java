@@ -31,11 +31,16 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.myfaces.renderkit.RendererUtils;
 import org.apache.myfaces.renderkit.html.HtmlResponseWriterImpl;
+import org.apache.myfaces.renderkit.html.util.DummyFormResponseWriter;
+import org.apache.myfaces.renderkit.html.util.DummyFormUtils;
 
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
+ * Revision 1.4  2005/05/02 16:40:09  svieujot
+ * Slight code refactor for x:buffer
+ *
  * Revision 1.3  2005/02/01 16:54:07  svieujot
  * Clean up.
  *
@@ -69,21 +74,21 @@ public class BufferRenderer extends Renderer {
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) {
         Buffer buffer = (Buffer)uiComponent;
-        buffer.fill(bufferWriter, facesContext);
+        buffer.fill(bufferWriter.toString(), facesContext);
+		
+        facesContext.setResponseWriter( initialWriter );
         
         if( bufferWriter.getDummyFormParams() != null ){
-            // Attempt to add the dummy form params (will not work with Sun RI) using reflexion.
-            try {
-                Method add = initialWriter.getClass().getDeclaredMethod("addDummyFormParameter", new Class[] {String.class});
-                for(Iterator i = bufferWriter.getDummyFormParams().iterator() ; i.hasNext() ;){
-                    add.invoke(initialWriter, new Object[] {i.next()});
-                }
+            try{ // Attempt to add the dummy form params (will not work with Sun RI)
+				DummyFormResponseWriter dummyFormResponseWriter = DummyFormUtils.getDummyFormResponseWriter( facesContext );
+				for(Iterator i = bufferWriter.getDummyFormParams().iterator() ; i.hasNext() ;)
+					dummyFormResponseWriter.addDummyFormParameter( i.next().toString() );
+				if( bufferWriter.isWriteDummyForm() )
+					dummyFormResponseWriter.setWriteDummyForm( true );
             } catch (Exception e) {
                 log.warn("Dummy form parameters are not supported by this JSF implementation.");
             }
         }
-        
-        facesContext.setResponseWriter( initialWriter );
     }
     
     private static class HtmlBufferResponseWriterWrapper extends HtmlResponseWriterImpl {
