@@ -72,6 +72,13 @@
                 <td></td>
             </tr>
             <tr>
+                <td>Sean Schofield</td>
+                <td>schof</td>
+                <td/>
+                <td/>
+                <td/>
+            </tr>
+            <tr>
                 <td>Sylvain Vieujot</td>
                 <td>svieujot</td>
                 <td>
@@ -115,13 +122,6 @@
               <th>TZ Offset</th>
               <th>Roles</th>
           </tr>
-        <tr>
-            <td>Sean Schofield</td>
-            <td>schof</td>
-            <td/>
-            <td/>
-            <td/>
-        </tr>
         <tr>
             <td>Stan Silvert</td>
             <td>ssilvert</td>
