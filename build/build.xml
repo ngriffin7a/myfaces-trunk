@@ -836,6 +836,14 @@ MLB:  MYFACES-92
 
     </target>
 
+    <target name="site-dist">
+
+        <ant antfile="build-site.xml" inheritall="false" target="all">
+            <property file="forrest.local.properties"/>
+        </ant>
+
+    </target>
+
     <target name="release" depends="prepare, src-release, bin-release, app-release"/>
 
 </project>
