@@ -3,13 +3,18 @@
 
     <project-information href="" label="Project" tab="project">
         <index_pm href="index.html" label="Welcome"/>
-        <license label="License" href="license.html" />
+        <news label="News">
+            <current label="Current" href="index.html"/>
+            <current label="Archive" href="news-archive.html"/>
+        </news>
         <downloads label="Downloads">
             <bindownload label="Binary" href="http://myfaces.apache.org/binary.cgi"/>
             <srcdownload label="Source" href="http://myfaces.apache.org/source.cgi"/>
             <bindownload_html href="binary.html"/> <!-- these dummy links are necessary -->
             <srcdownload_html href="source.html"/> <!-- these dummy links are necessary -->
+            <nightly label="Nightly" href="http://cvs.apache.org/builds/myfaces/nightly/"/>
         </downloads>
+        <license label="License" href="license.html" />
      </project-information>
     <docu href="docs/" label="Documentation" tab="documentation">
         <gettingstarted label="Getting Started" href="gettingstarted.html"/>

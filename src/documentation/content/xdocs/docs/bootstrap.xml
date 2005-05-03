@@ -14,8 +14,8 @@
 
     <p>
         The following instructions are for the setup and usage of the bootstrap.xml build file.  This file is an Ant script 
-        which can be used to generate and publish the nightly builds using the latest CVS code.  It is also used to publish 
-        the release builds.
+        which can be used to generate and publish the nightly builds using the latest SVN code.  It is also used to build 
+        and sign the release builds.
     </p>  
     <ul>
         <li>
@@ -33,9 +33,16 @@
     </ul>
     <ul>
         <li>
+            Download the jsvn.jar from 
+            <link href="http://jsvn.alternatecomputing.com/">alternatecomputing.com</link> 
+            and copy to <code>$ANT_HOME/lib</code>.  This is necessary to allow ant to use SVN to retrieve the source code.
+        </li>
+    </ul>    
+    <ul>
+        <li>
             Install  
-            <link href="https://www.cvshome.org/">CVS</link>.  
-            Make sure the cvs binary is part of the <code>$PATH</code>.
+            <link href="http://subversion.tigris.org/">SVN</link>.  
+            Make sure the svn binary is part of the <code>$PATH</code>.
         </li>
     </ul>
     <ul>
@@ -46,8 +53,8 @@
     <ul>
         <li>
             Copy the <code>bootstrap.xml</code> file and <code>bootstrap.properties</code> files to this directory.  
-            These files should work without any changes.  Currently these files are located in the CVS repository in 
-            the <code>incubator-myfaces/build</code> directory.  Copy the <code>bootstrap.properties.local.sample</code> 
+            These files should work without any changes.  Currently these files are located in the SVN repository in 
+            the <code>build</code> directory.  Copy the <code>bootstrap.properties.local.sample</code> 
             file to this directory as well.  Rename this file to <code>bootstrap.properties.local</code>.  Change the 
             username and password in this file to a valid username and password for the destination server.
         </li>
