@@ -4,22 +4,32 @@
 <document>
 
 <header>
-    <title>Apache MyFaces - CVS </title>
+    <title>Apache MyFaces - Subversion Access</title>
 </header>
 
 <body>
 
 <section>
-<title>CVS Access of MyFaces</title>
-      <p>MyFaces uses CVS.</p>
-      
-      <ul>
-        <li><link href="http://cvs.apache.org/viewcvs.cgi/incubator-myfaces/">watch CVS here</link></li>
-		<li>The CVS root is [login]@cvs.apache.org:/home/cvs for committers, and :pserver:anoncvs@cvs.apache.org:/home/cvspublic for non-committers.</li>
-      </ul>
+<title>SVN Access for MyFaces</title>
+    <p>
+        MyFaces uses the Subversion (SVN) source code repository.  The SVN server is maintained by the Apache Software Foundation.  
+        Click <link href="http://apache.org/dev/version-control.html">here</link> for more information on the ASF source code 
+        repositories.
+    </p>
+    <p>
+        <br/>        
+        Use the following command to get the latest source code:
+    </p>
+    <p>
+        <code>svn checkout http://svn.apache.org/repos/asf/myfaces/trunk myfaces-trunk</code>
+    </p>
+    <p>
+        <br/>
+        The source code can also be viewed online <link href="http://svn.apache.org/viewcvs.cgi/myfaces/">here</link> 
+        using viewcvs.  
+    </p>    
+
 </section>
-
-
 
 </body>
     

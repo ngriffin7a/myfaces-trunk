@@ -20,6 +20,15 @@ Look at <link href="http://java.sun.com/j2ee/javaserverfaces/">Sun's JavaServer(
     </section>
 
     <section>
+        <title>May 3, 2005 - MyFaces source code moves to Subversion</title>
+        <p>
+            The MyFaces source code has been moved from CVS to Subversion (SVN.)  This move will help us maintain the anticipated new MyFaces 
+            subprojects.  It also bring us into compliance with the ASF goal of moving all CVS projects to SVN by the end of the year.  Click 
+            <link href="community/versioning.html">here </link> for more details on how to access the source code.  
+        </p>
+    </section>
+    
+    <section>
         <title>April 16, 2005 - MyFaces 1.0.9(m9) has been released</title>
         <p>
             MyFaces 1.0.9(m9) is now available.  The (m9) stands for milestone 9.  The license agreement covering JSF and all other JCP based
@@ -67,24 +76,6 @@ Look at <link href="http://java.sun.com/j2ee/javaserverfaces/">Sun's JavaServer(
             <br/><br/>
         </note>
         <p>Click <link href="http://www.jroller.com/page/dgeary/20050224#myfaces_is_hot">here</link> to read David Geary's blog.</p>
-    </section>
-    <section>
-        <title>February 23, 2005 - MyFaces is Now a Top Level Apache Project</title>
-        <note label="Email to myfaces-dev from ASF Board">
-            Hi All,<br/>
-            <br/>
-            Congratulations to all for officially making MyFaces into a top level Apache
-            project!
-            <br/><br/>
-            For the last couple of years, I believe the project has come a long way from
-            its small beginnings. All of this is thanks to the contribution of every one
-            of you, regardless of how large or small. Open source development, coupled
-            with strong leadership (Manfred and others), is always a winning combination!
-            <br/><br/>
-            Once again, Congratulations.
-            <br/><br/>
-            Anton
-        </note>
     </section>
     <section>
         <title>Resources</title>

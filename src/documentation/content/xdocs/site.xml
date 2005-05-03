@@ -41,7 +41,7 @@
         <getinvolved label="Get Involved" href="http://www.apache.org/dev/contributors.html"/>
         <mailinglists label="Mailing Lists" href="mailinglists.html" />
         <issue label="Bug Reporting" href="issue.html"/>
-        <cvs label="CVS" href="versioning.html"/>
+        <cvs label="SVN" href="versioning.html"/>
         <wiki label="Wiki" href="http://wiki.apache.org/myfaces"/>
         <bylaws label="Project Bylaws" href="bylaws.html"/>
         <powered label="Powered by MyFaces" href="poweredbymyfaces.html"/>

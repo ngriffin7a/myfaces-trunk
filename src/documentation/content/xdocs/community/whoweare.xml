@@ -75,7 +75,7 @@
                 <td>Sean Schofield</td>
                 <td>schof</td>
                 <td/>
-                <td/>
+                <td>GMT-5</td>
                 <td/>
             </tr>
             <tr>
@@ -135,24 +135,25 @@
     <section>
       <title>MyFaces Contributors</title>
       <table>
-    	<tr><th>Name</th></tr>
-		<tr><td>Dimitry D'hondt</td></tr>
-      	<tr><td>Robert J. Lebowitz</td></tr>
-      	<tr><td>Robert Gothan</td></tr>
-      	<tr><td>Christian Rueed</td></tr>
-      	<tr><td>Takashi Okamoto</td></tr>
-      	<tr><td>Spencer Uresk</td></tr>
-      	<tr><td>Louis Calisi</td></tr>
-      	<tr><td>Dan Hodnett</td></tr>
-      	<tr><td>Rogerio Pereira</td></tr>
-        <tr><td>Francesco Consumi</td></tr>
-		<tr><td>Jesse Wilson</td></tr>
-		<tr><td>Heath Borders-Wing</td></tr>
-		<tr><td>Bruno Aranda</td></tr>
-		<tr><td>Jiri Zaloudek (WML RenderKit)</td></tr>
-		<tr><td>Mike Traum</td></tr>
-		<tr><td>Mathias Broekelmann</td></tr>
-       </table>
+            <tr><th>Name</th></tr>
+            <tr><td>Dimitry D'hondt</td></tr>
+            <tr><td>Robert J. Lebowitz</td></tr>
+            <tr><td>Robert Gothan</td></tr>
+            <tr><td>Christian Rueed</td></tr>
+            <tr><td>Takashi Okamoto</td></tr>
+            <tr><td>Spencer Uresk</td></tr>
+            <tr><td>Louis Calisi</td></tr>
+            <tr><td>Dan Hodnett</td></tr>
+            <tr><td>Rogerio Pereira</td></tr>
+            <tr><td>Francesco Consumi</td></tr>
+            <tr><td>Jesse Wilson</td></tr>
+            <tr><td>Heath Borders-Wing</td></tr>
+            <tr><td>Bruno Aranda</td></tr>
+            <tr><td>Jiri Zaloudek (WML RenderKit)</td></tr>
+            <tr><td>Mike Traum</td></tr>
+            <tr><td>Mathias Broekelmann</td></tr>
+            <tr><td>Martin Bosak</td></tr>
+        </table>
     </section>
 
     </body>
