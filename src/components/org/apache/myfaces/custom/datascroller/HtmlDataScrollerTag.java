@@ -23,7 +23,7 @@ import javax.faces.component.UIComponent;
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
+ * $Log: HtmlDataScrollerTag.java,v $
  * Revision 1.11  2005/02/18 17:19:30  matzew
  * added release() to tag clazzes.
  *
@@ -93,6 +93,7 @@ public class HtmlDataScrollerTag
     private static final String PAGINATOR_COL_STYLE_ATTR    = "paginatorColumnStyle";
     private static final String PAGINATOR_ACTCOL_CLASS_ATTR = "paginatorActiveColumnClass";
     private static final String PAGINATOR_ACTCOL_STYLE_ATTR = "paginatorActiveColumnStyle";
+	private static final String RENDER_FACETS_IF_SINGLE_PAGE_ATTR = "renderFacetsIfSinglePage";
 
     private String _for;
     private String _fastStep;
@@ -112,6 +113,7 @@ public class HtmlDataScrollerTag
     private String _paginatorColumnStyle;
     private String _paginatorActiveColumnClass;
     private String _paginatorActiveColumnStyle;
+	private String _renderFacetsIfSinglePage;
 
     // User Role support
     private String _enabledOnUserRole;
@@ -137,6 +139,7 @@ public class HtmlDataScrollerTag
         _paginatorColumnStyle=null;
         _paginatorActiveColumnClass=null;
         _paginatorActiveColumnStyle=null;
+		_renderFacetsIfSinglePage=null;
         _enabledOnUserRole=null;
         _visibleOnUserRole=null;
     }
@@ -173,7 +176,8 @@ public class HtmlDataScrollerTag
         setStringProperty(component, PAGINATOR_COL_STYLE_ATTR, _paginatorColumnStyle);
         setStringProperty(component, PAGINATOR_ACTCOL_CLASS_ATTR, _paginatorActiveColumnClass);
         setStringProperty(component, PAGINATOR_ACTCOL_STYLE_ATTR, _paginatorActiveColumnStyle);
-
+		setBooleanProperty(component, RENDER_FACETS_IF_SINGLE_PAGE_ATTR, _renderFacetsIfSinglePage);
+		
         setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
         setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
     }
@@ -267,6 +271,11 @@ public class HtmlDataScrollerTag
     public void setPaginatorActiveColumnStyle(String paginatorActiveColumnStyle)
     {
         _paginatorActiveColumnStyle = paginatorActiveColumnStyle;
+    }
+
+    public void setRenderFacetsIfSinglePage(String renderFacetsIfSinglePage)
+    {
+		_renderFacetsIfSinglePage = renderFacetsIfSinglePage;
     }
 
     // userrole attributes

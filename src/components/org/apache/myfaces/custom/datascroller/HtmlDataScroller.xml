@@ -25,6 +25,10 @@
         <type>java.lang.String</type>
     </field>
     <field>
+        <name>rowsCountVar</name>
+        <type>String</type>
+    </field>
+    <field>
         <name>style</name>
         <type>String</type>
     </field>
@@ -63,5 +67,9 @@
     <field>
         <name>paginatorActiveColumnStyle</name>
         <type>String</type>
+    </field>
+    <field>
+        <name>renderFacetsIfSinglePage</name>
+        <type>boolean</type>
     </field>
 </component>

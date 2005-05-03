@@ -758,7 +758,7 @@
         </attribute>
      </tag>
 
-    <!-- dataTableScroller -->
+    <!-- dataScroller -->
     <tag>
         <name>dataScroller</name>
         <tag-class>org.apache.myfaces.custom.datascroller.HtmlDataScrollerTag</tag-class>
@@ -913,6 +913,15 @@
             <rtexprvalue>false</rtexprvalue>
             <description>
                 style for paginator's column with pageIndex = currentPageIndex
+            </description>
+        </attribute>
+        <attribute>
+            <name>renderFacetsIfSinglePage</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                If set to false, the facets aren't renderd if all the lines are contained on a single page.
+                Default is true.
             </description>
         </attribute>
      </tag>

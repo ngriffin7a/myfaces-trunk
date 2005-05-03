@@ -36,7 +36,7 @@ import java.util.Map;
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
+ * $Log: HtmlDataScrollerRenderer.java,v $
  * Revision 1.19  2005/01/04 01:42:23  svieujot
  * Bugfix for last page.
  *
@@ -62,7 +62,7 @@ public class HtmlDataScrollerRenderer
     private static final Log log = LogFactory.getLog(HtmlDataScrollerRenderer.class);
 
     protected static final String FACET_FIRST         = "first".intern();
-    protected static final String FACET_PREVOIUS      = "previous".intern();
+    protected static final String FACET_PREVIOUS      = "previous".intern();
     protected static final String FACET_NEXT          = "next".intern();
     protected static final String FACET_LAST          = "last".intern();
     protected static final String FACET_FAST_FORWARD  = "fastf".intern();
@@ -96,7 +96,7 @@ public class HtmlDataScrollerRenderer
             {
                 uiData.setFirst(0);
             }
-            else if (param.equals(FACET_PREVOIUS))
+            else if (param.equals(FACET_PREVIOUS))
             {
                 int previous = uiData.getFirst() - uiData.getRows();
                 if (previous >= 0)
@@ -161,22 +161,16 @@ public class HtmlDataScrollerRenderer
         }
     }
 
-
-    public void encodeChildren(FacesContext facescontext, UIComponent uicomponent) throws IOException
+	protected void setVariables(FacesContext facescontext, HtmlDataScroller scroller) throws IOException
     {
-        RendererUtils.checkParamValidity(facescontext, uicomponent, HtmlDataScroller.class);
-
-        Map requestMap = facescontext.getExternalContext().getRequestMap();
-        HtmlDataScroller scroller = (HtmlDataScroller)uicomponent;
-
-        UIData uiData = findUIData(scroller, uicomponent);
+        UIData uiData = findUIData(scroller, scroller);
         if (uiData == null)
         {
             return;
         }
-
-
-
+		
+		Map requestMap = facescontext.getExternalContext().getRequestMap();
+		
         String pageCountVar = scroller.getPageCountVar();
         if (pageCountVar != null)
         {
@@ -219,47 +213,82 @@ public class HtmlDataScrollerRenderer
                 lastRowIndex = count;
             requestMap.put(lastRowIndexVar, new Integer(lastRowIndex));
         }
-
-        RendererUtils.renderChildren(facescontext, uicomponent);
-
+    }
+	
+    public void removeVariables(FacesContext facescontext, HtmlDataScroller scroller) throws IOException
+    {
+		Map requestMap = facescontext.getExternalContext().getRequestMap();
+		
+		String pageCountVar = scroller.getPageCountVar();
         if (pageCountVar != null)
         {
             requestMap.remove(pageCountVar);
         }
+		String pageIndexVar = scroller.getPageIndexVar();
         if (pageIndexVar != null)
         {
             requestMap.remove(pageIndexVar);
         }
+		String rowsCountVar = scroller.getRowsCountVar();
         if (rowsCountVar != null)
         {
             requestMap.remove(rowsCountVar);
         }
+		String displayedRowsCountVar = scroller.getDisplayedRowsCountVar();
         if (displayedRowsCountVar != null)
         {
             requestMap.remove(displayedRowsCountVar);
         }
+		String firstRowIndexVar = scroller.getFirstRowIndexVar();
         if (firstRowIndexVar != null)
         {
             requestMap.remove(firstRowIndexVar);
         }
+		String lastRowIndexVar = scroller.getLastRowIndexVar();
         if (lastRowIndexVar != null)
         {
             requestMap.remove(lastRowIndexVar);
         }
     }
 
-    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
-    {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlDataScroller.class);
+	public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException {
+		super.encodeBegin(facesContext, uiComponent);
+		
+		RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlDataScroller.class);
+		
+		HtmlDataScroller scroller = (HtmlDataScroller)uiComponent;
+		
+		setVariables(facesContext, scroller);
+	}
 
-        ResponseWriter writer = facesContext.getResponseWriter();
-        HtmlDataScroller scroller = (HtmlDataScroller)uiComponent;
+	public void encodeChildren(FacesContext facescontext, UIComponent uicomponent) throws IOException
+    {
+        RendererUtils.checkParamValidity(facescontext, uicomponent, HtmlDataScroller.class);
+
+        RendererUtils.renderChildren(facescontext, uicomponent);
+    }
+
+    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException{
+		RendererUtils.checkParamValidity(facesContext, uiComponent, HtmlDataScroller.class);
+		
+		HtmlDataScroller scroller = (HtmlDataScroller)uiComponent;
 
         UIData uiData = findUIData(scroller, uiComponent);
         if (uiData == null)
         {
             return;
         }
+
+		renderPaginator(uiData, facesContext, scroller);
+		removeVariables(facesContext, scroller);
+    }
+	
+	public void renderPaginator(UIData uiData, FacesContext facesContext, HtmlDataScroller scroller) throws IOException
+    {
+		ResponseWriter writer = facesContext.getResponseWriter();
+
+		if (!scroller.isRenderFacetsIfSinglePage() && getPageCount(uiData)<=1)
+			return;
 
         writer.startElement("table", scroller);
         String styleClass = scroller.getStyleClass();
@@ -292,7 +321,7 @@ public class HtmlDataScrollerRenderer
         if (facetComp != null)
         {
             writer.startElement("td", scroller);
-            renderFacet(facesContext, scroller, facetComp, FACET_PREVOIUS);
+            renderFacet(facesContext, scroller, facetComp, FACET_PREVIOUS);
             writer.endElement("td");
         }
         if (scroller.isPaginator())

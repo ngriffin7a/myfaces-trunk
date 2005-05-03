@@ -87,7 +87,7 @@ public class HtmlDataScroller
         return (UIComponent)getFacets().get(FAST_REWIND_FACET_NAME);
     }
 
-    public void setPrevoius(UIComponent previous)
+    public void setPrevious(UIComponent previous)
     {
         getFacets().put(PREVIOUS_FACET_NAME, previous);
     }
@@ -129,6 +129,7 @@ public class HtmlDataScroller
     private String _paginatorColumnStyle = null;
     private String _paginatorActiveColumnClass = null;
     private String _paginatorActiveColumnStyle = null;
+	private Boolean _renderFacetsIfSinglePage = null;
 
     public HtmlDataScroller()
     {
@@ -359,11 +360,22 @@ public class HtmlDataScroller
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
-
+    public void setRenderFacetsIfSinglePage(boolean renderFacetsIfSinglePage)
+    {
+		_renderFacetsIfSinglePage = Boolean.valueOf(renderFacetsIfSinglePage);
+    }
+	
+    public boolean isRenderFacetsIfSinglePage()
+    {
+        if (_renderFacetsIfSinglePage != null) return _renderFacetsIfSinglePage.booleanValue();
+        ValueBinding vb = getValueBinding("renderFacetsIfSinglePage");
+        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+        return v != null ? v.booleanValue() : true;
+    }
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[20];
+        Object values[] = new Object[21];
         values[0] = super.saveState(context);
         values[1] = _for;
         values[2] = _fastStep;
@@ -384,6 +396,7 @@ public class HtmlDataScroller
         values[17] = _paginatorColumnStyle;
         values[18] = _paginatorActiveColumnClass;
         values[19] = _paginatorActiveColumnStyle;
+		values[20] = _renderFacetsIfSinglePage;
         return values;
     }
 
@@ -410,6 +423,7 @@ public class HtmlDataScroller
         _paginatorColumnStyle = (String)values[17];
         _paginatorActiveColumnClass = (String)values[18];
         _paginatorActiveColumnStyle = (String)values[19];
+		_renderFacetsIfSinglePage = (Boolean)values[20];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }

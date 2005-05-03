@@ -3,6 +3,7 @@ MyFaces Release Notes
 
 ----------------------------------------------------------------------
 Changes in Release 1.0.10
+* added renderFacetsIfSinglePage to x:dataScroller
 * closed MYFACES-177
 * closed MYFACES-199
 * closed MYFACES-209
