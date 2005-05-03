@@ -1,3 +1,3 @@
 apache.username=foo
 apache.password=bar
-release.dir=c:\foo
+release.dir=c:\\foo

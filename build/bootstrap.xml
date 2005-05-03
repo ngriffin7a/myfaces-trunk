@@ -10,6 +10,8 @@ through the system path.
 
     <taskdef name="scp" classname="org.apache.tools.ant.taskdefs.optional.ssh.Scp"/>
     <taskdef name="sshexec" classname="org.apache.tools.ant.taskdefs.optional.ssh.SSHExec"/>
+    <taskdef name="svn-checkout" classname="com.alternatecomputing.jsvn.ant.SvnCheckout"/>
+    <taskdef name="svn-update" classname="com.alternatecomputing.jsvn.ant.SvnUpdate"/>
 
     <!-- use properties file to determine cvs configuration info -->
     <property file="bootstrap.properties"/>
@@ -26,28 +28,21 @@ through the system path.
         </fail>
 
         <!-- use latest version if version is not specified -->
-        <condition property="cvs.tag" value="HEAD">
+        <condition property="svn.tag" value="trunk">
             <and>
                 <not>
                     <isset property="build.version"/>
                 </not>
             </and>
         </condition>
-        <condition property="cvs.tag" value="rel_${build.version}">
+        <condition property="svn.tag" value="tags/rel_${build.version}">
             <and>
                 <isset property="build.version"/>
             </and>
         </condition>
-        <condition property="build.version" value="HEAD">
-            <and>
-                <not>
-                    <isset property="build.version"/>
-                </not>
-            </and>
-        </condition>
 
         <echo message="build.version=${build.version}"/>
-        <echo message="cvs.tag=${cvs.tag}"/>
+        <echo message="svn.tag=${svn.tag}"/>
 
         <!-- determine if the files have been checked out already -->
         <available file="${project.name}" type="dir" property="already.checked.out"/>
@@ -66,55 +61,25 @@ through the system path.
         <delete dir="${checkout.dir}"/>
     </target>
 
-    <target name="cvs-checkout" depends="prepare" unless="already.checked.out">
+    <target name="svn-checkout" depends="prepare" unless="already.checked.out">
 
-        <echo message="cvs.server = ${cvs.server}"/>
-        <echo message="cvs.repository = ${cvs.repository}"/>
-        <echo message="cvs.username = ${cvs.username}"/>
-        <echo message="cvs.password = ${cvs.password}"/>
+        <echo message="svn.repository = ${svn.repository}"/>
+        <echo message="project.name = ${project.name}"/>
 
-        <!-- login to cvs -->
-        <cvspass cvsroot=":pserver:${cvs.username}@${cvs.server}:${cvs.repository}"
-                 password="${cvs.password}"
-                 passfile=".cvspass"/>
-
-        <cvs    cvsroot=":pserver:${cvs.username}@${cvs.server}:${cvs.repository}"
-                dest="."
-                command="checkout"
-                tag="${cvs.tag}"
-                package="${project.name}"
-                quiet="true"/>
+        <svn-checkout repositoryUrl="${svn.repository}/${project.name}/${svn.tag}" destination="${project.name}"/>
 
     </target>
 
-    <target name="cvs-update" depends="prepare" if="already.checked.out">
+    <target name="svn-update" depends="prepare" if="already.checked.out">
 
-        <!-- login to cvs -->
-        <cvspass cvsroot=":pserver:${cvs.username}@${cvs.server}:${cvs.repository}"
-                 password="${cvs.password}"/>
+        <echo message="svn.repository = ${svn.repository}"/>
+        <echo message="project.name = ${project.name}"/>
 
-        <cvs cvsroot=":pserver:${cvs.username}@${cvs.server}:${cvs.repository}"
-             dest="."
-             command="update -dP"
-             package="${project.name}"
-             quiet="true"/>
+        <svn-update repositoryUrl="${svn.repository}/${project.name}/${svn.tag}" target="${project.name}"/>
 
     </target>
 
-    <target name="cvs-list" description="Lists all of the projects in the CVS repository">
-
-        <!-- login to cvs -->
-        <cvspass cvsroot=":pserver:${cvs.username}@${cvs.server}:${cvs.repository}"
-                 password="${cvs.password}"/>
-
-        <cvs cvsroot=":pserver:${cvs.username}@${cvs.server}:${cvs.repository}"
-             dest="."
-             command="ls -q"
-             quiet="true"/>
-
-    </target>
-
-    <target name="nightly" depends="cvs-checkout,cvs-update">
+    <target name="nightly" depends="svn-checkout,svn-update">
 
         <echo message="build.dir: ${build.dir}"/>
         <echo message="building nigthly for ${project.name} ..." level="debug"/>
@@ -138,7 +103,7 @@ through the system path.
 
     </target>
 
-    <target name="release" depends="check,cvs-checkout,cvs-update">
+    <target name="release" depends="check,svn-checkout,svn-update">
 
         <echo message="build.dir: ${build.dir}"/>
         <echo message="building release for ${project.name} ..." level="debug"/>
