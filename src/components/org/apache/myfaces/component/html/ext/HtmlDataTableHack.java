@@ -454,7 +454,7 @@ abstract class HtmlDataTableHack
 
         public void setRowIndex(int i)
         {
-            if (i < -1) throw new IllegalArgumentException();
+            if (i < -1) throw new IndexOutOfBoundsException( "Index < 0 : "+i );
         }
 
         public Object getWrappedData()
