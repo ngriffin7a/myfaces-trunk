@@ -29,7 +29,6 @@ import java.util.Map;
 public class HtmlDataList
         extends UIData
 {
-
     public void processDecodes(FacesContext context)
     {
         int first = getFirst();
@@ -50,12 +49,79 @@ public class HtmlDataList
             {
                 for (Iterator it = getChildren().iterator(); it.hasNext();)
                 {
-                    UIComponent child = (UIComponent)it.next();
+                    UIComponent child = (UIComponent) it.next();
                     if (!child.isRendered())
                     {
                         continue;
                     }
                     child.processDecodes(context);
+                }
+            }
+        }
+
+        setRowIndex(-1);
+    }
+
+    public void processUpdates(FacesContext context)
+    {
+        int first = getFirst();
+        int rows = getRows();
+        int last;
+        if (rows == 0)
+        {
+            last = getRowCount();
+        }
+        else
+        {
+            last = first + rows;
+        }
+        for (int rowIndex = first; rowIndex < last; rowIndex++)
+        {
+            setRowIndex(rowIndex);
+            if (isRowAvailable())
+            {
+                for (Iterator it = getChildren().iterator(); it.hasNext();)
+                {
+                    UIComponent child = (UIComponent) it.next();
+                    if (!child.isRendered())
+                    {
+                        continue;
+                    }
+                    child.processUpdates(context);
+                }
+            }
+        }
+
+        setRowIndex(-1);
+    }
+
+
+    public void processValidators(FacesContext context)
+    {
+        int first = getFirst();
+        int rows = getRows();
+        int last;
+        if (rows == 0)
+        {
+            last = getRowCount();
+        }
+        else
+        {
+            last = first + rows;
+        }
+        for (int rowIndex = first; rowIndex < last; rowIndex++)
+        {
+            setRowIndex(rowIndex);
+            if (isRowAvailable())
+            {
+                for (Iterator it = getChildren().iterator(); it.hasNext();)
+                {
+                    UIComponent child = (UIComponent) it.next();
+                    if (!child.isRendered())
+                    {
+                        continue;
+                    }
+                    child.processValidators(context);
                 }
             }
         }
@@ -122,9 +188,12 @@ public class HtmlDataList
 
     public String getLayout()
     {
-        if (_layout != null) return _layout;
+        if (_layout != null)
+        {
+            return _layout;
+        }
         ValueBinding vb = getValueBinding("layout");
-        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+        return vb != null ? (String) vb.getValue(getFacesContext()) : null;
     }
 
     public void setRowIndexVar(String rowIndexVar)
@@ -134,9 +203,12 @@ public class HtmlDataList
 
     public String getRowIndexVar()
     {
-        if (_rowIndexVar != null) return _rowIndexVar;
+        if (_rowIndexVar != null)
+        {
+            return _rowIndexVar;
+        }
         ValueBinding vb = getValueBinding("rowIndexVar");
-        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+        return vb != null ? (String) vb.getValue(getFacesContext()) : null;
     }
 
     public void setRowCountVar(String rowCountVar)
@@ -146,9 +218,12 @@ public class HtmlDataList
 
     public String getRowCountVar()
     {
-        if (_rowCountVar != null) return _rowCountVar;
+        if (_rowCountVar != null)
+        {
+            return _rowCountVar;
+        }
         ValueBinding vb = getValueBinding("rowCountVar");
-        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+        return vb != null ? (String) vb.getValue(getFacesContext()) : null;
     }
 
 
@@ -164,11 +239,11 @@ public class HtmlDataList
 
     public void restoreState(FacesContext context, Object state)
     {
-        Object values[] = (Object[])state;
+        Object values[] = (Object[]) state;
         super.restoreState(context, values[0]);
-        _layout = (String)values[1];
-        _rowIndexVar = (String)values[2];
-        _rowCountVar = (String)values[3];
+        _layout = (String) values[1];
+        _rowIndexVar = (String) values[2];
+        _rowCountVar = (String) values[3];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }
