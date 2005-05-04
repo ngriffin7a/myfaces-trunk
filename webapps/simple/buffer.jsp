@@ -70,7 +70,7 @@
                 columnClasses="standardTable_Column,standardTable_ColumnCentered,standardTable_Column"
                 var="car"
                 value="#{scrollerList.list}"
-                preserveDataModel="true"
+                preserveDataModel="false"
                 rows="10"
            >
            <h:column>

@@ -25,6 +25,7 @@
         <h:outputLink value="sample2.jsf" ><f:verbatim>Sample 2</f:verbatim></h:outputLink> <br/>
         <h:outputLink value="validate.jsf" ><f:verbatim>Validations</f:verbatim></h:outputLink> <br/>
         <h:outputLink value="aliasBean.jsf" ><f:verbatim>Alias Bean</f:verbatim></h:outputLink> <br/>
+        <h:outputLink value="buffer.jsf" ><f:verbatim>Buffer</f:verbatim></h:outputLink> <br/>
         Data Table<br/>
         &nbsp;&nbsp;&nbsp;<h:outputLink value="masterDetail.jsf" ><f:verbatim>Master-Detail</f:verbatim></h:outputLink><br/>
         &nbsp;&nbsp;&nbsp;<h:outputLink value="dataScroller.jsf" ><f:verbatim>Data Scroller</f:verbatim></h:outputLink><br/>            
