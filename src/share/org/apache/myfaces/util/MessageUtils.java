@@ -18,8 +18,14 @@ package org.apache.myfaces.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.apache.myfaces.util.ClassUtils;
+
 import javax.faces.application.FacesMessage;
+import javax.faces.application.ApplicationFactory;
+import javax.faces.application.Application;
 import javax.faces.context.FacesContext;
+import javax.faces.FactoryFinder;
+
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -28,6 +34,7 @@ import java.util.ResourceBundle;
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @author Manfred Geiler
+ * @author Sean Schofield
  * @version $Revision$ $Date$
  * $Log$
  * Revision 1.4  2004/10/13 11:51:01  matze
@@ -75,20 +82,10 @@ public class MessageUtils
                                           Object[] args,
                                           FacesContext facesContext)
     {
-        Locale locale;
-        if (facesContext.getViewRoot() != null)
-        {
-            locale = facesContext.getViewRoot().getLocale();
-        }
-        else
-        {
-            locale = facesContext.getApplication().getDefaultLocale();
-        }
-        return internalGetMessage(facesContext,
-                                  locale,
-                                  severity,
-                                  messageId,
-                                  args);
+        FacesMessage message = getMessage(facesContext, messageId, args);
+        message.setSeverity(severity);
+        
+        return message;
     }
 
     public static void addMessage(FacesMessage.Severity severity,
@@ -123,128 +120,136 @@ public class MessageUtils
         facesContext.addMessage(forClientId,
                                 getMessage(severity, messageId, args, facesContext));
     }
-
-
-
-
-    private static FacesMessage internalGetMessage(FacesContext facesContext,
-                                                   Locale locale,
-                                                   FacesMessage.Severity severity,
-                                                   String messageId,
-                                                   Object args[])
+ 
+    /**
+     * Uses <code>MessageFormat</code> and the supplied parameters to fill in the param placeholders in the String.
+     * 
+     * @param locale The <code>Locale</code> to use when performing the substitution.
+     * @param msgtext The original parameterized String.
+     * @param params The params to fill in the String with.
+     * @return The updated String.
+     */
+    public static String substituteParams(Locale locale, String msgtext, Object params[])
     {
-        ResourceBundle appBundle;
-        ResourceBundle defBundle;
-        String summary;
-        String detail;
-
-        appBundle = getApplicationBundle(facesContext, locale);
-        summary = getBundleString(appBundle, messageId);
-        if (summary != null)
+        String localizedStr = null;
+        if(params == null || msgtext == null)
+            return msgtext;
+        StringBuffer b = new StringBuffer(100);
+        MessageFormat mf = new MessageFormat(msgtext);
+        if(locale != null)
         {
-            detail = getBundleString(appBundle, messageId + DETAIL_SUFFIX);
+            mf.setLocale(locale);
+            b.append(mf.format(((Object) (params))));
+            localizedStr = b.toString();
         }
-        else
-        {
-            defBundle = getDefaultBundle(locale);
-            summary = getBundleString(defBundle, messageId);
-            if (summary != null)
-            {
-                detail = getBundleString(defBundle, messageId + DETAIL_SUFFIX);
-            }
-            else
-            {
-                //Try to find detail alone
-                detail = getBundleString(appBundle, messageId + DETAIL_SUFFIX);
-                if (detail != null)
-                {
-                    summary = null;
-                }
-                else
-                {
-                    detail = getBundleString(defBundle, messageId + DETAIL_SUFFIX);
-                    if (detail != null)
-                    {
-                        summary = null;
-                    }
-                    else
-                    {
-                        //Neither detail nor summary found
-                        if (log.isWarnEnabled()) log.warn("No message with id " + messageId + " found in any bundle");
-                        return new FacesMessage(severity, messageId, null);
-                    }
-                }
-            }
-        }
-
-        if (args != null && args.length > 0)
-        {
-            MessageFormat format;
-
-            if (summary != null)
-            {
-                format = new MessageFormat(summary, locale);
-                summary = format.format(args);
-            }
-
-            if (detail != null)
-            {
-                format = new MessageFormat(detail, locale);
-                detail = format.format(args);
-            }
-        }
-
-        return new FacesMessage(severity, summary, detail);
+        return localizedStr;
     }
 
-
-    private static String getBundleString(ResourceBundle bundle, String key)
+    public static FacesMessage getMessage(String messageId, Object params[])
     {
-        try
+        Locale locale = null;
+        FacesContext context = FacesContext.getCurrentInstance();
+        if(context != null && context.getViewRoot() != null)
         {
-            return bundle == null ? null : bundle.getString(key);
-        }
-        catch (MissingResourceException e)
+            locale = context.getViewRoot().getLocale();
+            if(locale == null)
+                locale = Locale.getDefault();
+        } else
         {
-            return null;
+            locale = Locale.getDefault();
         }
+        return getMessage(locale, messageId, params);
     }
 
-
-    private static ResourceBundle getApplicationBundle(FacesContext facesContext, Locale locale)
+    public static FacesMessage getMessage(Locale locale, String messageId, Object params[])
     {
-        String bundleName = facesContext.getApplication().getMessageBundle();
+        String summary = null;
+        String detail = null;
+        String bundleName = getApplication().getMessageBundle();
+        ResourceBundle bundle = null;        
+        
         if (bundleName != null)
         {
+            bundle = ResourceBundle.getBundle(bundleName, locale);
+            try 
+            {
+                summary = bundle.getString(messageId);
+            }
+            catch (MissingResourceException e) {}
+        }
+
+        if (summary == null)
+        {
+            bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE, locale, ClassUtils.getCurrentLoader(bundleName));
+            if(bundle == null)
+            {
+                throw new NullPointerException();
+            }
+            
             try
             {
-                return ResourceBundle.getBundle(bundleName, locale, Thread.currentThread().getContextClassLoader());
+                summary = bundle.getString(messageId);
             }
-            catch (MissingResourceException e)
-            {
-                log.error("Resource bundle " + bundleName + " could not be found.");
-                return null;
-            }
+            catch(MissingResourceException e) { }
         }
-        else
+
+        if(summary == null)
         {
             return null;
         }
-    }
+        
+        if (bundle == null)
+        {
+            throw new NullPointerException("Unable to locate ResrouceBundle: bundle is null");
+        }
+        summary = substituteParams(locale, summary, params);
 
-    private static ResourceBundle getDefaultBundle(Locale locale)
-    {
         try
         {
-            return ResourceBundle.getBundle(DEFAULT_BUNDLE,
-                                            locale,
-                                            FacesContext.class.getClassLoader());
+            detail = substituteParams(locale, bundle.getString(messageId + DETAIL_SUFFIX), params);
         }
-        catch (MissingResourceException e)
+        catch(MissingResourceException e) { }
+
+        return new FacesMessage(summary, detail);
+    }
+
+    public static FacesMessage getMessage(FacesContext context, String messageId)
+    {
+        return getMessage(context, messageId, ((Object []) (null)));
+    }
+
+    public static FacesMessage getMessage(FacesContext context, String messageId, Object params[])
+    {
+        if(context == null || messageId == null)
+            throw new NullPointerException(" context " + context + " messageId " + messageId);
+        Locale locale = null;
+        if(context != null && context.getViewRoot() != null)
+            locale = context.getViewRoot().getLocale();
+        else
+            locale = Locale.getDefault();
+        if(null == locale)
+            throw new NullPointerException(" locale " + locale);
+        FacesMessage message = getMessage(locale, messageId, params);
+        if(message != null)
         {
-            log.error("Resource bundle " + DEFAULT_BUNDLE + " could not be found.");
-            return null;
+            return message;
+        } else
+        {
+            locale = Locale.getDefault();
+            return getMessage(locale, messageId, params);
         }
     }
 
+    private static Application getApplication()
+    {
+        FacesContext context = FacesContext.getCurrentInstance();
+        if(context != null)
+        {
+            return FacesContext.getCurrentInstance().getApplication();
+        } else
+        {
+            ApplicationFactory afactory = (ApplicationFactory)FactoryFinder.getFactory("javax.faces.application.ApplicationFactory");
+            return afactory.getApplication();
+        }
+    }
 }
