@@ -90,6 +90,7 @@ public class AliasBean extends UIComponentBase {
     private String _aliasBeanExpression = null;
 
     private transient FacesContext _context = null;
+	private transient Object evaluatedExpression = null;
 
     public AliasBean() {
         setRendererType(DEFAULT_RENDERER_TYPE);
@@ -248,12 +249,12 @@ public class AliasBean extends UIComponentBase {
         _context = context;
         makeAlias();
     }
-
-    private void makeAlias() {
-        // First, compute the value or reference
-        Object value;
-        
-        ValueBinding valueVB = null;
+	
+	private void computeEvaluatedExpression(){
+		if( evaluatedExpression != null )
+			return;
+		
+		ValueBinding valueVB = null;
         if (_valueExpression == null) {
             valueVB = getValueBinding("value");
             _valueExpression = valueVB.getExpressionString();
@@ -262,13 +263,18 @@ public class AliasBean extends UIComponentBase {
         if( valueVB == null ){
             if( _valueExpression.startsWith("#{") ){
                 valueVB = _context.getApplication().createValueBinding(_valueExpression);
-                value = valueVB.getValue(_context);
+				evaluatedExpression = valueVB.getValue(_context);
             }else{
-                value = _valueExpression;
+				evaluatedExpression = _valueExpression;
             }
         }else{
-            value = valueVB.getValue(_context);
+			evaluatedExpression = valueVB.getValue(_context);
         }
+	}
+
+    private void makeAlias() {
+        // First, compute the value or reference
+		computeEvaluatedExpression();
 
         // Then set the alias to this value
         ValueBinding aliasVB;
@@ -279,7 +285,7 @@ public class AliasBean extends UIComponentBase {
             aliasVB = _context.getApplication().createValueBinding(_aliasBeanExpression);
         }
 
-        aliasVB.setValue(_context, value);
+        aliasVB.setValue(_context, evaluatedExpression);
 
         log.debug("makeAlias: " + _valueExpression + " = " + _aliasBeanExpression);
     }
