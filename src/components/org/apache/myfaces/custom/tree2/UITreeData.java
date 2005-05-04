@@ -15,6 +15,8 @@
  */
 package org.apache.myfaces.custom.tree2;
 
+import org.apache.myfaces.util.MessageUtils;
+
 import javax.faces.component.UIComponentBase;
 import javax.faces.component.NamingContainer;
 import javax.faces.component.UIComponent;
@@ -26,14 +28,18 @@ import javax.faces.event.PhaseId;
 import javax.faces.event.FacesListener;
 import javax.faces.el.ValueBinding;
 import javax.faces.application.FacesMessage;
+import javax.faces.application.*;
 
+import java.text.MessageFormat;
 import java.io.Serializable;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
-
+import java.util.ResourceBundle;
+import java.util.Locale;
+import java.util.*;
 
 /**
  * TreeData is a {@link UIComponent} that supports binding data stored in a tree represented
@@ -50,9 +56,9 @@ public class UITreeData extends UIComponentBase implements NamingContainer
 {
 
     public static final String COMPONENT_TYPE = "org.apache.myfaces.Tree2";
-    public static final String COMPONENT_FAMILY = "org.apache.myfaces.HtmlTree2"; //"javax.faces.Data";
+    public static final String COMPONENT_FAMILY = "org.apache.myfaces.HtmlTree2";
     private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.Tree2";
-
+    private static final String MISSING_NODE = "org.apache.myfaces.tree2.MISSING_NODE";
     private static final int PROCESS_DECODES = 1;
     private static final int PROCESS_VALIDATORS = 2;
     private static final int PROCESS_UPDATES = 3;
@@ -114,7 +120,8 @@ public class UITreeData extends UIComponentBase implements NamingContainer
             setNodeId(childEvent.getNodeId());
             FacesEvent nodeEvent = childEvent.getFacesEvent();
             nodeEvent.getComponent().broadcast(nodeEvent);
-            setNodeId(currNodeId);
+            setNodeId("666:666:666");
+            //setNodeId(currNodeId);
             return;
         } else
         {
@@ -287,7 +294,26 @@ public class UITreeData extends UIComponentBase implements NamingContainer
         {
             return;
         }
-        model.setNodeId(nodeId);
+        
+        try
+        {
+            model.setNodeId(nodeId);
+        }
+        catch (IndexOutOfBoundsException aob)
+        {
+            /**
+             * This might happen if we are trying to process a commandLink for a node that node that no longer 
+             * exists.  Instead of allowing a RuntimeException to crash the application, we will add a warning 
+             * message so the user can optionally display the warning.  Also, we will allow the user to provide 
+             * their own value binding method to be called so they can handle it how they see fit.
+             */
+            FacesMessage message = MessageUtils.getMessage(MISSING_NODE, new String[] {nodeId});
+            message.setSeverity(FacesMessage.SEVERITY_WARN);
+            FacesContext.getCurrentInstance().addMessage(getId(), message);
+            
+            /** @todo call hook */
+            /** @todo figure out whether or not to abort this method gracefully */
+        }
 
         restoreDescendantState();
 
@@ -304,7 +330,6 @@ public class UITreeData extends UIComponentBase implements NamingContainer
             }
         }
     }
-
 
     /**
      * Gets an array of String containing the ID's of all of the {@link TreeNode}s in the path to
