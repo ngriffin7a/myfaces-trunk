@@ -143,15 +143,8 @@ public class TreeModel
             int nodeIndex = Integer.parseInt(st.nextToken());
             sb.append(nodeIndex);
 
-            try
-            {
-                node = (TreeNode)node.getChildren().get(nodeIndex);
-            }
-            catch (IndexOutOfBoundsException e)
-            {
-                String msg = "Node with id " + sb.toString() + ". Failed to parse " + nodeId;
-                throw new IllegalArgumentException(msg);
-            }
+            // don't worry about invalid index, that exception will be caught later and dealt with
+            node = (TreeNode)node.getChildren().get(nodeIndex);
             sb.append(SEPARATOR);
         }
 

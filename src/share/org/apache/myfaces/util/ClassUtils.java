@@ -321,4 +321,21 @@ public class ClassUtils
             throw new FacesException(message, e);
         }
     }
+
+    /**
+     * Gets the ClassLoader associated with the current thread.  Returns the class loader associated with 
+     * the specified default object if no context loader is associated with the current thread.
+     * 
+     * @param defaultObject The default object to use to determine the class loader (if none associated with current thread.)
+     * @return ClassLoader
+     */    
+    protected static ClassLoader getCurrentLoader(Object defaultObject)
+    {
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        if(loader == null)
+        {
+            loader = defaultObject.getClass().getClassLoader();
+        }
+        return loader;
+    }
 }
