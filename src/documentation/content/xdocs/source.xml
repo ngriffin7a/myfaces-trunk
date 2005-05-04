@@ -88,7 +88,7 @@
                 If you want to use the latest Apache MyFaces features, the source code is under
                 version control with CVS.  Click <link href="http://apache.org/dev/version-control.html">here</link>
                 for information on how to use the ASF CVS Repository. There are also
-                <a href="http://cvs.apache.org/builds/myfaces/nightly">nightly</a>
+                <a href="http://svn.apache.org/builds/myfaces/nightly">nightly</a>
                 builds available every 24 hours (11:00 PM EST).
             </p>
         </section>

@@ -45,7 +45,7 @@ MyFaces developers guidelines
   XXX:  something that is bogus but works
   FIXME: something that is bogus and broken
 
-* CVS
+* Version Control
   - Every developer may upload files, if (s)he is confident, that this
     file is usable for others.
   - Uploaded java files must be compilable, of course.

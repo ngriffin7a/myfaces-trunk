@@ -2,8 +2,8 @@
 
 <!--
 This is a basic ant build file that can perform a so-called "bootstrap" build of any project.
-The only requirement is that the project be checked in CVS and have its own build file.  Basically this will check out
-the project (by specific version if desired) and run the appropriate build script.  The CVS client must also be available
+The only requirement is that the project be checked in SVN and have its own build file.  Basically this will check out
+the project (by specific version if desired) and run the appropriate build script.  The SVN client must also be available
 through the system path.
 -->
 <project name="Bootstrap Build Script" default="nightly" basedir=".">
@@ -121,7 +121,7 @@ through the system path.
         </copy>
 
     </target>
-    
+
     <target name="check">
         <!-- make sure build.version property was set (externally) -->
         <fail unless="build.version">
@@ -130,7 +130,7 @@ through the system path.
         <!-- make sure user specified a release directory on their local machine (externally) -->
         <fail unless="release.dir">
             The release.dir property must be set (use command line or bootstrap.local.properies.)
-        </fail>        
+        </fail>
     </target>
 
 </project>
