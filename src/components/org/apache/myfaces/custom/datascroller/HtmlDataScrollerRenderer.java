@@ -82,7 +82,7 @@ public class HtmlDataScrollerRenderer
 
         HtmlDataScroller scroller = (HtmlDataScroller)component;
 
-        UIData uiData = findUIData(scroller, component);
+        UIData uiData = findUIData(scroller);
         if (uiData == null)
         {
             return;
@@ -163,7 +163,7 @@ public class HtmlDataScrollerRenderer
 
 	protected void setVariables(FacesContext facescontext, HtmlDataScroller scroller) throws IOException
     {
-        UIData uiData = findUIData(scroller, scroller);
+        UIData uiData = findUIData(scroller);
         if (uiData == null)
         {
             return;
@@ -273,7 +273,7 @@ public class HtmlDataScrollerRenderer
 		
 		HtmlDataScroller scroller = (HtmlDataScroller)uiComponent;
 
-        UIData uiData = findUIData(scroller, uiComponent);
+        UIData uiData = findUIData(scroller);
         if (uiData == null)
         {
             return;
@@ -558,18 +558,18 @@ public class HtmlDataScrollerRenderer
         return pageCount;
     }
 
-    protected UIData findUIData(HtmlDataScroller scroller, UIComponent component)
+    protected UIData findUIData(HtmlDataScroller scroller)
     {
         String forStr = scroller.getFor();
         UIComponent forComp;
         if (forStr == null)
         {
             // DataScroller may be a child of uiData
-            forComp = component.getParent();
+            forComp = scroller.getParent();
         }
         else
         {
-            forComp = component.findComponent(scroller.getFor());
+            forComp = scroller.findComponent(scroller.getFor());
             if (forComp == null)
             {
                 log.warn("could not find UIData referenced by attribute dataScroller@for = '" + scroller.getFor() + "'");
