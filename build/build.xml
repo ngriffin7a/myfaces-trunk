@@ -331,6 +331,7 @@ but as picky as TLDDoc is; I didn't take the chance.
                  classpathref="javadoc.class.path"
                  failonerror="true"
         	     Windowtitle="Apache MyFaces API Documentation">
+                <arg value="-notimestamp"/>
         	<sourcepath>
            		<pathelement location="${myfaces.src}"/>
            		<pathelement location="${share.src}"/>
