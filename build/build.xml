@@ -321,8 +321,12 @@ but as picky as TLDDoc is; I didn't take the chance.
     <target name="javadoc"
             description="creates javadoc for MyFaces classes"
             depends="myfaces-jar" >
-        <mkdir dir="${doc.dir}/javadoc"/>
-        <javadoc destdir="${doc.dir}/javadoc"
+
+        <!-- set the property for javadoc dir (if it hasn't been set already) -->
+        <property name="javadoc.dir" value="${doc.dir}/javadoc"/>
+
+        <mkdir dir="${javadoc.dir}"/>
+        <javadoc destdir="${javadoc.dir}"
                  packagenames="org.apache.myfaces.*"
                  classpathref="javadoc.class.path"
                  failonerror="true"
@@ -407,7 +411,7 @@ MLB:  MYFACES-92
         gpg --verify ${bin.release.tgz}.asc ${bin.release.tgz}
         gpg -o ${bin.release.zip}.asc --detach-sig ${bin.release.zip}
         gpg --verify ${bin.release.zip}.asc ${bin.release.zip}
-        </echo>                
+        </echo>
 
     </target>
 
@@ -473,7 +477,7 @@ MLB:  MYFACES-92
 
         <property name="src.release.tgz" value="${release.dir}/${src.release.bundle}.tgz"/>
         <property name="src.release.zip" value="${release.dir}/${src.release.bundle}.zip"/>
-        
+
         <tar destfile="${src.release.tgz}" compression="gzip">
              <tarfileset prefix="${src.release.bundle}" dir="${temp.dir}/${src.release.bundle}"/>
         </tar>
@@ -489,7 +493,7 @@ MLB:  MYFACES-92
         gpg --verify ${src.release.tgz}.asc ${src.release.tgz}
         gpg -o ${src.release.zip}.asc --detach-sig ${src.release.zip}
         gpg --verify ${src.release.zip}.asc ${src.release.zip}
-        </echo>                
+        </echo>
 
     </target>
 
@@ -537,6 +541,9 @@ MLB:  MYFACES-92
 
         <!-- clean up application build stuff as well -->
         <ant antfile="build-webapps.xml" inheritall="false" target="clean"/>
+
+        <!-- ### todo clean up javadoc dir, etc. but don't delete entire directory b/c we want to preserve the SVN stuff ### -->
+
     </target>
 
     <target name="clean-all"
@@ -817,30 +824,41 @@ MLB:  MYFACES-92
         <tar destfile="${app.release.tgz}" compression="gzip" >
             <tarfileset prefix="${app.release.bundle}" dir="${webapp.dist.dir}"/>
         </tar>
-        
+
         <checksum file="${app.release.tgz}" forceOverwrite="yes" fileext=".md5"/>
 
         <zip destfile="${app.release.zip}" compress="true">
             <zipfileset prefix="${app.release.bundle}" dir="${webapp.dist.dir}"/>
         </zip>
-        
-        <checksum file="${app.release.zip}" forceOverwrite="yes" fileext=".md5"/>        
-        
+
+        <checksum file="${app.release.zip}" forceOverwrite="yes" fileext=".md5"/>
+
         <!-- generate/append script for pgp signing of bundle -->
         <echo file="${sign.script}" append="true">
         gpg -o ${app.release.tgz}.asc --detach-sig ${app.release.tgz}
         gpg --verify ${app.release.tgz}.asc ${app.release.tgz}
         gpg -o ${app.release.zip}.asc --detach-sig ${app.release.zip}
         gpg --verify ${app.release.zip}.asc ${app.release.zip}
-        </echo>                
+        </echo>
 
     </target>
 
-    <target name="site-dist">
+    <target name="site">
 
+        <property file="forrest.local.properties"/>
+
+        <!-- build forrest site -->
         <ant antfile="build-site.xml" inheritall="false" target="all">
             <property file="forrest.local.properties"/>
         </ant>
+
+        <!-- add javadoc -->
+        <ant target="javadoc">
+            <property name="javadoc.dir" value="${project.site-dir}/javadoc"/>
+        </ant>
+
+        <!-- add tld javadoc -->
+        <!-- ### todo ### -->
 
     </target>
 
