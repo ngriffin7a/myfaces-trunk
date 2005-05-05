@@ -116,7 +116,9 @@ public class LoadBundleTag
         final ResourceBundle bundle;
         try
         {
-            bundle = ResourceBundle.getBundle(basename, locale);
+            bundle = ResourceBundle.getBundle(basename, 
+                                              locale, 
+                                              Thread.currentThread().getContextClassLoader());
         }
         catch (MissingResourceException e)
         {
