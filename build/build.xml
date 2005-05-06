@@ -42,6 +42,7 @@ but as picky as TLDDoc is; I didn't take the chance.
     <property file="build.local.properties"/>
     <property file="build.default.properties"/>
     <property file="manifest.properties"/>
+    <property file="forrest.local.properties"/>
 
     <property name="release.version" value="${manifest.impl.version}"/>
     <property name="src.release.bundle" value="myfaces-${release.version}-src"/>
@@ -345,17 +346,21 @@ but as picky as TLDDoc is; I didn't take the chance.
     <target name="tlddoc"
             description="creates tlddoc for the extension tld"
             depends="resolve-tld-entities,codegen" >
-        <mkdir dir="${doc.dir}/tlddoc"/>
+
+        <!-- set the property for tlddoc dir (if it hasn't been set already) -->
+        <property name="tlddoc.dir" value="${doc.dir}/tlddoc"/>
+
+        <mkdir dir="${tlddoc.dir}"/>
         <java fork="true" jar="${tlddoc.jar}" failonerror="true">
             <arg line="-doctitle 'Tag library for Apache MyFaces'" />
-            <arg line="-d ${doc.dir}/tlddoc"/>
+            <arg line="-d ${tlddoc.dir}"/>
 <!--
 MLB:  MYFACES-92
             <arg line="-xslt ${tlddoc.xslt.dir}"/>
 -->
             <arg value="${resolved-tlds.dir}/myfaces_ext.tld"/>
             <arg value="${generated.src}/myfaces_wap.tld"/>
-		</java>
+        </java>
     </target>
 
     <target name="prepare-bin-release" depends="prepare">
@@ -846,8 +851,6 @@ MLB:  MYFACES-92
 
     <target name="site">
 
-        <property file="forrest.local.properties"/>
-
         <!-- build forrest site -->
         <ant antfile="build-site.xml" inheritall="false" target="all">
             <property file="forrest.local.properties"/>
@@ -859,7 +862,9 @@ MLB:  MYFACES-92
         </ant>
 
         <!-- add tld javadoc -->
-        <!-- ### todo ### -->
+        <ant target="tlddoc">
+            <property name="tlddoc.dir" value="${project.site-dir}/tlddoc"/>
+        </ant>
 
     </target>
 
