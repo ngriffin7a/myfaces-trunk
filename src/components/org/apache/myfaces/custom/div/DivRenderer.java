@@ -60,9 +60,7 @@ public class DivRenderer extends HtmlRenderer {
     
     String styleClass = div.getStyleClass();
     String style = div.getStyle();
-    if(null != styleClass && null != style) {
-      throw new IllegalStateException("Only one of style or styleClass can be specified");
-    }
+
     if(null != styleClass) {
         writer.writeAttribute(HTML.CLASS_ATTR, styleClass, null);
     }
