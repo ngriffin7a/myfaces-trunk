@@ -58,6 +58,18 @@
         <managed-bean-class>org.apache.myfaces.examples.aliasexample.AliasHolder</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
+    
+    <managed-bean>
+        <managed-bean-name>aliasTest3</managed-bean-name>
+        <managed-bean-class>org.apache.myfaces.examples.aliasexample.AliasHolder</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    
+    <managed-bean>
+        <managed-bean-name>aliasTest4</managed-bean-name>
+        <managed-bean-class>org.apache.myfaces.examples.aliasexample.AliasHolder</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
 
     <!-- Managed Beans for selectbox.jsp -->
 

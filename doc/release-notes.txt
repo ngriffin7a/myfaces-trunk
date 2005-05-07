@@ -5,6 +5,7 @@ MyFaces Release Notes
 Changes in Release 1.0.10
 * added renderFacetsIfSinglePage to x:dataScroller
 * aliasBean : avoid evaluating expressions on each phase
+* added aliasBeansScope tag to make configuration with multiple aliasBean easier to manage.
 * closed MYFACES-177
 * closed MYFACES-199
 * closed MYFACES-209

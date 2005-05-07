@@ -24,7 +24,6 @@ import java.util.Map;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
-import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.FacesEvent;
 
@@ -32,104 +31,46 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * The aliasBean tag allows you to link a fictive bean to a real bean.
- * 
- * Let's suppose you have a subform you use often but with different beans.
- * <br/>The aliasBean allows you to design the subform with a fictive bean and
- * to include it in all the pages where you use it. You just need to make an
- * alias to the real bean named after the fictive bean before invoking the
- * fictive bean. <br/>This making it possible to have a library of reusable
- * generic subforms.
+ * Holds several aliases that are configured by aliasBean tags.
  * 
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
  * $Log$
- * Revision 1.10  2005/03/15 00:34:17  svieujot
- * Close MYFACES-128, thanks to Mathias Broekelmann.
- *
- * Revision 1.9  2005/03/10 22:42:26  svieujot
- * Close MYFACES-125 thanks to Mathias Broekelmann.
- *
- * Revision 1.8  2005/03/10 15:11:00  svieujot
- * Fix MYFACES-125 thanks to Mathias Broekelmann.
- *
- * Revision 1.7  2005/01/27 16:00:30  svieujot
- * *** empty log message ***
- *
- * Revision 1.6  2005/01/27 01:59:45  svieujot
- * AliasBean : Change sourceBean attribute for value.
- * Make it work with both beans references ( #{myBean} ), and fix strings as value.
- * Document tld.
- *
- * Revision 1.5  2005/01/04 15:41:06  svieujot
- * new x:buffer component.
- *
- * Revision 1.4  2004/11/23 11:03:35  svieujot
- * Get ride of the x:aliasBean "permanent" attribute.
- * 
- * Revision 1.3 2004/11/23 04:46:40 svieujot Add an ugly "permanent"
- * tag to x:aliasBean to handle children events.
- * 
- * Revision 1.2 2004/11/14 15:06:36 svieujot Improve AliasBean to make the alias
- * effective only within the tag body
- * 
- * Revision 1.1 2004/11/08 20:43:15 svieujot Add an x:aliasBean component
- * 
  */
-public class AliasBean extends UIComponentBase {
-    private static final Log log = LogFactory.getLog(AliasBean.class);
+public class AliasBeansScope extends UIComponentBase {
+    static final Log log = LogFactory.getLog(AliasBeansScope.class);
 
-    public static final String COMPONENT_TYPE = "org.apache.myfaces.AliasBean";
+    public static final String COMPONENT_TYPE = "org.apache.myfaces.AliasBeansScope";
     public static final String COMPONENT_FAMILY = "javax.faces.Data";
-    private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.AliasBean";
+    private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.AliasBeansScope";
 
-    private Alias alias;
-	private boolean scopeSearched = false;
-	private boolean withinScope;
+	private ArrayList _aliases = new ArrayList();
+    transient FacesContext _context = null;
 
-    private transient FacesContext _context = null;
-
-    public AliasBean() {
+    public AliasBeansScope() {
         setRendererType(DEFAULT_RENDERER_TYPE);
-		alias = new Alias( this );
     }
+	
+	void addAlias(Alias alias){
+		_aliases.add( alias );
+	}
 
     public String getFamily() {
         return COMPONENT_FAMILY;
     }
 
-    public void setAlias(String aliasBeanExpression){
-        alias.setAliasBeanExpression( aliasBeanExpression );
-    }
-    
-    public String getValue(){
-		String valueExpression = alias.getValueExpression(); 
-        if (valueExpression != null)
-            return valueExpression;
-        ValueBinding vb = getValueBinding("value");
-        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
-    }
-    public void setValue(String valueExpression){
-        alias.setValueExpression( valueExpression );
-    }
-
     public Object saveState(FacesContext context) {
         log.debug("saveState");
-
         _context = context;
 
-		Object[] state = {super.saveState(context), alias.saveState()};
-		return state;
+        return super.saveState(context);
     }
 
     public void restoreState(FacesContext context, Object state) {
         log.debug("restoreState");
-
         _context = context;
 
-        Object values[] = (Object[]) state;
-        super.restoreState(context, values[0]);
-		alias.restoreState(values[1]);
+        super.restoreState(context, state);
     }
 
     public Object processSaveState(FacesContext context) {
@@ -137,8 +78,6 @@ public class AliasBean extends UIComponentBase {
             throw new NullPointerException("context");
         if (isTransient())
             return null;
-		
-		makeAlias(context);
 		
         Map facetMap = null;
         for (Iterator it = getFacets().entrySet().iterator(); it.hasNext();) {
@@ -150,6 +89,9 @@ public class AliasBean extends UIComponentBase {
                 facetMap.put(entry.getKey(), component.processSaveState(context));
             }
         }
+		
+		makeAliases(context);
+		
         List childrenList = null;
         if (getChildCount() > 0) {
             for (Iterator it = getChildren().iterator(); it.hasNext();) {
@@ -162,7 +104,7 @@ public class AliasBean extends UIComponentBase {
             }
         }
 		
-		removeAlias(context);
+		removeAliases(context);
 		
         return new Object[] { saveState(context), facetMap, childrenList };
     }
@@ -173,10 +115,10 @@ public class AliasBean extends UIComponentBase {
         Object myState = ((Object[]) state)[0];
 
         restoreState(context, myState);
-        makeAlias(context);
+        makeAliases(context);
 
         Map facetMap = (Map) ((Object[]) state)[1];
-        List childrenList = (List) ((Object[]) state)[2];
+        
         for (Iterator it = getFacets().entrySet().iterator(); it.hasNext();) {
             Map.Entry entry = (Map.Entry) it.next();
             Object facetState = facetMap.get(entry.getKey());
@@ -186,6 +128,8 @@ public class AliasBean extends UIComponentBase {
                 context.getExternalContext().log("No state found to restore facet " + entry.getKey());
             }
         }
+		
+		List childrenList = (List) ((Object[]) state)[2];
         if (getChildCount() > 0) {
             int idx = 0;
             for (Iterator it = getChildren().iterator(); it.hasNext();) {
@@ -199,42 +143,28 @@ public class AliasBean extends UIComponentBase {
             }
         }
 
-        removeAlias(context);
+        removeAliases(context);
     }
 
     public void processValidators(FacesContext context) {
-		if( withinScope )
-			return;
-
         log.debug("processValidators");
-        makeAlias(context);
+        makeAliases(context);
         super.processValidators(context);
-        removeAlias(context);
+        removeAliases(context);
     }
 
 	public void processDecodes(FacesContext context) {
 		log.debug("processDecodes");
-		if( withinScope ){
-			if( ! alias.isActive() )
-				makeAlias(context);
-
-			super.processDecodes(context);
-			return;
-		}
-
-		makeAlias(context);
+		makeAliases(context);
 		super.processDecodes(context);
-		removeAlias(context);
+		removeAliases(context);
 	}
 	
     public void processUpdates(FacesContext context) {
-		if( withinScope )
-			return;
-
         log.debug("processUpdates");
-        makeAlias(context);
+        makeAliases(context);
         super.processUpdates(context);
-        removeAlias(context);
+        removeAliases(context);
     }
 
     public void queueEvent(FacesEvent event) {
@@ -242,7 +172,7 @@ public class AliasBean extends UIComponentBase {
     }
 
     public void broadcast(FacesEvent event) throws AbortProcessingException {
-        makeAlias();
+        makeAliases();
 
         if (event instanceof FacesEventWrapper) {
             FacesEvent originalEvent = ((FacesEventWrapper) event).getWrappedFacesEvent();
@@ -251,33 +181,26 @@ public class AliasBean extends UIComponentBase {
             super.broadcast(event);
         }
 
-        removeAlias();
-    }
-
-    void makeAlias(FacesContext context) {
+        removeAliases();
+	}
+	
+    void makeAliases(FacesContext context) {
         _context = context;
-        makeAlias();
+		makeAliases();
     }
 
-    private void makeAlias() {
-		if( ! scopeSearched ){
-			withinScope =  getParent() instanceof AliasBeansScope;
-			if( withinScope ){
-				AliasBeansScope aliasScope = (AliasBeansScope) getParent();
-				aliasScope.addAlias( alias );
-			}
-			scopeSearched = true;
-		}
-       	alias.make( _context );
+    private void makeAliases() {
+		for(Iterator i = _aliases.iterator() ; i.hasNext() ;)
+			((Alias)i.next()).make( _context );
     }
 
-    void removeAlias(FacesContext context) {
+    void removeAliases(FacesContext context) {
         _context = context;
-        removeAlias();
+        removeAliases();
     }
 
-    private void removeAlias() {
-        if( ! withinScope )
-			alias.remove( _context );
+    private void removeAliases() {
+		for(Iterator i = _aliases.iterator() ; i.hasNext() ;)
+			((Alias)i.next()).remove( _context );
     }
 }
