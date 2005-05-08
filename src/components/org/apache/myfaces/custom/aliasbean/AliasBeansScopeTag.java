@@ -20,7 +20,6 @@ import org.apache.myfaces.taglib.UIComponentTagBase;
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
  */
 public class AliasBeansScopeTag extends UIComponentTagBase {
     

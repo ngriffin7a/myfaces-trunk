@@ -20,18 +20,8 @@ import javax.faces.event.FacesListener;
 import javax.faces.event.PhaseId;
 
 /**
- * The aliasBean tag allows you to link a fictive bean to a real bean.
- * 
- * Let's suppose you have a subform you use often but with different beans.
- * <br/>The aliasBean allows you to design the subform with a fictive bean and
- * to include it in all the pages where you use it. You just need to make an
- * alias to the real bean named after the fictive bean before invoking the
- * fictive bean. <br/>This making it possible to have a library of reusable
- * generic subforms.
- * 
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
  */
 
 class FacesEventWrapper extends FacesEvent {

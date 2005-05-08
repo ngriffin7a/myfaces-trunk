@@ -25,13 +25,6 @@ import org.apache.commons.logging.LogFactory;
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.2  2004/11/14 15:06:35  svieujot
- * Improve AliasBean to make the alias effective only within the tag body
- *
- * Revision 1.1  2004/11/08 20:43:15  svieujot
- * Add an x:aliasBean component
- *
  */
 public class AliasBeanRenderer extends Renderer {
     private static final Log log = LogFactory.getLog(AliasBeanRenderer.class);

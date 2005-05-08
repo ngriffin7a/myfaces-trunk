@@ -25,8 +25,6 @@ import org.apache.commons.logging.LogFactory;
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- *
  */
 public class AliasBeansScopeRenderer extends Renderer {
     private static final Log log = LogFactory.getLog(AliasBeansScopeRenderer.class);

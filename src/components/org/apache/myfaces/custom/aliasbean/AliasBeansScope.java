@@ -35,7 +35,6 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
  */
 public class AliasBeansScope extends UIComponentBase {
     static final Log log = LogFactory.getLog(AliasBeansScope.class);

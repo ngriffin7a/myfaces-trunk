@@ -22,24 +22,6 @@ import org.apache.myfaces.taglib.UIComponentTagBase;
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.5  2005/02/18 17:19:30  matzew
- * added release() to tag clazzes.
- *
- * Revision 1.4  2005/01/27 01:59:45  svieujot
- * AliasBean : Change sourceBean attribute for value.
- * Make it work with both beans references ( #{myBean} ), and fix strings as value.
- * Document tld.
- *
- * Revision 1.3  2004/11/23 11:03:35  svieujot
- * Get ride of the x:aliasBean "permanent" attribute.
- *
- * Revision 1.2  2004/11/23 04:46:40  svieujot
- * Add an ugly "permanent" tag to x:aliasBean to handle children events.
- *
- * Revision 1.1  2004/11/08 20:43:15  svieujot
- * Add an x:aliasBean component
- *
  */
 public class AliasBeanTag extends UIComponentTagBase {
 

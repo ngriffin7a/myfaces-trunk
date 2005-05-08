@@ -25,7 +25,6 @@ import org.apache.commons.logging.LogFactory;
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
  */
 
 class Alias {

@@ -43,38 +43,6 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.10  2005/03/15 00:34:17  svieujot
- * Close MYFACES-128, thanks to Mathias Broekelmann.
- *
- * Revision 1.9  2005/03/10 22:42:26  svieujot
- * Close MYFACES-125 thanks to Mathias Broekelmann.
- *
- * Revision 1.8  2005/03/10 15:11:00  svieujot
- * Fix MYFACES-125 thanks to Mathias Broekelmann.
- *
- * Revision 1.7  2005/01/27 16:00:30  svieujot
- * *** empty log message ***
- *
- * Revision 1.6  2005/01/27 01:59:45  svieujot
- * AliasBean : Change sourceBean attribute for value.
- * Make it work with both beans references ( #{myBean} ), and fix strings as value.
- * Document tld.
- *
- * Revision 1.5  2005/01/04 15:41:06  svieujot
- * new x:buffer component.
- *
- * Revision 1.4  2004/11/23 11:03:35  svieujot
- * Get ride of the x:aliasBean "permanent" attribute.
- * 
- * Revision 1.3 2004/11/23 04:46:40 svieujot Add an ugly "permanent"
- * tag to x:aliasBean to handle children events.
- * 
- * Revision 1.2 2004/11/14 15:06:36 svieujot Improve AliasBean to make the alias
- * effective only within the tag body
- * 
- * Revision 1.1 2004/11/08 20:43:15 svieujot Add an x:aliasBean component
- * 
  */
 public class AliasBean extends UIComponentBase {
     private static final Log log = LogFactory.getLog(AliasBean.class);
