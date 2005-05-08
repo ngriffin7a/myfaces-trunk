@@ -78,6 +78,8 @@ public class AliasBeansScope extends UIComponentBase {
             throw new NullPointerException("context");
         if (isTransient())
             return null;
+
+		makeAliases(context);
 		
         Map facetMap = null;
         for (Iterator it = getFacets().entrySet().iterator(); it.hasNext();) {
@@ -89,8 +91,6 @@ public class AliasBeansScope extends UIComponentBase {
                 facetMap.put(entry.getKey(), component.processSaveState(context));
             }
         }
-		
-		makeAliases(context);
 		
         List childrenList = null;
         if (getChildCount() > 0) {
@@ -115,6 +115,7 @@ public class AliasBeansScope extends UIComponentBase {
         Object myState = ((Object[]) state)[0];
 
         restoreState(context, myState);
+
         makeAliases(context);
 
         Map facetMap = (Map) ((Object[]) state)[1];
