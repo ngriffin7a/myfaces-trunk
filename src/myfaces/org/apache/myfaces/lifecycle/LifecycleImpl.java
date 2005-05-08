@@ -125,22 +125,37 @@ public class LifecycleImpl
         Application application = facesContext.getApplication();
         ViewHandler viewHandler = application.getViewHandler();
 
-        boolean viewCreated = false;
+        //boolean viewCreated = false;
         UIViewRoot viewRoot = viewHandler.restoreView(facesContext, viewId);
         if (viewRoot == null)
         {
             viewRoot = viewHandler.createView(facesContext, viewId);
             facesContext.renderResponse();
-            viewCreated = true;
+            //viewCreated = true;
         }
 
         facesContext.setViewRoot(viewRoot);
+
+        /* This section has been disabled because it causes some bug.
+         * Be careful if you need to re-enable it.
+         * Furthermore, for an unknown reason, it seems that by default
+         * it is executed (i.e. log.isTraceEnabled() is true).
+         * Bug example :
+         * This traceView causes DebugUtil.printComponent to print all the attributes
+         * of the view components.
+         * And if you have a data table within an aliasBean, this causes the data table
+         * to initialize it's value attribute while the alias isn't set.
+         * So, the value initializes with an UIData.EMPTY_DATA_MODEL, and not with the aliased one.
+         * But as it's initialized, it will not try to get the value from the ValueBinding next
+         * time it needs to.
+         * I expect this to cause more similar bugs.
+         * TODO : Completely remove or be SURE by default it's not executed, and it has no more side-effects.
 
         if (log.isTraceEnabled())
         {
             //Note: DebugUtils Logger must also be in trace level
             DebugUtils.traceView(viewCreated ? "Newly created view" : "Restored view");
-        }
+        }*/
 
         if (facesContext.getExternalContext().getRequestParameterMap().isEmpty())
         {
