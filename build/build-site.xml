@@ -7,8 +7,9 @@
       * FORREST_HOME must be set as an environment variable
      -->
 
-    <property environment="env"/>
-    <property name="forrest.home" value="${env.FORREST_HOME}"/>
+     <property environment="env"/>
+
+     <property name="forrest.home" value="${env.FORREST_HOME}"/>
 
     <import file="${env.FORREST_HOME}/forrest.build.xml"/>
 

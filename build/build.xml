@@ -32,7 +32,6 @@
     <property file="build.local.properties"/>
     <property file="build.default.properties"/>
     <property file="manifest.properties"/>
-    <property file="forrest.local.properties"/>
 
     <property name="release.version" value="${manifest.impl.version}"/>
     <property name="src.release.bundle" value="myfaces-${release.version}-src"/>
@@ -838,19 +837,23 @@
 
     <target name="site">
 
+        <!--
+        Preconditions for use of this target: see build-site.xml
+        -->
+
         <!-- build forrest site -->
         <ant antfile="build-site.xml" inheritall="false" target="all">
-            <property file="forrest.local.properties"/>
+            <property name="project.site-dir" value="${site.build.dir}"/>
         </ant>
 
         <!-- add javadoc -->
         <ant target="javadoc">
-            <property name="javadoc.dir" value="${project.site-dir}/javadoc"/>
+            <property name="javadoc.dir" value="${site.build.dir}/javadoc"/>
         </ant>
 
         <!-- add tld javadoc -->
         <ant target="tlddoc">
-            <property name="tlddoc.dir" value="${project.site-dir}/tlddoc"/>
+            <property name="tlddoc.dir" value="${site.build.dir}/tlddoc"/>
         </ant>
 
     </target>
