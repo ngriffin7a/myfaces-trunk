@@ -158,11 +158,4 @@ public class LengthValidator
         return true;
     }
 
-    public int hashCode() {
-        int result;
-        result = (_minimum != null ? _minimum.hashCode() : 0);
-        result = 29 * result + (_maximum != null ? _maximum.hashCode() : 0);
-        result = 29 * result + (_transient ? 1 : 0);
-        return result;
-    }
 }
