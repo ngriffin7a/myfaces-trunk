@@ -23,43 +23,6 @@ import javax.faces.webapp.UIComponentTag;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.13  2005/03/07 09:06:51  matzew
- * Patch for the new tree form Sean Schofield
- *
- * Revision 1.12  2005/02/18 17:19:30  matzew
- * added release() to tag clazzes.
- *
- * Revision 1.11  2005/01/30 15:24:10  matzew
- * thanks to sean schofield for removing *legacy* attributes of MyFaces
- *
- * Revision 1.10  2005/01/28 17:19:09  matzew
- * Patch for MYFACES-91 form Sean Schofield
- *
- * Revision 1.9  2005/01/25 22:15:53  matzew
- * JavaDoc patch form Sean Schofield
- *
- * Revision 1.8  2005/01/10 08:08:12  matzew
- * added patch form sean schofield. forceId for reuse of "legacy JavaScript" (MyFaces-70)
- *
- * Revision 1.7  2004/10/13 11:51:01  matze
- * renamed packages to org.apache
- *
- * Revision 1.6  2004/07/01 22:01:21  mwessendorf
- * ASF switch
- *
- * Revision 1.5  2004/04/16 15:13:33  manolito
- * validator attribute support and MethodBinding invoke exception handling fixed
- *
- * Revision 1.4  2004/04/05 11:04:57  manolito
- * setter for renderer type removed, no more default renderer type needed
- *
- * Revision 1.3  2004/04/01 09:33:43  manolito
- * user role support removed
- *
- * Revision 1.2  2004/03/30 12:16:08  manolito
- * header comments
- *
  */
 public abstract class UIComponentTagBase
         extends UIComponentTag

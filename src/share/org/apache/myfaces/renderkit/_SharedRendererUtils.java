@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,23 +32,10 @@ import java.util.List;
 /**
  * The util methods in this class are shared between the javax.faces.component package and
  * the org.apache.myfaces.renderkit package.
- * Please note: Any changes here must also apply to the class in the other package! 
+ * Please note: Any changes here must also apply to the class in the other package!
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.4  2005/04/06 10:21:55  manolito
- * MYFACES-149 fix for NullPointerException in _SharedRendererUtils.getConvertedUISelectManyValue
- *
- * Revision 1.3  2004/10/13 11:51:01  matze
- * renamed packages to org.apache
- *
- * Revision 1.2  2004/07/01 22:01:18  mwessendorf
- * ASF switch
- *
- * Revision 1.1  2004/04/06 13:03:52  manolito
- * x-checked getConvertedValue method in api and impl
- *
  */
 class _SharedRendererUtils
 {
@@ -209,12 +196,12 @@ class _SharedRendererUtils
     }
 
 
-    
+
     private static final Log log = LogFactory.getLog(_SharedRendererUtils.class);
 
     /**
      * This method is different in the two versions of _SharedRendererUtils.
-     */ 
+     */
     private static void log(FacesContext context, String msg, Exception e)
     {
         log.error(msg, e);

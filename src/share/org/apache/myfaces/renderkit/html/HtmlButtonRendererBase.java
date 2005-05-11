@@ -39,35 +39,6 @@ import java.util.Map;
  * @author Thomas Spiegl
  * @author Anton Koinov
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.9  2005/03/16 20:41:12  mmarinschek
- * fix for MYFACES-111, alien commit for Heath Borders
- *
- * Revision 1.8  2004/10/13 11:51:01  matze
- * renamed packages to org.apache
- *
- * Revision 1.7  2004/09/08 15:23:12  manolito
- * Autoscroll feature
- *
- * Revision 1.6  2004/09/08 09:32:03  manolito
- * MyfacesConfig moved to config package
- *
- * Revision 1.5  2004/07/26 09:19:08  manolito
- * removed onclick from passthrough attributes for ButtonRenderer
- *
- * Revision 1.4  2004/07/01 22:00:57  mwessendorf
- * ASF switch
- *
- * Revision 1.3  2004/06/03 12:57:03  o_rossmueller
- * modified link renderer to use one hidden field for all links according to 1.1 renderkit docs
- * added onclick=clear_XXX to button
- *
- * Revision 1.2  2004/06/03 11:45:40  o_rossmueller
- * added check for .y image button suffix according to 1.1 renderkit docs
- *
- * Revision 1.1  2004/05/18 14:31:39  manolito
- * user role support completely moved to components source tree
- *
  */
 public class HtmlButtonRendererBase
     extends HtmlRenderer

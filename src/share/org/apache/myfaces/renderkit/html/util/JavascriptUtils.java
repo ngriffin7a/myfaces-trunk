@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,43 +34,6 @@ import java.util.Set;
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.12  2004/12/27 04:11:11  mmarinschek
- * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
- *
- * Revision 1.11  2004/12/23 09:15:15  mmarinschek
- * changes to utils to handle ie better
- *
- * Revision 1.10  2004/12/02 21:31:56  svieujot
- * Bugfix in encodeString
- *
- * Revision 1.9  2004/10/13 11:51:01  matze
- * renamed packages to org.apache
- *
- * Revision 1.8  2004/09/10 14:13:52  manolito
- * trivial change
- *
- * Revision 1.7  2004/09/08 15:51:15  manolito
- * Autoscroll now also for horizontal scrolling
- *
- * Revision 1.6  2004/09/08 15:23:11  manolito
- * Autoscroll feature
- *
- * Revision 1.5  2004/09/08 09:31:25  manolito
- * moved isJavascriptDetected from MyFacesConfig to JavascriptUtils class
- *
- * Revision 1.4  2004/07/16 13:06:30  manolito
- * encode javascript strings for jscook menu labels
- *
- * Revision 1.3  2004/07/09 02:44:55  dave0000
- * More efficient implementation
- *
- * Revision 1.2  2004/07/01 22:00:53  mwessendorf
- * ASF switch
- *
- * Revision 1.1  2004/04/29 14:25:22  manolito
- * javascript function name bugfix
- *
  */
 public final class JavascriptUtils
 {
@@ -88,8 +51,8 @@ public final class JavascriptUtils
     {
         // utility class, do not instantiate
     }
-    
-    private static final Set RESERVED_WORDS = 
+
+    private static final Set RESERVED_WORDS =
         new HashSet(Arrays.asList(new String[]{
             "abstract",
             "boolean",
@@ -146,19 +109,19 @@ public final class JavascriptUtils
             "while",
             "with"
         }));
-    
+
     public static String getValidJavascriptName(String s, boolean checkForReservedWord)
     {
         if (checkForReservedWord && RESERVED_WORDS.contains(s))
         {
             return s + "_";
         }
-        
+
         StringBuffer buf = null;
         for (int i = 0, len = s.length(); i < len; i++)
         {
             char c = s.charAt(i);
-            
+
             if (Character.isLetterOrDigit(c))
             {
                 // allowed char
@@ -171,14 +134,14 @@ public final class JavascriptUtils
                     buf = new StringBuffer(s.length() + 10);
                     buf.append(s.substring(0, i));
                 }
-                
+
                 buf.append('_');
                 if (c < 16)
-                { 
+                {
                     // pad single hex digit values with '0' on the left
                     buf.append('0');
                 }
-                
+
                 if (c < 128)
                 {
                     // first 128 chars match their byte representation in UTF-8
@@ -187,7 +150,7 @@ public final class JavascriptUtils
                 else
                 {
                     byte[] bytes;
-                    try 
+                    try
                     {
                         bytes = Character.toString(c).getBytes("UTF-8");
                     }
@@ -195,16 +158,16 @@ public final class JavascriptUtils
                     {
                         throw new RuntimeException(e);
                     }
-                    
+
                     for (int j = 0; j < bytes.length; j++)
                     {
                         int intVal = bytes[j];
-                        if (intVal < 0) 
+                        if (intVal < 0)
                         {
                             // intVal will be >= 128
                             intVal = 256 + intVal;
                         }
-                        else if (intVal < 16) 
+                        else if (intVal < 16)
                         {
                             // pad single hex digit values with '0' on the left
                             buf.append('0');
@@ -213,9 +176,9 @@ public final class JavascriptUtils
                     }
                 }
             }
-            
+
         }
-        
+
         return buf == null ? s : buf.toString();
     }
 

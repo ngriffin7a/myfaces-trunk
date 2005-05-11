@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,22 +46,6 @@ import org.apache.myfaces.portlet.PortletUtil;
  * Implements the lifecycle as described in Spec. 1.0 PFD Chapter 2
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.44  2005/02/10 20:24:17  matzew
- * closed MYFACES-101 in Jira; Thanks to Stan Silvert (JBoss Group)
- *
- * Revision 1.43  2005/01/27 02:38:43  svieujot
- * Remove portlet-api dependency while keeping portlet support.
- *
- * Revision 1.42  2005/01/26 17:03:11  matzew
- * MYFACES-86. portlet support provided by Stan Silver (JBoss Group)
- *
- * Revision 1.41  2004/10/13 11:51:00  matze
- * renamed packages to org.apache
- *
- * Revision 1.40  2004/08/25 13:54:02  manolito
- * Log cvs keyword
- *
  */
 public class LifecycleImpl
         extends Lifecycle
@@ -333,7 +317,7 @@ public class LifecycleImpl
     private static String deriveViewId(FacesContext facesContext)
     {
         ExternalContext externalContext = facesContext.getExternalContext();
-        
+
         if (PortletUtil.isPortletRequest(facesContext))
         {
             PortletRequest request = (PortletRequest)externalContext.getRequest();

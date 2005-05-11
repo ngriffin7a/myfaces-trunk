@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,65 +37,6 @@ import java.util.Iterator;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.19  2005/03/16 16:40:59  svieujot
- * Call form.onsubmit in HtmlCommandLink (otherwise bypassed by calling directly form.submit.
- *
- * Revision 1.18  2004/10/13 11:51:01  matze
- * renamed packages to org.apache
- *
- * Revision 1.17  2004/09/08 15:23:12  manolito
- * Autoscroll feature
- *
- * Revision 1.16  2004/09/08 09:32:03  manolito
- * MyfacesConfig moved to config package
- *
- * Revision 1.15  2004/07/18 21:25:30  o_rossmueller
- * fix #991234: use hidden field name in link url
- *
- * Revision 1.14  2004/07/01 22:00:56  mwessendorf
- * ASF switch
- *
- * Revision 1.13  2004/06/16 23:50:08  o_rossmueller
- * force separate end tag
- *
- * Revision 1.12  2004/06/08 01:34:44  o_rossmueller
- * render link value if available as required by JSF 1.1 renderkitdocs
- *
- * Revision 1.11  2004/06/03 12:57:03  o_rossmueller
- * modified link renderer to use one hidden field for all links according to 1.1 renderkit docs
- * added onclick=clear_XXX to button
- *
- * Revision 1.10  2004/05/18 14:31:39  manolito
- * user role support completely moved to components source tree
- *
- * Revision 1.9  2004/05/18 12:02:29  manolito
- * getActionURL and getResourceURL must not call encodeActionURL or encodeResourceURL
- *
- * Revision 1.8  2004/05/12 01:50:47  o_rossmueller
- * fix #951896: add state params once is enough ;-)
- *
- * Revision 1.7  2004/05/12 01:41:32  o_rossmueller
- * fix #951896: added state params to link URLs for ALLOW_JAVASCRIPT=false
- *
- * Revision 1.6  2004/05/04 06:36:21  manolito
- * Bugfix #947302
- *
- * Revision 1.5  2004/04/29 19:34:38  o_rossmueller
- * javascript for 'target' attribute handling
- *
- * Revision 1.4  2004/04/27 10:32:24  manolito
- * clear hidden inputs javascript function
- *
- * Revision 1.3  2004/04/05 11:14:05  manolito
- * removed isVisibleOnUserRole
- *
- * Revision 1.2  2004/03/31 14:50:34  manolito
- * bug fix
- *
- * Revision 1.1  2004/03/31 11:58:44  manolito
- * custom component refactoring
- *
  */
 public abstract class HtmlLinkRendererBase
     extends HtmlRenderer
@@ -327,10 +268,10 @@ public abstract class HtmlLinkRendererBase
             onClick.append(target);
             onClick.append("';");
         }
-		
+
 		// onSubmit
 		onClick.append("if("+jsForm+".onsubmit){"+jsForm+".onsubmit();}");
-		
+
         //submit
         onClick.append(jsForm);
         onClick.append(".submit();return false;");  //return false, so that browser does not handle the click

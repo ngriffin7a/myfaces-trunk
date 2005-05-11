@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,31 +24,6 @@ import javax.faces.component.UIComponent;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.7  2005/02/18 17:19:29  matzew
- * added release() to tag clazzes.
- *
- * Revision 1.6  2004/10/13 11:51:01  matze
- * renamed packages to org.apache
- *
- * Revision 1.5  2004/07/01 22:01:11  mwessendorf
- * ASF switch
- *
- * Revision 1.4  2004/06/22 15:31:00  prophecyslides
- * Added readonly attribute
- *
- * Revision 1.3  2004/04/16 15:13:31  manolito
- * validator attribute support and MethodBinding invoke exception handling fixed
- *
- * Revision 1.2  2004/04/05 11:04:56  manolito
- * setter for renderer type removed, no more default renderer type needed
- *
- * Revision 1.1  2004/03/30 13:41:20  royalts
- * no message
- *
- * Revision 1.2  2004/03/30 12:16:08  manolito
- * header comments
- *
  */
 public abstract class HtmlInputTagBase
     extends HtmlComponentTagBase
@@ -74,7 +49,7 @@ public abstract class HtmlInputTagBase
         _valueChangeListener=null;
         _readonly=null;
     }
-    
+
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);

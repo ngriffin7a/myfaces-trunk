@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,42 +40,6 @@ import java.util.Set;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.16  2005/02/11 16:03:00  mmarinschek
- * solve bug in tabbed panel when datatable was displayed not on tab, but at the bottom of the datatable...
- *
- * Revision 1.15  2005/02/08 18:01:01  svieujot
- * Typo.
- *
- * Revision 1.14  2005/01/18 22:43:05  svieujot
- * Fix some bugs where converter wasn't used to determine selected values.
- * This caused for examples the list, checkbox and radio based components to bug when the backing bean value type is a primitive.
- *
- * Revision 1.13  2005/01/07 01:54:36  svieujot
- * radioRenderer wasn't looking at the submitted value.
- *
- * Revision 1.9 2004/10/13 11:51:01 matze renamed packages to org.apache
- * 
- * Revision 1.8 2004/07/01 22:00:56 mwessendorf ASF switch
- * 
- * Revision 1.7 2004/06/21 23:23:37 o_rossmueller fix #976411: removed </input>
- * tag for selectMultiCheckbox fix #972165: also check for readonly and also
- * check for selectMultiCheckbox
- * 
- * Revision 1.6 2004/06/04 00:26:16 o_rossmueller modified renderes to comply
- * with JSF 1.1
- * 
- * Revision 1.5 2004/05/18 14:31:39 manolito user role support completely moved
- * to components source tree
- * 
- * Revision 1.4 2004/05/05 18:03:00 o_rossmueller fix #948110: render span
- * element for styleClass
- * 
- * Revision 1.3 2004/04/02 13:57:13 manolito extended HtmlSelectManyCheckbox
- * with layout "spread" and custom Checkbox component
- * 
- * Revision 1.2 2004/04/02 13:37:49 manolito no message
- *  
  */
 public class HtmlCheckboxRendererBase extends HtmlRenderer {
     private static final Log log = LogFactory
@@ -150,7 +114,7 @@ public class HtmlCheckboxRendererBase extends HtmlRenderer {
                 .iterator(); it.hasNext();) {
             SelectItem selectItem = (SelectItem) it.next();
             Object itemValue = selectItem.getValue(); // TODO : Check here for getSubmittedValue. Look at RendererUtils.getValue
-            
+
             String itemStrValue;
             if (converter == null) {
                 itemStrValue = itemValue.toString();

@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,35 +32,31 @@ import org.apache.commons.logging.LogFactory;
  * </ol>
  *
  * @author  <a href="mailto:Jiri.Zaloudek@ivancice.cz">Jiri Zaloudek</a> (latest modification by $Author$)
- * @version $Revision$ $Date$ 
- * $Log$
- * Revision 1.1  2004/12/30 09:37:27  matzew
- * added a new RenderKit for WML. Thanks to Jirí Žaloudek
- *
+ * @version $Revision$ $Date$
  */
 public abstract class ValueHolderTagBase extends ComponentTagBase {
     private static Log log = LogFactory.getLog(ValueHolderTagBase.class);
-    
+
     /* properties */
     private String converter = null;
     private String value = null;
-    
+
     /** Creates a new instance of ValueTag */
     public ValueHolderTagBase() {
         super();
     }
-    
+
     public abstract String getRendererType();
-    
+
     public void release() {
         super.release();
         this.converter = null;
         this.value = null;
     }
-    
+
     protected void setProperties(UIComponent component) {
         super.setProperties(component);
-        
+
         if (converter != null) {
             if (component instanceof ValueHolder) {
                 if (isValueReference(converter)) {
@@ -75,10 +71,10 @@ public abstract class ValueHolderTagBase extends ComponentTagBase {
             }
             else {
                 log.error("Component " + component.getClass().getName() + " is no ValueHolder, cannot set 'converter' attribute.");
-            }            
+            }
         }
-        
-        
+
+
         if (value != null) {
             if (component instanceof ValueHolder) {
                 if (isValueReference(value)) {
@@ -86,14 +82,14 @@ public abstract class ValueHolderTagBase extends ComponentTagBase {
                     component.setValueBinding("value", vb);
                 } else
                     ((ValueHolder)component).setValue(value);
-                
+
             }
             else log.error("Component " + component.getClass().getName() + " is no ValueHolder, cannot set 'value' attribute.");
         }
-        
+
     }
     // ----------------------------------------------------- Getters and Setters
-    
+
     /**
      * Getter for property converter.
      * @return value of property converter.
@@ -101,15 +97,15 @@ public abstract class ValueHolderTagBase extends ComponentTagBase {
     public String getConverter() {
         return converter;
     }
-    
+
     /**
      * Setter for property converter.
      * @param converter new value of property converter.
      */
     public void setConverter(String converter) {
         this.converter = converter;
-    }    
-    
+    }
+
     /**
      * Getter for property value.
      * @return value of property value.
@@ -117,12 +113,12 @@ public abstract class ValueHolderTagBase extends ComponentTagBase {
     public String getValue() {
         return value;
     }
-    
+
     /**
      * Setter for property value.
      * @param value new value of property value.
      */
     public void setValue(String value) {
-        this.value = value;        
+        this.value = value;
     }
 }

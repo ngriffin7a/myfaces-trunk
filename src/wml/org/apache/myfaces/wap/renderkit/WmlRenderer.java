@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,17 +18,13 @@ package org.apache.myfaces.wap.renderkit;
 import javax.faces.component.NamingContainer;
 import javax.faces.render.Renderer;
 /**
- * 
- * @author  <a href="mailto:Jiri.Zaloudek@ivancice.cz">Jiri Zaloudek</a> (latest modification by $Author$)
- * @version $Revision$ $Date$ 
- * $Log$
- * Revision 1.1  2004/12/30 09:37:27  matzew
- * added a new RenderKit for WML. Thanks to Jirí Žaloudek
  *
+ * @author  <a href="mailto:Jiri.Zaloudek@ivancice.cz">Jiri Zaloudek</a> (latest modification by $Author$)
+ * @version $Revision$ $Date$
  */ 
 public class WmlRenderer extends Renderer {
-    
-    /** Converts the standard char separator (':') to underscore ('_'). 
+
+    /** Converts the standard char separator (':') to underscore ('_').
      *  The names of WML variables can consist of any combination of letters, digits, and underscores.
      */
     public String convertClientId(javax.faces.context.FacesContext context, String clientId) {
@@ -37,5 +33,5 @@ public class WmlRenderer extends Renderer {
         retValue = retValue.replace(NamingContainer.SEPARATOR_CHAR, '_');
 
         return (retValue);
-    }    
+    }
 }

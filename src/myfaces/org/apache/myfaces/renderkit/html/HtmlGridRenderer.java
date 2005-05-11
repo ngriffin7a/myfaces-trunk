@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,40 +33,6 @@ import java.util.Iterator;
 
 /**
  * X-CHECKED: tlddoc h:panelGrid 1.0 final
- *
- * $Log$
- * Revision 1.16  2004/12/23 13:03:08  mmarinschek
- * id's not rendered (or not conditionally rendered); changes in jslistener to support both ie and firefox now
- *
- * Revision 1.15  2004/11/21 12:39:09  mmarinschek
- * better Error handling
- *
- * Revision 1.14  2004/10/13 11:51:00  matze
- * renamed packages to org.apache
- *
- * Revision 1.13  2004/07/01 22:05:07  mwessendorf
- * ASF switch
- *
- * Revision 1.12  2004/06/17 03:57:14  dave0000
- * Fix order of nested if statements (columns <= 0 check) + misc
- *
- * Revision 1.11  2004/06/04 00:51:05  o_rossmueller
- * fixed NPE
- *
- * Revision 1.10  2004/06/03 23:02:14  o_rossmueller
- * fix for completion of last row
- *
- * Revision 1.9  2004/06/03 13:41:08  o_rossmueller
- * fix #962084: render rowClasses
- *
- * Revision 1.8  2004/03/31 13:43:29  royalts
- * no message
- *
- * Revision 1.7  2004/03/29 14:56:55  manolito
- * refactoring for implementation and non-standard component split
- *
- * Revision 1.6  2004/03/25 12:42:24  manolito
- * x-checked and corrected GridRenderer
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Thomas Spiegl

@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,48 +32,6 @@ import org.apache.commons.logging.LogFactory;
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.28  2004/10/13 11:51:01  matze
- * renamed packages to org.apache
- *
- * Revision 1.27  2004/07/16 17:46:26  royalts
- * moved org.apache.myfaces.webapp.webxml and org.apache.util.xml to share src-tree (needed WebXml for JspTilesViewHandlerImpl)
- *
- * Revision 1.26  2004/07/16 15:16:10  royalts
- * moved org.apache.myfaces.webapp.webxml and org.apache.util.xml to share src-tree (needed WebXml for JspTilesViewHandlerImpl)
- *
- * Revision 1.25  2004/07/07 08:34:57  mwessendorf
- * removed unused import-statements
- *
- * Revision 1.24  2004/07/07 00:25:08  o_rossmueller
- * tidy up config/confignew package (moved confignew classes to package config)
- *
- * Revision 1.23  2004/07/06 23:46:01  o_rossmueller
- * tidy up config/confignew package
- *
- * Revision 1.22  2004/07/01 22:05:11  mwessendorf
- * ASF switch
- *
- * Revision 1.21  2004/06/16 23:02:25  o_rossmueller
- * merged confignew_branch
- *
- * Revision 1.20.2.2  2004/06/16 02:07:24  o_rossmueller
- * get navigation rules from RuntimeConfig
- * refactored all remaining usages of MyFacesFactoryFinder to use RuntimeConfig
- *
- * Revision 1.20.2.1  2004/06/13 15:59:08  o_rossmueller
- * started integration of new config mechanism:
- * - factories
- * - components
- * - render kits
- * - managed beans + managed properties (no list/map initialization)
- *
- * Revision 1.20  2004/04/26 11:28:17  manolito
- * global navigation-rule with no from-view-id NPE bug
- *
- * Revision 1.19  2004/04/16 13:21:39  manolito
- * Weblogic startup issue
- *
  */
 public class StartupServletContextListener
         implements ServletContextListener

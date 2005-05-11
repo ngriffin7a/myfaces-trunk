@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,25 +35,6 @@ import java.util.zip.GZIPOutputStream;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.6  2004/10/13 11:51:00  matze
- * renamed packages to org.apache
- *
- * Revision 1.5  2004/07/01 22:05:07  mwessendorf
- * ASF switch
- *
- * Revision 1.4  2004/05/12 01:41:31  o_rossmueller
- * fix #951896: added state params to link URLs for ALLOW_JAVASCRIPT=false
- *
- * Revision 1.3  2004/04/13 08:57:00  manolito
- * commons codec
- *
- * Revision 1.3 2004/04/09 21:13:10 Sylvain Vieujot
- * Replace oreilly's Base64 encoder and decoder with Jakarta Commons Codec  
- * 
- * Revision 1.2  2004/04/06 10:20:26  manolito
- * no state restoring for different viewId
- *
  */
 public class HtmlResponseStateManager
         extends MyfacesResponseStateManager

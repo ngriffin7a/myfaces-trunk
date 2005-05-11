@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,25 +37,6 @@ import java.util.List;
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
- *
- *
- *          $Log$
- *          Revision 1.9  2005/03/29 11:40:50  matzew
- *          added new crosstable component (x:columns). Contributed by Mathias Broekelmann
- *
- *          Revision 1.8  2005/02/11 16:03:00  mmarinschek
- *          solve bug in tabbed panel when datatable was displayed not on tab, but at the bottom of the datatable...
- *
- *          Revision 1.7  2005/01/19 11:49:20  matzew
- *          MYFACES-83. Refactored HtmlTableRendererBase supported by "power-user" Heath Borders-Wing
- *
- *          Revision 1.6  2004/12/23 13:03:09  mmarinschek
- *          id's not rendered (or not conditionally rendered); changes in jslistener to support both ie and firefox now
- *
- *          Revision 1.5  2004/11/26 12:14:10  oros
- *          MYFACES-8: applied tree table patch by David Le Strat
- *
- * 
  */
 public class HtmlTableRendererBase extends HtmlRenderer
 {
@@ -178,7 +159,7 @@ public class HtmlTableRendererBase extends HtmlRenderer
         }
         writer.endElement(HTML.TBODY_ELEM);
     }
-    
+
     /**
      * Renders the body of a given <code>UIColumn</code> (everything but the header and footer facets).
      * @param facesContext the <code>FacesContext</code>.
@@ -201,11 +182,11 @@ public class HtmlTableRendererBase extends HtmlRenderer
 		{
 			writer.writeAttribute(HTML.CLASS_ATTR, columnStyleClass, null);
 		}
-		
+
         RendererUtils.renderChild(facesContext, component);
         writer.endElement(HTML.TD_ELEM);
 	}
-    
+
     /**
      * Renders the start of a new row of body content.
      * @param facesContext the <code>FacesContext</code>.
@@ -226,7 +207,7 @@ public class HtmlTableRendererBase extends HtmlRenderer
             writer.writeAttribute(HTML.CLASS_ATTR, rowStyleClass, null);
         }
 	}
-	
+
 	/**
      * Renders the end of a row of body content.
      * @param facesContext the <code>FacesContext</code>.
@@ -403,7 +384,7 @@ public class HtmlTableRendererBase extends HtmlRenderer
 	 * @param facesContext the <code>FacesContext</code>.
 	 * @param writer the <code>ResponseWriter</code>.
 	 * @param component the <code>UIComponent</code> for whom a table is being rendered.
-	 * @param headerStyleClass the styleClass of the header 
+	 * @param headerStyleClass the styleClass of the header
 	 * @throws IOException if an exception occurs.
 	 */
     protected void renderColumnHeaderRow(FacesContext facesContext, ResponseWriter writer, UIComponent component,
@@ -418,7 +399,7 @@ public class HtmlTableRendererBase extends HtmlRenderer
 	 * @param facesContext the <code>FacesContext</code>.
 	 * @param writer the <code>ResponseWriter</code>.
 	 * @param component the <code>UIComponent</code> for whom a table is being rendered.
-	 * @param footerStyleClass the styleClass of the footerStyleClass 
+	 * @param footerStyleClass the styleClass of the footerStyleClass
 	 * @throws IOException if an exception occurs.
 	 */
     protected void renderColumnFooterRow(FacesContext facesContext, ResponseWriter writer, UIComponent component,
@@ -450,7 +431,7 @@ public class HtmlTableRendererBase extends HtmlRenderer
         writer.endElement(HTML.TR_ELEM);
     }
 
-    private void renderColumnHeaderOrFooterRow(FacesContext facesContext, ResponseWriter writer, 
+    private void renderColumnHeaderOrFooterRow(FacesContext facesContext, ResponseWriter writer,
             UIComponent component, String styleClass, boolean header) throws IOException
     {
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
@@ -465,12 +446,12 @@ public class HtmlTableRendererBase extends HtmlRenderer
               {
                   if (header)
                   {
-                      renderColumnHeaderCell(facesContext, writer, uiComponent, 
+                      renderColumnHeaderCell(facesContext, writer, uiComponent,
                           ((UIColumn) uiComponent).getHeader(), styleClass, 0);
                   }
                   else
                   {
-                      renderColumnFooterCell(facesContext, writer, uiComponent, 
+                      renderColumnFooterCell(facesContext, writer, uiComponent,
                           ((UIColumn) uiComponent).getFooter(), styleClass, 0);
                   }
               }
@@ -508,7 +489,7 @@ public class HtmlTableRendererBase extends HtmlRenderer
      * will be wrapped.
      * @throws IOException
      */
-    protected void renderColumnHeaderCell(FacesContext facesContext, ResponseWriter writer, UIColumn uiColumn, 
+    protected void renderColumnHeaderCell(FacesContext facesContext, ResponseWriter writer, UIColumn uiColumn,
             String headerStyleClass, int colspan) throws IOException
     {
       renderColumnHeaderCell(facesContext, writer, uiColumn, uiColumn.getHeader(), headerStyleClass, colspan);
@@ -525,7 +506,7 @@ public class HtmlTableRendererBase extends HtmlRenderer
 	 * will be wrapped.
 	 * @throws IOException
 	 */
-    protected void renderColumnHeaderCell(FacesContext facesContext, ResponseWriter writer, UIComponent uiComponent, 
+    protected void renderColumnHeaderCell(FacesContext facesContext, ResponseWriter writer, UIComponent uiComponent,
             UIComponent facet, String headerStyleClass, int colspan) throws IOException
     {
         writer.startElement(HTML.TH_ELEM, uiComponent);
@@ -554,12 +535,12 @@ public class HtmlTableRendererBase extends HtmlRenderer
      * will be wrapped.
      * @throws IOException
      */
-    protected void renderColumnFooterCell(FacesContext facesContext, ResponseWriter writer, UIColumn uiColumn, 
+    protected void renderColumnFooterCell(FacesContext facesContext, ResponseWriter writer, UIColumn uiColumn,
         String footerStyleClass, int colspan) throws IOException
-    {      
+    {
       renderColumnFooterCell(facesContext, writer, uiColumn, uiColumn.getFooter(), footerStyleClass, colspan);
     }
-    
+
 	/**
 	 * Renders the footer facet for the given <code>UIColumn</code>.
 	 * @param facesContext the <code>FacesContext</code>.
@@ -571,7 +552,7 @@ public class HtmlTableRendererBase extends HtmlRenderer
 	 * will be wrapped.
 	 * @throws IOException
 	 */
-    protected void renderColumnFooterCell(FacesContext facesContext, ResponseWriter writer, UIComponent uiComponent, 
+    protected void renderColumnFooterCell(FacesContext facesContext, ResponseWriter writer, UIComponent uiComponent,
         UIComponent facet, String footerStyleClass, int colspan) throws IOException
     {
         writer.startElement(HTML.TD_ELEM, uiComponent);

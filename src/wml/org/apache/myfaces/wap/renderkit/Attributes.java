@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,11 +18,7 @@ package org.apache.myfaces.wap.renderkit;
 /**
  * Interface define attribute names for all JSF tags.
  * @author  <a href="mailto:Jiri.Zaloudek@ivancice.cz">Jiri Zaloudek</a> (latest modification by $Author$)
- * @version $Revision$ $Date$ 
- * $Log$
- * Revision 1.1  2004/12/30 09:37:27  matzew
- * added a new RenderKit for WML. Thanks to Jirí Žaloudek
- *
+ * @version $Revision$ $Date$
  */
 public interface Attributes {
     /** common attributes */
@@ -34,7 +30,7 @@ public interface Attributes {
     final public static String FOOTER = "footer";
     final public static String RENDERED = "rendered";
     final public static String VALUE = "value";
-    
+
     final public static String ALIGN = "align";
     final public static String ALT = "alt";
     final public static String CLASS = "class";
@@ -61,7 +57,7 @@ public interface Attributes {
     final public static String VSPACE = "vspace";
     final public static String WIDTH = "width";
     final public static String XML_LANG = "xml:lang";
-    
+
     /** tag names */
     final public static String A = "a";
     final public static String ANCHOR = "anchor";
@@ -79,11 +75,11 @@ public interface Attributes {
     final public static String TABLE = "table";
     final public static String TD = "td";
     final public static String TR = "tr";
-    
+
     /** hidden fields */
     final public static String POSTFIX_SUBMITED = "_submited";
     final public static String POSTFIX_ACTIVATED = "_activated";
-    
+
     /** constants */
     final public static String SELECT_MANY_SEPARATOR = ";";
     final public static String POST = "post";

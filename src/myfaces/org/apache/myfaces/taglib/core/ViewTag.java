@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,25 +42,6 @@ import java.util.Locale;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.16  2004/10/13 11:51:00  matze
- * renamed packages to org.apache
- *
- * Revision 1.15  2004/09/08 09:30:01  manolito
- * moved javascript detection to ResponseWriter
- *
- * Revision 1.14  2004/08/23 05:13:38  dave0000
- * Externalize String-to-Locale conversion
- *
- * Revision 1.13  2004/08/05 22:10:44  o_rossmueller
- * EXPERIMENTAL: JavaScript detection
- *
- * Revision 1.12  2004/07/01 22:05:03  mwessendorf
- * ASF switch
- *
- * Revision 1.11  2004/05/12 07:57:45  manolito
- * Log in javadoc header
- *
  */
 public class ViewTag
         extends UIComponentBodyTag
@@ -237,7 +218,7 @@ public class ViewTag
                 else
                 {
                     throw new IllegalArgumentException(
-                        "Locale or String class expected. Expression: " + _locale 
+                        "Locale or String class expected. Expression: " + _locale
                         + ". Return class: " + localeValue.getClass().getName());
                 }
             }

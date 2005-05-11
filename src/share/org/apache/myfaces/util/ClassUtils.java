@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,43 +32,6 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.11  2005/01/19 13:18:04  mmarinschek
- * better logging of component information
- *
- * Revision 1.10  2004/10/13 11:51:01  matze
- * renamed packages to org.apache
- *
- * Revision 1.9  2004/10/05 22:34:21  dave0000
- * bug 1021656 with related improvements
- *
- * Revision 1.8  2004/08/10 10:57:38  manolito
- * fixed StackOverflow in ClassUtils and cleaned up ClassUtils methods
- *
- * Revision 1.7  2004/08/05 22:55:51  o_rossmueller
- * fix: resolve primitive classes
- *
- * Revision 1.6  2004/07/13 04:59:25  tinytoony
- * primitive types where not retrieved (call to javaTypeToClass not used)
- *
- * Revision 1.5  2004/07/13 04:56:55  tinytoony
- * primitive types where not retrieved (call to javaTypeToClass not used)
- *
- * Revision 1.4  2004/07/01 22:01:13  mwessendorf
- * ASF switch
- *
- * Revision 1.3  2004/05/17 14:28:29  manolito
- * new configuration concept
- *
- * Revision 1.2  2004/05/11 04:24:10  dave0000
- * Bug 943166: add value coercion to ManagedBeanConfigurator
- *
- * Revision 1.1  2004/03/31 11:58:45  manolito
- * custom component refactoring
- *
- * Revision 1.12  2004/03/30 13:27:50  manolito
- * new getResourceAsStream method
- *
  */
 public class ClassUtils
 {
@@ -76,7 +39,7 @@ public class ClassUtils
 
     private static final Log log                  = LogFactory.getLog(ClassUtils.class);
     private static final Logger COERCION_LOGGER   = new Logger(System.out);
-    
+
     public static final Class BOOLEAN_ARRAY_CLASS = boolean[].class;
     public static final Class BYTE_ARRAY_CLASS    = byte[].class;
     public static final Class CHAR_ARRAY_CLASS    = char[].class;
@@ -118,7 +81,7 @@ public class ClassUtils
         COMMON_TYPES.put("java.lang.Float", Float.class);
         COMMON_TYPES.put("java.lang.Double", Double.class);
         COMMON_TYPES.put("java.lang.String", String.class);
-        
+
         COMMON_TYPES.put("byte[]", BYTE_ARRAY_CLASS);
         COMMON_TYPES.put("char[]", CHAR_ARRAY_CLASS);
         COMMON_TYPES.put("double[]", DOUBLE_ARRAY_CLASS);
@@ -139,7 +102,7 @@ public class ClassUtils
         COMMON_TYPES.put("java.lang.String[]", STRING_OBJECT_ARRAY_CLASS);
         // array of void is not a valid type
     }
-    
+
     /** utility class, do not instantiate */
     private ClassUtils()
     {
@@ -152,7 +115,7 @@ public class ClassUtils
      * Tries a Class.forName with the context class loader of the current thread first and
      * automatically falls back to the ClassUtils class loader (i.e. the loader of the
      * myfaces.jar lib) if necessary.
-     * 
+     *
      * @param type fully qualified name of a non-primitive non-array class
      * @return the corresponding Class
      * @throws NullPointerException if type is null
@@ -182,7 +145,7 @@ public class ClassUtils
     /**
      * Same as {@link #classForName(String)}, but throws a RuntimeException
      * (FacesException) instead of a ClassNotFoundException.
-     * 
+     *
      * @return the corresponding Class
      * @throws NullPointerException if type is null
      * @throws FacesException if class not found
@@ -204,7 +167,7 @@ public class ClassUtils
     /**
      * Similar as {@link #classForName(String)}, but also supports primitive types
      * and arrays as specified for the JavaType element in the JavaServer Faces Config DTD.
-     * 
+     *
      * @param type fully qualified class name or name of a primitive type, both optionally
      *             followed by "[]" to indicate an array type
      * @return the corresponding Class
@@ -240,7 +203,7 @@ public class ClassUtils
     /**
      * Same as {@link #javaTypeToClass(String)}, but throws a RuntimeException
      * (FacesException) instead of a ClassNotFoundException.
-     * 
+     *
      * @return the corresponding Class
      * @throws NullPointerException if type is null
      * @throws FacesException if class not found
@@ -316,19 +279,19 @@ public class ClassUtils
         catch (ELException e)
         {
             String message = "Cannot coerce " + value.getClass().getName()
-                + " to " + desiredClass.getName(); 
+                + " to " + desiredClass.getName();
             log.error(message, e);
             throw new FacesException(message, e);
         }
     }
 
     /**
-     * Gets the ClassLoader associated with the current thread.  Returns the class loader associated with 
+     * Gets the ClassLoader associated with the current thread.  Returns the class loader associated with
      * the specified default object if no context loader is associated with the current thread.
-     * 
+     *
      * @param defaultObject The default object to use to determine the class loader (if none associated with current thread.)
      * @return ClassLoader
-     */    
+     */
     protected static ClassLoader getCurrentLoader(Object defaultObject)
     {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();

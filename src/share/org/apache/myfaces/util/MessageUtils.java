@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,19 +36,6 @@ import java.util.ResourceBundle;
  * @author Manfred Geiler
  * @author Sean Schofield
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.4  2004/10/13 11:51:01  matze
- * renamed packages to org.apache
- *
- * Revision 1.3  2004/08/17 12:15:34  manolito
- * NPE when there was no ViewRoot
- *
- * Revision 1.2  2004/07/01 22:01:13  mwessendorf
- * ASF switch
- *
- * Revision 1.1  2004/03/30 16:59:47  manolito
- * MessageFactory removed, MessageUtils moved to util in src/share
- *
  */
 public class MessageUtils
 {
@@ -84,7 +71,7 @@ public class MessageUtils
     {
         FacesMessage message = getMessage(facesContext, messageId, args);
         message.setSeverity(severity);
-        
+
         return message;
     }
 
@@ -120,10 +107,10 @@ public class MessageUtils
         facesContext.addMessage(forClientId,
                                 getMessage(severity, messageId, args, facesContext));
     }
- 
+
     /**
      * Uses <code>MessageFormat</code> and the supplied parameters to fill in the param placeholders in the String.
-     * 
+     *
      * @param locale The <code>Locale</code> to use when performing the substitution.
      * @param msgtext The original parameterized String.
      * @param params The params to fill in the String with.
@@ -166,12 +153,12 @@ public class MessageUtils
         String summary = null;
         String detail = null;
         String bundleName = getApplication().getMessageBundle();
-        ResourceBundle bundle = null;        
-        
+        ResourceBundle bundle = null;
+
         if (bundleName != null)
         {
             bundle = ResourceBundle.getBundle(bundleName, locale);
-            try 
+            try
             {
                 summary = bundle.getString(messageId);
             }
@@ -185,7 +172,7 @@ public class MessageUtils
             {
                 throw new NullPointerException();
             }
-            
+
             try
             {
                 summary = bundle.getString(messageId);
@@ -197,7 +184,7 @@ public class MessageUtils
         {
             return null;
         }
-        
+
         if (bundle == null)
         {
             throw new NullPointerException("Unable to locate ResrouceBundle: bundle is null");

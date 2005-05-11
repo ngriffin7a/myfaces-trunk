@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,61 +23,6 @@ import org.apache.myfaces.util.ArrayUtils;
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.22  2005/02/28 20:40:15  svieujot
- * closed MYFACES-112
- *
- * Revision 1.21  2005/02/16 00:50:37  oros
- * SF issue #1043331: replaced all &nbsp; by the corresponding numeric entity &#160; so safari users will be happy, too, with MyFaces output
- *
- * Revision 1.20  2004/12/27 04:11:11  mmarinschek
- * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
- *
- * Revision 1.19  2004/12/04 03:22:45  svieujot
- * Bugfix for BR_ELEM
- *
- * Revision 1.18  2004/12/02 15:34:43  svieujot
- * Add iframe attributes
- *
- * Revision 1.17  2004/12/02 15:22:06  svieujot
- * Add IFRAME_ELEM
- *
- * Revision 1.16  2004/12/02 05:03:14  svieujot
- * Add H1-6 elements
- *
- * Revision 1.15  2004/12/02 02:34:41  svieujot
- * Add a BUTTON_ELEM
- *
- * Revision 1.14  2004/11/08 03:43:20  bdudney
- * Added a div element. x:div to use, inserts a div with class or style attributes
- *
- * Revision 1.13  2004/10/13 11:51:01  matze
- * renamed packages to org.apache
- *
- * Revision 1.12  2004/08/09 08:43:29  manolito
- * bug #1004867 - h:message has duplicate attributes
- *
- * Revision 1.11  2004/07/27 06:32:19  tinytoony
- * new calendar component as a popup
- *
- * Revision 1.10  2004/07/26 09:19:08  manolito
- * removed onclick from passthrough attributes for ButtonRenderer
- *
- * Revision 1.9  2004/07/01 22:00:56  mwessendorf
- * ASF switch
- *
- * Revision 1.8  2004/06/04 00:26:16  o_rossmueller
- * modified renderes to comply with JSF 1.1
- *
- * Revision 1.7  2004/05/29 10:19:55  mwessendorf
- * made the class FINAL, because has only one private const
- *
- * Revision 1.6  2004/05/18 14:31:39  manolito
- * user role support completely moved to components source tree
- *
- * Revision 1.5  2004/05/18 11:58:16  manolito
- * typing error fixed
- *
  */
 public final class HTML
 {
@@ -85,7 +30,7 @@ public final class HTML
     private HTML()
     {
         // disable instantiation
-    } 
+    }
 
     // Common attributes
     public static final String ALIGN_ATTR = "align";
@@ -96,7 +41,7 @@ public final class HTML
     public static final String WIDTH_ATTR = "width";
     public static final String READONLY_ATTR = "readonly";
     public static final String ACCEPT_ATTR = "accept";
-    
+
     // Common event handler attributes
     public static final String ONCLICK_ATTR     = "onclick";
     public static final String ONDBLCLICK_ATTR  = "ondblclick";
@@ -175,10 +120,10 @@ public final class HTML
             COMMON_FIELD_ATTRIBUTES_WITHOUT_DISABLED,
             new String[] {DISABLED_ATTR});
 
-    // Common Attributes    
-    public static final String[] COMMON_PASSTROUGH_ATTRIBUTES = 
+    // Common Attributes
+    public static final String[] COMMON_PASSTROUGH_ATTRIBUTES =
         (String[]) ArrayUtils.concat(
-            EVENT_HANDLER_ATTRIBUTES, 
+            EVENT_HANDLER_ATTRIBUTES,
             UNIVERSAL_ATTRIBUTES);
     public static final String[] COMMON_PASSTROUGH_ATTRIBUTES_WITHOUT_STYLE =
         (String[]) ArrayUtils.concat(
@@ -325,11 +270,11 @@ public final class HTML
         (String[]) ArrayUtils.concat(
             BUTTON_ATTRIBUTES,
             COMMON_FIELD_PASSTROUGH_ATTRIBUTES_WITHOUT_DISABLED_AND_ONCLICK);
-    
+
     // <iframe>
     public static final String FRAMEBORDER_ATTR = "frameborder";
     public static final String SCROLLING_ATTR = "scrolling";
-    
+
     // <label>
     public static final String FOR_ATTR = "for";
     public static final String[] LABEL_ATTRIBUTES =

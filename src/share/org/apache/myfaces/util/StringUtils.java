@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,32 +28,6 @@ import java.util.ArrayList;
  *
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
- * 
- * $Log$
- * Revision 1.4  2004/10/13 11:51:01  matze
- * renamed packages to org.apache
- *
- * Revision 1.3  2004/08/23 05:15:32  dave0000
- * be user friendly, do not return null
- *
- * Revision 1.2  2004/08/20 07:16:09  manolito
- * moved StringUtils to share source tree
- *
- * Revision 1.1  2004/08/19 16:18:54  manolito
- * moved to share dir
- *
- *
- * old cvs log (myfaces dir):
- * 
- * Revision 1.9  2004/07/01 22:05:15  mwessendorf
- * ASF switch
- *
- * Revision 1.8  2004/06/17 03:51:22  dave0000
- * Use EMPTY_STRING_ARRAY from ArrayUtils
- *
- * Revision 1.7  2004/03/30 07:42:53  dave0000
- * minIndex()
- *
  */
 public class StringUtils
 {
@@ -61,7 +35,7 @@ public class StringUtils
     {
         // utility class, no instantiation
     }
-    
+
     //~ Methods ------------------------------------------------------------------------------------
 
     /**
@@ -299,13 +273,13 @@ public class StringUtils
 
         StringBuffer sb     = new StringBuffer(end - begin);
         int          begin_ = begin; // need begin later
-        for (; (end_ >= 0) && (end_ < end); 
+        for (; (end_ >= 0) && (end_ < end);
             end_ = str.indexOf(quote, begin_ = end_ + 2))
         {
             if (((end_ + 1) >= end) || (str.charAt(end_ + 1) != quote))
             {
                 throw new IllegalArgumentException(
-                    "Internal quote not doubled in string '" 
+                    "Internal quote not doubled in string '"
                     + str.substring(begin, end) + "'");
             }
 
@@ -355,7 +329,7 @@ public class StringUtils
         if ((str.length() < 2) || (str.charAt(_end) != quote))
         {
             throw new IllegalArgumentException(
-                "Closing quote missing in string '" 
+                "Closing quote missing in string '"
                 + substring(str, begin, end) + "'");
         }
 
@@ -377,7 +351,7 @@ public class StringUtils
         int          len     = repl.length();
         int          lendiff = with.length() - repl.length();
         StringBuffer out     =
-            new StringBuffer((lendiff <= 0) ? str.length() 
+            new StringBuffer((lendiff <= 0) ? str.length()
                 : (str.length() + (10 * lendiff)));
         for (; pos >= 0; pos = str.indexOf(repl, lastindex = pos + len))
         {
@@ -401,7 +375,7 @@ public class StringUtils
         int          len       = str.length();
         int          lendiff   = with.length() - 1;
         StringBuffer out       =
-            new StringBuffer((lendiff <= 0) ? str.length() 
+            new StringBuffer((lendiff <= 0) ? str.length()
                 : (str.length() + (10 * lendiff)));
         int          lastindex = 0;
         for (; pos >= 0; pos = str.indexOf(repl, lastindex = pos + 1))
@@ -505,7 +479,7 @@ public class StringUtils
                 if ((pos < len) && (str.charAt(pos) != separator))
                 {
                     throw new IllegalArgumentException(
-                        "Separator must follow closing quote in string '" 
+                        "Separator must follow closing quote in string '"
                         + str + "'");
                 }
             }
@@ -520,7 +494,7 @@ public class StringUtils
             }
 
             list.add(
-                quoted ? dequote(str, oldPos + 1, pos - 1, quote) 
+                quoted ? dequote(str, oldPos + 1, pos - 1, quote)
                     : substring(str, oldPos, pos));
         }
 
@@ -547,9 +521,9 @@ public class StringUtils
 
         int lastTokenIndex = 0;
 
-        // Step 1: how many substrings? 
+        // Step 1: how many substrings?
         //      We exchange double scan time for less memory allocation
-        for (int pos = str.indexOf(separator); 
+        for (int pos = str.indexOf(separator);
             pos >= 0; pos = str.indexOf(separator, pos + 1))
         {
             lastTokenIndex++;
@@ -596,7 +570,7 @@ public class StringUtils
             return ArrayUtils.EMPTY_STRING_ARRAY;
         }
 
-        // Step 1: how many substrings? 
+        // Step 1: how many substrings?
         //      We exchange double scan time for less memory allocation
         int tokenCount = 0;
         for (int pos = 0; pos < len; pos++)
@@ -623,7 +597,7 @@ public class StringUtils
                 if ((pos < len) && (str.charAt(pos) != separator))
                 {
                     throw new IllegalArgumentException(
-                        "Separator must follow closing quote in strng '" 
+                        "Separator must follow closing quote in strng '"
                         + str + "'");
                 }
             }
@@ -646,8 +620,8 @@ public class StringUtils
         // Step 2: allocate exact size array
         String[] list = new String[tokenCount];
 
-        // Step 3: retrieve substrings 
-        // Note: on this pass we do not check for correctness, 
+        // Step 3: retrieve substrings
+        // Note: on this pass we do not check for correctness,
         //       since we have already done so
         tokenCount--; // we want to stop one token short
 
@@ -669,7 +643,7 @@ public class StringUtils
                 if (str.charAt(pos) != separator)
                 {
                     throw new IllegalArgumentException(
-                        "Separator must follow closing quote in strng '" 
+                        "Separator must follow closing quote in strng '"
                         + str + "'");
                 }
             }
@@ -680,7 +654,7 @@ public class StringUtils
             }
 
             list[i] =
-                quoted ? dequote(str, oldPos + 1, pos - 1, quote) 
+                quoted ? dequote(str, oldPos + 1, pos - 1, quote)
                     : substring(str, oldPos, pos);
         }
 
@@ -713,20 +687,20 @@ public class StringUtils
 
         return strings;
     }
-    
-    /** 
+
+    /**
      * Returns the minimum index >= 0, if any
-     * 
+     *
      * <p>
      * Use to find the first of two characters in a string:<br>
      * <code>minIndex(s.indexOf('/'), indexOf('\'))</code>
-     * </p> 
-     * 
+     * </p>
+     *
      */
     public static int minIndex(int a, int b)
     {
-        return (a < 0) ? b 
-            : (b < 0) ? a 
+        return (a < 0) ? b
+            : (b < 0) ? a
                 : (a < b) ? a : b;
     }
 }

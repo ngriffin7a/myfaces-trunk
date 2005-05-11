@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,39 +33,35 @@ import org.apache.commons.logging.LogFactory;
  * </ol>
  *
  * @author  <a href="mailto:Jiri.Zaloudek@ivancice.cz">Jiri Zaloudek</a> (latest modification by $Author$)
- * @version $Revision$ $Date$ 
- * $Log$
- * Revision 1.1  2004/12/30 09:37:27  matzew
- * added a new RenderKit for WML. Thanks to Jirí Žaloudek
- *
+ * @version $Revision$ $Date$
  */
 public abstract class ActionSourceTagBase extends ComponentTagBase {
     private static Log log = LogFactory.getLog(ActionSourceTagBase.class);
-    
+
     /* properties */
     private String action = null;
     private String actionListener = null;
     private String immediate = null;
-    
+
     /** Creates a new instance of CommandTag */
     public ActionSourceTagBase() {
         super();
     }
-    
+
     public abstract String getRendererType();
-    
+
     public void release() {
         super.release();
         this.action = null;
         this.actionListener = null;
         this.immediate = null;
     }
-    
+
     protected void setProperties(UIComponent component) {
         super.setProperties(component);
-        
+
         Class[] mbParams = {ActionEvent.class};
-        
+
         if (action != null) {
             if (!(component instanceof ActionSource)) {
                 throw new IllegalArgumentException("Component " + component.getId() + " is no ActionSource, cannot set 'action' attribute.");
@@ -75,10 +71,10 @@ public abstract class ActionSourceTagBase extends ComponentTagBase {
                 mb = FacesContext.getCurrentInstance().getApplication().createMethodBinding(action, null);
             else
                 mb = new ConstantMethodBinding(action);
-            
+
             ((ActionSource)component).setAction(mb);
         }
-        
+
         if (actionListener != null) {
             if (!(component instanceof ActionSource)) {
                 throw new IllegalArgumentException("Component " + component.getId() + " is no ActionSource, cannot set 'actionListener' attribute.");
@@ -91,7 +87,7 @@ public abstract class ActionSourceTagBase extends ComponentTagBase {
                 log.error("Invalid expression " + actionListener);
             }
         }
-        
+
         if (immediate != null) {
             if (component instanceof ActionSource) {
                 if (isValueReference(immediate)) {
@@ -102,29 +98,29 @@ public abstract class ActionSourceTagBase extends ComponentTagBase {
                     Boolean imm = Boolean.valueOf(immediate);
                     ((ActionSource)component).setImmediate(imm.booleanValue());
                 }
-                
+
             }
             else log.error("Component " + component.getClass().getName() + " is no ActionSource, cannot set 'immediate' attribute.");
         }
     }
-    
+
     // ----------------------------------------------------- Getters and Setters
     public String getAction() {
         return action;
     }
-    
+
     public void setAction(String action) {
         this.action = action;
     }
-    
+
     public String getActionListener() {
         return actionListener;
     }
-    
+
     public void setActionListener(String actionListener) {
         this.actionListener = actionListener;
     }
-    
+
     /**
      * Getter for property immediate.
      * @return value of property immediate.
@@ -132,7 +128,7 @@ public abstract class ActionSourceTagBase extends ComponentTagBase {
     public String getImmediate() {
         return immediate;
     }
-    
+
     /**
      * Setter for property immediate.
      * @param converter new value of property immediate.

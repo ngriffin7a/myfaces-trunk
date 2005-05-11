@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,48 +19,44 @@ package org.apache.myfaces.wap.def;
  * Render a single message for a specific component.
  *
  * Set-up for Rendering
- * Obtain the "summary" and "detail" properties fromUIMessage component. If not present, keep the empty string as the value, respectively. Obtain the firstFacesMessage to render from the component, using the "for" property of the UIMessage. This will be the only message we render. 
+ * Obtain the "summary" and "detail" properties fromUIMessage component. If not present, keep the empty string as the value, respectively. Obtain the firstFacesMessage to render from the component, using the "for" property of the UIMessage. This will be the only message we render.
  *
  * Rendering
- * For the message renderer, we only render one row, for the first message. For the messages renderer, we render as many rows as we have messages. 
+ * For the message renderer, we only render one row, for the first message. For the messages renderer, we render as many rows as we have messages.
  *
- * @wapfaces.tag 
+ * @wapfaces.tag
  *       componentFamily="UIMessage"
  *       rendererType="MessagesRenderer"
  *       tagName="messages"
  *       tagBaseClass="org.apache.myfaces.wap.base.MessageTagBase"
  *       bodyContent="JSP"
- * 
- * @author  <a href="mailto:Jiri.Zaloudek@ivancice.cz">Jiri Zaloudek</a> (latest modification by $Author$)
- * @version $Revision$ $Date$ 
- * $Log$
- * Revision 1.1  2004/12/30 09:37:25  matzew
- * added a new RenderKit for WML. Thanks to Jirí Žaloudek
  *
- */ 
+ * @author  <a href="mailto:Jiri.Zaloudek@ivancice.cz">Jiri Zaloudek</a> (latest modification by $Author$)
+ * @version $Revision$ $Date$
+ */
 
 
 public class Messages extends javax.faces.component.UIMessage {
-        
+
     /**
-     * Flag indicating that only global messages (that is, messages not associated with any client identifier) are to be displayed. 
-     * Default value is "false". 
+     * Flag indicating that only global messages (that is, messages not associated with any client identifier) are to be displayed.
+     * Default value is "false".
      *
      * @wapfaces.attribute
      *     valueBinding="true"
      *     initValue="false"
      */
-    boolean globalOnly; 
+    boolean globalOnly;
 
     /**
-     * The type of layout markup to use when rendering error messages. Valid values are "table" (an WML table) and "list" 
-     * (records disjoin with &lt;br/&gt; element). If not specified, the default value is "list". 
+     * The type of layout markup to use when rendering error messages. Valid values are "table" (an WML table) and "list"
+     * (records disjoin with &lt;br/&gt; element). If not specified, the default value is "list".
      *
      * @wapfaces.attribute
      *     valueBinding="true"
      */
-    java.lang.String layout; 
-    
+    java.lang.String layout;
+
     // ============= ABSTARACT ATTRIBUTES ======================================
     /**
      * The component identifier for the associated component.
@@ -70,16 +66,16 @@ public class Messages extends javax.faces.component.UIMessage {
      *     inherit="true"
      */
     java.lang.String id;
-    
+
     /**
-     * Flag indicating whether or not this component should be rendered (during Render Response Phase), or processed on any subsequent form submit. 
+     * Flag indicating whether or not this component should be rendered (during Render Response Phase), or processed on any subsequent form submit.
      *
      * @wapfaces.attribute
      *     abstract="true"
      *     inherit="true"
      */
     boolean rendered;
-        
+
     /**
      * The value binding expression linking this component to a property in a backing bean.
      *
@@ -87,26 +83,26 @@ public class Messages extends javax.faces.component.UIMessage {
      *     abstract="true"
      *     inherit="true"
      */
-    java.lang.String binding; 
-    
+    java.lang.String binding;
+
      /**
-     * Flag indicating whether the summary portion of displayed messages should be included. Default value is "true". 
+     * Flag indicating whether the summary portion of displayed messages should be included. Default value is "true".
      *
      * @wapfaces.attribute
-     *     initValue="true" 
+     *     initValue="true"
      *     abstract="true"
      *     inherit="true"
      */
     boolean showDetail;
-    
+
      /**
-     * Flag indicating whether the summary portion of displayed messages should be included. Default value is "false". 
+     * Flag indicating whether the summary portion of displayed messages should be included. Default value is "false".
      *
      * @wapfaces.attribute
-     *     initValue="false" 
+     *     initValue="false"
      *     abstract="true"
      *     inherit="true"
      */
     boolean showSummary;
-    
+
 }

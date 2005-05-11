@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,21 +29,17 @@ import org.apache.myfaces.wap.renderkit.WmlRenderer;
 
 /**
  * @author  <a href="mailto:Jiri.Zaloudek@ivancice.cz">Jiri Zaloudek</a> (latest modification by $Author$)
- * @version $Revision$ $Date$ 
- * $Log$
- * Revision 1.1  2004/12/30 09:37:26  matzew
- * added a new RenderKit for WML. Thanks to Jirí Žaloudek
- *
+ * @version $Revision$ $Date$
  */
 public class FormRenderer extends WmlRenderer {
     private static Log log = LogFactory.getLog(FormRenderer.class);
-    
+
     /** Creates a new instance of FormRenderer */
     public FormRenderer() {
         super();
         log.debug("created object " + this.getClass().getName());
     }
-    
+
     public void encodeBegin(FacesContext context, UIComponent component) throws java.io.IOException {
         log.debug("encodeBegin(" + component.getId() + ")");
         if (context == null || component == null) {
@@ -51,14 +47,14 @@ public class FormRenderer extends WmlRenderer {
         }
         if (!component.isRendered()) return;
     }
-    
+
     public void encodeChildren(FacesContext context, UIComponent component) throws java.io.IOException {
         log.debug("encodeChildren(" + component.getId() + ")");
         if (context == null || component == null) {
             throw new NullPointerException();
         }
     }
-    
+
     public void encodeEnd(FacesContext context, UIComponent component) throws java.io.IOException {
         log.debug("encodeEnd(" + component.getId() + ")");
         if (context == null || component == null) {
@@ -69,26 +65,26 @@ public class FormRenderer extends WmlRenderer {
         // write state marker
         context.getApplication().getViewHandler().writeState(context);
     }
-    
-    
+
+
     public void decode(FacesContext context, UIComponent component) {
         log.debug("decode(" + component.getId() + ")");
         if (component == null ) throw new NullPointerException();
-        
+
         Map params = context.getExternalContext().getRequestParameterMap();
-        
+
         if (params.containsKey(component.getClientId(context) + Attributes.POSTFIX_SUBMITED)){
             ((UIForm)component).setSubmitted(true);
             log.debug("form submited");
         }
-        else{ ((UIForm)component).setSubmitted(false);        
+        else{ ((UIForm)component).setSubmitted(false);
              log.debug("form not submited");
         }
-        
+
         /* TODO: correct the Duplicate component ID bug */
-        //context.getViewRoot().setTransient(true); 
+        //context.getViewRoot().setTransient(true);
     }
-    
-    
-    
+
+
+
 }

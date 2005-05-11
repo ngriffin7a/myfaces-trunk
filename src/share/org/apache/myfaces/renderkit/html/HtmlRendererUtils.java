@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,80 +47,6 @@ import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.30  2005/03/22 12:25:30  tomsp
- * fixed bug in renderSelectOptions - looking for itemStrValue in lookupSet did not work
- *
- * Revision 1.29  2005/03/16 20:34:36  mmarinschek
- * fix for MYFACES-89, alien commit for Heath Borders
- *
- * Revision 1.28  2005/03/15 05:24:03  svieujot
- * Add a fallback textarea mode to the htmlEditor.
- *
- * Revision 1.27  2005/01/24 15:43:13  svieujot
- * Adjust comments.
- *
- * Revision 1.20 2004/10/13 11:51:01 matze
- * renamed packages to org.apache
- * 
- * Revision 1.19 2004/09/08 09:32:03 manolito MyfacesConfig moved to config
- * package
- * 
- * Revision 1.18 2004/08/09 11:47:09 manolito CSS style support also for non OL
- * or UL layout
- * 
- * Revision 1.17 2004/07/18 22:45:11 o_rossmueller fix #992668: convert values
- * to string for 'selected' comparision
- * 
- * Revision 1.16 2004/07/09 02:26:19 dave0000 cleanup
- * 
- * Revision 1.15 2004/07/01 22:00:57 mwessendorf ASF switch
- * 
- * Revision 1.14 2004/06/21 23:23:37 o_rossmueller fix #976411: removed </input>
- * tag for selectMultiCheckbox fix #972165: also check for readonly and also
- * check for selectMultiCheckbox
- * 
- * Revision 1.13 2004/06/17 00:35:50 o_rossmueller fix #972165: do not reset
- * disabled html checkboxes (the browser does not send a form value for disabled
- * checkboxes even if value=true)
- * 
- * Revision 1.12 2004/06/16 23:51:15 o_rossmueller fix #970747: force separate
- * end tag for empty select list
- * 
- * Revision 1.11 2004/06/03 12:57:03 o_rossmueller modified link renderer to use
- * one hidden field for all links according to 1.1 renderkit docs added
- * onclick=clear_XXX to button
- * 
- * Revision 1.10 2004/05/29 10:19:54 mwessendorf made the class FINAL, because
- * has only one private const
- * 
- * Revision 1.9 2004/05/18 14:31:39 manolito user role support completely moved
- * to components source tree
- * 
- * Revision 1.8 2004/05/03 11:34:27 manolito bug #945118 (Checkbox session
- * state) fixed
- * 
- * Revision 1.7 2004/04/30 09:11:38 manolito no message
- * 
- * Revision 1.6 2004/04/29 19:34:38 o_rossmueller javascript for 'target'
- * attribute handling
- * 
- * Revision 1.5 2004/04/29 14:25:23 manolito javascript function name bugfix
- * 
- * Revision 1.4 2004/04/27 10:32:24 manolito clear hidden inputs javascript
- * function
- * 
- * Revision 1.3 2004/04/06 15:34:12 manolito decode methods must not set
- * submitted value to null
- * 
- * Revision 1.2 2004/04/01 12:43:18 manolito html nesting bug fixed
- * 
- * Revision 1.1 2004/03/29 14:57:00 manolito refactoring for implementation and
- * non-standard component split
- * 
- * Revision 1.17 2004/03/26 13:39:14 manolito added javascript 'return false' to
- * onClick attribute in render link method
- *  
  */
 public final class HtmlRendererUtils {
     private static final Log log = LogFactory.getLog(HtmlRendererUtils.class);
@@ -138,7 +64,7 @@ public final class HtmlRendererUtils {
 
     /**
      * X-CHECKED: tlddoc h:inputText
-     * 
+     *
      * @param facesContext
      * @param component
      */
@@ -168,7 +94,7 @@ public final class HtmlRendererUtils {
 
     /**
      * X-CHECKED: tlddoc h:selectBooleanCheckbox
-     * 
+     *
      * @param facesContext
      * @param component
      */
@@ -221,7 +147,7 @@ public final class HtmlRendererUtils {
 
     /**
      * X-CHECKED: tlddoc h:selectManyListbox
-     * 
+     *
      * @param facesContext
      * @param component
      */
@@ -251,7 +177,7 @@ public final class HtmlRendererUtils {
 
     /**
      * X-CHECKED: tlddoc h:selectManyListbox
-     * 
+     *
      * @param facesContext
      * @param component
      */
@@ -276,7 +202,7 @@ public final class HtmlRendererUtils {
             if(!isDisabledOrReadOnly(component))
             {
                 ((EditableValueHolder) component).setSubmittedValue( RendererUtils.EMPTY_STRING );
-                // Necessary for list with no selected item 
+                // Necessary for list with no selected item
             }
         }
     }
@@ -285,27 +211,27 @@ public final class HtmlRendererUtils {
      * public static void renderCheckbox(FacesContext facesContext, UIComponent
      * uiComponent, String value, String label, boolean checked) throws
      * IOException { String clientId = uiComponent.getClientId(facesContext);
-     * 
+     *
      * ResponseWriter writer = facesContext.getResponseWriter();
-     * 
+     *
      * writer.startElement(HTML.INPUT_ELEM, uiComponent);
      * writer.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_CHECKBOX, null);
      * writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
      * writer.writeAttribute(HTML.ID_ATTR, clientId, null);
-     * 
+     *
      * if (checked) { writer.writeAttribute(HTML.CHECKED_ATTR,
      * HTML.CHECKED_ATTR, null); }
-     * 
+     *
      * if ((value != null) && (value.length() > 0)) {
      * writer.writeAttribute(HTML.VALUE_ATTR, value, null); }
-     * 
+     *
      * renderHTMLAttributes(writer, uiComponent,
      * HTML.INPUT_PASSTHROUGH_ATTRIBUTES); renderDisabledOnUserRole(writer,
      * uiComponent, facesContext);
-     * 
+     *
      * if ((label != null) && (label.length() > 0)) {
      * writer.write(HTML.NBSP_ENTITY); writer.writeText(label, null); }
-     * 
+     *
      * writer.endElement(HTML.INPUT_ELEM); }
      */
 
@@ -486,27 +412,27 @@ public final class HtmlRendererUtils {
      * public static void renderRadio(FacesContext facesContext, UIInput
      * uiComponent, String value, String label, boolean checked) throws
      * IOException { String clientId = uiComponent.getClientId(facesContext);
-     * 
+     *
      * ResponseWriter writer = facesContext.getResponseWriter();
-     * 
+     *
      * writer.startElement(HTML.INPUT_ELEM, uiComponent);
      * writer.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_RADIO, null);
      * writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
      * writer.writeAttribute(HTML.ID_ATTR, clientId, null);
-     * 
+     *
      * if (checked) { writer.writeAttribute(HTML.CHECKED_ATTR,
      * HTML.CHECKED_ATTR, null); }
-     * 
+     *
      * if ((value != null) && (value.length() > 0)) {
      * writer.writeAttribute(HTML.VALUE_ATTR, value, null); }
-     * 
+     *
      * renderHTMLAttributes(writer, uiComponent,
      * HTML.INPUT_PASSTHROUGH_ATTRIBUTES); renderDisabledOnUserRole(writer,
      * uiComponent, facesContext);
-     * 
+     *
      * if ((label != null) && (label.length() > 0)) {
      * writer.write(HTML.NBSP_ENTITY); writer.writeText(label, null); }
-     * 
+     *
      * writer.endElement(HTML.INPUT_ELEM); }
      */
 
@@ -540,7 +466,7 @@ public final class HtmlRendererUtils {
             writer.writeAttribute(htmlAttrName, value, componentProperty);
             return true;
         }
-        
+
         return false;
     }
 
@@ -672,7 +598,7 @@ public final class HtmlRendererUtils {
      * to clear the hidden inputs. This is necessary because on a browser back,
      * each hidden input still has it's old value (browser cache!) and therefore
      * a new submit would cause the according action once more!
-     * 
+     *
      * @param writer
      * @param formName
      * @param dummyFormParams
@@ -727,7 +653,7 @@ public final class HtmlRendererUtils {
 
     /**
      * Prefixes the given String with "clear_" and removes special characters
-     * 
+     *
      * @param formName
      * @return
      */

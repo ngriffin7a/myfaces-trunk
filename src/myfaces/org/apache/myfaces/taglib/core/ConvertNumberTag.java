@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,25 +26,6 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 
 /**
- * $Log$
- * Revision 1.7  2004/11/22 16:13:08  bdudney
- * added code to make sure the converterId is set in WebLogic8.1sp3.
- *
- * Revision 1.6  2004/10/13 11:51:00  matze
- * renamed packages to org.apache
- *
- * Revision 1.5  2004/07/01 22:05:03  mwessendorf
- * ASF switch
- *
- * Revision 1.4  2004/06/27 19:26:18  mwessendorf
- * added default value, needed by jsf-spec
- *
- * Revision 1.3  2004/06/26 00:34:23  o_rossmueller
- * fix #979039: default type = number for convertNumber
- *
- * Revision 1.2  2004/03/26 11:47:10  manolito
- * NPE fixed
- *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -123,7 +104,7 @@ public class ConvertNumberTag
         _type = type;
     }
 
-    public void setPageContext(PageContext context) 
+    public void setPageContext(PageContext context)
     {
         super.setPageContext(context);
         setConverterId(NumberConverter.CONVERTER_ID);

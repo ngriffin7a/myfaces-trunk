@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,54 +29,50 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * @author  <a href="mailto:Jiri.Zaloudek@ivancice.cz">Jiri Zaloudek</a> (latest modification by $Author$)
- * @version $Revision$ $Date$ 
- * $Log$
- * Revision 1.1  2004/12/30 09:37:27  matzew
- * added a new RenderKit for WML. Thanks to Jirí Žaloudek
- *
+ * @version $Revision$ $Date$
  */
 public class WmlRenderUtils {
     private static Log log = LogFactory.getLog(RendererUtils.class);
-    
-    /** Writes options for the select element. 
-     * @param items is an instance of SelectItem or SelectItemGroup object. Alternatively array, collection or map of SelectItem objects. 
+
+    /** Writes options for the select element.
+     * @param items is an instance of SelectItem or SelectItemGroup object. Alternatively array, collection or map of SelectItem objects.
      */
     public static void writeOptions(Object items, UIComponent component, ResponseWriter writer) throws java.io.IOException {
         log.debug("method writeOptions");
-               
+
         if (items instanceof SelectItemGroup){
             log.debug("item is an instanceof SelectItemGroup");
             SelectItemGroup group = (SelectItemGroup)items;
-            
+
             writer.startElement(Attributes.OPTGROUP,component);
             RendererUtils.writeAttribute(Attributes.TITLE, group.getLabel(), writer);
-            
+
             SelectItem[] array = group.getSelectItems();
             for (int i = 0; i < array.length; i++)
                 writeOption(array[i],component, writer);
-            
+
             writer.endElement(Attributes.OPTGROUP);
-        }        
+        }
         else {
             if (items instanceof SelectItem){
                 log.debug("item is an instance of SelectItem");
                 writeOption((SelectItem)items,component, writer);
             }
-            
+
             if (items instanceof SelectItem[]){
                 log.debug("item is an instance of SelectItem[]");
                 SelectItem[] array = (SelectItem[])items;
                 for (int i = 0; i < array.length; i++)
                     writeOption(array[i],component, writer);
             }
-            
+
             if (items instanceof Collection){
                 log.debug("item is an instance of Collection");
                 Iterator iter = ((Collection)items).iterator();
                 while(iter.hasNext())
                     writeOptions(iter.next(),component, writer);
             }
-            
+
             if (items instanceof Map){
                 log.debug("item is an instance of Map");
                 Iterator iter = ((Map)items).entrySet().iterator();
@@ -85,7 +81,7 @@ public class WmlRenderUtils {
             }
         }
     }
-    
+
     /** Writes one option element for the select tag. */
     public static void writeOption(SelectItem item, UIComponent component, ResponseWriter writer) throws java.io.IOException {
         writer.startElement(Attributes.OPTION,component);

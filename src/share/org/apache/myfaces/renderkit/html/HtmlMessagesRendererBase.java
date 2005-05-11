@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,22 +34,6 @@ import java.util.Map;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.5  2005/01/26 13:27:16  mmarinschek
- * The x:message tags are now extended to use the column-name as a label for all inputs in an x:dataTable, without having to specify additional information.
- *
- * Revision 1.4  2004/12/23 13:03:09  mmarinschek
- * id's not rendered (or not conditionally rendered); changes in jslistener to support both ie and firefox now
- *
- * Revision 1.3  2004/10/13 11:51:01  matze
- * renamed packages to org.apache
- *
- * Revision 1.2  2004/07/01 22:00:56  mwessendorf
- * ASF switch
- *
- * Revision 1.1  2004/03/30 17:47:36  manolito
- * Message and Messages refactored
- *
  */
 public abstract class HtmlMessagesRendererBase
         extends HtmlMessageRendererBase

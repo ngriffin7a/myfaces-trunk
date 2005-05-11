@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,35 +35,6 @@ import java.util.Set;
  * @author Thomas Spiegl
  * @author Anton Koinov
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.9  2004/10/13 11:51:01  matze
- * renamed packages to org.apache
- *
- * Revision 1.8  2004/09/08 15:23:12  manolito
- * Autoscroll feature
- *
- * Revision 1.7  2004/07/01 22:00:57  mwessendorf
- * ASF switch
- *
- * Revision 1.6  2004/06/03 12:57:03  o_rossmueller
- * modified link renderer to use one hidden field for all links according to 1.1 renderkit docs
- * added onclick=clear_XXX to button
- *
- * Revision 1.5  2004/05/18 12:02:29  manolito
- * getActionURL and getResourceURL must not call encodeActionURL or encodeResourceURL
- *
- * Revision 1.4  2004/04/30 09:11:38  manolito
- * no message
- *
- * Revision 1.3  2004/04/29 19:34:38  o_rossmueller
- * javascript for 'target' attribute handling
- *
- * Revision 1.2  2004/04/27 10:32:24  manolito
- * clear hidden inputs javascript function
- *
- * Revision 1.1  2004/04/22 10:20:34  manolito
- * tree component
- *
  */
 public class HtmlFormRendererBase
         extends HtmlRenderer

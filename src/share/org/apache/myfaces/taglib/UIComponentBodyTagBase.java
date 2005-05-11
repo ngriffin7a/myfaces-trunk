@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,49 +31,6 @@ import java.io.Reader;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.15  2005/03/05 10:29:56  mmarinschek
- * better error handling
- *
- * Revision 1.14  2005/01/30 15:24:10  matzew
- * thanks to sean schofield for removing *legacy* attributes of MyFaces
- *
- * Revision 1.13  2005/01/28 17:19:09  matzew
- * Patch for MYFACES-91 form Sean Schofield
- *
- * Revision 1.12  2005/01/25 22:15:53  matzew
- * JavaDoc patch form Sean Schofield
- *
- * Revision 1.11  2005/01/10 08:08:12  matzew
- * added patch form sean schofield. forceId for reuse of "legacy JavaScript" (MyFaces-70)
- *
- * Revision 1.10  2004/10/13 11:51:01  matze
- * renamed packages to org.apache
- *
- * Revision 1.9  2004/07/01 22:01:21  mwessendorf
- * ASF switch
- *
- * Revision 1.8  2004/04/16 15:13:33  manolito
- * validator attribute support and MethodBinding invoke exception handling fixed
- *
- * Revision 1.7  2004/04/05 11:04:56  manolito
- * setter for renderer type removed, no more default renderer type needed
- *
- * Revision 1.6  2004/04/01 13:18:39  manolito
- * warning message
- *
- * Revision 1.5  2004/04/01 12:57:44  manolito
- * additional extended component classes for user role support
- *
- * Revision 1.4  2004/04/01 09:33:43  manolito
- * user role support removed
- *
- * Revision 1.3  2004/03/31 11:14:28  royalts
- * no message
- *
- * Revision 1.2  2004/03/30 12:16:08  manolito
- * header comments
- *
  */
 public abstract class UIComponentBodyTagBase
         extends UIComponentBodyTag
@@ -100,7 +57,7 @@ public abstract class UIComponentBodyTagBase
 
     /**
      * TODO: Ignore <!-- --> comments
-     */ 
+     */
     private boolean isBodyContentEmpty()
     {
         BodyContent bodyContent = getBodyContent();
@@ -153,10 +110,10 @@ public abstract class UIComponentBodyTagBase
     }
 
     /**
-     * Sets the forceId attribute of the tag.  NOTE: Not every tag that extends this class will 
-     * actually make use of this attribute.  Check the TLD to see which components actually 
+     * Sets the forceId attribute of the tag.  NOTE: Not every tag that extends this class will
+     * actually make use of this attribute.  Check the TLD to see which components actually
      * implement it.
-     * 
+     *
      * @param aForceId The value of the forceId attribute.
      */
     public void setForceId(String aForceId)
@@ -165,9 +122,9 @@ public abstract class UIComponentBodyTagBase
     }
 
     /**
-     * Sets the forceIdIndex attribute of the tag.  NOTE: Not every tag that extends this class will 
+     * Sets the forceIdIndex attribute of the tag.  NOTE: Not every tag that extends this class will
      * actually make use of this attribute.  Check the TLD to see which components actually implement it.
-     * 
+     *
      * @param aForceIdIndex The value of the forceIdIndex attribute.
      */
     public void setForceIdIndex(String aForceIdIndex)
@@ -218,7 +175,7 @@ public abstract class UIComponentBodyTagBase
     {
         UIComponentTagUtils.setValidatorProperty(getFacesContext(), component, value);
     }
-    
+
     protected void setActionProperty(UIComponent component, String action)
     {
         UIComponentTagUtils.setActionProperty(getFacesContext(), component, action);

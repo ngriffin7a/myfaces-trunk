@@ -53,83 +53,70 @@ import org.apache.myfaces.webapp.webxml.WebXml;
  *
  * @author  Stan Silvert (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.4  2005/04/21 17:25:23  ssilvert
- * MYFACES-205 Allow subclassing in order to implement portlet modes.
- *
- * Revision 1.3  2005/04/06 18:23:36  schof
- * Fixes MYFACES-101.  Used a patch from Stan while @infra sorts out his karma.
- *
- * Revision 1.2  2005/02/10 20:24:17  matzew
- * closed MYFACES-101 in Jira; Thanks to Stan Silvert (JBoss Group)
- *
- * Revision 1.1  2005/01/26 17:03:10  matzew
- * MYFACES-86. portlet support provided by Stan Silver (JBoss Group)
- *
  */
-public class MyFacesGenericPortlet extends GenericPortlet 
+public class MyFacesGenericPortlet extends GenericPortlet
 {
     private static final Log log = LogFactory.getLog(MyFacesGenericPortlet.class);
-    
+
     // PortletRequest parameter
     public static final String VIEW_ID =
         MyFacesGenericPortlet.class.getName() + ".VIEW_ID";
-    
+
     // PortletSession attribute
-    protected static final String CURRENT_FACES_CONTEXT = 
+    protected static final String CURRENT_FACES_CONTEXT =
         MyFacesGenericPortlet.class.getName() + ".CURRENT_FACES_CONTEXT";
-    
+
     // portlet config parameter from portlet.xml
     protected static final String DEFAULT_VIEW = "default-view";
-    
+
     // portlet config parameter from portlet.xml
     protected static final String DEFAULT_VIEW_SELECTOR = "default-view-selector";
-    
+
     protected static final String FACES_INIT_DONE =
         MyFacesGenericPortlet.class.getName() + ".FACES_INIT_DONE";
-    
+
     protected PortletContext portletContext;
-    
+
     protected FacesContextFactory facesContextFactory;
     protected Lifecycle lifecycle;
-    
+
     protected String defaultView;
     protected DefaultViewSelector defaultViewSelector;
-    
-    /** 
-     * Creates a new instance of MyFacesPortlet 
+
+    /**
+     * Creates a new instance of MyFacesPortlet
      */
-    public MyFacesGenericPortlet() 
+    public MyFacesGenericPortlet()
     {
     }
-    
+
     /**
      * Portlet lifecycle.
      */
-    public void destroy() 
+    public void destroy()
     {
         super.destroy();
         FactoryFinder.releaseFactories();
     }
-    
+
     /**
      * Portlet lifecycle.
      */
-    public void init() throws PortletException, UnavailableException 
+    public void init() throws PortletException, UnavailableException
     {
         this.portletContext = getPortletContext();
         setDefaultView();
         setDefaultViewSelector();
         initMyFaces();
-        
+
         facesContextFactory = (FacesContextFactory)FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
 
-        // Javadoc says: Lifecycle instance is shared across multiple simultaneous requests, it must be 
+        // Javadoc says: Lifecycle instance is shared across multiple simultaneous requests, it must be
         // implemented in a thread-safe manner.  So we can acquire it here once:
         LifecycleFactory lifecycleFactory = (LifecycleFactory)FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
         lifecycle = lifecycleFactory.getLifecycle(getLifecycleId());
     }
-    
+
     protected void setDefaultView() throws UnavailableException
     {
         this.defaultView = getPortletConfig().getInitParameter(DEFAULT_VIEW);
@@ -139,13 +126,13 @@ public class MyFacesGenericPortlet extends GenericPortlet
             throw new UnavailableException(msg);
         }
     }
-    
+
     protected void setDefaultViewSelector() throws UnavailableException
     {
         String selectorClass = getPortletConfig().getInitParameter(DEFAULT_VIEW_SELECTOR);
         if (selectorClass == null) return;
-        
-        try 
+
+        try
         {
             this.defaultViewSelector = (DefaultViewSelector)Class.forName(selectorClass).newInstance();
             this.defaultViewSelector.setPortletContext(getPortletContext());
@@ -156,20 +143,20 @@ public class MyFacesGenericPortlet extends GenericPortlet
             throw new UnavailableException(e.getMessage());
         }
     }
-    
-    protected String getLifecycleId() 
+
+    protected String getLifecycleId()
     {
         String lifecycleId = getPortletConfig().getInitParameter(FacesServlet.LIFECYCLE_ID_ATTR);
         return lifecycleId != null ? lifecycleId : LifecycleFactory.DEFAULT_LIFECYCLE;
     }
-    
-    protected void initMyFaces() 
+
+    protected void initMyFaces()
     {
-        try 
+        try
         {
             Boolean b = (Boolean)portletContext.getAttribute(FACES_INIT_DONE);
 
-            if (b == null || b.booleanValue() == false) 
+            if (b == null || b.booleanValue() == false)
             {
                 log.trace("Initializing MyFaces");
 
@@ -184,42 +171,42 @@ public class MyFacesGenericPortlet extends GenericPortlet
 
                 portletContext.setAttribute(FACES_INIT_DONE, Boolean.TRUE);
             }
-            else 
+            else
             {
                 log.info("MyFaces already initialized");
             }
-        } 
-        catch (Exception ex) 
+        }
+        catch (Exception ex)
         {
             log.error("Error initializing MyFacesGenericPortlet", ex);
         }
-        
+
         log.info("PortletContext '" + portletContext.getRealPath("/") + "' initialized.");
     }
-    
+
     /**
      * Called by the portlet container to allow the portlet to process an action request.
      */
-    public void processAction(ActionRequest request, ActionResponse response) 
-            throws PortletException, IOException 
+    public void processAction(ActionRequest request, ActionResponse response)
+            throws PortletException, IOException
     {
         if (log.isTraceEnabled()) log.trace("called processAction");
-        
+
         if (sessionTimedOut(request)) return;
-        
+
         setPortletRequestFlag(request);
-        
+
         FacesContext facesContext = facesContext(request, response);
-                
+
         try
         {
             lifecycle.execute(facesContext);
-            
+
             if (!facesContext.getResponseComplete())
             {
                 response.setRenderParameter(VIEW_ID, facesContext.getViewRoot().getViewId());
             }
-            
+
             request.getPortletSession().setAttribute(CURRENT_FACES_CONTEXT, facesContext);
         }
         catch (Throwable e)
@@ -229,61 +216,61 @@ public class MyFacesGenericPortlet extends GenericPortlet
         }
     }
 
-    protected void handleExceptionFromLifecycle(Throwable e) 
-            throws PortletException, IOException 
+    protected void handleExceptionFromLifecycle(Throwable e)
+            throws PortletException, IOException
     {
         logException(e, null);
 
-        if (e instanceof IOException) 
+        if (e instanceof IOException)
         {
             throw (IOException)e;
         }
-        
-        if (e instanceof PortletException) 
+
+        if (e instanceof PortletException)
         {
             throw (PortletException)e;
         }
-        
-        if (e.getMessage() != null) 
+
+        if (e.getMessage() != null)
         {
             throw new PortletException(e.getMessage(), e);
         }
-        
+
         throw new PortletException(e);
     }
-    
+
     /**
      * Helper method to serve up the view mode.
      */
     protected void doView(RenderRequest request, RenderResponse response)
-            throws PortletException, IOException 
+            throws PortletException, IOException
     {
         facesRender(request, response);
     }
-    
+
     /**
      * Helper method to serve up the edit mode.  Can be overridden to add
      * the edit mode concept to a JSF application.
      */
     protected void doEdit(RenderRequest request, RenderResponse response)
-            throws PortletException, IOException 
+            throws PortletException, IOException
     {
         facesRender(request, response);
     }
-    
+
     /**
      * Helper method to serve up the edit mode.  Can be overridden to add
      * the help mode concept to a JSF application.
      */
     protected void doHelp(RenderRequest request, RenderResponse response)
-            throws PortletException, IOException 
+            throws PortletException, IOException
     {
         facesRender(request, response);
     }
-    
+
     /**
      * This method follows JSF Spec section 2.1.1.  It renders the default view from a non-faces
-     * request.  
+     * request.
      *
      * @param request The portlet render request.
      * @param response The portlet render response.
@@ -293,7 +280,7 @@ public class MyFacesGenericPortlet extends GenericPortlet
     {
         nonFacesRequest(request, response, selectDefaultView(request, response));
     }
-    
+
     /**
      * This method follows JSF Spec section 2.1.1.  It renders a view from a non-faces
      * request.  This is useful for a default view as well as for views that need to
@@ -303,11 +290,11 @@ public class MyFacesGenericPortlet extends GenericPortlet
      * @param response The portlet render response.
      * @param view The name of the view that needs to be rendered.
      */
-    protected void nonFacesRequest(RenderRequest request, RenderResponse response, String view) 
+    protected void nonFacesRequest(RenderRequest request, RenderResponse response, String view)
             throws PortletException
     {
         if (log.isTraceEnabled()) log.trace("Non-faces request: contextPath = " + request.getContextPath());
-        ApplicationFactory appFactory = 
+        ApplicationFactory appFactory =
             (ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
         Application application = appFactory.getApplication();
         ViewHandler viewHandler = application.getViewHandler();
@@ -316,7 +303,7 @@ public class MyFacesGenericPortlet extends GenericPortlet
         facesContext.setViewRoot(viewRoot);
         lifecycle.render(facesContext);
     }
-    
+
     protected String selectDefaultView(RenderRequest request, RenderResponse response) throws PortletException
     {
         String view = this.defaultView;
@@ -328,11 +315,11 @@ public class MyFacesGenericPortlet extends GenericPortlet
                 view = selectedView;
             }
         }
-            
+
         return view;
     }
-    
-    protected FacesContext facesContext(PortletRequest request, 
+
+    protected FacesContext facesContext(PortletRequest request,
                                         PortletResponse response)
     {
         return facesContextFactory.getFacesContext(portletContext,
@@ -340,33 +327,33 @@ public class MyFacesGenericPortlet extends GenericPortlet
                                                    response,
                                                    lifecycle);
     }
-    
+
     protected ReleaseableExternalContext makeExternalContext(PortletRequest request,
                                                              PortletResponse response)
     {
         return (ReleaseableExternalContext)new PortletExternalContextImpl(portletContext, request, response);
     }
-    
-    protected boolean sessionTimedOut(PortletRequest request) 
+
+    protected boolean sessionTimedOut(PortletRequest request)
     {
         return request.getPortletSession(false) == null;
     }
-    
+
     protected void setPortletRequestFlag(PortletRequest request)
     {
         request.getPortletSession().setAttribute(PortletUtil.PORTLET_REQUEST_FLAG, "true");
     }
-    
+
     /**
      * Render a JSF view.
      */
     protected void facesRender(RenderRequest request, RenderResponse response)
-            throws PortletException, java.io.IOException 
+            throws PortletException, java.io.IOException
     {
         if (log.isTraceEnabled()) log.trace("called facesRender");
 
         response.setContentType("text/html");
-        
+
         String viewId = request.getParameter(VIEW_ID);
         if ((viewId == null) || sessionTimedOut(request))
         {
@@ -374,18 +361,18 @@ public class MyFacesGenericPortlet extends GenericPortlet
             nonFacesRequest(request,  response);
             return;
         }
-       
+
         setPortletRequestFlag(request);
-        
+
         try
         {
             ServletFacesContextImpl facesContext = (ServletFacesContextImpl)request.
                                                    getPortletSession().
                                                    getAttribute(CURRENT_FACES_CONTEXT);
-            
+
             // TODO: not sure if this can happen.  Also double check this against spec section 2.1.3
             if (facesContext.getResponseComplete()) return;
-            
+
             facesContext.setExternalContext(makeExternalContext(request, response));
             lifecycle.render(facesContext);
         }
@@ -394,27 +381,27 @@ public class MyFacesGenericPortlet extends GenericPortlet
             handleExceptionFromLifecycle(e);
         }
     }
-    
+
     protected void logException(Throwable e, String msgPrefix) {
         String msg;
-        if (msgPrefix == null) 
+        if (msgPrefix == null)
         {
-            if (e.getMessage() == null) 
+            if (e.getMessage() == null)
             {
                 msg = "Exception in FacesServlet";
-            } 
-            else 
+            }
+            else
             {
                 msg = e.getMessage();
             }
-        } 
-        else 
+        }
+        else
         {
-            if (e.getMessage() == null) 
+            if (e.getMessage() == null)
             {
                 msg = msgPrefix;
             }
-            else 
+            else
             {
                 msg = msgPrefix + ": " + e.getMessage();
             }
@@ -438,5 +425,5 @@ public class MyFacesGenericPortlet extends GenericPortlet
             }
         }
     }
-    
+
 }

@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,19 +22,6 @@ import junit.framework.TestCase;
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.4  2004/10/13 11:50:59  matze
- * renamed packages to org.apache
- *
- * Revision 1.3  2004/07/09 02:44:55  dave0000
- * More efficient implementation
- *
- * Revision 1.2  2004/07/01 22:01:09  mwessendorf
- * ASF switch
- *
- * Revision 1.1  2004/04/29 14:25:20  manolito
- * javascript function name bugfix
- *
  */
 public class JavascriptUtilsTest
         extends TestCase
@@ -45,9 +32,9 @@ public class JavascriptUtilsTest
     {
         super(s);
     }
-    
+
     /**
-     * We use the fact that the first 128 characters match their UTF-8 byte 
+     * We use the fact that the first 128 characters match their UTF-8 byte
      * encoding in our code. Make sure that is really the case.
      */
     public void testUTF()
@@ -64,7 +51,7 @@ public class JavascriptUtilsTest
             }
         }
     }
-    
+
     public void testGetValidJavascriptName()
     {
         String s, r;

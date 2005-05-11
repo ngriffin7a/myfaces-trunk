@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,23 +15,19 @@
  */
 package org.apache.myfaces.wap.def;
 
-/**  
+/**
  * If the "styleClass" attribute is present, render its value as the value of the "class" attribute. If the "escape" attribute is not present, or it is present and its value is "true" all angle brackets should be converted to the ampersand xx semicolon syntax when rendering the value of the "value" attribute as the value of the component. If the "escape" attribute is present and is "false" the value of the component should be rendered as text without escaping.
  *
- * @wapfaces.tag 
+ * @wapfaces.tag
  *       componentFamily="UIOutput"
  *       rendererType="OutputTextRenderer"
  *       tagName="outputText"
  *       tagBaseClass="org.apache.myfaces.wap.base.ValueHolderTagBase"
  *       bodyContent="JSP"
- * 
- * @author  <a href="mailto:Jiri.Zaloudek@ivancice.cz">Jiri Zaloudek</a> (latest modification by $Author$)
- * @version $Revision$ $Date$ 
- * $Log$
- * Revision 1.1  2004/12/30 09:37:25  matzew
- * added a new RenderKit for WML. Thanks to Jirí Žaloudek
  *
- */ 
+ * @author  <a href="mailto:Jiri.Zaloudek@ivancice.cz">Jiri Zaloudek</a> (latest modification by $Author$)
+ * @version $Revision$ $Date$
+ */
 
 
 public class OutputText extends javax.faces.component.UIOutput {
@@ -52,16 +48,16 @@ public class OutputText extends javax.faces.component.UIOutput {
      *     valueBinding="true"
      */
     //java.lang.String style;
-    
+
     /**
-     * Space-separated list of style class(es) to be applied when this element is rendered. This value must be passed through as the "class" attribute on generated markup. 
+     * Space-separated list of style class(es) to be applied when this element is rendered. This value must be passed through as the "class" attribute on generated markup.
      *
      * @wapfaces.attribute
      *     valueBinding="true"
      */
     //java.lang.String styleClass;
-    
-    
+
+
     // ============= ABSTARACT ATTRIBUTES ======================================
     /**
      * The component identifier for the associated component.
@@ -71,16 +67,16 @@ public class OutputText extends javax.faces.component.UIOutput {
      *     inherit="true"
      */
     java.lang.String id;
-    
+
     /**
-     * Flag indicating whether or not this component should be rendered (during Render Response Phase), or processed on any subsequent form submit. 
+     * Flag indicating whether or not this component should be rendered (during Render Response Phase), or processed on any subsequent form submit.
      *
      * @wapfaces.attribute
      *     abstract="true"
      *     inherit="true"
      */
     boolean rendered;
-        
+
     /**
      * The value binding expression linking this component to a property in a backing bean.
      *
@@ -88,16 +84,16 @@ public class OutputText extends javax.faces.component.UIOutput {
      *     abstract="true"
      *     inherit="true"
      */
-    java.lang.String binding;     
+    java.lang.String binding;
 
     /**
-     * Converter instance registered with this component. 
+     * Converter instance registered with this component.
      *
      * @wapfaces.attribute
      *     abstract="true"
      *     inherit="true"
      */
-    java.lang.String converter;     
+    java.lang.String converter;
 
     /**
      * The current value of this component.
@@ -106,5 +102,5 @@ public class OutputText extends javax.faces.component.UIOutput {
      *     inherit="true"
      *     abstract="true"
      */
-    java.lang.Object value;   
+    java.lang.Object value;
 }

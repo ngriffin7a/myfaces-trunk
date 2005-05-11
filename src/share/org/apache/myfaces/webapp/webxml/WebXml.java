@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,22 +27,6 @@ import java.util.*;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.3  2004/10/13 11:51:01  matze
- * renamed packages to org.apache
- *
- * Revision 1.2  2004/08/10 10:57:39  manolito
- * fixed StackOverflow in ClassUtils and cleaned up ClassUtils methods
- *
- * Revision 1.1  2004/07/16 15:16:10  royalts
- * moved org.apache.myfaces.webapp.webxml and org.apache.util.xml to share src-tree (needed WebXml for JspTilesViewHandlerImpl)
- *
- * Revision 1.10  2004/07/01 22:05:16  mwessendorf
- * ASF switch
- *
- * Revision 1.9  2004/04/19 13:03:21  manolito
- * Log
- *
  */
 public class WebXml
 {
@@ -91,7 +75,7 @@ public class WebXml
             String servletName = (String)entry.getKey();
             if (null == entry.getValue())
             {
-                // the value is null in the case of jsp files listed as servlets 
+                // the value is null in the case of jsp files listed as servlets
                 // in cactus
                 // <servlet>
                 //   <servlet-name>JspRedirector</servlet-name>

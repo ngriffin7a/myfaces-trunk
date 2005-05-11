@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,28 +24,21 @@ import org.apache.commons.logging.LogFactory;
 /**
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
- *          $Log$
- *          Revision 1.2  2004/10/13 11:51:01  matze
- *          renamed packages to org.apache
- *
- *          Revision 1.1  2004/08/23 05:13:39  dave0000
- *          Externalize String-to-Locale conversion
- *
  */
 public class LocaleUtils
 {
     private static final Log log = LogFactory.getLog(LocaleUtils.class);
-   
+
     /** Utility class, do not instatiate */
     private LocaleUtils()
     {
         // utility class, do not instantiate
     }
-    
-    /** 
+
+    /**
      * Converts a locale string to <code>Locale</code> class. Accepts both
      * '_' and '-' as separators for locale components.
-     * 
+     *
      * @param localeString string representation of a locale
      * @return Locale instance, compatible with the string representation
      */
@@ -67,7 +60,7 @@ public class LocaleUtils
             separatorCountry = localeString.indexOf('-');
             separator = '-';
         }
-        
+
         String language, country, variant;
         if (separatorCountry < 0)
         {
@@ -77,7 +70,7 @@ public class LocaleUtils
         else
         {
             language = localeString.substring(0, separatorCountry);
-            
+
             int separatorVariant = localeString.indexOf(separator, separatorCountry + 1);
             if (separatorVariant < 0)
             {
@@ -90,7 +83,7 @@ public class LocaleUtils
                 variant = localeString.substring(separatorVariant + 1);
             }
         }
-        
+
         return new Locale(language, country, variant);
     }
 }

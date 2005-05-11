@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,37 +28,21 @@ import java.util.*;
  * and L2 cleared.
  * </p>
  * <p>
- * IMPORTANT:entrySet(), keySet(), and values() return unmodifiable snapshot collections.  
+ * IMPORTANT:entrySet(), keySet(), and values() return unmodifiable snapshot collections.
  * </p>
  *
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.6  2004/10/13 11:51:01  matze
- * renamed packages to org.apache
- *
- * Revision 1.5  2004/08/10 08:23:13  manolito
- * trivial javadoc changes only
- *
- * Revision 1.4  2004/07/01 22:01:13  mwessendorf
- * ASF switch
- *
- * Revision 1.3  2004/04/26 05:54:59  dave0000
- * Add coercion to ValueBinding (and related changes)
- *
- * Revision 1.2  2004/04/01 05:37:34  dave0000
- * Correct L2->L1 merge condition
- *
  */
 public abstract class BiLevelCacheMap implements Map
 {
     //~ Instance fields ----------------------------------------------------------------------------
-    
+
     private static final int INITIAL_SIZE_L1 = 32;
 
     /** To preinitialize <code>_cacheL1</code> with default values use an initialization block */
     protected Map       _cacheL1;
-    
+
     /** Must be final because it is used for synchronization */
     private final Map   _cacheL2;
     private final int   _mergeThreshold;
@@ -74,7 +58,7 @@ public abstract class BiLevelCacheMap implements Map
     }
 
     //~ Methods ------------------------------------------------------------------------------------
-    
+
     public boolean isEmpty()
     {
         synchronized (_cacheL2) {
@@ -106,7 +90,7 @@ public abstract class BiLevelCacheMap implements Map
 
     public Set entrySet()
     {
-        synchronized (_cacheL2) 
+        synchronized (_cacheL2)
         {
             mergeIfL2NotEmpty();
             return Collections.unmodifiableSet(_cacheL1.entrySet());
@@ -148,21 +132,21 @@ public abstract class BiLevelCacheMap implements Map
                 mergeIfNeeded();
             }
         }
-        
+
         return retval;
     }
 
     public Set keySet()
     {
-        synchronized (_cacheL2) 
+        synchronized (_cacheL2)
         {
             mergeIfL2NotEmpty();
             return Collections.unmodifiableSet(_cacheL1.keySet());
         }
     }
 
-    /** 
-     * If key is already in cacheL1, the new value will show with a delay, 
+    /**
+     * If key is already in cacheL1, the new value will show with a delay,
      * since merge L2->L1 may not happen immediately. To force the merge sooner,
      * call <code>size()<code>.
      */
@@ -171,12 +155,12 @@ public abstract class BiLevelCacheMap implements Map
         synchronized (_cacheL2)
         {
             _cacheL2.put(key, value);
-            
+
             // not really a miss, but merge to avoid big increase in L2 size
             // (it cannot be reallocated, it is final)
             mergeIfNeeded();
         }
-        
+
         return value;
     }
 
@@ -185,7 +169,7 @@ public abstract class BiLevelCacheMap implements Map
         synchronized (_cacheL2)
         {
             mergeIfL2NotEmpty();
-            
+
             // sepatare merge to avoid increasing L2 size too much
             // (it cannot be reallocated, it is final)
             merge(map);
@@ -202,7 +186,7 @@ public abstract class BiLevelCacheMap implements Map
                 // nothing to remove
                 return null;
             }
-            
+
             Object retval;
             Map newMap;
             synchronized (_cacheL1)
@@ -212,7 +196,7 @@ public abstract class BiLevelCacheMap implements Map
                 newMap = HashMapUtils.merge(_cacheL1, _cacheL2);
                 retval = newMap.remove(key);
             }
-            
+
             _cacheL1 = newMap;
             _cacheL2.clear();
             _missCount = 0;
@@ -222,9 +206,9 @@ public abstract class BiLevelCacheMap implements Map
 
     public int size()
     {
-        // Note: cannot simply return L1.size + L2.size 
+        // Note: cannot simply return L1.size + L2.size
         //       because there might be overlaping of keys
-        synchronized (_cacheL2) 
+        synchronized (_cacheL2)
         {
             mergeIfL2NotEmpty();
             return _cacheL1.size();
@@ -233,30 +217,30 @@ public abstract class BiLevelCacheMap implements Map
 
     public Collection values()
     {
-        synchronized (_cacheL2) 
+        synchronized (_cacheL2)
         {
             mergeIfL2NotEmpty();
             return Collections.unmodifiableCollection(_cacheL1.values());
         }
     }
-    
-    private void mergeIfL2NotEmpty() 
+
+    private void mergeIfL2NotEmpty()
     {
         if (!_cacheL2.isEmpty())
         {
             merge(_cacheL2);
         }
     }
-    
-    private void mergeIfNeeded() 
+
+    private void mergeIfNeeded()
     {
         if (++_missCount >= _mergeThreshold)
         {
             merge(_cacheL2);
         }
     }
-    
-    private void merge(Map map) 
+
+    private void merge(Map map)
     {
         Map newMap;
         synchronized (_cacheL1)
@@ -274,15 +258,15 @@ public abstract class BiLevelCacheMap implements Map
     /**
      * Subclasses must implement to have automatic creation of new instances
      * or alternatively can use <code>put<code> to add new items to the cache.<br>
-     * 
+     *
      * Implementing this method is prefered to guarantee that there will be only
      * one instance per key ever created. Calling put() to add items in a multi-
      * threaded situation will require external synchronization to prevent two
      * instances for the same key, which defeats the purpose of this cache
      * (put() is useful when initialization is done during startup and items
-     * are not added during execution or when (temporarily) having possibly two 
+     * are not added during execution or when (temporarily) having possibly two
      * or more instances of the same key is not of concern).<br>
-     * 
+     *
      * @param key lookup key
      * @return new instace for the requested key
      */

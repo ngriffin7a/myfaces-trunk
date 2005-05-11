@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,34 +36,6 @@ import java.util.List;
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.9  2004/10/13 11:50:59  matze
- * renamed packages to org.apache
- *
- * Revision 1.8  2004/08/13 15:47:08  manolito
- * No decode for spread checkbox or radio
- *
- * Revision 1.7  2004/07/01 21:53:06  mwessendorf
- * ASF switch
- *
- * Revision 1.6  2004/06/04 00:26:16  o_rossmueller
- * modified renderes to comply with JSF 1.1
- *
- * Revision 1.5  2004/05/18 14:31:38  manolito
- * user role support completely moved to components source tree
- *
- * Revision 1.4  2004/04/05 09:11:03  manolito
- * extended exception messages
- *
- * Revision 1.3  2004/04/02 13:57:11  manolito
- * extended HtmlSelectManyCheckbox with layout "spread" and custom Checkbox component
- *
- * Revision 1.2  2004/03/31 15:15:59  royalts
- * no message
- *
- * Revision 1.1  2004/03/31 13:26:08  manolito
- * extended radio renderer
- *
  */
 public class HtmlRadioRenderer
         extends HtmlRadioRendererBase
@@ -162,7 +134,7 @@ public class HtmlRadioRenderer
                     selectItem.getLabel(),
                     currentValue == null && itemValue == null ||
                     currentValue != null && currentValue.equals(itemValue), false);
-        writer.endElement(HTML.LABEL_ELEM);        
+        writer.endElement(HTML.LABEL_ELEM);
     }
 
 

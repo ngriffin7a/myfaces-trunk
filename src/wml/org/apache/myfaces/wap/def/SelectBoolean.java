@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,54 +15,50 @@
  */
 package org.apache.myfaces.wap.def;
 
-/**  
+/**
  * Renders a checkbox for entry boolean value.
  *
  * Renders select tag with one option element.
- * Render the clientId of the component as the value of the "name" attribute. 
+ * Render the clientId of the component as the value of the "name" attribute.
  *
- * @wapfaces.tag 
+ * @wapfaces.tag
  *       componentFamily="UISelectBoolean"
  *       rendererType="SelectBooleanRenderer"
  *       tagName="selectBoolean"
  *       tagBaseClass="org.apache.myfaces.wap.base.EditableValueHolderTagBase"
  *       bodyContent="JSP"
- * 
- * @author  <a href="mailto:Jiri.Zaloudek@ivancice.cz">Jiri Zaloudek</a> (latest modification by $Author$)
- * @version $Revision$ $Date$ 
- * $Log$
- * Revision 1.1  2004/12/30 09:37:25  matzew
- * added a new RenderKit for WML. Thanks to Jirí Žaloudek
  *
- */ 
+ * @author  <a href="mailto:Jiri.Zaloudek@ivancice.cz">Jiri Zaloudek</a> (latest modification by $Author$)
+ * @version $Revision$ $Date$
+ */
 
 
 public class SelectBoolean extends javax.faces.component.UISelectBoolean {
 
     /**
-     * The name of the variable that is set with the result of the selection. May also by use to set default value. 
+     * The name of the variable that is set with the result of the selection. May also by use to set default value.
      *
      * @wapfaces.attribute
      *     valueBinding="true"
      */
-    java.lang.String name;    
-        
+    java.lang.String name;
+
     /**
      * Sets the tabbing position for the select element.
      *
      * @wapfaces.attribute
      *     valueBinding="true"
      */
-    java.lang.String tabindex;    
-    
+    java.lang.String tabindex;
+
     /**
      * Sets a title for the select element. Some browsers can ignore it.
      *
      * @wapfaces.attribute
      *     valueBinding="true"
      */
-    java.lang.String title;        
-    
+    java.lang.String title;
+
     /**
      * The xml:lang attribute specifies the natural or formal language of an element or its attributes.
      *
@@ -70,16 +66,16 @@ public class SelectBoolean extends javax.faces.component.UISelectBoolean {
      *     valueBinding="true"
      */
     java.lang.String xmllang;
-    
+
     /**
-     * Space-separated list of style class(es) to be applied when this element is rendered. This value must be passed through as the "class" attribute on generated markup. 
+     * Space-separated list of style class(es) to be applied when this element is rendered. This value must be passed through as the "class" attribute on generated markup.
      *
      * @wapfaces.attribute
      *     valueBinding="true"
      */
     java.lang.String styleClass;
-    
-    
+
+
     // ============= ABSTARACT ATTRIBUTES ======================================
     /**
      * The component identifier for the associated component.
@@ -89,16 +85,16 @@ public class SelectBoolean extends javax.faces.component.UISelectBoolean {
      *     inherit="true"
      */
     java.lang.String id;
-    
+
     /**
-     * Flag indicating whether or not this component should be rendered (during Render Response Phase), or processed on any subsequent form submit. 
+     * Flag indicating whether or not this component should be rendered (during Render Response Phase), or processed on any subsequent form submit.
      *
      * @wapfaces.attribute
      *     abstract="true"
      *     inherit="true"
      */
     boolean rendered;
-        
+
     /**
      * The value binding expression linking this component to a property in a backing bean.
      *
@@ -106,26 +102,26 @@ public class SelectBoolean extends javax.faces.component.UISelectBoolean {
      *     abstract="true"
      *     inherit="true"
      */
-    java.lang.String binding;     
+    java.lang.String binding;
 
     /**
-     * Converter instance registered with this component. 
+     * Converter instance registered with this component.
      *
      * @wapfaces.attribute
      *     abstract="true"
      *     inherit="true"
      */
-    java.lang.String converter;     
+    java.lang.String converter;
 
     /**
-     * Flag indicating that this component's value must be converted and validated immediately (that is, during Apply Request Values phase), rather than waiting until Process Validations phase. 
+     * Flag indicating that this component's value must be converted and validated immediately (that is, during Apply Request Values phase), rather than waiting until Process Validations phase.
      *
      * @wapfaces.attribute
      *     inherit="true"
      *     abstract="true"
      */
     boolean immediate;
-    
+
     /**
      * The current value of this component. Is rendered as attribute "value" in the select element. If is value "true" is checkbox checked.
      *
@@ -134,31 +130,31 @@ public class SelectBoolean extends javax.faces.component.UISelectBoolean {
      *     abstract="true"
      */
     java.lang.Object value;
-    
+
     /**
-     * Flag indicating that the user is required to provide a submitted value for this input component. 
+     * Flag indicating that the user is required to provide a submitted value for this input component.
      *
      * @wapfaces.attribute
      *     abstract="true"
      *     inherit="true"
      */
-    boolean required;     
-    
+    boolean required;
+
     /**
-     * MethodBinding representing a validator method that will be called during Process Validations to perform correctness checks on the value of this component. The expression must evaluate to a public method that takes FacesContext, UIComponent, and Object parameters, with a return type of void. 
+     * MethodBinding representing a validator method that will be called during Process Validations to perform correctness checks on the value of this component. The expression must evaluate to a public method that takes FacesContext, UIComponent, and Object parameters, with a return type of void.
      *
      * @wapfaces.attribute
      *     abstract="true"
      *     inherit="true"
      */
-    java.lang.String validator;     
-    
+    java.lang.String validator;
+
     /**
-     * MethodBinding representing a value change listener method that will be notified when a new value has been set for this input component. The expression must evaluate to a public method that takes a ValueChangeEvent parameter, with a return type of void. 
+     * MethodBinding representing a value change listener method that will be notified when a new value has been set for this input component. The expression must evaluate to a public method that takes a ValueChangeEvent parameter, with a return type of void.
      *
      * @wapfaces.attribute
      *     abstract="true"
      *     inherit="true"
      */
-    java.lang.String valueChangeListener;            
+    java.lang.String valueChangeListener;
 }

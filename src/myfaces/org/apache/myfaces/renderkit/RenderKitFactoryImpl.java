@@ -30,19 +30,6 @@ import java.util.Map;
  * RenderKitFactory implementation as defined in Spec. JSF.7.3
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.15  2004/10/13 11:51:00  matze
- * renamed packages to org.apache
- *
- * Revision 1.14  2004/07/05 12:52:41  manolito
- * Apache License
- *
- * Revision 1.13  2004/06/23 15:48:01  manolito
- * Map members now non-static
- *
- * Revision 1.12  2004/05/18 07:13:32  manolito
- * X-checked against specs: no more synchronization needed, allow replacement of renderKit, no excepetion on unknown id
- *
  */
 public class RenderKitFactoryImpl
     extends RenderKitFactory

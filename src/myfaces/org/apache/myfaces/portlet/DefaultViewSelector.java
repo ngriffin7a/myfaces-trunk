@@ -29,20 +29,16 @@ import javax.portlet.RenderResponse;
  *
  * @author  Stan Silvert (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.1  2005/01/26 17:03:10  matzew
- * MYFACES-86. portlet support provided by Stan Silver (JBoss Group)
- *
  */
 public interface DefaultViewSelector {
-    
+
     /**
-     * This method will be called by the MyFacesGenericPortlet in order to 
-     * give the selector an opportunity to store a reference to the 
+     * This method will be called by the MyFacesGenericPortlet in order to
+     * give the selector an opportunity to store a reference to the
      * PortletContext.
      */
     public void setPortletContext(PortletContext portletContext);
-    
+
     /**
      * This method allows a JSF application to specify which JSF view will be
      * when the incoming request does not provide a view id.

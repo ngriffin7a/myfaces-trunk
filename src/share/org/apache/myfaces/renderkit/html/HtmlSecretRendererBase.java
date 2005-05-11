@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,19 +34,6 @@ import java.io.IOException;
  * @author Thomas Spiegl
  * @author Anton Koinov
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.4  2004/12/23 13:03:09  mmarinschek
- * id's not rendered (or not conditionally rendered); changes in jslistener to support both ie and firefox now
- *
- * Revision 1.3  2004/10/13 11:51:01  matze
- * renamed packages to org.apache
- *
- * Revision 1.2  2004/07/01 22:00:57  mwessendorf
- * ASF switch
- *
- * Revision 1.1  2004/05/18 14:31:39  manolito
- * user role support completely moved to components source tree
- *
  */
 public class HtmlSecretRendererBase
         extends HtmlRenderer
@@ -55,7 +42,7 @@ public class HtmlSecretRendererBase
             throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, UIInput.class);
-        
+
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.startElement(HTML.INPUT_ELEM, uiComponent);
         writer.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_PASSWORD, null);
@@ -85,11 +72,11 @@ public class HtmlSecretRendererBase
         {
             writer.writeAttribute(HTML.DISABLED_ATTR, Boolean.TRUE, null);
         }
-        
+
         writer.endElement(HTML.INPUT_ELEM);
     }
 
-    
+
     protected boolean isDisabled(FacesContext facesContext, UIComponent uiComponent)
     {
         //TODO: overwrite in extended HtmlSecretRenderer and check for enabledOnUserRole
@@ -102,7 +89,7 @@ public class HtmlSecretRendererBase
             return RendererUtils.getBooleanAttribute(uiComponent, HTML.DISABLED_ATTR, false);
         }
     }
-    
+
 
     public void decode(FacesContext facesContext, UIComponent component)
     {

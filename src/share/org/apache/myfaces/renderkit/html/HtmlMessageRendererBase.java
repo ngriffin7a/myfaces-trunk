@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,46 +33,6 @@ import java.util.Map;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.12  2005/01/26 13:27:16  mmarinschek
- * The x:message tags are now extended to use the column-name as a label for all inputs in an x:dataTable, without having to specify additional information.
- *
- * Revision 1.11  2005/01/22 19:47:44  mmarinschek
- * Message rendering updated - if a validation exception needs to be rendered, the id of the component is replaced with a label.
- *
- * Revision 1.10  2004/12/23 13:03:09  mmarinschek
- * id's not rendered (or not conditionally rendered); changes in jslistener to support both ie and firefox now
- *
- * Revision 1.9  2004/10/13 11:51:01  matze
- * renamed packages to org.apache
- *
- * Revision 1.8  2004/09/02 17:23:25  tinytoony
- * fix for the span-element for other than the output-text
- *
- * Revision 1.7  2004/08/09 08:43:29  manolito
- * bug #1004867 - h:message has duplicate attributes
- *
- * Revision 1.6  2004/07/01 22:00:57  mwessendorf
- * ASF switch
- *
- * Revision 1.5  2004/04/05 09:11:03  manolito
- * extended exception messages
- *
- * Revision 1.4  2004/04/01 12:43:18  manolito
- * html nesting bug fixed
- *
- * Revision 1.3  2004/03/31 14:51:47  manolito
- * summaryFormat and detailFormat support
- *
- * Revision 1.2  2004/03/31 13:25:24  manolito
- * locale variable renamed
- *
- * Revision 1.1  2004/03/30 17:47:36  manolito
- * Message and Messages refactored
- *
- * Revision 1.1  2004/03/30 13:24:58  manolito
- * refactoring: HtmlComponentTag moved to share and renamed to HtmlComponentTagBase
- *
  */
 public abstract class HtmlMessageRendererBase
         extends HtmlRenderer

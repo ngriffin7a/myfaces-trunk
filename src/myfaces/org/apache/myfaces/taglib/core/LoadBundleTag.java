@@ -45,25 +45,6 @@ import org.apache.commons.logging.LogFactory;
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.10  2004/10/13 11:51:00  matze
- * renamed packages to org.apache
- *
- * Revision 1.9  2004/09/01 18:32:54  mwessendorf
- * Organize Imports
- *
- * Revision 1.8  2004/08/22 10:38:54  mwessendorf
- * bug #1013489
- *
- * Revision 1.7  2004/08/04 18:45:41  grantsmith
- * renamed 'enum' to 'enumer' to allow compile in JDK 1.5
- *
- * Revision 1.6  2004/07/01 22:05:03  mwessendorf
- * ASF switch
- *
- * Revision 1.5  2004/06/14 12:55:23  manolito
- * Added missing CVS Log comment
- *
  */
 public class LoadBundleTag
         extends TagSupport
@@ -102,12 +83,12 @@ public class LoadBundleTag
         {
             locale = facesContext.getApplication().getDefaultLocale();
         }
-        
+
         String basename = null;
-        
+
         if (_basename!=null) {
             if (UIComponentTag.isValueReference(_basename)) {
-                basename = (String)facesContext.getApplication().createValueBinding(_basename).getValue(facesContext);                
+                basename = (String)facesContext.getApplication().createValueBinding(_basename).getValue(facesContext);
             } else {
                 basename = _basename;
             }
@@ -116,8 +97,8 @@ public class LoadBundleTag
         final ResourceBundle bundle;
         try
         {
-            bundle = ResourceBundle.getBundle(basename, 
-                                              locale, 
+            bundle = ResourceBundle.getBundle(basename,
+                                              locale,
                                               Thread.currentThread().getContextClassLoader());
         }
         catch (MissingResourceException e)

@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,68 +37,6 @@ import java.util.*;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.23  2005/04/06 10:21:55  manolito
- * MYFACES-149 fix for NullPointerException in _SharedRendererUtils.getConvertedUISelectManyValue
- *
- * Revision 1.22  2005/01/26 13:27:16  mmarinschek
- * The x:message tags are now extended to use the column-name as a label for all inputs in an x:dataTable, without having to specify additional information.
- *
- * Revision 1.21  2005/01/22 16:47:17  mmarinschek
- * fixing bug with validation not called if the submitted value is empty; an empty string is submitted instead if the component is enabled.
- *
- * Revision 1.20  2005/01/18 22:43:05  svieujot
- * Fix some bugs where converter wasn't used to determine selected values.
- * This caused for examples the list, checkbox and radio based components to bug when the backing bean value type is a primitive.
- *
- * Revision 1.19  2005/01/09 18:15:12  mmarinschek
- * small changes - better error handling, label renderer supports more hooks for sub-classes
- *
- * Revision 1.18  2005/01/07 01:54:35  svieujot
- * radioRenderer wasn't looking at the submitted value.
- *
- * Revision 1.17  2005/01/05 23:06:43  svieujot
- * Fix bug : checkbox wasn't looking at the submitted value.
- *
- * Revision 1.16  2004/12/14 14:12:33  mmarinschek
- * PR:
- * Obtained from:
- * Submitted by:	
- * Reviewed by:
- *
- * Revision 1.15  2004/12/09 12:18:43  mmarinschek
- * changes in Calendar-Renderer to check for submitted-value first
- *
- * Revision 1.14  2004/10/13 11:51:01  matze
- * renamed packages to org.apache
- *
- * Revision 1.13  2004/09/06 08:41:49  tinytoony
- * changes to calendar - rendering wrong weekday, check output-text behavior
- *
- * Revision 1.12  2004/07/01 22:01:18  mwessendorf
- * ASF switch
- *
- * Revision 1.11  2004/06/23 12:42:26  tinytoony
- * just a tad more information ;)
- *
- * Revision 1.10  2004/05/18 14:31:40  manolito
- * user role support completely moved to components source tree
- *
- * Revision 1.9  2004/04/28 10:38:33  tinytoony
- * child is of type added to exception message
- *
- * Revision 1.8  2004/04/28 10:37:14  tinytoony
- * child is of type added to exception message
- *
- * Revision 1.7  2004/04/28 08:17:11  tinytoony
- * child is of type added to exception message
- *
- * Revision 1.6  2004/04/07 08:21:10  manolito
- * handling of select items with label == null
- *
- * Revision 1.5  2004/04/06 15:33:21  manolito
- * getStringValue must return submitted value if any
- *
  */
 public class RendererUtils
 {
@@ -225,7 +163,7 @@ public class RendererUtils
                     getPathToComponent(component));
         }
     }
-    
+
     public static Date getDateValue(UIComponent component)
     {
         if (!(component instanceof ValueHolder))
@@ -382,7 +320,7 @@ public class RendererUtils
         }
         return false;
     }
-    
+
     /**
      * Find the proper Converter for the given UIOutput component.
      * @return the Converter or null if no Converter specified or needed
@@ -481,7 +419,7 @@ public class RendererUtils
         {
             return;
         }
-        
+
         child.encodeBegin(facesContext);
         if (child.getRendersChildren())
         {
@@ -652,8 +590,8 @@ public class RendererUtils
 
         return internalSubmittedOrSelectedValuesAsSet(context, component, converter, uiSelectMany, selectedValues);
     }
-    
-    
+
+
     /**
      * Convenient utility method that returns the currently given value as String,
      * using the given converter.
@@ -676,8 +614,8 @@ public class RendererUtils
 
         return converter.getAsString(context, component, value);
     }
-    
-    
+
+
     /**
      * Convenient utility method that returns the currently given SelectItem value
      * as String, using the given converter.
@@ -688,7 +626,7 @@ public class RendererUtils
         return getConvertedStringValue(context, component, converter, selectItem.getValue());
     }
 
-    
+
     private static Set internalSubmittedOrSelectedValuesAsSet(FacesContext context,
             UIComponent component, Converter converter, UISelectMany uiSelectMany,
             Object values)
@@ -736,7 +674,7 @@ public class RendererUtils
                 HashSet set = new HashSet(HashMapUtils.calcCapacity(lst.size()));
                 for(Iterator i =lst.iterator(); i.hasNext(); )
                     set.add( getConvertedStringValue(context, component, converter, i.next()) );
-                
+
                 return set;
             }
         }
@@ -812,7 +750,7 @@ public class RendererUtils
         Boolean b = (Boolean)component.getAttributes().get(attrName);
         return b != null ? b.booleanValue() : defaultValue;
     }
-    
+
     public static int getIntegerAttribute(UIComponent component,
                                           String attrName,
                                           int defaultValue)

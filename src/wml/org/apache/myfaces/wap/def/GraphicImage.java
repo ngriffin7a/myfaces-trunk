@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,31 +15,27 @@
  */
 package org.apache.myfaces.wap.def;
 
-/**  
- * Renders an WML "img" element. Render the value of the component as the value of the "src" attribute, 
- * after passing it to the getResourceURL() method of the ViewHandler for this application, and passing the result 
- * through the encodeResourceURL() method of theExternalContext. 
- * Render the value of the alt attribute as the value of the "alt" attribute. 
- * If the "styleClass" attribute is specified, render its value as the value of the "class" attribute. 
+/**
+ * Renders an WML "img" element. Render the value of the component as the value of the "src" attribute,
+ * after passing it to the getResourceURL() method of the ViewHandler for this application, and passing the result
+ * through the encodeResourceURL() method of theExternalContext.
+ * Render the value of the alt attribute as the value of the "alt" attribute.
+ * If the "styleClass" attribute is specified, render its value as the value of the "class" attribute.
  *
- * @wapfaces.tag 
+ * @wapfaces.tag
  *       componentFamily="UIGraphic"
  *       rendererType="ImageRenderer"
  *       tagName="graphicImage"
  *       tagBaseClass="org.apache.myfaces.wap.base.ComponentTagBase"
  *       bodyContent="empty"
- * 
- * @author  <a href="mailto:Jiri.Zaloudek@ivancice.cz">Jiri Zaloudek</a> (latest modification by $Author$)
- * @version $Revision$ $Date$ 
- * $Log$
- * Revision 1.1  2004/12/30 09:37:25  matzew
- * added a new RenderKit for WML. Thanks to Jirí Žaloudek
  *
- */ 
+ * @author  <a href="mailto:Jiri.Zaloudek@ivancice.cz">Jiri Zaloudek</a> (latest modification by $Author$)
+ * @version $Revision$ $Date$
+ */
 
 
 public class GraphicImage extends javax.faces.component.UIGraphic {
-    
+
     /**
      * This attribute specifies an alternative textual representation for the image. This representation is used when the image can not be displayed using any other method (i.e., the user agent does not support images, or the image contents can not be found).
      *
@@ -57,7 +53,7 @@ public class GraphicImage extends javax.faces.component.UIGraphic {
      *    required="true"
      */
     java.lang.String url;
-    
+
     /**
      * This attribute specifies an alternative internal representation for the image. This representation is used if it exists; otherwise the image is downloaded from the URI specified in the src attribute, i.e., any localsrc parameter specified takes precedence over the image specified in the src parameter.
      *
@@ -105,7 +101,7 @@ public class GraphicImage extends javax.faces.component.UIGraphic {
      *     valueBinding="true"
      */
     java.lang.String width;
-    
+
     /**
      * The attribute styleClass affiliates an element with one or more classes. Multiple elements can be given the same styleClass name.
      *
@@ -121,7 +117,7 @@ public class GraphicImage extends javax.faces.component.UIGraphic {
      *     valueBinding="true"
      */
     java.lang.String xmllang;
-    
+
     /**
      * The current value of this component.
      *
@@ -140,16 +136,16 @@ public class GraphicImage extends javax.faces.component.UIGraphic {
      *     inherit="true"
      */
     java.lang.String id;
-    
+
     /**
-     * Flag indicating whether or not this component should be rendered (during Render Response Phase), or processed on any subsequent form submit. 
+     * Flag indicating whether or not this component should be rendered (during Render Response Phase), or processed on any subsequent form submit.
      *
      * @wapfaces.attribute
      *     abstract="true"
      *     inherit="true"
      */
     boolean rendered;
-        
+
     /**
      * The value binding expression linking this component to a property in a backing bean.
      *
@@ -157,5 +153,5 @@ public class GraphicImage extends javax.faces.component.UIGraphic {
      *     abstract="true"
      *     inherit="true"
      */
-    java.lang.String binding;    
+    java.lang.String binding;
 }
