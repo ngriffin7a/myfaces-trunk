@@ -39,6 +39,7 @@ public class HtmlInputDate extends UIInput implements UserRoleAware {
     private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.Date";
     private static final boolean DEFAULT_DISABLED = false;
     
+	private Boolean _readonly = null;
     private String _enabledOnUserRole = null;
     private String _visibleOnUserRole = null;
     
@@ -88,7 +89,17 @@ public class HtmlInputDate extends UIInput implements UserRoleAware {
     public void setPopupCalendar(boolean popupCalendar){
         this._popupCalendar = Boolean.valueOf(popupCalendar);
     }
-	
+
+    public boolean isReadonly(){
+        if (_readonly != null) return _readonly.booleanValue();
+        ValueBinding vb = getValueBinding("readonly");
+        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+        return v != null ? v.booleanValue() : false;
+    }
+    public void setReadonly(boolean readonly){
+        _readonly = Boolean.valueOf(readonly);
+    }
+
     public void setEnabledOnUserRole(String enabledOnUserRole){
         _enabledOnUserRole = enabledOnUserRole;
     }
@@ -123,14 +134,15 @@ public class HtmlInputDate extends UIInput implements UserRoleAware {
     }
 	
     public Object saveState(FacesContext context) {
-        Object values[] = new Object[7];
+        Object values[] = new Object[8];
         values[0] = super.saveState(context);
         values[1] = _type;
         values[2] = _popupCalendar;
         values[3] = _userData;
         values[4] = _disabled;
-        values[5] = _enabledOnUserRole;
-        values[6] = _visibleOnUserRole;
+		values[5] = _readonly;
+        values[6] = _enabledOnUserRole;
+        values[7] = _visibleOnUserRole;
         return values;
     }
 
@@ -141,8 +153,9 @@ public class HtmlInputDate extends UIInput implements UserRoleAware {
         _popupCalendar = (Boolean)values[2];
         _userData = (UserData)values[3];
         _disabled = (Boolean)values[4];
-        _enabledOnUserRole = (String)values[5];
-        _visibleOnUserRole = (String)values[6];
+		_readonly = (Boolean)values[5];
+        _enabledOnUserRole = (String)values[6];
+        _visibleOnUserRole = (String)values[7];
     }
     
     public static class UserData implements Serializable {

@@ -22,9 +22,7 @@ import org.apache.myfaces.taglib.html.HtmlInputTextTagBase;
 
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
- * @version $Revision$ $Date$ $Log:
- *          HtmlInputCalendarTag.java,v $
- *  
+ * @version $Revision$ $Date$
  */
 public class HtmlInputDateTag extends HtmlInputTextTagBase {
     public String getComponentType() {
