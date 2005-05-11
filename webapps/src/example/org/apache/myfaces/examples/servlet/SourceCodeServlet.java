@@ -19,7 +19,6 @@ public class SourceCodeServlet extends HttpServlet
         
         // get the actual file location of the requested resource
         String realPath = getServletConfig().getServletContext().getRealPath(webPage);
-        System.out.println("realPath: " + realPath);
 
         // output an HTML page
         res.setContentType("text/plain");
