@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,31 +27,6 @@ import java.util.*;
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.2  2004/12/11 21:41:33  svieujot
- * Add method to get the FileItems.
- *
- * Revision 1.1  2004/12/01 16:32:03  svieujot
- * Convert the Multipart filter in an ExtensionsFilter that provides an additional facility to include resources in a page.
- * Tested only with javascript resources right now, but should work fine with images too.
- * Some work to do to include css resources.
- * The popup component has been converted to use this new Filter.
- *
- * Revision 1.8  2004/11/16 16:25:52  mmarinschek
- * new popup - component; not yet finished
- *
- * Revision 1.7  2004/10/13 11:50:57  matze
- * renamed packages to org.apache
- *
- * Revision 1.6  2004/09/09 13:43:59  manolito
- * query string parameters where missing in the parameter map
- *
- * Revision 1.5  2004/08/16 18:06:47  svieujot
- * Another bug fix for bug #1001511. Patch submitted by Takashi Okamoto.
- *
- * Revision 1.4  2004/08/02 04:26:06  svieujot
- * Fix for bug #1001511 : setHeaderEncoding
- *
  */
 public class MultipartRequestWrapper
 		extends HttpServletRequestWrapper
@@ -66,7 +41,7 @@ public class MultipartRequestWrapper
     int thresholdSize;
     String repositoryPath;
 
-    public MultipartRequestWrapper(HttpServletRequest request, 
+    public MultipartRequestWrapper(HttpServletRequest request,
                                    int maxSize, int thresholdSize,
                                    String repositoryPath){
 		super( request );
@@ -75,7 +50,7 @@ public class MultipartRequestWrapper
         this.thresholdSize = thresholdSize;
         this.repositoryPath = repositoryPath;
 	}
-	
+
 	private void parseRequest() {
 		fileUpload = new DiskFileUpload();
 		fileUpload.setFileItemFactory(new DefaultFileItemFactory());
@@ -151,7 +126,7 @@ public class MultipartRequestWrapper
             }
         }
 	}
-	
+
 	private void addTextParameter(String name, String value){
 		if( ! parametersMap.containsKey( name ) ){
 			String[] valuesArray = {value};
@@ -165,41 +140,41 @@ public class MultipartRequestWrapper
 			parametersMap.put(name, valuesArray);
 		}
 	}
-	
+
 	public Enumeration getParameterNames() {
 		if( parametersMap == null ) parseRequest();
-		
+
 		return Collections.enumeration( parametersMap.keySet() );
 	}
-	
+
 	public String getParameter(String name) {
 		if( parametersMap == null ) parseRequest();
-		
+
 		String[] values = (String[])parametersMap.get( name );
 		if( values == null )
 			return null;
 		return values[0];
 	}
-	
+
 	public String[] getParameterValues(String name) {
 		if( parametersMap == null ) parseRequest();
-		
+
 		return (String[])parametersMap.get( name );
 	}
-	
+
 	public Map getParameterMap() {
 		if( parametersMap == null ) parseRequest();
-		
+
 		return parametersMap;
 	}
-	
+
 	// Hook for the x:inputFileUpload tag.
 	public FileItem getFileItem(String fieldName) {
 		if( fileItems == null ) parseRequest();
-		
+
 		return (FileItem) fileItems.get( fieldName );
 	}
-	
+
 	/**
 	 * Not used internaly by MyFaces, but provides a way to handle the uploaded files
 	 * out of MyFaces.

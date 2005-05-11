@@ -40,46 +40,6 @@ import java.util.Locale;
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.13  2005/04/29 00:27:30  grantsmith
- * MYFACES-220 closed. Patch from Jason Kissinger
- *
- * Revision 1.12  2004/12/22 08:12:36  manolito
- * Use lastIndexOf instead of indexOf as suggested by sean.schofield@gmail.com on mailing list
- *
- * Revision 1.11  2004/12/19 11:42:36  tomsp
- * removed Nullpointer from renderView when no tiles-definition is found
- *
- * Revision 1.10  2004/11/11 17:43:07  tomsp
- * no message
- *
- * Revision 1.9  2004/11/11 14:50:38  bdudney
- * made getInitParameter use the defined constant instead of the string
- *
- * Revision 1.8  2004/11/08 09:09:42  tomsp
- * no message
- *
- * Revision 1.7  2004/11/08 08:46:45  tomsp
- * no message
- *
- * Revision 1.6  2004/10/13 11:50:56  matze
- * renamed packages to org.apache
- *
- * Revision 1.5  2004/10/04 11:11:46  royalts
- * removed check on urlPattern
- *
- * Revision 1.4  2004/08/26 15:34:06  manolito
- * trivial cosmetic changes
- *
- * Revision 1.3  2004/08/26 14:25:21  manolito
- * JspTilesViewHandlerInitializer no longer needed, JspTilesViewHandlerImpl is initialized automatically now
- *
- * Revision 1.2  2004/07/19 08:18:19  royalts
- * moved org.apache.myfaces.webapp.webxml and org.apache.util.xml to share src-tree (needed WebXml for JspTilesViewHandlerImpl)
- *
- * Revision 1.1  2004/07/16 17:46:46  royalts
- * moved org.apache.myfaces.webapp.webxml and org.apache.util.xml to share src-tree (needed WebXml for JspTilesViewHandlerImpl)
- *
  */
 public class JspTilesViewHandlerImpl
     extends ViewHandler

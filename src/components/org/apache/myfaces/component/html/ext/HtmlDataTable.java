@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,58 +40,6 @@ import java.util.Map;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @author Manfred Geiler
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.20  2005/03/29 11:40:50  matzew
- * added new crosstable component (x:columns). Contributed by Mathias Broekelmann
- *
- * Revision 1.19  2005/03/21 12:33:46  svieujot
- * Set x:dataTable preserveDataModel default value to false.
- *
- * Revision 1.18  2005/03/19 04:27:55  svieujot
- * Align default values for preserveDataModel and preserveSort between HtmlDataTable.java, HtmlDataTableTag.java and the TLD.
- *
- * Revision 1.17  2005/03/04 01:21:22  mmarinschek
- * reverted bug fix as it introduced several new bugs with data-table
- *
- * Revision 1.15  2004/10/13 11:50:56  matze
- * renamed packages to org.apache
- *
- * Revision 1.14  2004/09/13 15:59:44  manolito
- * fixed problems with nested UIData and HtmlDataTable components
- *
- * Revision 1.13  2004/09/10 14:15:00  manolito
- * new previousRowDataVar attribute in extended HtmlDataTable
- *
- * Revision 1.12  2004/08/20 07:14:39  manolito
- * HtmlDataTable now also supports rowIndexVar and rowCountVar
- *
- * Revision 1.11  2004/08/10 13:29:59  manolito
- * full revision of extended HtmlDataTable so that there is no more cache problem
- *
- * Revision 1.10  2004/07/01 21:53:05  mwessendorf
- * ASF switch
- *
- * Revision 1.9  2004/06/22 14:33:29  royalts
- * no message
- *
- * Revision 1.8  2004/06/21 16:01:57  royalts
- * setSortAscending(...) and setSortColumn have to update model their own, because processUdates won't be executed.
- *
- * Revision 1.7  2004/06/21 14:43:20  manolito
- * no more calls to getRowCount to determine if list is empty before encodeBegin was called
- *
- * Revision 1.6  2004/06/21 12:15:29  manolito
- * encodeBegin in UIData examines descendants valid flag recursivly now before refreshing DataModel
- *
- * Revision 1.5  2004/05/21 10:39:26  manolito
- * new renderedIfEmpty attribute in ext. HtmlDataTable component
- *
- * Revision 1.4  2004/05/18 14:31:36  manolito
- * user role support completely moved to components source tree
- *
- * Revision 1.3  2004/05/18 11:22:44  manolito
- * optimized local value handling, so that getValue of UIData is only called when needed
- *
  */
 public class HtmlDataTable
         extends HtmlDataTableHack
@@ -466,7 +414,7 @@ public class HtmlDataTable
     protected void refresh(FacesContext context)
     {
         if (log.isDebugEnabled()) log.debug("Refresh for HtmlDataTable " + getClientId(context) + " was called");
-        
+
         if (_firstTimeRendered || isAllChildrenAndFacetsValid())
         {
             // No invalid children
@@ -483,7 +431,7 @@ public class HtmlDataTable
         }
     }
 
-    
+
     public void encodeBegin(FacesContext context) throws IOException
     {
         //refresh of _dataModel already done via refresh (called by HtmlDataTablePhaseListener)

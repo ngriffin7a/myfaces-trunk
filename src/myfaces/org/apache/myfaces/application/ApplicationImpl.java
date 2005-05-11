@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -49,32 +49,6 @@ import java.util.*;
  * @author Anton Koinov
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.37  2005/03/10 10:26:00  matzew
- * Patch for the ApplicationImpl form Mike Traum (MYFACES-122).
- * Also changed behaivor of "createConverter(java.lang.String converterId)"
- *
- * Revision 1.36  2005/03/04 00:28:45  mmarinschek
- * Changes in configuration due to missing Attribute/Property classes for the converter; not building in the functionality yet except for part of the converter properties
- *
- * Revision 1.35  2004/12/03 08:46:09  manolito
- * MYFACES-45 / ApplicationImpl does not correctly traverse a Class' hierarchy to create a Converter
- *
- * Revision 1.34  2004/10/13 11:50:59  matze
- * renamed packages to org.apache
- *
- * Revision 1.33  2004/09/08 07:45:05  mwessendorf
- * set DefaultRenderKitId = "HTML_BASIC"
- *
- * Revision 1.32  2004/08/10 10:57:37  manolito
- * fixed StackOverflow in ClassUtils and cleaned up ClassUtils methods
- *
- * Revision 1.31  2004/07/01 22:05:14  mwessendorf
- * ASF switch
- *
- * Revision 1.30  2004/06/14 12:55:23  manolito
- * Added missing CVS Log comment
- *
  */
 public class ApplicationImpl
     extends Application
@@ -290,7 +264,7 @@ public class ApplicationImpl
             log.error("addComponent: component = null is not allowed");
             throw new NullPointerException("addComponent: component = null is not allowed");
         }
-        
+
         try
         {
             _componentClassMap.put(componentType, ClassUtils.simpleClassForName(componentClassName));
@@ -316,7 +290,7 @@ public class ApplicationImpl
             throw new NullPointerException("addConverter: converterClass = null ist not allowed");
         }
 
-        
+
         try
         {
             _converterIdToClassMap.put(converterId, ClassUtils.simpleClassForName(converterClass));
@@ -341,7 +315,7 @@ public class ApplicationImpl
             log.error("addConverter: converterClass = null is not allowed");
             throw new NullPointerException("addConverter: converterClass = null ist not allowed");
         }
-        
+
         try
         {
             _converterClassToClassMap.put(targetClass, ClassUtils.simpleClassForName(converterClass));
@@ -383,7 +357,7 @@ public class ApplicationImpl
             log.error("addValidator:  validatorClass = null is not allowed");
             throw new NullPointerException("addValidator:  validatorClass = null ist not allowed");
         }
-        
+
         try
         {
             _validatorClassMap.put(validatorId, ClassUtils.simpleClassForName(validatorClass));
@@ -609,7 +583,7 @@ public class ApplicationImpl
             throw new NullPointerException("createMethodBinding: reference = null ist not allowed");
         }
 
-        // We choose to instantiate a new MethodBinding every time as this is much easier 
+        // We choose to instantiate a new MethodBinding every time as this is much easier
         // and about as efficient as implementing a cache specifically for MethodBinding,
         // which is complicated by the need to use a conposite key=(reference, params)
         // (significant part of MethodBinding is already cached by ValueBinding implicitly)
@@ -623,15 +597,15 @@ public class ApplicationImpl
             log.error("createValidator: validatorId = null is not allowed");
             throw new NullPointerException("createValidator: validatorId = null ist not allowed");
         }
-        
+
         Class validatorClass = (Class) _validatorClassMap.get(validatorId);
         if (validatorClass == null)
         {
-            String message = "Unknown converter id '" + validatorId + "'."; 
+            String message = "Unknown converter id '" + validatorId + "'.";
             log.error(message);
             throw new FacesException(message);
         }
-        
+
         try
         {
             return (Validator) validatorClass.newInstance();

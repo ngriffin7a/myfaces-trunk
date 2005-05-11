@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,37 +26,9 @@ import java.util.List;
 
 /**
  * see Javadoc of JSF Specification
- * 
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.18  2005/04/06 10:21:55  manolito
- * MYFACES-149 fix for NullPointerException in _SharedRendererUtils.getConvertedUISelectManyValue
- *
- * Revision 1.17  2005/03/04 00:41:40  mmarinschek
- * fixed myfaces-
- * 116
- *
- * Revision 1.16  2005/03/04 00:28:45  mmarinschek
- * Changes in configuration due to missing Attribute/Property classes for the converter; not building in the functionality yet except for part of the converter properties
- *
- * Revision 1.15  2005/01/23 22:06:33  svieujot
- * Bugfix :  When no value were submitted, default values were set.
- * This caused a bug when the component wasn't displayed (for example if it was in a TabPanel's Tab that wasn't displayed).
- * It was reseting the backend bean's value, and sometime causing Null Pointer Exceptions.
- *
- * Revision 1.14  2005/01/22 16:47:17  mmarinschek
- * fixing bug with validation not called if the submitted value is empty; an empty string is submitted instead if the component is enabled.
- *
- * Revision 1.13  2004/12/07 21:33:31  matzew
- * closing MYFACES-6, thanks to  Heath Borders-Wing for patching it!
- *
- * Revision 1.12  2004/07/01 22:00:50  mwessendorf
- * ASF switch
- *
- * Revision 1.11  2004/06/14 12:55:21  manolito
- * Added missing CVS Log comment
- *
  */
 public class UISelectMany
         extends UIInput

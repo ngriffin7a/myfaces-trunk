@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,19 +22,9 @@ import javax.faces.el.ValueBinding;
  * see Javadoc of JSF Specification
  *
  * Javadoc says default for showDetail is false, but Specs say it is true!?
- * 
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.8  2004/07/01 22:00:50  mwessendorf
- * ASF switch
- *
- * Revision 1.7  2004/03/31 14:51:48  manolito
- * summaryFormat and detailFormat support
- *
- * Revision 1.6  2004/03/30 17:47:33  manolito
- * Message and Messages refactored
- *
  */
 public class UIMessage
         extends UIComponentBase

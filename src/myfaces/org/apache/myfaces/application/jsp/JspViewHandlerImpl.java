@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,61 +45,6 @@ import org.apache.myfaces.webapp.webxml.WebXml;
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.35  2005/03/10 15:44:59  matzew
- * Patch for supporting Strut-Faces form Mike Traum (MYFACES-121)
- *
- * Revision 1.34  2005/02/10 20:31:21  matzew
- * organized import statements
- *
- * Revision 1.33  2005/02/10 20:24:17  matzew
- * closed MYFACES-101 in Jira; Thanks to Stan Silvert (JBoss Group)
- *
- * Revision 1.32  2005/01/27 02:38:44  svieujot
- * Remove portlet-api dependency while keeping portlet support.
- *
- * Revision 1.31  2005/01/26 17:03:12  matzew
- * MYFACES-86. portlet support provided by Stan Silver (JBoss Group)
- *
- * Revision 1.30  2004/10/13 11:50:59  matze
- * renamed packages to org.apache
- *
- * Revision 1.29  2004/10/05 08:22:55  manolito
- * #1031187 [PATCH] JspViewHandlerImpl: Remove dep on ServletRequest
- *
- * Revision 1.28  2004/09/02 09:04:14  manolito
- * typing errors in comments
- *
- * Revision 1.27  2004/09/01 18:32:55  mwessendorf
- * Organize Imports
- *
- * Revision 1.26  2004/08/11 23:09:35  o_rossmueller
- * handle character encoding as described in section 2.5.2.2 of JSF 1.1
- *
- * Revision 1.25  2004/08/11 22:56:30  o_rossmueller
- * handle character encoding as described in section 2.5.2.2 of JSF 1.1
- *
- * Revision 1.24  2004/07/16 08:34:01  manolito
- * cosmetic change
- *
- * Revision 1.23  2004/07/10 06:35:08  mwessendorf
- * is defaultRenderKitId set in faces-config.xml ?
- *
- * Revision 1.22  2004/07/01 22:05:20  mwessendorf
- * ASF switch
- *
- * Revision 1.21  2004/05/18 12:02:14  manolito
- * getActionURL and getResourceURL must not call encodeActionURL or encodeResourceURL
- *
- * Revision 1.20  2004/05/12 01:41:31  o_rossmueller
- * fix #951896: added state params to link URLs for ALLOW_JAVASCRIPT=false
- *
- * Revision 1.19  2004/04/27 07:37:56  manolito
- * bugfix: handleCharacterEncoding must be called before any request parameters are retrieved
- *
- * Revision 1.18  2004/04/05 09:16:24  manolito
- * javadoc header
- *
  */
 public class JspViewHandlerImpl
         extends ViewHandler
@@ -143,7 +88,7 @@ public class JspViewHandlerImpl
     }
 
     public String calculateRenderKitId(FacesContext facesContext)
-    {	
+    {
     	String renderKitId = facesContext.getApplication().getDefaultRenderKitId();
         return (renderKitId!=null) ? renderKitId : RenderKitFactory.HTML_BASIC_RENDER_KIT;
         //TODO: how to calculate from client?
@@ -201,7 +146,7 @@ public class JspViewHandlerImpl
             url.setParameter(MyFacesGenericPortlet.VIEW_ID, viewId);
             return url.toString();
         }
-        
+
         String path = getViewIdPath(facesContext, viewId);
         if (path.length() > 0 && path.charAt(0) == '/')
         {
@@ -242,7 +187,7 @@ public class JspViewHandlerImpl
             externalContext.dispatch(viewId);
             return;
         }
-        
+
         ServletMapping servletMapping = getServletMapping(externalContext);
         if (servletMapping.isExtensionMapping())
         {
@@ -274,7 +219,7 @@ public class JspViewHandlerImpl
             ServletResponse response = (ServletResponse) externalContext.getResponse();
             response.setLocale(viewToRender.getLocale());
         }
-        
+
         // TODO: 2.5.2.2 for Portlet?  What do I do?
 
         externalContext.dispatch(viewId);
@@ -332,11 +277,11 @@ public class JspViewHandlerImpl
             throw new IllegalArgumentException("ViewId must start with '/' (viewId = " + viewId + ")");
         }
 
-        if (PortletUtil.isPortletRequest(facescontext)) 
+        if (PortletUtil.isPortletRequest(facescontext))
         {
             return viewId;
         }
-        
+
         ServletMapping servletMapping = getServletMapping(facescontext.getExternalContext());
 
         if (servletMapping.isExtensionMapping())
@@ -415,7 +360,7 @@ public class JspViewHandlerImpl
             }
         }
 
-        // handle cases as best possible where servletPath is not a faces servlet, 
+        // handle cases as best possible where servletPath is not a faces servlet,
         // such as when coming through struts-faces
         if (mappings.size() > 0) {
             return (ServletMapping) mappings.get(0);

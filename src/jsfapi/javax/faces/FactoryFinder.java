@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,39 +27,6 @@ import java.util.*;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.19  2004/10/13 11:50:59  matze
- * renamed packages to org.apache
- *
- * Revision 1.18  2004/07/20 14:57:27  manolito
- * cosmetic change
- *
- * Revision 1.17  2004/07/20 14:56:41  manolito
- * removed public FactoryFinder method getValidFactoryNames - there is no such method in JSF 1.1 !
- *
- * Revision 1.16  2004/07/07 08:37:06  mwessendorf
- * final class
- *
- * Revision 1.15  2004/07/06 23:21:19  o_rossmueller
- * fix #985217: decoration support for factories
- *
- * Revision 1.14  2004/07/01 22:00:47  mwessendorf
- * ASF switch
- *
- * Revision 1.13  2004/06/16 23:02:20  o_rossmueller
- * merged confignew_branch
- *
- * Revision 1.12.2.1  2004/06/16 01:25:50  o_rossmueller
- * refactorings: FactoryFinder, decorator creation, dispenser (removed reverse order)
- * bug fixes
- * additional tests
- *
- * Revision 1.12  2004/04/29 07:24:51  manolito
- * fixed NPE in releaseFactories
- *
- * Revision 1.11  2004/04/13 08:25:59  manolito
- * Log
- *
  */
 public final class FactoryFinder
 {

@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,47 +45,6 @@ import org.apache.myfaces.util.HashMapUtils;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.35  2005/03/11 09:12:15  matzew
- * Patch from Stan Silver that removes the portlet dependency (MYFACES-126)
- *
- * Revision 1.34  2005/01/26 17:03:09  matzew
- * MYFACES-86. portlet support provided by Stan Silver (JBoss Group)
- *
- * Revision 1.33  2004/10/13 11:50:59  matze
- * renamed packages to org.apache
- *
- * Revision 1.32  2004/08/26 08:03:29  manolito
- * viewId for redirect might already contain a query string, so we must check for ? in url
- *
- * Revision 1.31  2004/08/26 08:00:58  manolito
- * add current queryString to url on redirect
- *
- * Revision 1.30  2004/07/07 08:34:57  mwessendorf
- * removed unused import-statements
- *
- * Revision 1.29  2004/07/07 00:25:04  o_rossmueller
- * tidy up config/confignew package (moved confignew classes to package config)
- *
- * Revision 1.28  2004/07/01 22:05:14  mwessendorf
- * ASF switch
- *
- * Revision 1.27  2004/06/16 23:02:21  o_rossmueller
- * merged confignew_branch
- *
- * Revision 1.26.2.1  2004/06/16 02:07:22  o_rossmueller
- * get navigation rules from RuntimeConfig
- * refactored all remaining usages of MyFacesFactoryFinder to use RuntimeConfig
- *
- * Revision 1.26  2004/05/18 12:02:28  manolito
- * getActionURL and getResourceURL must not call encodeActionURL or encodeResourceURL
- *
- * Revision 1.25  2004/05/10 04:49:26  dave0000
- * small optimization improvements
- *
- * Revision 1.24  2004/04/26 11:28:16  manolito
- * global navigation-rule with no from-view-id NPE bug
- *
  */
 public class NavigationHandlerImpl
     extends NavigationHandler
@@ -93,13 +52,13 @@ public class NavigationHandlerImpl
     private static final Log log = LogFactory.getLog(NavigationHandlerImpl.class);
 
     private static final String ASTERISK = "*";
-    
+
     private Map _navigationCases = null;
     private List _wildcardKeys = new ArrayList();
 
     public NavigationHandlerImpl()
     {
-        if (log.isTraceEnabled()) log.trace("New NavigationHandler instance created");        
+        if (log.isTraceEnabled()) log.trace("New NavigationHandler instance created");
     }
 
     public void handleNavigation(FacesContext facesContext, String fromAction, String outcome)
@@ -161,7 +120,7 @@ public class NavigationHandlerImpl
                           " toViewId =" + navigationCase.getToViewId() +
                           " redirect=" + navigationCase.isRedirect());
             }
-            if (navigationCase.isRedirect() && 
+            if (navigationCase.isRedirect() &&
                (!PortletUtil.isPortletRequest(facesContext)))
             { // Spec section 7.4.2 says "redirects not possible" in this case for portlets
                 ExternalContext externalContext = facesContext.getExternalContext();
@@ -183,7 +142,7 @@ public class NavigationHandlerImpl
                         }
                     }
                 }
-                
+
                 try
                 {
                     externalContext.redirect(externalContext.encodeActionURL(redirectPath));
@@ -239,13 +198,13 @@ public class NavigationHandlerImpl
     {
         if (_navigationCases == null)
         {
-            synchronized(this) 
+            synchronized(this)
             {
                 if (_navigationCases == null)
                 {
                     ExternalContext externalContext = facesContext.getExternalContext();
                     RuntimeConfig runtimeConfig = RuntimeConfig.getCurrentInstance(externalContext);
-        
+
                     Collection rules = runtimeConfig.getNavigationRules();
                     int rulesSize = rules.size();
                     Map cases = new HashMap(HashMapUtils.calcCapacity(rulesSize));
@@ -255,7 +214,7 @@ public class NavigationHandlerImpl
                     {
                         NavigationRule rule = (NavigationRule) iterator.next();
                         String fromViewId = rule.getFromViewId();
-        
+
                         //specification 7.4.2 footnote 4 - missing fromViewId is allowed:
                         if (fromViewId == null)
                         {
@@ -265,7 +224,7 @@ public class NavigationHandlerImpl
                         {
                             fromViewId = fromViewId.trim();
                         }
-        
+
                         List list = (List) cases.get(fromViewId);
                         if (list == null)
                         {
@@ -278,15 +237,15 @@ public class NavigationHandlerImpl
                         } else {
                             list.addAll(rule.getNavigationCases());
                         }
-        
+
                     }
                     Collections.sort(wildcardKeys, new KeyComparator());
-                        
+
                     synchronized (cases)
                     {
                         // We do not really need this sychronization at all, but this
                         // gives us the peace of mind that some good optimizing compiler
-                        // will not rearrange the execution of the assignment to an 
+                        // will not rearrange the execution of the assignment to an
                         // earlier time, before all init code completes
                         _navigationCases = cases;
                         _wildcardKeys = wildcardKeys;

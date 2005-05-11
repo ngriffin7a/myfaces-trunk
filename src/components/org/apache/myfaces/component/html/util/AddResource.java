@@ -44,83 +44,6 @@ import org.apache.myfaces.renderkit.html.HTML;
  *
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.23  2005/03/14 18:25:36  svieujot
- * ExtensionsFilter : Set last modified header (and us it in the URL instead of cacheKey).
- *
- * Revision 1.22  2005/03/14 17:49:32  svieujot
- * Cleanup.
- *
- * Revision 1.21  2005/03/14 15:58:42  svieujot
- * Added caching to the ExtensionsFilter
- *
- * Revision 1.20  2005/02/22 08:41:50  matzew
- * Patch for the new tree component form Sean Schofield
- *
- * Revision 1.19  2005/02/16 00:50:37  oros
- * SF issue #1043331: replaced all &nbsp; by the corresponding numeric entity &#160; so safari users will be happy, too, with MyFaces output
- *
- * Revision 1.18  2005/02/08 12:13:39  svieujot
- * Bugfix : Serve xsl files with the text/xml content type.
- *
- * Revision 1.17  2004/12/27 04:11:11  mmarinschek
- * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
- *
- * Revision 1.16  2004/12/24 14:11:50  svieujot
- * Return resource relative mapped path when given null context.
- *
- * Revision 1.15  2004/12/17 13:19:10  mmarinschek
- * new component jsValueChangeListener
- *
- * Revision 1.14  2004/12/06 01:02:02  svieujot
- * Write the response in the log messages (mainly to debug problems due to filters order).
- *
- * Revision 1.13  2004/12/03 21:20:09  svieujot
- * Add type="text/css" for inline styles.
- *
- * Revision 1.12  2004/12/03 21:15:21  svieujot
- * define AdditionalHeaderInfoToRender.equals to prevent several include of the same header info.
- *
- * Revision 1.11  2004/12/03 20:50:52  svieujot
- * Minor bugfix, and add <script ... defer="true"> capability.
- *
- * Revision 1.10  2004/12/03 20:27:51  svieujot
- * Add capability to add inline style to the header.
- *
- * Revision 1.9  2004/12/02 22:26:23  svieujot
- * Simplify the AddResource methods
- *
- * Revision 1.8  2004/12/02 11:53:27  svieujot
- * Replace java 1.5 code by 1.4 version.
- *
- * Revision 1.7  2004/12/02 02:20:55  svieujot
- * Bugfix : render the head elements in the same order as they were added (use a LinkedHashSet).
- *
- * Revision 1.6  2004/12/02 02:07:22  svieujot
- * Make the Extensions filter work with resource hierarchies.
- * A small concession had to be made though :
- * The ExtensionsFilter must have the (additional) /faces/*
- *
- * Revision 1.5  2004/12/02 00:25:34  oros
- * i18n issues
- * some slight refactorings
- *
- * Revision 1.4  2004/12/01 22:12:51  svieujot
- * Add xml and xsl content types.
- *
- * Revision 1.3  2004/12/01 20:29:22  svieujot
- * Add javadoc.
- *
- * Revision 1.2  2004/12/01 20:25:10  svieujot
- * Make the Extensions filter support css and image resources.
- * Convert the popup calendar to use this new filter.
- *
- * Revision 1.1  2004/12/01 16:32:03  svieujot
- * Convert the Multipart filter in an ExtensionsFilter that provides an additional facility to include resources in a page.
- * Tested only with javascript resources right now, but should work fine with images too.
- * Some work to do to include css resources.
- * The popup component has been converted to use this new Filter.
- *
  */
 public class AddResource {
     private static final Log log = LogFactory.getLog(AddResource.class);
@@ -215,9 +138,9 @@ public class AddResource {
     }
 
 	private static long getCacheKey(){
-		return getLastModified(); 
+		return getLastModified();
 	}
-	
+
 	private static Date lastModified = null;
 	private static long getLastModified(){
 		if( lastModified == null ){
@@ -232,8 +155,8 @@ public class AddResource {
 				log.error("Unparsable lastModified : "+sLastModified);
 			}
 		}
-		
-		return lastModified.getTime(); 
+
+		return lastModified.getTime();
 	}
 
     public static boolean isResourceMappedPath(HttpServletRequest request){
@@ -252,7 +175,7 @@ public class AddResource {
         int posStartComponentName = uri.indexOf( componentNameStartsAfter )+componentNameStartsAfter.length();
         int posEndComponentName = uri.indexOf("/", posStartComponentName);
         String componentName = uri.substring(posStartComponentName, posEndComponentName);
-		
+
 		// Skip cache key
 		int posStartResourceFileName = uri.indexOf("/", posEndComponentName+1)+1;
 
@@ -321,13 +244,13 @@ public class AddResource {
         }
 
 		response.setDateHeader("Last-Modified", getLastModified());
-		
+
 		// Set browser cache to a week.
 		// There is no risk, as the cache key is part of the URL.
 		Calendar expires = Calendar.getInstance();
 		expires.add(Calendar.DAY_OF_YEAR, 7);
 		response.setDateHeader("Expires", expires.getTimeInMillis());
-		
+
         OutputStream os = response.getOutputStream();
         int c;
         while ((c = is.read()) != -1)

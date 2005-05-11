@@ -36,38 +36,6 @@ import java.util.List;
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.19  2005/04/28 20:58:03  grantsmith
- * MYFACES-187 closed. Removed code suggested by user, ran cactus tests. No new failures.
- *
- * Revision 1.18  2005/04/25 18:43:19  grantsmith
- * MYFACES-187 - Comment out submittedValue - testing required
- *
- * Revision 1.17  2005/04/12 12:41:48  manolito
- * PR: MYFACES-179
- * Submitted by: Mathias Broekelmann
- *
- * Revision 1.16  2005/03/04 00:28:45  mmarinschek
- * Changes in configuration due to missing Attribute/Property classes for the converter; not building in the functionality yet except for part of the converter properties
- *
- * Revision 1.15  2005/01/22 16:47:17  mmarinschek
- * fixing bug with validation not called if the submitted value is empty; an empty string is submitted instead if the component is enabled.
- *
- * Revision 1.14  2004/07/01 22:00:50  mwessendorf
- * ASF switch
- *
- * Revision 1.13  2004/06/07 13:40:38  mwessendorf
- * solved Feature Request #966892
- *
- * Revision 1.12  2004/05/18 10:39:35  manolito
- * (re)set to valid on decode, so that component automatically gets (re)validated
- *
- * Revision 1.11  2004/04/16 15:13:33  manolito
- * validator attribute support and MethodBinding invoke exception handling fixed
- *
- * Revision 1.10  2004/04/06 13:03:35  manolito
- * x-checked getConvertedValue method in api and impl
- *
  */
 public class UIInput
         extends UIOutput

@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,29 +27,6 @@ import java.util.TimeZone;
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.13  2004/07/11 05:23:24  svieujot
- * Remove the DEFAULT_TIME_ZONE
- *
- * Revision 1.12  2004/07/01 22:00:51  mwessendorf
- * ASF switch
- *
- * Revision 1.11  2004/06/07 13:40:37  mwessendorf
- * solved Feature Request #966892
- *
- * Revision 1.10  2004/04/16 09:08:41  royalts
- * fixed getAsString: getTimeZone() may not be used here!!.
- *
- * Revision 1.9  2004/04/01 10:47:00  royalts
- * bugfix in restoreState
- *
- * Revision 1.8  2004/04/01 10:39:53  royalts
- * implements StateHoder was missing
- *
- * Revision 1.7  2004/03/26 12:08:42  manolito
- * Exceptions in getAsString now catched and
- * more relaxed Number casting in all number converters
- *
  */
 public class DateTimeConverter
         implements Converter, StateHolder

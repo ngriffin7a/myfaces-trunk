@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,28 +35,6 @@ import java.util.*;
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.15  2005/03/20 17:26:37  matzew
- * Component identifiers must obey the following syntax restrictions:
- *
- *     * Must not be a zero-length String.
- *     * First character must be a letter or an underscore ('_').
- *     * Subsequent characters must be a letter, a digit, an underscore ('_'), or a dash ('-').
- *
- * For more see JSF spec.
- *
- * Revision 1.14  2004/12/27 04:11:11  mmarinschek
- * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
- *
- * Revision 1.13  2004/08/27 10:45:55  manolito
- * log a warning when getClientId implicitly creates a component id
- *
- * Revision 1.12  2004/07/01 22:00:50  mwessendorf
- * ASF switch
- *
- * Revision 1.11  2004/05/03 10:28:03  manolito
- * getClientId automatically creates id now
- *
  */
 public abstract class UIComponentBase
         extends UIComponent
@@ -115,7 +93,7 @@ public abstract class UIComponentBase
     public String getClientId(FacesContext context)
     {
         if (context == null) throw new NullPointerException("context");
-                 
+
         if (_clientId != null) return _clientId;
 
         boolean idWasNull = false;
@@ -724,7 +702,7 @@ public abstract class UIComponentBase
         //is there any component identifier ?
         if(string == null)
             return;
- 
+
         //Component identifiers must obey the following syntax restrictions:
         //1. Must not be a zero-length String.
         if(string.length()==0){
@@ -739,21 +717,21 @@ public abstract class UIComponentBase
             //2. First character must be a letter or an underscore ('_').
             if(i==0){
                 if(!Character.isLetter(tmpChar) &&  tmpChar !='_'){
-                    throw new IllegalArgumentException("component identifier's first character must be a letter or an underscore ('_')! But it is \""+tmpChar+"\"");            
+                    throw new IllegalArgumentException("component identifier's first character must be a letter or an underscore ('_')! But it is \""+tmpChar+"\"");
                 }
             }else{
 
                 //3. Subsequent characters must be a letter, a digit, an underscore ('_'), or a dash ('-').
                 if(!Character.isDigit(tmpChar) && !Character.isLetter(tmpChar) && tmpChar !='-' && tmpChar !='_'){
-                    throw new IllegalArgumentException("Subsequent characters of component identifier must be a letter, a digit, an underscore ('_'), or a dash ('-')! But component identifier contains \""+tmpChar+"\"");            
+                    throw new IllegalArgumentException("Subsequent characters of component identifier must be a letter, a digit, an underscore ('_'), or a dash ('-')! But component identifier contains \""+tmpChar+"\"");
                 }
             }
         }
-        
+
     }
 
-    
-    
+
+
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
     private static final boolean DEFAULT_RENDERED = true;

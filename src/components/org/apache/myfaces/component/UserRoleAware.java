@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,19 +22,6 @@ package org.apache.myfaces.component;
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.4  2004/10/13 11:50:56  matze
- * renamed packages to org.apache
- *
- * Revision 1.3  2004/07/01 21:53:10  mwessendorf
- * ASF switch
- *
- * Revision 1.2  2004/05/18 14:31:36  manolito
- * user role support completely moved to components source tree
- *
- * Revision 1.1  2004/03/31 07:19:20  manolito
- * changed name from UserRoleSupport
- *
  */
 public interface UserRoleAware
 {

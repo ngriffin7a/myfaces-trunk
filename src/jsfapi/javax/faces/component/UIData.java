@@ -42,41 +42,6 @@ import javax.servlet.jsp.jstl.sql.Result;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.31  2005/04/13 14:18:24  schof
- * Fixes MYFACES-174 (Thanks to Mathias Broeklemann for the patch)
- *
- * Revision 1.30  2005/03/24 16:46:02  matzew
- * MYFACES-142
- *
- * Revision 1.29  2005/03/16 20:10:59  mmarinschek
- * fix for MYFACES-38, alien commit for Heath Borders
- *
- * Revision 1.28  2004/12/27 04:11:11  mmarinschek
- * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
- *
- * Revision 1.27  2004/11/26 22:04:57  svieujot
- * Make UIData work with Collection and not only List.
- * This allows component like x:dataList to work with Sets, or any type of collection data model.
- *
- * Revision 1.26  2004/09/13 15:59:44  manolito
- * fixed problems with nested UIData and HtmlDataTable components
- *
- * Revision 1.25  2004/07/01 22:00:50  mwessendorf
- * ASF switch
- *
- * Revision 1.24  2004/06/21 12:15:29  manolito
- * encodeBegin in UIData examines descendants valid flag recursivly now before refreshing DataModel
- *
- * Revision 1.23  2004/05/27 12:14:55  manolito
- * no message
- *
- * Revision 1.22  2004/05/21 10:39:27  manolito
- * new renderedIfEmpty attribute in ext. HtmlDataTable component
- *
- * Revision 1.21  2004/05/18 11:21:11  manolito
- * optimized saving of descendant states: isAllChildrenAndFacetsValid loop no longer needed
- *
  */
 public class UIData extends UIComponentBase implements NamingContainer
 {

@@ -86,22 +86,4 @@ MyFaces developers guidelines
  *
  * @author Bug Rogers (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.18  2005/04/25 18:43:19  grantsmith
- * MYFACES-187 - Comment out submittedValue - testing required
- *
- * Revision 1.17  2005/04/13 13:15:49  manolito
- * link to Apache-Wide Coding Style Guide
- *
- * Revision 1.16  2004/10/29 15:50:59  mmarinschek
- * Get rid of many of the outdated references to sourceforge. set myfaces extensions tld uri to http://myfaces.apache.org/extensions
- *
- * Revision 1.15  2004/07/05 12:52:43  manolito
- * Apache License
- *
- * Revision 1.14  2004/04/20 18:07:16  bdudney
- * build file refactoring
- *
- * Revision 1.13  2004/03/25 09:14:52  manolito
- * no message
  */

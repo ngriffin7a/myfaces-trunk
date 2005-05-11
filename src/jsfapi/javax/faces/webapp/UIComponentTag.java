@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,48 +35,6 @@ import java.util.*;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.26  2005/03/15 18:43:42  matzew
- * Patch from Stan Silver FOR MYFACES-123
- *
- * Revision 1.25  2005/03/12 02:17:52  mmarinschek
- * ui component logging enhanced
- *
- * Revision 1.24  2005/03/12 02:15:18  mmarinschek
- * jsvalueset now supports maps of maps; ui component logging enhanced
- *
- * Revision 1.23  2004/08/27 12:47:52  manolito
- * automatically assign IDs to facets and children of components that where created by binding
- *
- * Revision 1.22  2004/07/05 23:43:36  o_rossmueller
- * fix #985274: call setProperties for viewRoot
- *
- * Revision 1.21  2004/07/01 22:00:54  mwessendorf
- * ASF switch
- *
- * Revision 1.20  2004/04/26 13:13:52  manolito
- * always release facesContext
- *
- * Revision 1.19  2004/04/26 12:01:39  manolito
- * more reluctant releasing of members for Resin compatibility
- *
- * Revision 1.18  2004/04/20 11:16:23  royalts
- * no message
- *
- * Revision 1.17  2004/04/20 11:11:03  royalts
- * no message
- *
- * Revision 1.16  2004/04/20 10:54:21  royalts
- * added index check to findComponent
- *
- * Revision 1.15  2004/03/31 12:48:03  manolito
- * bug: newly created children added always at end
- *
- * Revision 1.14  2004/03/31 02:29:41  dave0000
- * avoid lastIndexOf scan if not needed
- *
- * Revision 1.13  2004/03/26 11:48:33  manolito
- * additional NPE check
  */
 public abstract class UIComponentTag
         implements Tag
@@ -225,10 +183,10 @@ public abstract class UIComponentTag
     public static boolean isValueReference(String value)
     {
         if (value == null) throw new NullPointerException("value");
-        
+
         int start = value.indexOf("#{");
         if (start < 0) return false;
-        
+
         int end = value.lastIndexOf('}');
         return (end >=0 && start < end);
     }
@@ -493,7 +451,7 @@ public abstract class UIComponentTag
      * Recurse all facets and children and assign them an unique ID if necessary.
      * We must *not* use UIViewRoot#createUniqueId here, because this would affect the
      * order of the created ids upon rerendering the page!
-     */ 
+     */
     private int recurseFacetsAndChildrenForId(FacesContext context,
                                               Iterator facetsAndChildren,
                                               String idPrefix,
@@ -531,7 +489,7 @@ public abstract class UIComponentTag
         }
         parentTag._facetsAdded.add(facetName);
     }
-                             
+
     private int getAddedChildrenCount(UIComponentTag parentTag)
     {
         return parentTag._childrenAdded != null ?
@@ -649,7 +607,7 @@ public abstract class UIComponentTag
             RenderKitFactory renderFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
             RenderKit renderKit = renderFactory.getRenderKit(facesContext,
                                                              facesContext.getViewRoot().getRenderKitId());
-            
+
             _writer = renderKit.createResponseWriter(new _PageContextOutWriter(pageContext),
                                                      pageContext.getRequest().getContentType(), //TODO: is this the correct content type?
                                                      pageContext.getRequest().getCharacterEncoding());

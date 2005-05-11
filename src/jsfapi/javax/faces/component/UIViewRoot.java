@@ -33,29 +33,6 @@ import javax.faces.render.RenderKitFactory;
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.15  2004/12/07 10:49:27  matzew
- * closed MAVEN-10, thanks to Christian Rueed for supporting this
- *
- * Revision 1.14  2004/09/03 12:32:06  tinytoony
- * file upload
- *
- * Revision 1.13  2004/08/23 05:13:37  dave0000
- * Externalize String-to-Locale conversion
- *
- * Revision 1.12  2004/08/22 10:37:29  mwessendorf
- * bug #1007065
- *
- * Revision 1.11  2004/07/01 22:00:48  mwessendorf
- * ASF switch
- *
- * Revision 1.10  2004/06/08 02:37:50  o_rossmueller
- * fix #967991: remove event from queue after broadcase
- * abort event procession on AbortProcessingException
- *
- * Revision 1.9  2004/05/12 07:57:40  manolito
- * Log in javadoc header
- *
  */
 public class UIViewRoot
         extends UIComponentBase

@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,25 +31,6 @@ import java.util.List;
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.6  2005/04/06 19:39:30  manolito
- * MYFACES-157 patch removed, not necessary because of MYFACES-149 fix
- *
- * Revision 1.5  2005/04/06 10:21:55  manolito
- * MYFACES-149 fix for NullPointerException in _SharedRendererUtils.getConvertedUISelectManyValue
- *
- * Revision 1.4  2005/03/31 22:47:14  schof
- * Whitney Hunter's patch for MYFACES-157
- *
- * Revision 1.3  2004/10/13 11:50:59  matze
- * renamed packages to org.apache
- *
- * Revision 1.2  2004/07/01 22:00:50  mwessendorf
- * ASF switch
- *
- * Revision 1.1  2004/04/06 13:03:35  manolito
- * x-checked getConvertedValue method in api and impl
- *
  */
 class _SharedRendererUtils
 {

@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,42 +41,6 @@ import java.io.IOException;
  * @author Thomas Spiegl (latest modification by $Author$)
  * @author Manfred Geiler
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.22  2005/01/18 07:03:15  matzew
- * added patch form Sean Schofield to solve state saving issue on server side. (MyFaces-81)
- *
- * Revision 1.21  2004/10/13 11:50:59  matze
- * renamed packages to org.apache
- *
- * Revision 1.20  2004/08/15 15:35:26  o_rossmueller
- * fix #1008685: hold view state by viewId
- *
- * Revision 1.19  2004/08/15 15:31:09  o_rossmueller
- * fix #1008685: hold view state by viewId
- *
- * Revision 1.18  2004/08/13 13:15:20  manolito
- * FIXME comment
- *
- * Revision 1.17  2004/07/21 11:22:40  mwessendorf
- * last modification in effect of Adam Winer bug-report.
- *
- * Revision 1.16  2004/07/01 22:05:20  mwessendorf
- * ASF switch
- *
- * Revision 1.15  2004/05/18 08:29:38  manolito
- * saveSerializedView now caches the SerializedView within the request, so that multiple calls only process the saveState methods of components once.
- *
- * Revision 1.14  2004/04/13 08:08:08  manolito
- * NPE bug fix
- *
- * Revision 1.13  2004/04/06 10:26:03  royalts
- * restoreView(...) returns null if restoredViewId != viewId
- *
- * Revision 1.12  2004/04/06 10:20:27  manolito
- * no state restoring for different viewId
- *
- * Revision 1.11  2004/03/25 08:52:40  manolito
- * fixed server state saving
  */
 public class JspStateManagerImpl
     extends MyfacesStateManager
@@ -321,7 +285,7 @@ public class JspStateManagerImpl
         }
         return _renderKitFactory;
     }
-    
+
     protected void saveSerializedViewInServletSession(ExternalContext externalContext,
                                                       String viewId,
                                                       SerializedView serializedView)
@@ -331,7 +295,7 @@ public class JspStateManagerImpl
         Object sv[] = new Object[] {serializedView.getStructure(), serializedView.getState()};
         externalContext.getSessionMap().put(SERIALIZED_VIEW_SESSION_ATTR + "-" + viewId, sv);
     }
-    
+
     protected SerializedView getSerializedViewFromServletSession(ExternalContext externalContext,
                                                                  String viewId)
     {
