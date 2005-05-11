@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,26 +29,6 @@ import org.xml.sax.SAXException;
 
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
- *
- * $Log$
- * Revision 1.6  2005/03/04 00:28:45  mmarinschek
- * Changes in configuration due to missing Attribute/Property classes for the converter; not building in the functionality yet except for part of the converter properties
- *
- * Revision 1.5  2004/11/25 08:34:42  matzew
- * applyed patch MYFACES-26. Thanks to Takashi Okamoto for supporting this.
- *
- * Revision 1.4  2004/10/13 11:50:59  matze
- * renamed packages to org.apache
- *
- * Revision 1.3  2004/07/13 23:11:12  o_rossmueller
- * fix #990302: set redirect correctly for navigation case (+ test in ConfigurationTest)
- *
- * Revision 1.2  2004/07/07 08:34:58  mwessendorf
- * removed unused import-statements
- *
- * Revision 1.1  2004/07/07 00:25:05  o_rossmueller
- * tidy up config/confignew package (moved confignew classes to package config)
- *
  */
 public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshaller
 {
@@ -97,7 +77,7 @@ public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshal
         digester.addCallMethod("faces-config/converter/converter-for-class", "setForClass", 0);
         digester.addCallMethod("faces-config/converter/converter-class", "setConverterClass", 0);
         digester.addObjectCreate("faces-config/converter/attribute",Attribute.class);
-        digester.addSetNext("faces-config/converter/attribute","addAttribute");        
+        digester.addSetNext("faces-config/converter/attribute","addAttribute");
         digester.addCallMethod("faces-config/converter/attribute/description", "addDescription", 0);
         digester.addCallMethod("faces-config/converter/attribute/display-name", "addDisplayName", 0);
         digester.addCallMethod("faces-config/converter/attribute/icon", "addIcon", 0);

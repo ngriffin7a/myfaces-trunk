@@ -10,13 +10,6 @@ import javax.faces.el.ValueBinding;
 /**
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.3  2005/01/04 16:09:57  mmarinschek
- * ChangeListener now uses renderer
- *
- * Revision 1.1  2004/12/17 13:19:10  mmarinschek
- * new component jsValueChangeListener
- *
  */
 public class JsValueChangeListener extends UIOutput
 {

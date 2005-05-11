@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,19 +25,6 @@ import javax.servlet.jsp.JspException;
 /**
  * @author mwessendorf (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.4  2004/10/13 11:50:57  matze
- * renamed packages to org.apache
- *
- * Revision 1.3  2004/09/15 07:58:59  mwessendorf
- * Custom Validators now work in OC4J - thanks to Daniel Kamakura for supporting this
- *
- * Revision 1.2  2004/07/01 21:53:08  mwessendorf
- * ASF switch
- *
- * Revision 1.1  2004/05/27 14:09:00  manolito
- * creditcard and email validator refactored
- *
  */
 public class ValidateCreditCardTag extends ValidatorTag {
 	//Cardtypes, that are supported by Commons-Validator.
@@ -46,7 +33,7 @@ public class ValidateCreditCardTag extends ValidatorTag {
 	private String _mastercard = null;
 	private String _visa = null;
 	private String _none = null;
-	
+
 	public ValidateCreditCardTag()
     {
 	}
@@ -90,7 +77,7 @@ public class ValidateCreditCardTag extends ValidatorTag {
 	 * @see javax.faces.webapp.ValidatorTag#createValidator()
 	 */
 	protected Validator createValidator() throws JspException {
-		
+
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		setValidatorId(CreditCardValidator.VALIDATOR_ID);
 		CreditCardValidator validator = (CreditCardValidator)super.createValidator();
@@ -156,8 +143,8 @@ public class ValidateCreditCardTag extends ValidatorTag {
 		}
 		return validator;
 	}
-	
-	
+
+
 
     /* (non-Javadoc)
      * @see javax.servlet.jsp.tagext.Tag#release()

@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,25 +43,6 @@ import org.apache.myfaces.context.portlet.PortletExternalContextImpl;
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.18  2005/01/26 17:03:11  matzew
- * MYFACES-86. portlet support provided by Stan Silver (JBoss Group)
- *
- * Revision 1.17  2004/10/13 11:51:00  matze
- * renamed packages to org.apache
- *
- * Revision 1.16  2004/07/18 21:44:40  o_rossmueller
- * fix #992629: implemented FacesContext.getRenderKit()
- *
- * Revision 1.15  2004/07/01 22:05:04  mwessendorf
- * ASF switch
- *
- * Revision 1.14  2004/04/16 13:56:59  manolito
- * Bug #922317 - ClassCastException in action handler after adding message
- *
- * Revision 1.13  2004/03/31 11:58:38  manolito
- * custom component refactoring
- *
  */
 public class ServletFacesContextImpl
     extends FacesContext
@@ -89,22 +70,22 @@ public class ServletFacesContextImpl
     // TODO: FIXME: the name of this class should be changed.
     public ServletFacesContextImpl(PortletContext portletContext,
                                    PortletRequest portletRequest,
-                                   PortletResponse portletResponse) 
+                                   PortletResponse portletResponse)
     {
         this(new PortletExternalContextImpl(portletContext,
                                             portletRequest,
                                             portletResponse));
     }
-    
+
     public ServletFacesContextImpl(ServletContext servletContext,
                                    ServletRequest servletRequest,
                                    ServletResponse servletResponse)
     {
-        this(new ServletExternalContextImpl(servletContext, 
+        this(new ServletExternalContextImpl(servletContext,
                                             servletRequest,
                                             servletResponse));
     }
-        
+
     private ServletFacesContextImpl(ReleaseableExternalContext externalContext)
     {
         _application = ((ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY))
@@ -213,7 +194,7 @@ public class ServletFacesContextImpl
          }
 
          String renderKitId = getViewRoot().getRenderKitId();
-        
+
          if (renderKitId == null)
          {
              return null;
@@ -322,7 +303,7 @@ public class ServletFacesContextImpl
     {
         _responseComplete = true;
     }
-    
+
     // Portlet need to do this to change from ActionRequest/Response to
     // RenderRequest/Response
     public void setExternalContext(ReleaseableExternalContext extContext)

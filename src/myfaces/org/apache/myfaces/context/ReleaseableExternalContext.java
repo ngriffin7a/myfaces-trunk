@@ -21,12 +21,8 @@ package org.apache.myfaces.context;
  *
  * @author  Stan Silvert (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.1  2005/01/26 17:03:10  matzew
- * MYFACES-86. portlet support provided by Stan Silver (JBoss Group)
- *
  */
-public interface ReleaseableExternalContext 
+public interface ReleaseableExternalContext
 {
     /**
      * Release resources that the ExternalContext is holding onto.

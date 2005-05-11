@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,51 +37,6 @@ import java.io.IOException;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.15  2004/12/01 16:32:03  svieujot
- * Convert the Multipart filter in an ExtensionsFilter that provides an additional facility to include resources in a page.
- * Tested only with javascript resources right now, but should work fine with images too.
- * Some work to do to include css resources.
- * The popup component has been converted to use this new Filter.
- *
- * Revision 1.14  2004/10/13 11:50:57  matze
- * renamed packages to org.apache
- *
- * Revision 1.13  2004/09/03 12:32:05  tinytoony
- * file upload
- *
- * Revision 1.12  2004/07/14 06:02:48  svieujot
- * FileUpload : split file based and memory based implementation.
- * Use the storage="memory|file" attribute.
- * Default is memory because file based implementation fails to serialize.
- *
- * Revision 1.11  2004/07/12 03:06:36  svieujot
- * Restore error handling due to UploadedFileDefaultImpl changes
- *
- * Revision 1.10  2004/07/01 21:53:05  mwessendorf
- * ASF switch
- *
- * Revision 1.9  2004/05/24 22:48:10  svieujot
- * Making UploadedFile an interface, and adjusting the renderer.
- *
- * Revision 1.8  2004/05/18 14:26:49  manolito
- * added UserRoleAware support
- *
- * Revision 1.7  2004/05/10 22:17:24  o_rossmueller
- * max file size configurable by filter init parameter 'maxFileSize'
- * removed default creation of file contents byte array
- *
- * Revision 1.6  2004/04/26 13:16:32  manolito
- * Log was missing
- *
- * Revision 1.4 Sylvain Vieujot
- * Don't change the file bean if no file is uploaded. 
- * 
- * Revision 1.3 Sylvain Vieujot
- * Fix a null pointer exception in encodeEnd if the file name is null.
- * 
- * Revision 1.2 Sylvain Vieujot
- * Upgraded to use commons fileUpload
  */
 public class HtmlFileUploadRenderer
     extends Renderer

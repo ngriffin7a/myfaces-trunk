@@ -22,14 +22,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * $Log$
- * Revision 1.1  2005/01/04 16:09:57  mmarinschek
- * ChangeListener now uses renderer
- *
- * Revision 1.1  2004/12/19 00:50:55  mmarinschek
- * JsValueSetTag
- *
- *
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

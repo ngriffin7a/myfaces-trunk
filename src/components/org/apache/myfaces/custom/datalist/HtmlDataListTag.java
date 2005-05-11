@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,28 +24,6 @@ import javax.faces.component.UIComponent;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.7  2005/02/18 17:19:30  matzew
- * added release() to tag clazzes.
- *
- * Revision 1.6  2004/10/13 11:50:57  matze
- * renamed packages to org.apache
- *
- * Revision 1.5  2004/07/01 21:53:09  mwessendorf
- * ASF switch
- *
- * Revision 1.4  2004/05/18 14:31:37  manolito
- * user role support completely moved to components source tree
- *
- * Revision 1.3  2004/04/05 11:04:52  manolito
- * setter for renderer type removed, no more default renderer type needed
- *
- * Revision 1.2  2004/04/01 12:57:39  manolito
- * additional extended component classes for user role support
- *
- * Revision 1.1  2004/03/31 12:15:26  manolito
- * custom component refactoring
- *
  */
 public class HtmlDataListTag
         extends HtmlComponentBodyTagBase
@@ -95,7 +73,7 @@ public class HtmlDataListTag
         _enabledOnUserRole=null;
         _visibleOnUserRole=null;
     }
-    
+
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);

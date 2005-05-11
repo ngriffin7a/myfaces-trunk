@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,23 +32,6 @@ import java.util.*;
  *
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a> (latest modification by $Author$)
  * @author Anton Koinov
- *
- * $Log$
- * Revision 1.5  2005/01/05 16:22:57  bdudney
- * added fail early code so that if you specify a non-existent property in the managed-bean stuff it will fail early instead of a lame error message that leads down a rabit trail.
- *
- * Revision 1.4  2004/10/13 11:50:59  matze
- * renamed packages to org.apache
- *
- * Revision 1.3  2004/10/05 22:34:22  dave0000
- * bug 1021656 with related improvements
- *
- * Revision 1.2  2004/08/10 10:57:38  manolito
- * fixed StackOverflow in ClassUtils and cleaned up ClassUtils methods
- *
- * Revision 1.1  2004/07/07 00:25:05  o_rossmueller
- * tidy up config/confignew package (moved confignew classes to package config)
- *
  */
 public class ManagedBeanBuilder
 {
@@ -130,7 +113,7 @@ public class ManagedBeanBuilder
                     value = property.getRuntimeValue(facesContext);
                     break;
             }
-            PropertyResolver propertyResolver = 
+            PropertyResolver propertyResolver =
                 facesContext.getApplication().getPropertyResolver();
             Class propertyClass = null;
 
@@ -157,9 +140,9 @@ public class ManagedBeanBuilder
     private void initializeMap(FacesContext facesContext, MapEntries mapEntries, Map map)
     {
         Application application = facesContext.getApplication();
-        Class keyClass = (mapEntries.getKeyClass() == null) 
+        Class keyClass = (mapEntries.getKeyClass() == null)
             ? String.class : ClassUtils.simpleJavaTypeToClass(mapEntries.getKeyClass());
-        Class valueClass = (mapEntries.getValueClass() == null) 
+        Class valueClass = (mapEntries.getValueClass() == null)
             ? String.class : ClassUtils.simpleJavaTypeToClass(mapEntries.getValueClass());
         ValueBinding valueBinding;
 
@@ -177,7 +160,7 @@ public class ManagedBeanBuilder
             if (entry.isNullValue())
             {
                 map.put(ClassUtils.convertToType(key, keyClass), null);
-            } 
+            }
             else
             {
                 Object value = entry.getValue();
@@ -204,7 +187,7 @@ public class ManagedBeanBuilder
             if (entry.isNullValue())
             {
                 list.add(null);
-            } 
+            }
             else
             {
                 Object value = entry.getValue();

@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -78,75 +78,6 @@ import org.xml.sax.SAXException;
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- *          $Log$
- *          Revision 1.11  2005/03/04 00:28:45  mmarinschek
- *          Changes in configuration due to missing Attribute/Property classes for the converter; not building in the functionality yet except for part of the converter properties
- *
- *          Revision 1.10  2005/01/26 17:03:11  matzew
- *          MYFACES-86. portlet support provided by Stan Silver (JBoss Group)
- *
- *          Revision 1.9  2004/12/13 22:20:34  oros
- *          fix #1046763: close temporary jar file before trying to delete it
- *
- *          Revision 1.8  2004/11/11 22:46:35  bdudney
- *          added some error reporting
- *
- *          Revision 1.7  2004/10/13 11:50:59  matze
- *          renamed packages to org.apache
- *
- *          Revision 1.6  2004/08/23 05:13:39  dave0000
- *          Externalize String-to-Locale conversion
- *
- *          Revision 1.5  2004/08/10 10:57:38  manolito
- *          fixed StackOverflow in ClassUtils and cleaned up ClassUtils methods
- *
- *          Revision 1.4  2004/07/20 14:56:41  manolito
- *          removed public FactoryFinder method getValidFactoryNames - there is no such method in JSF 1.1 !
- *
- *          Revision 1.3  2004/07/13 06:42:43  tinytoony
- *          does not break if converter-class has not been found, instead logs as error.
- *
- *          Revision 1.2  2004/07/07 08:34:58  mwessendorf
- *          removed unused import-statements
- *
- *          Revision 1.1  2004/07/07 00:25:05  o_rossmueller
- *          tidy up config/confignew package (moved confignew classes to package config)
- *
- *          Revision 1.7  2004/07/06 23:21:19  o_rossmueller
- *          fix #985217: decoration support for factories
- *
- *          Revision 1.6  2004/07/01 22:05:09  mwessendorf
- *          ASF switch
- *
- *          Revision 1.5  2004/06/17 23:23:48  o_rossmueller
- *          fix: entity resolver
- *
- *          Revision 1.4  2004/06/16 23:02:24  o_rossmueller
- *          merged confignew_branch
- *
- *          Revision 1.3.2.3  2004/06/16 01:25:52  o_rossmueller
- *          refactorings: FactoryFinder, decorator creation, dispenser (removed reverse order)
- *          bug fixes
- *          additional tests
- *
- *          Revision 1.3.2.2  2004/06/15 11:54:22  o_rossmueller
- *          fixed decorator pattern support
- *          <p/>
- *          Revision 1.3.2.1  2004/06/13 15:59:07  o_rossmueller
- *          started integration of new config mechanism:
- *          - factories
- *          - components
- *          - render kits
- *          - managed beans + managed properties (no list/map initialization)
- *          <p/>
- *          Revision 1.3  2004/06/08 20:50:09  o_rossmueller
- *          completed configurator
- *          <p/>
- *          Revision 1.2  2004/06/04 23:51:48  o_rossmueller
- *          Digester-based config parser/dispenser
- *          <p/>
- *          Revision 1.1  2004/05/17 14:28:28  manolito
- *          new configuration concept
  */
 public class FacesConfigurator
 {

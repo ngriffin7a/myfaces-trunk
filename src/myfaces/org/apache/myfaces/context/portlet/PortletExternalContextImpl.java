@@ -52,22 +52,18 @@ import org.apache.myfaces.util.EnumerationIterator;
  *
  * @author  Stan Silvert (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.1  2005/01/26 17:03:09  matzew
- * MYFACES-86. portlet support provided by Stan Silver (JBoss Group)
- *
  */
 public class PortletExternalContextImpl extends ExternalContext implements ReleaseableExternalContext {
-    
+
     private static final Log log = LogFactory.getLog(PortletExternalContextImpl.class);
-    
+
     private static final String INIT_PARAMETER_MAP_ATTRIBUTE = InitParameterMap.class.getName();
     private static final Map EMPTY_UNMODIFIABLE_MAP = Collections.unmodifiableMap(new HashMap(0));
-    
+
     PortletContext _portletContext;
     PortletRequest _portletRequest;
     PortletResponse _portletResponse;
-    
+
     private Map _applicationMap;
     private Map _sessionMap;
     private Map _requestMap;
@@ -78,18 +74,18 @@ public class PortletExternalContextImpl extends ExternalContext implements Relea
     private Map _requestCookieMap;
     private Map _initParameterMap;
     private boolean _isActionRequest;
-    
+
     /** Creates a new instance of PortletFacesContextImpl */
     public PortletExternalContextImpl(PortletContext portletContext,
                                       PortletRequest portletRequest,
-                                      PortletResponse portletResponse) 
+                                      PortletResponse portletResponse)
     {
         _portletContext = portletContext;
         _portletRequest = portletRequest;
         _portletResponse = portletResponse;
         _isActionRequest = (portletRequest != null &&
                                  portletRequest instanceof ActionRequest);
-        
+
         if (_isActionRequest)
         {
             ActionRequest actionRequest = (ActionRequest)portletRequest;
@@ -105,7 +101,7 @@ public class PortletExternalContextImpl extends ExternalContext implements Relea
                     PortletSession session = portletRequest.getPortletSession(false);
 
                     if (session != null) {
-                        characterEncoding = (String) session.getAttribute(ViewHandler.CHARACTER_ENCODING_KEY, 
+                        characterEncoding = (String) session.getAttribute(ViewHandler.CHARACTER_ENCODING_KEY,
                                                                           PortletSession.PORTLET_SCOPE);
                     }
 
@@ -120,7 +116,7 @@ public class PortletExternalContextImpl extends ExternalContext implements Relea
             }
         }
     }
-    
+
     private String lookupCharacterEncoding(String contentType)
     {
         String characterEncoding = null;
@@ -153,15 +149,15 @@ public class PortletExternalContextImpl extends ExternalContext implements Relea
         }
         return characterEncoding;
     }
-    
-    public void dispatch(String path) throws IOException 
+
+    public void dispatch(String path) throws IOException
     {
         if (_isActionRequest)
         { // dispatch only allowed for RenderRequest
             String msg = "Can not call dispatch() during a portlet ActionRequest";
             throw new IllegalStateException(msg);
         }
-        
+
         PortletRequestDispatcher requestDispatcher
             = _portletContext.getRequestDispatcher(path); //TODO: figure out why I need named dispatcher
         try
@@ -181,27 +177,27 @@ public class PortletExternalContextImpl extends ExternalContext implements Relea
             }
         }
     }
-    
+
     public String encodeActionURL(String url) {
         checkNull(url, "url");
         return _portletResponse.encodeURL(url);
     }
-    
+
     public String encodeNamespace(String name) {
         if (_isActionRequest)
         { // encodeNamespace only allowed for RenderRequest
             String msg = "Can not call encodeNamespace() during a portlet ActionRequest";
             throw new IllegalStateException(msg);
         }
-        
+
         return ((RenderResponse)_portletResponse).getNamespace() + name;
     }
-    
+
     public String encodeResourceURL(String url) {
         checkNull(url, "url");
         return _portletResponse.encodeURL(url);
     }
-    
+
     public Map getApplicationMap() {
         if (_applicationMap == null)
         {
@@ -209,19 +205,19 @@ public class PortletExternalContextImpl extends ExternalContext implements Relea
         }
         return _applicationMap;
     }
-    
+
     public String getAuthType() {
         return _portletRequest.getAuthType();
     }
-    
+
     public Object getContext() {
         return _portletContext;
     }
-    
+
     public String getInitParameter(String name) {
         return _portletContext.getInitParameter(name);
     }
-    
+
     public Map getInitParameterMap() {
         if (_initParameterMap == null)
         {
@@ -234,23 +230,23 @@ public class PortletExternalContextImpl extends ExternalContext implements Relea
         }
         return _initParameterMap;
     }
-    
+
     public String getRemoteUser() {
         return _portletRequest.getRemoteUser();
     }
-    
+
     public Object getRequest() {
         return _portletRequest;
     }
-    
+
     public String getRequestContextPath() {
         return _portletRequest.getContextPath();
     }
-    
+
     public Map getRequestCookieMap() {
         return EMPTY_UNMODIFIABLE_MAP;
     }
-    
+
     public Map getRequestHeaderMap() {
         if (_requestHeaderMap == null)
         {
@@ -258,7 +254,7 @@ public class PortletExternalContextImpl extends ExternalContext implements Relea
         }
         return _requestHeaderMap;
     }
-    
+
     public Map getRequestHeaderValuesMap() {
         if (_requestHeaderValuesMap == null)
         {
@@ -266,15 +262,15 @@ public class PortletExternalContextImpl extends ExternalContext implements Relea
         }
         return _requestHeaderValuesMap;
     }
-    
+
     public Locale getRequestLocale() {
         return _portletRequest.getLocale();
     }
-    
+
     public Iterator getRequestLocales() {
         return new EnumerationIterator(_portletRequest.getLocales());
     }
-    
+
     public Map getRequestMap() {
         if (_requestMap == null)
         {
@@ -282,7 +278,7 @@ public class PortletExternalContextImpl extends ExternalContext implements Relea
         }
         return _requestMap;
     }
-    
+
     public Map getRequestParameterMap() {
         if (_requestParameterMap == null)
         {
@@ -290,12 +286,12 @@ public class PortletExternalContextImpl extends ExternalContext implements Relea
         }
         return _requestParameterMap;
     }
-    
+
     public Iterator getRequestParameterNames() {
         // TODO: find out why it is not done this way in ServletExternalContextImpl
         return new EnumerationIterator(_portletRequest.getParameterNames());
     }
-    
+
     public Map getRequestParameterValuesMap() {
         if (_requestParameterValuesMap == null)
         {
@@ -303,40 +299,40 @@ public class PortletExternalContextImpl extends ExternalContext implements Relea
         }
         return _requestParameterValuesMap;
     }
-    
+
     public String getRequestPathInfo() {
         return null; // must return null
     }
-    
+
     public String getRequestServletPath() {
         return null; // must return null
     }
-    
+
     public URL getResource(String path) throws MalformedURLException {
         checkNull(path, "path");
-        
+
         return _portletContext.getResource(path);
     }
-    
+
     public InputStream getResourceAsStream(String path) {
         checkNull(path, "path");
-        
+
         return _portletContext.getResourceAsStream(path);
     }
-    
+
     public Set getResourcePaths(String path) {
         checkNull(path, "path");
         return _portletContext.getResourcePaths(path);
     }
-    
+
     public Object getResponse() {
         return _portletResponse;
     }
-    
+
     public Object getSession(boolean create) {
         return _portletRequest.getPortletSession(create);
     }
-    
+
     public Map getSessionMap() {
         if (_sessionMap == null)
         {
@@ -344,30 +340,30 @@ public class PortletExternalContextImpl extends ExternalContext implements Relea
         }
         return _sessionMap;
     }
-    
+
     public Principal getUserPrincipal() {
         return _portletRequest.getUserPrincipal();
     }
-    
+
     public boolean isUserInRole(String role) {
         checkNull(role, "role");
-        
+
         return _portletRequest.isUserInRole(role);
     }
-    
+
     public void log(String message) {
         checkNull(message, "message");
-        
+
         _portletContext.log(message);
     }
-    
+
     public void log(String message, Throwable exception) {
         checkNull(message, "message");
         checkNull(exception, "exception");
-        
+
         _portletContext.log(message, exception);
     }
-    
+
     public void redirect(String url) throws IOException {
         if (_portletResponse instanceof ActionResponse)
         {
@@ -378,7 +374,7 @@ public class PortletExternalContextImpl extends ExternalContext implements Relea
             throw new IllegalArgumentException("Only ActionResponse supported");
         }
     }
-    
+
     public void release() {
         _portletContext = null;
         _portletRequest = null;
@@ -393,13 +389,13 @@ public class PortletExternalContextImpl extends ExternalContext implements Relea
         _requestCookieMap = null;
         _initParameterMap = null;
     }
-    
-    private void checkNull(Object o, String param) 
+
+    private void checkNull(Object o, String param)
     {
         if (o == null)
         {
             throw new NullPointerException(param + " can not be null.");
         }
     }
-    
+
 }

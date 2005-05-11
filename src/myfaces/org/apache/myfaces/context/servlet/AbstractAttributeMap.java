@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,23 +28,9 @@ import java.util.Set;
 
 /**
  * Helper Map implementation for use with different Attribute Maps.
- * 
+ *
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
- * 
- * $Log$
- * Revision 1.9  2004/10/13 11:51:00  matze
- * renamed packages to org.apache
- *
- * Revision 1.8  2004/07/03 18:29:18  dave0000
- * Remove redundant code, small fixes.
- *
- * Revision 1.7  2004/07/01 22:05:04  mwessendorf
- * ASF switch
- *
- * Revision 1.6  2004/03/30 05:34:56  dave0000
- * change entrySet() to not use HashMap and avoid copying data
- *
  */
 public abstract class AbstractAttributeMap
     implements Map
@@ -236,14 +222,14 @@ public abstract class AbstractAttributeMap
         {
             return AbstractAttributeMap.this.containsValue(o);
         }
-        
+
         public boolean remove(Object o)
         {
             if (o == null)
             {
                 return false;
             }
-            
+
             for (Iterator it = iterator(); it.hasNext();)
             {
                 if (o.equals(it.next()))
@@ -252,7 +238,7 @@ public abstract class AbstractAttributeMap
                     return true;
                 }
             }
-            
+
             return false;
         }
     }
@@ -271,13 +257,13 @@ public abstract class AbstractAttributeMap
         public Iterator iterator() {
             return new EntryIterator();
         }
-        
+
         public boolean contains(Object o) {
             if (!(o instanceof Entry))
             {
                 return false;
             }
-            
+
             Entry entry = (Entry) o;
             Object key = entry.getKey();
             Object value = entry.getValue();
@@ -285,25 +271,25 @@ public abstract class AbstractAttributeMap
             {
                 return false;
             }
-            
+
             return value.equals(AbstractAttributeMap.this.get(key));
         }
-        
+
         public boolean remove(Object o) {
             if (!(o instanceof Entry))
             {
                 return false;
             }
-            
+
             Entry entry = (Entry) o;
             Object key = entry.getKey();
             Object value = entry.getValue();
-            if (key == null || value == null 
+            if (key == null || value == null
                 || !value.equals(AbstractAttributeMap.this.get(key)))
             {
                 return false;
             }
-            
+
             return AbstractAttributeMap.this.remove(((Entry) o).getKey()) != null;
         }
     }
@@ -318,7 +304,7 @@ public abstract class AbstractAttributeMap
         public Object next()
         {
             super.next();
-            // Must create new Entry every time--value of the entry must stay 
+            // Must create new Entry every time--value of the entry must stay
             // linked to the same attribute name
             return new EntrySetEntry(_currentKey);
         }
@@ -327,12 +313,12 @@ public abstract class AbstractAttributeMap
     private class EntrySetEntry implements Entry
     {
         private final Object _currentKey;
-        
+
         public EntrySetEntry(Object currentKey)
         {
             _currentKey = currentKey;
         }
-        
+
         public Object getKey()
         {
             return _currentKey;

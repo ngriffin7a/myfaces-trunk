@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,49 +27,34 @@ import org.apache.myfaces.MyFacesBaseTest;
 
 /**
  * Test for AbstractAttributeMap core functionality through ApplicationMap.
- * 
+ *
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
- * 
- * $Log$
- * Revision 1.6  2004/10/13 11:50:59  matze
- * renamed packages to org.apache
- *
- * Revision 1.5  2004/07/01 22:01:09  mwessendorf
- * ASF switch
- *
- * Revision 1.4  2004/04/02 13:57:18  bdudney
- * cleaned up the tests so they all run and added 
-execution to the build.xml file.
- *
- * Revision 1.3  2004/03/30 05:38:50  dave0000
- * add copyright statement
- *
  */
 public class ApplicationMapTest extends MyFacesBaseTest
 {
     private Object _test0 = new Object();
     private Object _test1 = new Object();
-    
+
     public ApplicationMapTest(String name)
     {
         super(name);
     }
-    
+
     private void init()
     {
         Map appMap = _facesContext.getExternalContext().getApplicationMap();
-        
+
         appMap.clear();
 
         assertTrue(appMap.isEmpty());
         assertEquals(0, appMap.size());
-        
+
         assertNull(appMap.put("test1", _test1));
 
         assertFalse(appMap.isEmpty());
         assertEquals(1, appMap.size());
-        
+
         Object test2 = new Object();
         assertNull(appMap.put("test2", test2));
 
@@ -83,7 +68,7 @@ public class ApplicationMapTest extends MyFacesBaseTest
 
         assertSame(_test1, appMap.put("test1", test2));
         assertSame(test2, appMap.put("test1", _test1));
-        
+
         assertEquals(4, appMap.size());
 
         assertSame(test4, appMap.remove("test4"));
@@ -91,15 +76,15 @@ public class ApplicationMapTest extends MyFacesBaseTest
         assertNull(appMap.put("test4", test4));
         assertEquals(4, appMap.size());
     }
-    
+
     public void testClear()
     {
         // Map
         init();
         Map appMap = _facesContext.getExternalContext().getApplicationMap();
-        
+
         assertFalse(appMap.isEmpty());
-        
+
         appMap.clear();
 
         assertTrue(appMap.isEmpty());
@@ -108,9 +93,9 @@ public class ApplicationMapTest extends MyFacesBaseTest
         // EntrySet
         init();
         Set entrySet = appMap.entrySet();
-        
+
         assertFalse(entrySet.isEmpty());
-        
+
         entrySet.clear();
 
         assertTrue(appMap.isEmpty());
@@ -121,9 +106,9 @@ public class ApplicationMapTest extends MyFacesBaseTest
         // KeySet
         init();
         Set keySet = appMap.keySet();
-        
+
         assertFalse(keySet.isEmpty());
-        
+
         keySet.clear();
 
         assertTrue(appMap.isEmpty());
@@ -134,9 +119,9 @@ public class ApplicationMapTest extends MyFacesBaseTest
         // Values
         init();
         Collection values = appMap.values();
-        
+
         assertFalse(values.isEmpty());
-        
+
         values.clear();
 
         assertTrue(appMap.isEmpty());
@@ -150,7 +135,7 @@ public class ApplicationMapTest extends MyFacesBaseTest
         init();
         Map appMap = _facesContext.getExternalContext().getApplicationMap();
         Map cache = new HashMap();
-        
+
         for (Iterator it = appMap.entrySet().iterator(); it.hasNext();)
         {
             Entry entry = (Entry) it.next();
@@ -162,14 +147,14 @@ public class ApplicationMapTest extends MyFacesBaseTest
             Entry entry = (Entry) it.next();
             assertSame(entry.getValue(), cache.put(entry.getKey(), entry.getValue()));
         }
-        
+
         assertSame(_test1, cache.get("test1"));
 
         int size = appMap.size();
-        
+
         assertNull(appMap.put("test0", _test0));
         assertEquals(size + 1, appMap.size());
-        
+
         findTest0: {
             for (Iterator it = appMap.entrySet().iterator(); it.hasNext();)
             {
@@ -187,7 +172,7 @@ public class ApplicationMapTest extends MyFacesBaseTest
             }
             throw new IllegalStateException("Test0 not found");
         }
-        
+
         for (Iterator it = appMap.entrySet().iterator(); it.hasNext();)
         {
             // Only one remove() will succeed
@@ -205,7 +190,7 @@ public class ApplicationMapTest extends MyFacesBaseTest
         init();
         Map appMap = _facesContext.getExternalContext().getApplicationMap();
         Map cache = new HashMap();
-        
+
         for (Iterator it = appMap.keySet().iterator(); it.hasNext();)
         {
             String key = (String) it.next();
@@ -221,10 +206,10 @@ public class ApplicationMapTest extends MyFacesBaseTest
         assertSame(_test1, cache.get("test1"));
 
         int size = appMap.size();
-        
+
         assertNull(appMap.put("test0", _test0));
         assertEquals(size + 1, appMap.size());
-        
+
         findTest0: {
             for (Iterator it = appMap.keySet().iterator(); it.hasNext();)
             {
@@ -242,7 +227,7 @@ public class ApplicationMapTest extends MyFacesBaseTest
             }
             throw new IllegalStateException("Test0 not found");
         }
-        
+
         for (Iterator it = appMap.entrySet().iterator(); it.hasNext();)
         {
             // Only one remove() will succeed
@@ -260,7 +245,7 @@ public class ApplicationMapTest extends MyFacesBaseTest
         init();
         Map appMap = _facesContext.getExternalContext().getApplicationMap();
         Set cache = new HashSet();
-        
+
         for (Iterator it = appMap.values().iterator(); it.hasNext();)
         {
             assertTrue(cache.add(it.next()));
@@ -272,12 +257,12 @@ public class ApplicationMapTest extends MyFacesBaseTest
         }
 
         assertTrue(cache.contains(_test1));
-        
+
         int size = appMap.size();
-        
+
         assertNull(appMap.put("test0", _test0));
         assertEquals(size + 1, appMap.size());
-        
+
         findTest0: {
             for (Iterator it = appMap.values().iterator(); it.hasNext();)
             {
@@ -295,7 +280,7 @@ public class ApplicationMapTest extends MyFacesBaseTest
             }
             throw new IllegalStateException("Test0 not found");
         }
-        
+
         for (Iterator it = appMap.entrySet().iterator(); it.hasNext();)
         {
             // Only one remove() will succeed

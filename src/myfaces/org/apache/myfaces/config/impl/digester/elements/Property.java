@@ -23,10 +23,6 @@ import java.util.Collections;
     <!ELEMENT property        (description*, display-name*, icon*, property-name, property-class, default-value?, suggested-value?, property-extension*)>
 
  *          <p/>
- *          $Log$
- *          Revision 1.1  2005/03/04 00:28:45  mmarinschek
- *          Changes in configuration due to missing Attribute/Property classes for the converter; not building in the functionality yet except for part of the converter properties
- *
  */
 public class Property
 {

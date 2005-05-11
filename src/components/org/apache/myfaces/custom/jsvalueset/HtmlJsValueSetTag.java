@@ -10,20 +10,6 @@ import javax.faces.component.UIComponent;
 /**
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.3  2005/02/18 17:19:31  matzew
- * added release() to tag clazzes.
- *
- * Revision 1.2  2005/01/04 16:09:57  mmarinschek
- * ChangeListener now uses renderer
- *
- * Revision 1.1  2004/12/19 00:50:55  mmarinschek
- * JsValueSetTag
- *
- * Revision 1.1  2004/12/17 13:19:10  mmarinschek
- * new component jsValueChangeListener
- *
- *
  */
 public class HtmlJsValueSetTag
         extends UIComponentTagBase
@@ -50,7 +36,7 @@ public class HtmlJsValueSetTag
 
     // HtmlJsValueSet attributes
     private String _name;
-    
+
     public void release() {
         super.release();
         _name=null;

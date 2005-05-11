@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,36 +30,6 @@ import java.util.*;
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.4  2004/10/13 11:50:59  matze
- * renamed packages to org.apache
- *
- * Revision 1.3  2004/09/08 09:28:56  manolito
- * moved MyfacesConfig to package config
- *
- * Revision 1.2  2004/07/07 08:34:58  mwessendorf
- * removed unused import-statements
- *
- * Revision 1.1  2004/07/07 00:25:05  o_rossmueller
- * tidy up config/confignew package (moved confignew classes to package config)
- *
- * Revision 1.4  2004/07/01 22:05:09  mwessendorf
- * ASF switch
- *
- * Revision 1.3  2004/06/16 23:02:24  o_rossmueller
- * merged confignew_branch
- *
- * Revision 1.2.2.1  2004/06/16 01:25:52  o_rossmueller
- * refactorings: FactoryFinder, decorator creation, dispenser (removed reverse order)
- * bug fixes
- * additional tests
- *
- * Revision 1.2  2004/06/08 20:50:09  o_rossmueller
- * completed configurator
- *
- * Revision 1.1  2004/05/17 14:28:28  manolito
- * new configuration concept
- *
  */
 public class RuntimeConfig
 {
@@ -76,7 +46,7 @@ public class RuntimeConfig
         if (runtimeConfig == null)
         {
             runtimeConfig = new RuntimeConfig();
-            externalContext.getApplicationMap().put(APPLICATION_MAP_PARAM_NAME, runtimeConfig);            
+            externalContext.getApplicationMap().put(APPLICATION_MAP_PARAM_NAME, runtimeConfig);
         }
         return runtimeConfig;
     }

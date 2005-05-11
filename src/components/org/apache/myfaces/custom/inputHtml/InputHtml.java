@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,90 +26,27 @@ import org.apache.myfaces.renderkit.RendererUtils;
 /**
  * HTML Editor using the kupu library.
  * http://kupu.oscom.org/
- * 
+ *
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.1  2005/03/26 20:31:37  svieujot
- * Rename x:htmlEditor to x:inputHtml.
- *
- * Revision 1.20  2005/03/22 02:13:28  svieujot
- * htmlEditor : Add a showAllToolBoxes short cut.
- *
- * Revision 1.19  2005/03/15 05:24:03  svieujot
- * Add a fallback textarea mode to the htmlEditor.
- *
- * Revision 1.18  2005/03/09 04:07:22  svieujot
- * htmlEditor : Kupu 1.2rc2 update
- *
- * Revision 1.17  2005/02/06 19:45:32  svieujot
- * Add allowExternalLinks attribute.
- *
- * Revision 1.16  2005/02/05 18:51:21  svieujot
- * x:htmlEditor : Upgrade to Kupu 1.2rc1, remove formularMode (too experimental), bugfixes.
- *
- * Revision 1.15  2005/01/03 03:49:31  svieujot
- * trim returned text
- *
- * Revision 1.14  2005/01/02 20:39:16  svieujot
- * HtmlEditor can now process HTML documents and HTML fragments.
- *
- * Revision 1.13  2004/12/24 13:21:50  matzew
- * organized imports
- *
- * Revision 1.12  2004/12/09 05:16:44  svieujot
- * Simplify by extending html.ext.HtmlInputText instead of extending UIInput and implementing UserRolesAware.
- *
- * Revision 1.11  2004/12/08 04:36:27  svieujot
- * Cancel last *source attributes, and make style and styleClass more modular.
- *
- * Revision 1.10  2004/12/08 04:13:56  svieujot
- * Add styleSource and styleClassSource for the htmlEditor source window.
- *
- * Revision 1.9  2004/12/06 04:26:07  svieujot
- * Make HtmlEditor UserRoleAware.
- *
- * Revision 1.8  2004/12/06 03:34:57  svieujot
- * Typo
- *
- * Revision 1.7  2004/12/06 01:03:42  svieujot
- * Bugfix : getter now use boolean instead of Boolean, and setters created.
- *
- * Revision 1.6  2004/12/04 22:25:36  svieujot
- * *** empty log message ***
- *
- * Revision 1.5  2004/12/04 03:26:28  svieujot
- * Various bug fixes
- *
- * Revision 1.4  2004/12/04 00:40:25  svieujot
- * htmlEditor : add style and styleClass attributes.
- *
- * Revision 1.3  2004/12/04 00:20:00  svieujot
- * htmlEditor : Add a formular mode, and more sensible defaults.
- *
- * Revision 1.2  2004/12/03 21:59:09  svieujot
- * Initial set of htmlEditor attributes.
- *
- * Revision 1.1  2004/12/02 22:28:30  svieujot
- * Add an x:htmlEditor based on the Kupu library.
  */
 public class InputHtml extends HtmlInputText {
     public static final String COMPONENT_TYPE = "org.apache.myfaces.InputHtml";
 
     public static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.InputHtml";
-    
+
     private static final Log log = LogFactory.getLog(HtmlInputText.class);
-    
+
     private String _style;
     private String _styleClass;
-    
+
 	private String _fallback;
     private String _type;
-    
+
     private Boolean _allowEditSource;
     private Boolean _allowExternalLinks;
     private Boolean _addKupuLogo;
-    
+
 	private Boolean _showAllToolBoxes;
     private Boolean _showPropertiesToolBox;
     private Boolean _showLinksToolBox;
@@ -129,26 +66,26 @@ public class InputHtml extends HtmlInputText {
     public Object saveState(FacesContext context) {
         Object values[] = new Object[5];
         values[0] = super.saveState(context);
-        
+
         String[] display = new String[2];
         display[0] = _style;
         display[1] = _styleClass;
-        
+
         values[1] = display;
-        
+
 		String[] types = new String[2];
 		types[0] = _fallback;
 		types[1] = _type;
-		
+
         values[2] = types;
-        
+
         Boolean toolBarButtons[] = new Boolean[3];
         toolBarButtons[0] = _allowEditSource;
         toolBarButtons[1] = _allowExternalLinks;
         toolBarButtons[2] = _addKupuLogo;
-        
+
         values[3] = toolBarButtons;
-        
+
         Boolean toolBoxes[] = new Boolean[7];
 		toolBoxes[0] = _showAllToolBoxes;
         toolBoxes[1] = _showPropertiesToolBox;
@@ -157,29 +94,29 @@ public class InputHtml extends HtmlInputText {
         toolBoxes[4] = _showTablesToolBox;
 		toolBoxes[5] = _showCleanupExpressionsToolBox;
         toolBoxes[6] = _showDebugToolBox;
-        
+
         values[4] = toolBoxes;
-        
+
         return values;
     }
 
     public void restoreState(FacesContext context, Object state) {
         Object values[] = (Object[]) state;
         super.restoreState(context, values[0]);
-        
+
         String[] display = (String[]) values[1];
         _style = display[0];
         _styleClass = display[1];
-        
+
 		String[] types = (String[]) values[2];
 		_fallback = types[0];
         _type = types[1];
-        
+
         Boolean[] toolBarButtons = (Boolean[]) values[3];
         _allowEditSource = toolBarButtons[0];
         _allowExternalLinks = toolBarButtons[1];
         _addKupuLogo = toolBarButtons[2];
-        
+
         Boolean[] toolBoxes = (Boolean[]) values[4];
 		_showAllToolBoxes = toolBoxes[0];
         _showPropertiesToolBox = toolBoxes[1];
@@ -189,7 +126,7 @@ public class InputHtml extends HtmlInputText {
 		_showCleanupExpressionsToolBox = toolBoxes[5];
         _showDebugToolBox = toolBoxes[6];
     }
-    
+
     public String getStyle(){
    		if (_style != null)
    		    return _style;
@@ -199,7 +136,7 @@ public class InputHtml extends HtmlInputText {
     public void setStyle(String style){
    		this._style = style;
     }
-    
+
     public String getStyleClass(){
    		if (_styleClass != null)
    		    return _styleClass;
@@ -209,7 +146,7 @@ public class InputHtml extends HtmlInputText {
     public void setStyleClass(String styleClass){
    		this._styleClass = styleClass;
     }
-	
+
     public String getFallback(){
         if (_fallback != null)
             return _fallback;
@@ -219,7 +156,7 @@ public class InputHtml extends HtmlInputText {
     public void setFallback(String _fallback){
         this._fallback = _fallback;
     }
-    
+
     public String getType(){
         if (_type != null)
             return _type;
@@ -232,7 +169,7 @@ public class InputHtml extends HtmlInputText {
     public boolean isTypeDocument(){
         return getType().equals("document");
     }
-    
+
     public boolean isAllowEditSource(){
    		if (_allowEditSource != null)
    		    return _allowEditSource.booleanValue();
@@ -242,7 +179,7 @@ public class InputHtml extends HtmlInputText {
     public void setAllowEditSource(boolean allowEditSource){
         this._allowEditSource = Boolean.valueOf(allowEditSource);
     }
-    
+
     public boolean isAllowExternalLinks(){
         if (_allowExternalLinks != null)
             return _allowExternalLinks.booleanValue();
@@ -252,7 +189,7 @@ public class InputHtml extends HtmlInputText {
     public void setAllowExternalLinks(boolean allowExternalLinks){
         this._allowExternalLinks = Boolean.valueOf(allowExternalLinks);
     }
-    
+
     public boolean isAddKupuLogo(){
    		if (_addKupuLogo != null)
    		    return _addKupuLogo.booleanValue();
@@ -262,7 +199,7 @@ public class InputHtml extends HtmlInputText {
     public void setAddKupuLogo(boolean addKupuLogo){
         this._addKupuLogo = Boolean.valueOf(addKupuLogo);
     }
-    
+
 	public boolean isShowAllToolBoxes(){
    		if (_showAllToolBoxes != null)
    		    return _showAllToolBoxes.booleanValue();
@@ -272,7 +209,7 @@ public class InputHtml extends HtmlInputText {
     public void setShowAllToolBoxes(boolean showAllToolBoxes){
         this._showAllToolBoxes = Boolean.valueOf(showAllToolBoxes);
     }
-	
+
     public boolean isShowPropertiesToolBox(){
 		if( isShowAllToolBoxes() )
 			return true;
@@ -285,7 +222,7 @@ public class InputHtml extends HtmlInputText {
     public void setShowPropertiesToolBox(boolean showPropertiesToolBox){
         this._showPropertiesToolBox = Boolean.valueOf(showPropertiesToolBox);
     }
-    
+
     public boolean isShowLinksToolBox(){
 		if( isShowAllToolBoxes() )
 			return true;
@@ -298,7 +235,7 @@ public class InputHtml extends HtmlInputText {
     public void setShowLinksToolBox(boolean showLinksToolBox){
         this._showLinksToolBox = Boolean.valueOf(showLinksToolBox);
     }
-    
+
     public boolean isShowImagesToolBox(){
 		if( isShowAllToolBoxes() )
 			return true;
@@ -311,7 +248,7 @@ public class InputHtml extends HtmlInputText {
     public void setShowImagesToolBox(boolean showImagesToolBox){
         this._showImagesToolBox = Boolean.valueOf(showImagesToolBox);
     }
-    
+
     public boolean isShowTablesToolBox(){
 		if( isShowAllToolBoxes() )
 			return true;
@@ -324,7 +261,7 @@ public class InputHtml extends HtmlInputText {
     public void setShowTablesToolBox(boolean showTablesToolBox){
         this._showTablesToolBox = Boolean.valueOf(showTablesToolBox);
     }
-	
+
 	public boolean isShowCleanupExpressionsToolBox(){
 		if( isShowAllToolBoxes() )
 			return true;
@@ -337,7 +274,7 @@ public class InputHtml extends HtmlInputText {
     public void setShowCleanupExpressionsToolBox(boolean showCleanupExpressionsToolBox){
         this._showCleanupExpressionsToolBox = Boolean.valueOf(showCleanupExpressionsToolBox);
     }
-    
+
     public boolean isShowDebugToolBox(){
 		if( isShowAllToolBoxes() )
 			return true;
@@ -350,7 +287,7 @@ public class InputHtml extends HtmlInputText {
     public void setShowDebugToolBox(boolean showTablesToolBox){
         this._showDebugToolBox = Boolean.valueOf(showTablesToolBox);
     }
-    
+
     public boolean isShowAnyToolBox(){
    		return isShowAllToolBoxes()
    			|| isShowPropertiesToolBox()
@@ -365,31 +302,31 @@ public class InputHtml extends HtmlInputText {
         String val = RendererUtils.getStringValue(context, this);
         if( isHtmlDocument( val ) )
             return val;
-        
+
         return "<html><body>"+(val==null ? "" : val)+"</body></html>";
     }
-    
+
     private static boolean isHtmlDocument(String text){
         if( text == null )
             return false;
-        
+
         if( text.indexOf("<body>")!=-1 || text.indexOf("<body ")!=-1
             || text.indexOf("<BODY>")!=-1 || text.indexOf("<BODY ")!=-1 )
             return true;
-        
+
         return false;
     }
-    
+
     public String getValueFromDocument(String text){
         if( text == null )
             return "";
-        
+
         if( isTypeDocument() )
             return text.trim();
-        
+
         if( !isHtmlDocument(text) )
             return text.trim();
-     
+
         // Extract the fragment from the document.
         String lcText = text.toLowerCase();
         int textLength = lcText.length();
@@ -398,29 +335,29 @@ public class InputHtml extends HtmlInputText {
             bodyStartIndex = lcText.indexOf("<body");
             if( bodyStartIndex == -1 )
                 break; // not found.
-            
+
             bodyStartIndex += 5;
             char c = lcText.charAt(bodyStartIndex);
             if( c=='>' ){
                 break;
             }
-            
+
             if( c!=' ' && c!='\t' )
                 continue;
-            
+
             bodyStartIndex = lcText.indexOf('>', bodyStartIndex);
         }
         bodyStartIndex++;
-        
+
         int bodyEndIndex = lcText.lastIndexOf("</body>")-1;
-        
+
         if( bodyStartIndex<0 || bodyEndIndex<0
            || bodyStartIndex > bodyEndIndex
            || bodyStartIndex>=textLength || bodyEndIndex>=textLength ){
             log.warn("Couldn't extract HTML body from :\n"+text);
             return text.trim();
         }
-        
+
         return text.substring(bodyStartIndex, bodyEndIndex+1).trim();
     }
 }

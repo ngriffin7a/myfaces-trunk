@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,19 +33,6 @@ import java.util.List;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.5  2005/02/16 00:50:37  oros
- * SF issue #1043331: replaced all &nbsp; by the corresponding numeric entity &#160; so safari users will be happy, too, with MyFaces output
- *
- * Revision 1.4  2004/10/13 11:50:57  matze
- * renamed packages to org.apache
- *
- * Revision 1.3  2004/07/01 21:53:08  mwessendorf
- * ASF switch
- *
- * Revision 1.2  2004/05/18 17:08:21  manolito
- * no message
- *
  */
 public class HtmlNavigationRenderer
         extends HtmlLinkRenderer

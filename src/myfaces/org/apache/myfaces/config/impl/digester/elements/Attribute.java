@@ -11,7 +11,7 @@ import java.util.Collections;
 /**
  * @author Martin Marinschek
  * @version $Revision$ $Date$
- * 
+ *
      The "attribute" element represents a named, typed, value associated with
      the parent UIComponent via the generic attributes mechanism.
 
@@ -19,13 +19,8 @@ import java.util.Collections;
      component.
 
      <!ELEMENT attribute       (description*, display-name*, icon*, attribute-name, attribute-class, default-value?, suggested-value?, attribute-extension*)>
- 
+
  *          <p/>
- *          $Log$
- *          Revision 1.1  2005/03/04 00:28:45  mmarinschek
- *          Changes in configuration due to missing Attribute/Property classes for the converter; not building in the functionality yet except for part of the converter properties
- *
- * 
  */
 public class Attribute
 {

@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,29 +27,9 @@ import javax.faces.validator.ValidatorException;
 /**
  * @author mwessendorf (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.6  2004/11/30 09:37:43  matzew
- * changes i18n-messages for validation
- *
- * Revision 1.5  2004/10/13 11:50:57  matze
- * renamed packages to org.apache
- *
- * Revision 1.4  2004/07/01 21:53:08  mwessendorf
- * ASF switch
- *
- * Revision 1.3  2004/06/28 22:12:13  o_rossmueller
- * fix #978654: do not coerce null
- *
- * Revision 1.2  2004/06/05 09:37:43  mwessendorf
- * new validator for regExpr.
- * and began with Friendly validator messages
- *
- * Revision 1.1  2004/05/27 14:09:00  manolito
- * creditcard and email validator refactored
- *
  */
 public class CreditCardValidator implements Validator,StateHolder {
-	
+
 	/**
 	 * <p>The standard converter id for this converter.</p>
 	 */
@@ -59,36 +39,36 @@ public class CreditCardValidator implements Validator,StateHolder {
 	 * <p>The message identifier of the {@link FacesMessage} to be created if
 	 * the creditcard check fails.</p>
 	 */
-	public static final String CREDITCARD_MESSAGE_ID = "org.apache.myfaces.Creditcard.INVALID";	
-	
+	public static final String CREDITCARD_MESSAGE_ID = "org.apache.myfaces.Creditcard.INVALID";
+
 	//private DEFAULT_VALUES
 	private static final boolean DEFAULT_AMEX = true;
 	private static final boolean DEFAULT_DISCOVER = true;
 	private static final boolean DEFAULT_MASTERCARD = true;
 	private static final boolean DEFAULT_VISA = true;
 	private static final boolean DEFAULT_NONE = false;
-	
-	
+
+
 	public CreditCardValidator(){
 	}
-	
+
 	//Cardtypes, that are supported by Commons-Validator.
 	private Boolean _amex = null;
 	private Boolean _discover = null;
 	private Boolean _mastercard = null;
 	private Boolean _visa = null;
 	private Boolean _none = null;
-	
+
 	//JSF-Field for StateHolder-IF
 	private boolean _transient = false;
-	
+
 	//Field, to init the desired Validator
 	private int _initSum = 0;
 
 	private org.apache.commons.validator.CreditCardValidator creditCardValidator = null;
 
 	/**
-	 * 
+	 *
 	 */
 	public void validate(
 		FacesContext facesContext,
@@ -125,21 +105,21 @@ public class CreditCardValidator implements Validator,StateHolder {
 		else{
 			computeValidators();
 			creditCardValidator = new org.apache.commons.validator.CreditCardValidator(_initSum);
-		}	
+		}
 	}
-	
+
 	/**
 	 * private methode, that counts the desired creditCards
-	 */	
+	 */
 	private void computeValidators(){
 		if(isAmex()){
 			this._initSum= org.apache.commons.validator.CreditCardValidator.AMEX + _initSum;
 		}
 		if(isVisa()){
-			this._initSum= org.apache.commons.validator.CreditCardValidator.VISA+ _initSum;	
+			this._initSum= org.apache.commons.validator.CreditCardValidator.VISA+ _initSum;
 		}
 		if(isMastercard()){
-			this._initSum= org.apache.commons.validator.CreditCardValidator.MASTERCARD+ _initSum;	
+			this._initSum= org.apache.commons.validator.CreditCardValidator.MASTERCARD+ _initSum;
 		}
 		if(isDiscover()){
 			this._initSum= org.apache.commons.validator.CreditCardValidator.DISCOVER+ _initSum;

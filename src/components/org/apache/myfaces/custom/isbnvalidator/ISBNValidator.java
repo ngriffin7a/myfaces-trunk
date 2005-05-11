@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,20 +26,10 @@ import javax.faces.validator.ValidatorException;
 /**
  * @author <a href="mailto:matzew@apache.org">Matthias We�endorf</a> (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.3  2004/11/30 09:37:42  matzew
- * changes i18n-messages for validation
- *
- * Revision 1.2  2004/11/23 04:59:24  svieujot
- * Remove "unmappable character for encoding UTF8" warning.
- *
- * Revision 1.1  2004/11/20 20:17:05  matzew
- * added new validator for ISBN codes
- *
  */
 
 public class ISBNValidator implements Validator {
-	
+
 	/**
 	 * <p>The standard converter id for this converter.</p>
 	 */
@@ -48,28 +38,28 @@ public class ISBNValidator implements Validator {
 	 * <p>The message identifier of the {@link FacesMessage} to be created if
 	 * the maximum length check fails.</p>
 	 */
-	public static final String ISBN_MESSAGE_ID = "org.apache.myfaces.ISBN.INVALID";	
-	
+	public static final String ISBN_MESSAGE_ID = "org.apache.myfaces.ISBN.INVALID";
+
 	/**
 	 * <p>isbnValidator</p>
 	 */
 	private org.apache.commons.validator.ISBNValidator isbnValidator;
-	
+
 	public ISBNValidator(){
 	    isbnValidator = new org.apache.commons.validator.ISBNValidator();
 	}
 
 	/**
 	 * methode that validates isbn codes.
-	 * it uses the commons-validator 
+	 * it uses the commons-validator
 	 */
 	public void validate(
 		FacesContext facesContext,
 		UIComponent uiComponent,
 		Object value)
 		throws ValidatorException {
-	
-	
+
+
 			if (facesContext == null) throw new NullPointerException("facesContext");
 			if (uiComponent == null) throw new NullPointerException("uiComponent");
 
@@ -80,7 +70,7 @@ public class ISBNValidator implements Validator {
 			if (!isbnValidator.isValid( value.toString())) {
 				Object[] args = {value.toString()};
 				throw new ValidatorException(MessageUtils.getMessage(FacesMessage.SEVERITY_ERROR,ISBN_MESSAGE_ID, args));
-				
+
 			}
 
 	}

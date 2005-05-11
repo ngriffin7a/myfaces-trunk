@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,13 +27,6 @@ import org.apache.myfaces.config.impl.digester.elements.ListEntries;
  * @author Anton Koinov
  *
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.3  2004/10/13 11:51:00  matze
- * renamed packages to org.apache
- *
- * Revision 1.2  2004/10/05 22:34:21  dave0000
- * bug 1021656 with related improvements
- *
  */
 public class ManagedProperty implements org.apache.myfaces.config.element.ManagedProperty
 {
@@ -121,12 +114,12 @@ public class ManagedProperty implements org.apache.myfaces.config.element.Manage
         _type = TYPE_VALUE;
     }
 
-    
+
     public Object getRuntimeValue(FacesContext facesContext)
     {
         if (_valueBinding == null)
         {
-            _valueBinding = 
+            _valueBinding =
                 UIComponentTag.isValueReference(_value)
                 ? facesContext.getApplication().createValueBinding(_value)
                 : DUMMY_VB;
@@ -144,22 +137,22 @@ public class ManagedProperty implements org.apache.myfaces.config.element.Manage
             throw new UnsupportedOperationException();
         }
 
-        public Class getType(FacesContext facesContext) 
+        public Class getType(FacesContext facesContext)
         {
             throw new UnsupportedOperationException();
         }
 
-        public Object getValue(FacesContext facesContext) 
+        public Object getValue(FacesContext facesContext)
         {
             throw new UnsupportedOperationException();
         }
 
-        public boolean isReadOnly(FacesContext facesContext) 
+        public boolean isReadOnly(FacesContext facesContext)
         {
             throw new UnsupportedOperationException();
         }
 
-        public void setValue(FacesContext facesContext, Object value) 
+        public void setValue(FacesContext facesContext, Object value)
         {
             throw new UnsupportedOperationException();
         }

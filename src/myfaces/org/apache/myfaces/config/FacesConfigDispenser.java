@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,30 +25,6 @@ import java.util.Iterator;
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.3  2005/03/04 00:28:45  mmarinschek
- * Changes in configuration due to missing Attribute/Property classes for the converter; not building in the functionality yet except for part of the converter properties
- *
- * Revision 1.2  2004/10/13 11:50:59  matze
- * renamed packages to org.apache
- *
- * Revision 1.1  2004/07/07 00:25:05  o_rossmueller
- * tidy up config/confignew package (moved confignew classes to package config)
- *
- * Revision 1.3  2004/07/01 22:05:09  mwessendorf
- * ASF switch
- *
- * Revision 1.2  2004/06/16 23:02:23  o_rossmueller
- * merged confignew_branch
- *
- * Revision 1.1.2.1  2004/06/16 01:25:52  o_rossmueller
- * refactorings: FactoryFinder, decorator creation, dispenser (removed reverse order)
- * bug fixes
- * additional tests
- *
- * Revision 1.1  2004/05/17 14:28:27  manolito
- * new configuration concept
- *
  */
 public interface FacesConfigDispenser
 {
@@ -186,7 +162,7 @@ public interface FacesConfigDispenser
 
 
     /**
-     * @return Iterator over {@link javax.faces.event.PhaseListener} implementation class names 
+     * @return Iterator over {@link javax.faces.event.PhaseListener} implementation class names
      */
     public Iterator getLifecyclePhaseListeners();
 }

@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,12 +18,8 @@ package org.apache.myfaces.custom.div;
 import javax.faces.component.UIComponent;
 import org.apache.myfaces.taglib.html.HtmlOutputTextTagBase;
 /**
- * @author bdudney (latest modification by $Author$) 
- * @version $Revision$ $Date$ 
- * $Log$
- * Revision 1.1  2004/11/08 03:43:20  bdudney
- * Added a div element. x:div to use, inserts a div with class or style attributes
- *
+ * @author bdudney (latest modification by $Author$)
+ * @version $Revision$ $Date$
  */
 public class DivTag extends HtmlOutputTextTagBase {
   private String _style = null;

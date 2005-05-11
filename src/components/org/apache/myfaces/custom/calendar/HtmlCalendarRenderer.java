@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,74 +45,6 @@ import java.util.Locale;
 import java.util.List;
 
 /**
- * $Log$
- * Revision 1.21  2005/04/08 02:02:26  schof
- * Fixes MYFACES-167 (Thanks to David Heffelfinger for reporting the bug and supplying the patch.)
- *
- * Revision 1.20  2005/02/11 14:11:04  mmarinschek
- * fixed jira 97
- *
- * Revision 1.19  2005/02/11 13:24:01  mmarinschek
- * fix jira 60, showing fix in examples
- *
- * Revision 1.18  2005/01/17 10:08:44  mmarinschek
- * trying to fix problem with added resources to header; css and js was not changeable by the user anymore...
- *
- * Revision 1.17  2005/01/09 18:15:12  mmarinschek
- * small changes - better error handling, label renderer supports more hooks for sub-classes
- *
- * Revision 1.16  2004/12/27 04:11:11  mmarinschek
- * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
- *
- * Revision 1.15  2004/12/10 02:08:54  svieujot
- * Share code with HtmlInputDate.
- *
- * Revision 1.14  2004/12/09 12:18:43  mmarinschek
- * changes in Calendar-Renderer to check for submitted-value first
- *
- * Revision 1.13  2004/12/09 05:13:02  svieujot
- * Mark potential bugs where we use the backing bean's value, and do not check for submitted value
- *
- * Revision 1.12  2004/12/02 22:26:23  svieujot
- * Simplify the AddResource methods
- *
- * Revision 1.11  2004/12/01 20:25:10  svieujot
- * Make the Extensions filter support css and image resources.
- * Convert the popup calendar to use this new filter.
- *
- * Revision 1.10  2004/11/29 13:57:56  mmarinschek
- * changes for input-calendar bugs
- *
- * Revision 1.9  2004/10/13 11:50:57  matze
- * renamed packages to org.apache
- *
- * Revision 1.8  2004/09/06 08:41:48  tinytoony
- * changes to calendar - rendering wrong weekday, check output-text behavior
- *
- * Revision 1.7  2004/07/28 18:00:47  tinytoony
- * calendar; revisited again for complete i18
- *
- * Revision 1.6  2004/07/28 17:13:54  tinytoony
- * new calendar popup, revisited, global variables renamed to help with uniqueness
- *
- * Revision 1.5  2004/07/27 16:48:02  tinytoony
- * new calendar popup, revisited
- *
- * Revision 1.4  2004/07/27 06:28:32  tinytoony
- * new calendar component as a popup
- *
- * Revision 1.3  2004/07/01 21:53:11  mwessendorf
- * ASF switch
- *
- * Revision 1.2  2004/04/20 14:39:12  royalts
- * writeLink: added text.setValue(content), removed link.setValue(content)
- *
- * Revision 1.1  2004/03/31 11:58:34  manolito
- * custom component refactoring
- *
- * Revision 1.6  2004/03/29 15:06:17  manolito
- * no longer depends on specific LinkRenderer
- *
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -131,9 +63,9 @@ public class HtmlCalendarRenderer
 
         Locale currentLocale = facesContext.getViewRoot().getLocale();
 
-        
+
         Date value;
-        
+
         try
         {
             value = RendererUtils.getDateValue(inputCalendar);
@@ -142,7 +74,7 @@ public class HtmlCalendarRenderer
         {
             value = null;
         }
-       
+
 
         Calendar timeKeeper = Calendar.getInstance(currentLocale);
         timeKeeper.setTime(value!=null?value:new Date());
@@ -156,7 +88,7 @@ public class HtmlCalendarRenderer
         {
             if(inputCalendar.isAddResources())
                 addScriptAndCSSResources(facesContext);
-            
+
             String dateFormat = CalendarDateTimeConverter.createJSPopupFormat(facesContext,
                     inputCalendar.getPopupDateFormat());
 
@@ -185,7 +117,7 @@ public class HtmlCalendarRenderer
             RendererUtils.copyHtmlInputTextAttributes(inputCalendar, inputText);
 
             inputText.setTransient(true);
-            
+
             if (value == null && inputCalendar.getSubmittedValue() != null)
             {
                 inputText.setValue(inputCalendar.getSubmittedValue());
@@ -205,7 +137,7 @@ public class HtmlCalendarRenderer
             inputCalendar.getChildren().remove(inputText);
 
             ResponseWriter writer = facesContext.getResponseWriter();
-            
+
             writer.startElement(HTML.SCRIPT_ELEM,null);
             writer.writeAttribute(HTML.SCRIPT_TYPE_ATTR,HTML.SCRIPT_TYPE_TEXT_JAVASCRIPT,null);
             writer.write("<!--\n");
@@ -281,7 +213,7 @@ public class HtmlCalendarRenderer
             writer.endElement(HTML.TABLE_ELEM);
         }
     }
-    
+
     /**
      * Used by the x:inputDate renderer : HTMLDateRenderer
      * @throws IOException
@@ -291,9 +223,9 @@ public class HtmlCalendarRenderer
         AddResource.addStyleSheet(HtmlCalendarRenderer.class, "WH/theme.css", facesContext);
         AddResource.addStyleSheet(HtmlCalendarRenderer.class, "DB/theme.css", facesContext);
         AddResource.addJavaScriptToHeader(HtmlCalendarRenderer.class, "popcalendar.js", facesContext);
-        
+
         ResponseWriter writer = facesContext.getResponseWriter();
-        
+
         writer.startElement(HTML.SCRIPT_ELEM, null);
         writer.writeAttribute(HTML.SCRIPT_TYPE_ATTR, HTML.SCRIPT_TYPE_TEXT_JAVASCRIPT, null);
         writer.write(

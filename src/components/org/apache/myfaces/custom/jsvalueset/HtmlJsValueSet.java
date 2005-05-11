@@ -12,11 +12,6 @@ import javax.faces.context.FacesContext;
 /**
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.1  2004/12/19 00:50:55  mmarinschek
- * JsValueSetTag
- *
- *
  */
 public class HtmlJsValueSet extends UIOutput
 {

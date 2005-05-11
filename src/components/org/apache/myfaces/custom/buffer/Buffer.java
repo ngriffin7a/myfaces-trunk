@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,13 +22,6 @@ import javax.faces.el.ValueBinding;
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.2  2005/05/02 16:40:09  svieujot
- * Slight code refactor for x:buffer
- *
- * Revision 1.1  2005/01/04 15:41:06  svieujot
- * new x:buffer component.
- *
  */
 public class Buffer extends UIComponentBase{
 
@@ -62,10 +55,10 @@ public class Buffer extends UIComponentBase{
         super.restoreState(context, values[0]);
         _intoExpression = (String) values[1];
     }
-    
+
     void fill(String content, FacesContext facesContext){
         ValueBinding intoVB;
-        
+
         if (_intoExpression == null) {
             intoVB = getValueBinding("into");
             _intoExpression = intoVB.getExpressionString();

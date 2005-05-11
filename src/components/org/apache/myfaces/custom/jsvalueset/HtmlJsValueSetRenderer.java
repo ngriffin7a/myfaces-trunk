@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,17 +29,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * $Log$
- * Revision 1.3  2005/03/12 02:15:18  mmarinschek
- * jsvalueset now supports maps of maps; ui component logging enhanced
- *
- * Revision 1.2  2004/12/27 04:11:11  mmarinschek
- * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
- *
- * Revision 1.1  2004/12/19 00:50:55  mmarinschek
- * JsValueSetTag
- *
- *
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
  */

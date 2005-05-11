@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,28 +37,15 @@ import org.apache.myfaces.renderkit.html.util.DummyFormUtils;
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.4  2005/05/02 16:40:09  svieujot
- * Slight code refactor for x:buffer
- *
- * Revision 1.3  2005/02/01 16:54:07  svieujot
- * Clean up.
- *
- * Revision 1.2  2005/02/01 16:51:48  svieujot
- * Move the HtmlResponseWriterImpl to the shared sources directory.
- *
- * Revision 1.1  2005/01/04 15:41:06  svieujot
- * new x:buffer component.
- *
  */
 public class BufferRenderer extends Renderer {
     private static final Log log = LogFactory.getLog(BufferRenderer.class);
-    
+
     public static final String RENDERER_TYPE = "org.apache.myfaces.Buffer";
 
     private ResponseWriter initialWriter;
     private HtmlBufferResponseWriterWrapper bufferWriter;
-    
+
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) {
         RendererUtils.checkParamValidity(facesContext, uiComponent, Buffer.class);
 
@@ -66,7 +53,7 @@ public class BufferRenderer extends Renderer {
         bufferWriter = HtmlBufferResponseWriterWrapper.getInstance( initialWriter );
         facesContext.setResponseWriter( bufferWriter );
     }
-    
+
     public void encodeChildren(FacesContext facesContext, UIComponent component) throws IOException{
         RendererUtils.checkParamValidity(facesContext, component, Buffer.class);
         RendererUtils.renderChildren(facesContext, component);
@@ -75,9 +62,9 @@ public class BufferRenderer extends Renderer {
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) {
         Buffer buffer = (Buffer)uiComponent;
         buffer.fill(bufferWriter.toString(), facesContext);
-		
+
         facesContext.setResponseWriter( initialWriter );
-        
+
         if( bufferWriter.getDummyFormParams() != null ){
             try{ // Attempt to add the dummy form params (will not work with Sun RI)
 				DummyFormResponseWriter dummyFormResponseWriter = DummyFormUtils.getDummyFormResponseWriter( facesContext );
@@ -90,30 +77,30 @@ public class BufferRenderer extends Renderer {
             }
         }
     }
-    
+
     private static class HtmlBufferResponseWriterWrapper extends HtmlResponseWriterImpl {
-        
+
         private ByteArrayOutputStream stream;
         private PrintWriter writer;
-        
+
         static public HtmlBufferResponseWriterWrapper getInstance(ResponseWriter initialWriter){
             ByteArrayOutputStream instanceStream = new ByteArrayOutputStream();
             PrintWriter instanceWriter = new PrintWriter(instanceStream, true);
-            
+
             return new HtmlBufferResponseWriterWrapper(initialWriter, instanceStream, instanceWriter);
         }
-        
+
         private HtmlBufferResponseWriterWrapper(ResponseWriter initialWriter, ByteArrayOutputStream stream, PrintWriter writer){
             super(writer, initialWriter.getContentType(), initialWriter.getCharacterEncoding());
             this.stream = stream;
             this.writer = writer;
         }
-        
+
         public String toString(){
             try{
                 stream.flush();
                 writer.close();
-                
+
                 return stream.toString( getCharacterEncoding() );
             }catch(UnsupportedEncodingException e){
                 // an attempt to set an invalid character encoding would have caused this exception before
