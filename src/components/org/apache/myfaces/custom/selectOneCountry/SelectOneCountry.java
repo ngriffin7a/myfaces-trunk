@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,21 +32,17 @@ import org.apache.myfaces.component.html.ext.HtmlSelectOneMenu;
 /**
  * @author Sylvain Vieujot (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.1  2005/02/09 13:05:20  svieujot
- * new x:selectOneCountry component
- *
  */
 public class SelectOneCountry extends HtmlSelectOneMenu {
     public static final String COMPONENT_TYPE = "org.apache.myfaces.SelectOneCountry";
     private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.SelectOneCountryRenderer";
-    
+
     private Integer _maxLength = null;
-    
+
     public SelectOneCountry() {
         setRendererType(DEFAULT_RENDERER_TYPE);
     }
-    
+
 	public Integer getMaxLength() {
 		if (_maxLength != null) return _maxLength;
 		ValueBinding vb = getValueBinding("length");
@@ -55,7 +51,7 @@ public class SelectOneCountry extends HtmlSelectOneMenu {
 	public void setMaxLength(Integer maxLength) {
 		_maxLength = maxLength;
 	}
-		
+
     public Object saveState(FacesContext context) {
         Object values[] = new Object[2];
         values[0] = super.saveState(context);
@@ -68,22 +64,22 @@ public class SelectOneCountry extends HtmlSelectOneMenu {
         super.restoreState(context, values[0]);
         _maxLength = (Integer)values[1];
     }
-    
+
     // -------- Over ridden UIComponent methods -----------
-    
+
     public void encodeChildren(FacesContext context){
         // noop
     }
-    
+
     public int getChildCount(){
         return Locale.getISOCountries().length;
     }
-    
+
     public List getChildren(){
         String[] availableCountries = Locale.getISOCountries();
-        
+
         Locale currentLocale;
-        
+
         FacesContext facesContext = FacesContext.getCurrentInstance();
         UIViewRoot viewRoot = facesContext.getViewRoot();
         if( viewRoot != null )
@@ -91,22 +87,22 @@ public class SelectOneCountry extends HtmlSelectOneMenu {
         else
             currentLocale = facesContext.getApplication().getDefaultLocale();
 
-        
+
         TreeMap map = new TreeMap();
         // TreeMap is sorted according to the keys' natural order
-        
+
         for(int i=0; i<availableCountries.length; i++){
             String countryCode = availableCountries[i];
             Locale tmp = new Locale(countryCode, countryCode);
             map.put(tmp.getDisplayCountry(currentLocale), countryCode);
         }
-        
+
         List countriesSelectItems = new ArrayList(availableCountries.length);
-        
+
         int maxDescriptionLength = _maxLength==null ? Integer.MAX_VALUE : _maxLength.intValue();
         if( maxDescriptionLength < 5 )
             maxDescriptionLength = 5;
-        
+
         for(Iterator i = map.keySet().iterator(); i.hasNext(); ){
             String countryName = (String) i.next();
             String countryCode = (String) map.get( countryName );
@@ -116,13 +112,13 @@ public class SelectOneCountry extends HtmlSelectOneMenu {
             else{
                 label = countryName.substring(0, maxDescriptionLength-3)+"...";
             }
-            
+
             UISelectItem selectItem = new UISelectItem();
             selectItem.setValue( new SelectItem(countryCode, label) );
-            
+
             countriesSelectItems.add( selectItem );
         }
-        
+
         return countriesSelectItems;
     }
 }

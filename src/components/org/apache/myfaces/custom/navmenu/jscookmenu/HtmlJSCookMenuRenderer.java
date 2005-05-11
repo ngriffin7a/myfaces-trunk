@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,55 +41,6 @@ import java.util.Map;
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
- *          $Log$
- *          Revision 1.16  2005/04/29 15:20:25  schof
- *          Fixes MYFACE-196.  Patch by Martin Bosak
- *
- *          Revision 1.15  2005/04/13 13:52:01  schof
- *          Fixes MYFACES-185 (patch submitted by Martin Bosak)
- *
- *          Revision 1.14  2005/04/12 17:47:51  schof
- *          Fixes MYFACES-182 (Thanks to David Heffelfinger for reporting and fixing.)
- *
- *          Revision 1.13  2005/04/08 13:05:59  schof
- *          Fixes MyFaces-20 (Patch by Martin Bosak)
- *
- *          Revision 1.12  2004/12/27 04:11:11  mmarinschek
- *          Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
- *
- *          Revision 1.11  2004/12/24 14:49:29  svieujot
- *          Upgrade the navmenu component to use the Extensions filter.
- *
- *          Revision 1.10  2004/12/13 23:14:37  oros
- *          fix #1044663: handle enabledOnUserRole/visibleOnUserRole, disabled menu items are rendered with null actions
- *
- *          Revision 1.9  2004/10/13 11:50:57  matze
- *          renamed packages to org.apache
- *
- *          Revision 1.8  2004/10/05 15:11:43  manolito
- *          #1020264 x:navigationMenuItem icon problem
- *
- *          Revision 1.7  2004/07/16 13:06:30  manolito
- *          encode javascript strings for jscook menu labels
- *
- *          Revision 1.6  2004/07/05 08:28:24  royalts
- *          added example for <x:navigationMenuItems>
- *
- *          Revision 1.5  2004/07/01 21:53:09  mwessendorf
- *          ASF switch
- *
- *          Revision 1.4  2004/06/25 10:58:43  royalts
- *          fixed bug 979038
- *
- *          Revision 1.3  2004/06/23 14:17:31  royalts
- *          no message
- *
- *          Revision 1.2  2004/06/23 13:50:18  royalts
- *          no message
- *
- *          Revision 1.1  2004/06/23 13:44:31  royalts
- *          no message
- *
  */
 public class HtmlJSCookMenuRenderer
     extends HtmlRenderer
@@ -104,7 +55,7 @@ public class HtmlJSCookMenuRenderer
 
         Map parameter = context.getExternalContext().getRequestParameterMap();
         String actionParam = (String)parameter.get(JSCOOK_ACTION_PARAM);
-        if (actionParam != null && !actionParam.trim().equals("") && 
+        if (actionParam != null && !actionParam.trim().equals("") &&
                 !actionParam.trim().equals("null"))
         {
             String compId = component.getId();
@@ -133,30 +84,30 @@ public class HtmlJSCookMenuRenderer
         }
     }
 
-    private String decodeValueBinding(String actionParam, FacesContext context) 
+    private String decodeValueBinding(String actionParam, FacesContext context)
     {
-        int idx = actionParam.indexOf(";#{"); 
+        int idx = actionParam.indexOf(";#{");
         if (idx == -1) {
             return actionParam;
         }
-        
+
         String newActionParam = actionParam.substring(0, idx);
         String vbParam = actionParam.substring(idx + 1);
-        
+
         idx = vbParam.indexOf('=');
         if (idx == -1) {
             return newActionParam;
         }
         String vbExpressionString = vbParam.substring(0, idx);
         String vbValue = vbParam.substring(idx + 1);
-        
-        ValueBinding vb = 
-            context.getApplication().createValueBinding(vbExpressionString);        
+
+        ValueBinding vb =
+            context.getApplication().createValueBinding(vbExpressionString);
         vb.setValue(context, vbValue);
-        
+
         return newActionParam;
     }
-    
+
     public boolean getRendersChildren()
     {
         return true;
@@ -175,7 +126,7 @@ public class HtmlJSCookMenuRenderer
             dummyFormResponseWriter.setWriteDummyForm(true);
 
             String myId = component.getId();
-            
+
             ResponseWriter writer = context.getResponseWriter();
 
             writer.write("\n<script type=\"text/javascript\"><!--\n" +
@@ -265,10 +216,10 @@ public class HtmlJSCookMenuRenderer
                     writer.write(",");
                     if (uiNavMenuItem != null)
                     {
-                        encodeNavigationMenuItems(context, writer, menuItems, 
+                        encodeNavigationMenuItems(context, writer, menuItems,
                                 uiNavMenuItem.getChildren(), menuId);
                     } else {
-                        encodeNavigationMenuItems(context, writer, menuItems, 
+                        encodeNavigationMenuItems(context, writer, menuItems,
                                 new ArrayList(1), menuId);
                     }
                 }
@@ -277,8 +228,8 @@ public class HtmlJSCookMenuRenderer
         }
     }
 
-    private void encodeValueBinding(ResponseWriter writer, UINavigationMenuItem uiNavMenuItem, 
-            NavigationMenuItem item) throws IOException 
+    private void encodeValueBinding(ResponseWriter writer, UINavigationMenuItem uiNavMenuItem,
+            NavigationMenuItem item) throws IOException
     {
         ValueBinding vb = uiNavMenuItem.getValueBinding("NavMenuItemValue");
         if (vb == null) {
@@ -292,18 +243,18 @@ public class HtmlJSCookMenuRenderer
         if (tempObj == null) {
             return;
         }
-        
+
         writer.write(";");
         writer.write(vbExpression);
         writer.write("=");
         writer.write(tempObj.toString());
     }
-    
+
     public void encodeEnd(FacesContext context, UIComponent component) throws IOException
     {
         RendererUtils.checkParamValidity(context, component, HtmlCommandJSCookMenu.class);
         HtmlCommandJSCookMenu menu = (HtmlCommandJSCookMenu)component;
-        
+
         AddResource.addJavaScriptToHeader(NavigationMenuItem.class, "jscookmenu/JSCookMenu.js", context);
 
         AddResource.addJavaScriptToHeader(NavigationMenuItem.class, "jscookmenu/ThemeOffice/theme.js", context);
@@ -317,7 +268,7 @@ public class HtmlJSCookMenuRenderer
 
         AddResource.addJavaScriptToHeader(NavigationMenuItem.class, "jscookmenu/ThemePanel/theme.js", context);
         AddResource.addStyleSheet(NavigationMenuItem.class, "jscookmenu/ThemePanel/theme.css", context);
-        
+
         ResponseWriter writer = context.getResponseWriter();
 
         String menuId = component.getClientId(context).replaceAll(":","_") + "_menu";

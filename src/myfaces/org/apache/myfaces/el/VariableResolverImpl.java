@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,42 +35,6 @@ import org.apache.commons.logging.LogFactory;
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.34  2004/11/08 03:43:20  bdudney
- * Added a div element. x:div to use, inserts a div with class or style attributes
- *
- * Revision 1.33  2004/10/13 11:51:00  matze
- * renamed packages to org.apache
- *
- * Revision 1.32  2004/07/27 06:28:34  dave0000
- * fix issue with getType of literal expressions (and other improvements)
- *
- * Revision 1.31  2004/07/07 08:34:58  mwessendorf
- * removed unused import-statements
- *
- * Revision 1.30  2004/07/07 00:25:07  o_rossmueller
- * tidy up config/confignew package (moved confignew classes to package config)
- *
- * Revision 1.29  2004/07/01 22:05:12  mwessendorf
- * ASF switch
- *
- * Revision 1.28  2004/06/16 23:02:24  o_rossmueller
- * merged confignew_branch
- *
- * Revision 1.27.2.2  2004/06/16 02:07:23  o_rossmueller
- * get navigation rules from RuntimeConfig
- * refactored all remaining usages of MyFacesFactoryFinder to use RuntimeConfig
- *
- * Revision 1.27.2.1  2004/06/13 15:59:07  o_rossmueller
- * started integration of new config mechanism:
- * - factories
- * - components
- * - render kits
- * - managed beans + managed properties (no list/map initialization)
- *
- * Revision 1.27  2004/05/12 07:57:43  manolito
- * Log in javadoc header
- *
  */
 public class VariableResolverImpl
     extends VariableResolver
@@ -183,7 +147,7 @@ public class VariableResolverImpl
                 }
             });
     }
-    
+
     /**
      * Stores all implicit objects defined for this instance of <code>VariableResolver</code>
      * <p>
@@ -243,7 +207,7 @@ public class VariableResolverImpl
                 }
             });
     }
-    
+
     /**
      * Stores all scopes defined for this instance of <code>VariableResolver</code>
      * <p>
@@ -329,7 +293,7 @@ public class VariableResolverImpl
 
             // put in scope
             String scopeKey = mbc.getManagedBeanScope();
-            
+
             // find the scope handler object
             Scope scope = (Scope) _scopes.get(scopeKey);
             if (scope == null)

@@ -11,26 +11,6 @@ import javax.faces.component.UIComponent;
 /**
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.6  2005/03/14 20:34:13  mmarinschek
- * fixed bug myfaces-132, thanks to gerhard hofmann
- *
- * Revision 1.5  2005/03/14 13:43:34  svieujot
- * Close MyFaces-132 thanks to Gerhard Hofmann
- *
- * Revision 1.4  2005/02/18 17:19:30  matzew
- * added release() to tag clazzes.
- *
- * Revision 1.3  2004/11/25 08:41:25  matzew
- * removed unused import-statements
- *
- * Revision 1.2  2004/11/23 23:24:04  mmarinschek
- * Popup tag has now more attributes
- *
- * Revision 1.1  2004/11/16 16:25:52  mmarinschek
- * new popup - component; not yet finished
- *
- *
  */
 public class HtmlPopupTag
         extends HtmlComponentTagBase
@@ -50,7 +30,7 @@ public class HtmlPopupTag
     private String _displayAtDistanceY = null;
     private String _closePopupOnExitingElement = null;
     private String _closePopupOnExitingPopup = null;
-    
+
     public void release() {
         super.release();
 

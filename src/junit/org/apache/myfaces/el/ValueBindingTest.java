@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,49 +25,6 @@ import javax.faces.el.ValueBinding;
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
- * 
- * $Log$
- * Revision 1.30  2004/10/13 11:50:59  matze
- * renamed packages to org.apache
- *
- * Revision 1.29  2004/09/28 19:08:26  dave0000
- * commented some non-working testcases
- *
- * Revision 1.28  2004/09/27 03:12:54  dave0000
- * *** empty log message ***
- *
- * Revision 1.26  2004/09/08 07:43:52  mwessendorf
- * added TestCase
- *
- * Revision 1.25  2004/09/06 16:21:10  mwessendorf
- * added TestCase
- *
- * Revision 1.24  2004/09/02 08:40:18  mwessendorf
- * added TestCase for bug #1018239
- *
- * Revision 1.23  2004/09/01 18:25:19  mwessendorf
- * added TestCase
- *
- * Revision 1.22  2004/07/27 06:46:59  dave0000
- * cleanup/arange testcases, remove duplicates
- *
- * Revision 1.21  2004/07/27 06:28:34  dave0000
- * fix issue with getType of literal expressions (and other improvements)
- *
- * Revision 1.20  2004/07/01 22:00:55  mwessendorf
- * ASF switch
- *
- * Revision 1.19  2004/05/11 04:24:12  dave0000
- * Bug 943166: add value coercion to ManagedBeanConfigurator
- *
- * Revision 1.18  2004/05/10 05:30:15  dave0000
- * Fix issue with setting Managed Bean to a wrong scope
- *
- * Revision 1.17  2004/04/07 03:54:07  dave0000
- * fix testcases to match removed trim() on expression string
- *
- * Revision 1.16  2004/03/30 07:38:11  dave0000
- * implement mixed string-reference expressions
  */
 public class ValueBindingTest extends ELBaseTest
 {

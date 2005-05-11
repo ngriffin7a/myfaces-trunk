@@ -20,13 +20,6 @@ import org.apache.myfaces.taglib.UIComponentTagBase;
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.2  2004/10/13 11:50:57  matze
- * renamed packages to org.apache
- *
- * Revision 1.1  2004/09/14 13:38:01  royalts
- * removed check on urlPattern
- *
  */
 public class HtmlNavigationMenuItemsTag
         extends UIComponentTagBase

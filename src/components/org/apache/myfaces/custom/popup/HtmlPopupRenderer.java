@@ -29,47 +29,6 @@ import java.util.List;
 /**
  * @author Martin Marinschek (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.12  2005/02/11 13:33:58  mmarinschek
- * fix jira 15
- *
- * Revision 1.11  2004/12/27 04:11:11  mmarinschek
- * Data Table stores the state of facets of children; script tag is rendered with type attribute instead of language attribute, popup works better as a column in a data table
- *
- * Revision 1.10  2004/12/20 06:13:01  mmarinschek
- * killed bugs
- *
- * Revision 1.9  2004/12/17 22:06:32  grantsmith
- * Jira MYFACES-57: Changed logging levels to DEBUG from INFO
- *
- * Revision 1.8  2004/12/17 13:19:10  mmarinschek
- * new component jsValueChangeListener
- *
- * Revision 1.7  2004/12/03 20:52:11  svieujot
- * Defer script loading for additional performance.
- *
- * Revision 1.6  2004/12/02 22:26:23  svieujot
- * Simplify the AddResource methods
- *
- * Revision 1.5  2004/12/01 16:32:03  svieujot
- * Convert the Multipart filter in an ExtensionsFilter that provides an additional facility to include resources in a page.
- * Tested only with javascript resources right now, but should work fine with images too.
- * Some work to do to include css resources.
- * The popup component has been converted to use this new Filter.
- *
- * Revision 1.4  2004/11/25 08:41:25  matzew
- * removed unused import-statements
- *
- * Revision 1.3  2004/11/23 23:24:04  mmarinschek
- * Popup tag has now more attributes
- *
- * Revision 1.2  2004/11/17 11:25:42  mmarinschek
- * reviewed version of popup
- *
- * Revision 1.1  2004/11/16 16:25:52  mmarinschek
- * new popup - component; not yet finished
- *
- *
  */
 public class HtmlPopupRenderer
     extends HtmlRenderer

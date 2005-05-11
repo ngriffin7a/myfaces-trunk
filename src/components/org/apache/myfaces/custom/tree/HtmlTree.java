@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -48,26 +48,6 @@ import org.apache.myfaces.custom.tree.model.TreePath;
  *
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller </a>
  * @version $Revision$ $Date$
- *          <p/>
- *          $Log$
- *          Revision 1.31  2005/03/30 07:41:58  matzew
- *          closed MYFACES-139. Thanks to Mathias Broekelmann
- *
- *          Revision 1.30  2005/02/11 00:54:02  svieujot
- *          Revert changes commited to the wrong branch.
- *
- *          Revision 1.28  2004/12/24 14:13:16  svieujot
- *          Upgrade the tree component to use the Extensions filter.
- *
- *          Revision 1.27  2004/11/26 12:46:38  oros
- *          cleanup: removed unused iconChild attribute
- *
- *          Revision 1.26  2004/11/26 12:33:54  oros
- *          MYFACES-9: store iconChildMiddle in component state
- *
- *          Revision 1.25  2004/11/26 12:14:10  oros
- *          MYFACES-8: applied tree table patch by David Le Strat
- *
  */
 public class HtmlTree extends HtmlPanelGroup implements TreeModelListener
 {
@@ -80,7 +60,7 @@ public class HtmlTree extends HtmlPanelGroup implements TreeModelListener
     private static final int EVENT_REMOVED = 2;
     private static final int EVENT_STRUCTURE_CHANGED = 3;
     private static int counter = 0;
-    
+
     // Defaut images
     private static final String DEFAULT_IMAGE_ICON_LINE = "images/line.gif";
     private static final String DEFAULT_IMAGE_ICON_NOLINE = "images/noline.gif";
@@ -95,7 +75,7 @@ public class HtmlTree extends HtmlPanelGroup implements TreeModelListener
     private static final String DEFAULT_IMAGE_ICON_NODE_CLOSE_FIRST = "images/node_close_first.gif";
     private static final String DEFAULT_IMAGE_ICON_NODE_CLOSE_MIDDLE = "images/node_close_middle.gif";
     private static final String DEFAULT_IMAGE_ICON_NODE_CLOSE_LAST = "images/node_close_last.gif";
-    
+
     private IconProvider iconProvider;
     private boolean itemStatesRestored = false;
     private String var;
@@ -197,7 +177,7 @@ public class HtmlTree extends HtmlPanelGroup implements TreeModelListener
     {
         if( iconLine != null )
             return iconLine;
-        
+
         return getDefaultImagePath( DEFAULT_IMAGE_ICON_LINE );
     }
 
@@ -212,7 +192,7 @@ public class HtmlTree extends HtmlPanelGroup implements TreeModelListener
     {
         if( iconNoline != null )
             return iconNoline;
-        
+
         return getDefaultImagePath( DEFAULT_IMAGE_ICON_NOLINE );
     }
 
@@ -227,7 +207,7 @@ public class HtmlTree extends HtmlPanelGroup implements TreeModelListener
     {
         if( iconChildFirst != null )
             return iconChildFirst;
-        
+
         return getDefaultImagePath( DEFAULT_IMAGE_ICON_CHILD_FIRST );
     }
 
@@ -242,7 +222,7 @@ public class HtmlTree extends HtmlPanelGroup implements TreeModelListener
     {
         if( iconChildMiddle != null )
             return iconChildMiddle;
-        
+
         return getDefaultImagePath( DEFAULT_IMAGE_ICON_CHILD_MIDDLE );
     }
 
@@ -257,7 +237,7 @@ public class HtmlTree extends HtmlPanelGroup implements TreeModelListener
     {
         if( iconChildLast != null )
             return iconChildLast;
-        
+
         return getDefaultImagePath( DEFAULT_IMAGE_ICON_CHILD_LAST );
     }
 
@@ -272,7 +252,7 @@ public class HtmlTree extends HtmlPanelGroup implements TreeModelListener
     {
         if( iconNodeOpen != null )
             return iconNodeOpen;
-        
+
         return getDefaultImagePath( DEFAULT_IMAGE_ICON_NODE_OPEN );
     }
 
@@ -287,7 +267,7 @@ public class HtmlTree extends HtmlPanelGroup implements TreeModelListener
     {
         if( iconNodeOpenFirst != null )
         return iconNodeOpenFirst;
-        
+
         return getDefaultImagePath( DEFAULT_IMAGE_ICON_NODE_OPEN_FIRST );
     }
 
@@ -302,7 +282,7 @@ public class HtmlTree extends HtmlPanelGroup implements TreeModelListener
     {
         if( iconNodeOpenMiddle != null )
             return iconNodeOpenMiddle;
-        
+
         return getDefaultImagePath( DEFAULT_IMAGE_ICON_NODE_OPEN_MIDDLE );
     }
 
@@ -317,7 +297,7 @@ public class HtmlTree extends HtmlPanelGroup implements TreeModelListener
     {
         if( iconNodeOpenLast != null )
             return iconNodeOpenLast;
-        
+
         return getDefaultImagePath( DEFAULT_IMAGE_ICON_NODE_OPEN_LAST );
     }
 
@@ -332,7 +312,7 @@ public class HtmlTree extends HtmlPanelGroup implements TreeModelListener
     {
         if( iconNodeClose != null )
             return iconNodeClose;
-        
+
         return getDefaultImagePath( DEFAULT_IMAGE_ICON_NODE_CLOSE );
     }
 
@@ -347,7 +327,7 @@ public class HtmlTree extends HtmlPanelGroup implements TreeModelListener
     {
         if( iconNodeCloseFirst != null )
             return iconNodeCloseFirst;
-        
+
         return getDefaultImagePath( DEFAULT_IMAGE_ICON_NODE_CLOSE_FIRST );
     }
 
@@ -362,7 +342,7 @@ public class HtmlTree extends HtmlPanelGroup implements TreeModelListener
     {
         if( iconNodeCloseMiddle != null )
             return iconNodeCloseMiddle;
-        
+
         return getDefaultImagePath( DEFAULT_IMAGE_ICON_NODE_CLOSE_MIDDLE );
     }
 
@@ -377,7 +357,7 @@ public class HtmlTree extends HtmlPanelGroup implements TreeModelListener
     {
         if( iconNodeCloseLast != null )
             return iconNodeCloseLast;
-        
+
         return getDefaultImagePath( DEFAULT_IMAGE_ICON_NODE_CLOSE_LAST );
     }
 

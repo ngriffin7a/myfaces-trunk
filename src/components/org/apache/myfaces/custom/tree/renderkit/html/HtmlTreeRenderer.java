@@ -41,30 +41,12 @@ import java.util.List;
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller </a>
  * @version $Revision$ $Date$
- *
- *          $Log$
- *          Revision 1.16  2005/02/11 00:54:02  svieujot
- *          Revert changes commited to the wrong branch.
- *
- *          Revision 1.14  2004/12/24 14:13:16  svieujot
- *          Upgrade the tree component to use the Extensions filter.
- *
- *          Revision 1.13  2004/12/22 17:52:54  grantsmith
- *          Jira MYFACES-48: Tree Table Component Fixes & Tree Checkbox Support
- *
- *          Revision 1.12  2004/11/26 12:46:38  oros
- *          cleanup: removed unused iconChild attribute
- *
- *          Revision 1.11  2004/11/26 12:14:09  oros
- *          MYFACES-8: applied tree table patch by David Le Strat
- *
- *
  */
 public class HtmlTreeRenderer extends HtmlTableRendererBase
 {
 
     private static final Integer ZERO = new Integer(0);
-    
+
     private static final String DEFAULT_IMAGE_ICON_FOLDER = "images/folder.gif";
 
     public boolean getRendersChildren()

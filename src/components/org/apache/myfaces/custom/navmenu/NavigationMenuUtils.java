@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,22 +27,6 @@ import java.util.*;
 /**
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
- *          $Log$
- *          Revision 1.5  2004/12/13 23:14:38  oros
- *          fix #1044663: handle enabledOnUserRole/visibleOnUserRole, disabled menu items are rendered with null actions
- *
- *          Revision 1.4  2004/10/13 11:50:57  matze
- *          renamed packages to org.apache
- *
- *          Revision 1.3  2004/07/05 08:28:25  royalts
- *          added example for <x:navigationMenuItems>
- *
- *          Revision 1.2  2004/07/01 21:53:07  mwessendorf
- *          ASF switch
- *
- *          Revision 1.1  2004/06/23 13:44:31  royalts
- *          no message
- *
  */
 public class NavigationMenuUtils
 {

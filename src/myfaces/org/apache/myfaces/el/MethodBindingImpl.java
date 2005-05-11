@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,25 +35,6 @@ import java.lang.reflect.Method;
 /**
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.17  2004/10/13 11:51:00  matze
- * renamed packages to org.apache
- *
- * Revision 1.16  2004/07/01 22:05:12  mwessendorf
- * ASF switch
- *
- * Revision 1.15  2004/06/23 15:56:16  manolito
- * removed our own version of commons-beanutils MethodUtils
- *
- * Revision 1.14  2004/05/18 17:09:29  manolito
- * resolved the problem with inaccessible methods in private classes that implement a public interface
- *
- * Revision 1.13  2004/05/11 04:24:10  dave0000
- * Bug 943166: add value coercion to ManagedBeanConfigurator
- *
- * Revision 1.12  2004/04/16 15:13:31  manolito
- * validator attribute support and MethodBinding invoke exception handling fixed
- *
  */
 public class MethodBindingImpl extends MethodBinding
     implements StateHolder
@@ -210,7 +191,7 @@ public class MethodBindingImpl extends MethodBinding
                 + getExpressionString(), e);
         }
     }
-    
+
     public String toString()
     {
         return _valueBinding.toString();

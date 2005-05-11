@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,18 +20,8 @@ import javax.faces.component.UIComponent;
 import org.apache.myfaces.taglib.html.HtmlOutputTextTagBase;
 
 /**
- * @author mwessendorf (latest modification by $Author$) 
- * @version $Revision$ $Date$ 
- * $Log$
- * Revision 1.3  2005/02/18 17:19:31  matzew
- * added release() to tag clazzes.
- *
- * Revision 1.2  2004/10/13 11:50:58  matze
- * renamed packages to org.apache
- *
- * Revision 1.1  2004/08/18 15:36:08  mwessendorf
- * added a new Stylesheet-Component
- * 
+ * @author mwessendorf (latest modification by $Author$)
+ * @version $Revision$ $Date$
 */
 public class StylesheetTag extends HtmlOutputTextTagBase {
 
@@ -63,7 +53,7 @@ public class StylesheetTag extends HtmlOutputTextTagBase {
 
 
     }
- 
+
      /**
  	 * overrides setProperties() form UIComponentTag.
  	 */
@@ -73,9 +63,9 @@ public class StylesheetTag extends HtmlOutputTextTagBase {
         setStringProperty(component, "path", _path);
 
     }
-    
+
     //---------------------------------------------only the Setters
-   
+
     public void setPath(String path) {
         this._path = path;
     }

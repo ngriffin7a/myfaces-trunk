@@ -24,13 +24,6 @@ import javax.faces.context.FacesContext;
 /**
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
- *          $Log$
- *          Revision 1.2  2005/01/09 21:56:33  tomsp
- *          added new component swapimage
- *
- *          Revision 1.1  2005/01/09 12:36:58  tomsp
- *          added new component swapimage
- *
  */
 public class HtmlSwapImage extends UIGraphic
 {

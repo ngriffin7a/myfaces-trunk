@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,34 +34,6 @@ import java.util.List;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.10  2005/02/11 16:03:00  mmarinschek
- * solve bug in tabbed panel when datatable was displayed not on tab, but at the bottom of the datatable...
- *
- * Revision 1.9  2005/01/24 12:20:11  mmarinschek
- * Changed the TabbedPane component to only decode components which are on the visible tags - other components are not processed in the decode phase. Changed the HtmlRendererUtils back to submit empty strings for components which should be posted back but have null values.
- *
- * Revision 1.8  2004/11/26 14:29:12  oros
- * bug fix #1006636: VisibleOnUserRole attribute for x:panelTab tag
- *
- * Revision 1.7  2004/10/13 11:50:58  matze
- * renamed packages to org.apache
- *
- * Revision 1.6  2004/08/09 07:28:20  manolito
- * activeTabStyleClass, inactiveTabStyleClass, activeSubStyleClass, inactiveSubStyleClass, tagContentStyleClass via codegen
- *
- * Revision 1.5  2004/07/10 17:11:02  o_rossmueller
- * added attributes activeTabStyleClass, inactiveTabStyleClass, activeSubStyleClass, inactiveSubStyleClass, tagContentStyleClass to overwrite style attributes using css
- *
- * Revision 1.4  2004/07/01 21:53:05  mwessendorf
- * ASF switch
- *
- * Revision 1.3  2004/04/16 15:13:31  manolito
- * validator attribute support and MethodBinding invoke exception handling fixed
- *
- * Revision 1.2  2004/04/06 15:36:31  manolito
- * go to render phase after tab switching
- *
  */
 public class HtmlPanelTabbedPane
         extends HtmlPanelGroup

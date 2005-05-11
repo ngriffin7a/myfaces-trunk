@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -52,31 +52,9 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Utility class to implement support functionality to "morph" JSP EL into JSF
  * EL
- * 
+ *
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
- * 
- * $Log$
- * Revision 1.7  2005/04/11 17:39:36  svieujot
- * ELParserHelper : Fix a String IndexOutOfBoundsException & several bugs in toJspELExpression.
- * Add a JUnit Test.
- *
- * Revision 1.6  2004/10/13 11:51:00  matze
- * renamed packages to org.apache
- *
- * Revision 1.5  2004/09/28 19:11:50  dave0000
- * uppercase static final prop
- * remove redundant code
- *
- * Revision 1.4  2004/07/01 22:05:11  mwessendorf
- * ASF switch
- *
- * Revision 1.3  2004/05/10 05:30:13  dave0000
- * Fix issue with setting Managed Bean to a wrong scope
- *
- * Revision 1.2  2004/04/08 23:22:18  dave0000
- * remove assert statements
- *
  */
 public class ELParserHelper
 {
@@ -123,9 +101,9 @@ public class ELParserHelper
 
     /**
      * Convert ValueBinding syntax #{ } to JSP EL syntax ${ }
-     * 
+     *
      * @param expressionString <code>ValueBinding</code> reference expression
-     * 
+     *
      * @return JSP EL compatible expression
      */
     static String toJspElExpression(String expressionString)
@@ -133,7 +111,7 @@ public class ELParserHelper
         StringBuffer sb = new StringBuffer(expressionString.length());
         int remainsPos = 0;
 
-        for (int posOpenBrace = expressionString.indexOf('{'); posOpenBrace >= 0; 
+        for (int posOpenBrace = expressionString.indexOf('{'); posOpenBrace >= 0;
             posOpenBrace = expressionString.indexOf('{', remainsPos))
         {
             if (posOpenBrace > 0)
@@ -151,7 +129,7 @@ public class ELParserHelper
                 {
 //                    // TODO: should use \\ as escape for \ always, not just when before #{
 //                    // allow use of '\' as escape symbol for #{ (for compatibility with Sun's extended implementation)
-//                    if (isEscaped(expressionString, posOpenBrace - 1)) 
+//                    if (isEscaped(expressionString, posOpenBrace - 1))
 //                    {
 //                      escapes: {
 //                            for (int i = sb.length() - 1; i >= 0; i--)
@@ -187,7 +165,7 @@ public class ELParserHelper
         }
 
 		sb.append(expressionString.substring(remainsPos));
-		
+
         // Create a new String to shrink mem size since we are caching
         return new String(sb.toString());
     }
@@ -201,12 +179,12 @@ public class ELParserHelper
 
     /**
      * Return the index of the matching closing brace, skipping over quoted text
-     * 
+     *
      * @param expressionString string to search
      * @param indexofOpeningBrace the location of opening brace to match
-     * 
+     *
      * @return the index of the matching closing brace
-     * 
+     *
      * @throws ReferenceSyntaxException if matching brace cannot be found
      */
     private static int indexOfMatchingClosingBrace(String expressionString,
@@ -260,7 +238,7 @@ public class ELParserHelper
     /**
      * Returns the index of the matching closing quote, skipping over escaped
      * quotes
-     * 
+     *
      * @param expressionString string to scan
      * @param indexOfOpeningQuote start from this position in the string
      * @return -1 if no match, the index of closing quote otherwise
@@ -269,7 +247,7 @@ public class ELParserHelper
         int indexOfOpeningQuote)
     {
         char quote = expressionString.charAt(indexOfOpeningQuote);
-        for (int i = expressionString.indexOf(quote, indexOfOpeningQuote + 1); 
+        for (int i = expressionString.indexOf(quote, indexOfOpeningQuote + 1);
             i >= 0; i = expressionString.indexOf(quote, i + 1))
         {
             if (!isEscaped(expressionString, i))
@@ -297,7 +275,7 @@ public class ELParserHelper
      * Replaces all <code>ValueSuffix</code>es with custom implementation
      * ValueSuffexes that use JSF <code>PropertyResolver</code> insted of JSP
      * EL one.
-     * 
+     *
      * @param expression <code>Expression</code> or
      *        <code>ExpressionString</code> instance
      * @param application <code>Application</code> instance to get
@@ -358,7 +336,7 @@ public class ELParserHelper
         }
         else if (expression instanceof ConditionalExpression)
         {
-            ConditionalExpression conditionalExpression = 
+            ConditionalExpression conditionalExpression =
                 (ConditionalExpression) expression;
             replaceSuffixes(conditionalExpression.getTrueBranch());
             replaceSuffixes(conditionalExpression.getFalseBranch());
@@ -434,11 +412,11 @@ public class ELParserHelper
     /**
      * Coerces <code>index</code> to Integer for array types, or returns
      * <code>null</code> for non-array types.
-     * 
+     *
      * @param base Object for the base
      * @param index Object for the index
      * @return Integer a valid Integer index, or null if not an array type
-     * 
+     *
      * @throws ELException if exception occurs trying to coerce to Integer
      * @throws EvaluationException if base is array type but cannot convert
      *         index to Integer

@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,26 +34,9 @@ import org.xml.sax.SAXException;
 /**
  * @author mwessendorf (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.7  2005/02/22 13:41:10  matzew
- * added RENDER_TYPE constant
- *
- * Revision 1.6  2004/10/13 11:50:57  matze
- * renamed packages to org.apache
- *
- * Revision 1.5  2004/09/15 07:27:01  mwessendorf
- * RssTicker works now behind a firewall
- *
- * Revision 1.4  2004/07/01 21:53:10  mwessendorf
- * ASF switch
- *
- * Revision 1.3  2004/06/27 22:06:26  mwessendorf
- * Log
- *
- *
  */
 public class HtmlRssTicker extends HtmlOutputText{
-	
+
     private static final Log log = LogFactory.getLog(HtmlRssTicker.class);
 	public static final String COMPONENT_TYPE = "org.apache.myfaces.RssTicker";
 	public static final String COMPONENT_FAMILY = "javax.faces.Output";
@@ -62,7 +45,7 @@ public class HtmlRssTicker extends HtmlOutputText{
 	//private fields
 	private String _rssUrl = null;
 	private RSSDigester _digester = null;
-	private Channel _channel; 
+	private Channel _channel;
 
 
 	public HtmlRssTicker()
@@ -75,8 +58,8 @@ public class HtmlRssTicker extends HtmlOutputText{
 	{
 		return COMPONENT_FAMILY;
 	}
-	
-	
+
+
 	public Object saveState(FacesContext context)
 	{
 		Object values[] = new Object[5];
@@ -84,13 +67,13 @@ public class HtmlRssTicker extends HtmlOutputText{
 		values[1] = _rssUrl;
 		return ((Object) (values));
 	}
- 
+
 	public void restoreState(FacesContext context, Object state)
 	{
 		Object values[] = (Object[])state;
 		super.restoreState(context, values[0]);
 		_rssUrl = (String)values[1];
-	}	
+	}
 
 	public String getRssUrl() {
 		if (_rssUrl != null) return _rssUrl;
@@ -101,36 +84,36 @@ public class HtmlRssTicker extends HtmlOutputText{
 
 	public void setRssUrl(String string) {
 		_rssUrl = string;
-		loadNews(_rssUrl); 
+		loadNews(_rssUrl);
 	}
 
 	/**
 	 * @param _rssUrl
 	 */
 	private void loadNews(String string) {
-		try { 
-			
-			this._channel = (Channel)_digester.parse(string); 
-		  } catch(MalformedURLException mue){ 
+		try {
+
+			this._channel = (Channel)_digester.parse(string);
+		  } catch(MalformedURLException mue){
 			_channel = null;
 			log.warn("NO CONNECTION TO THE INTERNET. CAN NOT READ RSS-FEED");
 		  }catch (UnknownHostException uhe){
 				_channel = null;
 				log.warn("NO CONNECTION TO THE INTERNET. CAN NOT READ RSS-FEED");
-		  } catch (IOException e1) { 
-			e1.printStackTrace(); 
-		  } catch (SAXException e) { 
-			e.printStackTrace(); 
-		  } 
+		  } catch (IOException e1) {
+			e1.printStackTrace();
+		  } catch (SAXException e) {
+			e.printStackTrace();
+		  }
 	}
 
-	public Channel getChannel() { 
-	  return _channel; 
-	} 
-	public int itemCount(){ 
+	public Channel getChannel() {
+	  return _channel;
+	}
+	public int itemCount(){
 	  return _channel.getItems().length;
-	} 
-	public Item[] items(){ 
-	  return _channel.getItems(); 
-	} 
+	}
+	public Item[] items(){
+	  return _channel.getItems();
+	}
 }

@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,18 +24,8 @@ import org.apache.commons.logging.LogFactory;
 
 
 /**
- * @author mwessendorf (latest modification by $Author$) 
- * @version $Revision$ $Date$ 
- * $Log$
- * Revision 1.3  2004/10/13 11:50:58  matze
- * renamed packages to org.apache
- *
- * Revision 1.2  2004/08/22 10:36:50  mwessendorf
- * typo
- *
- * Revision 1.1  2004/08/18 15:36:09  mwessendorf
- * added a new Stylesheet-Component
- * 
+ * @author mwessendorf (latest modification by $Author$)
+ * @version $Revision$ $Date$
 */
 
 public class Stylesheet extends UIOutput {
@@ -44,10 +34,10 @@ public class Stylesheet extends UIOutput {
 	public static final String COMPONENT_FAMILY = "javax.faces.Output";
 	private static final String DEFAULT_RENDERER_TYPE = "org.apache.myfaces.Stylesheet";
 	private static final Log log = LogFactory.getLog(Stylesheet.class);
-	
+
     private String _path = null;
-	
-	
+
+
     // ------------------------------------------------------------ Constructors
     public Stylesheet() {
 

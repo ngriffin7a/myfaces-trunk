@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,16 +23,6 @@ import javax.faces.event.PhaseId;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.4  2004/10/13 11:50:58  matze
- * renamed packages to org.apache
- *
- * Revision 1.3  2004/07/01 21:53:05  mwessendorf
- * ASF switch
- *
- * Revision 1.2  2004/04/06 15:32:14  manolito
- * correct phase is APPLY_REQUEST_VALUES
- *
  */
 public class TabChangeEvent
         extends FacesEvent

@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,46 +37,10 @@ import java.util.Map;
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
- * $Log$
- * Revision 1.31  2005/01/09 18:15:12  mmarinschek
- * small changes - better error handling, label renderer supports more hooks for sub-classes
- *
- * Revision 1.30  2004/12/03 08:41:45  manolito
- * MYFACES-44 / PropertyResolverImpl has special logic for UIComponents
- *
- * Revision 1.29  2004/10/13 11:51:00  matze
- * renamed packages to org.apache
- *
- * Revision 1.28  2004/09/20 14:35:48  dave0000
- * bug 1030875:
- * getType() should return null if type cannot be determined
- * isReadOnly() should return false if read-only cannot be determined
- *
- * Revision 1.27  2004/07/01 22:05:11  mwessendorf
- * ASF switch
- *
- * Revision 1.26  2004/06/23 15:56:16  manolito
- * removed our own version of commons-beanutils MethodUtils
- *
- * Revision 1.25  2004/05/18 17:09:29  manolito
- * resolved the problem with inaccessible methods in private classes that implement a public interface
- *
- * Revision 1.24  2004/04/26 05:54:59  dave0000
- * Add coercion to ValueBinding (and related changes)
- *
- * Revision 1.23  2004/04/08 13:42:13  royalts
- * removed main method
- *
- * Revision 1.22  2004/04/08 05:16:45  dave0000
- * change to always use JSF PropertyResolver (was using JSP PR sometimes)
- *
- * Revision 1.21  2004/04/06 06:48:23  manolito
- * IndexedPropertyDescriptor issue
- *
  */
 public class PropertyResolverImpl extends PropertyResolver
 {
-    private static final Log log = 
+    private static final Log log =
         LogFactory.getLog(PropertyResolverImpl.class);
 
     //~ Static fields/initializers ---------------------------------------------
@@ -105,8 +69,8 @@ public class PropertyResolverImpl extends PropertyResolver
         }
         catch (RuntimeException e)
         {
-            log.error("Exception getting value of property " + property 
-                + " of bean " 
+            log.error("Exception getting value of property " + property
+                + " of bean "
                 + base != null ? base.getClass().getName() : "NULL", e);
             throw e;
         }
@@ -139,13 +103,13 @@ public class PropertyResolverImpl extends PropertyResolver
                 return null;
             }
 
-            throw new ReferenceSyntaxException("Must be array or List. Bean: " 
+            throw new ReferenceSyntaxException("Must be array or List. Bean: "
                 + base.getClass().getName() + ", index " + index);
         }
         catch (RuntimeException e)
         {
-            log.error("Exception getting value for index " + index 
-                + " of bean " 
+            log.error("Exception getting value for index " + index
+                + " of bean "
                 + base != null ? base.getClass().getName() : "NULL", e);
             throw e;
         }
@@ -164,8 +128,8 @@ public class PropertyResolverImpl extends PropertyResolver
             if (property == null ||
                 property instanceof String && ((String)property).length() == 0)
             {
-                throw new PropertyNotFoundException("Bean: " 
-                    + base.getClass().getName() 
+                throw new PropertyNotFoundException("Bean: "
+                    + base.getClass().getName()
                     + ", null or empty property name");
             }
 
@@ -181,8 +145,8 @@ public class PropertyResolverImpl extends PropertyResolver
         }
         catch (RuntimeException e)
         {
-            log.error("Exception setting property " + property 
-                + " of bean " 
+            log.error("Exception setting property " + property
+                + " of bean "
                 + base != null ? base.getClass().getName() : "NULL", e);
             throw e;
         }
@@ -209,8 +173,8 @@ public class PropertyResolverImpl extends PropertyResolver
                 }
                 if (base instanceof List)
                 {
-                    // REVISIT: should we try to grow the list, if growable type 
-                    //          (e.g., ArrayList, etc.), and if not large 
+                    // REVISIT: should we try to grow the list, if growable type
+                    //          (e.g., ArrayList, etc.), and if not large
                     //          enough?
                     ((List) base).set(index, newValue);
 
@@ -219,17 +183,17 @@ public class PropertyResolverImpl extends PropertyResolver
             }
             catch (IndexOutOfBoundsException e)
             {
-                throw new PropertyNotFoundException("Bean: " 
+                throw new PropertyNotFoundException("Bean: "
                     + base.getClass().getName() + ", index " + index, e);
             }
 
             throw new EvaluationException(
-                "Bean must be array or List. Bean: " 
+                "Bean must be array or List. Bean: "
                 + base.getClass().getName() + ", index " + index);
         }
         catch (RuntimeException e)
         {
-            log.error("Exception setting value of index " + index + " of bean " 
+            log.error("Exception setting value of index " + index + " of bean "
                 + base != null ? base.getClass().getName() : "NULL", e);
             throw e;
         }
@@ -253,10 +217,10 @@ public class PropertyResolverImpl extends PropertyResolver
             }
 
             // If none of the special bean types, then process as normal Bean
-            PropertyDescriptor propertyDescriptor = 
+            PropertyDescriptor propertyDescriptor =
                 getPropertyDescriptor(base, property.toString());
 
-            return propertyDescriptor.getWriteMethod() == null; 
+            return propertyDescriptor.getWriteMethod() == null;
         }
         catch (Exception e)
         {
@@ -310,7 +274,7 @@ public class PropertyResolverImpl extends PropertyResolver
             }
 
             // If none of the special bean types, then process as normal Bean
-            PropertyDescriptor propertyDescriptor = 
+            PropertyDescriptor propertyDescriptor =
                 getPropertyDescriptor(base, property.toString());
 
             return propertyDescriptor.getPropertyType();
@@ -339,8 +303,8 @@ public class PropertyResolverImpl extends PropertyResolver
 
             if (base instanceof List)
             {
-                // REVISIT: does it make sense to do this or simply return 
-                //          Object.class? What if the new value is not of 
+                // REVISIT: does it make sense to do this or simply return
+                //          Object.class? What if the new value is not of
                 //          the old value's class?
                 Object value = ((List) base).get(index);
 
@@ -363,7 +327,7 @@ public class PropertyResolverImpl extends PropertyResolver
 
     public static void setProperty(Object base, String name, Object newValue)
     {
-        PropertyDescriptor propertyDescriptor = 
+        PropertyDescriptor propertyDescriptor =
             getPropertyDescriptor(base, name);
 
         Method m = propertyDescriptor.getWriteMethod();
@@ -388,14 +352,14 @@ public class PropertyResolverImpl extends PropertyResolver
         }
         catch (Throwable t)
         {
-            throw new EvaluationException("Bean: " 
+            throw new EvaluationException("Bean: "
                 + base.getClass().getName() + ", property: " + name, t);
         }
     }
 
     public static Object getProperty(Object base, String name)
     {
-        PropertyDescriptor propertyDescriptor = 
+        PropertyDescriptor propertyDescriptor =
             getPropertyDescriptor(base, name);
 
         Method m = propertyDescriptor.getReadMethod();
@@ -420,7 +384,7 @@ public class PropertyResolverImpl extends PropertyResolver
         }
         catch (Throwable t)
         {
-            throw new EvaluationException("Bean: " 
+            throw new EvaluationException("Bean: "
                 + base.getClass().getName() + ", property: " + name, t);
         }
     }
@@ -438,7 +402,7 @@ public class PropertyResolverImpl extends PropertyResolver
         }
         catch (IntrospectionException e)
         {
-            throw new PropertyNotFoundException("Bean: " 
+            throw new PropertyNotFoundException("Bean: "
                 + base.getClass().getName() + ", property: " + name, e);
         }
 
@@ -448,9 +412,9 @@ public class PropertyResolverImpl extends PropertyResolver
     public static PropertyDescriptor getPropertyDescriptor(
         BeanInfo beanInfo, String propertyName)
     {
-        PropertyDescriptor[] propDescriptors = 
+        PropertyDescriptor[] propDescriptors =
             beanInfo.getPropertyDescriptors();
-        
+
         if (propDescriptors != null)
         {
             // TODO: cache this in classLoader safe way
@@ -461,9 +425,9 @@ public class PropertyResolverImpl extends PropertyResolver
             }
         }
 
-        throw new PropertyNotFoundException("Bean: " 
-            + beanInfo.getBeanDescriptor().getBeanClass().getName() 
+        throw new PropertyNotFoundException("Bean: "
+            + beanInfo.getBeanDescriptor().getBeanClass().getName()
             + ", property: " + propertyName);
     }
-    
+
 }
