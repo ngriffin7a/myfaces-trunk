@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,7 +28,7 @@ import java.io.IOException;
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
- * $Log$
+ * $Log: HtmlSortHeaderRenderer.java,v $
  * Revision 1.6  2004/10/13 11:50:58  matze
  * renamed packages to org.apache
  *
@@ -48,28 +48,33 @@ import java.io.IOException;
 public class HtmlSortHeaderRenderer
         extends HtmlLinkRendererBase
 {
+    private static final String FACET_ASCENDING = "ascending";
+    private static final String FACET_DESCENDING = "descending";
+
     //private static final Log log = LogFactory.getLog(HtmlSortHeaderRenderer.class);
 
     public void encodeEnd(FacesContext facesContext, UIComponent component) throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, component, HtmlCommandSortHeader.class);
-
         if (UserRoleUtils.isEnabledOnUserRole(component))
         {
             HtmlCommandSortHeader sortHeader = (HtmlCommandSortHeader)component;
             HtmlDataTable dataTable = sortHeader.findParentDataTable();
-
-            if (sortHeader.isArrow() && sortHeader.getColumnName().equals(dataTable.getSortColumn()))
+            if (sortHeader.getColumnName().equals(dataTable.getSortColumn()))
             {
-                ResponseWriter writer = facesContext.getResponseWriter();
-
-                if (dataTable.isSortAscending())
+                UIComponent img = (dataTable.isSortAscending())
+                                  ? sortHeader.getFacet(FACET_ASCENDING)
+                                  : sortHeader.getFacet(FACET_DESCENDING);
+                // render directional image
+                if (img != null)
                 {
-                    writer.write("&#x2191;");
+                    RendererUtils.renderChild(facesContext, img);
                 }
-                else
+                // render directional character
+                if (sortHeader.isArrow())
                 {
-                    writer.write("&#x2193;");
+                    ResponseWriter writer = facesContext.getResponseWriter();
+                    writer.write((dataTable.isSortAscending()) ? "&#x2191;" : "&#x2193;");
                 }
             }
         }

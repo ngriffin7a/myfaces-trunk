@@ -6,7 +6,7 @@
 
 <!--
 /*
- * Copyright 2005 The Apache Software Foundation.
+ * Copyright 2004 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ managed beans used:
                  headerClass="standardTable_Header"
                  footerClass="standardTable_Header"
                  rowClasses="standardTable_Row1,standardTable_Row2"
-                 columnClasses="standardTable_Column,standardTable_ColumnCentered, standardTable_Column"
+                 columnClasses="standardTable_Column,standardTable_ColumnCentered,standardTable_Column"
                  var="row"
                  value="#{openDataList.data}"
                  preserveDataModel="true"
@@ -50,7 +50,13 @@ managed beans used:
                  preserveSort="true">
         <x:columns value="#{openDataList.columnHeaders}" var="columnHeader">
             <f:facet name="header">
-                <x:commandSortHeader columnName="#{columnHeader}" arrow="true">
+                <x:commandSortHeader columnName="#{columnHeader}" arrow="false">
+                    <f:facet name="ascending">
+                        <h:graphicImage value="images/ascending-arrow.gif" rendered="true" border="0"/>
+                    </f:facet>
+                    <f:facet name="descending">
+                        <h:graphicImage value="images/descending-arrow.gif" rendered="true" border="0"/>
+                    </f:facet>
                     <h:outputText value="#{columnHeader}" />
                 </x:commandSortHeader>
             </f:facet>
