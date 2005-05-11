@@ -1,0 +1,10 @@
+<!-- MyFaces extension: user role attributes -->
+        <attribute>
+            <name>displayValueOnly</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                If true, renders only the value of the component, but no input widget.
+                Default is false.
+            </description>
+        </attribute>

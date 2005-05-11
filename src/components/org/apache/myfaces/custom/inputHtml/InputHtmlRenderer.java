@@ -58,11 +58,34 @@ public class InputHtmlRenderer extends HtmlRenderer {
     public void encodeEnd(FacesContext context, UIComponent uiComponent) throws IOException {
         RendererUtils.checkParamValidity(context, uiComponent, InputHtml.class);
 		InputHtml editor = (InputHtml) uiComponent;
-		if( useFallback(editor) )
+		if( editor.isDisplayValueOnly() )
+			encodeDisplayValueOnly(context, editor);
+		else if( useFallback(editor) )
 			encodeEndFallBackMode(context, editor);
 		else
 			encodeEndNormalMode(context, editor);
     }
+
+	private void encodeDisplayValueOnly(FacesContext context, InputHtml editor) throws IOException {
+		String clientId = editor.getClientId(context);
+		// Use only a textarea
+		ResponseWriter writer = context.getResponseWriter();
+        writer.startElement(HTML.SPAN_ELEM, editor);
+
+        writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
+        HtmlRendererUtils.writeIdIfNecessary(writer, editor, context);
+
+		// TODO : Change to use displayValueOnlyStyle/StyleClass ?
+		if( editor.getStyle()!=null )
+            writer.writeAttribute(HTML.STYLE_ATTR, editor.getStyle(), null);
+		if( editor.getStyleClass()!=null )
+            writer.writeAttribute(HTML.STYLE_CLASS_ATTR, editor.getStyleClass(), null);
+
+        String text = RendererUtils.getStringValue(context, editor);
+        writer.write( getHtmlBody( text ) );
+
+        writer.endElement(HTML.SPAN_ELEM);
+	}
 
 	private void encodeEndFallBackMode(FacesContext context, InputHtml editor) throws IOException {
 		String clientId = editor.getClientId(context);

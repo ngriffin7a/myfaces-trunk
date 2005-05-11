@@ -19,6 +19,7 @@
 <!DOCTYPE taglib
   PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
   "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd" [
+<!ENTITY display_value_only_attributes  SYSTEM "entities/display_value_only_attributes.xml">
 <!ENTITY ext_forceId_attribute          SYSTEM "entities/ext_forceId_attribute.xml">
 <!ENTITY html_anchor_attributes         SYSTEM "entities/html_anchor_attributes.xml">
 <!ENTITY html_button_attributes         SYSTEM "entities/html_button_attributes.xml">
@@ -994,6 +995,7 @@
         </attribute>
         &ui_input_attributes;
         &user_role_attributes;
+        &display_value_only_attributes;
         <attribute>
 	        <name>style</name>
             <required>false</required>

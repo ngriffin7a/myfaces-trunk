@@ -15,6 +15,7 @@
  */
 package org.apache.myfaces.component.html.ext;
 
+import org.apache.myfaces.component.DisplayValueOnlyCapable;
 import org.apache.myfaces.component.UserRoleAware;
 import org.apache.myfaces.component.UserRoleUtils;
 import org.apache.myfaces.component.html.util.HtmlComponentUtils;
@@ -28,7 +29,7 @@ import javax.faces.el.ValueBinding;
  */
 public class HtmlInputText
         extends javax.faces.component.html.HtmlInputText
-        implements UserRoleAware
+        implements UserRoleAware, DisplayValueOnlyCapable
 {
 
     public String getClientId(FacesContext context)
@@ -45,9 +46,11 @@ public class HtmlInputText
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
     public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlInputText";
+    private static final boolean DEFAULT_DISPLAYVALUEONLY = false;
 
     private String _enabledOnUserRole = null;
     private String _visibleOnUserRole = null;
+	private Boolean _displayValueOnly = null;
 
     public HtmlInputText()
     {
@@ -78,20 +81,33 @@ public class HtmlInputText
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
-
     public boolean isRendered()
     {
         if (!UserRoleUtils.isVisibleOnUserRole(this)) return false;
         return super.isRendered();
     }
+	
+    public void setDisplayValueOnly(boolean displayValueOnly)
+    {
+        _displayValueOnly = Boolean.valueOf(displayValueOnly);
+    }
+
+    public boolean isDisplayValueOnly()
+    {
+        if (_displayValueOnly != null) return _displayValueOnly.booleanValue();
+        ValueBinding vb = getValueBinding("displayValueOnly");
+        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+        return v != null ? v.booleanValue() : DEFAULT_DISPLAYVALUEONLY;
+    }
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[3];
+        Object values[] = new Object[4];
         values[0] = super.saveState(context);
         values[1] = _enabledOnUserRole;
         values[2] = _visibleOnUserRole;
-        return ((Object) (values));
+		values[3] = _displayValueOnly;
+        return values;
     }
 
     public void restoreState(FacesContext context, Object state)
@@ -100,6 +116,7 @@ public class HtmlInputText
         super.restoreState(context, values[0]);
         _enabledOnUserRole = (String)values[1];
         _visibleOnUserRole = (String)values[2];
+		_displayValueOnly = (Boolean)values[3];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }
