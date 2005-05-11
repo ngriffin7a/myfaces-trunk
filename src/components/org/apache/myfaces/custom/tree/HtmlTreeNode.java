@@ -30,7 +30,7 @@ import java.util.List;
  *
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  * @version $Revision$ $Date$
-* /
+ */
 public class HtmlTreeNode
     extends HtmlCommandLink
 {
