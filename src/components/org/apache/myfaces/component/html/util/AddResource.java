@@ -46,7 +46,7 @@ import org.apache.myfaces.renderkit.html.HTML;
  * @version $Revision$ $Date$
  */
 public class AddResource {
-    private static final Log log = LogFactory.getLog(AddResource.class);
+    protected static final Log log = LogFactory.getLog(AddResource.class);
 
     private static final String COMPONENTS_PACKAGE = "org.apache.myfaces.custom.";
 
@@ -130,7 +130,7 @@ public class AddResource {
                 request);
     }
 
-    private static String getResourceMappedPath(String componentName, String resourceFileName, HttpServletRequest request){
+    protected static String getResourceMappedPath(String componentName, String resourceFileName, HttpServletRequest request){
         String contextPath = "";
         if( request != null )
             contextPath = request.getContextPath();
@@ -138,25 +138,27 @@ public class AddResource {
     }
 
 	private static long getCacheKey(){
-		return getLastModified();
+		// A 100 sec. delay between 2 deployement should be enough
+		// and helps reduce the URL length.
+		return getLastModified() / 100000; 
 	}
 
-	private static Date lastModified = null;
+	private static long lastModified = 0;
 	private static long getLastModified(){
-		if( lastModified == null ){
+		if( lastModified == 0 ){
 			final String format = "yyyy-MM-dd HH:mm:ss Z"; // Must match the one used in the build file
 	        final String bundleName = AddResource.class.getName();
 	        ResourceBundle resources = ResourceBundle.getBundle( bundleName );
 			String sLastModified = resources.getString("lastModified");
 			try {
-				lastModified = new SimpleDateFormat(format).parse( sLastModified );
+				lastModified = new SimpleDateFormat(format).parse( sLastModified ).getTime();
 			} catch (ParseException e) {
-				lastModified = new Date();
+				lastModified = new Date().getTime();
 				log.error("Unparsable lastModified : "+sLastModified);
 			}
 		}
-
-		return lastModified.getTime();
+		
+		return lastModified; 
 	}
 
     public static boolean isResourceMappedPath(HttpServletRequest request){
@@ -184,7 +186,7 @@ public class AddResource {
         return new String[]{componentName, resourceFileName};
     }
 
-    private static String getComponentName(Class componentClass){
+    protected static String getComponentName(Class componentClass){
         String name = componentClass.getName();
         if( ! name.startsWith(COMPONENTS_PACKAGE) ){
             log.error("getComponentName called for non extension component : "+name+"\n"+
