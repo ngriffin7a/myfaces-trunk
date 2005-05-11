@@ -120,7 +120,7 @@ public class HtmlTreeNode
         {
             return translatedPath;
         }
-        ;
+        
         return translatePath(getPath(), getTreeModel(FacesContext.getCurrentInstance()));
     }
 
@@ -484,7 +484,7 @@ public class HtmlTreeNode
         values[2] = layout;
         values[3] = translatePath(getPath(), getTreeModel(context));
         values[4] = Boolean.valueOf(selected);
-        return ((Object) (values));
+        return values;
     }
 
 
