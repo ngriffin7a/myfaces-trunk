@@ -12,12 +12,13 @@ through the system path.
     <taskdef name="sshexec" classname="org.apache.tools.ant.taskdefs.optional.ssh.SSHExec"/>
     <taskdef name="svn-checkout" classname="com.alternatecomputing.jsvn.ant.SvnCheckout"/>
     <taskdef name="svn-update" classname="com.alternatecomputing.jsvn.ant.SvnUpdate"/>
+    <taskdef name="svn-commit" classname="com.alternatecomputing.jsvn.ant.SvnCommit"/>
+    <taskdef name="svn-add" classname="com.alternatecomputing.jsvn.ant.SvnAdd"/>
 
     <!-- use properties file to determine cvs configuration info -->
     <property file="bootstrap.properties"/>
     <property file="bootstrap.properties.local"/>
-    <property name="checkout.dir" value="${project.name}"/>
-    <property name="build.dir" value="${basedir}/${project.name}/build"/>
+    <property name="build.dir" value="${basedir}/${code.checkout.dir}/build"/>
     <property name="temp.dir" value="${build.dir}/temp"/>
 
     <target name="prepare">
@@ -28,6 +29,7 @@ through the system path.
         </fail>
 
         <!-- use latest version if version is not specified -->
+        <!--
         <condition property="svn.tag" value="trunk">
             <and>
                 <not>
@@ -40,12 +42,11 @@ through the system path.
                 <isset property="build.version"/>
             </and>
         </condition>
-
-        <echo message="build.version=${build.version}"/>
-        <echo message="svn.tag=${svn.tag}"/>
-
+        -->
+        
         <!-- determine if the files have been checked out already -->
-        <available file="${project.name}" type="dir" property="already.checked.out"/>
+        <available file="${code.checkout.dir}" type="dir" property="code.already.checked.out"/>
+        <available file="${site.checkout.dir}" type="dir" property="site.already.checked.out"/>
 
         <!-- classpath for <javadoc> -->
         <path id="doclet.classpath">
@@ -58,29 +59,28 @@ through the system path.
     </target>
 
     <target name="clean" description="Remove everything generated from previous builds of the same project">
-        <delete dir="${checkout.dir}"/>
+        <delete dir="${code.checkout.dir}"/>
+        <delete dir="${site.checkout.dir}"/>
     </target>
 
-    <target name="svn-checkout" depends="prepare" unless="already.checked.out">
-
-        <echo message="svn.repository = ${svn.repository}"/>
-        <echo message="project.name = ${project.name}"/>
-
-        <svn-checkout repositoryUrl="${svn.repository}/${project.name}/${svn.tag}" destination="${project.name}"/>
-
+    <target name="svn-checkout-code" depends="prepare" unless="code.already.checked.out">
+        <svn-checkout repositoryUrl="${svn.repository}/${code.project.name}" destination="${code.checkout.dir}"/>
     </target>
 
-    <target name="svn-update" depends="prepare" if="already.checked.out">
-
-        <echo message="svn.repository = ${svn.repository}"/>
-        <echo message="project.name = ${project.name}"/>
-
-        <svn-update repositoryUrl="${svn.repository}/${project.name}/${svn.tag}" target="${project.name}"/>
-
+    <target name="svn-update-code" depends="prepare" if="code.already.checked.out">
+        <svn-update repositoryUrl="${svn.repository}/${code.project.name}" target="${code.checkout.dir}"/>
     </target>
 
-    <target name="nightly" depends="svn-checkout,svn-update">
+    <target name="svn-checkout-site" depends="prepare" unless="site.already.checked.out">
+        <svn-checkout repositoryUrl="${svn.repository}/${site.project.name}" destination="${site.checkout.dir}"/>
+    </target>
 
+    <target name="svn-update-site" depends="prepare" if="site.already.checked.out">
+        <svn-update repositoryUrl="${svn.repository}/${site.project.name}" target="${site.checkout.dir}"/>
+    </target>
+
+    <target name="nightly" depends="svn-checkout-code,svn-update-code">
+        
         <echo message="build.dir: ${build.dir}"/>
         <echo message="building nigthly for ${project.name} ..." level="debug"/>
 
@@ -103,7 +103,7 @@ through the system path.
 
     </target>
 
-    <target name="release" depends="check,svn-checkout,svn-update">
+    <target name="release" depends="check,svn-checkout-code,svn-update-code">
 
         <echo message="build.dir: ${build.dir}"/>
         <echo message="building release for ${project.name} ..." level="debug"/>
@@ -120,6 +120,18 @@ through the system path.
             <fileset dir="${release.dir}"/>
         </copy>
 
+    </target>
+    
+    <target name="publish-site"><!-- depends="svn-checkout-code,svn-update-code,svn-checkout-site,svn-update-site">-->
+        
+        <property name="site.build.dir" value="${basedir}/${site.checkout.dir}"/>
+        <property name="project.home" value="${basedir}/${code.checkout.dir}"/>
+        
+        <echo message="site.build.dir: ${site.build.dir}"/>
+        
+        <!-- execute the build file that was just checked out -->
+        <ant dir="${build.dir}" target="site" inheritRefs="true"/>        
+        
     </target>
 
     <target name="check">

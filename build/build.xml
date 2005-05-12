@@ -5,6 +5,7 @@
 
     <!-- Constants -->
     <property name="project.dir" location="${basedir}/.."/>
+    <property name="project.home" location="${project.dir}"/>
     <property name="build.dir" location="${project.dir}/build"/>
     <property name="nightly.dir" location="${build.dir}/nightly"/>
     <property name="dist.dir" location="${build.dir}/dist"/>
@@ -840,11 +841,14 @@
         <!--
         Preconditions for use of this target: see build-site.xml
         -->
-
         <!-- build forrest site -->
         <ant antfile="build-site.xml" inheritall="false" target="all">
             <property name="project.site-dir" value="${site.build.dir}"/>
+            <property name="project.home" value="${project.home}"/>
         </ant>
+        
+        <!-- fix line endings for cgi scripts (or they will bomb out once deployed -->
+        <fixcrlf srcdir="${site.build.dir}" eol="unix" eof="remove" includes="**/*.cgi"/>        
 
         <!-- add javadoc -->
         <ant target="javadoc">
