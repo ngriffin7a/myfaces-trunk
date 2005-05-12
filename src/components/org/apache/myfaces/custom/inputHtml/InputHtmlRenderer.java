@@ -75,11 +75,10 @@ public class InputHtmlRenderer extends HtmlRenderer {
         writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
         HtmlRendererUtils.writeIdIfNecessary(writer, editor, context);
 
-		// TODO : Change to use displayValueOnlyStyle/StyleClass ?
-		if( editor.getStyle()!=null )
-            writer.writeAttribute(HTML.STYLE_ATTR, editor.getStyle(), null);
-		if( editor.getStyleClass()!=null )
-            writer.writeAttribute(HTML.STYLE_CLASS_ATTR, editor.getStyleClass(), null);
+		if( editor.getDisplayValueOnlyStyle()!=null )
+            writer.writeAttribute(HTML.STYLE_ATTR, editor.getDisplayValueOnlyStyle(), null);
+		if( editor.getDisplayValueOnlyStyleClass()!=null )
+            writer.writeAttribute(HTML.STYLE_CLASS_ATTR, editor.getDisplayValueOnlyStyleClass(), null);
 
         String text = RendererUtils.getStringValue(context, editor);
         writer.write( getHtmlBody( text ) );

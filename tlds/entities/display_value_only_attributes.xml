@@ -8,3 +8,19 @@
                 Default is false.
             </description>
         </attribute>
+        <attribute>
+            <name>displayValueOnlyStyle</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                Style used when displayValueOnly is true.
+            </description>
+        </attribute>
+        <attribute>
+            <name>displayValueOnlyStyleClass</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                Style class used when displayValueOnly is true.
+            </description>
+        </attribute>        

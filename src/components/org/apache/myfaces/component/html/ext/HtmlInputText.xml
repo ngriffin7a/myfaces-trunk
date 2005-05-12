@@ -19,4 +19,12 @@
         <type>boolean</type>
         <default-value>false</default-value>
     </field>
+	<field>
+        <name>displayValueOnlyStyle</name>
+        <type>java.lang.String</type>
+    </field>
+	<field>
+        <name>displayValueOnlyStyleClass</name>
+        <type>java.lang.String</type>
+    </field>
 </component>

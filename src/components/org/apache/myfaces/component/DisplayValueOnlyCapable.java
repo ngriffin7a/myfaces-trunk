@@ -28,4 +28,10 @@ public interface DisplayValueOnlyCapable
 {
     public boolean isDisplayValueOnly();
     public void setDisplayValueOnly(boolean displayValueOnly);
+	
+    public String getDisplayValueOnlyStyle();
+    public void setDisplayValueOnlyStyle(String style);
+	
+    public String getDisplayValueOnlyStyleClass();
+    public void setDisplayValueOnlyStyleClass(String styleClass);
 }

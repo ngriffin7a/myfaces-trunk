@@ -51,6 +51,8 @@ public class HtmlInputText
     private String _enabledOnUserRole = null;
     private String _visibleOnUserRole = null;
 	private Boolean _displayValueOnly = null;
+	private String _displayValueOnlyStyle = null;
+	private String _displayValueOnlyStyleClass = null;
 
     public HtmlInputText()
     {
@@ -100,13 +102,39 @@ public class HtmlInputText
         return v != null ? v.booleanValue() : DEFAULT_DISPLAYVALUEONLY;
     }
 
+    public void setDisplayValueOnlyStyle(String displayValueOnlyStyle)
+    {
+		_displayValueOnlyStyle = displayValueOnlyStyle;
+    }
+
+    public String getDisplayValueOnlyStyle()
+    {
+        if (_displayValueOnlyStyle != null) return _displayValueOnlyStyle;
+        ValueBinding vb = getValueBinding("displayValueOnlyStyle");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+	
+    public void setDisplayValueOnlyStyleClass(String displayValueOnlyStyleClass)
+    {
+		_displayValueOnlyStyleClass = displayValueOnlyStyleClass;
+    }
+
+    public String getDisplayValueOnlyStyleClass()
+    {
+        if (_displayValueOnlyStyleClass != null) return _displayValueOnlyStyleClass;
+        ValueBinding vb = getValueBinding("displayValueOnlyStyleClass");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[4];
+        Object values[] = new Object[6];
         values[0] = super.saveState(context);
         values[1] = _enabledOnUserRole;
         values[2] = _visibleOnUserRole;
 		values[3] = _displayValueOnly;
+		values[4] = _displayValueOnlyStyle;
+		values[5] = _displayValueOnlyStyleClass;
         return values;
     }
 
@@ -117,6 +145,8 @@ public class HtmlInputText
         _enabledOnUserRole = (String)values[1];
         _visibleOnUserRole = (String)values[2];
 		_displayValueOnly = (Boolean)values[3];
+		_displayValueOnlyStyle = (String)values[4];
+		_displayValueOnlyStyleClass = (String)values[5];
     }
     //------------------ GENERATED CODE END ---------------------------------------
 }
