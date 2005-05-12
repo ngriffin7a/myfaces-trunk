@@ -6,6 +6,7 @@
         <news label="News">
             <current label="Current" href="index.html"/>
             <current label="Archive" href="news-archive.html"/>
+            <current label="Foo" href="foo.html"/>
         </news>
         <downloads label="Downloads">
             <bindownload label="Binary" href="http://myfaces.apache.org/binary.cgi"/>
