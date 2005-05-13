@@ -24,6 +24,7 @@
 		<li>Unpack the MyFaces examples archive myfaces-X.X.X-app.zip (or myfaces-X.X.X-app.tgz) to a directory of your choice.</li>
 		<li>Remove any previous MyFaces webapps from your Tomcat installation and clean up your Tomcat work dir. Also make sure that there is no jsf-api.jar or jsf-impl.jar (i.e. Suns API and implementation) in the classpath or in one of Tomcat's lib directories (common/lib or shared/lib).</li>
 		<li>Copy the file myfaces-examples.war to the webapps dir of your Tomcat installation directory - and check once more that there is no old myfaces-examples directory there ;-)</li>
+		<li>Attention: if you are using Tomcat 5.5, remove commons-el.jar and jsp-2.0.jar from the WEB-INF/lib directory if you see a blank page on startup. See the faq for more information.</li>        
 		<li>(Re)start Tomcat</li>
 		<li> Start your browser and enjoy it at <link href="http://localhost:8080/myfaces-examples">http://localhost:8080/myfaces-examples</link></li>
 	</ul>
