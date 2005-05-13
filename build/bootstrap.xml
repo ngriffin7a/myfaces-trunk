@@ -137,6 +137,14 @@ through the system path.
         <property name="site.build.dir" value="${basedir}/${site.checkout.dir}"/>
         <property name="project.home" value="${basedir}/${code.checkout.dir}"/>
 
+        <delete>
+            <fileset dir="${site.checkout.dir}">
+                <include name="*.html"/>
+                <include name="*.cgi"/>
+                <include name="*.txt"/>
+            </fileset>            
+        </delete>
+        
         <!-- execute the build file that was just checked out -->
         <ant dir="${build.dir}" target="site" inheritRefs="true"/>        
 
@@ -151,10 +159,10 @@ through the system path.
             </add>
             <add dir="${site.checkout.dir}/javadoc"/>
             <add dir="${site.checkout.dir}/tlddoc"/>
-
+            
             <commit dir="${site.checkout.dir}" message="automated ant commit"/>
         </svn>
-
+        
     </target>
 
     <target name="check">

@@ -1,3 +1,6 @@
 apache.username=foo
 apache.password=bar
 release.dir=c:\\foo
+MailLogger.mailhost=foo.com
+MailLogger.from=foo@apache.org
+MailLogger.failure.to=pmc@myfaces.apache.org
