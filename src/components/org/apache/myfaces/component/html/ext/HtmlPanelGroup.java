@@ -17,6 +17,7 @@ package org.apache.myfaces.component.html.ext;
 
 import org.apache.myfaces.component.UserRoleAware;
 import org.apache.myfaces.component.UserRoleUtils;
+import org.apache.myfaces.component.DisplayValueOnlyCapable;
 import org.apache.myfaces.component.html.util.HtmlComponentUtils;
 
 import javax.faces.context.FacesContext;
@@ -28,7 +29,7 @@ import javax.faces.el.ValueBinding;
  */
 public class HtmlPanelGroup
         extends javax.faces.component.html.HtmlPanelGroup
-        implements UserRoleAware
+        implements UserRoleAware, DisplayValueOnlyCapable
 {
     public String getClientId(FacesContext context)
     {
