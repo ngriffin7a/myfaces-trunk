@@ -17,6 +17,7 @@ package org.apache.myfaces.component.html.ext;
 
 import org.apache.myfaces.component.UserRoleAware;
 import org.apache.myfaces.component.UserRoleUtils;
+import org.apache.myfaces.component.DisplayValueOnlyCapable;
 import org.apache.myfaces.component.html.util.HtmlComponentUtils;
 
 import javax.faces.context.FacesContext;
@@ -28,7 +29,7 @@ import javax.faces.el.ValueBinding;
  */
 public class HtmlInputTextarea
         extends javax.faces.component.html.HtmlInputTextarea
-        implements UserRoleAware
+        implements UserRoleAware, DisplayValueOnlyCapable
 {
 
     public String getClientId(FacesContext context)
@@ -45,9 +46,13 @@ public class HtmlInputTextarea
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
     public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlInputTextarea";
+    private static final boolean DEFAULT_DISPLAYVALUEONLY = false;
 
     private String _enabledOnUserRole = null;
     private String _visibleOnUserRole = null;
+    private Boolean _displayValueOnly = null;
+	private String _displayValueOnlyStyle = null;
+	private String _displayValueOnlyStyleClass = null;
 
     public HtmlInputTextarea()
     {
@@ -87,10 +92,13 @@ public class HtmlInputTextarea
 
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[3];
+        Object values[] = new Object[6];
         values[0] = super.saveState(context);
         values[1] = _enabledOnUserRole;
         values[2] = _visibleOnUserRole;
+        values[3] = _displayValueOnly;
+        values[4] = _displayValueOnlyStyle;
+        values[5] = _displayValueOnlyStyleClass;
         return ((Object) (values));
     }
 
@@ -100,6 +108,41 @@ public class HtmlInputTextarea
         super.restoreState(context, values[0]);
         _enabledOnUserRole = (String)values[1];
         _visibleOnUserRole = (String)values[2];
+        _displayValueOnly = (Boolean)values[3];
+        _displayValueOnlyStyle = (String)values[4];
+        _displayValueOnlyStyleClass = (String)values[5];
     }
     //------------------ GENERATED CODE END ---------------------------------------
+
+    public boolean isDisplayValueOnly() {
+        if (_displayValueOnly != null) return _displayValueOnly.booleanValue();
+        ValueBinding vb = getValueBinding("displayValueOnly");
+        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+        return v != null ? v.booleanValue() : DEFAULT_DISPLAYVALUEONLY;
+    }
+
+    public void setDisplayValueOnly(boolean displayValueOnly) {
+        _displayValueOnly = Boolean.valueOf(displayValueOnly);
+    }
+
+    public String getDisplayValueOnlyStyle() {
+        if (_displayValueOnlyStyle != null) return _displayValueOnlyStyle;
+        ValueBinding vb = getValueBinding("displayValueOnlyStyle");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setDisplayValueOnlyStyle(String displayValueOnlyStyle) {
+        _displayValueOnlyStyle = displayValueOnlyStyle;
+    }
+
+    public String getDisplayValueOnlyStyleClass() {
+        if (_displayValueOnlyStyleClass != null) return _displayValueOnlyStyleClass;
+        ValueBinding vb = getValueBinding("displayValueOnlyStyleClass");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setDisplayValueOnlyStyleClass(String displayValueOnlyStyleClass) {
+        _displayValueOnlyStyleClass = displayValueOnlyStyleClass;
+    }
 }
+

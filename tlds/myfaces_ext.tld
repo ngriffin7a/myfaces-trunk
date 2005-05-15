@@ -226,6 +226,7 @@
         &standard_input_text_attributes;
         &user_role_attributes;
         &ext_forceId_attribute;
+        &display_value_only_attributes;
     </tag>
 
     <!-- inputTextarea -->
@@ -239,6 +240,7 @@
         &standard_input_textarea_attributes;
         &user_role_attributes;
         &ext_forceId_attribute;
+        &display_value_only_attributes;
     </tag>
 
     <!-- message -->
@@ -397,6 +399,7 @@
         &standard_select_one_menu_attributes;
         &user_role_attributes;
         &ext_forceId_attribute;
+        &display_value_only_attributes;
     </tag>
 
     <!-- selectOneRadio -->
@@ -412,6 +415,7 @@
         &standard_select_one_radio_attributes;
         &user_role_attributes;
         &ext_forceId_attribute;
+        &display_value_only_attributes;
     </tag>
 
     <!-- selectManyCheckbox -->
@@ -427,6 +431,7 @@
         &standard_select_many_checkbox_attributes;
         &user_role_attributes;
         &ext_forceId_attribute;
+        &display_value_only_attributes;
     </tag>
 
 

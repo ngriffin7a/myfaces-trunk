@@ -64,6 +64,38 @@ managed beans used:
                                       rows="5"
                                       value="#{q_form.text}" required="true" />
                     <f:verbatim><br><br></f:verbatim>
+                    <!-- Test HtmlInputText start-->
+                    <x:inputText id="in" displayValueOnly="true" value="test" />
+                    <f:verbatim><br><br></f:verbatim>
+                    <x:inputText id="in1" displayValueOnly="false" value="test" />   
+                    <f:verbatim><br><br></f:verbatim>
+                    <!-- Test HtmlInputText end-->
+                    <!-- Test HtmlSelectOneRadio start-->
+                    <x:selectOneRadio id="r1" value="#{carconf.discount}" layout="pageDirection"  displayValueOnly="true" >
+                                <f:selectItem itemValue="1" itemLabel="#{example_messages['discount_0']}" />
+                                <f:selectItem itemValue="2" itemLabel="#{example_messages['discount_1']}"  />
+                                <f:selectItem itemValue="3" itemLabel="#{example_messages['discount_2']}"  />
+                    </x:selectOneRadio>
+                    <f:verbatim><br><br></f:verbatim>
+                    <x:selectOneRadio id="r2" value="#{carconf.discount}" layout="pageDirection"  displayValueOnly="false" >
+                                <f:selectItem itemValue="1" itemLabel="#{example_messages['discount_0']}" />
+                                <f:selectItem itemValue="2" itemLabel="#{example_messages['discount_1']}"  />
+                                <f:selectItem itemValue="3" itemLabel="#{example_messages['discount_2']}"  />
+                    </x:selectOneRadio>
+                    <f:verbatim><br><br></f:verbatim>
+                    <!-- Test HtmlSelectOneRadio end-->
+                    <!-- Test HtmlInputTextarea start-->
+                    <x:inputTextarea id="text1"
+                                      rows="5"
+                                      value="#{q_form.text}" required="true"
+                                      displayValueOnly="true" />
+                    <f:verbatim><br><br></f:verbatim>
+                    <x:inputTextarea id="text2"
+                                      rows="5"
+                                      value="#{q_form.text}" required="true"
+                                      displayValueOnly="false" />
+                    <f:verbatim><br><br></f:verbatim>
+                    <!-- Test HtmlInputTextarea end-->
                     <h:selectOneMenu id="oneoption" value="#{q_form.quoteChar}" >
                         <f:selectItem itemValue="" itemLabel="#{example_messages['sample2_select_quote']}" />
                         <f:selectItem itemValue="\"" itemLabel="Double" />
@@ -74,6 +106,13 @@ managed beans used:
                         <f:actionListener type="org.apache.myfaces.examples.example2.QuotationController" ></f:actionListener>
                     </h:commandButton>
 
+                    <!-- Test HtmlSelectManyCheckbox start-->
+                    <f:verbatim><br><br></f:verbatim>
+                    <x:selectManyCheckbox id="chkmany" value="#{q_form.selectManyValues}" layout="pageDirection" displayValueOnly="true" >
+                        <f:selectItem itemValue="" itemLabel="#{example_messages['sample2_select_unquote']}" />
+                        <f:selectItems value="#{q_form.selectManyItems}" />
+                    </x:selectManyCheckbox>
+                    <!-- Test HtmlSelectManyCheckbox end-->
                     <f:verbatim><br><br></f:verbatim>
                     <h:selectManyListbox id="manyoptions" value="#{q_form.selectManyValues}" >
                         <f:selectItem itemValue="" itemLabel="#{example_messages['sample2_select_unquote']}" />

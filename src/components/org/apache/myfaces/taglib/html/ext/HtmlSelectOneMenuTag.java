@@ -41,10 +41,18 @@ public class HtmlSelectOneMenuTag
     private String _enabledOnUserRole;
     private String _visibleOnUserRole;
 
+    private String _displayValueOnly;
+	private String _displayValueOnlyStyle;
+	private String _displayValueOnlyStyleClass;
+
     public void release() {
         super.release();
         _enabledOnUserRole=null;
         _visibleOnUserRole=null;
+
+        _displayValueOnly=null;
+        _displayValueOnlyStyle=null;
+        _displayValueOnlyStyleClass=null;
     }
 
     protected void setProperties(UIComponent component)
@@ -52,6 +60,10 @@ public class HtmlSelectOneMenuTag
         super.setProperties(component);
         setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
         setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
+
+        setBooleanProperty(component, "displayValueOnly", _displayValueOnly);
+        setStringProperty(component, "displayValueOnlyStyle", _displayValueOnlyStyle);
+        setStringProperty(component, "displayValueOnlyStyleClass", _displayValueOnlyStyleClass);
     }
 
     public void setEnabledOnUserRole(String enabledOnUserRole)
@@ -64,4 +76,18 @@ public class HtmlSelectOneMenuTag
         _visibleOnUserRole = visibleOnUserRole;
     }
 
+    public void setDisplayValueOnly(String displayValueOnly)
+    {
+        _displayValueOnly = displayValueOnly;
+    }
+
+    public void setDisplayValueOnlyStyle(String displayValueOnlyStyle)
+    {
+        _displayValueOnlyStyle = displayValueOnlyStyle;
+    }
+
+    public void setDisplayValueOnlyStyleClass(String displayValueOnlyStyleClass)
+    {
+        _displayValueOnlyStyleClass = displayValueOnlyStyleClass;
+    }
 }

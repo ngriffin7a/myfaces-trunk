@@ -50,6 +50,7 @@ public class HtmlInputText
 
     private String _enabledOnUserRole = null;
     private String _visibleOnUserRole = null;
+    
 	private Boolean _displayValueOnly = null;
 	private String _displayValueOnlyStyle = null;
 	private String _displayValueOnlyStyleClass = null;
