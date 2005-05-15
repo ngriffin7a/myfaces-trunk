@@ -386,6 +386,7 @@
         &standard_panel_group_attributes;
         &user_role_attributes;
         &ext_forceId_attribute;
+        &display_value_only_attributes;
     </tag>
 
     <!-- selectOneMenu -->

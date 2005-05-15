@@ -41,6 +41,10 @@ public class HtmlPanelGroupTag
     private String _enabledOnUserRole;
     private String _visibleOnUserRole;
 
+    private String _displayValueOnly;
+	private String _displayValueOnlyStyle;
+	private String _displayValueOnlyStyleClass;
+
     public void release() {
         super.release();
         _enabledOnUserRole=null;
@@ -52,6 +56,10 @@ public class HtmlPanelGroupTag
         super.setProperties(component);
         setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
         setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
+
+        setBooleanProperty(component, "displayValueOnly", _displayValueOnly);
+        setStringProperty(component, "displayValueOnlyStyle", _displayValueOnlyStyle);
+        setStringProperty(component, "displayValueOnlyStyleClass", _displayValueOnlyStyleClass);
     }
 
     public void setEnabledOnUserRole(String enabledOnUserRole)
@@ -62,6 +70,21 @@ public class HtmlPanelGroupTag
     public void setVisibleOnUserRole(String visibleOnUserRole)
     {
         _visibleOnUserRole = visibleOnUserRole;
+    }
+
+    public void setDisplayValueOnly(String displayValueOnly)
+    {
+        _displayValueOnly = displayValueOnly;
+    }
+
+    public void setDisplayValueOnlyStyle(String displayValueOnlyStyle)
+    {
+        _displayValueOnlyStyle = displayValueOnlyStyle;
+    }
+
+    public void setDisplayValueOnlyStyleClass(String displayValueOnlyStyleClass)
+    {
+        _displayValueOnlyStyleClass = displayValueOnlyStyleClass;
     }
 
 }

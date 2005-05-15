@@ -82,37 +82,6 @@ public class HtmlSelectManyCheckbox
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
-
-    public boolean isRendered()
-    {
-        if (!UserRoleUtils.isVisibleOnUserRole(this)) return false;
-        return super.isRendered();
-    }
-
-    public Object saveState(FacesContext context)
-    {
-        Object values[] = new Object[6];
-        values[0] = super.saveState(context);
-        values[1] = _enabledOnUserRole;
-        values[2] = _visibleOnUserRole;
-        values[3] = _displayValueOnly;
-        values[4] = _displayValueOnlyStyle;
-        values[5] = _displayValueOnlyStyleClass;
-        return ((Object) (values));
-    }
-
-    public void restoreState(FacesContext context, Object state)
-    {
-        Object values[] = (Object[])state;
-        super.restoreState(context, values[0]);
-        _enabledOnUserRole = (String)values[1];
-        _visibleOnUserRole = (String)values[2];
-        _displayValueOnly = (Boolean)values[3];
-        _displayValueOnlyStyle = (String)values[4];
-        _displayValueOnlyStyleClass = (String)values[5];
-    }
-    //------------------ GENERATED CODE END ---------------------------------------
-
     public boolean isDisplayValueOnly() {
         if (_displayValueOnly != null) return _displayValueOnly.booleanValue();
         ValueBinding vb = getValueBinding("displayValueOnly");
@@ -143,4 +112,35 @@ public class HtmlSelectManyCheckbox
     public void setDisplayValueOnlyStyleClass(String displayValueOnlyStyleClass) {
         _displayValueOnlyStyleClass = displayValueOnlyStyleClass;
     }
+
+
+    public boolean isRendered()
+    {
+        if (!UserRoleUtils.isVisibleOnUserRole(this)) return false;
+        return super.isRendered();
+    }
+
+    public Object saveState(FacesContext context)
+    {
+        Object values[] = new Object[6];
+        values[0] = super.saveState(context);
+        values[1] = _enabledOnUserRole;
+        values[2] = _visibleOnUserRole;
+        values[3] = _displayValueOnly;
+        values[4] = _displayValueOnlyStyle;
+        values[5] = _displayValueOnlyStyleClass;
+        return ((Object) (values));
+    }
+
+    public void restoreState(FacesContext context, Object state)
+    {
+        Object values[] = (Object[])state;
+        super.restoreState(context, values[0]);
+        _enabledOnUserRole = (String)values[1];
+        _visibleOnUserRole = (String)values[2];
+        _displayValueOnly = (Boolean)values[3];
+        _displayValueOnlyStyle = (String)values[4];
+        _displayValueOnlyStyleClass = (String)values[5];
+    }
+    //------------------ GENERATED CODE END ---------------------------------------
 }

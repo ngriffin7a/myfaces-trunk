@@ -82,6 +82,36 @@ public class HtmlSelectOneRadio
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
+    public boolean isDisplayValueOnly() {
+        if (_displayValueOnly != null) return _displayValueOnly.booleanValue();
+        ValueBinding vb = getValueBinding("displayValueOnly");
+        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+        return v != null ? v.booleanValue() : DEFAULT_DISPLAYVALUEONLY;
+    }
+
+    public void setDisplayValueOnly(boolean displayValueOnly) {
+        _displayValueOnly = Boolean.valueOf(displayValueOnly);
+    }
+
+    public String getDisplayValueOnlyStyle() {
+        if (_displayValueOnlyStyle != null) return _displayValueOnlyStyle;
+        ValueBinding vb = getValueBinding("displayValueOnlyStyle");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setDisplayValueOnlyStyle(String displayValueOnlyStyle) {
+        _displayValueOnlyStyle = displayValueOnlyStyle;
+    }
+
+    public String getDisplayValueOnlyStyleClass() {
+        if (_displayValueOnlyStyleClass != null) return _displayValueOnlyStyleClass;
+        ValueBinding vb = getValueBinding("displayValueOnlyStyleClass");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setDisplayValueOnlyStyleClass(String displayValueOnlyStyleClass) {
+        _displayValueOnlyStyleClass = displayValueOnlyStyleClass;
+    }
 
     public boolean isRendered()
     {
@@ -112,35 +142,4 @@ public class HtmlSelectOneRadio
         _displayValueOnlyStyleClass = (String)values[5];
     }
     //------------------ GENERATED CODE END ---------------------------------------
-
-        public boolean isDisplayValueOnly() {
-        if (_displayValueOnly != null) return _displayValueOnly.booleanValue();
-        ValueBinding vb = getValueBinding("displayValueOnly");
-        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
-        return v != null ? v.booleanValue() : DEFAULT_DISPLAYVALUEONLY;
-    }
-
-    public void setDisplayValueOnly(boolean displayValueOnly) {
-        _displayValueOnly = Boolean.valueOf(displayValueOnly);
-    }
-
-    public String getDisplayValueOnlyStyle() {
-        if (_displayValueOnlyStyle != null) return _displayValueOnlyStyle;
-        ValueBinding vb = getValueBinding("displayValueOnlyStyle");
-        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
-    }
-
-    public void setDisplayValueOnlyStyle(String displayValueOnlyStyle) {
-        _displayValueOnlyStyle = displayValueOnlyStyle;
-    }
-
-    public String getDisplayValueOnlyStyleClass() {
-        if (_displayValueOnlyStyleClass != null) return _displayValueOnlyStyleClass;
-        ValueBinding vb = getValueBinding("displayValueOnlyStyleClass");
-        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
-    }
-
-    public void setDisplayValueOnlyStyleClass(String displayValueOnlyStyleClass) {
-        _displayValueOnlyStyleClass = displayValueOnlyStyleClass;
-    }
 }

@@ -46,9 +46,13 @@ public class HtmlPanelGroup
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
     public static final String COMPONENT_TYPE = "org.apache.myfaces.HtmlPanelGroup";
+    private static final boolean DEFAULT_DISPLAYVALUEONLY = false;
 
     private String _enabledOnUserRole = null;
     private String _visibleOnUserRole = null;
+    private Boolean _displayValueOnly = null;
+	private String _displayValueOnlyStyle = null;
+	private String _displayValueOnlyStyleClass = null;
 
     public HtmlPanelGroup()
     {
@@ -77,6 +81,37 @@ public class HtmlPanelGroup
         if (_visibleOnUserRole != null) return _visibleOnUserRole;
         ValueBinding vb = getValueBinding("visibleOnUserRole");
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public boolean isDisplayValueOnly() {
+        if (_displayValueOnly != null) return _displayValueOnly.booleanValue();
+        ValueBinding vb = getValueBinding("displayValueOnly");
+        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+        return v != null ? v.booleanValue() : DEFAULT_DISPLAYVALUEONLY;
+    }
+
+    public void setDisplayValueOnly(boolean displayValueOnly) {
+        _displayValueOnly = Boolean.valueOf(displayValueOnly);
+    }
+
+    public String getDisplayValueOnlyStyle() {
+        if (_displayValueOnlyStyle != null) return _displayValueOnlyStyle;
+        ValueBinding vb = getValueBinding("displayValueOnlyStyle");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setDisplayValueOnlyStyle(String displayValueOnlyStyle) {
+        _displayValueOnlyStyle = displayValueOnlyStyle;
+    }
+
+    public String getDisplayValueOnlyStyleClass() {
+        if (_displayValueOnlyStyleClass != null) return _displayValueOnlyStyleClass;
+        ValueBinding vb = getValueBinding("displayValueOnlyStyleClass");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
+
+    public void setDisplayValueOnlyStyleClass(String displayValueOnlyStyleClass) {
+        _displayValueOnlyStyleClass = displayValueOnlyStyleClass;
     }
 
 

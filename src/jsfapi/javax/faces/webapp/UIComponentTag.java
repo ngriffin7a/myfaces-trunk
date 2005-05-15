@@ -15,6 +15,9 @@
  */
 package javax.faces.webapp;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
@@ -58,6 +61,8 @@ public abstract class UIComponentTag
     private ResponseWriter _writer = null;
     private Set _childrenAdded = null;
     private Set _facetsAdded = null;
+
+    private static Log log = LogFactory.getLog(UIComponentTag.class);
 
 
     public UIComponentTag()
@@ -601,6 +606,12 @@ public abstract class UIComponentTag
     protected void setupResponseWriter()
     {
         FacesContext facesContext = getFacesContext();
+
+        if(facesContext == null)
+        {
+            log.error("Faces context not found. getResponseWriter will fail. Check if the FacesServlet has been initialized at all in your web.xml.");
+        }
+
         _writer = facesContext.getResponseWriter();
         if (_writer == null)
         {
