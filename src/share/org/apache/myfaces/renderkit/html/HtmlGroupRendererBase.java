@@ -17,7 +17,8 @@ import java.io.IOException;
  *          <p/>
  *          $Log: $
  */
-public class HtmlGroupRendererBase 
+public class HtmlGroupRendererBase
+        extends HtmlRenderer 
 {
     public boolean getRendersChildren()
     {

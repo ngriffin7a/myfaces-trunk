@@ -25,6 +25,7 @@ import java.util.Iterator;
  *          $Log: $
  */
 public class HtmlGridRendererBase
+        extends HtmlRenderer
 {
     private static final Log log = LogFactory.getLog(HtmlGridRendererBase.class);
 
