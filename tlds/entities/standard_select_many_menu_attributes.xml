@@ -1,0 +1,4 @@
+        &ui_select_many_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_select_attributes;
