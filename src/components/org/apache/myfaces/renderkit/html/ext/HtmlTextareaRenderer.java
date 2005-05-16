@@ -54,30 +54,14 @@ public class HtmlTextareaRenderer
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, UIInput.class);
 
-        if(uiComponent instanceof HtmlInputTextarea)
+        if(HtmlRendererUtils.isDisplayValueOnly(uiComponent))
         {
-            HtmlInputTextarea textarea = (HtmlInputTextarea) uiComponent;
-            if(textarea.isDisplayValueOnly())
-                encodeDisplayValueOnly(facesContext, textarea);
-            else
-                super.encodeTextArea(facesContext, textarea);
+            HtmlRendererUtils.renderDisplayValueOnly(facesContext, (UIInput) uiComponent);
+        }
+        else
+        {
+            super.encodeTextArea(facesContext, uiComponent);
         }
     }
 
-    private void encodeDisplayValueOnly(FacesContext facesContext, HtmlInputTextarea textarea) throws IOException
-    {
-        ResponseWriter writer = facesContext.getResponseWriter();
-        writer.startElement(HTML.SPAN_ELEM, textarea);
-
-        String clientId = textarea.getClientId(facesContext);
-        writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
-        HtmlRendererUtils.writeIdIfNecessary(writer, textarea, facesContext);
-
-        HtmlRendererUtils.renderDisplayValueOnlyAttributes(textarea, writer);
-
-        String strValue = RendererUtils.getStringValue(facesContext, textarea);
-        writer.writeText(strValue, JSFAttr.VALUE_ATTR);
-
-        writer.endElement(HTML.SPAN_ELEM);
-    }
 }

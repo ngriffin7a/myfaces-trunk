@@ -24,13 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.faces.FacesException;
-import javax.faces.component.EditableValueHolder;
-import javax.faces.component.NamingContainer;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIForm;
-import javax.faces.component.UISelectMany;
-import javax.faces.component.UISelectOne;
-import javax.faces.component.UIViewRoot;
+import javax.faces.component.*;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.convert.Converter;
@@ -41,6 +35,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.myfaces.config.MyfacesConfig;
 import org.apache.myfaces.renderkit.RendererUtils;
+import org.apache.myfaces.renderkit.JSFAttr;
 import org.apache.myfaces.renderkit.html.util.DummyFormUtils;
 import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
 import org.apache.myfaces.component.DisplayValueOnlyCapable;
@@ -568,7 +563,7 @@ public final class HtmlRendererUtils {
         }
     }
 
-    public static void renderDisplayValueOnly(FacesContext facesContext, UIComponent
+    public static void renderDisplayValueOnlyForSelects(FacesContext facesContext, UIComponent
             uiComponent)
         throws IOException
     {
@@ -621,20 +616,20 @@ public final class HtmlRendererUtils {
             uiComponent;
 
 
-        if(displayOnlyCapable.getDisplayValueOnlyStyle() != null || displayOnlyCapable.getDisplayValueOnlyStyleClass()!=null)
+        if(getDisplayValueOnlyStyle(uiComponent) != null || getDisplayValueOnlyStyleClass(uiComponent)!=null)
         {
-            if(displayOnlyCapable.getDisplayValueOnlyStyle() != null)
+            if(getDisplayValueOnlyStyle(uiComponent) != null )
             {
-                writer.writeAttribute(HTML.STYLE_ATTR, displayOnlyCapable.getDisplayValueOnlyStyle(), null);
+                writer.writeAttribute(HTML.STYLE_ATTR, getDisplayValueOnlyStyle(uiComponent), null);
             }
             else if(uiComponent.getAttributes().get("style")!=null)
             {
                 writer.writeAttribute(HTML.STYLE_ATTR, uiComponent.getAttributes().get("style"), null);
             }
             
-            if(displayOnlyCapable.getDisplayValueOnlyStyleClass() != null)
+            if(getDisplayValueOnlyStyleClass(uiComponent) != null )
             {
-                writer.writeAttribute(HTML.STYLE_CLASS_ATTR, displayOnlyCapable.getDisplayValueOnlyStyleClass(), null);
+                writer.writeAttribute(HTML.STYLE_CLASS_ATTR, getDisplayValueOnlyStyleClass(uiComponent), null);
             }
             else if(uiComponent.getAttributes().get("styleClass")!=null)
             {
@@ -676,6 +671,82 @@ public final class HtmlRendererUtils {
                 }
             }
         }
+    }
+
+    public static String getDisplayValueOnlyStyleClass(UIComponent component) {
+
+        if(component instanceof DisplayValueOnlyCapable)
+        {
+            if(((DisplayValueOnlyCapable) component).getDisplayValueOnlyStyleClass()!=null)
+                return ((DisplayValueOnlyCapable) component).getDisplayValueOnlyStyleClass();
+
+            UIComponent parent;
+
+            while((parent = component.getParent())!=null)
+            {
+                if(parent instanceof DisplayValueOnlyCapable)
+                {
+                    return ((DisplayValueOnlyCapable) parent).getDisplayValueOnlyStyleClass();
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public static String getDisplayValueOnlyStyle(UIComponent component) {
+
+        if(component instanceof DisplayValueOnlyCapable)
+        {
+            if(((DisplayValueOnlyCapable) component).getDisplayValueOnlyStyle()!=null)
+                return ((DisplayValueOnlyCapable) component).getDisplayValueOnlyStyle();
+
+            UIComponent parent;
+
+            while((parent = component.getParent())!=null)
+            {
+                if(parent instanceof DisplayValueOnlyCapable)
+                {
+                    return ((DisplayValueOnlyCapable) parent).getDisplayValueOnlyStyle();
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public static boolean isDisplayValueOnly(UIComponent component) {
+
+        if(component instanceof DisplayValueOnlyCapable)
+        {
+            
+            UIComponent parent;
+
+            while((parent = component.getParent())!=null)
+            {
+                if(parent instanceof DisplayValueOnlyCapable)
+                {
+                    return ((DisplayValueOnlyCapable) parent).isDisplayValueOnly();
+                }
+            }
+        }
+
+        return (component instanceof DisplayValueOnlyCapable) &&
+                        ((DisplayValueOnlyCapable) component).isDisplayValueOnly();
+    }
+
+    public static void renderDisplayValueOnly(FacesContext facesContext, UIInput input) throws IOException {
+        ResponseWriter writer = facesContext.getResponseWriter();
+        writer.startElement(HTML.SPAN_ELEM, input);
+
+        writeIdIfNecessary(writer, input, facesContext);
+
+        renderDisplayValueOnlyAttributes(input, writer);
+
+        String strValue = RendererUtils.getStringValue(facesContext, input);
+        writer.writeText(strValue, JSFAttr.VALUE_ATTR);
+
+        writer.endElement(HTML.SPAN_ELEM);
     }
 
     public static class LinkParameter {

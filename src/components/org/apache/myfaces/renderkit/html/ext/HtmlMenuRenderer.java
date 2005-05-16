@@ -48,10 +48,9 @@ public class HtmlMenuRenderer
     public void encodeEnd(FacesContext facesContext, UIComponent component)
             throws IOException
     {
-        if(component instanceof DisplayValueOnlyCapable
-            && ((DisplayValueOnlyCapable) component).isDisplayValueOnly())
+        if(HtmlRendererUtils.isDisplayValueOnly(component))
         {
-            HtmlRendererUtils.renderDisplayValueOnly(facesContext, component);
+            HtmlRendererUtils.renderDisplayValueOnlyForSelects(facesContext, component);
         }
         else
         {

@@ -45,9 +45,9 @@ public class HtmlListboxRenderer
 
     public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException {
 
-        if(uiComponent instanceof DisplayValueOnlyCapable && ((DisplayValueOnlyCapable) uiComponent).isDisplayValueOnly())
+        if(HtmlRendererUtils.isDisplayValueOnly(uiComponent))
         {
-            HtmlRendererUtils.renderDisplayValueOnly(facesContext, uiComponent);
+            HtmlRendererUtils.renderDisplayValueOnlyForSelects(facesContext, uiComponent);
         }
         else
         {

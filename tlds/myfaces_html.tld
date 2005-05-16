@@ -57,6 +57,7 @@
 <!ENTITY standard_output_label_attributes    SYSTEM "entities/standard_output_label_attributes.xml">
 <!ENTITY standard_output_text_attributes     SYSTEM "entities/standard_output_text_attributes.xml">
 <!ENTITY standard_panel_group_attributes     SYSTEM "entities/standard_panel_group_attributes.xml">
+<!ENTITY standard_panel_grid_attributes      SYSTEM "entities/standard_panel_grid_attributes.xml">
 <!ENTITY standard_select_boolean_checkbox_attributes  SYSTEM "entities/standard_select_boolean_checkbox_attributes.xml">
 <!ENTITY standard_select_many_checkbox_attributes SYSTEM "entities/standard_select_many_checkbox_attributes.xml">
 <!ENTITY standard_select_many_listbox_attributes SYSTEM "entities/standard_select_many_listbox_attributes.xml">
@@ -300,36 +301,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         <name>panelGrid</name>
         <tag-class>org.apache.myfaces.taglib.html.HtmlPanelGridTag</tag-class>
         <body-content>JSP</body-content>
-        &ui_panel_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &html_table_attributes;
-        <!-- GridRenderer attributes -->
-        <attribute>
-            <name>columnClasses</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>columns</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>footerClass</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>headerClass</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
-        <attribute>
-            <name>rowClasses</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>
+        &standard_panel_grid_attributes;
      </tag>
 
 <!-- panelGroup -->

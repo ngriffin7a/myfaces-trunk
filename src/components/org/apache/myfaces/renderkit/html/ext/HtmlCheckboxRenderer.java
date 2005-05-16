@@ -56,7 +56,7 @@ public class HtmlCheckboxRenderer
         }
         else if (component instanceof DisplayValueOnlyCapable && ((DisplayValueOnlyCapable) component).isDisplayValueOnly())
         {
-            HtmlRendererUtils.renderDisplayValueOnly(context, component);
+            HtmlRendererUtils.renderDisplayValueOnlyForSelects(context, component);
         }
         else if (component instanceof UISelectMany)
         {

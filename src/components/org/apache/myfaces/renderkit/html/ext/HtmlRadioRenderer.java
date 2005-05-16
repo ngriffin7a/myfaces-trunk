@@ -55,10 +55,9 @@ public class HtmlRadioRenderer
         {
             renderRadio(context, (HtmlRadio)component);
         }
-        else if (component instanceof DisplayValueOnlyCapable &&
-                ((DisplayValueOnlyCapable) component).isDisplayValueOnly())
+        else if (HtmlRendererUtils.isDisplayValueOnly(component))
         {
-            HtmlRendererUtils.renderDisplayValueOnly(context, component);
+            HtmlRendererUtils.renderDisplayValueOnlyForSelects(context, component);
         }
         else if (component instanceof UISelectOne)
         {

@@ -16,6 +16,7 @@
 package org.apache.myfaces.renderkit.html.ext;
 
 import org.apache.myfaces.component.UserRoleUtils;
+import org.apache.myfaces.component.DisplayValueOnlyCapable;
 import org.apache.myfaces.component.html.ext.HtmlInputText;
 import org.apache.myfaces.renderkit.html.HtmlTextRendererBase;
 import org.apache.myfaces.renderkit.html.HTML;
@@ -24,6 +25,7 @@ import org.apache.myfaces.renderkit.RendererUtils;
 import org.apache.myfaces.renderkit.JSFAttr;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
@@ -52,12 +54,10 @@ public class HtmlTextRenderer
     public void encodeEnd(FacesContext facesContext, UIComponent component)
         throws IOException
     {
-        if(component instanceof HtmlInputText)
+        if(HtmlRendererUtils.isDisplayValueOnly(component))
         {
-            if(((HtmlInputText)component).isDisplayValueOnly())
-                renderInputValueOnly(facesContext, (HtmlInputText)component);
-            else
-                super.renderInput(facesContext, (HtmlInputText)component);
+            HtmlRendererUtils.renderDisplayValueOnly(facesContext,
+                    (UIInput) component);
         }
         else
         {
@@ -70,11 +70,9 @@ public class HtmlTextRenderer
     {
         ResponseWriter writer = facesContext.getResponseWriter();
 
-        String clientId = inputText.getClientId(facesContext);
-
         writer.startElement(HTML.SPAN_ELEM, inputText);
 
-        writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
+        HtmlRendererUtils.writeIdIfNecessary(writer, inputText, facesContext);
 
         HtmlRendererUtils.renderDisplayValueOnlyAttributes(inputText, writer);
 
