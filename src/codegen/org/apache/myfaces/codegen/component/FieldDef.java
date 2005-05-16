@@ -210,6 +210,11 @@ public class FieldDef
         }
     }
 
+    public String getIsSetMethodName()
+    {
+        return "isSet"+Character.toUpperCase(_name.charAt(0)) + _name.substring(1);
+    }
+
     public String getPrimitiveValueMethod()
     {
         if (!isPrimitiveType()) throw new UnsupportedOperationException();

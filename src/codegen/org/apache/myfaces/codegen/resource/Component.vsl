@@ -63,6 +63,15 @@ $I____#else
 $I____#end
     }
 
+
+    public boolean ${f.isSetMethodName}()
+    {
+        if (_$f.name != null) return true;
+        ValueBinding vb = getValueBinding("$f.name");
+        ${f.baseFieldType} v = vb != null ? (${f.baseFieldType})vb.getValue(getFacesContext()) : null;
+        return v != null;
+    }
+
 $I__#else
 $I____#if ( $f.isGenerateSetter() )
     public void ${f.setterMethodName}($f.type $f.saveName)

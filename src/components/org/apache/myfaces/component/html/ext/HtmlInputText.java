@@ -95,6 +95,13 @@ public class HtmlInputText
         _displayValueOnly = Boolean.valueOf(displayValueOnly);
     }
 
+    public boolean isSetDisplayValueOnly() {
+        if (_displayValueOnly != null) return true;
+        ValueBinding vb = getValueBinding("displayValueOnly");
+        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+        return v != null;
+    }
+
     public boolean isDisplayValueOnly()
     {
         if (_displayValueOnly != null) return _displayValueOnly.booleanValue();

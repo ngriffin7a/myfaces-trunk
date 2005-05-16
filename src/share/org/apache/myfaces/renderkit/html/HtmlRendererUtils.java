@@ -129,8 +129,7 @@ public final class HtmlRendererUtils {
 
     public static boolean isDisabledOrReadOnly(UIComponent component)
     {
-        return (component instanceof DisplayValueOnlyCapable &&
-                ((DisplayValueOnlyCapable) component).isDisplayValueOnly()) ||
+        return isDisplayValueOnly(component) ||
                 isTrue(component.getAttributes().get("disabled")) ||
                     isTrue(component.getAttributes().get("readOnly"));
     }
@@ -612,10 +611,6 @@ public final class HtmlRendererUtils {
             return;
         }
 
-        DisplayValueOnlyCapable displayOnlyCapable = (DisplayValueOnlyCapable)
-            uiComponent;
-
-
         if(getDisplayValueOnlyStyle(uiComponent) != null || getDisplayValueOnlyStyleClass(uiComponent)!=null)
         {
             if(getDisplayValueOnlyStyle(uiComponent) != null )
@@ -684,7 +679,8 @@ public final class HtmlRendererUtils {
 
             while((parent = parent.getParent())!=null)
             {
-                if(parent instanceof DisplayValueOnlyCapable)
+                if(parent instanceof DisplayValueOnlyCapable &&
+                        ((DisplayValueOnlyCapable) parent).getDisplayValueOnlyStyleClass()!=null)
                 {
                     return ((DisplayValueOnlyCapable) parent).getDisplayValueOnlyStyleClass();
                 }
@@ -705,7 +701,8 @@ public final class HtmlRendererUtils {
 
             while((parent = parent.getParent())!=null)
             {
-                if(parent instanceof DisplayValueOnlyCapable)
+                if(parent instanceof DisplayValueOnlyCapable &&
+                        ((DisplayValueOnlyCapable) parent).getDisplayValueOnlyStyle()!=null)
                 {
                     return ((DisplayValueOnlyCapable) parent).getDisplayValueOnlyStyle();
                 }
@@ -719,20 +716,22 @@ public final class HtmlRendererUtils {
 
         if(component instanceof DisplayValueOnlyCapable)
         {
-            
+            if(((DisplayValueOnlyCapable) component).isSetDisplayValueOnly())
+                return ((DisplayValueOnlyCapable) component).isDisplayValueOnly();
+
             UIComponent parent=component;
 
             while((parent = parent.getParent())!=null)
             {
-                if(parent instanceof DisplayValueOnlyCapable)
+                if(parent instanceof DisplayValueOnlyCapable &&
+                        ((DisplayValueOnlyCapable) parent).isSetDisplayValueOnly())
                 {
                     return ((DisplayValueOnlyCapable) parent).isDisplayValueOnly();
                 }
             }
         }
 
-        return (component instanceof DisplayValueOnlyCapable) &&
-                        ((DisplayValueOnlyCapable) component).isDisplayValueOnly();
+        return false;
     }
 
     public static void renderDisplayValueOnly(FacesContext facesContext, UIInput input) throws IOException {

@@ -84,6 +84,13 @@ public class HtmlPanelGroup
         return vb != null ? (String)vb.getValue(getFacesContext()) : null;
     }
 
+    public boolean isSetDisplayValueOnly() {
+        if (_displayValueOnly != null) return true;
+        ValueBinding vb = getValueBinding("displayValueOnly");
+        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
+        return v != null;
+    }
+
     public boolean isDisplayValueOnly() {
         if (_displayValueOnly != null) return _displayValueOnly.booleanValue();
         ValueBinding vb = getValueBinding("displayValueOnly");
