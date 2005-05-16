@@ -680,9 +680,9 @@ public final class HtmlRendererUtils {
             if(((DisplayValueOnlyCapable) component).getDisplayValueOnlyStyleClass()!=null)
                 return ((DisplayValueOnlyCapable) component).getDisplayValueOnlyStyleClass();
 
-            UIComponent parent;
+            UIComponent parent=component;
 
-            while((parent = component.getParent())!=null)
+            while((parent = parent.getParent())!=null)
             {
                 if(parent instanceof DisplayValueOnlyCapable)
                 {
@@ -701,9 +701,9 @@ public final class HtmlRendererUtils {
             if(((DisplayValueOnlyCapable) component).getDisplayValueOnlyStyle()!=null)
                 return ((DisplayValueOnlyCapable) component).getDisplayValueOnlyStyle();
 
-            UIComponent parent;
+            UIComponent parent=component;
 
-            while((parent = component.getParent())!=null)
+            while((parent = parent.getParent())!=null)
             {
                 if(parent instanceof DisplayValueOnlyCapable)
                 {
@@ -720,9 +720,9 @@ public final class HtmlRendererUtils {
         if(component instanceof DisplayValueOnlyCapable)
         {
             
-            UIComponent parent;
+            UIComponent parent=component;
 
-            while((parent = component.getParent())!=null)
+            while((parent = parent.getParent())!=null)
             {
                 if(parent instanceof DisplayValueOnlyCapable)
                 {
