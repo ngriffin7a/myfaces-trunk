@@ -54,7 +54,7 @@ public class HtmlCheckboxRenderer
         {
             renderSingleCheckbox(context, (HtmlCheckbox)component);
         }
-        else if (component instanceof DisplayValueOnlyCapable && ((DisplayValueOnlyCapable) component).isDisplayValueOnly())
+        else if (component instanceof DisplayValueOnlyCapable && HtmlRendererUtils.isDisplayValueOnly(component))
         {
             HtmlRendererUtils.renderDisplayValueOnlyForSelects(context, component);
         }

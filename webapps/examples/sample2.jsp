@@ -106,22 +106,26 @@ managed beans used:
                         <f:actionListener type="org.apache.myfaces.examples.example2.QuotationController" ></f:actionListener>
                     </h:commandButton>
 
-                    <%-- Test HtmlSelectManyCheckbox start--%>
-                    <f:verbatim><br><br></f:verbatim>
-                    <x:selectManyCheckbox id="chkmany" value="#{q_form.selectManyValues}" layout="pageDirection" displayValueOnly="true" >
-                        <f:selectItem itemValue="" itemLabel="#{example_messages['sample2_select_unquote']}" />
-                        <f:selectItems value="#{q_form.selectManyItems}" />
-                    </x:selectManyCheckbox>
-                    <%-- Test HtmlSelectManyCheckbox end--%>
-                    <f:verbatim><br><br></f:verbatim>
-                    <x:selectManyListbox id="manyoptions" value="#{q_form.selectManyValues}" displayValueOnly="true" >
+                    <x:panelGrid displayValueOnly="true"> 
+                        <%-- Test HtmlSelectManyCheckbox start--%>
+                        <f:verbatim><br><br></f:verbatim>
+                        <x:selectManyCheckbox id="chkmany" value="#{q_form.selectManyValues}" layout="pageDirection">
+                            <f:selectItem itemValue="" itemLabel="#{example_messages['sample2_select_unquote']}" />
+                            <f:selectItems value="#{q_form.selectManyItems}" />
+                        </x:selectManyCheckbox>
+                        <%-- Test HtmlSelectManyCheckbox end--%>
+                        <f:verbatim><br><br></f:verbatim>
+                        <x:selectManyListbox id="manyoptions" value="#{q_form.selectManyValues}">
+                            <f:selectItem itemValue="" itemLabel="#{example_messages['sample2_select_unquote']}" />
+                            <f:selectItems value="#{q_form.selectManyItems}" />
+                        </x:selectManyListbox>
+                    </x:panelGrid>
+
+                    <x:selectManyListbox id="manyoptions2" value="#{q_form.selectManyValues}" >
                         <f:selectItem itemValue="" itemLabel="#{example_messages['sample2_select_unquote']}" />
                         <f:selectItems value="#{q_form.selectManyItems}" />
                     </x:selectManyListbox>
-                    <x:selectManyListbox id="manyoptions2" value="#{q_form.selectManyValues}" displayValueOnly="false" >
-                        <f:selectItem itemValue="" itemLabel="#{example_messages['sample2_select_unquote']}" />
-                        <f:selectItems value="#{q_form.selectManyItems}" />
-                    </x:selectManyListbox>
+
                     <h:commandButton id="button2" value="#{example_messages['sample2_remove_quote']}" action="none"><f:verbatim><br></f:verbatim>
                         <f:actionListener type="org.apache.myfaces.examples.example2.QuotationController" ></f:actionListener>
                     </h:commandButton>

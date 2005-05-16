@@ -58,7 +58,7 @@ public class InputHtmlRenderer extends HtmlRenderer {
     public void encodeEnd(FacesContext context, UIComponent uiComponent) throws IOException {
         RendererUtils.checkParamValidity(context, uiComponent, InputHtml.class);
 		InputHtml editor = (InputHtml) uiComponent;
-		if( editor.isDisplayValueOnly() )
+		if( HtmlRendererUtils.isDisplayValueOnly(editor) )
 			encodeDisplayValueOnly(context, editor);
 		else if( useFallback(editor) )
 			encodeEndFallBackMode(context, editor);
@@ -71,14 +71,9 @@ public class InputHtmlRenderer extends HtmlRenderer {
 		// Use only a textarea
 		ResponseWriter writer = context.getResponseWriter();
         writer.startElement(HTML.SPAN_ELEM, editor);
-
-        writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
         HtmlRendererUtils.writeIdIfNecessary(writer, editor, context);
 
-		if( editor.getDisplayValueOnlyStyle()!=null )
-            writer.writeAttribute(HTML.STYLE_ATTR, editor.getDisplayValueOnlyStyle(), null);
-		if( editor.getDisplayValueOnlyStyleClass()!=null )
-            writer.writeAttribute(HTML.STYLE_CLASS_ATTR, editor.getDisplayValueOnlyStyleClass(), null);
+        HtmlRendererUtils.renderDisplayValueOnlyAttributes(editor, writer);
 
         String text = RendererUtils.getStringValue(context, editor);
         writer.write( getHtmlBody( text ) );
