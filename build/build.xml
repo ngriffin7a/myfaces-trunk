@@ -55,6 +55,7 @@
     <path id="jsfapi.class.path">
         <pathelement location="${servlet-jsp.jar}"/>
         <pathelement location="${jstl.jar}"/>
+        <pathelement location="${commons-logging.jar}"/>
     </path>
 
     <!-- classpath for compiling shared classes -->

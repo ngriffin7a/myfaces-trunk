@@ -18,6 +18,7 @@ package org.apache.myfaces.renderkit.html.ext;
 import org.apache.myfaces.component.DisplayValueOnlyCapable;
 import org.apache.myfaces.component.UserRoleUtils;
 import org.apache.myfaces.renderkit.html.HtmlRendererUtils;
+import org.apache.myfaces.renderkit.html.HtmlListboxRendererBase;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -29,7 +30,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class HtmlListboxRenderer
-        extends org.apache.myfaces.renderkit.html.HtmlListboxRenderer
+        extends HtmlListboxRendererBase
 {
     protected boolean isDisabled(FacesContext facesContext, UIComponent uiComponent)
     {
