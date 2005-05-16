@@ -61,9 +61,13 @@
 <!ENTITY standard_output_label_attributes    SYSTEM "entities/standard_output_label_attributes.xml">
 <!ENTITY standard_output_text_attributes     SYSTEM "entities/standard_output_text_attributes.xml">
 <!ENTITY standard_panel_group_attributes     SYSTEM "entities/standard_panel_group_attributes.xml">
+<!ENTITY standard_select_boolean_checkbox_attributes  SYSTEM "entities/standard_select_boolean_checkbox_attributes.xml">
+<!ENTITY standard_select_many_checkbox_attributes SYSTEM "entities/standard_select_many_checkbox_attributes.xml">
+<!ENTITY standard_select_many_listbox_attributes SYSTEM "entities/standard_select_many_listbox_attributes.xml">
+<!ENTITY standard_select_many_menu_attributes SYSTEM "entities/standard_select_many_menu_attributes.xml">
+<!ENTITY standard_select_one_listbox_attributes SYSTEM "entities/standard_select_one_listbox_attributes.xml">
 <!ENTITY standard_select_one_menu_attributes SYSTEM "entities/standard_select_one_menu_attributes.xml">
 <!ENTITY standard_select_one_radio_attributes SYSTEM "entities/standard_select_one_radio_attributes.xml">
-<!ENTITY standard_select_many_checkbox_attributes SYSTEM "entities/standard_select_many_checkbox_attributes.xml">
 <!ENTITY alt_location_attributes             SYSTEM "entities/alt_location_attributes.xml">
 ]>
 
@@ -403,6 +407,20 @@
         &display_value_only_attributes;
     </tag>
 
+    <!-- selectManyMenu -->
+    <tag>
+        <name>selectManyMenu</name>
+        <tag-class>org.apache.myfaces.taglib.html.ext.HtmlSelectManyMenuTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Extends standard selectManyMenu by user role support.
+        </description>
+        &standard_select_many_menu_attributes;
+        &user_role_attributes;
+        &ext_forceId_attribute;
+        &display_value_only_attributes;
+    </tag>
+
     <!-- selectOneRadio -->
     <tag>
         <name>selectOneRadio</name>
@@ -414,6 +432,20 @@
             of value "spread" (see custom radio tag).
         </description>
         &standard_select_one_radio_attributes;
+        &user_role_attributes;
+        &ext_forceId_attribute;
+        &display_value_only_attributes;
+    </tag>
+
+    <!-- selectBooleanCheckbox -->
+    <tag>
+        <name>selectBooleanCheckbox</name>
+        <tag-class>org.apache.myfaces.taglib.html.ext.HtmlSelectBooleanCheckboxTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Extends standard selectBooleanCheckbox by user role support.
+        </description>
+        &standard_select_boolean_checkbox_attributes;
         &user_role_attributes;
         &ext_forceId_attribute;
         &display_value_only_attributes;
@@ -435,6 +467,33 @@
         &display_value_only_attributes;
     </tag>
 
+    <!-- selectOneListbox -->
+    <tag>
+        <name>selectOneCheckbox</name>
+        <tag-class>org.apache.myfaces.taglib.html.ext.HtmlSelectOneListboxTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Extends standard selectOneListbox by user role support.
+        </description>
+        &standard_select_one_listbox_attributes;
+        &user_role_attributes;
+        &ext_forceId_attribute;
+        &display_value_only_attributes;
+    </tag>
+
+    <!-- selectManyListbox -->
+    <tag>
+        <name>selectManyListbox</name>
+        <tag-class>org.apache.myfaces.taglib.html.ext.HtmlSelectManyListboxTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Extends standard selectManyListbox by user role support.
+        </description>
+        &standard_select_many_listbox_attributes;
+        &user_role_attributes;
+        &ext_forceId_attribute;
+        &display_value_only_attributes;
+    </tag>
 
 <!--     Custom components     -->
 

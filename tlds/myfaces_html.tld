@@ -57,9 +57,13 @@
 <!ENTITY standard_output_label_attributes    SYSTEM "entities/standard_output_label_attributes.xml">
 <!ENTITY standard_output_text_attributes     SYSTEM "entities/standard_output_text_attributes.xml">
 <!ENTITY standard_panel_group_attributes     SYSTEM "entities/standard_panel_group_attributes.xml">
-<!ENTITY standard_select_one_menu_attributes  SYSTEM "entities/standard_select_one_menu_attributes.xml">
-<!ENTITY standard_select_one_radio_attributes SYSTEM "entities/standard_select_one_radio_attributes.xml">
+<!ENTITY standard_select_boolean_checkbox_attributes  SYSTEM "entities/standard_select_boolean_checkbox_attributes.xml">
 <!ENTITY standard_select_many_checkbox_attributes SYSTEM "entities/standard_select_many_checkbox_attributes.xml">
+<!ENTITY standard_select_many_listbox_attributes SYSTEM "entities/standard_select_many_listbox_attributes.xml">
+<!ENTITY standard_select_many_menu_attributes SYSTEM "entities/standard_select_many_menu_attributes.xml">
+<!ENTITY standard_select_one_listbox_attributes SYSTEM "entities/standard_select_one_listbox_attributes.xml">
+<!ENTITY standard_select_one_menu_attributes SYSTEM "entities/standard_select_one_menu_attributes.xml">
+<!ENTITY standard_select_one_radio_attributes SYSTEM "entities/standard_select_one_radio_attributes.xml">
 ]>
 
 <taglib>
@@ -341,10 +345,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         <name>selectBooleanCheckbox</name>
         <tag-class>org.apache.myfaces.taglib.html.HtmlSelectBooleanCheckboxTag</tag-class>
         <body-content>JSP</body-content>
-        &ui_select_boolean_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &html_input_checkbox_attributes;
+        &standard_select_boolean_checkbox_attributes;
     </tag>
 
 <!-- selectManyCheckbox -->
@@ -360,18 +361,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         <name>selectManyListbox</name>
         <tag-class>org.apache.myfaces.taglib.html.HtmlSelectManyListboxTag</tag-class>
         <body-content>JSP</body-content>
-        &ui_select_many_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &html_select_attributes;
-        <!-- ListboxRenderer attributes -->
-        <attribute>
-            <name>size</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>see JSF Spec.</description>
-        </attribute>
+        &standard_select_many_listbox_attributes;
     </tag>
 
 <!-- selectmany_menu -->
@@ -379,10 +369,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         <name>selectManyMenu</name>
         <tag-class>org.apache.myfaces.taglib.html.HtmlSelectManyMenuTag</tag-class>
         <body-content>JSP</body-content>
-        &ui_select_many_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &html_select_attributes;
+        &standard_select_many_menu_attributes;
     </tag>
 
 <!-- selectOneListbox -->
@@ -390,18 +377,7 @@ Start of revised 1.0 conforming tags (in alphabetical order)
         <name>selectOneListbox</name>
         <tag-class>org.apache.myfaces.taglib.html.HtmlSelectOneListboxTag</tag-class>
         <body-content>JSP</body-content>
-        &ui_select_one_attributes;
-        &html_universal_attributes;
-        &html_event_handler_attributes;
-        &html_select_attributes;
-        <!-- ListboxRenderer attributes -->
-        <attribute>
-            <name>size</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-            <type>java.lang.String</type>
-            <description>see JSF Spec.</description>
-        </attribute>
+        &standard_select_one_listbox_attributes;
     </tag>
 
 <!-- selectOneMenu -->

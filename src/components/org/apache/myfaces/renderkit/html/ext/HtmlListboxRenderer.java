@@ -15,11 +15,13 @@
  */
 package org.apache.myfaces.renderkit.html.ext;
 
+import org.apache.myfaces.component.DisplayValueOnlyCapable;
 import org.apache.myfaces.component.UserRoleUtils;
-import org.apache.myfaces.renderkit.html.HtmlListboxRendererBase;
+import org.apache.myfaces.renderkit.html.HtmlRendererUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import java.io.IOException;
 
 
 /**
@@ -27,7 +29,7 @@ import javax.faces.context.FacesContext;
  * @version $Revision$ $Date$
  */
 public class HtmlListboxRenderer
-        extends HtmlListboxRendererBase
+        extends org.apache.myfaces.renderkit.html.HtmlListboxRenderer
 {
     protected boolean isDisabled(FacesContext facesContext, UIComponent uiComponent)
     {
@@ -40,4 +42,17 @@ public class HtmlListboxRenderer
             return super.isDisabled(facesContext, uiComponent);
         }
     }
+
+    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException {
+
+        if(uiComponent instanceof DisplayValueOnlyCapable && ((DisplayValueOnlyCapable) uiComponent).isDisplayValueOnly())
+        {
+            HtmlRendererUtils.renderDisplayValueOnly(facesContext, uiComponent);
+        }
+        else
+        {
+            super.encodeEnd(facesContext, uiComponent);
+        }
+    }
+
 }

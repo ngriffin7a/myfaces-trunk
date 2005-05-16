@@ -85,15 +85,7 @@ public class HtmlRadioRendererBase
 
         Converter converter;
         List selectItemList = RendererUtils.getSelectItemList(selectOne);
-        try
-        {
-            converter = RendererUtils.findUIOutputConverter(facesContext, selectOne);
-        }
-        catch (FacesException e)
-        {
-            log.error("Error finding Converter for component with id " + uiComponent.getClientId(facesContext));
-            converter = null;
-        }
+        converter = HtmlRendererUtils.findUIOutputConverterFailSafe(facesContext, selectOne);
 
         String currentValueStr = RendererUtils.getStringValue(facesContext, selectOne);
 

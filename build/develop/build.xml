@@ -92,10 +92,10 @@
 
         <copy todir="${web-inf.lib.dir}">
             <fileset file="${jstl.jar}"/>
-            <fileset file="${jsp-2.0.jar}"/>
+            <!--fileset file="${jsp-2.0.jar}"/-->
             <fileset file="${commons-codec.jar}"/>
             <fileset file="${commons-logging.jar}"/>
-            <fileset file="${commons-el.jar}"/>
+            <!--fileset file="${commons-el.jar}"/-->
             <fileset file="${log4j.jar}"/>
             <fileset file="${commons-fileupload.jar}"/>
             <fileset file="${commons-validator.jar}"/>

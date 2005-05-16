@@ -41,6 +41,11 @@ public class HtmlTextareaRendererBase
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, UIInput.class);
 
+        encodeTextArea(facesContext, uiComponent);
+
+    }
+
+    protected void encodeTextArea(FacesContext facesContext, UIComponent uiComponent) throws IOException {
         ResponseWriter writer = facesContext.getResponseWriter();
         writer.startElement(HTML.TEXTAREA_ELEM, uiComponent);
 

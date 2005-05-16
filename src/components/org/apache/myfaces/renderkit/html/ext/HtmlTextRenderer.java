@@ -57,40 +57,12 @@ public class HtmlTextRenderer
             if(((HtmlInputText)component).isDisplayValueOnly())
                 renderInputValueOnly(facesContext, (HtmlInputText)component);
             else
-                renderInput(facesContext, (HtmlInputText)component);
+                super.renderInput(facesContext, (HtmlInputText)component);
         }
         else
         {
             super.encodeEnd(facesContext, component);
         }
-    }
-
-    protected void renderInput(FacesContext facesContext, HtmlInputText inputText)
-        throws IOException
-    {
-        ResponseWriter writer = facesContext.getResponseWriter();
-
-        String clientId = inputText.getClientId(facesContext);
-        String value = RendererUtils.getStringValue(facesContext, inputText);
-
-        writer.startElement(HTML.INPUT_ELEM, inputText);
-        writer.writeAttribute(HTML.ID_ATTR, clientId, null);
-        writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
-        writer.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_TEXT, null);
-        if (value != null)
-            writer.writeAttribute(HTML.VALUE_ATTR, value, JSFAttr.VALUE_ATTR);
-
-        HtmlRendererUtils.renderHTMLAttributes(writer, inputText, HTML.INPUT_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED);
-
-        if(inputText.getStyle() != null)
-            writer.writeAttribute(HTML.STYLE_ATTR, inputText.getStyle(), null);
-        if(inputText.getStyleClass() != null)
-            writer.writeAttribute(HTML.STYLE_CLASS_ATTR, inputText.getStyleClass(), null);
-
-        if (isDisabled(facesContext, inputText))
-            writer.writeAttribute(HTML.DISABLED_ATTR, Boolean.TRUE, null);
-
-        writer.endElement(HTML.INPUT_ELEM);
     }
 
     protected void renderInputValueOnly(FacesContext facesContext, HtmlInputText inputText)
@@ -104,12 +76,7 @@ public class HtmlTextRenderer
 
         writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
 
-        HtmlRendererUtils.renderHTMLAttributes(writer, inputText, HTML.INPUT_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED);
-
-        if(inputText.getDisplayValueOnlyStyle() != null)
-            writer.writeAttribute(HTML.STYLE_ATTR, inputText.getDisplayValueOnlyStyle(), null);
-        if(inputText.getDisplayValueOnlyStyleClass() != null)
-            writer.writeAttribute(HTML.STYLE_CLASS_ATTR, inputText.getDisplayValueOnlyStyleClass(), null);
+        HtmlRendererUtils.renderDisplayValueOnlyAttributes(inputText, writer);
 
         String strValue = RendererUtils.getStringValue(facesContext, inputText);
         writer.writeText(strValue, JSFAttr.VALUE_ATTR);

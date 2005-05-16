@@ -84,6 +84,31 @@
   </component>
 
   <component>
+    <component-type>org.apache.myfaces.HtmlSelectBooleanCheckbox</component-type>
+    <component-class>org.apache.myfaces.component.html.ext.HtmlSelectBooleanCheckbox</component-class>
+  </component>
+
+  <component>
+    <component-type>org.apache.myfaces.HtmlSelectManyCheckbox</component-type>
+    <component-class>org.apache.myfaces.component.html.ext.HtmlSelectManyCheckbox</component-class>
+  </component>
+
+    <component>
+      <component-type>org.apache.myfaces.HtmlSelectManyListbox</component-type>
+      <component-class>org.apache.myfaces.component.html.ext.HtmlSelectManyListbox</component-class>
+    </component>
+
+    <component>
+      <component-type>org.apache.myfaces.HtmlSelectManyMenu</component-type>
+      <component-class>org.apache.myfaces.component.html.ext.HtmlSelectManyMenu</component-class>
+    </component>
+
+    <component>
+      <component-type>org.apache.myfaces.HtmlSelectOneListbox</component-type>
+      <component-class>org.apache.myfaces.component.html.ext.HtmlSelectOneListbox</component-class>
+    </component>
+
+  <component>
     <component-type>org.apache.myfaces.HtmlSelectOneMenu</component-type>
     <component-class>org.apache.myfaces.component.html.ext.HtmlSelectOneMenu</component-class>
   </component>
@@ -93,10 +118,6 @@
     <component-class>org.apache.myfaces.component.html.ext.HtmlSelectOneRadio</component-class>
   </component>
 
-  <component>
-    <component-type>org.apache.myfaces.HtmlSelectManyCheckbox</component-type>
-    <component-class>org.apache.myfaces.component.html.ext.HtmlSelectManyCheckbox</component-class>
-  </component>
 
   <!-- MyFaces custom components (in alphabetical order) -->
 
@@ -379,6 +400,12 @@
         </renderer>
 
         <renderer>
+            <component-family>javax.faces.SelectBoolean</component-family>
+            <renderer-type>org.apache.myfaces.Checkbox</renderer-type>
+            <renderer-class>org.apache.myfaces.renderkit.html.ext.HtmlCheckboxRenderer</renderer-class>
+        </renderer>
+
+        <renderer>
             <component-family>javax.faces.SelectMany</component-family>
             <renderer-type>org.apache.myfaces.Checkbox</renderer-type>
             <renderer-class>org.apache.myfaces.renderkit.html.ext.HtmlCheckboxRenderer</renderer-class>
@@ -388,6 +415,24 @@
             <component-family>javax.faces.SelectOne</component-family>
             <renderer-type>org.apache.myfaces.Menu</renderer-type>
             <renderer-class>org.apache.myfaces.renderkit.html.ext.HtmlMenuRenderer</renderer-class>
+        </renderer>
+
+        <renderer>
+            <component-family>javax.faces.SelectMany</component-family>
+            <renderer-type>org.apache.myfaces.Menu</renderer-type>
+            <renderer-class>org.apache.myfaces.renderkit.html.ext.HtmlMenuRenderer</renderer-class>
+        </renderer>
+
+        <renderer>
+            <component-family>javax.faces.SelectOne</component-family>
+            <renderer-type>org.apache.myfaces.Listbox</renderer-type>
+            <renderer-class>org.apache.myfaces.renderkit.html.ext.HtmlListboxRenderer</renderer-class>
+        </renderer>
+
+        <renderer>
+            <component-family>javax.faces.SelectMany</component-family>
+            <renderer-type>org.apache.myfaces.Listbox</renderer-type>
+            <renderer-class>org.apache.myfaces.renderkit.html.ext.HtmlListboxRenderer</renderer-class>
         </renderer>
 
         <renderer>

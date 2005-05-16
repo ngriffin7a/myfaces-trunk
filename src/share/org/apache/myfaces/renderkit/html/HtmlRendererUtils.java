@@ -43,6 +43,7 @@ import org.apache.myfaces.config.MyfacesConfig;
 import org.apache.myfaces.renderkit.RendererUtils;
 import org.apache.myfaces.renderkit.html.util.DummyFormUtils;
 import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
+import org.apache.myfaces.component.DisplayValueOnlyCapable;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -133,7 +134,9 @@ public final class HtmlRendererUtils {
 
     public static boolean isDisabledOrReadOnly(UIComponent component)
     {
-        return isTrue(component.getAttributes().get("disabled")) ||
+        return (component instanceof DisplayValueOnlyCapable &&
+                ((DisplayValueOnlyCapable) component).isDisplayValueOnly()) ||
+                isTrue(component.getAttributes().get("disabled")) ||
                     isTrue(component.getAttributes().get("readOnly"));
     }
 
@@ -273,25 +276,11 @@ public final class HtmlRendererUtils {
             writer.writeAttribute(HTML.MULTIPLE_ATTR, "true", null);
             selectItemList = RendererUtils
                     .getSelectItemList((UISelectMany) uiComponent);
-            try {
-                converter = RendererUtils.findUISelectManyConverter(
-                        facesContext, (UISelectMany) uiComponent);
-            } catch (FacesException e) {
-                log.error("Error finding Converter for component with id "
-                        + uiComponent.getClientId(facesContext));
-                converter = null;
-            }
+            converter = findUISelectManyConverterFailsafe(facesContext, uiComponent);
         } else {
             selectItemList = RendererUtils
                     .getSelectItemList((UISelectOne) uiComponent);
-            try {
-                converter = RendererUtils.findUIOutputConverter(facesContext,
-                        (UISelectOne) uiComponent);
-            } catch (FacesException e) {
-                log.error("Error finding Converter for component with id "
-                        + uiComponent.getClientId(facesContext));
-                converter = null;
-            }
+            converter = findUIOutputConverterFailSafe(facesContext, uiComponent);
         }
 
         if (size == 0) {
@@ -307,41 +296,62 @@ public final class HtmlRendererUtils {
             writer.writeAttribute(HTML.DISABLED_ATTR, Boolean.TRUE, null);
         }
 
+        Set lookupSet = getSubmittedOrSelectedValuesAsSet(selectMany, uiComponent, facesContext, converter);
+
+        renderSelectOptions(facesContext, uiComponent, converter, lookupSet,
+                selectItemList);
+        // bug #970747: force separate end tag
+        writer.writeText("", null);
+        writer.endElement(HTML.SELECT_ELEM);
+    }
+
+    public static Set getSubmittedOrSelectedValuesAsSet(boolean selectMany, UIComponent uiComponent, FacesContext facesContext, Converter converter) {
         Set lookupSet;
-        boolean useSubmittedValue;
+
         if (selectMany) {
             UISelectMany uiSelectMany = (UISelectMany) uiComponent;
             lookupSet = RendererUtils.getSubmittedValuesAsSet(facesContext, uiComponent, converter, uiSelectMany);
             if (lookupSet == null)
             {
-                useSubmittedValue = false;
                 lookupSet = RendererUtils.getSelectedValuesAsSet(facesContext, uiComponent, converter, uiSelectMany);
-            }
-            else
-            {
-                useSubmittedValue = true;
             }
         } else {
             UISelectOne uiSelectOne = (UISelectOne) uiComponent;
             Object lookup = uiSelectOne.getSubmittedValue();
             if (lookup == null)
             {
-                useSubmittedValue = false;
                 lookup = uiSelectOne.getValue();
-            }
-            else
-            {
-                useSubmittedValue = true;
             }
             String lookupString = RendererUtils.getConvertedStringValue(facesContext, uiComponent, converter, lookup);
             lookupSet = Collections.singleton(lookupString);
         }
+        return lookupSet;
+    }
 
-        renderSelectOptions(facesContext, uiComponent, converter, lookupSet,
-                useSubmittedValue, selectItemList);
-        // bug #970747: force separate end tag
-        writer.writeText("", null);
-        writer.endElement(HTML.SELECT_ELEM);
+    public static Converter findUISelectManyConverterFailsafe(FacesContext facesContext, UIComponent uiComponent) {
+        Converter converter;
+        try {
+            converter = RendererUtils.findUISelectManyConverter(
+                    facesContext, (UISelectMany) uiComponent);
+        } catch (FacesException e) {
+            log.error("Error finding Converter for component with id "
+                    + uiComponent.getClientId(facesContext));
+            converter = null;
+        }
+        return converter;
+    }
+
+    public static Converter findUIOutputConverterFailSafe(FacesContext facesContext, UIComponent uiComponent) {
+        Converter converter;
+        try {
+            converter = RendererUtils.findUIOutputConverter(facesContext,
+                    (UISelectOne) uiComponent);
+        } catch (FacesException e) {
+            log.error("Error finding Converter for component with id "
+                    + uiComponent.getClientId(facesContext));
+            converter = null;
+        }
+        return converter;
     }
 
     /**
@@ -357,16 +367,14 @@ public final class HtmlRendererUtils {
      *            <code>component</code>'s converter
      * @param lookupSet
      *            the <code>Set</code> to use to look up selected options
-     * @param useSubmittedValue
-     *            whether we are using the submittedValue
      * @param selectItemList
      *            the <code>List</code> of <code>SelectItem</code> s to be
      *            rendered as HTML option elements.
      * @throws IOException
      */
     private static void renderSelectOptions(FacesContext context,
-            UIComponent component, Converter converter, Set lookupSet,
-            boolean useSubmittedValue, List selectItemList) throws IOException {
+                                            UIComponent component, Converter converter, Set lookupSet,
+                                            List selectItemList) throws IOException {
         ResponseWriter writer = context.getResponseWriter();
 
         for (Iterator it = selectItemList.iterator(); it.hasNext();) {
@@ -379,7 +387,7 @@ public final class HtmlRendererUtils {
                 SelectItem[] selectItems = ((SelectItemGroup) selectItem)
                         .getSelectItems();
                 renderSelectOptions(context, component, converter, lookupSet,
-                        useSubmittedValue, Arrays.asList(selectItems));
+                        Arrays.asList(selectItems));
                 writer.endElement(HTML.OPTGROUP_ELEM);
             } else {
                 String itemStrValue = RendererUtils.getConvertedStringValue(context, component,
@@ -557,6 +565,116 @@ public final class HtmlRendererUtils {
         if(component.getId()!=null && !component.getId().startsWith(UIViewRoot.UNIQUE_ID_PREFIX))
         {
             writer.writeAttribute(HTML.ID_ATTR, component.getClientId(facesContext),null);
+        }
+    }
+
+    public static void renderDisplayValueOnly(FacesContext facesContext, UIComponent
+            uiComponent)
+        throws IOException
+    {
+        ResponseWriter writer = facesContext.getResponseWriter();
+
+        List selectItemList;
+        Converter converter;
+        if (uiComponent instanceof UISelectMany) {
+            selectItemList = RendererUtils
+                    .getSelectItemList((UISelectMany) uiComponent);
+            converter = findUISelectManyConverterFailsafe(facesContext, uiComponent);
+        } else {
+            selectItemList = RendererUtils
+                    .getSelectItemList((UISelectOne) uiComponent);
+            converter = findUIOutputConverterFailSafe(facesContext, uiComponent);
+        }
+
+        writer.startElement(HTML.UL_ELEM, uiComponent);
+        writeIdIfNecessary(writer, uiComponent, facesContext);
+        writer.writeAttribute(HTML.NAME_ATTR, uiComponent
+                .getClientId(facesContext), null);
+
+        renderDisplayValueOnlyAttributes(uiComponent, writer);
+
+
+        Set lookupSet = getSubmittedOrSelectedValuesAsSet(
+                uiComponent instanceof UISelectMany,
+                uiComponent, facesContext, converter);
+
+        renderSelectOptionsAsText(facesContext, uiComponent, converter, lookupSet,
+                selectItemList);
+
+        // bug #970747: force separate end tag
+        writer.writeText("", null);
+        writer.endElement(HTML.UL_ELEM);
+
+    }
+
+    public static void renderDisplayValueOnlyAttributes(UIComponent uiComponent, ResponseWriter writer) throws IOException {
+        if(!(uiComponent instanceof DisplayValueOnlyCapable))
+        {
+            log.error("Wrong type of uiComponent. needs DisplayValueOnlyCapable.");
+            renderHTMLAttributes(writer, uiComponent,
+                    HTML.COMMON_PASSTROUGH_ATTRIBUTES);
+
+            return;
+        }
+
+        DisplayValueOnlyCapable displayOnlyCapable = (DisplayValueOnlyCapable)
+            uiComponent;
+
+
+        if(displayOnlyCapable.getDisplayValueOnlyStyle() != null || displayOnlyCapable.getDisplayValueOnlyStyleClass()!=null)
+        {
+            if(displayOnlyCapable.getDisplayValueOnlyStyle() != null)
+            {
+                writer.writeAttribute(HTML.STYLE_ATTR, displayOnlyCapable.getDisplayValueOnlyStyle(), null);
+            }
+            else if(uiComponent.getAttributes().get("style")!=null)
+            {
+                writer.writeAttribute(HTML.STYLE_ATTR, uiComponent.getAttributes().get("style"), null);
+            }
+            
+            if(displayOnlyCapable.getDisplayValueOnlyStyleClass() != null)
+            {
+                writer.writeAttribute(HTML.STYLE_CLASS_ATTR, displayOnlyCapable.getDisplayValueOnlyStyleClass(), null);
+            }
+            else if(uiComponent.getAttributes().get("styleClass")!=null)
+            {
+                writer.writeAttribute(HTML.STYLE_CLASS_ATTR, uiComponent.getAttributes().get("styleClass"), null);
+            }
+
+            renderHTMLAttributes(writer, uiComponent,
+                    HTML.COMMON_PASSTROUGH_ATTRIBUTES_WITHOUT_STYLE);
+        }
+        else
+        {
+            renderHTMLAttributes(writer, uiComponent,
+                    HTML.COMMON_PASSTROUGH_ATTRIBUTES);
+        }
+    }
+
+    private static void renderSelectOptionsAsText(FacesContext context,
+                                            UIComponent component, Converter converter, Set lookupSet,
+                                            List selectItemList) throws IOException {
+        ResponseWriter writer = context.getResponseWriter();
+
+        for (Iterator it = selectItemList.iterator(); it.hasNext();) {
+            SelectItem selectItem = (SelectItem) it.next();
+
+            if (selectItem instanceof SelectItemGroup) {
+                SelectItem[] selectItems = ((SelectItemGroup) selectItem)
+                        .getSelectItems();
+                renderSelectOptionsAsText(context, component, converter, lookupSet,
+                        Arrays.asList(selectItems));
+            } else {
+                String itemStrValue = RendererUtils.getConvertedStringValue(context, component,
+                        converter, selectItem);
+
+                if (lookupSet.contains(itemStrValue)) {  //TODO/FIX: we always compare the String vales, better fill lookupSet with Strings only when useSubmittedValue==true, else use the real item value Objects
+
+                    writer.startElement(HTML.LI_ELEM, null);
+                    writer.writeText(selectItem.getLabel(), null);
+                    writer.endElement(HTML.LI_ELEM);
+                }
+            }
         }
     }
 
