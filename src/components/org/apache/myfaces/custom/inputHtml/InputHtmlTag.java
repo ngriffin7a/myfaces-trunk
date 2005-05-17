@@ -17,6 +17,7 @@ package org.apache.myfaces.custom.inputHtml;
 
 import javax.faces.component.UIComponent;
 
+import org.apache.myfaces.component.DisplayValueOnlyCapable;
 import org.apache.myfaces.component.UserRoleAware;
 import org.apache.myfaces.renderkit.JSFAttr;
 import org.apache.myfaces.taglib.UIComponentTagBase;
@@ -47,6 +48,10 @@ public class InputHtmlTag extends UIComponentTagBase {
 
     private String enabledOnUserRole;
     private String visibleOnUserRole;
+    
+    private String displayValueOnly;
+	private String displayValueOnlyStyle;
+	private String displayValueOnlyStyleClass;
 
     private String immediate;
     private String required;
@@ -70,8 +75,13 @@ public class InputHtmlTag extends UIComponentTagBase {
         showTablesToolBox=null;
 		showCleanupExpressionsToolBox=null;
         showDebugToolBox=null;
+        
         enabledOnUserRole=null;
         visibleOnUserRole=null;
+        
+        displayValueOnly=null;
+        displayValueOnlyStyle=null;
+        displayValueOnlyStyleClass=null;
 
 		immediate=null;
         required=null;
@@ -102,6 +112,10 @@ public class InputHtmlTag extends UIComponentTagBase {
 
         setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, enabledOnUserRole);
         setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, visibleOnUserRole);
+        
+        setBooleanProperty(component, DisplayValueOnlyCapable.DISPLAY_VALUE_ONLY_ATTR, displayValueOnly);
+        setStringProperty(component, DisplayValueOnlyCapable.DISPLAY_VALUE_ONLY_STYLE_ATTR, displayValueOnlyStyle);
+        setStringProperty(component, DisplayValueOnlyCapable.DISPLAY_VALUE_ONLY_STYLE_CLASS_ATTR, displayValueOnlyStyleClass);
 
 		setBooleanProperty(component, JSFAttr.IMMEDIATE_ATTR, immediate);
         setBooleanProperty(component, JSFAttr.REQUIRED_ATTR, required);
@@ -179,6 +193,18 @@ public class InputHtmlTag extends UIComponentTagBase {
 
     public void setVisibleOnUserRole(String visibleOnUserRole){
         this.visibleOnUserRole = visibleOnUserRole;
+    }
+    
+    public void setDisplayValueOnly(String displayValueOnly){
+        this.displayValueOnly = displayValueOnly;
+    }
+
+    public void setDisplayValueOnlyStyle(String displayValueOnlyStyle){
+        this.displayValueOnlyStyle = displayValueOnlyStyle;
+    }
+
+    public void setDisplayValueOnlyStyleClass(String displayValueOnlyStyleClass){
+        this.displayValueOnlyStyleClass = displayValueOnlyStyleClass;
     }
 
 	public void setImmediate(String immediate){

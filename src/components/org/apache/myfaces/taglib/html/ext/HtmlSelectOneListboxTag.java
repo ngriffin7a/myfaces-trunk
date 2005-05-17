@@ -15,6 +15,7 @@
  */
 package org.apache.myfaces.taglib.html.ext;
 
+import org.apache.myfaces.component.DisplayValueOnlyCapable;
 import org.apache.myfaces.component.UserRoleAware;
 import org.apache.myfaces.component.html.ext.HtmlSelectOneListbox;
 import org.apache.myfaces.taglib.html.HtmlSelectListboxTagBase;
@@ -61,9 +62,9 @@ public class HtmlSelectOneListboxTag
         setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
         setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
 
-        setBooleanProperty(component, "displayValueOnly", _displayValueOnly);
-        setStringProperty(component, "displayValueOnlyStyle", _displayValueOnlyStyle);
-        setStringProperty(component, "displayValueOnlyStyleClass", _displayValueOnlyStyleClass);
+        setBooleanProperty(component, DisplayValueOnlyCapable.DISPLAY_VALUE_ONLY_ATTR, _displayValueOnly);
+        setStringProperty(component, DisplayValueOnlyCapable.DISPLAY_VALUE_ONLY_STYLE_ATTR, _displayValueOnlyStyle);
+        setStringProperty(component, DisplayValueOnlyCapable.DISPLAY_VALUE_ONLY_STYLE_CLASS_ATTR, _displayValueOnlyStyleClass);
     }
 
     public void setEnabledOnUserRole(String enabledOnUserRole)

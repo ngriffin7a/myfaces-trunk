@@ -26,6 +26,10 @@ package org.apache.myfaces.component;
  */
 public interface DisplayValueOnlyCapable
 {
+    public static final String DISPLAY_VALUE_ONLY_ATTR = "displayValueOnly";
+    public static final String DISPLAY_VALUE_ONLY_STYLE_ATTR = "displayValueOnlyStyle";
+    public static final String DISPLAY_VALUE_ONLY_STYLE_CLASS_ATTR = "displayValueOnlyStyleClass";
+    
     public boolean isSetDisplayValueOnly();
     public boolean isDisplayValueOnly();
     public void setDisplayValueOnly(boolean displayValueOnly);
