@@ -484,7 +484,7 @@
 
     <!-- selectOneListbox -->
     <tag>
-        <name>selectOneCheckbox</name>
+        <name>selectOneListbox</name>
         <tag-class>org.apache.myfaces.taglib.html.ext.HtmlSelectOneListboxTag</tag-class>
         <body-content>JSP</body-content>
         <description>
