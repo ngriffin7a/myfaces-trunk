@@ -5,20 +5,32 @@
 
     <!-- Constants -->
     <property name="project.dir" location="${basedir}/../.."/>
+
+    <!-- examples webapp-->
     <property name="examples.dir" location="${project.dir}/webapps/examples"/>
     <property name="examples.src" location="${project.dir}/webapps/src"/>
     <property name="examples.web" location="${examples.dir}"/>
     <property name="examples.doc" location="${examples.dir}/doc"/>
-    <property name="web-inf.classes.dir" location="${examples.web}/WEB-INF/classes"/>
-    <property name="web-inf.lib.dir" location="${examples.web}/WEB-INF/lib"/>
+    <property name="examples.web-inf.classes.dir" location="${examples.web}/WEB-INF/classes"/>
+    <property name="examples.web-inf.lib.dir" location="${examples.web}/WEB-INF/lib"/>
+
     <property name="myfaces.doc" location="${project.dir}/doc"/>
     <property name="share.src" location="${project.dir}/src/share"/>
     <property name="myfaces.src" location="${project.dir}/src/myfaces"/>
     <property name="components.src" location="${project.dir}/src/components"/>
     <property name="jsfapi.src" location="${project.dir}/src/jsfapi"/>
     <property name="tlds.dir" location="${project.dir}/tlds"/>
+
     <property name="tiles.dir" location="${project.dir}/webapps/tiles"/>
     <property name="tiles.web" location="${tiles.dir}/web"/>
+
+    <!-- simple webapp -->
+    <property name="simple.dir" location="${project.dir}/webapps/simple"/>
+    <property name="simple.src" location="${project.dir}/webapps/src"/>
+    <property name="simple.web" location="${simple.dir}"/>
+    <property name="simple.doc" location="${simple.dir}/doc"/>
+    <property name="simple.web-inf.classes.dir" location="${simple.web}/WEB-INF/classes"/>
+    <property name="simple.web-inf.lib.dir" location="${simple.web}/WEB-INF/lib"/>
 
     <!-- Properties -->
     <property file="build.local.properties"/>
@@ -88,9 +100,9 @@
     <target name="prepare-for-debug"
             description="copies needed config, TLD files and components-resources">
 
-        <mkdir dir="${web-inf.lib.dir}"/>
+        <mkdir dir="${examples.web-inf.lib.dir}"/>
 
-        <copy todir="${web-inf.lib.dir}">
+        <copy todir="${examples.web-inf.lib.dir}">
             <fileset file="${jstl.jar}"/>
             <!--fileset file="${jsp-2.0.jar}"/-->
             <fileset file="${commons-codec.jar}"/>
@@ -112,17 +124,29 @@
             <fileset file="${commons-validator.jar}"/>
             <fileset file="${jakarta-oro.jar}"/>
         </copy>
+        <copy todir="${simple.web-inf.lib.dir}">
+            <fileset file="${jstl.jar}"/>
+            <fileset file="${jsp-2.0.jar}"/>
+            <fileset file="${commons-codec.jar}"/>
+            <fileset file="${commons-logging.jar}"/>
+            <fileset file="${commons-el.jar}"/>
+            <fileset file="${log4j.jar}"/>
+            <fileset file="${commons-fileupload.jar}"/>
+            <fileset file="${commons-validator.jar}"/>
+            <fileset file="${jakarta-oro.jar}"/>
+        </copy>
 
 
         <copy file="${project.dir}/conf/develop-web.xml" tofile="${examples.web}/WEB-INF/web.xml" />
         <copy file="${project.dir}/conf/tiles/develop-web.xml" tofile="${tiles.web}/WEB-INF/web.xml" />
 
         <copy file="${project.dir}/conf/faces-config.xml" todir="${examples.web}/WEB-INF" />
+        <copy file="${project.dir}/conf/faces-config.xml" todir="${simple.web}/WEB-INF" />
 
         <!-- resolve TLD entities (for containers that do not support entities within TLDs) -->
         <xslt basedir="${tlds.dir}"
               includes="*.tld"
-              destdir="${web-inf.lib.dir}"
+              destdir="${examples.web-inf.lib.dir}"
               style="${tlds.dir}/resolve_entities.xsl"
               extension=".tld">
              <xmlcatalog>
@@ -131,7 +155,10 @@
              </xmlcatalog>
         </xslt>
         <copy todir="${tiles.web}/WEB-INF/lib" >
-            <fileset dir="${web-inf.lib.dir}" includes="*.tld" />
+            <fileset dir="${examples.web-inf.lib.dir}" includes="*.tld" />
+        </copy>
+        <copy todir="${simple.web}/WEB-INF/lib" >
+            <fileset dir="${examples.web-inf.lib.dir}" includes="*.tld" />
         </copy>
 
     </target>
@@ -142,37 +169,37 @@
             depends="prepare-for-debug"
             description="compiles the myfaces and examples java classes to WEB-INF/classes and copies needed config and TLD files">
 
-        <mkdir dir="${web-inf.classes.dir}"/>
+        <mkdir dir="${examples.web-inf.classes.dir}"/>
 
         <javac srcdir="${jsfapi.src}"
-               destdir="${web-inf.classes.dir}"
+               destdir="${examples.web-inf.classes.dir}"
                optimize="off"
                debug="on"
                classpathref="jsfapi.class.path">
         </javac>
 
         <javac srcdir="${share.src}"
-               destdir="${web-inf.classes.dir}"
+               destdir="${examples.web-inf.classes.dir}"
                optimize="off"
                debug="on"
                classpathref="share.class.path">
         </javac>
 
         <javac srcdir="${myfaces.src}"
-               destdir="${web-inf.classes.dir}"
+               destdir="${examples.web-inf.classes.dir}"
                optimize="off"
                debug="on"
                classpathref="myfaces.class.path">
         </javac>
 
         <javac srcdir="${components.src}"
-               destdir="${web-inf.classes.dir}"
+               destdir="${examples.web-inf.classes.dir}"
                optimize="off"
                debug="on"
                classpathref="components.class.path">
         </javac>
 
-        <copy todir="${web-inf.classes.dir}">
+        <copy todir="${examples.web-inf.classes.dir}">
             <fileset dir="${myfaces.src}"
                      includes="**"
                      excludes="**/*.java
@@ -180,13 +207,13 @@
         </copy>
 
         <javac srcdir="${examples.src}"
-               destdir="${web-inf.classes.dir}"
+               destdir="${examples.web-inf.classes.dir}"
                optimize="off"
                debug="on"
                classpathref="examples.class.path">
         </javac>
 
-        <copy todir="${web-inf.classes.dir}">
+        <copy todir="${examples.web-inf.classes.dir}">
             <fileset dir="${examples.src}"
                      includes="**"
                      excludes="**/*.java
@@ -198,8 +225,8 @@
     <target name="clean"
             description="deletes all files that were built">
         <delete quiet="true" failonerror="false" includeEmptyDirs="true">
-            <fileset dir="${web-inf.classes.dir}"/>
-            <fileset dir="${web-inf.lib.dir}"/>
+            <fileset dir="${examples.web-inf.classes.dir}"/>
+            <fileset dir="${examples.web-inf.lib.dir}"/>
             <fileset file="${examples.web}/WEB-INF/web.xml"/>
             <fileset file="${examples.web}/WEB-INF/faces-config.xml"/>
             <fileset file="${examples.web}/jscalendar"/>

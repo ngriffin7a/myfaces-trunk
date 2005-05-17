@@ -14,14 +14,14 @@ import java.util.Map;
  */
 public class DVOFace implements Serializable
 {
-    private boolean attribute = false;
+    private boolean attribute = true;
     
     private Map map = new HashMap(){
     	public Object get(Object key){
     		Object held = super.get( key );
     		if( held != null )
     			return held;
-    		if( key.toString().toLowerCase().contains("list") )
+    		if( key.toString().toLowerCase().indexOf("list")>0 )
     			return new ArrayList();
     		
     		return null;	

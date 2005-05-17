@@ -28,26 +28,27 @@
 
 <f:view>
 
-    <h1>Usage of the displayValueOnly attribute</h1>
+    <f:verbatim>
+        <h1>Usage of the displayValueOnly attribute</h1>
+    </f:verbatim>
+    <h:form id="form" >
+	    <x:saveState id="ss1" value="#{dvoFace.attribute}"/>
 
-    <h:form>
-	    <x:saveState value="#{dvoFace.attribute}"/>
-	    
     	<h:selectBooleanCheckbox
 	    	id="displayValueOnlyCheckBox"
 	    	title="displayValueOnly"
 			value="#{dvoFace.attribute}"/>
-		<h:outputLabel for="displayValueOnlyCheckBox" value="displayValueOnly attribute"/>
+		<h:outputLabel id="displayValueOnlyCheckBoxL" for="displayValueOnlyCheckBox" value="displayValueOnly attribute"/>
 
-		<br/>
-		
-		<h:panelGrid columns="2">
-	        <h:outputLabel for="inputText" value="inputText"/>
+		<f:verbatim><br/></f:verbatim>
+
+		<h:panelGrid id="firstGrid" columns="2">
+	        <h:outputLabel id="inputTextL" for="inputText" value="inputText"/>
 	        <x:inputText id="inputText" value="#{dvoFace.map['inputText']}" displayValueOnly="#{dvoFace.attribute}"/>
-	        
-	        <h:outputLabel for="inputTextarea" value="inputTextarea"/>
+
+	        <h:outputLabel id="inputTextareaL" for="inputTextarea" value="inputTextarea"/>
 	        <x:inputTextarea id="inputTextarea" value="#{dvoFace.map['inputTextarea']}" displayValueOnly="#{dvoFace.attribute}"/>
-	        
+
 	        <h:outputLabel for="selectManyCheckbox" value="selectManyCheckbox"/>
 	        <x:selectManyCheckbox id="selectManyCheckbox" value="#{dvoFace.map['selectManyCheckboxList']}" displayValueOnly="#{dvoFace.attribute}">
 			  	<f:selectItem itemLabel="Value 1" itemValue="1"/>
@@ -55,50 +56,49 @@
 			  	<f:selectItem itemLabel="Value 3" itemValue="3"/>
 			</x:selectManyCheckbox>
 
-	        <h:outputLabel for="selectOneMenu" value="selectOneMenu"/>
-			<x:selectManyMenu id="selectOneMenu" value="#{dvoFace.map['selectOneMenuList']}" displayValueOnly="#{dvoFace.attribute}">
+	        <%--h:outputLabel for="selectOneMenu" value="selectOneMenu"/>
+			<x:selectOneMenu id="selectOneMenu" value="#{dvoFace.map['selectOneMenu']}" displayValueOnly="#{dvoFace.attribute}">
 			  	<f:selectItem itemLabel="Value 1" itemValue="1"/>
 			  	<f:selectItem itemLabel="Value 2" itemValue="2"/>
 			  	<f:selectItem itemLabel="Value 3" itemValue="3"/>
-			</x:selectManyMenu>
-				
-	        <h:outputLabel for="selectManyMenu" value="selectManyMenu"/>
+			</x:selectOneMenu--%>
+
+	        <h:outputLabel id="selectManyMenuL" for="selectManyMenu" value="selectManyMenu"/>
 			<x:selectManyMenu id="selectManyMenu" value="#{dvoFace.map['selectManyMenuList']}" displayValueOnly="#{dvoFace.attribute}">
 			  	<f:selectItem itemLabel="Value 1" itemValue="1"/>
 			  	<f:selectItem itemLabel="Value 2" itemValue="2"/>
 			  	<f:selectItem itemLabel="Value 3" itemValue="3"/>
 			</x:selectManyMenu>
-			
-			<%-- h:outputLabel for="selectOneListbox" value="selectOneListbox"/>
+
+			<%--h:outputLabel for="selectOneListbox" value="selectOneListbox"/>
 			<x:selectOneListbox id="selectOneListbox" value="#{dvoFace.map['selectOneListbox']}" displayValueOnly="#{dvoFace.attribute}">
 			  	<f:selectItem itemLabel="Value 1" itemValue="1"/>
 			  	<f:selectItem itemLabel="Value 2" itemValue="2"/>
 			  	<f:selectItem itemLabel="Value 3" itemValue="3"/>
-			</x:selectOneListbox --%>
-			
-			<h:outputLabel for="inputHtml" value="inputHtml"/>
+			</x:selectOneListbox--%>
+
+			<h:outputLabel id="inputHtmlL" for="inputHtml" value="inputHtml"/>
 	        <x:inputHtml id="inputHtml" value="#{dvoFace.map['inputHtml']}" displayValueOnly="#{dvoFace.attribute}"/>
-			
+
 		</h:panelGrid>
-        <br/><br/>
-        
+        <f:verbatim><br/><br/>
+
         <h2>The attribute can also be set for a whole section</h2>
-        
-        <x:panelGrid columns="2" displayValueOnly="#{dvoFace.attribute}">
-	        <h:outputLabel for="inputText2" value="inputText"/>
+
+        </f:verbatim>
+        <x:panelGrid id="secondGrid" columns="2" displayValueOnly="#{dvoFace.attribute}">
+	        <h:outputLabel id="inputText2L" for="inputText2" value="inputText"/>
 	        <x:inputText id="inputText2" value="#{dvoFace.map['inputText2']}"/>
-	        
-	        <h:outputLabel for="inputTextarea2" value="inputTextarea"/>
+
+	        <h:outputLabel id="inputTextArea2L" for="inputTextarea2" value="inputTextarea"/>
 	        <x:inputTextarea id="inputTextarea2" value="#{dvoFace.map['inputTextarea2']}"/>
 	    </x:panelGrid>
-        
-
-        <h:commandButton/>
+        <h:commandButton id="submitBtn" />
     </h:form>
 
-</f:view>
+    <%@include file="inc/page_footer.jsp" %>
 
-<%@include file="inc/page_footer.jsp" %>
+</f:view>
 
 </body>
 
