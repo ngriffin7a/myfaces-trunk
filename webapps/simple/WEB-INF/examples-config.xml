@@ -165,6 +165,14 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 
+    <!-- Managed Beans for date.jsp -->
+
+    <managed-bean>
+        <managed-bean-name>dvoFace</managed-bean-name>
+        <managed-bean-class>org.apache.myfaces.examples.displayValueOnly.DVOFace</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+
     <!-- Managed Beans for inputHtml.jsp -->
 
     <managed-bean>

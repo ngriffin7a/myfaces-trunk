@@ -23,7 +23,11 @@
 
         <h:outputLink value="sample1.jsf" ><f:verbatim>Sample 1</f:verbatim></h:outputLink> <br/>
         <h:outputLink value="sample2.jsf" ><f:verbatim>Sample 2</f:verbatim></h:outputLink> <br/>
+        <h:outputLink value="displayValueOnly.jsf" ><f:verbatim>displayValueOnly attribute</f:verbatim></h:outputLink> <br/>
         <h:outputLink value="validate.jsf" ><f:verbatim>Validations</f:verbatim></h:outputLink> <br/>
+
+		<br/>
+		                
         <h:outputLink value="aliasBean.jsf" ><f:verbatim>Alias Bean</f:verbatim></h:outputLink> <br/>
         <h:outputLink value="buffer.jsf" ><f:verbatim>Buffer</f:verbatim></h:outputLink> <br/>
         Data Table<br/>
