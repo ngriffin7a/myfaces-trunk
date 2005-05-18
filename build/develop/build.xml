@@ -105,9 +105,13 @@
         <copy todir="${examples.web-inf.lib.dir}">
             <fileset file="${jstl.jar}"/>
             <!--fileset file="${jsp-2.0.jar}"/-->
+
+            <fileset file="${commons-beanutils.jar}"/>
             <fileset file="${commons-codec.jar}"/>
+            <fileset file="${commons-collections.jar}"/>
             <fileset file="${commons-logging.jar}"/>
             <!--fileset file="${commons-el.jar}"/-->
+            <fileset file="${commons-digester.jar}"/>
             <fileset file="${log4j.jar}"/>
             <fileset file="${commons-fileupload.jar}"/>
             <fileset file="${commons-validator.jar}"/>
@@ -115,8 +119,11 @@
         </copy>
         <copy todir="${tiles.web}/WEB-INF/lib">
             <fileset file="${jstl.jar}"/>
+            <fileset file="${commons-beanutils.jar}"/>
+            <fileset file="${commons-collections.jar}"/>
             <fileset file="${commons-codec.jar}"/>
             <fileset file="${commons-logging.jar}"/>
+            <fileset file="${commons-digester.jar}"/>
             <fileset file="${log4j.jar}"/>
             <fileset file="${commons-fileupload.jar}"/>
             <fileset file="${commons-validator.jar}"/>
@@ -124,8 +131,11 @@
         </copy>
         <copy todir="${simple.web-inf.lib.dir}">
             <fileset file="${jstl.jar}"/>
+            <fileset file="${commons-beanutils.jar}"/>              
             <fileset file="${commons-codec.jar}"/>
+            <fileset file="${commons-collections.jar}"/>
             <fileset file="${commons-logging.jar}"/>
+            <fileset file="${commons-digester.jar}"/>
             <fileset file="${log4j.jar}"/>
             <fileset file="${commons-fileupload.jar}"/>
             <fileset file="${commons-validator.jar}"/>
