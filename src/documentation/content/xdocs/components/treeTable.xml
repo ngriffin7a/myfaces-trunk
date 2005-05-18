@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
 
-<!--
-This is a standard template meant to be used for the documentation of all custom
-components.
--->
 <document>
     <!-- component name -->
     <header>
-        <title>Alias Bean</title>
-        <subtitle>&lt;x:aliasBean></subtitle>
+        <title>Tree Column</title>
+        <subtitle>&lt;x:treeColumn></subtitle>
     </header>
     <body>
         <!-- Description -->
