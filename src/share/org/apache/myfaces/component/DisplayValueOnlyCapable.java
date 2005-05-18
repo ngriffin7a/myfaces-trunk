@@ -30,13 +30,13 @@ public interface DisplayValueOnlyCapable
     public static final String DISPLAY_VALUE_ONLY_STYLE_ATTR = "displayValueOnlyStyle";
     public static final String DISPLAY_VALUE_ONLY_STYLE_CLASS_ATTR = "displayValueOnlyStyleClass";
     
-    public boolean isSetDisplayValueOnly();
-    public boolean isDisplayValueOnly();
-    public void setDisplayValueOnly(boolean displayValueOnly);
+    boolean isSetDisplayValueOnly();
+    boolean isDisplayValueOnly();
+    void setDisplayValueOnly(boolean displayValueOnly);
 
-    public String getDisplayValueOnlyStyle();
-    public void setDisplayValueOnlyStyle(String style);
+    String getDisplayValueOnlyStyle();
+    void setDisplayValueOnlyStyle(String style);
 	
-    public String getDisplayValueOnlyStyleClass();
-    public void setDisplayValueOnlyStyleClass(String styleClass);
+    String getDisplayValueOnlyStyleClass();
+    void setDisplayValueOnlyStyleClass(String styleClass);
 }

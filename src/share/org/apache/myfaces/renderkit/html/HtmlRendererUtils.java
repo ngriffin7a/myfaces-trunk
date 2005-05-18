@@ -582,8 +582,8 @@ public final class HtmlRendererUtils {
 
         writer.startElement(HTML.UL_ELEM, uiComponent);
         writeIdIfNecessary(writer, uiComponent, facesContext);
-        writer.writeAttribute(HTML.NAME_ATTR, uiComponent
-                .getClientId(facesContext), null);
+
+
 
         renderDisplayValueOnlyAttributes(uiComponent, writer);
 
@@ -663,6 +663,12 @@ public final class HtmlRendererUtils {
                     writer.startElement(HTML.LI_ELEM, null);
                     writer.writeText(selectItem.getLabel(), null);
                     writer.endElement(HTML.LI_ELEM);
+
+                    if(component instanceof UISelectOne)
+                    {
+                        //take care of several choices with the same value; use only the first one
+                        return;
+                    }
                 }
             }
         }
