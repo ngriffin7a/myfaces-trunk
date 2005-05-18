@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+
+<!--
+This is a standard template meant to be used for the documentation of all custom
+components.
+-->
+<document>
+    <!-- component name -->
+    <header>
+        <title>Alias Bean</title>
+        <subtitle>&lt;x:aliasBean></subtitle>
+    </header>
+    <body>
+        <!-- Description -->
+        <section>
+            <title>Description</title>
+            <p>
+                [TO DO]
+            </p>
+        </section>
+        <!-- screen shot -->
+        <section>
+            <title>Screen Shot</title>
+            <p>[TO DO]</p> <!-- replace with either a figure or Not Available -->
+            <!--
+            <figure src="jscookmenu.png" alt="jscookmenu"/>
+            -->
+        </section>
+        <!-- API -->
+        <section>
+            <title>API</title>
+            <table>
+                <tr>
+                    <td>component-family</td>
+                    <td>[TODO]</td>
+                </tr>
+                <tr>
+                    <td>renderer-type</td>
+                    <td>[TODO]</td>
+                </tr>
+                <tr>
+                    <td>component-class</td>
+                    <td>[TODO]</td>
+                </tr>
+                <tr>
+                    <td>renderer-class</td>
+                    <td>[TODO]</td>
+                </tr>
+                <tr>
+                    <td>tag-class</td>
+                    <td>[TODO]</td>
+                </tr>
+            </table>
+        </section>
+        <!-- Syntax -->
+        <section>
+            <title>Syntax</title>
+            <p>[TO DO]</p>
+        </section>
+        <!-- Instructions -->
+        <section>
+            <title>Instructions</title>
+            <p>[TO DO]</p>
+        </section>
+    </body>
+    <footer>
+    	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
+	&copy; 2004 - 2005, Apache Software Foundation
+	</legal>
+    </footer>
+
+</document>

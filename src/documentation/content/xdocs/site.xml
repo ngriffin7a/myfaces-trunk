@@ -40,6 +40,23 @@
          <validateRegExpr label="validateRegExpr" href="validateRegExpr.html"/>
          <validateEmail label="validateEmail" href="validateEmail.html"/>
          <validateEqual label="validateEqual" href="validateEqual.html"/>
+         <aliasBean label="Alias Bean" href="aliasBean.html"/>
+         <Buffer label="Buffer" href="buffer.html"/>
+         <fileUpload label="File Upload" href="fileUpload.html"/>
+         <tabbedPane label="TabbedPane" href="tabbedPane.html"/>
+         <calendar label="Calendar" href="calendar.html"/>
+         <popup label="Popup" href="popup.html"/>
+         <javascriptListener label="Javascript Listener" href="javascriptListener.html"/>
+         <inputDate label="Date" href="inputDate.html"/>
+         <inputHtml label="Html Editor" href="inputHtml.html"/>
+         <dataList label="Data List" href="dataList.html"/>
+         <Tree label="Tree" href="tree.html"/>
+         <TreeTable label="Tree Table" href="treeTable.html"/>
+         <rssTicker label="RSS Ticker" href="rssTicker.html"/>
+         <panelStack label="Panel Stack" href="panelStack.html"/>
+         <stylesheet label="Style Sheet" href="stylesheet.html"/>
+         <newspaperTable label="Newspaper Table" href="newspaperTable.html"/>
+         <forceId label="forceId" href="forceId.html"/>
      </components>
     <community href="community/" label="Community" tab="community">
         <whoweare label="Who we are" href="whoweare.html"/>
