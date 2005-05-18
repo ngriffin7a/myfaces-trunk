@@ -152,7 +152,7 @@ through the system path.
         <svn username="${apache.username}" password="${apache.password}">
             <add>
                 <fileset dir="${site.checkout.dir}">
-                    <include name="*.html"/>
+                    <include name="**/*.html"/>
                     <include name="*.cgi"/>
                     <include name="*.txt"/>
                 </fileset>
