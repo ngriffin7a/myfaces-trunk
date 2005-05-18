@@ -33,8 +33,8 @@
      <components href="components/" label="Components" tab="components">
          <overview label="Overview" href="overview.html"/>
          <jscookmenu label="JSCook Menu" href="jscookmenu.html"/>
-         <tree label="Tiles Support" href="tiles.html"/>
-         <tree label="Tree2" href="tree2.html"/>
+         <tiles label="Tiles Support" href="tiles.html"/>
+         <tree2 label="Tree2" href="tree2.html"/>
          <validateCreditCard label="validateCreditCard" href="validateCreditCard.html"/>
          <validateISBN label="validateISBN" href="validateISBN.html"/>
          <validateRegExpr label="validateRegExpr" href="validateRegExpr.html"/>
@@ -48,7 +48,7 @@
          <popup label="Popup" href="popup.html"/>
          <javascriptListener label="Javascript Listener" href="javascriptListener.html"/>
          <inputDate label="Date" href="inputDate.html"/>
-         <inputHtml label="Html Editor" href="inputHtml.html"/>
+         <inputHtml label="Html Editor" href="htmlEditor.html"/>
          <dataList label="Data List" href="dataList.html"/>
          <Tree label="Tree" href="tree.html"/>
          <TreeTable label="Tree Table" href="treeTable.html"/>
