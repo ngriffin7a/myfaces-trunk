@@ -1,12 +1,12 @@
 /*
  * Copyright 2004 The Apache Software Foundation.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Thomas Spiegl
  * @version $Revision$ $Date$
  */
 public class HtmlJSCookMenuRenderer
@@ -59,7 +59,7 @@ public class HtmlJSCookMenuRenderer
                 !actionParam.trim().equals("null"))
         {
             String compId = component.getId();
-            int idx = actionParam.indexOf(':');
+            int idx = actionParam.lastIndexOf(':');
             if (idx == -1) {
                 return;
             }
@@ -84,30 +84,30 @@ public class HtmlJSCookMenuRenderer
         }
     }
 
-    private String decodeValueBinding(String actionParam, FacesContext context)
+    private String decodeValueBinding(String actionParam, FacesContext context) 
     {
-        int idx = actionParam.indexOf(";#{");
+        int idx = actionParam.indexOf(";#{"); 
         if (idx == -1) {
             return actionParam;
         }
-
+        
         String newActionParam = actionParam.substring(0, idx);
         String vbParam = actionParam.substring(idx + 1);
-
+        
         idx = vbParam.indexOf('=');
         if (idx == -1) {
             return newActionParam;
         }
         String vbExpressionString = vbParam.substring(0, idx);
         String vbValue = vbParam.substring(idx + 1);
-
-        ValueBinding vb =
-            context.getApplication().createValueBinding(vbExpressionString);
+        
+        ValueBinding vb = 
+            context.getApplication().createValueBinding(vbExpressionString);        
         vb.setValue(context, vbValue);
-
+        
         return newActionParam;
     }
-
+    
     public boolean getRendersChildren()
     {
         return true;
@@ -125,12 +125,12 @@ public class HtmlJSCookMenuRenderer
             dummyFormResponseWriter.addDummyFormParameter(JSCOOK_ACTION_PARAM);
             dummyFormResponseWriter.setWriteDummyForm(true);
 
-            String myId = component.getId();
-
+            String myId = getMenuId(context, component);
+            
             ResponseWriter writer = context.getResponseWriter();
 
             writer.write("\n<script type=\"text/javascript\"><!--\n" +
-                         "var myMenu =\n[");
+                         "var " + getMenuId( context, component ) + " =\n[");
             encodeNavigationMenuItems(context, writer,
                                       (NavigationMenuItem[]) list.toArray(new NavigationMenuItem[list.size()]),
                                       uiNavMenuItemList,
@@ -189,7 +189,9 @@ public class HtmlJSCookMenuRenderer
                 writer.write("''");
             }
             writer.write(", '");
-            writer.write(JavascriptUtils.encodeString(item.getLabel()));
+            if( item.getLabel() != null ) {
+                writer.write(JavascriptUtils.encodeString(item.getLabel()));
+            }
             writer.write("', ");
             if (item.getAction() != null && ! item.isDisabled())
             {
@@ -216,20 +218,20 @@ public class HtmlJSCookMenuRenderer
                     writer.write(",");
                     if (uiNavMenuItem != null)
                     {
-                        encodeNavigationMenuItems(context, writer, menuItems,
+                        encodeNavigationMenuItems(context, writer, menuItems, 
                                 uiNavMenuItem.getChildren(), menuId);
                     } else {
                         encodeNavigationMenuItems(context, writer, menuItems,
                                 new ArrayList(1), menuId);
-                    }
+                    } 
                 }
             };
             writer.write("]");
         }
     }
 
-    private void encodeValueBinding(ResponseWriter writer, UINavigationMenuItem uiNavMenuItem,
-            NavigationMenuItem item) throws IOException
+    private void encodeValueBinding(ResponseWriter writer, UINavigationMenuItem uiNavMenuItem, 
+            NavigationMenuItem item) throws IOException 
     {
         ValueBinding vb = uiNavMenuItem.getValueBinding("NavMenuItemValue");
         if (vb == null) {
@@ -243,18 +245,18 @@ public class HtmlJSCookMenuRenderer
         if (tempObj == null) {
             return;
         }
-
+        
         writer.write(";");
         writer.write(vbExpression);
         writer.write("=");
         writer.write(tempObj.toString());
     }
-
+    
     public void encodeEnd(FacesContext context, UIComponent component) throws IOException
     {
         RendererUtils.checkParamValidity(context, component, HtmlCommandJSCookMenu.class);
         HtmlCommandJSCookMenu menu = (HtmlCommandJSCookMenu)component;
-
+        
         AddResource.addJavaScriptToHeader(NavigationMenuItem.class, "jscookmenu/JSCookMenu.js", context);
 
         AddResource.addJavaScriptToHeader(NavigationMenuItem.class, "jscookmenu/ThemeOffice/theme.js", context);
@@ -268,20 +270,31 @@ public class HtmlJSCookMenuRenderer
 
         AddResource.addJavaScriptToHeader(NavigationMenuItem.class, "jscookmenu/ThemePanel/theme.js", context);
         AddResource.addStyleSheet(NavigationMenuItem.class, "jscookmenu/ThemePanel/theme.css", context);
-
+        
         ResponseWriter writer = context.getResponseWriter();
 
-        String menuId = component.getClientId(context).replaceAll(":","_") + "_menu";
+        String menuId = getMenuId(context, component);
 
+        writer.write("<div id=\"" + menuId + "\"></div>\n" +
+                     "<script type=\"text/javascript\"><!--\n" +
+                     "\tcmDraw ('" + menuId + "', " + menuId + ", '" + menu.getLayout() + "', cm" + menu.getTheme() + ", '" + menu.getTheme() + "');\n" +
+                     "--></script>\n");
+    }
+
+    /**
+     * TODO Give this a good comment.
+     * 
+     * @param context
+     * @param component
+     * @return
+     */
+    private String getMenuId(FacesContext context, UIComponent component) {
+        String menuId = component.getClientId(context).replaceAll(":","_") + "_menu";
         while(menuId.startsWith("_"))
         {
             menuId = menuId.substring(1);
         }
-
-        writer.write("<div id=\"" + menuId + "\"></div>\n" +
-                     "<script type=\"text/javascript\"><!--\n" +
-                     "\tcmDraw ('" + menuId + "', myMenu, '" + menu.getLayout() + "', cm" + menu.getTheme() + ", '" + menu.getTheme() + "');\n" +
-                     "--></script>\n");
+        return menuId;
     }
 
 }
