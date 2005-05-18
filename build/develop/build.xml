@@ -154,7 +154,7 @@
             <fileset dir="${examples.web-inf.lib.dir}" includes="*.tld" />
         </copy>
         <copy todir="${simple.web}/WEB-INF/lib" >
-            <fileset dir="${simple.web-inf.lib.dir}" includes="*.tld" />
+            <fileset dir="${examples.web-inf.lib.dir}" includes="*.tld" />
         </copy>
 
     </target>
