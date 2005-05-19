@@ -207,20 +207,4 @@
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 
-
-    <taglib>
-        <taglib-uri>http://java.sun.com/jsf/core</taglib-uri>
-        <taglib-location>lib/myfaces_core.tld</taglib-location>
-    </taglib>
-
-    <taglib>
-        <taglib-uri>http://java.sun.com/jsf/html</taglib-uri>
-        <taglib-location>lib/myfaces_html.tld</taglib-location>
-    </taglib>
-
-    <taglib>
-        <taglib-uri>http://myfaces.apache.org/extensions</taglib-uri>
-        <taglib-location>lib/myfaces_ext.tld</taglib-location>
-    </taglib>
-
 </web-app>
