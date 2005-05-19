@@ -35,8 +35,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.myfaces.config.MyfacesConfig;
 import org.apache.myfaces.renderkit.RendererUtils;
-import org.apache.myfaces.renderkit.JSFAttr;
 import org.apache.myfaces.renderkit.html.util.DummyFormUtils;
+import org.apache.myfaces.renderkit.html.util.HTMLEncoder;
 import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
 import org.apache.myfaces.component.DisplayValueOnlyCapable;
 
@@ -624,11 +624,11 @@ public final class HtmlRendererUtils {
             
             if(getDisplayValueOnlyStyleClass(uiComponent) != null )
             {
-                writer.writeAttribute(HTML.STYLE_CLASS_ATTR, getDisplayValueOnlyStyleClass(uiComponent), null);
+                writer.writeAttribute(HTML.CLASS_ATTR, getDisplayValueOnlyStyleClass(uiComponent), null);
             }
             else if(uiComponent.getAttributes().get("styleClass")!=null)
             {
-                writer.writeAttribute(HTML.STYLE_CLASS_ATTR, uiComponent.getAttributes().get("styleClass"), null);
+                writer.writeAttribute(HTML.CLASS_ATTR, uiComponent.getAttributes().get("styleClass"), null);
             }
 
             renderHTMLAttributes(writer, uiComponent,
@@ -749,7 +749,7 @@ public final class HtmlRendererUtils {
         renderDisplayValueOnlyAttributes(input, writer);
 
         String strValue = RendererUtils.getStringValue(facesContext, input);
-        writer.writeText(strValue, JSFAttr.VALUE_ATTR);
+        writer.write( HTMLEncoder.encode(strValue, true, true) );
 
         writer.endElement(HTML.SPAN_ELEM);
     }
