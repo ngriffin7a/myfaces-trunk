@@ -67,7 +67,6 @@ public class InputHtmlRenderer extends HtmlRenderer {
     }
 
 	private void encodeDisplayValueOnly(FacesContext context, InputHtml editor) throws IOException {
-		String clientId = editor.getClientId(context);
 		// Use only a textarea
 		ResponseWriter writer = context.getResponseWriter();
         writer.startElement(HTML.SPAN_ELEM, editor);
@@ -111,22 +110,23 @@ public class InputHtmlRenderer extends HtmlRenderer {
 	private static String getHtmlBody(String html){
 		String lcText = html.toLowerCase();
         int textLength = lcText.length();
-        int bodyStartIndex = 0;
+        int bodyStartIndex = -1;
         while(bodyStartIndex < textLength){
-            bodyStartIndex = lcText.indexOf("<body");
+        	bodyStartIndex++;
+            bodyStartIndex = lcText.indexOf("<body", bodyStartIndex);
             if( bodyStartIndex == -1 )
                 break; // not found.
 
             bodyStartIndex += 5;
             char c = lcText.charAt(bodyStartIndex);
-            if( c=='>' ){
+            if( c=='>' )
                 break;
-            }
 
             if( c!=' ' && c!='\t' )
                 continue;
 
             bodyStartIndex = lcText.indexOf('>', bodyStartIndex);
+            break;
         }
         bodyStartIndex++;
 
