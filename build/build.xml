@@ -40,7 +40,7 @@
     <property name="app.release.bundle" value="myfaces-${release.version}-app"/>
 
     <!-- Temporary dir. May be overridden in build.local.properties -->
-    <property name="temp.dir" location="${env.TEMP}"/>
+    <property name="temp.dir" location="${project.dir}/build/temp"/>
 
     <property name="api.classes" location="${temp.dir}/myfaces-api/classes"/>
     <property name="share.classes" location="${temp.dir}/myfaces-share/classes"/>
@@ -847,9 +847,9 @@
             <property name="project.site-dir" value="${site.build.dir}"/>
             <property name="project.home" value="${project.home}"/>
         </ant>
-        
+
         <!-- fix line endings for cgi scripts (or they will bomb out once deployed -->
-        <fixcrlf srcdir="${site.build.dir}" eol="unix" eof="remove" includes="**/*.cgi"/>        
+        <fixcrlf srcdir="${site.build.dir}" eol="unix" eof="remove" includes="**/*.cgi"/>
 
         <!-- add javadoc -->
         <ant target="javadoc">
