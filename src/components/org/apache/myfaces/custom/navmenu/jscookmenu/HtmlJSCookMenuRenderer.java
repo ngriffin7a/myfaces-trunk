@@ -58,7 +58,7 @@ public class HtmlJSCookMenuRenderer
         if (actionParam != null && !actionParam.trim().equals("") &&
                 !actionParam.trim().equals("null"))
         {
-            String compId = component.getId();
+            String compId = getMenuId(context,component);
             int idx = actionParam.lastIndexOf(':');
             if (idx == -1) {
                 return;
