@@ -22,16 +22,15 @@ import org.apache.myfaces.renderkit.html.HtmlRendererUtils;
 import org.apache.myfaces.component.UserRoleUtils;
 
 import javax.faces.application.ViewHandler;
-import javax.faces.component.NamingContainer;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIForm;
-import javax.faces.component.UIViewRoot;
-import javax.faces.component.UINamingContainer;
+import javax.faces.component.*;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.convert.Converter;
+import javax.faces.FacesException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Iterator;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -226,7 +225,6 @@ public class HtmlTabbedPaneRenderer
         }
     }
 
-
     protected void writeFormStart(ResponseWriter writer,
                                   FacesContext facesContext,
                                   UIComponent tabbedPane)
@@ -383,41 +381,40 @@ public class HtmlTabbedPaneRenderer
     }
 
 
-    protected void writeTabCell(ResponseWriter writer,
-                                FacesContext facesContext,
-                                HtmlPanelTabbedPane tabbedPane,
-                                int tabCount,
-                                int selectedIndex)
-        throws IOException
-    {
-        HtmlRendererUtils.writePrettyLineSeparator(facesContext);
-        HtmlRendererUtils.writePrettyIndent(facesContext);
-        writer.startElement(HTML.TD_ELEM, tabbedPane);
-        writer.writeAttribute(HTML.COLSPAN_ATTR, Integer.toString(tabCount + 1), null);
-        writer.writeAttribute(HTML.STYLE_ATTR, TAB_CELL_STYLE + "background-color:" + tabbedPane.getBgcolor(), null);
-        HtmlRendererUtils.renderHTMLAttribute(writer, tabbedPane, "tabContentStyleClass", HTML.STYLE_CLASS_ATTR);
+    protected void writeTabCell(ResponseWriter writer, FacesContext facesContext, HtmlPanelTabbedPane tabbedPane,
+           int tabCount, int selectedIndex) throws IOException {
+       HtmlRendererUtils.writePrettyLineSeparator(facesContext);
+       HtmlRendererUtils.writePrettyIndent(facesContext);
+       writer.startElement(HTML.TD_ELEM, tabbedPane);
+       writer.writeAttribute(HTML.COLSPAN_ATTR, Integer.toString(tabCount + 1), null);
+       writer.writeAttribute(HTML.STYLE_ATTR, TAB_CELL_STYLE + "background-color:" + tabbedPane.getBgcolor(), null);
+       HtmlRendererUtils.renderHTMLAttribute(writer, tabbedPane, "tabContentStyleClass", HTML.STYLE_CLASS_ATTR);
 
-        int tabIdx = 0;
-        List children = tabbedPane.getChildren();
-        for (int i = 0, len = children.size(); i < len; i++)
-        {
-            UIComponent child = getUIComponent((UIComponent)children.get(i));
-            if (child instanceof HtmlPanelTab)
-            {
-                if (tabIdx == selectedIndex)
-                {
-                    RendererUtils.renderChild(facesContext, child);
-                }
-                tabIdx++;
-            }
-            else
-            {
-                RendererUtils.renderChild(facesContext, child);
-            }
-        }
+       int tabIdx = 0;
+       List children = tabbedPane.getChildren();
+       for (int i = 0, len = children.size(); i < len; i++) {
+           UIComponent child = getUIComponent((UIComponent) children.get(i));
+           if (child instanceof HtmlPanelTab) {
+               // the inactive tabs are hidden with a div-tag
+               if (tabIdx != selectedIndex) {
+                   writer.startElement(HTML.DIV_ELEM, tabbedPane);
+                   writer.writeAttribute(HTML.STYLE_ATTR, "display:none", null);
+                   RendererUtils.renderChild(facesContext, child);
+                   writer.endElement(HTML.DIV_ELEM);
+               }
+               else
+               {
+                   RendererUtils.renderChild(facesContext, child);
+               }
 
-        writer.endElement(HTML.TD_ELEM);
-    }
+               tabIdx++;
+           } else {
+               RendererUtils.renderChild(facesContext, child);
+           }
+       }
+
+       writer.endElement(HTML.TD_ELEM);
+   }
 
     private UIComponent getUIComponent(UIComponent uiComponent)
     {

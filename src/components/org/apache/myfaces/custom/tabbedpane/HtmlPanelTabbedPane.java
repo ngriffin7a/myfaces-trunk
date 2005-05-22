@@ -50,32 +50,21 @@ public class HtmlPanelTabbedPane
     }
 
     public void processDecodes(javax.faces.context.FacesContext context)
-    {
-        if (context == null) throw new NullPointerException("context");
-        decode(context);
+   {
+       if (context == null) throw new NullPointerException("context");
+       decode(context);
 
-        int tabIdx = 0;
-        int selectedIndex = getSelectedIndex();
+       int tabIdx = 0;
+       int selectedIndex = getSelectedIndex();
 
-        Iterator it = getFacetsAndChildren();
+       Iterator it = getFacetsAndChildren();
 
-        while (it.hasNext())
-        {
-            UIComponent childOrFacet = getUIComponent((UIComponent) it.next());
-            if (childOrFacet instanceof HtmlPanelTab)
-            {
-                if (tabIdx == selectedIndex)
-                {
-                    childOrFacet.processDecodes(context);
-                }
-                tabIdx++;
-            }
-            else
-            {
-                childOrFacet.processDecodes(context);
-            }
-        }
-    }
+       while (it.hasNext())
+       {
+           UIComponent childOrFacet = getUIComponent((UIComponent) it.next());
+           childOrFacet.processDecodes(context);
+       }
+   }
 
     private UIComponent getUIComponent(UIComponent uiComponent)
     {
