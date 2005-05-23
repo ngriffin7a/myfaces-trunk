@@ -21,6 +21,7 @@ import org.apache.myfaces.component.html.util.AddResource;
 import org.apache.myfaces.renderkit.html.HtmlRendererUtils;
 import org.apache.myfaces.renderkit.html.HTML;
 import org.apache.myfaces.renderkit.JSFAttr;
+import org.apache.myfaces.renderkit.RendererUtils;
 
 import javax.faces.component.NamingContainer;
 import javax.faces.component.UIComponent;
@@ -336,9 +337,9 @@ public class HtmlTreeRenderer extends Renderer
         out.startElement(HTML.TD_ELEM, tree);
         if (nodeImgFacet != null)
         {
-            encodeRecursive(context, nodeImgFacet);
+            RendererUtils.renderChild(context, nodeImgFacet);
         }
-        encodeRecursive(context, nodeTypeFacet);
+        RendererUtils.renderChild(context, nodeTypeFacet);
         out.endElement(HTML.TD_ELEM);
     }
 
@@ -531,7 +532,7 @@ public class HtmlTreeRenderer extends Renderer
                 imageAttrs.put(HTML.ONCLICK_ATTR, onClick);
                 imageAttrs.put(HTML.STYLE_ATTR, "cursor:hand;cursor:pointer");
             }
-            encodeRecursive(context, image);
+            RendererUtils.renderChild(context, image);
         }
         else
         {
@@ -546,36 +547,11 @@ public class HtmlTreeRenderer extends Renderer
             expandControl.getChildren().add(param);
             expandControl.getChildren().add(image);
 
-            encodeRecursive(context, expandControl);
+            RendererUtils.renderChild(context, expandControl);
         }
         out.endElement(HTML.TD_ELEM);
 
         return nodeImgFacet;
-    }
-
-    private void encodeRecursive(FacesContext context, UIComponent component) throws IOException
-    {
-        /**@todo consider moving this common functionality to a base class or utility class */
-        if (!component.isRendered()) return;
-
-        component.encodeBegin(context);
-
-        if (component.getRendersChildren())
-        {
-            component.encodeChildren(context);
-        }
-        else
-        {
-            List childList = component.getChildren();
-
-            for (int i=0; i < childList.size(); i++)
-            {
-                UIComponent child = (UIComponent)childList.get(i);
-                encodeRecursive(context, child);
-            }
-        }
-
-        component.encodeEnd(context);
     }
 
     /**
