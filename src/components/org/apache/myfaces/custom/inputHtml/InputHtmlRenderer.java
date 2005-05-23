@@ -104,7 +104,9 @@ public class InputHtmlRenderer extends HtmlRenderer {
 	}
 
 	private static String htmlToPlainText(String html){
-		return getHtmlBody( html ).replaceAll("<br.*>","\n");
+		return getHtmlBody( html )
+				.replaceAll("<br.*>","\n")
+				.replaceAll("<.+?>", "");
 	}
 
 	private static String getHtmlBody(String html){
