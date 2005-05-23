@@ -228,6 +228,9 @@
         <description>
             Extends standard inputText by user role support.
         </description>
+        <attribute><name>datafld</name>     <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
+        <attribute><name>datasrc</name>     <required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
+        <attribute><name>dataformatas</name><required>false</required>  <rtexprvalue>false</rtexprvalue><type>java.lang.String</type></attribute>
         &standard_input_text_attributes;
         &user_role_attributes;
         &ext_forceId_attribute;

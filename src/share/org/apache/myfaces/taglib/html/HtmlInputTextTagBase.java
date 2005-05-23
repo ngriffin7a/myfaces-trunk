@@ -15,7 +15,6 @@
  */
 package org.apache.myfaces.taglib.html;
 
-import org.apache.myfaces.renderkit.JSFAttr;
 import org.apache.myfaces.renderkit.html.HTML;
 
 import javax.faces.component.UIComponent;
@@ -40,9 +39,6 @@ public abstract class HtmlInputTextTagBase
     private String _accesskey;
     private String _align;
     private String _alt; //FIXME: not in API, HTML 4.0 transitional attribute and not in strict... what to do?
-    private String _datafld;
-    private String _datasrc;
-    private String _dataformatas;
     private String _disabled;
     private String _maxlength;
     private String _onblur;
@@ -59,17 +55,11 @@ public abstract class HtmlInputTextTagBase
     // UIInput attributes
     // --> already implemented in HtmlInputTagBase
 
-    // HtmlInputText attributes
-    private String _escape;
-
     public void release() {
         super.release();
         _accesskey=null;
         _align=null;
         _alt=null;
-        _datafld=null;
-        _datasrc=null;
-        _dataformatas=null;
         _disabled=null;
         _maxlength=null;
         _onblur=null;
@@ -79,7 +69,6 @@ public abstract class HtmlInputTextTagBase
         _readonly=null;
         _size=null;
         _tabindex=null;
-        _escape=null;
     }
 
     protected void setProperties(UIComponent component)
@@ -89,9 +78,6 @@ public abstract class HtmlInputTextTagBase
         setStringProperty(component, HTML.ACCESSKEY_ATTR, _accesskey);
         setStringProperty(component, HTML.ALIGN_ATTR, _align);
         setStringProperty(component, HTML.ALT_ATTR, _alt);
-        setStringProperty(component, HTML.DATAFLD_ATTR, _datafld);
-        setStringProperty(component, HTML.DATASRC_ATTR, _datasrc);
-        setStringProperty(component, HTML.DATAFORMATAS_ATTR, _dataformatas);
         setBooleanProperty(component, HTML.DISABLED_ATTR, _disabled);
         setIntegerProperty(component, HTML.MAXLENGTH_ATTR, _maxlength);
         setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
@@ -101,8 +87,6 @@ public abstract class HtmlInputTextTagBase
         setBooleanProperty(component, HTML.READONLY_ATTR, _readonly);
         setIntegerProperty(component, HTML.SIZE_ATTR, _size);
         setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
-
-        setBooleanProperty(component, JSFAttr.ESCAPE_ATTR, _escape);
     }
 
     public void setAccesskey(String accesskey)
@@ -118,21 +102,6 @@ public abstract class HtmlInputTextTagBase
     public void setAlt(String alt)
     {
         _alt = alt;
-    }
-
-    public void setDatafld(String datafld)
-    {
-        _datafld = datafld;
-    }
-
-    public void setDatasrc(String datasrc)
-    {
-        _datasrc = datasrc;
-    }
-
-    public void setDataformatas(String dataformatas)
-    {
-        _dataformatas = dataformatas;
     }
 
     public void setDisabled(String disabled)
@@ -178,10 +147,5 @@ public abstract class HtmlInputTextTagBase
     public void setTabindex(String tabindex)
     {
         _tabindex = tabindex;
-    }
-
-    public void setEscape(String escape)
-    {
-        _escape = escape;
     }
 }

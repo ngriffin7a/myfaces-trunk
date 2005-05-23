@@ -15,6 +15,7 @@
  */
 package org.apache.myfaces.taglib.html.ext;
 
+import org.apache.myfaces.renderkit.html.HTML;
 import org.apache.myfaces.component.DisplayValueOnlyCapable;
 import org.apache.myfaces.component.UserRoleAware;
 import org.apache.myfaces.component.html.ext.HtmlInputText;
@@ -41,6 +42,9 @@ public class HtmlInputTextTag
 
     private String _enabledOnUserRole;
     private String _visibleOnUserRole;
+    private String _datafld;
+    private String _datasrc;
+    private String _dataformatas;
 
     private String _displayValueOnly;
 	private String _displayValueOnlyStyle;
@@ -51,7 +55,9 @@ public class HtmlInputTextTag
 
         _enabledOnUserRole=null;
         _visibleOnUserRole=null;
-
+        _datafld=null;
+        _datasrc=null;
+        _dataformatas=null;
         _displayValueOnly=null;
         _displayValueOnlyStyle=null;
         _displayValueOnlyStyleClass=null;
@@ -62,7 +68,9 @@ public class HtmlInputTextTag
         super.setProperties(component);
         setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
         setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
-        
+        setStringProperty(component, HTML.DATAFLD_ATTR, _datafld);
+        setStringProperty(component, HTML.DATASRC_ATTR, _datasrc);
+        setStringProperty(component, HTML.DATAFORMATAS_ATTR, _dataformatas);
         setBooleanProperty(component, DisplayValueOnlyCapable.DISPLAY_VALUE_ONLY_ATTR, _displayValueOnly);
         setStringProperty(component, DisplayValueOnlyCapable.DISPLAY_VALUE_ONLY_STYLE_ATTR, _displayValueOnlyStyle);
         setStringProperty(component, DisplayValueOnlyCapable.DISPLAY_VALUE_ONLY_STYLE_CLASS_ATTR, _displayValueOnlyStyleClass);
@@ -91,5 +99,20 @@ public class HtmlInputTextTag
     public void setDisplayValueOnlyStyleClass(String displayValueOnlyStyleClass)
     {
         _displayValueOnlyStyleClass = displayValueOnlyStyleClass;
+    }
+    
+    public void setDatafld(String datafld)
+    {
+        _datafld = datafld;
+    }
+
+    public void setDatasrc(String datasrc)
+    {
+        _datasrc = datasrc;
+    }
+
+    public void setDataformatas(String dataformatas)
+    {
+        _dataformatas = dataformatas;
     }
 }
