@@ -186,6 +186,6 @@ public class HtmlTree extends UITreeData
      */
     public boolean isNodeSelected()
     {
-        return getNodeId().equals(_selectedNodeId);
+        return (getNodeId() != null) ? getNodeId().equals(_selectedNodeId) : false;
     }
 }
