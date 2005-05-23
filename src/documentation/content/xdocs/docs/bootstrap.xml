@@ -15,7 +15,8 @@
     <p>
         The following instructions are for the setup and usage of the bootstrap.xml build file.  This file is an Ant script 
         which can be used to generate and publish the nightly builds using the latest SVN code.  It is also used to build 
-        and sign the release builds.
+        and sign the release builds.  Finally, this file is used to automatically generate the website using the latest 
+        xdocs, javadoc and tlddoc from SVN.
     </p>  
     <ul>
         <li>
@@ -89,6 +90,13 @@
             <code>00 23 * * * ant -buildfile bootstrap.xml clean nightly >/dev/null 2>&amp;1</code>
         </li>
     </ul>        
+    <ul>
+        <li>
+            A cron job is also needed on the desitnation server to make sure the website is updated from SVN <br/>
+            <code>00 23 * * * ant -buildfile bootstrap.xml clean nightly >/dev/null 2>&amp;1</code>
+        </li>
+    </ul>            
+
 </section>
 
 </body>
