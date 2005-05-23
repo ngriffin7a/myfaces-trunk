@@ -328,24 +328,29 @@ public class InputHtml extends HtmlInputText {
             return text.trim();
 
         // Extract the fragment from the document.
-        String lcText = text.toLowerCase();
+        return getHtmlBody( text );
+    }
+    
+    static String getHtmlBody(String html){
+		String lcText = html.toLowerCase();
         int textLength = lcText.length();
-        int bodyStartIndex = 0;
+        int bodyStartIndex = -1;
         while(bodyStartIndex < textLength){
-            bodyStartIndex = lcText.indexOf("<body");
+        	bodyStartIndex++;
+            bodyStartIndex = lcText.indexOf("<body", bodyStartIndex);
             if( bodyStartIndex == -1 )
                 break; // not found.
 
             bodyStartIndex += 5;
             char c = lcText.charAt(bodyStartIndex);
-            if( c=='>' ){
+            if( c=='>' )
                 break;
-            }
 
             if( c!=' ' && c!='\t' )
                 continue;
 
             bodyStartIndex = lcText.indexOf('>', bodyStartIndex);
+            break;
         }
         bodyStartIndex++;
 
@@ -354,10 +359,10 @@ public class InputHtml extends HtmlInputText {
         if( bodyStartIndex<0 || bodyEndIndex<0
            || bodyStartIndex > bodyEndIndex
            || bodyStartIndex>=textLength || bodyEndIndex>=textLength ){
-            log.warn("Couldn't extract HTML body from :\n"+text);
-            return text.trim();
+        	log.warn("Couldn't extract HTML body from :\n"+html);
+            return html.trim();
         }
 
-        return text.substring(bodyStartIndex, bodyEndIndex+1).trim();
-    }
+        return html.substring(bodyStartIndex, bodyEndIndex+1).trim();
+	}
 }

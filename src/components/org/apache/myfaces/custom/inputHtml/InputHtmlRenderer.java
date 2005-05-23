@@ -42,6 +42,7 @@ public class InputHtmlRenderer extends HtmlRenderer {
     // TODO : Finish Disabled mode.
     // TODO : Automatic Fallback for non kupu capable browsers (Safari, smartphones, non javascript, ...).
     // TODO : Make Image & Link Library work.
+	// TODO : Allow disabeling of tag filtering
 
     protected boolean isDisabled(FacesContext facesContext, UIComponent uiComponent) {
         if( !UserRoleUtils.isEnabledOnUserRole(uiComponent) )
@@ -75,7 +76,7 @@ public class InputHtmlRenderer extends HtmlRenderer {
         HtmlRendererUtils.renderDisplayValueOnlyAttributes(editor, writer);
 
         String text = RendererUtils.getStringValue(context, editor);
-        writer.write( getHtmlBody( text ) );
+        writer.write( InputHtml.getHtmlBody( text ) );
 
         writer.endElement(HTML.SPAN_ELEM);
 	}
@@ -104,43 +105,9 @@ public class InputHtmlRenderer extends HtmlRenderer {
 	}
 
 	private static String htmlToPlainText(String html){
-		return getHtmlBody( html )
+		return InputHtml.getHtmlBody( html )
 				.replaceAll("<br.*>","\n")
 				.replaceAll("<.+?>", "");
-	}
-
-	private static String getHtmlBody(String html){
-		String lcText = html.toLowerCase();
-        int textLength = lcText.length();
-        int bodyStartIndex = -1;
-        while(bodyStartIndex < textLength){
-        	bodyStartIndex++;
-            bodyStartIndex = lcText.indexOf("<body", bodyStartIndex);
-            if( bodyStartIndex == -1 )
-                break; // not found.
-
-            bodyStartIndex += 5;
-            char c = lcText.charAt(bodyStartIndex);
-            if( c=='>' )
-                break;
-
-            if( c!=' ' && c!='\t' )
-                continue;
-
-            bodyStartIndex = lcText.indexOf('>', bodyStartIndex);
-            break;
-        }
-        bodyStartIndex++;
-
-        int bodyEndIndex = lcText.lastIndexOf("</body>")-1;
-
-        if( bodyStartIndex<0 || bodyEndIndex<0
-           || bodyStartIndex > bodyEndIndex
-           || bodyStartIndex>=textLength || bodyEndIndex>=textLength ){
-            return html.trim();
-        }
-
-        return html.substring(bodyStartIndex, bodyEndIndex+1).trim();
 	}
 
 	private void encodeEndNormalMode(FacesContext context, InputHtml editor) throws IOException {
