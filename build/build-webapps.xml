@@ -37,7 +37,7 @@
             </fileset>
             <fileset dir="${optional.lib.dir}">
                 <include name="*.jar"/>
-            </fileset>            
+            </fileset>
         </path>
 
     </target>
@@ -77,12 +77,13 @@
             </fileset>
             <fileset dir="${optional.lib.dir}">
                 <include name="log4j*.jar"/>
-                <include name="struts.jar"/>     
+                <include name="struts.jar"/>
                 <include name="commons*.jar"/>
+                <include name="jakarta*.jar"/>
             </fileset>
 
         </copy>
-        
+
         <copy todir="${build.web.lib}" file="${myfaces.jar}"/>
 
         <war warfile="${war.file}" webxml="${web.dir}/WEB-INF/web.xml">
