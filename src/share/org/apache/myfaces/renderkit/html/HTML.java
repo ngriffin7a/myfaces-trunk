@@ -20,7 +20,7 @@ import org.apache.myfaces.util.ArrayUtils;
 
 /**
  * Constant declarations for HTML rendering.
- * @author Manfred Geiler (latest modification by $Author$)
+ * @author Manfred Geiler
  * @author Anton Koinov
  * @version $Revision$ $Date$
  */
@@ -133,6 +133,10 @@ public final class HTML
         (String[]) ArrayUtils.concat(
             EVENT_HANDLER_ATTRIBUTES_WITHOUT_ONCLICK,
             UNIVERSAL_ATTRIBUTES);
+    public static final String[] COMMON_PASSTROUGH_ATTRIBUTES_WITHOUT_ONCLICK_WITHOUT_STYLE =
+        (String[]) ArrayUtils.concat(
+            EVENT_HANDLER_ATTRIBUTES_WITHOUT_ONCLICK,
+            UNIVERSAL_ATTRIBUTES_WITHOUT_STYLE);
     public static final String[] COMMON_FIELD_PASSTROUGH_ATTRIBUTES_WITHOUT_DISABLED =
         (String[]) ArrayUtils.concat(
             COMMON_PASSTROUGH_ATTRIBUTES,
@@ -175,6 +179,10 @@ public final class HTML
         (String[]) ArrayUtils.concat(
             ANCHOR_ATTRIBUTES,
             COMMON_PASSTROUGH_ATTRIBUTES_WITHOUT_STYLE);
+    public static final String[] ANCHOR_PASSTHROUGH_ATTRIBUTES_WITHOUT_ONCLICK_WITHOUT_STYLE =
+        (String[]) ArrayUtils.concat(
+            ANCHOR_ATTRIBUTES,
+            COMMON_PASSTROUGH_ATTRIBUTES_WITHOUT_ONCLICK_WITHOUT_STYLE);
 
     // <form>
     public static final String ACCEPT_CHARSET_ATTR = "accept-charset";

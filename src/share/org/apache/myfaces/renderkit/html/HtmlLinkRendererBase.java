@@ -35,7 +35,7 @@ import java.net.URLEncoder;
 import java.util.Iterator;
 
 /**
- * @author Manfred Geiler (latest modification by $Author$)
+ * @author Manfred Geiler
  * @version $Revision$ $Date$
  */
 public abstract class HtmlLinkRendererBase
@@ -151,18 +151,21 @@ public abstract class HtmlLinkRendererBase
     {
         ResponseWriter writer = facesContext.getResponseWriter();
 
+        String[] anchorAttrsToRender;
         if (JavascriptUtils.isJavascriptAllowed(facesContext.getExternalContext()))
         {
             renderJavaScriptAnchorStart(facesContext, writer, component, clientId);
+            anchorAttrsToRender = HTML.ANCHOR_PASSTHROUGH_ATTRIBUTES_WITHOUT_ONCLICK_WITHOUT_STYLE;
         }
         else
         {
             renderNonJavaScriptAnchorStart(facesContext, writer, component, clientId);
+            anchorAttrsToRender = HTML.ANCHOR_PASSTHROUGH_ATTRIBUTES_WITHOUT_STYLE;
         }
 
         writer.writeAttribute(HTML.ID_ATTR, clientId, null);
         HtmlRendererUtils.renderHTMLAttributes(writer, component,
-                                               HTML.ANCHOR_PASSTHROUGH_ATTRIBUTES_WITHOUT_STYLE);
+                                               anchorAttrsToRender);
         HtmlRendererUtils.renderHTMLAttribute(writer, HTML.STYLE_ATTR, HTML.STYLE_ATTR,
                                               style);
         HtmlRendererUtils.renderHTMLAttribute(writer, HTML.STYLE_CLASS_ATTR, HTML.STYLE_CLASS_ATTR,
