@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * @author Thomas Spiegl (latest modification by $Author$)
+ * @author Thomas Spiegl
  * @version $Revision$ $Date$
  */
 public class JspTilesViewHandlerImpl
@@ -145,6 +145,22 @@ public class JspTilesViewHandlerImpl
         try
         {
             definition = getDefinitionsFactory().getDefinition(tilesId, request, servletContext);
+            
+            if (definition == null)
+            {
+                /**
+                 * Check for the definition without the leading '/' character.  Allows user to specify Tiles definitions without a 
+                 * leading '/' char.
+                 */
+                int slashIndex = tilesId.indexOf("/");
+                if (slashIndex == 0)
+                {
+                    tilesId = tilesId.substring(1);
+                    System.out.println("##### tilesId = " + tilesId);
+                    definition = getDefinitionsFactory().getDefinition(tilesId, request, servletContext);
+                }
+            }
+            
             if (definition != null)
             {
                 // if tiles-definition could be found set ComponentContext & viewId
