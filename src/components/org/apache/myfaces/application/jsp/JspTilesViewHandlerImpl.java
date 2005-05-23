@@ -47,9 +47,11 @@ public class JspTilesViewHandlerImpl
     private ViewHandler _viewHandler;
 
     private static final Log log = LogFactory.getLog(JspTilesViewHandlerImpl.class);
-    private static final String TILES_EXTENSION = ".tiles";
+    private static final String TILES_DEF_EXT = ".tiles";
     private static final String TILES_DEF_ATTR = "tiles-definitions";
+    private static final String TILES_EXT_ATTR = "tiles-extension";
 
+    private String tilesExtension = TILES_DEF_EXT;
     private DefinitionsFactory _definitionsFactory;
 
     public JspTilesViewHandlerImpl(ViewHandler viewHandler)
@@ -70,6 +72,16 @@ public class JspTilesViewHandlerImpl
                           + TILES_DEF_ATTR + " param in your web.xml");
                 return null;
             }
+
+            String tilezExtension = context.getInitParameter(TILES_EXT_ATTR);
+            if (tilezExtension != null)
+            {
+                tilesExtension = tilezExtension;
+                if (log.isDebugEnabled())
+                {
+                log.debug("Using non-default tiles extension of: " + tilesExtension);
+                }
+            } 
 
             DefinitionsFactoryConfig factoryConfig = new DefinitionsFactoryConfig();
             factoryConfig.setDefinitionConfigFiles(tilesDefinitions);
@@ -132,11 +144,11 @@ public class JspTilesViewHandlerImpl
         int idx = tilesId.lastIndexOf('.');
         if (idx > 0)
         {
-            tilesId = tilesId.substring(0, idx) + TILES_EXTENSION;
+            tilesId = tilesId.substring(0, idx) + tilesExtension;
         }
         else
         {
-            tilesId = tilesId  + TILES_EXTENSION;
+            tilesId = tilesId  + tilesExtension;
         }
         ServletRequest request = (ServletRequest)externalContext.getRequest();
         ServletContext servletContext = (ServletContext)externalContext.getContext();
@@ -156,7 +168,6 @@ public class JspTilesViewHandlerImpl
                 if (slashIndex == 0)
                 {
                     tilesId = tilesId.substring(1);
-                    System.out.println("##### tilesId = " + tilesId);
                     definition = getDefinitionsFactory().getDefinition(tilesId, request, servletContext);
                 }
             }
