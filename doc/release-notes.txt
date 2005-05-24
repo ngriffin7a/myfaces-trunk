@@ -9,6 +9,7 @@ Changes in Release 1.0.10
 * closed MYFACES-177
 * closed MYFACES-199
 * closed MYFACES-209
+* closed MYFACES-241
 * closed MYFACES-242
 ----------------------------------------------------------------------
 Changes in Release 1.0.9

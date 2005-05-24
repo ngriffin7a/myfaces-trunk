@@ -16,13 +16,17 @@ components.
         <section>
             <title>Description</title>
             <p>
-                [TO DO]
+                The forceId attribute allows you to set
+                the id of a component to a fixed value.
+                This can be useful if you want to heavily use
+                (or reuse your preexisting) JavaScript libraries
+                or CSS-styles.
             </p>
         </section>
         <!-- screen shot -->
         <section>
             <title>Screen Shot</title>
-            <p>[TO DO]</p> <!-- replace with either a figure or Not Available -->
+            <p>Not available</p> <!-- replace with either a figure or Not Available -->
             <!--
             <figure src="jscookmenu.png" alt="jscookmenu"/>
             -->
@@ -32,24 +36,11 @@ components.
             <title>API</title>
             <table>
                 <tr>
-                    <td>component-family</td>
-                    <td>[TODO]</td>
-                </tr>
-                <tr>
-                    <td>renderer-type</td>
-                    <td>[TODO]</td>
-                </tr>
-                <tr>
-                    <td>component-class</td>
-                    <td>[TODO]</td>
-                </tr>
-                <tr>
-                    <td>renderer-class</td>
-                    <td>[TODO]</td>
-                </tr>
-                <tr>
-                    <td>tag-class</td>
-                    <td>[TODO]</td>
+                    <td>attribute forceId</td>
+                    <td>On all MyFaces extended and custom components (all components
+                        in the extended taglib, usually prefixed with an 'x')
+                        the forceId attribute can be set to the desired id-value.
+                    </td>
                 </tr>
             </table>
         </section>
@@ -61,7 +52,12 @@ components.
         <!-- Instructions -->
         <section>
             <title>Instructions</title>
-            <p>[TO DO]</p>
+            <p>
+                An example: if you want to use the panelGroup
+                control with a predefined id, you include the markup:
+                &lt;x:panelGroup forceId="yourIdValue" /&gt;
+                into your JSP-file.
+            </p>
         </section>
     </body>
     <footer>
