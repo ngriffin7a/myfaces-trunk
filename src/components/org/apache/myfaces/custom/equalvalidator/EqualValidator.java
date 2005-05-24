@@ -61,17 +61,21 @@ public class EqualValidator implements Validator, StateHolder {
 		Object value)
 		throws ValidatorException {
 
-			if (facesContext == null) throw new NullPointerException("facesContext");
-			if (uiComponent == null) throw new NullPointerException("uiComponent");
+	    if (facesContext == null) throw new NullPointerException("facesContext");
+        if (uiComponent == null) throw new NullPointerException("uiComponent");
 
-			if (value == null)
-			{
-				return;
+		if (value == null)
+		{
+		    return;
 		}
 
 		UIInput foreignComp = (UIInput) uiComponent.getParent().findComponent(_for);
-		if(foreignComp==null)
-			throw new FacesException("Unable to find component '" + _for + "' (calling findComponent on component '" + uiComponent.getId() + "')");
+        if(foreignComp==null)
+            throw new FacesException("Unable to find component '" + _for + "' (calling findComponent on component '" + uiComponent.getId() + "')");
+
+        if (foreignComp.isRequired() && foreignComp.getValue()== null ) {
+            return;
+        }
 
 		Object[] args = {value.toString(),(foreignComp.getValue()==null) ? foreignComp.getId():foreignComp.getValue().toString()};
 

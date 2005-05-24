@@ -326,7 +326,7 @@ public class HtmlDataTable
             }
             else if (List.class.isAssignableFrom(type))
             {
-                vb.setValue(context, (List)dm.getWrappedData());
+                vb.setValue(context, dm.getWrappedData());
             }
             else if (OBJECT_ARRAY_CLASS.isAssignableFrom(type))
             {
@@ -531,7 +531,7 @@ public class HtmlDataTable
         values[6] = _renderedIfEmpty;
         values[7] = _rowCountVar;
         values[8] = _rowIndexVar;
-        return ((Object) (values));
+        return values;
     }
 
 
@@ -603,7 +603,7 @@ public class HtmlDataTable
         }
         else
         {
-            return new _SerializableScalarDataModel(getFirst(), getRows(), (Object)value);
+            return new _SerializableScalarDataModel(getFirst(), getRows(), value);
         }
     }
 
