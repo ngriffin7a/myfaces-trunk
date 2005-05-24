@@ -17,6 +17,7 @@ package org.apache.myfaces.custom.calendar;
 
 import org.apache.myfaces.component.UserRoleAware;
 import org.apache.myfaces.taglib.html.HtmlInputTagBase;
+import org.apache.myfaces.renderkit.html.HTML;
 
 import javax.faces.component.UIComponent;
 
@@ -27,6 +28,17 @@ import javax.faces.component.UIComponent;
 public class HtmlInputCalendarTag
         extends HtmlInputTagBase
 {
+    private String _accesskey;
+    private String _align;
+    private String _alt;
+    private String _disabled;
+    private String _maxlength;
+    private String _onblur;
+    private String _onchange;
+    private String _onfocus;
+    private String _onselect;
+    private String _size;
+    private String _tabindex;
     //private static final Log log = LogFactory.getLog(HtmlInputCalendarTag.class);
 
     public String getComponentType()
@@ -102,6 +114,19 @@ public class HtmlInputCalendarTag
     {
         super.setProperties(component);
 
+        setStringProperty(component, HTML.ACCESSKEY_ATTR, _accesskey);
+        setStringProperty(component, HTML.ALIGN_ATTR, _align);
+        setStringProperty(component, HTML.ALT_ATTR, _alt);
+        setBooleanProperty(component, HTML.DISABLED_ATTR, _disabled);
+        setIntegerProperty(component, HTML.MAXLENGTH_ATTR, _maxlength);
+        setStringProperty(component, HTML.ONBLUR_ATTR, _onblur);
+        setStringProperty(component, HTML.ONCHANGE_ATTR, _onchange);
+        setStringProperty(component, HTML.ONFOCUS_ATTR, _onfocus);
+        setStringProperty(component, HTML.ONSELECT_ATTR, _onselect);
+        setIntegerProperty(component, HTML.SIZE_ATTR, _size);
+        setStringProperty(component, HTML.TABINDEX_ATTR, _tabindex);
+
+
         setStringProperty(component, "monthYearRowClass", _monthYearRowClass);
         setStringProperty(component, "weekRowClass", _weekRowClass);
         setStringProperty(component, "dayCellClass", _dayCellClass);
@@ -118,7 +143,6 @@ public class HtmlInputCalendarTag
         setStringProperty(component,"popupSelectMonthMessage",_popupSelectMonthMessage);
         setStringProperty(component,"popupSelectYearMessage",_popupSelectYearMessage);
         setStringProperty(component,"popupSelectDateMessage",_popupSelectDateMessage);
-
 
         setStringProperty(component, UserRoleAware.ENABLED_ON_USER_ROLE_ATTR, _enabledOnUserRole);
         setStringProperty(component, UserRoleAware.VISIBLE_ON_USER_ROLE_ATTR, _visibleOnUserRole);
@@ -212,5 +236,60 @@ public class HtmlInputCalendarTag
     public void setPopupWeekString(String popupWeekString)
     {
         _popupWeekString = popupWeekString;
+    }
+
+    public void setAccesskey(String accesskey)
+    {
+        _accesskey = accesskey;
+    }
+
+    public void setAlign(String align)
+    {
+        _align = align;
+    }
+
+    public void setAlt(String alt)
+    {
+        _alt = alt;
+    }
+
+    public void setDisabled(String disabled)
+    {
+        _disabled = disabled;
+    }
+
+    public void setMaxlength(String maxlength)
+    {
+        _maxlength = maxlength;
+    }
+
+    public void setOnblur(String onblur)
+    {
+        _onblur = onblur;
+    }
+
+    public void setOnchange(String onchange)
+    {
+        _onchange = onchange;
+    }
+
+    public void setOnfocus(String onfocus)
+    {
+        _onfocus = onfocus;
+    }
+
+    public void setOnselect(String onselect)
+    {
+        _onselect = onselect;
+    }
+
+    public void setSize(String size)
+    {
+        _size = size;
+    }
+
+    public void setTabindex(String tabindex)
+    {
+        _tabindex = tabindex;
     }
 }

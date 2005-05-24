@@ -196,15 +196,23 @@ function jscalendarConstructDate(d,m,y){
 }
 
 function jscalendarCloseCalendar() {
-	jscalendarHideCalendar();
-	
-	if( jscalendarMyFacesCtlType!="x:inputDate" )
-		jscalendarCtlToPlaceValue.value = jscalendarConstructDate(jscalendarDateSelected,jscalendarMonthSelected,jscalendarYearSelected)
-	else{
-		document.getElementById(jscalendarMyFacesInputDateClientId+".day").value = jscalendarDateSelected;
-		document.getElementById(jscalendarMyFacesInputDateClientId+".month").value = jscalendarMonthSelected+1;
-		document.getElementById(jscalendarMyFacesInputDateClientId+".year").value = jscalendarYearSelected;
-	}
+    jscalendarHideCalendar();
+
+    if( jscalendarMyFacesCtlType!="x:inputDate" )
+    {
+        jscalendarCtlToPlaceValue.value = jscalendarConstructDate(jscalendarDateSelected,jscalendarMonthSelected,jscalendarYearSelected)
+        var onchange=jscalendarCtlToPlaceValue.getAttribute("onchange");
+        if(onchange)
+        {
+            eval(onchange);
+        }
+    }
+    else
+    {
+        document.getElementById(jscalendarMyFacesInputDateClientId+".day").value = jscalendarDateSelected;
+        document.getElementById(jscalendarMyFacesInputDateClientId+".month").value = jscalendarMonthSelected+1;
+        document.getElementById(jscalendarMyFacesInputDateClientId+".year").value = jscalendarYearSelected;
+    }
 }
 
 /*** Month Pulldown	***/

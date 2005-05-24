@@ -526,7 +526,9 @@
         &ui_input_attributes;
         &html_event_handler_attributes;
         &html_universal_attributes;
+        &html_input_attributes;
         &user_role_attributes;
+        &ext_forceId_attribute;
         <attribute>
             <name>monthYearRowClass</name>
             <required>false</required>
