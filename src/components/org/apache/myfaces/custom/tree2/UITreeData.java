@@ -120,10 +120,10 @@ public class UITreeData extends UIComponentBase implements NamingContainer
             setNodeId(childEvent.getNodeId());
             FacesEvent nodeEvent = childEvent.getFacesEvent();
             nodeEvent.getComponent().broadcast(nodeEvent);
-            setNodeId("666:666:666");
-            //setNodeId(currNodeId);
+            setNodeId(currNodeId);
             return;
-        } else
+        } 
+        else
         {
             super.broadcast(event);
             return;
