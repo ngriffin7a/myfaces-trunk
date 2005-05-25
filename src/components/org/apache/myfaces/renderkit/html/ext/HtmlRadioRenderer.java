@@ -137,6 +137,7 @@ public class HtmlRadioRenderer
                     uiSelectOne,
                     itemStrValue,
                     selectItem.getLabel(),
+                    selectItem.isDisabled(),
                     currentValue == null && itemValue == null ||
                     currentValue != null && currentValue.equals(itemValue), false);
         writer.endElement(HTML.LABEL_ELEM);

@@ -93,6 +93,7 @@ public class HtmlRadioRendererBase
         {
             SelectItem selectItem = (SelectItem)it.next();
             String itemStrValue = RendererUtils.getConvertedStringValue(facesContext, selectOne, converter, selectItem.getValue());
+            boolean itemDisabled = selectItem.isDisabled();
 
             writer.write("\t\t");
             if (pageDirectionLayout) writer.startElement(HTML.TR_ELEM, selectOne);
@@ -102,6 +103,7 @@ public class HtmlRadioRendererBase
                         selectOne,
                         itemStrValue,
                         selectItem.getLabel(),
+                        itemDisabled,
                         currentValueStr.equals(itemStrValue),
                         false);
             writer.endElement(HTML.LABEL_ELEM);
@@ -140,6 +142,7 @@ public class HtmlRadioRendererBase
                                UIInput uiComponent,
                                String value,
                                String label,
+                               boolean disabled,
                                boolean checked, boolean renderId)
             throws IOException
     {
@@ -150,6 +153,10 @@ public class HtmlRadioRendererBase
         writer.startElement(HTML.INPUT_ELEM, uiComponent);
         writer.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_RADIO, null);
         writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
+        
+        if (disabled) {
+            writer.writeAttribute(HTML.DISABLED_ATTR, HTML.DISABLED_ATTR, null);
+        }
 
         if (renderId) {
             writer.writeAttribute(HTML.ID_ATTR, clientId, null);
