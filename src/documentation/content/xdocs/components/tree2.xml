@@ -56,6 +56,7 @@ components.
             </table>
         </section>
         <!-- Syntax -->
+<!--        
         <section>
             <title>Syntax</title>
             <note label="&lt;x:tree2>">
@@ -72,10 +73,17 @@ components.
                 <code>varNodeToggler</code><br/>
             </note>
         </section>
+-->        
+        <!-- Usage -->
+        <section>
+            <title>Usage</title>
+            <p>[TODO]</p>
+        </section>
+        
         <!-- Instructions -->
         <section>
-            <title>Instructions</title>
-            <p>[TO DO]</p>
+            <title>Additional Informaiton</title>
+            <p>[TODO]</p>
         </section>
     </body>
     <footer>

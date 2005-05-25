@@ -12,16 +12,16 @@
         <section>
             <title>Description</title>
             <p>
-                [TO DO]
+                The newspaperTable tag allows a long, narrow table to be wrapped
+                so that it becomes a short, wide table. This allows more information
+                to be shown on a single screen. This is commonly used to present
+                checkboxes for a long list of items.
             </p>
         </section>
         <!-- screen shot -->
         <section>
             <title>Screen Shot</title>
-            <p>[TO DO]</p> <!-- replace with either a figure or Not Available -->
-            <!--
-            <figure src="jscookmenu.png" alt="jscookmenu"/>
-            -->
+            <figure src="images/newspaperTable.png" alt="Tree2"/>
         </section>
         <!-- API -->
         <section>
@@ -49,16 +49,29 @@
                 </tr>
             </table>
         </section>
-        <!-- Syntax -->
+
+        <!-- Usage -->
         <section>
-            <title>Syntax</title>
-            <p>[TO DO]</p>
+            <title>Usage</title>
+            <source>
+            &lt;x:newspaperTable newspaperColumns="3"  value="#{addressBB.states}" var="state">
+                &lt;f:facet name="spacer">&lt;f:verbatim>&amp;#160;&lt;/f:verbatim>&lt;/f:facet>
+                &lt;h:column>
+                    &lt;h:outputText value="#{state.abbr}"/>
+                &lt;/h:column>
+                &lt;h:column>
+                    &lt;h:outputText value="#{state.name}"/>
+                &lt;/h:column>
+            &lt;/x:newspaperTable>
+            </source>
         </section>
-        <!-- Instructions -->
+        
+        <!-- Additional Information -->
         <section>
-            <title>Instructions</title>
-            <p>[TO DO]</p>
-        </section>
+            <title>Additional Informaiton</title>
+            <p>None.</p>
+        </section>        
+
     </body>
     <footer>
     	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />

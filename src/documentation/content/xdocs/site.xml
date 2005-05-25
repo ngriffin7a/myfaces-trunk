@@ -40,6 +40,7 @@
          <validateRegExpr label="validateRegExpr" href="validateRegExpr.html"/>
          <validateEmail label="validateEmail" href="validateEmail.html"/>
          <validateEqual label="validateEqual" href="validateEqual.html"/>
+         <newspaperTable label="Newspaper Table" href="newspaperTable.html"/>
          <aliasBean label="Alias Bean" href="aliasBean.html"/>
          <Buffer label="Buffer" href="buffer.html"/>
          <fileUpload label="File Upload" href="fileUpload.html"/>
@@ -55,7 +56,6 @@
          <rssTicker label="RSS Ticker" href="rssTicker.html"/>
          <panelStack label="Panel Stack" href="panelStack.html"/>
          <stylesheet label="Style Sheet" href="stylesheet.html"/>
-         <newspaperTable label="Newspaper Table" href="newspaperTable.html"/>
          <forceId label="forceId" href="forceId.html"/>
      </components>
     <community href="community/" label="Community" tab="community">

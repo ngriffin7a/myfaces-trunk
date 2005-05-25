@@ -55,16 +55,19 @@ components.
                 </tr>
             </table>
         </section>
-        <!-- Syntax -->
+
+        <!-- Usage -->
         <section>
-            <title>Syntax</title>
-            <p>[TO DO]</p>
+            <title>Usage</title>
+            <p>[TODO]</p>
         </section>
-        <!-- Instructions -->
+        
+        <!-- Additional Information -->
         <section>
-            <title>Instructions</title>
-            <p>[TO DO]</p>
-        </section>
+            <title>Additional Informaiton</title>
+            <p>[TODO]</p>
+        </section>        
+
     </body>
     <footer>
     	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
