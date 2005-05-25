@@ -74,18 +74,12 @@ public final class HtmlRendererUtils {
         Map paramMap = facesContext.getExternalContext()
                 .getRequestParameterMap();
         String clientId = component.getClientId(facesContext);
-        if (paramMap.containsKey(clientId)) {
-            //request parameter found, set submittedValue
-            ((EditableValueHolder) component).setSubmittedValue(paramMap
-                    .get(clientId));
-        } else {
-            //request parameter not found, nothing to decode - set submitted value to empty
-            //if the component has not been disabled
-            if(!isDisabledOrReadOnly(component))
-            {
-                ((EditableValueHolder) component).setSubmittedValue( RendererUtils.EMPTY_STRING );
-            }
-        }
+
+        if(isDisabledOrReadOnly(component))
+            return;
+
+        ((EditableValueHolder) component).setSubmittedValue(paramMap
+                .get(clientId));
     }
 
     /**
