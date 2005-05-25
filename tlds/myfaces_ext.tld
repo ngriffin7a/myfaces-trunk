@@ -206,6 +206,22 @@
                 or when isRowAvailable returns false for the previous row.
             </description>
         </attribute>
+        <attribute>
+            <name>rowOnMouseOver</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                Defines a JavaScript onmouseover event handler for each table row
+            </description>
+        </attribute>
+        <attribute>
+            <name>rowOnMouseOut</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+                Defines a JavaScript onmouseout event handler for each table row
+            </description>
+        </attribute>
      </tag>
 
     <!-- inputHidden -->
@@ -2031,7 +2047,7 @@
             A tag that defines a new bean (alias) with a given value.
             This allows you to design a subform with a generic (fictive) beans and to include it in all the pages where you use it.
 			You just need to make an alias to the real bean named after the generic bean before including the subform.
-			
+
 			When used within an aliasBeansScope tag, this tag adds the alias to the aliasBeansScope.
 			This makes configuration with multiple aliasBeans easier to write.
         </description>
@@ -2066,7 +2082,7 @@
         <description>
             This is like an aliasBean tag, but instead of the alias/value attributes, you configure the aliases
             by adding aliasBean tags in the body.
-            
+
             The aliasBeans should be declared right after this tag.
         </description>
         <attribute>

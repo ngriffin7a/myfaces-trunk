@@ -61,7 +61,8 @@ public class HtmlDataTable
 
     private String _sortColumn = null;
     private Boolean _sortAscending = null;
-
+    private String _rowOnMouseOver = null;
+    private String _rowOnMouseOut = null;
 
     public void setValue(Object value)
     {
@@ -514,7 +515,7 @@ public class HtmlDataTable
     public Object saveState(FacesContext context)
     {
         boolean preserveSort = isPreserveSort();
-        Object values[] = new Object[9];
+        Object values[] = new Object[11];
         values[0] = super.saveState(context);
         values[1] = _preserveDataModel;
         if (isPreserveDataModel())
@@ -531,6 +532,8 @@ public class HtmlDataTable
         values[6] = _renderedIfEmpty;
         values[7] = _rowCountVar;
         values[8] = _rowIndexVar;
+        values[9] = _rowOnMouseOver;
+        values[10] = _rowOnMouseOut;
         return values;
     }
 
@@ -556,6 +559,8 @@ public class HtmlDataTable
         _renderedIfEmpty = (Boolean)values[6];
         _rowCountVar = (String)values[7];
         _rowIndexVar = (String)values[8];
+        _rowOnMouseOver = (String)values[9];
+        _rowOnMouseOut = (String)values[10];
 
         // restore state means component was already rendered at least once:
         _firstTimeRendered = false;
@@ -654,9 +659,45 @@ public class HtmlDataTable
         return v != null ? v.booleanValue() : DEFAULT_SORTASCENDING;
     }
 
+    public void setRowOnMouseOver(String rowOnMouseOver)
+    {
+        _rowOnMouseOver = rowOnMouseOver;
+        // update model is necessary here, because processUpdates is never called
+        // reason: HtmlCommandSortHeader.isImmediate() == true
+        ValueBinding vb = getValueBinding("rowOnMouseOver");
+        if (vb != null)
+        {
+            vb.setValue(getFacesContext(), _rowOnMouseOver);
+            _rowOnMouseOver = null;
+        }
+    }
 
+    public String getRowOnMouseOver()
+    {
+        if (_rowOnMouseOver != null) return _rowOnMouseOver;
+        ValueBinding vb = getValueBinding("rowOnMouseOver");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
 
+    public void setRowOnMouseOut(String rowOnMouseOut)
+    {
+        _rowOnMouseOut = rowOnMouseOut;
+        // update model is necessary here, because processUpdates is never called
+        // reason: HtmlCommandSortHeader.isImmediate() == true
+        ValueBinding vb = getValueBinding("rowOnMouseOut");
+        if (vb != null)
+        {
+            vb.setValue(getFacesContext(), _rowOnMouseOut);
+            _rowOnMouseOut = null;
+        }
+    }
 
+    public String getRowOnMouseOut()
+    {
+        if (_rowOnMouseOut != null) return _rowOnMouseOut;
+        ValueBinding vb = getValueBinding("rowOnMouseOut");
+        return vb != null ? (String)vb.getValue(getFacesContext()) : null;
+    }
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 

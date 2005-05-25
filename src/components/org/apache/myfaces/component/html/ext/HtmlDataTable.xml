@@ -41,4 +41,12 @@
         <name>previousRowDataVar</name>
         <type>java.lang.String</type>
     </field>
+    <field>
+        <name>rowOnMouseOver</name>
+        <type>java.lang.String</type>
+    </field>
+    <field>
+        <name>rowOnMouseOut</name>
+        <type>java.lang.String</type>
+    </field>
 </component>

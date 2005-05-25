@@ -35,7 +35,7 @@
         &nbsp;&nbsp;&nbsp;<h:outputLink value="dataScroller.jsf" ><f:verbatim>Data Scroller</f:verbatim></h:outputLink><br/>            
         &nbsp;&nbsp;&nbsp;<h:outputLink value="sortTable.jsf" ><f:verbatim>Sortable</f:verbatim></h:outputLink><br/>            
         &nbsp;&nbsp;&nbsp;<h:outputLink value="pagedSortTable.jsf" ><f:verbatim>Paged and Sortable</f:verbatim></h:outputLink><br/>            
-        &nbsp;&nbsp;&nbsp;<h:outputLink value="openDataTable.jsf" ><f:verbatim>Paged and Sortable (dynamic number of columns)</f:verbatim></h:outputLink><br/>
+        &nbsp;&nbsp;&nbsp;<h:outputLink value="openDataTable.jsf" ><f:verbatim>Paged and Sortable (dynamic number of columns; mouseover)</f:verbatim></h:outputLink><br/>
         <h:outputLink value="selectbox.jsf" ><f:verbatim>Select boxes</f:verbatim></h:outputLink> <br/>
         <h:outputLink value="fileupload.jsf" ><f:verbatim>File upload</f:verbatim></h:outputLink> <br/>
         <h:outputLink value="tabbedPane.jsf" ><f:verbatim>Tabbed Pane</f:verbatim></h:outputLink> <br/>
