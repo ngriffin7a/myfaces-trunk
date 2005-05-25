@@ -217,6 +217,13 @@ public class HtmlNavigationRenderer
     protected String getNavigationItemClass(HtmlPanelNavigation navPanel,
                                             HtmlCommandNavigation navItem)
     {
+        // MYFACES-117, if a styleClass is supplied for a HtmlCommandNavigation,
+        // panelNavigation active/open/normal styles for items will be overriden
+        if (navItem.getStyleClass() != null) 
+        {
+            return navItem.getStyleClass();
+        }
+        
         if (navItem.isActive())
         {
             return navPanel.getActiveItemClass();
