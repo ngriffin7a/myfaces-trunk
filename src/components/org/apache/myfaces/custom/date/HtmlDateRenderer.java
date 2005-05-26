@@ -107,6 +107,7 @@ public class HtmlDateRenderer extends HtmlRenderer {
         HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
         HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
         HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.INPUT_ATTRIBUTES);
+        HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.COMMON_FIELD_EVENT_ATTRIBUTES);
 
 		if (disabled) {
 		    writer.writeAttribute(HTML.DISABLED_ATTR, Boolean.TRUE, null);
@@ -138,6 +139,7 @@ public class HtmlDateRenderer extends HtmlRenderer {
         writer.writeAttribute(HTML.SIZE_ATTR, "1", null);
         HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.UNIVERSAL_ATTRIBUTES);
         HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.EVENT_HANDLER_ATTRIBUTES);
+        HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.COMMON_FIELD_EVENT_ATTRIBUTES);
 
         if (disabled) {
             writer.writeAttribute(HTML.DISABLED_ATTR, Boolean.TRUE, null);
