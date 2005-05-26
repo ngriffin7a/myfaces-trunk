@@ -309,7 +309,11 @@ public class VariableResolverImpl
             return obj;
         }
 
-        log.warn("Variable '" + name + "' could not be resolved.");
+        if(log.isDebugEnabled())
+        {
+            log.debug("Variable '" + name + "' could not be resolved.");
+        }
+        
         return null;
     }
 
