@@ -4,7 +4,7 @@ MyFaces TODOs
 Tasks
 -----
 You can browse all current tasks at:
-http://sourceforge.net/pm/?group_id=69709
+http://issues.apache.org/jira/secure/BrowseProject.jspa?id=10600
 
 
 TODOs (HACKs, FIXMEs, ...)

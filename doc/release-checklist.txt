@@ -3,9 +3,11 @@ Checklist for tasks to be done, when releasing of a new version
 
 - change version in build/manifest.properties, webapps/examples/inc/page_header.jsp and webapps/simple/inc/page_header.jsp
 - commit everything
-- cvs tag in format "rel_1_0_3"
+- svn tag in format "rel_1_0_3"
 - ant "clean-all"
 - ant "all"
+
+// this part of the checklist was written for a release at sourceforge and should be replaced by a new one
 - add new release at SF and set to "hidden" in the meantime
 - write some notes and paste the current release-notes as change log
 - upload files to SF
@@ -15,6 +17,8 @@ Checklist for tasks to be done, when releasing of a new version
 - send release monitor notice
 - change dynamic content on homepage
 - post news at SF
+// end of sourceforge part
+
 - post news article in wiki
 - post announcement on Sun JSF forum
 - announce on both mailing lists
