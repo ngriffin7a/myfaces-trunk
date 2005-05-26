@@ -260,7 +260,7 @@ public class HtmlResponseWriterImpl
         }
         else
         {
-            String strValue = value.toString(); //TODO: Use converter for value
+            String strValue = value.toString();
             _writer.write(' ');
             _writer.write(name);
             _writer.write("=\"");
@@ -280,7 +280,7 @@ public class HtmlResponseWriterImpl
             throw new IllegalStateException("Must be called before the start element is closed (attribute '" + name + "')");
         }
 
-        String strValue = value.toString(); //TODO: Use converter for value?
+        String strValue = value.toString();
         _writer.write(' ');
         _writer.write(name);
         _writer.write("=\"");
@@ -343,7 +343,7 @@ public class HtmlResponseWriterImpl
         if(value == null)
             return;
 
-        String strValue = value.toString(); //TODO: Use converter for value?
+        String strValue = value.toString();
 
         if (isScriptOrStyle())
         {

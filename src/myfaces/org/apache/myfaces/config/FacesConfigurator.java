@@ -584,7 +584,7 @@ public class FacesConfigurator
 
             renderKitFactory.addRenderKit(renderKitId, renderKit);
         }
-    }
+    }                                              
 
 
     private void configureLifecycle()

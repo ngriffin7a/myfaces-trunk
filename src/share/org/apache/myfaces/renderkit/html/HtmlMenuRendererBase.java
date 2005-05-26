@@ -78,32 +78,6 @@ public class HtmlMenuRendererBase
         }
     }
 
-
-    private String getStyleClass(UISelectMany component)
-    {
-        if (component instanceof HtmlSelectManyMenu)
-        {
-            return ((HtmlSelectManyMenu)component).getStyleClass();
-        }
-        else
-        {
-            return (String)component.getAttributes().get(HTML.STYLE_CLASS_ATTR);
-        }
-    }
-
-    private String getStyleClass(UISelectOne component)
-    {
-        if (component instanceof HtmlSelectOneMenu)
-        {
-            return ((HtmlSelectOneMenu)component).getStyleClass();
-        }
-        else
-        {
-            return (String)component.getAttributes().get(HTML.STYLE_CLASS_ATTR);
-        }
-    }
-
-
     public void decode(FacesContext facesContext, UIComponent uiComponent)
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, null);

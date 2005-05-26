@@ -78,8 +78,15 @@ public final class HtmlRendererUtils {
         if(isDisabledOrReadOnly(component))
             return;
 
-        ((EditableValueHolder) component).setSubmittedValue(paramMap
+        if(paramMap.containsKey(clientId))
+        {
+            ((EditableValueHolder) component).setSubmittedValue(paramMap
                 .get(clientId));
+        }
+        else
+        {
+            log.warn("There should always be a submitted value for an input if it is rendered, its form is submitted, and it is not disabled or read-only.");
+        }
     }
 
     /**
@@ -95,6 +102,10 @@ public final class HtmlRendererUtils {
                     + component.getClientId(facesContext)
                     + " is not an EditableValueHolder");
         }
+
+        if(isDisabledOrReadOnly(component))
+            return;
+
         Map paramMap = facesContext.getExternalContext()
                 .getRequestParameterMap();
         String clientId = component.getClientId(facesContext);
@@ -111,13 +122,7 @@ public final class HtmlRendererUtils {
                         .setSubmittedValue(Boolean.FALSE);
             }
         } else {
-            //request parameter not found, nothing to decode - set submitted value to empty
-            //if the component has not been disabled
-            if(!isDisabledOrReadOnly(component))
-            {
-                ((EditableValueHolder) component).setSubmittedValue( Boolean.FALSE );
-                // Necessary for unchecked chek box
-            }
+            log.warn("There should always be a submitted value for a checkbox if it is rendered, its form is submitted, and it is not disabled or read-only.");
         }
     }
 
@@ -152,17 +157,21 @@ public final class HtmlRendererUtils {
         Map paramValuesMap = facesContext.getExternalContext()
                 .getRequestParameterValuesMap();
         String clientId = component.getClientId(facesContext);
+
+        if(isDisabledOrReadOnly(component))
+            return;
+
         if (paramValuesMap.containsKey(clientId)) {
             String[] reqValues = (String[]) paramValuesMap.get(clientId);
             ((EditableValueHolder) component).setSubmittedValue(reqValues);
         } else {
-            //request parameter not found, nothing to decode - set submitted value to empty
-            //if the component has not been disabled
-            if(!isDisabledOrReadOnly(component))
-            {
-                ((EditableValueHolder) component).setSubmittedValue( RendererUtils.EMPTY_STRING );
-                // Necessary for combo box / list with no selected item
-            }
+            /* request parameter not found, nothing to decode - set submitted value to an empty array
+               as we should get here only if the component is on a submitted form, is rendered
+               and if the component is not readonly or has not been disabled.
+
+               So in fact, there must be component value at this location, but for listboxes, comboboxes etc.
+               the submitted value is not posted if no item is selected. */
+            ((EditableValueHolder) component).setSubmittedValue( new String[]{});
         }
     }
 
@@ -179,6 +188,10 @@ public final class HtmlRendererUtils {
                     + component.getClientId(facesContext)
                     + " is not an EditableValueHolder");
         }
+
+        if(isDisabledOrReadOnly(component))
+            return;
+
         Map paramMap = facesContext.getExternalContext()
                 .getRequestParameterMap();
         String clientId = component.getClientId(facesContext);
@@ -187,14 +200,8 @@ public final class HtmlRendererUtils {
             ((EditableValueHolder) component).setSubmittedValue(paramMap
                     .get(clientId));
         } else {
-            //request parameter not found, nothing to decode - set submitted value to empty
-            //if the component has not been disabled
-
-            if(!isDisabledOrReadOnly(component))
-            {
-                ((EditableValueHolder) component).setSubmittedValue( RendererUtils.EMPTY_STRING );
-                // Necessary for list with no selected item
-            }
+            //see reason for this action at decodeUISelectMany
+            ((EditableValueHolder) component).setSubmittedValue( RendererUtils.EMPTY_STRING );
         }
     }
 
