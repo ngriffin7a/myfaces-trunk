@@ -262,11 +262,6 @@ public class UIInput
         Object submittedValue = getSubmittedValue();
         if (submittedValue == null) return;
 
-        if(submittedValue instanceof String && ((String) submittedValue).length()==0)
-        {
-            submittedValue = null;
-        }
-
         Object convertedValue = getConvertedValue(context, submittedValue);
 
         if (!isValid()) return;
