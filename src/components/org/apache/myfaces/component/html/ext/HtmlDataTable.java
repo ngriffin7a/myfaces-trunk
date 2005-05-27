@@ -17,7 +17,7 @@ package org.apache.myfaces.component.html.ext;
 
 import org.apache.myfaces.component.UserRoleAware;
 import org.apache.myfaces.component.UserRoleUtils;
-import org.apache.myfaces.component.UIColumns;
+import org.apache.myfaces.custom.crosstable.UIColumns;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

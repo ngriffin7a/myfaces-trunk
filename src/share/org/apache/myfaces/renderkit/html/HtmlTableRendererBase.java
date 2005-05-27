@@ -19,7 +19,6 @@ import org.apache.myfaces.renderkit.JSFAttr;
 import org.apache.myfaces.renderkit.RendererUtils;
 import org.apache.myfaces.util.ArrayUtils;
 import org.apache.myfaces.util.StringUtils;
-import org.apache.myfaces.component.UIColumns;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -135,22 +134,7 @@ public class HtmlTableRendererBase extends HtmlRenderer
                 UIComponent child = (UIComponent) children.get(j);
                 if(child.isRendered())
                 {
-                    if (child instanceof UIColumn)
-                    {
-                        String columnStyle = styles.getColumnStyle(j);
-                          renderColumnBody(facesContext, writer, uiData, child, columnStyle);
-                    }
-                    else if (child instanceof UIColumns)
-                    {
-                        UIColumns columns = (UIColumns) child;
-                        for (int k = 0, colSize = columns.getRowCount(); k < colSize; k++)
-                        {
-                            columns.setRowIndex(k);
-                            String columnStyle = styles.getColumnStyle(j);
-                            renderColumnBody(facesContext, writer, uiData, child, columnStyle);
-                        }
-                        columns.setRowIndex(-1);
-                    }
+                	encodeColumnChild(facesContext, writer, uiData, child, styles.getColumnStyle(j));
                 }
             }
             renderRowEnd(facesContext, writer, uiData);
@@ -159,6 +143,15 @@ public class HtmlTableRendererBase extends HtmlRenderer
         }
         writer.endElement(HTML.TBODY_ELEM);
     }
+
+	protected void encodeColumnChild(FacesContext facesContext, ResponseWriter writer, 
+	    UIData uiData, UIComponent component, String columnStyle) throws IOException
+	{
+        if (component instanceof UIColumn)
+        {
+			renderColumnBody(facesContext, writer, uiData, component, columnStyle);
+        }
+	}
 
     /**
      * Renders the body of a given <code>UIColumn</code> (everything but the header and footer facets).
@@ -292,23 +285,10 @@ public class HtmlTableRendererBase extends HtmlRenderer
             UIComponent uiComponent = (UIComponent) it.next();
             if(uiComponent.isRendered())
             {
-              if (uiComponent instanceof UIColumn)
-              {
-                  colspan++;
+              	colspan += determineChildColSpan(uiComponent);
                   if (!hasColumnFacet)
                   {
-                      hasColumnFacet = header ? ((UIColumn) uiComponent).getHeader() != null : ((UIColumn) uiComponent)
-                              .getFooter() != null;
-                  }
-              }
-              else if (uiComponent instanceof UIColumns)
-              {
-                  UIColumns columns = (UIColumns) uiComponent;
-                  colspan += columns.getRowCount();
-                  if (!hasColumnFacet)
-                  {
-                      hasColumnFacet = header ? columns.getHeader() != null : columns.getFooter() != null;
-                  }
+              	  	hasColumnFacet = hasFacet(header, uiComponent); 
               }
             }
         }
@@ -343,6 +323,30 @@ public class HtmlTableRendererBase extends HtmlRenderer
     }
 
 	/**
+	 * @param header
+	 * @param uiComponent
+	 * @return
+	 */
+	protected boolean hasFacet(boolean header, UIComponent uiComponent)
+	{
+		if (uiComponent instanceof UIColumn)
+		{
+		  	UIColumn uiColumn = (UIColumn) uiComponent;
+		  	return header ? uiColumn.getHeader() != null : uiColumn.getFooter() != null;
+		}
+		return false;
+	}
+	
+	protected int determineChildColSpan(UIComponent uiComponent)
+	{
+		if (uiComponent instanceof UIColumn)
+		{
+		    return 1;
+		}
+		return 0;
+	}
+
+    /**
 	 * Renders the header row of the table being rendered.
 	 * @param facesContext the <code>FacesContext</code>.
 	 * @param writer the <code>ResponseWriter</code>.
@@ -442,6 +446,15 @@ public class HtmlTableRendererBase extends HtmlRenderer
             UIComponent uiComponent = (UIComponent) it.next();
             if(uiComponent.isRendered())
             {
+                renderColumnChildHeaderOrFooterRow(facesContext, writer, uiComponent, styleClass, header);
+            }
+        }
+        writer.endElement(HTML.TR_ELEM);
+    }
+
+    protected void renderColumnChildHeaderOrFooterRow(FacesContext facesContext, 
+        ResponseWriter writer, UIComponent uiComponent, String styleClass, boolean header) throws IOException
+    {
               if (uiComponent instanceof UIColumn)
               {
                   if (header)
@@ -455,28 +468,6 @@ public class HtmlTableRendererBase extends HtmlRenderer
                           ((UIColumn) uiComponent).getFooter(), styleClass, 0);
                   }
               }
-              else if (uiComponent instanceof UIColumns)
-              {
-                  UIColumns columns = (UIColumns) uiComponent;
-                  for (int i = 0, size = columns.getRowCount(); i < size; i++)
-                  {
-                      columns.setRowIndex(i);
-                      if (header)
-                      {
-                          renderColumnHeaderCell(facesContext, writer, columns, columns.getHeader(),
-                              styleClass, 0);
-                      }
-                      else
-                      {
-                          renderColumnFooterCell(facesContext, writer, columns, columns.getFooter(),
-                              styleClass, 0);
-                      }
-                  }
-                  columns.setRowIndex(-1);
-              }
-            }
-        }
-        writer.endElement(HTML.TR_ELEM);
     }
 
     /**

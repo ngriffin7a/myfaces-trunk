@@ -17,7 +17,6 @@ package org.apache.myfaces.custom.crosstable;
 
 import javax.faces.component.UIComponent;
 
-import org.apache.myfaces.component.UIColumns;
 import org.apache.myfaces.renderkit.JSFAttr;
 import org.apache.myfaces.taglib.html.HtmlComponentBodyTagBase;
 
@@ -27,33 +26,33 @@ import org.apache.myfaces.taglib.html.HtmlComponentBodyTagBase;
  */
 public class HtmlColumnsTag extends HtmlComponentBodyTagBase
 {
-  private String mVar;
+    private String mVar;
 
-  /**
-   * @see javax.faces.webapp.UIComponentTag#getComponentType()
-   */
-  public String getComponentType()
-  {
-    return UIColumns.COMPONENT_TYPE;
-  }
+    /**
+     * @see javax.faces.webapp.UIComponentTag#getComponentType()
+     */
+    public String getComponentType()
+    {
+        return UIColumns.COMPONENT_TYPE;
+    }
 
-  /**
-   * @see javax.faces.webapp.UIComponentTag#getRendererType()
-   */
-  public String getRendererType()
-  {
-    return null;
-  }
+    /**
+     * @see javax.faces.webapp.UIComponentTag#getRendererType()
+     */
+    public String getRendererType()
+    {
+        return null;
+    }
 
-  public void setVar(String var)
-  {
-    mVar = var;
-  }
+    public void setVar(String var)
+    {
+        mVar = var;
+    }
 
-  protected void setProperties(UIComponent component)
-  {
-    super.setProperties(component);
+    protected void setProperties(UIComponent component)
+    {
+        super.setProperties(component);
 
-    setStringProperty(component, JSFAttr.VAR_ATTR, mVar);
-  }
+        setStringProperty(component, JSFAttr.VAR_ATTR, mVar);
+    }
 }
