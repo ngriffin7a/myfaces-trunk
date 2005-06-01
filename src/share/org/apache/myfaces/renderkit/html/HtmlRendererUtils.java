@@ -111,8 +111,7 @@ public final class HtmlRendererUtils {
         String clientId = component.getClientId(facesContext);
         if (paramMap.containsKey(clientId)) {
             String reqValue = (String) paramMap.get(clientId);
-            if (reqValue != null
-                    && (reqValue.equalsIgnoreCase("on")
+            if ((reqValue.equalsIgnoreCase("on")
                             || reqValue.equalsIgnoreCase("yes") || reqValue
                             .equalsIgnoreCase("true"))) {
                 ((EditableValueHolder) component)
@@ -122,7 +121,8 @@ public final class HtmlRendererUtils {
                         .setSubmittedValue(Boolean.FALSE);
             }
         } else {
-            log.warn("There should always be a submitted value for a checkbox if it is rendered, its form is submitted, and it is not disabled or read-only.");
+            ((EditableValueHolder) component)
+                    .setSubmittedValue(Boolean.FALSE);
         }
     }
 
