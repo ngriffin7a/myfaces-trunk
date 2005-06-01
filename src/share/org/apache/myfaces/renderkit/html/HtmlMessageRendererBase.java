@@ -17,6 +17,8 @@ package org.apache.myfaces.renderkit.html;
 
 import org.apache.myfaces.renderkit.JSFAttr;
 import org.apache.myfaces.renderkit.RendererUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
@@ -37,7 +39,7 @@ import java.util.Map;
 public abstract class HtmlMessageRendererBase
         extends HtmlRenderer
 {
-    //private static final Log log = LogFactory.getLog(HtmlMessageRendererBase.class);
+    private static final Log log = LogFactory.getLog(HtmlMessageRendererBase.class);
 
     protected abstract String getSummary(FacesContext facesContext,
                                          UIComponent message,
@@ -56,13 +58,15 @@ public abstract class HtmlMessageRendererBase
         String forAttr = getFor(message);
         if (forAttr == null)
         {
-            throw new FacesException("Attribute 'for' of UIMessage must not be null");
+            log.error("Attribute 'for' of UIMessage must not be null");
+            return;
         }
 
         UIComponent forComponent = message.findComponent(forAttr);
         if (forComponent == null)
         {
-            throw new FacesException("Could not render Message. Unable to find component '" + forAttr + "' (calling findComponent on component '" + message.getClientId(facesContext) + "')");
+            log.error("Could not render Message. Unable to find component '" + forAttr + "' (calling findComponent on component '" + message.getClientId(facesContext) + "'). If the provided id was correct, wrap the message and its component into an h:panelGroup or h:panelGrid.");
+            return;
         }
 
         String clientId = forComponent.getClientId(facesContext);
