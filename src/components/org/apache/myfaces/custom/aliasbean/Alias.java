@@ -114,13 +114,15 @@ class Alias {
 	}
 	
 	void remove(FacesContext facesContext){
+        _active = false;
 		if( evaluatedExpression == null )
 			return;
+        
+        evaluatedExpression = null;
 
         log.debug("removeAlias: " + _valueExpression + " != " + _aliasBeanExpression);
         ValueBinding aliasVB = _aliasComponent.getValueBinding("alias");
         if( aliasVB != null )
 			aliasVB.setValue(facesContext, null);
-		_active = false;
 	}
 }
