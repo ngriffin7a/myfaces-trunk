@@ -9,7 +9,7 @@
     <!-- Constants -->
     <property name="project.dir" location="${basedir}/../.."/>
     <property name="examples.dir" location="${project.dir}/webapps/examples"/>
-    <property name="examples.src" location="${project.dir}/webapps/src"/>
+    <property name="examples.src" location="${project.dir}/webapps/src/example"/>
     <property name="examples.web" location="${examples.dir}"/>
     <property name="web-inf.classes.dir" location="${examples.web}/WEB-INF/classes"/>
     <property name="web-inf.lib.dir" location="${examples.web}/WEB-INF/lib"/>
