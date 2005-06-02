@@ -19,7 +19,7 @@
     <docu href="docs/" label="Documentation" tab="documentation">
         <gettingstarted label="Getting Started" href="gettingstarted.html"/>
         <ri label="MyFaces and RI" href="risamples.html"/>
-        <tomcat55 label="MyFaces and Tomcat5.5" href="tomcat55.html"/>
+        <tomcat4x label="MyFaces and Tomcat 4.x" href="tomcat4x.html"/>
         <portlet label="MyFaces' Portlet Support" href="portlet.html"/>
         <extensionsFilter label="MyFaces' Extensions Filter" href="extensionsFilter.html"/>
         <compatibility label="Compatibility" href="compatibility.html"/>

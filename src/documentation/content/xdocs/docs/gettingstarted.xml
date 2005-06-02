@@ -24,8 +24,7 @@
 		<li>Unpack the MyFaces examples archive myfaces-X.X.X-app.zip (or myfaces-X.X.X-app.tgz) to a directory of your choice.</li>
 		<li>Remove any previous MyFaces webapps from your Tomcat installation and clean up your Tomcat work dir. Also make sure that there is no jsf-api.jar or jsf-impl.jar (i.e. Suns API and implementation) in the classpath or in one of Tomcat's lib directories (common/lib or shared/lib).</li>
 		<li>Copy the file myfaces-examples.war to the webapps dir of your Tomcat installation directory - and check once more that there is no old myfaces-examples directory there ;-)</li>
-		<li>Attention: if you are using Tomcat 5.5, remove commons-el.jar and jsp-2.0.jar from the WEB-INF/lib directory if you see a blank page on startup. See the faq for more information.</li>        
-		<li>(Re)start Tomcat</li>
+		<li>Start Tomcat, if its not already running.</li>
 		<li> Start your browser and enjoy it at <link href="http://localhost:8080/myfaces-examples">http://localhost:8080/myfaces-examples</link></li>
 	</ul>
 </section>
@@ -42,7 +41,49 @@
 	<ul>
 		<li>Look at the <link href="compatibility.html">compatibility list</link> to find out if your servlet container is supported.</li>
 		<li>Download the latest <link href="http://myfaces.apache.org/binary.cgi">MyFaces binary</link> release.</li>
-		<li>Copy the jar files myfaces-jsf-api.jar, myfaces.jar, jstl.jar, jakarta-oro.jar, commons-codec-1.2.jar, commons-el.jar, commons-fileupload-1.0.jar, commons-logging.jar and commons-validator.jar from the lib directory to the WEB-INF/lib dir of your Webapplication.</li>
+		<li>Copy these jar files from the <code>$MYFACES/lib</code> directory to the <code>WEB-INF/lib</code> dir of your <code>.war</code> file.
+		  <table>
+		    <tr>
+		      <th>Jar File</th><th>Notes</th>
+		    </tr>
+		    <tr>
+		      <td>commons-beanutils-1.6.1.jar</td><td></td>
+		    </tr>
+		    <tr>
+		      <td>commons-codec-1.2.jar</td><td>Required only if you are uploading files</td>
+		    </tr>
+		    <tr>
+		      <td>commons-collections-3.0.jar</td><td></td>
+		    </tr>
+		    <tr>
+		      <td>commons-digester-1.5.jar</td><td></td>
+		    </tr>
+		    <tr>
+		      <td>commons-el.jar</td><td></td>
+		    </tr>
+		    <tr>
+		      <td>commons-fileupload-1.0.jar</td><td>Required only if you are uploading files</td>
+		    </tr>
+		    <tr>
+		      <td>commons-logging.jar</td><td></td>
+		    </tr>
+		    <tr>
+		      <td>commons-validator.jar</td><td></td>
+		    </tr>
+		    <tr>
+		      <td>log4j-1.2.8.jar</td><td>Required only if you have commons-logging configured to use log4j</td>
+		    </tr>
+		    <tr>
+		      <td>myfaces.jar</td><td></td>
+		    </tr>
+		    <tr>
+		      <td>portlet-api-1.0.jar</td><td>Required only if you are doing portlets</td>
+		    </tr>
+		    <tr>
+		      <td>struts.jar</td><td>Required only if you are doing tiles work, will change to the tile.jar file once tiles is pulled from struts.</td>
+		    </tr>
+		  </table>
+		</li>
 		<li>If you are using a JSP 1.2 container like Tomcat 4 you must also copy the file jsp-2.0.jar to your WEB-INF/lib dir.</li>
 		<li>Make sure that there is no jsf-api.jar (i.e. Suns API implementation) in the classpath or in one of your container's shared lib directories (e.g. common/lib or shared/lib for Tomcat).</li>
 		<li>Configure your webapp's web.xml file (see conf/web.xml for example and documentation)</li>
