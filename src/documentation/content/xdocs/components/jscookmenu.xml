@@ -56,29 +56,7 @@
         <!-- Instructions -->
         <section>
             <title>Instructions</title>
-            <p>If you want to use jscookMenu in your application, you will have to: </p>
-            <ul>
-                <li>
-                    Add jscookmenu directory containing css and scripting code to your web directory
-                    (you can find it in the examples application).
-                </li>
-                <li>
-                    Add scripts and stylesheets for the theme you would like to use to html-header
-                    (see also inc/header.inc in the examples application)
-                </li>
-            </ul>
-            <p>
-                <code>&lt;!-- JSCook Menu --></code><br/>
-                <code>&lt;script language="JavaScript" src="jscookmenu/JSCookMenu.js" type="text/javascript">&lt;/script></code><br/>
-                <code>&lt;script language="JavaScript" src="jscookmenu/ThemeOffice/theme.js">&lt;/script></code> <br/>
-                <code>&lt;link rel="stylesheet" href="jscookmenu/ThemeOffice/theme.css" type="text/css"></code> <br/>
-                <code>&lt;script language="JavaScript" src="jscookmenu/ThemeMiniBlack/theme.js">&lt;/script></code> <br/>
-                <code>&lt;link rel="stylesheet" href="jscookmenu/ThemeMiniBlack/theme.css" type="text/css"></code> <br/>
-                <code>&lt;script language="JavaScript" src="jscookmenu/ThemeIE/theme.js">&lt;/script></code> <br/>
-                <code>&lt;link rel="stylesheet" href="jscookmenu/ThemeIE/theme.css" type="text/css"></code> <br/>
-                <code>&lt;script language="JavaScript" src="jscookmenu/ThemePanel/theme.js">&lt;/script></code> <br/>
-                <code>&lt;link rel="stylesheet" href="jscookmenu/ThemePanel/theme.css" type="text/css"></code> <br/>
-            </p>
+            <p>[TO DO]</p>
         </section>
     </body>
     <footer>
