@@ -20,6 +20,7 @@ Changes in Release 1.0.10
 * closed MYFACES-234
 * closed MYFACES-241
 * closed MYFACES-242
+* closed MYFACES-263
 ----------------------------------------------------------------------
 Changes in Release 1.0.9
 * added support for portlet api (MYFACES-86). Thanks to Stan Silver (JBoss Group)

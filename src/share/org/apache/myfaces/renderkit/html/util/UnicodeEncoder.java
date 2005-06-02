@@ -54,23 +54,27 @@ public abstract class UnicodeEncoder
 			return "";
 		}
 
-		StringBuffer sb = new StringBuffer();	//create later on demand
+		StringBuffer sb = null;
 		char c;
 		for (int i = 0; i < string.length (); ++i)
 		{
 			c = string.charAt(i);
-      if (((int)c) >= 0x80)
-      {
-        //encode all non basic latin characters
+			if (((int)c) >= 0x80)
+			{
+				if( sb == null ){
+					sb = new StringBuffer( string.length()+4 );
+					sb.append( string.substring(0,i) );
+				}
+				//encode all non basic latin characters
 				sb.append("&#" + ((int)c) + ";");
-      }
-      else
-      {
+			}
+			else if( sb != null )
+			{
 				sb.append(c);
-      }
+			}
 		}
 
-		return sb.toString();
+		return sb != null ? sb.toString() : string;
 	}
 
 
