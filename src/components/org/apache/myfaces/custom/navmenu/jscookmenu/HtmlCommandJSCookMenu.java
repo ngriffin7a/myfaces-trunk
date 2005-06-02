@@ -118,7 +118,7 @@ public class HtmlCommandJSCookMenu
         values[2] = _theme;
         values[3] = _enabledOnUserRole;
         values[4] = _visibleOnUserRole;
-        return ((Object) (values));
+        return values;
     }
 
     public void restoreState(FacesContext context, Object state)
