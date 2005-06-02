@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+
+<document>
+
+<header>
+    <title>Apache MyFaces - MyFaces and Tomcat 4.x </title>
+</header>
+
+<body>
+
+<section>
+<title>Running MyFaces apps inside Tomcat 4.x</title>
+
+  <p>MyFaces has a dependency on some of the classes in the JSP2.0 spec. As a result applications based on MyFaces will not run without the inclusion of the jsp-2.0.jar file in the <code>WEB-INF/lib</code> directory of your <code>.war</code> file.</p>
+      
+  <p>We hope this helps, if not please contact the user list at <link href="mailto:users@myfaces.apache.org">MyFaces</link>.</p>
+
+</section>
+
+
+
+</body>
+    
+<footer>
+    	<legal>Java, J2EE, and JCP are trademarks or registered trademarks of Sun Microsystems, Inc. in the United States and other countries.<br />
+	&copy; 2005, Apache Software Foundation
+	</legal>
+</footer>
+
+</document>
