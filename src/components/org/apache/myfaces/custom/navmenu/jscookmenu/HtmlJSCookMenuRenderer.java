@@ -150,7 +150,7 @@ public class HtmlJSCookMenuRenderer
     {
         for (int i = 0; i < items.length; i++)
         {
-            NavigationMenuItem item = (NavigationMenuItem)items[i];
+            NavigationMenuItem item = items[i];
             Object tempObj = null;
             UINavigationMenuItem uiNavMenuItem = null;
             if (i < uiNavMenuItemList.size()) {
@@ -186,7 +186,7 @@ public class HtmlJSCookMenuRenderer
             }
             else
             {
-                writer.write("''");
+                writer.write("null");
             }
             writer.write(", '");
             if( item.getLabel() != null ) {
@@ -208,7 +208,7 @@ public class HtmlJSCookMenuRenderer
             {
                 writer.write("null");
             }
-            writer.write(", '#', null");
+            writer.write(", 'linkDummyForm', null"); // TODO Change here to allow the use of non dummy form if possible.
 
             if (item.isRendered() && ! item.isDisabled()) {
                 // render children only if parent is visible/enabled
@@ -225,7 +225,7 @@ public class HtmlJSCookMenuRenderer
                                 new ArrayList(1), menuId);
                     } 
                 }
-            };
+            }
             writer.write("]");
         }
     }
@@ -257,19 +257,20 @@ public class HtmlJSCookMenuRenderer
         RendererUtils.checkParamValidity(context, component, HtmlCommandJSCookMenu.class);
         HtmlCommandJSCookMenu menu = (HtmlCommandJSCookMenu)component;
         
-        AddResource.addJavaScriptToHeader(NavigationMenuItem.class, "jscookmenu/JSCookMenu.js", context);
+        AddResource.addJavaScriptToHeader(HtmlJSCookMenuRenderer.class, "JSCookMenu.js", context);
+        AddResource.addJavaScriptToHeader(HtmlJSCookMenuRenderer.class, "MyFacesHack.js", context);
 
-        AddResource.addJavaScriptToHeader(NavigationMenuItem.class, "jscookmenu/ThemeOffice/theme.js", context);
-        AddResource.addStyleSheet(NavigationMenuItem.class, "jscookmenu/ThemeOffice/theme.css", context);
+        AddResource.addJavaScriptToHeader(HtmlJSCookMenuRenderer.class, "ThemeOffice/theme.js", context);
+        AddResource.addStyleSheet(HtmlJSCookMenuRenderer.class, "ThemeOffice/theme.css", context);
 
-        AddResource.addJavaScriptToHeader(NavigationMenuItem.class, "jscookmenu/ThemeMiniBlack/theme.js", context);
-        AddResource.addStyleSheet(NavigationMenuItem.class, "jscookmenu/ThemeMiniBlack/theme.css", context);
+        AddResource.addJavaScriptToHeader(HtmlJSCookMenuRenderer.class, "ThemeMiniBlack/theme.js", context);
+        AddResource.addStyleSheet(HtmlJSCookMenuRenderer.class, "ThemeMiniBlack/theme.css", context);
 
-        AddResource.addJavaScriptToHeader(NavigationMenuItem.class, "jscookmenu/ThemeIE/theme.js", context);
-        AddResource.addStyleSheet(NavigationMenuItem.class, "jscookmenu/ThemeIE/theme.css", context);
+        AddResource.addJavaScriptToHeader(HtmlJSCookMenuRenderer.class, "ThemeIE/theme.js", context);
+        AddResource.addStyleSheet(HtmlJSCookMenuRenderer.class, "ThemeIE/theme.css", context);
 
-        AddResource.addJavaScriptToHeader(NavigationMenuItem.class, "jscookmenu/ThemePanel/theme.js", context);
-        AddResource.addStyleSheet(NavigationMenuItem.class, "jscookmenu/ThemePanel/theme.css", context);
+        AddResource.addJavaScriptToHeader(HtmlJSCookMenuRenderer.class, "ThemePanel/theme.js", context);
+        AddResource.addStyleSheet(HtmlJSCookMenuRenderer.class, "ThemePanel/theme.css", context);
         
         ResponseWriter writer = context.getResponseWriter();
 
