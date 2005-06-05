@@ -78,11 +78,11 @@ public class HtmlGridRendererBase
 
         writer.flush();
 
+        // theader and tfooter are rendered before the tbody 
         renderHeaderOrFooter(facesContext, writer, component, columns, true);   //Header facet
-
-        renderChildren(facesContext, writer, component, columns);
-
         renderHeaderOrFooter(facesContext, writer, component, columns, false);  //Footer facet
+        
+        renderChildren(facesContext, writer, component, columns);
 
         writer.endElement(HTML.TABLE_ELEM);
     }
