@@ -89,6 +89,9 @@
         <x:panelGrid id="secondGrid" columns="2" displayValueOnly="#{dvoFace.attribute}">
 	        <h:outputLabel id="inputText2L" for="inputText2" value="inputText"/>
 	        <x:inputText id="inputText2" value="#{dvoFace.map['inputText2']}"/>
+	        
+	        <h:outputLabel id="inputSecret2L" for="inputSecret2" value="inputSecret"/>
+	        <x:inputSecret id="inputSecret2" value="secret" />
 
 	        <h:outputLabel id="inputTextArea2L" for="inputTextarea2" value="inputTextarea"/>
 	        <x:inputTextarea id="inputTextarea2" value="#{dvoFace.map['inputTextarea2']}"/>

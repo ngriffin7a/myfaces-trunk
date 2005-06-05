@@ -32,35 +32,35 @@ import java.util.Locale;
 public class NumberConverter
         implements Converter, StateHolder
 {
-    private static final String CONVERSION_MESSAGE_ID = "javax.faces.convert.NumberConverter.CONVERSION";
+    protected static final String CONVERSION_MESSAGE_ID = "javax.faces.convert.NumberConverter.CONVERSION";
 
     // FIELDS
-    public static final String CONVERTER_ID = "javax.faces.Number";
+    protected static final String CONVERTER_ID = "javax.faces.Number";
 
-    public static final boolean JAVA_VERSION_14;
+    protected static final boolean JAVA_VERSION_14;
 
     static
     {
         JAVA_VERSION_14 = checkJavaVersion14();
     }
 
-    private String _currencyCode;
-    private String _currencySymbol;
-    private Locale _locale;
-    private int _maxFractionDigits;
-    private int _maxIntegerDigits;
-    private int _minFractionDigits;
-    private int _minIntegerDigits;
-    private String _pattern;
-    private String _type;
-    private boolean _groupingUsed = true;
-    private boolean _integerOnly = false;
-    private boolean _transient;
+    protected String _currencyCode;
+    protected String _currencySymbol;
+    protected Locale _locale;
+    protected int _maxFractionDigits;
+    protected int _maxIntegerDigits;
+    protected int _minFractionDigits;
+    protected int _minIntegerDigits;
+    protected String _pattern;
+    protected String _type;
+    protected boolean _groupingUsed = true;
+    protected boolean _integerOnly = false;
+    protected boolean _transient;
 
-    private boolean _maxFractionDigitsSet;
-    private boolean _maxIntegerDigitsSet;
-    private boolean _minFractionDigitsSet;
-    private boolean _minIntegerDigitsSet;
+    protected boolean _maxFractionDigitsSet;
+    protected boolean _maxIntegerDigitsSet;
+    protected boolean _minFractionDigitsSet;
+    protected boolean _minIntegerDigitsSet;
 
 
     // CONSTRUCTORS
@@ -127,7 +127,7 @@ public class NumberConverter
         }
     }
 
-    private NumberFormat getNumberFormat(FacesContext facesContext)
+    protected NumberFormat getNumberFormat(FacesContext facesContext)
     {
         Locale lokale = _locale != null ? _locale : facesContext.getViewRoot().getLocale();
 
@@ -158,7 +158,7 @@ public class NumberConverter
         throw new ConverterException("Cannot get NumberFormat, illegal type " + _type);
     }
 
-    private void formatCurrency(NumberFormat format)
+    protected void formatCurrency(NumberFormat format)
     {
         if (_currencyCode == null && _currencySymbol == null)
         {
@@ -376,7 +376,7 @@ public class NumberConverter
         _type = type;
     }
 
-    private static boolean checkJavaVersion14()
+    protected static boolean checkJavaVersion14()
     {
         String version = System.getProperty("java.version");
         if (version == null)

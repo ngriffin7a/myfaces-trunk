@@ -31,26 +31,26 @@ import java.util.TimeZone;
 public class DateTimeConverter
         implements Converter, StateHolder
 {
-    private static final String CONVERSION_MESSAGE_ID = "javax.faces.convert.DateTimeConverter.CONVERSION";
+    protected static final String CONVERSION_MESSAGE_ID = "javax.faces.convert.DateTimeConverter.CONVERSION";
 
     // FIELDS
     public static final String CONVERTER_ID = "javax.faces.DateTime";
-    private static final String TYPE_DATE = "date";
-    private static final String TYPE_TIME = "time";
-    private static final String TYPE_BOTH = "both";
-    private static final String STYLE_DEFAULT = "default";
-    private static final String STYLE_MEDIUM = "medium";
-    private static final String STYLE_SHORT = "short";
-    private static final String STYLE_LONG = "long";
-    private static final String STYLE_FULL = "full";
+    protected static final String TYPE_DATE = "date";
+    protected static final String TYPE_TIME = "time";
+    protected static final String TYPE_BOTH = "both";
+    protected static final String STYLE_DEFAULT = "default";
+    protected static final String STYLE_MEDIUM = "medium";
+    protected static final String STYLE_SHORT = "short";
+    protected static final String STYLE_LONG = "long";
+    protected static final String STYLE_FULL = "full";
 
-    private String _dateStyle;
-    private Locale _locale;
-    private String _pattern;
-    private String _timeStyle;
-    private TimeZone _timeZone;
-    private String _type;
-    private boolean _transient;
+    protected String _dateStyle;
+    protected Locale _locale;
+    protected String _pattern;
+    protected String _timeStyle;
+    protected TimeZone _timeZone;
+    protected String _type;
+    protected boolean _transient;
 
     // CONSTRUCTORS
     public DateTimeConverter()
@@ -117,7 +117,7 @@ public class DateTimeConverter
         }
     }
 
-    private DateFormat getDateFormat()
+    protected DateFormat getDateFormat()
     {
         String type = getType();
         DateFormat format = null;
@@ -146,7 +146,7 @@ public class DateTimeConverter
         return format;
     }
 
-    private int calcStyle(String name)
+    protected int calcStyle(String name)
     {
         if (name.equals(STYLE_DEFAULT))
         {

@@ -15,15 +15,24 @@
  */
 package org.apache.myfaces.renderkit.html.ext;
 
+import java.io.IOException;
+
 import org.apache.myfaces.component.UserRoleUtils;
+import org.apache.myfaces.component.html.ext.HtmlInputText;
+import org.apache.myfaces.renderkit.JSFAttr;
+import org.apache.myfaces.renderkit.html.HTML;
+import org.apache.myfaces.renderkit.html.HtmlRendererUtils;
 import org.apache.myfaces.renderkit.html.HtmlSecretRendererBase;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
 
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Bruno Aranda
  * @version $Revision$ $Date$
  */
 public class HtmlSecretRenderer
@@ -40,4 +49,35 @@ public class HtmlSecretRenderer
             return super.isDisabled(facesContext, uiComponent);
         }
     }
+    
+    public void encodeEnd(FacesContext facesContext, UIComponent component)
+    throws IOException
+	{
+	    if(HtmlRendererUtils.isDisplayValueOnly(component))
+	    {
+	    	renderInputValueOnly(facesContext,
+	                (UIInput) component);
+	    }
+	    else
+	    {
+	        super.encodeEnd(facesContext, component);
+	    }
+	}
+	
+	protected void renderInputValueOnly(FacesContext facesContext, UIInput uiInput)
+	    throws IOException
+	{
+	    ResponseWriter writer = facesContext.getResponseWriter();
+	
+	    writer.startElement(HTML.SPAN_ELEM, uiInput);
+	
+	    HtmlRendererUtils.writeIdIfNecessary(writer, uiInput, facesContext);
+	
+	    HtmlRendererUtils.renderDisplayValueOnlyAttributes(uiInput, writer);
+	
+	    // renders five asterisks instead of the component value
+	    writer.writeText("*****", JSFAttr.VALUE_ATTR);
+	
+	    writer.endElement(HTML.SPAN_ELEM);
+	}
 }
