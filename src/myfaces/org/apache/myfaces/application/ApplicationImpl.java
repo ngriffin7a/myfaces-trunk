@@ -447,7 +447,11 @@ public class ApplicationImpl
 
         try
         {
-            return (Converter) converterClass.newInstance();
+            Converter converter= (Converter) converterClass.newInstance();
+
+            setConverterProperties(converterClass, converter);
+
+            return converter;
         }
         catch (Exception e)
         {
@@ -501,26 +505,7 @@ public class ApplicationImpl
             {
                 Converter converter = (Converter) converterClass.newInstance();
 
-                org.apache.myfaces.config.impl.digester.elements.Converter converterConfig =
-                        (org.apache.myfaces.config.impl.digester.elements.Converter)
-                            _converterClassNameToConfigurationMap.get(converterClass.getName());
-
-                Iterator it = converterConfig.getProperties();
-
-                while (it.hasNext())
-                {
-                    Property property = (Property) it.next();
-
-                    try
-                    {
-                        BeanUtils.setProperty(converter,property.getPropertyName(),property.getDefaultValue());
-                    }
-                    catch(Throwable th)
-                    {
-                        log.error("Initializing converter : "+converterClass.getName()+" with property : "+
-                                property.getPropertyName()+" and value : "+property.getDefaultValue()+" failed.");
-                    }
-                }
+                setConverterProperties(converterClass, converter);
 
                 return converter;
             }
@@ -571,6 +556,34 @@ public class ApplicationImpl
             return null;
         }
 
+    }
+
+    private void setConverterProperties(Class converterClass, Converter converter)
+    {
+        org.apache.myfaces.config.impl.digester.elements.Converter converterConfig =
+                (org.apache.myfaces.config.impl.digester.elements.Converter)
+                    _converterClassNameToConfigurationMap.get(converterClass.getName());
+
+        if(converterConfig != null)
+        {
+
+            Iterator it = converterConfig.getProperties();
+
+            while (it.hasNext())
+            {
+                Property property = (Property) it.next();
+
+                try
+                {
+                    BeanUtils.setProperty(converter,property.getPropertyName(),property.getDefaultValue());
+                }
+                catch(Throwable th)
+                {
+                    log.error("Initializing converter : "+converterClass.getName()+" with property : "+
+                            property.getPropertyName()+" and value : "+property.getDefaultValue()+" failed.");
+                }
+            }
+        }
     }
 
 

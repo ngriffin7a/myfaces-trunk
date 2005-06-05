@@ -15,18 +15,6 @@
  */
 package org.apache.myfaces.renderkit.html;
 
-import org.apache.myfaces.renderkit.JSFAttr;
-import org.apache.myfaces.renderkit.RendererUtils;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIGraphic;
-import javax.faces.component.html.HtmlGraphicImage;
-import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
-import java.io.IOException;
 
 
 /**
@@ -35,46 +23,7 @@ import java.io.IOException;
  * @version $Revision$ $Date$
  */
 public class HtmlImageRenderer
-extends HtmlRenderer
+extends HtmlImageRendererBase
 {
-    private static final Log log = LogFactory.getLog(HtmlImageRenderer.class);
-
-    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
-            throws IOException
-    {
-        RendererUtils.checkParamValidity(facesContext, uiComponent, UIGraphic.class);
-
-        ResponseWriter writer = facesContext.getResponseWriter();
-
-        String url;
-        if (uiComponent instanceof HtmlGraphicImage)
-        {
-            url = ((HtmlGraphicImage)uiComponent).getUrl();
-        }
-        else
-        {
-            url = (String)uiComponent.getAttributes().get(JSFAttr.URL_ATTR);
-        }
-
-        if ((url != null) && (url.length() > 0))
-        {
-            writer.startElement(HTML.IMG_ELEM, uiComponent);
-
-            writer.writeAttribute(HTML.ID_ATTR, uiComponent.getClientId(facesContext), null);
-
-            String src = facesContext.getApplication()
-                            .getViewHandler().getResourceURL(facesContext, url);
-            writer.writeURIAttribute(HTML.SRC_ATTR,
-                                     facesContext.getExternalContext().encodeResourceURL(src),
-                                     null);
-
-            HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.IMG_PASSTHROUGH_ATTRIBUTES);
-
-            writer.endElement(HTML.IMG_ELEM);
-        }
-        else
-        {
-            if (log.isWarnEnabled()) log.warn("Graphic with id " + uiComponent.getClientId(facesContext) + " has no value (url).");
-        }
-    }
+   
 }

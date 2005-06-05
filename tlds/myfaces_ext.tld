@@ -266,6 +266,22 @@
         &ext_forceId_attribute;
         &display_value_only_attributes;
     </tag>
+    
+     <!-- graphicImage -->
+    <tag>
+        <name>graphicImage</name>
+        <tag-class>org.apache.myfaces.taglib.html.ext.HtmlGraphicImageTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Extends standard graphicImage.
+        </description>
+        &ui_graphic_attributes;
+        &html_universal_attributes;
+        &html_event_handler_attributes;
+        &html_img_attributes;
+        &user_role_attributes;
+        &ext_forceId_attribute;
+    </tag>
 
     <!-- message -->
     <tag>

@@ -57,6 +57,11 @@
     <component-type>org.apache.myfaces.HtmlInputTextarea</component-type>
     <component-class>org.apache.myfaces.component.html.ext.HtmlInputTextarea</component-class>
   </component>
+  
+  <component>
+    <component-type>org.apache.myfaces.HtmlGraphicImage</component-type>
+    <component-class>org.apache.myfaces.component.html.ext.HtmlGraphicImage</component-class>
+  </component>
 
   <component>
     <component-type>org.apache.myfaces.HtmlMessage</component-type>
@@ -384,6 +389,12 @@
             <component-family>javax.faces.Panel</component-family>
             <renderer-type>org.apache.myfaces.Group</renderer-type>
             <renderer-class>org.apache.myfaces.renderkit.html.ext.HtmlGroupRenderer</renderer-class>
+        </renderer>
+
+		<renderer>
+            <component-family>javax.faces.Graphic</component-family>
+            <renderer-type>org.apache.myfaces.Image</renderer-type>
+            <renderer-class>org.apache.myfaces.renderkit.html.ext.HtmlImageRenderer</renderer-class>
         </renderer>
 
         <renderer>
