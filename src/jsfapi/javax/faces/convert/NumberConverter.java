@@ -35,7 +35,7 @@ public class NumberConverter
     protected static final String CONVERSION_MESSAGE_ID = "javax.faces.convert.NumberConverter.CONVERSION";
 
     // FIELDS
-    protected static final String CONVERTER_ID = "javax.faces.Number";
+    public static final String CONVERTER_ID = "javax.faces.Number";
 
     protected static final boolean JAVA_VERSION_14;
 
