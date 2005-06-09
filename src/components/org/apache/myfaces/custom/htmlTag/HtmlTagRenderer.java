@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.myfaces.custom.div;
+package org.apache.myfaces.custom.htmlTag;
 
 import java.io.IOException;
 
@@ -26,24 +26,24 @@ import org.apache.myfaces.renderkit.html.HtmlRenderer;
 import org.apache.myfaces.renderkit.html.HtmlRendererUtils;
 /**
  * @author bdudney (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * @version $Revision$ $Date: 2005-05-11 11:47:12 -0400 (Wed, 11 May 2005) $
  */
-public class DivRenderer extends HtmlRenderer {
-  public static final String RENDERER_TYPE = "org.apache.myfaces.DivRenderer";
+public class HtmlTagRenderer extends HtmlRenderer {
+  public static final String RENDERER_TYPE = "org.apache.myfaces.HtmlTagRenderer";
 
   public void encodeBegin(FacesContext context, UIComponent component)
       throws IOException {
     if ((context == null) || (component == null)) {
       throw new NullPointerException();
     }
-    Div div = (Div) component;
+    HtmlTag htmlTag = (HtmlTag) component;
     ResponseWriter writer = context.getResponseWriter();
 
-    writer.startElement(HTML.DIV_ELEM, component);
+    writer.startElement(htmlTag.getValue().toString(), htmlTag);
     HtmlRendererUtils.writeIdIfNecessary(writer, component, context);
 
-    String styleClass = div.getStyleClass();
-    String style = div.getStyle();
+    String styleClass = htmlTag.getStyleClass();
+    String style = htmlTag.getStyle();
 
     if(null != styleClass) {
         writer.writeAttribute(HTML.CLASS_ATTR, styleClass, null);
@@ -58,7 +58,8 @@ public class DivRenderer extends HtmlRenderer {
     if ((context == null) || (component == null)) {
       throw new NullPointerException();
     }
+    HtmlTag htmlTag = (HtmlTag) component;
     ResponseWriter writer = context.getResponseWriter();
-    writer.endElement(HTML.DIV_ELEM);
+    writer.endElement(htmlTag.getValue().toString());
   }
 }

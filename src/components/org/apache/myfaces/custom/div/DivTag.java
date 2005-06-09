@@ -15,45 +15,18 @@
  */
 package org.apache.myfaces.custom.div;
 
-import javax.faces.component.UIComponent;
-import org.apache.myfaces.taglib.html.HtmlOutputTextTagBase;
+import org.apache.myfaces.custom.htmlTag.HtmlTagTag;
 /**
  * @author bdudney (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class DivTag extends HtmlOutputTextTagBase {
-  private String _style = null;
-  private String _styleClass = null;
+public class DivTag extends HtmlTagTag {
+	
+  public DivTag() {
+    super();
+  }
 
   public String getComponentType() {
     return Div.COMPONENT_TYPE;
-  }
-
-  public String getRendererType() {
-    return DivRenderer.RENDERER_TYPE;
-  }
-
-  public void release() {
-    super.release();
-    this._style = null;
-    this._styleClass = null;
-  }
-
-  /**
-   * overrides setProperties() form UIComponentTag.
-   */
-  protected void setProperties(UIComponent component) {
-    super.setProperties(component);
-    setStringProperty(component, "style", _style);
-    setStringProperty(component, "styleClass", _styleClass);
-  }
-
-  //---------------------------------------------only the Setters
-  public void setStyle(String style) {
-    this._style = style;
-  }
-
-  public void setStyleClass(String styleClass) {
-    this._styleClass = styleClass;
   }
 }

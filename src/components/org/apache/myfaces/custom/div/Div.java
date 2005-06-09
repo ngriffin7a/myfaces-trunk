@@ -15,78 +15,16 @@
  */
 package org.apache.myfaces.custom.div;
 
-import javax.faces.component.UIOutput;
-import javax.faces.context.FacesContext;
-import javax.faces.el.ValueBinding;
-
-import org.apache.myfaces.component.html.util.HtmlComponentUtils;
+import org.apache.myfaces.custom.htmlTag.HtmlTag;
 
 /**
  * @author bdudney (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class Div extends UIOutput {
+public class Div extends HtmlTag {
   public static final String COMPONENT_TYPE = "org.apache.myfaces.Div";
-  public static final String COMPONENT_FAMILY = "javax.faces.Output";
-  private static final String DEFAULT_RENDERER_TYPE = DivRenderer.RENDERER_TYPE;
 
-  private String _style = null;
-  private String _styleClass = null;
-
-  // ------------------------------------------------------------ Constructors
-  public Div() {
-    setRendererType(DEFAULT_RENDERER_TYPE);
-  }
-
-  public String getFamily() {
-    return COMPONENT_FAMILY;
-  }
-
-  public String getClientId(FacesContext context)
-  {
-      String clientId = HtmlComponentUtils.getClientId(this, getRenderer(context), context);
-      if (clientId == null)
-      {
-          clientId = super.getClientId(context);
-      }
-
-      return clientId;
-    }
-
-  public String getStyle() {
-    if (_style != null)
-      return _style;
-    ValueBinding vb = getValueBinding("style");
-    return vb != null ? (String) vb.getValue(getFacesContext()) : null;
-  }
-
-  public void setStyle(String style) {
-    this._style = style;
-  }
-
-  public String getStyleClass() {
-    if (_styleClass != null)
-      return _styleClass;
-    ValueBinding vb = getValueBinding("styleClass");
-    return vb != null ? (String) vb.getValue(getFacesContext()) : null;
-  }
-
-  public void setStyleClass(String styleClass) {
-    this._styleClass = styleClass;
-  }
-
-  public void restoreState(FacesContext context, Object state) {
-    Object values[] = (Object[]) state;
-    super.restoreState(context, values[0]);
-    _style = (String) values[1];
-    _styleClass = (String) values[2];
-  }
-
-  public Object saveState(FacesContext context) {
-    Object values[] = new Object[3];
-    values[0] = super.saveState(context);
-    values[1] = _style;
-    values[2] = _styleClass;
-    return values;
+  public Object getValue() {
+	return "div";
   }
 }

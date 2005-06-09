@@ -1644,7 +1644,7 @@
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 			<description>
-				The style to use for this div. Either style or styleClass must be specified but not both.
+				The style to use for this div.
 			</description>
 		</attribute>
 		<attribute>
@@ -1652,7 +1652,42 @@
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 			<description>
-				The class to use for this div. Either style or styleClass must be specified but not both.
+				The class to use for this div.
+			</description>
+		</attribute>
+	</tag>
+	
+	<!-- htmlTag -->
+
+	<tag>
+		<name>htmlTag</name>
+		<tag-class>org.apache.myfaces.custom.htmlTag.HtmlTagTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>Places the given HTML tag div around its children</description>
+		&ui_component_attributes;
+        &ext_forceId_attribute;
+        <attribute>
+            <name>value</name>
+            <required>true</required>
+            <rtexprvalue>false</rtexprvalue>
+            <description>
+				The name of the tag. For example, use h1 to generate an h1 tag.
+			</description>
+        </attribute>
+		<attribute>
+			<name>style</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				The style to use for this tag.
+			</description>
+		</attribute>
+		<attribute>
+			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description>
+				The class to use for this tag.
 			</description>
 		</attribute>
 	</tag>
