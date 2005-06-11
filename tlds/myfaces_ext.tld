@@ -27,6 +27,7 @@
 <!ENTITY html_form_attributes           SYSTEM "entities/html_form_attributes.xml">
 <!ENTITY html_img_attributes            SYSTEM "entities/html_img_attributes.xml">
 <!ENTITY html_input_attributes          SYSTEM "entities/html_input_attributes.xml">
+<!ENTITY html_input_help_attributes     SYSTEM "entities/html_input_help_attributes.xml">
 <!ENTITY html_input_checkbox_attributes SYSTEM "entities/html_input_checkbox_attributes.xml">
 <!ENTITY html_input_radio_attributes    SYSTEM "entities/html_input_radio_attributes.xml">
 <!ENTITY html_label_attributes          SYSTEM "entities/html_label_attributes.xml">
@@ -281,6 +282,18 @@
         &user_role_attributes;
         &ext_forceId_attribute;
         &display_value_only_attributes;
+    </tag>
+
+    <!-- inputTextHelp -->
+    <tag>
+        <name>inputTextHelp</name>
+        <tag-class>org.apache.myfaces.custom.inputHtmlHelp.HtmlInputTextHelpTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>
+            Extends standard inputText by helptext support.
+        </description>
+        &standard_input_text_attributes;
+        &html_input_help_attributes;
     </tag>
 
     <!-- inputTextarea -->

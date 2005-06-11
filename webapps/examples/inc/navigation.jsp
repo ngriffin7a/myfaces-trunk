@@ -8,7 +8,7 @@
               activeItemClass="navitem_active"
               openItemClass="navitem_open"   >
     <x:commandNavigation id="nav_1" value="#{example_messages['nav_Home']}" action="go_home">
-        <f:param name="param" value="value"/>
+        <f:param name="param" value="value"></f:param>
     </x:commandNavigation>
     <x:commandNavigation id="nav_2" value="#{example_messages['nav_Examples']}" >
         <x:commandNavigation id="nav_2_1" value="#{example_messages['nav_Sample_1']}" action="go_sample1" />
@@ -27,6 +27,7 @@
             <x:commandNavigation id="nav_2_4_72" value="#{example_messages['nav_JsListener']}" action="go_jslistener" />            
             <x:commandNavigation id="nav_2_4_8" value="#{example_messages['nav_Date']}" action="go_date" />
             <x:commandNavigation id="nav_2_4_81" value="#{example_messages['nav_InputHtml']}" action="go_inputHtml" />
+            <x:commandNavigation id="nav_2_4_82" value="#{example_messages['nav_InputHtmlHelp']}" action="go_inputHtmlHelp" />
             <x:commandNavigation id="nav_2_4_9" value="#{example_messages['nav_dataList']}" action="go_dataList" />
             <x:commandNavigation id="nav_2_4_10" value="#{example_messages['nav_tree']}" action="go_tree" />
             <x:commandNavigation id="nav_2_4_11" value="#{example_messages['nav_treeTable']}" action="go_treeTable"/>

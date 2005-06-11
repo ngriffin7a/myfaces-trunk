@@ -59,6 +59,11 @@
   </component>
 
   <component>
+    <component-type>org.apache.myfaces.HtmlInputTextHelp</component-type>
+    <component-class>org.apache.myfaces.custom.inputHtmlHelp.HtmlInputTextHelp</component-class>
+  </component>
+
+  <component>
     <component-type>org.apache.myfaces.HtmlInputTextarea</component-type>
     <component-class>org.apache.myfaces.component.html.ext.HtmlInputTextarea</component-class>
   </component>
@@ -417,6 +422,12 @@
             <component-family>javax.faces.Input</component-family>
             <renderer-type>org.apache.myfaces.Text</renderer-type>
             <renderer-class>org.apache.myfaces.renderkit.html.ext.HtmlTextRenderer</renderer-class>
+        </renderer>
+
+        <renderer>
+            <component-family>javax.faces.Input</component-family>
+            <renderer-type>org.apache.myfaces.TextHelp</renderer-type>
+            <renderer-class>org.apache.myfaces.custom.inputHtmlHelp.HtmlTextHelpRenderer</renderer-class>
         </renderer>
 
         <renderer>
