@@ -39,8 +39,6 @@ import org.apache.myfaces.renderkit.html.util.DummyFormUtils;
 import org.apache.myfaces.renderkit.html.util.HTMLEncoder;
 import org.apache.myfaces.renderkit.html.util.JavascriptUtils;
 import org.apache.myfaces.component.DisplayValueOnlyCapable;
-import org.apache.myfaces.custom.inputHtmlHelp.HtmlInputTextHelp;
-import org.apache.myfaces.custom.inputHtmlHelp.HtmlInputTextHelp;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
