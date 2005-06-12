@@ -60,7 +60,7 @@
 
   <component>
     <component-type>org.apache.myfaces.HtmlInputTextHelp</component-type>
-    <component-class>org.apache.myfaces.custom.inputHtmlHelp.HtmlInputTextHelp</component-class>
+    <component-class>org.apache.myfaces.custom.inputTextHelp.HtmlInputTextHelp</component-class>
   </component>
 
   <component>
@@ -427,7 +427,7 @@
         <renderer>
             <component-family>javax.faces.Input</component-family>
             <renderer-type>org.apache.myfaces.TextHelp</renderer-type>
-            <renderer-class>org.apache.myfaces.custom.inputHtmlHelp.HtmlTextHelpRenderer</renderer-class>
+            <renderer-class>org.apache.myfaces.custom.inputTextHelp.HtmlTextHelpRenderer</renderer-class>
         </renderer>
 
         <renderer>

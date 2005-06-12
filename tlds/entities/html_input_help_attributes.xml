@@ -10,8 +10,3 @@
             <required>false</required>
             <rtexprvalue>false</rtexprvalue>
         </attribute>
-        <attribute>
-            <name>addResources</name>
-            <required>false</required>
-            <rtexprvalue>false</rtexprvalue>
-        </attribute>

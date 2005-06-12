@@ -50,14 +50,14 @@
             <h:panelGroup id="body">
 				<h:form>
 					<f:verbatim>
-						<h1>Input Html Help</h1>
+						<h1>Input Text Help</h1>
 					</f:verbatim>
                     <x:div/>
                     <h:outputText value="Reset Helptext:"/>
-                    <x:inputTextHelp value="" id="i1" addResources="true" helpText="Hello World"/>
+                    <x:inputTextHelp value="" id="i1" helpText="Hello World"/>
                     <x:div/>
                     <h:outputText value="Select Text:"/>
-                    <x:inputTextHelp value="" id="i2" selectText="true" helpText=""/>
+                    <x:inputTextHelp value="" id="i2" selectText="true" helpText="TT.MM.JJJJ"/>
 				</h:form>
             </h:panelGroup>
         </f:facet>

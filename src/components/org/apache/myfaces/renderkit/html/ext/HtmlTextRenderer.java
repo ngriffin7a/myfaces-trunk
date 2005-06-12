@@ -56,29 +56,24 @@ public class HtmlTextRenderer
     {
         if(HtmlRendererUtils.isDisplayValueOnly(component))
         {
-            HtmlRendererUtils.renderDisplayValueOnly(facesContext,
-                    (UIInput) component);
+            renderInputValueOnly(facesContext, component);
         }
         else
         {
-            super.encodeEnd(facesContext, component);
+            renderNormal(facesContext, component);
         }
     }
 
-    protected void renderInputValueOnly(FacesContext facesContext, HtmlInputText inputText)
+    protected void renderInputValueOnly(FacesContext facesContext, UIComponent component)
         throws IOException
     {
-        ResponseWriter writer = facesContext.getResponseWriter();
+            HtmlRendererUtils.renderDisplayValueOnly(facesContext,
+                    (UIInput) component);
+    }
 
-        writer.startElement(HTML.SPAN_ELEM, inputText);
-
-        HtmlRendererUtils.writeIdIfNecessary(writer, inputText, facesContext);
-
-        HtmlRendererUtils.renderDisplayValueOnlyAttributes(inputText, writer);
-
-        String strValue = RendererUtils.getStringValue(facesContext, inputText);
-        writer.writeText(strValue, JSFAttr.VALUE_ATTR);
-
-        writer.endElement(HTML.SPAN_ELEM);
+    protected void renderNormal(FacesContext facesContext, UIComponent component)
+        throws IOException
+    {
+            super.encodeEnd(facesContext, component);
     }
 }

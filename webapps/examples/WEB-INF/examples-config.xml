@@ -328,10 +328,9 @@
             <to-view-id>/inputHtml.jsp</to-view-id>
         </navigation-case>
 
-        <!--TODO-->
         <navigation-case>
-            <from-outcome>go_inputHtmlHelp</from-outcome>
-            <to-view-id>/inputHtmlHelp.jsp</to-view-id>
+            <from-outcome>go_inputTextHelp</from-outcome>
+            <to-view-id>/inputTextHelp.jsp</to-view-id>
         </navigation-case>
 
         <navigation-case>
