@@ -30,6 +30,7 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import javax.faces.model.SelectItem;
+import javax.faces.model.SelectItemGroup;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -92,22 +93,11 @@ public class HtmlRadioRendererBase
         for (Iterator it = selectItemList.iterator(); it.hasNext(); )
         {
             SelectItem selectItem = (SelectItem)it.next();
-            String itemStrValue = RendererUtils.getConvertedStringValue(facesContext, selectOne, converter, selectItem.getValue());
-            boolean itemDisabled = selectItem.isDisabled();
-
-            writer.write("\t\t");
-            if (pageDirectionLayout) writer.startElement(HTML.TR_ELEM, selectOne);
-            writer.startElement(HTML.TD_ELEM, selectOne);
-            writer.startElement(HTML.LABEL_ELEM, selectOne);
-            renderRadio(facesContext,
-                        selectOne,
-                        itemStrValue,
-                        selectItem.getLabel(),
-                        itemDisabled,
-                        currentValueStr.equals(itemStrValue),
-                        false);
-            writer.endElement(HTML.LABEL_ELEM);
-            writer.endElement(HTML.TD_ELEM);
+            
+            renderGroupOrItemRadio(facesContext, selectOne, 
+            		selectItem, currentValueStr,
+            		converter, pageDirectionLayout);
+            
             if (pageDirectionLayout) writer.endElement(HTML.TR_ELEM);
         }
 
@@ -137,6 +127,73 @@ public class HtmlRadioRendererBase
          return (String)selectOne.getAttributes().get(JSFAttr.STYLE_CLASS_ATTR);
      }
 
+    
+    protected void renderGroupOrItemRadio(FacesContext facesContext,
+    		UIComponent uiComponent, SelectItem selectItem,
+    		String currentValueStr,
+    		Converter converter, boolean pageDirectionLayout) throws IOException{
+    	
+    	ResponseWriter writer = facesContext.getResponseWriter();
+    	
+    	boolean isSelectItemGroup = (selectItem instanceof SelectItemGroup);
+    	
+    	Object itemValue = selectItem.getValue(); // TODO : Check here for getSubmittedValue. Look at RendererUtils.getValue
+
+    	UISelectOne selectOne = (UISelectOne)uiComponent;
+    	
+        if (isSelectItemGroup) {
+        	if (pageDirectionLayout)
+                writer.startElement(HTML.TR_ELEM, selectOne);
+        	
+        	writer.startElement(HTML.TD_ELEM, selectOne);
+        	writer.write(selectItem.getLabel());
+        	writer.endElement(HTML.TD_ELEM);
+        	
+        	if (pageDirectionLayout) {
+	        	writer.endElement(HTML.TR_ELEM);
+	        	writer.startElement(HTML.TR_ELEM, selectOne);
+        	}
+        	writer.startElement(HTML.TD_ELEM, selectOne);
+        	
+        	writer.startElement(HTML.TABLE_ELEM, selectOne);
+        	writer.writeAttribute(HTML.BORDER_ATTR, "0", null);
+
+        	SelectItemGroup group = (SelectItemGroup) selectItem;
+        	SelectItem[] selectItems = group.getSelectItems();
+        	
+        	for (int i=0; i<selectItems.length; i++) {
+        		renderGroupOrItemRadio(facesContext, selectOne, selectItems[i], currentValueStr, converter, pageDirectionLayout);
+        	}
+        	
+        	writer.endElement(HTML.TD_ELEM);
+        	writer.endElement(HTML.TR_ELEM);
+        	writer.endElement(HTML.TABLE_ELEM);
+        	writer.endElement(HTML.TD_ELEM);
+        	
+        	if (pageDirectionLayout)
+                writer.endElement(HTML.TR_ELEM);
+        	
+        } else {
+        
+        writer.write("\t\t");
+        if (pageDirectionLayout)
+            writer.startElement(HTML.TR_ELEM, selectOne);
+        writer.startElement(HTML.TD_ELEM, selectOne);
+        writer.startElement(HTML.LABEL_ELEM, selectOne);
+
+        String itemStrValue = RendererUtils.getConvertedStringValue(facesContext, selectOne, converter, selectItem.getValue());
+        boolean itemDisabled = selectItem.isDisabled();
+        
+        boolean itemChecked = currentValueStr.equals(itemStrValue);
+        
+        renderRadio(facesContext, selectOne, itemStrValue, selectItem
+                .getLabel(), itemDisabled, itemChecked, false);
+        writer.endElement(HTML.LABEL_ELEM);
+        writer.endElement(HTML.TD_ELEM);
+        if (pageDirectionLayout)
+            writer.endElement(HTML.TR_ELEM);
+        }
+    }
 
     protected void renderRadio(FacesContext facesContext,
                                UIInput uiComponent,

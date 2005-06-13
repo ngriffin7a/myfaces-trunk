@@ -83,6 +83,13 @@ public final class HTML
         ONCHANGE_ATTR
     };
 
+    public static final String[] COMMON_FIELD_EVENT_ATTRIBUTES_WITHOUT_ONFOCUS =
+    {
+        ONBLUR_ATTR,
+        ONSELECT_ATTR,
+        ONCHANGE_ATTR
+    };
+
     // universal attributes
     public static final String DIR_ATTR   = "dir";
     public static final String LANG_ATTR  = "lang";
@@ -142,6 +149,16 @@ public final class HTML
             COMMON_PASSTROUGH_ATTRIBUTES,
             COMMON_FIELD_ATTRIBUTES_WITHOUT_DISABLED,
             COMMON_FIELD_EVENT_ATTRIBUTES);
+    public static final String[] COMMON_FIELD_PASSTROUGH_ATTRIBUTES_WITHOUT_DISABLED_AND_ONFOCUS =
+        (String[]) ArrayUtils.concat(
+            COMMON_PASSTROUGH_ATTRIBUTES,
+            COMMON_FIELD_ATTRIBUTES_WITHOUT_DISABLED,
+            COMMON_FIELD_EVENT_ATTRIBUTES_WITHOUT_ONFOCUS);
+    public static final String[] COMMON_FIELD_PASSTROUGH_ATTRIBUTES_WITHOUT_DISABLED_AND_ONFOCUS_AND_ONCLICK =
+        (String[]) ArrayUtils.concat(
+            COMMON_PASSTROUGH_ATTRIBUTES_WITHOUT_ONCLICK,
+            COMMON_FIELD_ATTRIBUTES_WITHOUT_DISABLED,
+            COMMON_FIELD_EVENT_ATTRIBUTES_WITHOUT_ONFOCUS);
     public static final String[] COMMON_FIELD_PASSTROUGH_ATTRIBUTES_WITHOUT_DISABLED_AND_ONCLICK =
         (String[]) ArrayUtils.concat(
             COMMON_PASSTROUGH_ATTRIBUTES_WITHOUT_ONCLICK,

@@ -63,7 +63,8 @@ public class HtmlTextHelpRenderer extends HtmlTextRenderer
 
         writer.startElement(HTML.INPUT_ELEM, input);
 
-        HtmlRendererUtils.writeIdIfNecessary(writer, input, facesContext);
+        //write id in any case, it is needed for the java-script function
+        writer.writeAttribute(HTML.ID_ATTR, input.getClientId(facesContext),null);
 
         renderHelpTextAttributes(input, writer, facesContext);
 
@@ -91,19 +92,26 @@ public class HtmlTextHelpRenderer extends HtmlTextRenderer
             if(isSelectText(component))
             {
                 HtmlRendererUtils.renderHTMLAttributes(writer, component,
-                        HTML.COMMON_PASSTROUGH_ATTRIBUTES_WITHOUT_ONCLICK);
+                        HTML.COMMON_FIELD_PASSTROUGH_ATTRIBUTES_WITHOUT_DISABLED_AND_ONFOCUS_AND_ONCLICK);
+                writer.writeAttribute(HTML.ONFOCUS_ATTR,
+                        HtmlInputTextHelp.JS_FUNCTION_SELECT_TEXT + "('" +
+                            getHelpText(component) + "', '" + id +"')", null);
                 writer.writeAttribute(HTML.ONCLICK_ATTR,
                         HtmlInputTextHelp.JS_FUNCTION_SELECT_TEXT + "('" +
                             getHelpText(component) + "', '" + id +"')", null);
+
             }
             else
             {
                 if(getHelpText(component) != null)
                 {
                     HtmlRendererUtils.renderHTMLAttributes(writer, component,
-                            HTML.COMMON_PASSTROUGH_ATTRIBUTES_WITHOUT_ONCLICK);
-                    writer.writeAttribute(HTML.ONCLICK_ATTR,
+                            HTML.COMMON_FIELD_PASSTROUGH_ATTRIBUTES_WITHOUT_DISABLED_AND_ONFOCUS_AND_ONCLICK);
+                    writer.writeAttribute(HTML.ONFOCUS_ATTR,
                             HtmlInputTextHelp.JS_FUNCTION_RESET_HELP + "('" +
+                            getHelpText(component) + "', '" + id +"')", null);
+                writer.writeAttribute(HTML.ONCLICK_ATTR,
+                        HtmlInputTextHelp.JS_FUNCTION_RESET_HELP + "('" +
                             getHelpText(component) + "', '" + id +"')", null);
                 }
                 else

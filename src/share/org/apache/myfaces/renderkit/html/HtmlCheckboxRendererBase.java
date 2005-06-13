@@ -32,6 +32,8 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import javax.faces.model.SelectItem;
+import javax.faces.model.SelectItemGroup;
+
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
@@ -58,7 +60,7 @@ public class HtmlCheckboxRendererBase extends HtmlRenderer {
             Boolean value = RendererUtils.getBooleanValue( uiComponent );
             boolean isChecked = value != null ? value.booleanValue() : false;
             renderCheckbox(facesContext, uiComponent, EXTERNAL_TRUE_VALUE,
-                    null, isChecked, true);
+                    null, false,isChecked, true); //TODO: the selectBoolean is never disabled
         } else if (uiComponent instanceof UISelectMany) {
             renderCheckboxList(facesContext, (UISelectMany) uiComponent);
         } else {
@@ -92,7 +94,7 @@ public class HtmlCheckboxRendererBase extends HtmlRenderer {
 
         if (!pageDirectionLayout)
             writer.startElement(HTML.TR_ELEM, selectMany);
-
+        
         Converter converter;
         try {
             converter = RendererUtils.findUISelectManyConverter(facesContext,
@@ -113,32 +115,10 @@ public class HtmlCheckboxRendererBase extends HtmlRenderer {
         for (Iterator it = RendererUtils.getSelectItemList(selectMany)
                 .iterator(); it.hasNext();) {
             SelectItem selectItem = (SelectItem) it.next();
-            Object itemValue = selectItem.getValue(); // TODO : Check here for getSubmittedValue. Look at RendererUtils.getValue
-
-            String itemStrValue;
-            if (converter == null) {
-                itemStrValue = itemValue.toString();
-            } else {
-                itemStrValue = converter.getAsString(facesContext, selectMany,
-                        itemValue);
-            }
-
-            writer.write("\t\t");
-            if (pageDirectionLayout)
-                writer.startElement(HTML.TR_ELEM, selectMany);
-            writer.startElement(HTML.TD_ELEM, selectMany);
-            writer.startElement(HTML.LABEL_ELEM, selectMany);
-
-            boolean checked = (useSubmittedValues && lookupSet
-                    .contains(itemStrValue))
-                    || (!useSubmittedValues && lookupSet.contains(itemValue));
-
-            renderCheckbox(facesContext, selectMany, itemStrValue, selectItem
-                    .getLabel(), checked, false);
-            writer.endElement(HTML.LABEL_ELEM);
-            writer.endElement(HTML.TD_ELEM);
-            if (pageDirectionLayout)
-                writer.endElement(HTML.TR_ELEM);
+            
+            renderGroupOrItemCheckbox(facesContext, selectMany, 
+            		selectItem, useSubmittedValues, lookupSet, 
+            		converter, pageDirectionLayout);
         }
 
         if (!pageDirectionLayout)
@@ -153,10 +133,86 @@ public class HtmlCheckboxRendererBase extends HtmlRenderer {
             return (String) selectMany.getAttributes().get(JSFAttr.LAYOUT_ATTR);
         }
     }
+    
+    protected void renderGroupOrItemCheckbox(FacesContext facesContext,
+    		UIComponent uiComponent, SelectItem selectItem,
+    		boolean useSubmittedValues, Set lookupSet,
+    		Converter converter, boolean pageDirectionLayout) throws IOException{
+    	
+    	ResponseWriter writer = facesContext.getResponseWriter();
+    	
+    	boolean isSelectItemGroup = (selectItem instanceof SelectItemGroup);
+    	
+    	Object itemValue = selectItem.getValue(); // TODO : Check here for getSubmittedValue. Look at RendererUtils.getValue
+
+    	UISelectMany selectMany = (UISelectMany)uiComponent;
+    	
+        String itemStrValue;
+        if (converter == null) {
+            itemStrValue = itemValue.toString();
+        } else {
+            itemStrValue = converter.getAsString(facesContext, selectMany,
+                    itemValue);
+        }
+
+        if (isSelectItemGroup) {
+        	if (pageDirectionLayout)
+                writer.startElement(HTML.TR_ELEM, selectMany);
+        	
+        	writer.startElement(HTML.TD_ELEM, selectMany);
+        	writer.write(selectItem.getLabel());
+        	writer.endElement(HTML.TD_ELEM);
+        	
+        	if (pageDirectionLayout) {
+	        	writer.endElement(HTML.TR_ELEM);
+	        	writer.startElement(HTML.TR_ELEM, selectMany);
+        	}
+        	writer.startElement(HTML.TD_ELEM, selectMany);
+        	
+        	writer.startElement(HTML.TABLE_ELEM, selectMany);
+        	writer.writeAttribute(HTML.BORDER_ATTR, "0", null);
+
+        	SelectItemGroup group = (SelectItemGroup) selectItem;
+        	SelectItem[] selectItems = group.getSelectItems();
+        	
+        	for (int i=0; i<selectItems.length; i++) {
+        		renderGroupOrItemCheckbox(facesContext, selectMany, selectItems[i], useSubmittedValues, lookupSet, converter, pageDirectionLayout);
+        	}
+        	
+        	writer.endElement(HTML.TD_ELEM);
+        	writer.endElement(HTML.TR_ELEM);
+        	writer.endElement(HTML.TABLE_ELEM);
+        	writer.endElement(HTML.TD_ELEM);
+        	
+        	if (pageDirectionLayout)
+                writer.endElement(HTML.TR_ELEM);
+        	
+        } else {
+        
+        writer.write("\t\t");
+        if (pageDirectionLayout)
+            writer.startElement(HTML.TR_ELEM, selectMany);
+        writer.startElement(HTML.TD_ELEM, selectMany);
+        writer.startElement(HTML.LABEL_ELEM, selectMany);
+
+        boolean checked = (useSubmittedValues && lookupSet
+                .contains(itemStrValue))
+                || (!useSubmittedValues && lookupSet.contains(itemValue));
+
+        boolean disabled = selectItem.isDisabled();
+        
+        renderCheckbox(facesContext, selectMany, itemStrValue, selectItem
+                .getLabel(), disabled, checked, false);
+        writer.endElement(HTML.LABEL_ELEM);
+        writer.endElement(HTML.TD_ELEM);
+        if (pageDirectionLayout)
+            writer.endElement(HTML.TR_ELEM);
+        }
+    }
 
     protected void renderCheckbox(FacesContext facesContext,
             UIComponent uiComponent, String value, String label,
-            boolean checked, boolean renderId) throws IOException {
+            boolean disabled, boolean checked, boolean renderId) throws IOException {
         String clientId = uiComponent.getClientId(facesContext);
 
         ResponseWriter writer = facesContext.getResponseWriter();
@@ -164,12 +220,17 @@ public class HtmlCheckboxRendererBase extends HtmlRenderer {
         writer.startElement(HTML.INPUT_ELEM, uiComponent);
         writer.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_CHECKBOX, null);
         writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
+        
         if (renderId) {
             HtmlRendererUtils.writeIdIfNecessary(writer, uiComponent, facesContext);
         }
 
         if (checked) {
             writer.writeAttribute(HTML.CHECKED_ATTR, HTML.CHECKED_ATTR, null);
+        }
+        
+        if (disabled) {
+        	writer.writeAttribute(HTML.DISABLED_ATTR, HTML.DISABLED_ATTR, null);
         }
 
         if ((value != null) && (value.length() > 0)) {
