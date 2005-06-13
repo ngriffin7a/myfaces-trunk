@@ -139,6 +139,7 @@ public class HtmlCheckboxRenderer
                        uiSelectMany,
                        itemStrValue,
                        selectItem.getLabel(),
+                       isDisabled(facesContext,uiSelectMany),
                        lookupSet.contains(itemStrValue), true);
     }
 

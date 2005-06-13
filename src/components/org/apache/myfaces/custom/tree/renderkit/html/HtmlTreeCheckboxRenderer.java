@@ -87,7 +87,12 @@ public class HtmlTreeCheckboxRenderer extends HtmlCheckboxRendererBase
             itemStrValue = converter.getAsString(context, uiSelectMany, itemValue);
         }
 
-        renderCheckbox(context, uiSelectMany, itemStrValue, checkbox.getItemLabel(), lookupSet.contains(itemStrValue),
+        renderCheckbox(context,
+        		uiSelectMany,
+        		itemStrValue,
+        		checkbox.getItemLabel(),
+        		isDisabled(context,uiSelectMany),
+        		lookupSet.contains(itemStrValue),
                 true);
     }
 
