@@ -17,6 +17,8 @@ package org.apache.myfaces.config;
 
 import org.apache.myfaces.config.element.*;
 import org.apache.myfaces.util.ClassUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.faces.FacesException;
 import javax.faces.application.Application;
@@ -35,6 +37,8 @@ import java.util.*;
  */
 public class ManagedBeanBuilder
 {
+    private static Log log = LogFactory.getLog(ManagedBeanBuilder.class);
+
     public Object buildManagedBean(FacesContext facesContext, ManagedBean beanConfiguration) throws FacesException
     {
         Object bean = ClassUtils.newInstance(beanConfiguration.getManagedBeanClassName());
@@ -99,11 +103,56 @@ public class ManagedBeanBuilder
             switch (property.getType())
             {
                 case ManagedProperty.TYPE_LIST:
-                    value = new ArrayList();
+                    if (property.getPropertyClass() != null)
+                    {
+                        Class listClass = ClassUtils.simpleJavaTypeToClass(property.getPropertyClass());
+                        try
+                        {
+                            value = listClass.newInstance();
+
+                            if(!(value instanceof List))
+                            {
+                                log.error("Supplied type is no instance of java.util.List");
+                                value = new ArrayList();
+                            }
+                        }
+                        catch(Exception ex)
+                        {
+                            log.error("Exception while initiating list-type. ",ex);
+                            value = new ArrayList();
+                        }
+                    }
+                    else
+                    {
+                          value = new ArrayList();
+                    }
                     initializeList(facesContext, property.getListEntries(), (List) value);
                     break;
                 case ManagedProperty.TYPE_MAP:
-                    value = new HashMap();
+                    if (property.getPropertyClass() != null)
+                    {
+                        Class mapClass = ClassUtils.simpleJavaTypeToClass(property.getPropertyClass());
+                        try
+                        {
+                            value = mapClass.newInstance();
+
+                            if(!(value instanceof Map))
+                            {
+                                log.error("Supplied type is no instance of java.util.Map");
+                                value = new HashMap();
+                            }
+                        }
+                        catch(Exception ex)
+                        {
+                            log.error("Exception while initiating map-type. ",ex);
+                            value = new HashMap();
+                        }
+                    }
+                    else
+                    {
+                          value = new HashMap();
+                    }
+
                     initializeMap(facesContext, property.getMapEntries(), (Map) value);
                     break;
                 case ManagedProperty.TYPE_NULL:
