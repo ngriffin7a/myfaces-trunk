@@ -67,7 +67,6 @@ public class HtmlTextHelpRenderer extends HtmlTextRenderer
         writer.writeAttribute(HTML.NAME_ATTR, input.getClientId(facesContext), null);
         writer.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_TEXT, null);
 
-
         renderHelpTextAttributes(input, writer, facesContext);
 
         String value = RendererUtils.getStringValue(facesContext, input);
@@ -85,8 +84,7 @@ public class HtmlTextHelpRenderer extends HtmlTextRenderer
     {
         if(!(component instanceof HtmlInputTextHelp))
         {
-            HtmlRendererUtils.renderHTMLAttributes(writer, component, HTML.COMMON_PASSTROUGH_ATTRIBUTES);
-            return;
+            HtmlRendererUtils.renderHTMLAttributes(writer, component, HTML.INPUT_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED);
         }
         else
         {
@@ -119,7 +117,7 @@ public class HtmlTextHelpRenderer extends HtmlTextRenderer
                 else
                 {
                     HtmlRendererUtils.renderHTMLAttributes(writer,
-                            component, HTML.COMMON_FIELD_ATTRIBUTES_WITHOUT_DISABLED);
+                            component, HTML.INPUT_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED);
                 }
             }
         }
