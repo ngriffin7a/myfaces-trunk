@@ -1,19 +1,19 @@
 package org.apache.myfaces.custom.inputTextHelp;
 
-import org.apache.myfaces.renderkit.html.HtmlTextRendererBase;
-import org.apache.myfaces.renderkit.html.HtmlRendererUtils;
+import org.apache.myfaces.component.html.util.AddResource;
+import org.apache.myfaces.renderkit.RendererUtils;
 import org.apache.myfaces.renderkit.html.HTML;
+import org.apache.myfaces.renderkit.html.HtmlRendererUtils;
 import org.apache.myfaces.renderkit.html.ext.HtmlTextRenderer;
 import org.apache.myfaces.renderkit.html.util.HTMLEncoder;
-import org.apache.myfaces.renderkit.RendererUtils;
-import org.apache.myfaces.component.html.util.AddResource;
 
-import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
-
+import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
+import javax.faces.convert.ConverterException;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author Thomas Obereder
@@ -56,27 +56,29 @@ public class HtmlTextHelpRenderer extends HtmlTextRenderer
         return null;
     }
 
-    public static void renderInputTextHelp(FacesContext facesContext, UIInput input)
+    public void renderInputTextHelp(FacesContext facesContext, UIInput input)
             throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter();
 
         writer.startElement(HTML.INPUT_ELEM, input);
 
-        //write id in any case, it is needed for the java-script function
-        writer.writeAttribute(HTML.ID_ATTR, input.getClientId(facesContext),null);
+        writer.writeAttribute(HTML.ID_ATTR, input.getClientId(facesContext), null);
+        writer.writeAttribute(HTML.NAME_ATTR, input.getClientId(facesContext), null);
+        writer.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_TEXT, null);
+
 
         renderHelpTextAttributes(input, writer, facesContext);
 
         String value = RendererUtils.getStringValue(facesContext, input);
-        value = (value.equals("") || value == null) ? getHelpText(input) : "";
+        value = (value.equals("") || value == null) ? getHelpText(input) : value;
 
         writer.writeAttribute(HTML.VALUE_ATTR, HTMLEncoder.encode(value,true,true), null);
 
         writer.endElement(HTML.INPUT_ELEM);
     }
 
-    public static void renderHelpTextAttributes(UIComponent component,
+    private void renderHelpTextAttributes(UIComponent component,
                                                 ResponseWriter writer,
                                                 FacesContext facesContext)
             throws IOException
@@ -92,7 +94,7 @@ public class HtmlTextHelpRenderer extends HtmlTextRenderer
             if(isSelectText(component))
             {
                 HtmlRendererUtils.renderHTMLAttributes(writer, component,
-                        HTML.COMMON_FIELD_PASSTROUGH_ATTRIBUTES_WITHOUT_DISABLED_AND_ONFOCUS_AND_ONCLICK);
+                        HTML.INPUT_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED_AND_ONFOCUS_AND_ONCLICK);
                 writer.writeAttribute(HTML.ONFOCUS_ATTR,
                         HtmlInputTextHelp.JS_FUNCTION_SELECT_TEXT + "('" +
                             getHelpText(component) + "', '" + id +"')", null);
@@ -106,7 +108,7 @@ public class HtmlTextHelpRenderer extends HtmlTextRenderer
                 if(getHelpText(component) != null)
                 {
                     HtmlRendererUtils.renderHTMLAttributes(writer, component,
-                            HTML.COMMON_FIELD_PASSTROUGH_ATTRIBUTES_WITHOUT_DISABLED_AND_ONFOCUS_AND_ONCLICK);
+                            HTML.INPUT_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED_AND_ONFOCUS_AND_ONCLICK);
                     writer.writeAttribute(HTML.ONFOCUS_ATTR,
                             HtmlInputTextHelp.JS_FUNCTION_RESET_HELP + "('" +
                             getHelpText(component) + "', '" + id +"')", null);
@@ -117,13 +119,35 @@ public class HtmlTextHelpRenderer extends HtmlTextRenderer
                 else
                 {
                     HtmlRendererUtils.renderHTMLAttributes(writer,
-                            component, HTML.COMMON_PASSTROUGH_ATTRIBUTES);
+                            component, HTML.COMMON_FIELD_ATTRIBUTES_WITHOUT_DISABLED);
                 }
             }
         }
+
+         if (isDisabled(facesContext, component))
+        {
+            writer.writeAttribute(HTML.DISABLED_ATTR, Boolean.TRUE, null);
+        }
     }
 
-    private static void addJavaScriptResources(FacesContext facesContext) throws IOException
+    public void decode(FacesContext facesContext, UIComponent component)
+    {
+        super.decode(facesContext, component);
+    }
+
+    public Object getConvertedValue(FacesContext facesContext, UIComponent component, Object submittedValue) throws ConverterException
+    {
+        if(submittedValue!=null && component instanceof HtmlInputTextHelp &&
+                ((HtmlInputTextHelp) component).getHelpText()!=null &&
+            submittedValue.equals(((HtmlInputTextHelp) component).getHelpText()))
+        {
+            submittedValue = "";
+        }
+
+        return super.getConvertedValue(facesContext, component, submittedValue);
+    }
+
+    private static void addJavaScriptResources(FacesContext facesContext)
     {
         AddResource.addJavaScriptToHeader(HtmlTextHelpRenderer.class,
                                             "inputTextHelp.js",

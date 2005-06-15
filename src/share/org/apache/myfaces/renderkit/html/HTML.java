@@ -269,6 +269,11 @@ public final class HTML
                 INPUT_ATTRIBUTES,
                 COMMON_FIELD_PASSTROUGH_ATTRIBUTES_WITHOUT_DISABLED);
 
+    public static final String[] INPUT_PASSTHROUGH_ATTRIBUTES_WITHOUT_DISABLED_AND_ONFOCUS_AND_ONCLICK =
+        (String[]) ArrayUtils.concat(
+                INPUT_ATTRIBUTES,
+                COMMON_FIELD_PASSTROUGH_ATTRIBUTES_WITHOUT_DISABLED_AND_ONFOCUS_AND_ONCLICK);
+
     //values for input-type attribute
     public static final String INPUT_TYPE_SUBMIT = "submit";
     public static final String INPUT_TYPE_IMAGE = "image";

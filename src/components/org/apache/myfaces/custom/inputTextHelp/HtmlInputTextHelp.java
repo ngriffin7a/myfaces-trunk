@@ -61,7 +61,7 @@ public class HtmlInputTextHelp extends HtmlInputText
 
     public Object saveState(FacesContext context)
     {
-        Object[] state = new Object[4];
+        Object[] state = new Object[3];
         state[0] = super.saveState(context);
         state[1] = _helpText;
         state[2] = _selectText;
