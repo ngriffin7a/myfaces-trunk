@@ -323,6 +323,11 @@
   </component>
 
   <component>
+    <component-type>org.apache.myfaces.SelectOneLanguage</component-type>
+    <component-class>org.apache.myfaces.custom.selectOneLanguage.SelectOneLanguage</component-class>
+  </component>
+
+  <component>
         <component-type>org.apache.myfaces.Stylesheet</component-type>
       <component-class>org.apache.myfaces.custom.stylesheet.Stylesheet</component-class>
   </component>
@@ -642,6 +647,12 @@
             <component-family>javax.faces.SelectOne</component-family>
             <renderer-type>org.apache.myfaces.SelectOneCountryRenderer</renderer-type>
             <renderer-class>org.apache.myfaces.custom.selectOneCountry.SelectOneCountryRenderer</renderer-class>
+        </renderer>
+        
+		<renderer>
+            <component-family>javax.faces.SelectOne</component-family>
+            <renderer-type>org.apache.myfaces.SelectOneLanguageRenderer</renderer-type>
+            <renderer-class>org.apache.myfaces.custom.selectOneLanguage.SelectOneLanguageRenderer</renderer-class>
         </renderer>
 
       <renderer>

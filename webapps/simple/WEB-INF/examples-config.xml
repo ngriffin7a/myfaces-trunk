@@ -87,6 +87,13 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 
+    <!-- Managed Beans for selectOneLanguage.jsp -->
+
+    <managed-bean>
+        <managed-bean-name>language</managed-bean-name>
+        <managed-bean-class>org.apache.myfaces.examples.misc.Language</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
 
     <!-- Managed Beans for simpleList.jsp -->
 
