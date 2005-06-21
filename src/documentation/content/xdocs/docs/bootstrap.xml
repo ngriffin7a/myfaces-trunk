@@ -39,6 +39,9 @@
             and copy to <code>$ANT_HOME/lib</code>.  This is necessary to allow ant to use SVN to retrieve the source code.
         </li>
     </ul>    
+    
+    
+    
     <ul>
         <li>
             Install  
@@ -87,13 +90,19 @@
     <ul>
         <li>
             A cron job also needs to be added to the machine performing the nightly build <br/>
-            <code>00 23 * * * ant -buildfile bootstrap.xml clean nightly >/dev/null 2>&amp;1</code>
+            <code>00 23 * * * ant -buildfile /home/sjs4/bootstrap/bootstrap.xml -logger org.apache.tools.ant.listener.MailLogger clean nightly >/dev/null 2>&amp;1</code>
         </li>
     </ul>        
     <ul>
         <li>
+            A cron job also needs to be added to the machine performing the preiodic website build <br/>
+            <code>45 0-23/4 * * * ant -buildfile /home/sjs4/bootstrap/bootstrap.xml -logger org.apache.tools.ant.listener.MailLogger clean publish-site >/dev/null</code>
+        </li>
+    </ul>            
+    <ul>
+        <li>
             A cron job is also needed on the desitnation server to make sure the website is updated from SVN <br/>
-            <code>00 23 * * * ant -buildfile bootstrap.xml clean nightly >/dev/null 2>&amp;1</code>
+            <code>15 * * * * /home/schof/site-update.sh >/dev/null</code>
         </li>
     </ul>            
 
