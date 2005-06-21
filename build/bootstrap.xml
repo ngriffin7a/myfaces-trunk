@@ -100,6 +100,9 @@ through the system path.
         </tstamp>
         <property name="release.version" value="${TODAY}"/>
         <property name="release.dir" value="${build.dir}/nightly/${TODAY}"/>
+
+        <delete dir="${release.dir}"/>
+        
         <echo message="build output directory: ${release.dir}"/>
         <mkdir dir="${release.dir}"/>
 
@@ -119,11 +122,14 @@ through the system path.
         <echo message="building release for ${project.name} ..." level="debug"/>
 
         <property name="release.dir" value="${build.dir}/release"/>
+
+        <delete dir="${release.dir}"/>
+
         <echo message="build output directory: ${release.dir}"/>
         <mkdir dir="${release.dir}"/>
 
         <!-- execute the build file that was just checked out -->
-        <ant dir="${build.dir}" target="release" inheritRefs="true"/>
+        <ant dir="${build.dir}" target="clean" inheritRefs="true"/>
 
         <!-- copy files to local release dir -->
         <copy todir="${release.dir}">
