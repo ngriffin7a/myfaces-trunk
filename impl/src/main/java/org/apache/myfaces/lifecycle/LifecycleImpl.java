@@ -15,44 +15,42 @@
  */
 package org.apache.myfaces.lifecycle;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.faces.FacesException;
-import javax.faces.application.Application;
-import javax.faces.application.ViewHandler;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.faces.el.ValueBinding;
-import javax.faces.event.PhaseEvent;
-import javax.faces.event.PhaseId;
-import javax.faces.event.PhaseListener;
-import javax.faces.lifecycle.Lifecycle;
-import javax.portlet.PortletRequest;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.myfaces.portlet.MyFacesGenericPortlet;
 import org.apache.myfaces.portlet.PortletUtil;
 import org.apache.myfaces.util.DebugUtils;
+import org.apache.myfaces.shared_impl.util.RestoreStateUtils;
+
+import javax.faces.FacesException;
+import javax.faces.application.Application;
+import javax.faces.application.ViewHandler;
+import javax.faces.component.UIViewRoot;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.faces.event.PhaseEvent;
+import javax.faces.event.PhaseId;
+import javax.faces.event.PhaseListener;
+import javax.faces.lifecycle.Lifecycle;
+import javax.portlet.PortletRequest;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implements the lifecycle as described in Spec. 1.0 PFD Chapter 2
- * @author Manfred Geiler (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * @author Manfred Geiler
  */
 public class LifecycleImpl
         extends Lifecycle
 {
     private static final Log log = LogFactory.getLog(LifecycleImpl.class);
 
-    private List _phaseListenerList = new ArrayList();
+    private final List _phaseListenerList = new ArrayList();
+
+    /**
+     * Lazy cache for returning _phaseListenerList as an Array.
+     */
     private PhaseListener[] _phaseListenerArray = null;
 
     public LifecycleImpl()
@@ -83,10 +81,7 @@ public class LifecycleImpl
             return;
         }
 
-        if (invokeApplication(facesContext))
-        {
-            return;
-        }
+        invokeApplication(facesContext);
     }
 
 
@@ -178,7 +173,7 @@ public class LifecycleImpl
             facesContext.renderResponse();
         }
 
-        recursivelyHandleComponentReferencesAndSetValid(facesContext, viewRoot);
+        RestoreStateUtils.recursivelyHandleComponentReferencesAndSetValid(facesContext, viewRoot);
 
         informPhaseListenersAfter(facesContext, PhaseId.RESTORE_VIEW);
 
@@ -430,6 +425,9 @@ public class LifecycleImpl
             viewId = externalContext.getRequestServletPath();  //getServletPath
             DebugUtils.assertError(viewId != null,
                                    log, "RequestServletPath is null, cannot determine viewId of current page.");
+            if(viewId==null)
+                return null;
+
             //TODO: JSF Spec 2.2.1 - what do they mean by "if the default ViewHandler implementation is used..." ?
             String defaultSuffix = externalContext.getInitParameter(ViewHandler.DEFAULT_SUFFIX_PARAM_NAME);
             String suffix = defaultSuffix != null ? defaultSuffix : ViewHandler.DEFAULT_SUFFIX;
@@ -452,54 +450,17 @@ public class LifecycleImpl
     }
 
 
-    /**
-     * Walk the component tree, executing any component-bindings to reattach
-     * components to their backing beans. Also, any UIInput component is
-     * marked as Valid.
-     * <p>
-     *  Note that this method effectively breaks encapsulation; instead of
-     *  asking each component to update itself and its children, this
-     * method just reaches into each component. That makes it impossible
-     * for any component to customise its behaviour at this point.
-     */
-    private static void recursivelyHandleComponentReferencesAndSetValid(FacesContext facesContext,
-                                                                        UIComponent root)
-    {
-        for (Iterator it = root.getFacetsAndChildren(); it.hasNext(); )
-        {
-            UIComponent component = (UIComponent)it.next();
-
-            ValueBinding binding = component.getValueBinding("binding");    //TODO: constant
-            if (binding != null && !binding.isReadOnly(facesContext))
-            {
-                binding.setValue(facesContext, component);
-            }
-
-            if (component instanceof UIInput)
-            {
-                ((UIInput)component).setValid(true);
-            }
-
-            recursivelyHandleComponentReferencesAndSetValid(facesContext, component);
-        }
-    }
-
     public void addPhaseListener(PhaseListener phaseListener)
     {
         if(phaseListener == null)
         {
             throw new NullPointerException("PhaseListener must not be null.");
         }
-        if (_phaseListenerList == null)
+        synchronized(_phaseListenerList)
         {
-            _phaseListenerList = new ArrayList();
-            if (_phaseListenerArray != null)
-            {
-                _phaseListenerList.addAll(Arrays.asList(_phaseListenerArray));
-                _phaseListenerArray = null;
-            }
+            _phaseListenerList.add(phaseListener);
+            _phaseListenerArray = null; // reset lazy cache array
         }
-        _phaseListenerList.add(phaseListener);
     }
 
     public void removePhaseListener(PhaseListener phaseListener)
@@ -508,33 +469,24 @@ public class LifecycleImpl
         {
             throw new NullPointerException("PhaseListener must not be null.");
         }
-        if (_phaseListenerList == null)
+        synchronized(_phaseListenerList)
         {
-            _phaseListenerList = new ArrayList();
-            if (_phaseListenerArray != null)
-            {
-                _phaseListenerList.addAll(Arrays.asList(_phaseListenerArray));
-                _phaseListenerArray = null;
-            }
+            _phaseListenerList.remove(phaseListener);
+            _phaseListenerArray = null; // reset lazy cache array
         }
-        _phaseListenerList.remove(phaseListener);
     }
 
     public PhaseListener[] getPhaseListeners()
     {
-        if (_phaseListenerArray == null)
+        synchronized(_phaseListenerList)
         {
-            if (_phaseListenerList == null)
-            {
-                _phaseListenerArray = new PhaseListener[0];
-            }
-            else
+            // (re)build lazy cache array if necessary
+            if (_phaseListenerArray == null)
             {
                 _phaseListenerArray = (PhaseListener[])_phaseListenerList.toArray(new PhaseListener[_phaseListenerList.size()]);
-                _phaseListenerList = null;
             }
+            return _phaseListenerArray;
         }
-        return _phaseListenerArray;
     }
 
 
