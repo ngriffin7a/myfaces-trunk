@@ -28,7 +28,6 @@ import java.util.List;
 public class ManagedBean implements org.apache.myfaces.config.element.ManagedBean
 {
 
-    private String description;
     private String name;
     private String beanClassName;
     private Class beanClass;
@@ -78,14 +77,6 @@ public class ManagedBean implements org.apache.myfaces.config.element.ManagedBea
     }
 
 
-    public String getDescription() {
-        return description;
-    }
-    
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    
     public String getManagedBeanName()
     {
         return name;

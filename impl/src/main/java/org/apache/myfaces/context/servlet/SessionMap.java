@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Enumeration;
 import java.util.Map;
-import javax.portlet.PortletSession;
 
 
 /**
@@ -79,18 +78,9 @@ public class SessionMap extends AbstractAttributeMap
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * This will clear the session without invalidation.  If no session has
-     * been created, it will simply return.
-     */
+
     public void clear()
     {
-        HttpSession session = getSession();
-        if (session == null) return;
-        for (Enumeration attributeNames = session.getAttributeNames(); 
-             attributeNames.hasMoreElements(); ) {
-            String attributeName = (String)attributeNames.nextElement();
-            session.removeAttribute(attributeName);
-        }
+        throw new UnsupportedOperationException();
     }
 }

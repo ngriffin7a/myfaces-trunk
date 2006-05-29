@@ -15,7 +15,6 @@
  */
 package javax.faces.context;
 
-import javax.el.ELContext;
 import javax.faces.application.FacesMessage;
 import java.util.Iterator;
 
@@ -27,13 +26,6 @@ import java.util.Iterator;
  */
 public abstract class FacesContext
 {
-    // The following concrete method was added for JSF 1.2.  It supplies a default 
-    // implementation that throws UnsupportedOperationException.  
-    // This allows old FacesContext implementations to still work.
-    public ELContext getELContext() {
-        throw new UnsupportedOperationException();
-    }
-    
     public abstract javax.faces.application.Application getApplication();
 
     public abstract Iterator getClientIdsWithMessages();

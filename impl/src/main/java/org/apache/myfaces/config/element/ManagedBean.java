@@ -32,7 +32,6 @@ public interface ManagedBean
     public static final int INIT_MODE_MAP = 2;
     public static final int INIT_MODE_LIST = 3;
 
-    public String getDescription();
     public String getManagedBeanName();
     public String getManagedBeanClassName();
     public Class getManagedBeanClass();

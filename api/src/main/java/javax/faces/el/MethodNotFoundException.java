@@ -20,7 +20,6 @@ package javax.faces.el;
  *
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
- * @deprecated
  */
 public class MethodNotFoundException extends EvaluationException
 {
@@ -28,33 +27,21 @@ public class MethodNotFoundException extends EvaluationException
 	// FIELDS
 
   // CONSTRUCTORS
-        /**
-         * @deprecated
-         */
 	public MethodNotFoundException()
 	{
 		super();
 	}
 
-        /**
-         * @deprecated
-         */
 	public MethodNotFoundException(String message)
 	{
         super(message);
 	}
 
-        /**
-         * @deprecated
-         */
 	public MethodNotFoundException(String message, Throwable cause)
 	{
 		super(message, cause);
 	}
 
-        /**
-         * @deprecated
-         */
 	public MethodNotFoundException(Throwable cause)
 	{
 		super(cause);

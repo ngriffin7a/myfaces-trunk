@@ -22,7 +22,6 @@ import javax.faces.context.FacesContext;
  *
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
- * @deprecated
  */
 public abstract class MethodBinding
 {
@@ -30,9 +29,6 @@ public abstract class MethodBinding
 	// FIELDS
 
 	// CONSTRUCTORS
-        /**
-         * @deprecated
-         */
 	public MethodBinding()
 	{
 	}
@@ -41,21 +37,14 @@ public abstract class MethodBinding
 	
 	/**
 	 * returns the <code>String</code> of your expression like <code>#{bean.foo}</code>.
-         * @deprecated
 	 */
 	public String getExpressionString()
 	{
         return null;
 	}
     
-    /**
-     * @deprecated
-     */
     public abstract Class getType(FacesContext facescontext) throws MethodNotFoundException;
 
-    /**
-     * @deprecated
-     */
     public abstract Object invoke(FacesContext facescontext, Object aobj[])
         throws EvaluationException, MethodNotFoundException;
 }

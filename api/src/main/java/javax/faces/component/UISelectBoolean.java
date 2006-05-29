@@ -15,7 +15,6 @@
  */
 package javax.faces.component;
 
-import javax.el.ValueExpression;
 import javax.faces.el.ValueBinding;
 
 
@@ -43,9 +42,6 @@ public class UISelectBoolean
         return value != null ? value.booleanValue() : false;
     }
 
-    /**
-     * @deprecated Use getValueExpression instead
-     */
     public ValueBinding getValueBinding(String name)
     {
         if (name == null) throw new NullPointerException("name");
@@ -59,9 +55,6 @@ public class UISelectBoolean
         }
     }
 
-    /**
-     * @deprecated Use setValueExpression instead
-     */
     public void setValueBinding(String name,
                                 ValueBinding binding)
     {
@@ -73,33 +66,6 @@ public class UISelectBoolean
         else
         {
             super.setValueBinding(name, binding);
-        }
-    }
-    
-    public ValueExpression getValueExpression(String name)
-    {
-        if (name == null) throw new NullPointerException("name");
-        if (name.equals("selected"))
-        {
-            return super.getValueExpression("value");
-        }
-        else
-        {
-            return super.getValueExpression(name);
-        }
-    }
-
-    public void setValueExpression(String name,
-                                   ValueExpression binding)
-    {
-        if (name == null) throw new NullPointerException("name");
-        if (name.equals("selected"))
-        {
-            super.setValueExpression("value", binding);
-        }
-        else
-        {
-            super.setValueExpression(name, binding);
         }
     }
 

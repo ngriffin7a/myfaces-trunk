@@ -22,7 +22,6 @@ import javax.faces.FacesException;
  *
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
- * @deprecated
  */
 public class EvaluationException extends FacesException
 {
@@ -30,33 +29,21 @@ public class EvaluationException extends FacesException
 	// FIELDS
 
   // CONSTRUCTORS
-        /**
-         * @deprecated
-         */
 	public EvaluationException()
     {
 		super();
 	}
 
-        /**
-         * @deprecated
-         */
 	public EvaluationException(String message)
 	{
 		super(message);
 	}
 
-        /**
-         * @deprecated
-         */
 	public EvaluationException(String message, Throwable cause)
 	{
 		super(message, cause);
 	}
     
-        /**
-         * @deprecated
-         */
 	public EvaluationException(Throwable cause)
 	{
         super(cause);

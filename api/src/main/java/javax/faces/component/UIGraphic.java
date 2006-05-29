@@ -15,12 +15,11 @@
  */
 package javax.faces.component;
 
-import javax.el.ValueExpression;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 
 /**
- * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
+ * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
@@ -41,9 +40,6 @@ public class UIGraphic
         setValue(url);
     }
 
-    /**
-     * @deprecated Use getValueExpression instead
-     */
     public ValueBinding getValueBinding(String name)
     {
         if (URL_PROPERTY.equals(name))
@@ -56,9 +52,6 @@ public class UIGraphic
         }
     }
 
-    /**
-     * @deprecated Use setValueExpression instead
-     */
     public void setValueBinding(String name,
                                 ValueBinding binding)
     {
@@ -69,31 +62,6 @@ public class UIGraphic
         else
         {
             super.setValueBinding(name, binding);
-        }
-    }
-    
-    public ValueExpression getValueExpression(String name)
-    {
-        if (URL_PROPERTY.equals(name))
-        {
-            return super.getValueExpression(VALUE_PROPERTY);
-        }
-        else
-        {
-            return super.getValueExpression(name);
-        }
-    }
-
-    public void setValueExpression(String name,
-                                   ValueExpression binding)
-    {
-        if (URL_PROPERTY.equals(name))
-        {
-            super.setValueExpression(VALUE_PROPERTY, binding);
-        }
-        else
-        {
-            super.setValueExpression(name, binding);
         }
     }
 

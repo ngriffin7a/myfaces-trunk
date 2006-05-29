@@ -20,7 +20,6 @@ package javax.faces.el;
  *
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
- * @deprecated
  */
 public class PropertyNotFoundException extends EvaluationException
 {
@@ -29,33 +28,21 @@ public class PropertyNotFoundException extends EvaluationException
 	// FIELDS
 
   // CONSTRUCTORS
-        /**
-         * @deprecated
-         */
 	public PropertyNotFoundException()
 	{
 		super();
 	}
 
-        /**
-         * @deprecated
-         */
 	public PropertyNotFoundException(String message)
 	{
 		super(message);
 	}
 
-        /**
-         * @deprecated
-         */
 	public PropertyNotFoundException(String message, Throwable cause)
 	{
 		super(message, cause);
 	}
 
-        /**
-         * @deprecated
-         */
 	public PropertyNotFoundException(Throwable cause)
 	{
 		super(cause);

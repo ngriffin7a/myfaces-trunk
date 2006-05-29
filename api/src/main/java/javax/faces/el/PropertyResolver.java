@@ -25,14 +25,10 @@ package javax.faces.el;
  *
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
- * @deprecated
  */
 public abstract class PropertyResolver
 {
 
-    /**
-     * @deprecated
-     */
     public PropertyResolver()
     {
     }
@@ -41,8 +37,6 @@ public abstract class PropertyResolver
      * Returns the datatype of the specified element within a list or array.
      * <p>
      * Param base must be of type Array or List.
-     *
-     * @deprecated
      */
     public abstract Class getType(Object base, int index)
         throws EvaluationException, PropertyNotFoundException;
@@ -63,7 +57,6 @@ public abstract class PropertyResolver
      * @param base must not be null.
      * @param property must be of type String, must not be null and
      *  must not be an empty string.
-     * @deprecated
      */
     public abstract Class getType(Object base, java.lang.Object property)
         throws EvaluationException, PropertyNotFoundException;
@@ -79,7 +72,6 @@ public abstract class PropertyResolver
      *  
      * @throws ReferenceSyntaxException if the base object is not an Array
      * or List.
-     * @deprecated
      */
     public abstract Object getValue(Object base, int index)
         throws EvaluationException, PropertyNotFoundException;
@@ -97,20 +89,13 @@ public abstract class PropertyResolver
      * 
      * @throws PropertyNotFoundException if the provided object does
      * not have the specified property.
-     * @deprecated
      */
     public abstract Object getValue(Object base, java.lang.Object property)
         throws EvaluationException, PropertyNotFoundException;
 
-    /**
-     * @deprecated
-     */
     public abstract boolean isReadOnly(Object base, int index)
         throws EvaluationException, PropertyNotFoundException;
 
-    /**
-     * @deprecated
-     */
     public abstract boolean isReadOnly(Object base, java.lang.Object property)
         throws EvaluationException, PropertyNotFoundException;
 
@@ -122,16 +107,12 @@ public abstract class PropertyResolver
      * 
      * @throws EvaluationException if the base object is not an Array or List.
      * @throws PropertyNotFoundException if the index is "out of bounds".
-     *
-     * @deprecated
      */
     public abstract void setValue(Object base, int index, java.lang.Object value)
         throws EvaluationException, PropertyNotFoundException;
 
     /**
      * Set the named property on the base object to the provided value.
-     *
-     * @deprecated
      */
     public abstract void setValue(Object base, Object property, java.lang.Object value)
         throws EvaluationException, PropertyNotFoundException;

@@ -22,25 +22,17 @@ import javax.faces.context.FacesContext;
  *
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
- *
- * @deprecated
  */
 public abstract class VariableResolver
 {
 	// FIELDS
 
 	// CONSTRUCTORS
-        /**
-         * @deprecated
-         */
 	public VariableResolver()
 	{
 	}
 
 	// METHODS
-        /**
-         * @deprecated
-         */
 	public abstract Object resolveVariable(FacesContext facesContext, String name)
         throws EvaluationException;
 }
