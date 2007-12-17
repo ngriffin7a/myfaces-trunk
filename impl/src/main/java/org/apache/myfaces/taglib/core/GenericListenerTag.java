@@ -21,6 +21,7 @@ import javax.el.ELException;
 import javax.el.ValueExpression;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionListener;
 import javax.faces.webapp.UIComponentClassicTagBase;
 import javax.faces.webapp.UIComponentELTag;
 import javax.servlet.jsp.JspException;
@@ -64,6 +65,8 @@ public abstract class GenericListenerTag<_Holder, _Listener>
 
     protected abstract void addListener(_Holder holder, _Listener listener);
 
+    protected abstract _Listener createDelegateListener(ValueExpression type, ValueExpression binding);
+    
     public int doStartTag() throws JspException
     {
         UIComponentClassicTagBase componentTag = UIComponentELTag.getParentUIComponentClassicTagBase(pageContext);
@@ -97,7 +100,20 @@ public abstract class GenericListenerTag<_Holder, _Listener>
             throw new JspException(
                     "Component " + ((UIComponent) holder).getId() + " is not instance of " + _holderClazz.getName());
         }
-
+        
+        if (_type != null && _type.isLiteralText())
+        {
+            createListener(holder,component);
+        }else{
+            addListener(holder, createDelegateListener(_type,_binding));
+        }
+        
+        return Tag.SKIP_BODY;
+    }
+    
+    protected void createListener(_Holder holder, UIComponent component) 
+        throws JspException
+    {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         _Listener listener;
         // type and/or binding must be specified
@@ -112,7 +128,7 @@ public abstract class GenericListenerTag<_Holder, _Listener>
                     {
                         addListener(holder, listener);
                         // no need for further processing
-                        return Tag.SKIP_BODY;
+                        return;
                     }
                 }
                 catch (ELException e)
@@ -127,11 +143,15 @@ public abstract class GenericListenerTag<_Holder, _Listener>
                 if (_type.isLiteralText())
                 {
                     className = _type.getExpressionString();
+                    //If type is literal text we should create
+                    //a new instance
+                    listener = (_Listener) ClassUtils.newInstance(className);
                 } else
                 {
                     className = (String) _type.getValue(facesContext.getELContext());
+                    listener = null;
                 }
-                listener = (_Listener) ClassUtils.newInstance(className);
+                                
                 if (null != _binding)
                 {
                     try
@@ -142,14 +162,18 @@ public abstract class GenericListenerTag<_Holder, _Listener>
                         throw new JspException("Exception while evaluating the binding attribute of Component "
                                 + component.getId(), e);
                     }
+                }else{
+                    //Type is a EL expression, and there is
+                    //no binding property so we should create
+                    //a new instance
+                    listener = (_Listener) ClassUtils.newInstance(className);
                 }
                 addListener(holder, listener);
             }
         } catch (ClassCastException e)
         {
             throw new JspException(e);
-        }
-
-        return Tag.SKIP_BODY;
+        }        
     }
+    
 }

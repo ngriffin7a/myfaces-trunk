@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
-    <artifactId>myfaces-master</artifactId>
-    <groupId>org.apache.myfaces.maven</groupId>
-    <version>1.0.5</version>
+    <groupId>org.apache.myfaces</groupId>
+    <artifactId>myfaces</artifactId>
+    <version>3</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.myfaces.core</groupId>
   <artifactId>myfaces-core-project</artifactId>
   <packaging>pom</packaging>
   <name>Core Project</name>
-  <version>1.2.1-SNAPSHOT</version>
+  <version>1.2.1</version>
   <url>http://myfaces.apache.org/projects</url>
   <issueManagement>
     <system>jira</system>
     <url>http://issues.apache.org/jira/secure/BrowseProject.jspa?id=10600</url>
   </issueManagement>
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/myfaces/core/branches/1_2_1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/myfaces/core/branches/1_2_1</developerConnection>
-    <url>http://svn.apache.org/repos/asf/myfaces/core/branches/1_2_1</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/myfaces/core/tags/1_2_1</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/myfaces/core/tags/1_2_1</developerConnection>
+    <url>http://svn.apache.org/repos/asf/myfaces/core/tags/1_2_1</url>
   </scm>
   <modules>
     <module>build</module>
@@ -32,26 +32,6 @@
        <name>java.net Maven 1 Repository</name>
        <url>http://download.java.net/maven/1</url>
        <layout>legacy</layout>
-    </repository>
-    <repository>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <id>apache.snapshots</id>
-      <url>http://people.apache.org/repo/m2-snapshot-repository</url>
-    </repository>
-    <repository>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>myfaces-repo</id>
-      <url>http://myfaces.zones.apache.org/dist/maven-repository</url>
     </repository>
   </repositories>
   <build>
@@ -114,18 +94,18 @@
       <dependency>
         <groupId>org.apache.myfaces.core</groupId>
         <artifactId>myfaces-api</artifactId>
-        <version>1.2.1-SNAPSHOT</version>
+        <version>1.2.1</version>
       </dependency>
       <dependency>
         <groupId>org.apache.myfaces.core</groupId>
         <artifactId>myfaces-api</artifactId>
-        <version>1.2.1-SNAPSHOT</version>
+        <version>1.2.1</version>
         <classifier>tests</classifier>
       </dependency>
       <dependency>
         <groupId>org.apache.myfaces.shared</groupId>
         <artifactId>myfaces-shared-impl</artifactId>
-        <version>3.0.1-SNAPSHOT</version>
+        <version>3.0.1</version>
       </dependency>
 
       <dependency>
@@ -264,17 +244,11 @@
         </pluginRepository>
     </pluginRepositories>
 
-  <distributionManagement>
-    <site>
-      <id>apache-site</id>
-      <name>Apache Website</name>
-      <url>scpexe://minotaur.apache.org/www/incubator.apache.org/adffaces</url>
-    </site>
-    <snapshotRepository>
-      <uniqueVersion>false</uniqueVersion>
-      <id>apache-maven-snapshots</id>
-      <name>Apache Maven Snapshot Repository</name>
-      <url>scpexe://minotaur.apache.org/www/people.apache.org/repo/m2-snapshot-repository</url>
-    </snapshotRepository>
-  </distributionManagement>
+    <distributionManagement>
+      <site>
+        <id>apache-site</id>
+        <name>Apache Website</name>
+        <url>scpexe://minotaur.apache.org/www/myfaces.apache.org/core12/</url>
+      </site>
+    </distributionManagement>
 </project>

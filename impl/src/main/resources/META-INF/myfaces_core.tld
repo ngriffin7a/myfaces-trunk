@@ -25,7 +25,6 @@
         This tag library implements the standard JSF core tags.
     </description>
    <tlib-version>1.2</tlib-version>
-   <jsp-version>2.1</jsp-version>
    <short-name>f</short-name>
    <uri>http://java.sun.com/jsf/core</uri>
 
@@ -211,12 +210,12 @@
            associates it with the nearest parent UIComponent.
        </description>
        <name>converter</name>
-       <tag-class>org.apache.myfaces.taglib.core.ConverterTag</tag-class>
+       <tag-class>org.apache.myfaces.taglib.core.ConverterImplTag</tag-class>
        <body-content>empty</body-content>
       <attribute>
           <description>The converter's registered ID.</description>
           <name>converterId</name>
-          <required>true</required>
+          <required>false</required>
           <deferred-value>
                 <type>java.lang.String</type>
             </deferred-value>
@@ -459,7 +458,7 @@
       <attribute>
           <description>The value of this parameter.</description>
           <name>value</name>
-          <required>true</required>
+          <required>false</required>
           <deferred-value/>
       </attribute>
    </tag>
@@ -900,7 +899,7 @@
 
         </description>
         <name>validator</name>
-       <tag-class>org.apache.myfaces.taglib.core.ValidatorTag</tag-class>
+       <tag-class>org.apache.myfaces.taglib.core.ValidatorImplTag</tag-class>
        <body-content>empty</body-content>
       <attribute>
           <description>The registered ID of the desired Validator.</description>
