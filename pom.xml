@@ -10,16 +10,16 @@
   <artifactId>myfaces-core-project</artifactId>
   <packaging>pom</packaging>
   <name>Core Project</name>
-  <version>1.2.1-SNAPSHOT</version>
+  <version>1.2.1</version>
   <url>http://myfaces.apache.org/projects</url>
   <issueManagement>
     <system>jira</system>
     <url>http://issues.apache.org/jira/secure/BrowseProject.jspa?id=10600</url>
   </issueManagement>
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/myfaces/core/trunk_1.2.x</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/myfaces/core/trunk_1.2.x</developerConnection>
-    <url>http://svn.apache.org/repos/asf/myfaces/core/trunk_1.2.x</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/myfaces/core/tags/1_2_1</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/myfaces/core/tags/1_2_1</developerConnection>
+    <url>http://svn.apache.org/repos/asf/myfaces/core/tags/1_2_1</url>
   </scm>
   <modules>
     <module>build</module>
@@ -94,18 +94,18 @@
       <dependency>
         <groupId>org.apache.myfaces.core</groupId>
         <artifactId>myfaces-api</artifactId>
-        <version>1.2.1-SNAPSHOT</version>
+        <version>1.2.1</version>
       </dependency>
       <dependency>
         <groupId>org.apache.myfaces.core</groupId>
         <artifactId>myfaces-api</artifactId>
-        <version>1.2.1-SNAPSHOT</version>
+        <version>1.2.1</version>
         <classifier>tests</classifier>
       </dependency>
       <dependency>
         <groupId>org.apache.myfaces.shared</groupId>
         <artifactId>myfaces-shared-impl</artifactId>
-        <version>3.0.1-SNAPSHOT</version>
+        <version>3.0.1</version>
       </dependency>
 
       <dependency>
