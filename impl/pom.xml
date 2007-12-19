@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.apache.myfaces.core</groupId>
     <artifactId>myfaces-core-project</artifactId>
-    <version>1.2.2-SNAPSHOT</version>
+    <version>1.2.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.myfaces.core</groupId>
@@ -12,9 +12,9 @@
   <description>MyFaces Implementation - JSR 252 ( http://www.jcp.org/en/jsr/detail?id=252 )</description>
   <url>http://myfaces.apache.org</url>
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/myfaces/core/branches/1_2_1prepare/impl</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/myfaces/core/branches/1_2_1prepare/impl</developerConnection>
-    <url>http://svn.apache.org/repos/asf/myfaces/core/branches/1_2_1prepare/impl</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/myfaces/core/branches/1_2_1/impl</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/myfaces/core/branches/1_2_1/impl</developerConnection>
+    <url>http://svn.apache.org/repos/asf/myfaces/core/branches/1_2_1/impl</url>
   </scm>
   <build>
     <resources>
@@ -49,7 +49,6 @@
       <plugin>
         <groupId>org.apache.myfaces.trinidadbuild</groupId>
         <artifactId>maven-faces-plugin</artifactId>
-        <version>1.2.5</version>
         <configuration>
           <taglibs>
             <h>http://java.sun.com/jsf/html</h>
@@ -88,7 +87,7 @@
                 <artifactItem>
                   <groupId>org.apache.myfaces.shared</groupId>
                   <artifactId>myfaces-shared-impl</artifactId>
-                  <version>3.0.1</version>
+                  <version>3.0.1-SNAPSHOT</version>
                 </artifactItem>
               </artifactItems>
               <outputDirectory>${project.build.directory}/classes</outputDirectory>
@@ -234,7 +233,7 @@
     <dependency>
        <groupId>org.apache.myfaces.core</groupId>
        <artifactId>myfaces-build</artifactId>
-       <version>1.2.2-SNAPSHOT</version>
+       <version>1.2.1-SNAPSHOT</version>
        <scope>provided</scope>
     </dependency>
     <dependency>
