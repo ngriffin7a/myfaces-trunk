@@ -70,7 +70,7 @@
         <plugin>
           <groupId>org.apache.myfaces.trinidadbuild</groupId>
           <artifactId>maven-faces-plugin</artifactId>
-          <version>1.2.5</version>
+          <version>1.2.6</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
