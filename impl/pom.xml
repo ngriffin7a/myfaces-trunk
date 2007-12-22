@@ -12,9 +12,9 @@
   <description>MyFaces Implementation - JSR 252 ( http://www.jcp.org/en/jsr/detail?id=252 )</description>
   <url>http://myfaces.apache.org</url>
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/myfaces/core/tags/1_2_1/impl</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/myfaces/core/tags/1_2_1/impl</developerConnection>
-    <url>http://svn.apache.org/repos/asf/myfaces/core/tags/1_2_1/impl</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/myfaces/core/tags/1_2_1</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/myfaces/core/tags/1_2_1</developerConnection>
+    <url>http://svn.apache.org/repos/asf/myfaces/core/tags/1_2_1</url>
   </scm>
   <build>
     <resources>
@@ -49,7 +49,6 @@
       <plugin>
         <groupId>org.apache.myfaces.trinidadbuild</groupId>
         <artifactId>maven-faces-plugin</artifactId>
-        <version>1.2.5</version>
         <configuration>
           <taglibs>
             <h>http://java.sun.com/jsf/html</h>
