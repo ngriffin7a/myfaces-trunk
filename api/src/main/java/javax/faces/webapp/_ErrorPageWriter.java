@@ -47,25 +47,49 @@ final class _ErrorPageWriter {
 
     private final static String TS = "&lt;";
 
-    private static final String ERROR_TEMPLATE = "META-INF/rsc/facelet-dev-error.xml";
+    private static final String ERROR_TEMPLATE = "META-INF/rsc/myfaces-dev-error.xml";
+
+    private static final String ERROR_TEMPLATE_RESOURCE = "org.apache.myfaces.ERROR_TEMPLATE_RESOURCE";
 
     private static String[] ERROR_PARTS;
 
-    private static final String DEBUG_TEMPLATE = "META-INF/rsc/facelet-dev-debug.xml";
+    private static final String DEBUG_TEMPLATE = "META-INF/rsc/myfaces-dev-debug.xml";
+    
+    private static final String DEBUG_TEMPLATE_RESOURCE = "org.apache.myfaces.DEBUG_TEMPLATE_RESOURCE";    
 
     private static String[] DEBUG_PARTS;
 
     public _ErrorPageWriter() {
         super();
     }
-
-    private static void init() throws IOException {
+    
+    private static String getErrorTemplate(FacesContext context)
+    {
+        String errorTemplate = context.getExternalContext().getInitParameter(ERROR_TEMPLATE_RESOURCE);
+        if (errorTemplate != null)
+        {
+            return errorTemplate;
+        }
+        return ERROR_TEMPLATE;
+    }
+    
+    private static String getDebugTemplate(FacesContext context)
+    {
+        String debugTemplate = context.getExternalContext().getInitParameter(DEBUG_TEMPLATE_RESOURCE);
+        if (debugTemplate != null)
+        {
+            return debugTemplate;
+        }        
+        return DEBUG_TEMPLATE;
+    }
+    
+    private static void init(FacesContext context) throws IOException {
         if (ERROR_PARTS == null) {
-            ERROR_PARTS = splitTemplate(ERROR_TEMPLATE);
+            ERROR_PARTS = splitTemplate(getErrorTemplate(context));
         }
 
         if (DEBUG_PARTS == null) {
-            DEBUG_PARTS = splitTemplate(DEBUG_TEMPLATE);
+            DEBUG_PARTS = splitTemplate(getDebugTemplate(context));
         }
     }
 
@@ -84,7 +108,7 @@ final class _ErrorPageWriter {
         return str.split("@@");
     }
 
-    private static ArrayList getErrorId(Exception e){
+    private static ArrayList getErrorId(Throwable e){
         String message = e.getMessage();
 
         if(message==null)
@@ -115,9 +139,9 @@ final class _ErrorPageWriter {
             writer.write(ex.getClass().getName());
         }
     }
-    
-    public static void debugHtml(Writer writer, FacesContext faces, Exception e) throws IOException {
-        init();
+
+    public static void debugHtml(Writer writer, FacesContext faces, Throwable e) throws IOException {
+        init(faces);
         Date now = new Date();
         for (int i = 0; i < ERROR_PARTS.length; i++) {
             if ("message".equals(ERROR_PARTS[i])) {
@@ -144,8 +168,89 @@ final class _ErrorPageWriter {
             }
         }
     }
+    
+    public static void debugHtml(Writer writer, FacesContext faces, List exceptionList) throws IOException
+    {
+        init(faces);
+        Date now = new Date();
+        for (int i = 0; i < ERROR_PARTS.length; i++)
+        {
+            if ("message".equals(ERROR_PARTS[i]))
+            {
+                for (int j = 0; j < exceptionList.size(); j++)
+                {
+                    Exception e = (Exception) exceptionList.get(j);
+                    String msg = e.getMessage();
+                    if (msg != null)
+                    {
+                        writer.write(msg.replaceAll("<", TS));
+                    }
+                    else 
+                    {
+                        writer.write(e.getClass().getName());
+                    }
+                    if (!(j+1==exceptionList.size()))
+                    {
+                        writer.write("<br>");
+                    }
+                }
+            }
+            else if ("trace".equals(ERROR_PARTS[i]))
+            {
+                for (int j = 0; j < exceptionList.size(); j++)
+                {
+                    Exception e = (Exception) exceptionList.get(j);
+                    writeException(writer, e);
+                }
+            }
+            else if ("now".equals(ERROR_PARTS[i]))
+            {
+                writer.write(DateFormat.getDateTimeInstance().format(now));
+            }
+            else if ("tree".equals(ERROR_PARTS[i]))
+            {
+                if (faces.getViewRoot() != null)
+                {
+                    List highlightId = null;
+                    for (int j = 0; j < exceptionList.size(); j++)
+                    {
+                        Exception e = (Exception) exceptionList.get(j);
+                        if (highlightId == null)
+                        {
+                            highlightId = getErrorId(e);
+                        }
+                        else
+                        {
+                            highlightId.addAll(getErrorId(e));
+                        }
+                    }
+                    writeComponent(writer, faces.getViewRoot(), highlightId);
+                }
+            }
+            else if ("vars".equals(ERROR_PARTS[i]))
+            {
+                writeVariables(writer, faces);
+            }
+            else if ("cause".equals(ERROR_PARTS[i]))
+            {
+                for (int j = 0; j < exceptionList.size(); j++)
+                {
+                    Exception e = (Exception) exceptionList.get(j);
+                    writeCause(writer, e);
+                    if (!(j+1==exceptionList.size()))
+                    {
+                        writer.write("<br>");
+                    }
+                }
+            }
+            else
+            {
+                writer.write(ERROR_PARTS[i]);
+            }
+        }
+    }    
 
-    private static void writeException(Writer writer, Exception e) throws IOException {
+    private static void writeException(Writer writer, Throwable e) throws IOException {
         StringWriter str = new StringWriter(256);
         PrintWriter pstr = new PrintWriter(str);
         e.printStackTrace(pstr);
@@ -154,7 +259,7 @@ final class _ErrorPageWriter {
     }
 
     public static void debugHtml(Writer writer, FacesContext faces) throws IOException {
-        init();
+        init(faces);
         Date now = new Date();
         for (int i = 0; i < DEBUG_PARTS.length; i++) {
             if ("message".equals(DEBUG_PARTS[i])) {
@@ -333,7 +438,12 @@ final class _ErrorPageWriter {
         return (c.getClass().getName().startsWith("com.sun.facelets.compiler"));
     }
 
-    public static void handleException(FacesContext facesContext, Exception ex) throws ServletException, IOException {
+    public static void handleException(FacesContext facesContext, Exception ex) throws ServletException, IOException
+    {
+        handleThrowable(facesContext, ex);
+    }
+    
+    public static void handleThrowable(FacesContext facesContext, Throwable ex) throws ServletException, IOException {
 
         prepareExceptionStack(ex);
 
@@ -355,6 +465,41 @@ final class _ErrorPageWriter {
         }
         else {
             throwException(ex);
+        }
+    }
+    
+    public static void handleExceptionList(FacesContext facesContext, List exceptionList) throws ServletException, IOException
+    {
+        for (int i = 0; i < exceptionList.size(); i++)
+        {
+            prepareExceptionStack( (Exception) exceptionList.get(i));
+        }
+
+        Object response = facesContext.getExternalContext().getResponse();
+        if(response instanceof HttpServletResponse)
+        {
+            HttpServletResponse httpResp = (HttpServletResponse) response;
+            if (!httpResp.isCommitted())
+            {
+                httpResp.reset();
+                httpResp.setContentType("text/html; charset=UTF-8");
+                Writer writer = httpResp.getWriter();
+
+                debugHtml(writer, facesContext, exceptionList);
+
+                for (int i = 0; i < exceptionList.size(); i++)
+                {
+                    log.error("An exception occurred", (Exception) exceptionList.get(i));
+                }
+            }
+            else
+            {
+                throwException((Exception)exceptionList.get(0));
+            }
+        }
+        else
+        {
+            throwException((Exception)exceptionList.get(0));
         }
     }
 
@@ -381,7 +526,7 @@ final class _ErrorPageWriter {
         }
     }
 
-    static void throwException(Exception e) throws IOException, ServletException {
+    static void throwException(Throwable e) throws IOException, ServletException {
 
         prepareExceptionStack(e);
 

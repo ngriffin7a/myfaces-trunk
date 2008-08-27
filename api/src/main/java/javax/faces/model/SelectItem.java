@@ -1,17 +1,20 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package javax.faces.model;
 
@@ -31,9 +34,9 @@ public class SelectItem implements Serializable
     private String _label;
     private String _description;
     private boolean _disabled;
-    private boolean escape;
+    private boolean _escape;
 
-	// CONSTRUCTORS
+    // CONSTRUCTORS
     public SelectItem()
     {
     }
@@ -44,6 +47,7 @@ public class SelectItem implements Serializable
         _label = value == null ? null : value.toString();
         _description = null;
         _disabled = false;
+        _escape=true;
     }
 
     public SelectItem(Object value, String label)
@@ -52,6 +56,7 @@ public class SelectItem implements Serializable
         _label = label;
         _description = null;
         _disabled = false;
+        _escape = true;
     }
 
     public SelectItem(Object value, String label, String description)
@@ -60,6 +65,7 @@ public class SelectItem implements Serializable
         _label = label;
         _description = description;
         _disabled = false;
+        _escape = true;
     }
 
     public SelectItem(Object value, String label, String description, boolean disabled)
@@ -68,6 +74,7 @@ public class SelectItem implements Serializable
         _label = label;
         _description = description;
         _disabled = disabled;
+        _escape = true;
     }
 
     public SelectItem(Object value, String label, String description, boolean disabled, boolean escape)
@@ -76,10 +83,10 @@ public class SelectItem implements Serializable
         _label = label;
         _description = description;
         _disabled = disabled;
-        this.escape = escape;
+        this._escape = escape;
     }
     
-	// METHODS
+    // METHODS
     public String getDescription()
     {
         return _description;
@@ -124,12 +131,12 @@ public class SelectItem implements Serializable
 
     public boolean isEscape()
     {
-        return escape;
+        return _escape;
     }
 
     public void setEscape(boolean escape)
     {
-        this.escape = escape;
+        this._escape = escape;
     }
     
 }

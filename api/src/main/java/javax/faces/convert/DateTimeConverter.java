@@ -1,17 +1,20 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package javax.faces.convert;
 
@@ -87,21 +90,17 @@ public class DateTimeConverter
                 }
                 catch (ParseException e)
                 {
-                	try {
-                		String type = getType();
-                		Object[] args = new Object[]{value,format.parse(new Date().toString()),_MessageUtils.getLabel(facesContext, uiComponent)};
-                		
-                		if(type.equals(TYPE_DATE))
-                			throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,DATE_ID,args));
-                		else if (type.equals(TYPE_TIME))
-                			throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,TIME_ID,args));
-                		else if (type.equals(TYPE_BOTH))
-                			throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,DATETIME_ID,args));
-                		else
-                			throw new ConverterException("invalid type '" + _type + "'");
-                	}catch(ParseException exception) {
-                		throw new ConverterException(exception);
-                	}
+                    String type = getType();
+                    Object[] args = new Object[]{value,format.format(new Date()),_MessageUtils.getLabel(facesContext, uiComponent)};
+                    
+                    if(type.equals(TYPE_DATE))
+                        throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,DATE_ID,args));
+                    else if (type.equals(TYPE_TIME))
+                        throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,TIME_ID,args));
+                    else if (type.equals(TYPE_BOTH))
+                        throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,DATETIME_ID,args));
+                    else
+                        throw new ConverterException("invalid type '" + _type + "'");
                 }
             }
         }
@@ -134,7 +133,7 @@ public class DateTimeConverter
         }
         catch (Exception e)
         {
-        	throw new ConverterException(_MessageUtils.getErrorMessage(facesContext, STRING_ID, new Object[]{value,_MessageUtils.getLabel(facesContext, uiComponent)}),e);
+            throw new ConverterException(_MessageUtils.getErrorMessage(facesContext, STRING_ID, new Object[]{value,_MessageUtils.getLabel(facesContext, uiComponent)}),e);
         }
     }
 

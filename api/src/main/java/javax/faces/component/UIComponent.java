@@ -1,17 +1,20 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package javax.faces.component;
 
@@ -27,12 +30,20 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+
 /**
  * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
+@JSFComponent(
+        type="javax.faces.Component",
+        family="javax.faces.Component",
+        desc = "abstract base component",
+        configExcluded = true
+        )
 public abstract class UIComponent
         implements StateHolder
 {
@@ -137,31 +148,31 @@ public abstract class UIComponent
      */
     public boolean invokeOnComponent(javax.faces.context.FacesContext context, String clientId, javax.faces.component.ContextCallback callback) throws javax.faces.FacesException
     {
-    	//java.lang.NullPointerException - if any of the arguments are null
-    	if(context == null || clientId == null || callback == null)
-    	{
-    		throw new NullPointerException();
-    	}
-    	
-    	//searching for this component?
-    	boolean returnValue = this.getClientId(context).equals(clientId); 
-    	if(returnValue)
-    	{
-    		try
-    		{
-    			callback.invokeContextCallback(context, this);
-    		} catch(Exception e)
-    		{
-    			throw new FacesException(e);
-    		}
-    		return returnValue;
-    	}
-		//Searching for this component's children/facets 
-    	for (Iterator<UIComponent> it = this.getFacetsAndChildren(); !returnValue && it.hasNext();){
-    		returnValue = it.next().invokeOnComponent(context, clientId, callback);
-    	}
-    		
-    	return returnValue;
+        //java.lang.NullPointerException - if any of the arguments are null
+        if(context == null || clientId == null || callback == null)
+        {
+            throw new NullPointerException();
+        }
+        
+        //searching for this component?
+        boolean found = clientId.equals(this.getClientId(context)); 
+        if(found)
+        {
+            try
+            {
+                callback.invokeContextCallback(context, this);
+            } catch(Exception e)
+            {
+                throw new FacesException(e);
+            }
+            return found;
+        }
+        //Searching for this component's children/facets 
+        for (Iterator<UIComponent> it = this.getFacetsAndChildren(); !found && it.hasNext();){
+            found = it.next().invokeOnComponent(context, clientId, callback);
+        }
+            
+        return found;
     }
 
     public abstract java.lang.String getClientId(javax.faces.context.FacesContext context);
@@ -220,35 +231,35 @@ public abstract class UIComponent
             throws java.io.IOException;
 
     public abstract void encodeEnd(javax.faces.context.FacesContext context)
-    		throws java.io.IOException;
+            throws java.io.IOException;
 
     public void encodeAll(javax.faces.context.FacesContext context) throws java.io.IOException
     {
-    	if(context == null)
-    	{
-    		throw new NullPointerException();
-    	}
-    	
-    	if(isRendered())
-    	{
-    		this.encodeBegin(context);
-    		
-    		//rendering children
-    		if(this.getRendersChildren())
-    		{
-    			this.encodeChildren(context);
-    		}
-    		//let children render itself
-    		else
-    		{
+        if(context == null)
+        {
+            throw new NullPointerException();
+        }
+        
+        if(isRendered())
+        {
+            this.encodeBegin(context);
+            
+            //rendering children
+            if(this.getRendersChildren())
+            {
+                this.encodeChildren(context);
+            }
+            //let children render itself
+            else
+            {
           if(this.getChildCount()>0) {
-      			for (UIComponent comp : this.getChildren()) {
-    					comp.encodeAll(context);
-    				}
+                  for (UIComponent comp : this.getChildren()) {
+                        comp.encodeAll(context);
+                    }
           }
-    		}
+            }
             this.encodeEnd(context);
-    	}
+        }
     }
 
 

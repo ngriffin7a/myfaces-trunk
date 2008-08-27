@@ -1,17 +1,20 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package javax.faces.application;
 
@@ -70,29 +73,29 @@ public abstract class ViewHandler
      */
     public String calculateCharacterEncoding(javax.faces.context.FacesContext context)
     {
-    	String _encoding = null;
-    	ExternalContext externalContext = context.getExternalContext();
+        String _encoding = null;
+        ExternalContext externalContext = context.getExternalContext();
         String _contentType = (String) externalContext.getRequestHeaderMap().get("Content-Type");
-    	int _indexOf = _contentType == null ? -1 :_contentType.indexOf("charset");
-    	if(_indexOf != -1)
-    	{
-			String _tempEnc =_contentType.substring(_indexOf); //charset=UTF-8 
-    		_encoding = _tempEnc.substring(_tempEnc.indexOf("=")+1); //UTF-8
-    	}
-    	else 
-    	{
-    		boolean _sessionAvailable = externalContext.getSession(false) != null;
-    		if(_sessionAvailable)
-    		{
-    			Object _sessionParam = externalContext.getSessionMap().get(CHARACTER_ENCODING_KEY); 
-    			if (_sessionParam != null)
-    			{
-    				_encoding = _sessionParam.toString();
-    			}
-    		}
-    	}
-    	
-    	return _encoding;
+        int _indexOf = _contentType == null ? -1 :_contentType.indexOf("charset");
+        if(_indexOf != -1)
+        {
+            String _tempEnc =_contentType.substring(_indexOf); //charset=UTF-8 
+            _encoding = _tempEnc.substring(_tempEnc.indexOf("=")+1); //UTF-8
+        }
+        else 
+        {
+            boolean _sessionAvailable = externalContext.getSession(false) != null;
+            if(_sessionAvailable)
+            {
+                Object _sessionParam = externalContext.getSessionMap().get(CHARACTER_ENCODING_KEY); 
+                if (_sessionParam != null)
+                {
+                    _encoding = _sessionParam.toString();
+                }
+            }
+        }
+        
+        return _encoding;
     }
     
     /**
@@ -131,18 +134,29 @@ public abstract class ViewHandler
      * This method is also invoked when navigation occurs from one view to another, where
      * the viewId passed is the id of the new view to be displayed. Again it is the responsibility
      * of renderView to then populate the viewroot with descendants.
+     * <p>
+     * The locale and renderKit settings are inherited from the current UIViewRoot that is
+     * configured before this method is called. That means of course that they do NOT
+     * get set for GET requests, including navigation that has the redirect flag set.
      */
     public abstract javax.faces.component.UIViewRoot createView(javax.faces.context.FacesContext context,
                                                                 String viewId);
 
     /**
      * Return a URL that a remote system can invoke in order to access the specified view.
+     * <p>
+     * Note that the URL a user enters and the viewId which is invoked can be
+     * different. The simplest difference is a change in suffix (eg url "foo.jsf"
+     * references view "foo.jsp").
      */
     public abstract String getActionURL(javax.faces.context.FacesContext context,
                                         String viewId);
 
     /**
-     * Return a URL that a remote system can invoke in order to access the specified resource..
+     * Return a URL that a remote system can invoke in order to access the specified resource.
+     * <p>
+     * When path starts with a slash, it is relative to the webapp root. Otherwise it is
+     * relative to the value returned by getActionURL.
      */
     public abstract String getResourceURL(javax.faces.context.FacesContext context,
                                           String path);
@@ -155,18 +169,18 @@ public abstract class ViewHandler
      */
     public void initView(javax.faces.context.FacesContext context) throws FacesException
     {
-    	String _encoding = this.calculateCharacterEncoding(context);
-    	if(_encoding != null)
-    	{
-    		try
-    		{
-        		context.getExternalContext().setRequestCharacterEncoding(_encoding);
-    		}
-    		catch(UnsupportedEncodingException uee)
-    		{
-    			throw new FacesException(uee);
-    		}
-    	}
+        String _encoding = this.calculateCharacterEncoding(context);
+        if(_encoding != null)
+        {
+            try
+            {
+                context.getExternalContext().setRequestCharacterEncoding(_encoding);
+            }
+            catch(UnsupportedEncodingException uee)
+            {
+                throw new FacesException(uee);
+            }
+        }
     }
     
     /**

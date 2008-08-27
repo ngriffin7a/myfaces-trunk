@@ -1,17 +1,20 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package javax.faces.convert;
 
@@ -88,6 +91,7 @@ public class NumberConverter
                 format.setParseIntegerOnly(_integerOnly);
                 
                 DecimalFormat df = (DecimalFormat)format;
+                //df.setParseBigDecimal(true);
                 DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
                 boolean changed = false;
                 if(dfs.getGroupingSeparator() == '\u00a0')
@@ -114,22 +118,22 @@ public class NumberConverter
                   catch (ParseException pe)
                   {
 
-                	if(getPattern() != null)
-                		throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
-                																	PATTERN_ID,
-                																	new Object[]{value,"$###,###",_MessageUtils.getLabel(facesContext, uiComponent)}));
-                	else if(getType().equals("number"))
-                		throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
-																					NUMBER_ID,
-																					new Object[]{value,"21",_MessageUtils.getLabel(facesContext, uiComponent)}));
-                	else if(getType().equals("currency"))
-                		throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
-                																	CURRENCY_ID,
-                																	new Object[]{value,"42.25",_MessageUtils.getLabel(facesContext, uiComponent)}));
-                	else if(getType().equals("percent"))
-                		throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
-																					PERCENT_ID,
-																					new Object[]{value,".90",_MessageUtils.getLabel(facesContext, uiComponent)}));
+                    if(getPattern() != null)
+                        throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
+                                                                                    PATTERN_ID,
+                                                                                    new Object[]{value,"$###,###",_MessageUtils.getLabel(facesContext, uiComponent)}));
+                    else if(getType().equals("number"))
+                        throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
+                                                                                    NUMBER_ID,
+                                                                                    new Object[]{value,"21",_MessageUtils.getLabel(facesContext, uiComponent)}));
+                    else if(getType().equals("currency"))
+                        throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
+                                                                                    CURRENCY_ID,
+                                                                                    new Object[]{value,"42.25",_MessageUtils.getLabel(facesContext, uiComponent)}));
+                    else if(getType().equals("percent"))
+                        throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
+                                                                                    PERCENT_ID,
+                                                                                    new Object[]{value,".90",_MessageUtils.getLabel(facesContext, uiComponent)}));
                   }
                 }
             }
@@ -164,7 +168,7 @@ public class NumberConverter
         }
         catch (Exception e)
         {
-        	throw new ConverterException(_MessageUtils.getErrorMessage(facesContext, STRING_ID, new Object[]{value,_MessageUtils.getLabel(facesContext, uiComponent)}),e);
+            throw new ConverterException(_MessageUtils.getErrorMessage(facesContext, STRING_ID, new Object[]{value,_MessageUtils.getLabel(facesContext, uiComponent)}),e);
         }
     }
 

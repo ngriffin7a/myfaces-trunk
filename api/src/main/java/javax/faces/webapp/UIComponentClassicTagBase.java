@@ -1,17 +1,20 @@
 /*
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package javax.faces.webapp;
 
@@ -45,7 +48,7 @@ import java.util.logging.Level;
 public abstract class UIComponentClassicTagBase extends UIComponentTagBase
         implements BodyTag, JspIdConsumer
 {
-	
+    
     //  do not change this w/out doing likewise in UIComponentTag
     private static final String COMPONENT_STACK_ATTR = "org.apache.myfaces.COMPONENT_STACK";
 
@@ -282,7 +285,7 @@ public abstract class UIComponentClassicTagBase extends UIComponentTagBase
             {
                 _facesJspId = UNIQUE_ID_PREFIX + _jspId;
 
-                if (isIdDuplicated(_facesJspId) || isIncludedOrForwarded()) {
+                if (isIdDuplicated(_facesJspId)) {
                     _facesJspId = createNextId(_facesJspId);
                 }
             }
@@ -1143,7 +1146,7 @@ public abstract class UIComponentClassicTagBase extends UIComponentTagBase
         {
             if (isInAnIterator)
             {
-                setId(createNextId(id));
+                setId(createNextId(id));              
                 id = getId();
             }
             else
@@ -1194,16 +1197,23 @@ public abstract class UIComponentClassicTagBase extends UIComponentTagBase
 
         getFacesContext().getExternalContext().getRequestMap().put(componentId, new Integer(iCurrentCounter));
 
-        componentId = componentId + UNIQUE_ID_PREFIX + iCurrentCounter;
+        if (isIncludedOrForwarded())
+        {
+            componentId = componentId + "pc" + iCurrentCounter;
+        }
+        else
+        {
+            componentId = componentId + UNIQUE_ID_PREFIX + iCurrentCounter;            
+        }
 
         return componentId;
     }
-
+        
     private void checkIfItIsInAnIterator(String jspId)
     {
         Set<String> previousJspIdsSet = getPreviousJspIdsSet();
 
-        if (previousJspIdsSet.contains(jspId) || isIncludedOrForwarded())
+        if (previousJspIdsSet.contains(jspId))
         {
             isInAnIterator = true;
         }

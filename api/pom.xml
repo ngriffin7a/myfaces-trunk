@@ -21,7 +21,7 @@
     <plugins>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>2.1</version>
+        <version>2.2</version>
         <executions>
           <execution>
             <goals>
@@ -42,6 +42,7 @@
           </execution>
          </executions>
         </plugin>
+        <!-- 
       <plugin>
         <groupId>org.apache.myfaces.buildtools</groupId>
         <artifactId>myfaces-faces-plugin</artifactId>
@@ -69,6 +70,28 @@
             </dependency>
         </dependencies>
       </plugin>
+       -->
+      <plugin>
+        <groupId>org.apache.myfaces.buildtools</groupId>
+        <artifactId>myfaces-builder-plugin</artifactId>
+        <version>1.0.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>build-metadata</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>makecomp</id>
+            <configuration>
+               <jsfVersion>12</jsfVersion>
+            </configuration>            
+            <goals>
+              <goal>make-components</goal>
+            </goals>
+          </execution>        
+        </executions>
+      </plugin>          
     </plugins>
   </build>
   <profiles>
@@ -83,7 +106,7 @@
         <plugins>
           <plugin>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.3</version>
+            <version>2.4</version>
             <executions>
               <execution>
                 <id>attach-javadoc</id>
@@ -172,7 +195,12 @@
       <artifactId>commons-logging</artifactId>
       <version>1.1.1</version>
     </dependency>
-
+    <dependency>
+      <groupId>org.apache.myfaces.buildtools</groupId>
+      <artifactId>myfaces-builder-annotations</artifactId> 
+      <version>1.0.1</version>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>commons-beanutils</groupId>
       <artifactId>commons-beanutils</artifactId>
@@ -221,12 +249,11 @@
     <plugins>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.3</version>
+        <version>2.4</version>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>changelog-maven-plugin</artifactId>
-        <version>2.0-beta-1</version>
+        <artifactId>maven-changelog-plugin</artifactId>
+        <version>2.1</version>
         <reportSets>
           <reportSet>
             <id>dual-report</id>
@@ -243,14 +270,12 @@
         </reportSets>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>jxr-maven-plugin</artifactId>
-        <version>2.0-beta-1</version>
+        <artifactId>maven-jxr-plugin</artifactId>
+        <version>2.1</version>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>surefire-report-maven-plugin</artifactId>
-        <version>2.0-beta-1</version>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+        <version>2.4.3</version>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -265,7 +290,7 @@
       <!-- override PMD settings to set targetJdk -->
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
-        <version>2.2</version>
+        <version>2.4</version>
         <configuration>
           <rulesets>
             <ruleset>/rulesets/basic.xml</ruleset>
