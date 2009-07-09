@@ -18,15 +18,13 @@
  */
 package org.apache.myfaces.config.element;
 
-import java.util.Iterator;
-
-import org.apache.myfaces.config.element.ListEntries;
+import java.util.Collection;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public interface ManagedBean extends ElementBase
+public interface ManagedBean
 {
     // <!ELEMENT managed-bean (description*, display-name*, icon*, managed-bean-name, managed-bean-class, managed-bean-scope, (managed-property* | map-entries | list-entries))>
 
@@ -35,9 +33,10 @@ public interface ManagedBean extends ElementBase
     public static final int INIT_MODE_MAP = 2;
     public static final int INIT_MODE_LIST = 3;
 
+    public String getDescription();
     public String getManagedBeanName();
     public String getManagedBeanClassName();
-    public Class getManagedBeanClass();
+    public Class<?> getManagedBeanClass();
     public String getManagedBeanScope();
 
     public int getInitMode();
@@ -45,7 +44,7 @@ public interface ManagedBean extends ElementBase
     /**
      * @return Iterator over {@link ManagedProperty} entries
      */
-    public Iterator getManagedProperties();
+    public Collection<? extends ManagedProperty> getManagedProperties();
 
     public MapEntries getMapEntries();
 

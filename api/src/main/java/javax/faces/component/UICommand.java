@@ -18,104 +18,106 @@
  */
 package javax.faces.component;
 
+import javax.el.MethodExpression;
+import javax.el.ValueExpression;
 import javax.faces.context.FacesContext;
-import javax.faces.el.EvaluationException;
 import javax.faces.el.MethodBinding;
-import javax.faces.el.ValueBinding;
-import javax.faces.event.*;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.ActionListener;
+import javax.faces.event.FacesEvent;
+import javax.faces.event.PhaseId;
+
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
 
 /**
+ * 
  * UICommand is a base abstraction for components that implement ActionSource.
- * <p>
- * See the javadoc for this class in the
- * <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- * for further details.
- *
- * @JSFComponent
- *   type = "javax.faces.Command"
- *   family = "javax.faces.Command"
- *   desc = "UICommand executes an action"
- *
- * @author Manfred Geiler (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * 
+ * <h4>Events:</h4>
+ * <table border="1" width="100%" cellpadding="3" summary="">
+ * <tr bgcolor="#CCCCFF" class="TableHeadingColor">
+ * <th align="left">Type</th>
+ * <th align="left">Phases</th>
+ * <th align="left">Description</th>
+ * </tr>
+ * <tr class="TableRowColor">
+ * <td valign="top"><code>javax.faces.event.ActionEvent</code></td>
+ * <td valign="top" nowrap>Invoke Application<br>
+ * Apply Request Values</td>
+ * <td valign="top">Event delivered when the "action" of the component has been
+ * invoked; for example, by clicking on a button. The action may result in page
+ * navigation.</td>
+ * </tr>
+ * </table>
  */
-public class UICommand extends UIComponentBase implements ActionSource
+@JSFComponent(defaultRendererType = "javax.faces.Button")
+public class UICommand extends UIComponentBase implements ActionSource2
 {
     public static final String COMPONENT_TYPE = "javax.faces.Command";
     public static final String COMPONENT_FAMILY = "javax.faces.Command";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Button";
-    private static final boolean DEFAULT_IMMEDIATE = false;
 
-    private Boolean _immediate = null;
-    private Object _value = null;
+    private MethodExpression _actionExpression;
+    private MethodBinding _actionListener;
 
-    private MethodBinding _action = null;
-    private MethodBinding _actionListener = null;
-
-    public void setAction(MethodBinding action)
+    /**
+     * Construct an instance of the UICommand.
+     */
+    public UICommand()
     {
-        _action = action;
+        setRendererType("javax.faces.Button");
     }
 
     /**
      * Specifies the action to take when this command is invoked.
-     *
+     * <p>
      * If the value is an expression, it is expected to be a method 
      * binding EL expression that identifies an action method. An action method
      * accepts no parameters and has a String return value, called the action
      * outcome, that identifies the next view displayed. The phase that this
      * event is fired in can be controlled via the immediate attribute.
-     *
+     * </p>
+     * <p>
      * If the value is a string literal, it is treated as a navigation outcome
      * for the current view.  This is functionally equivalent to a reference to
      * an action method that returns the string literal.
+     * </p>
      * 
-     * @JSFProperty
-     *   returnSignature="java.lang.String"
+     * @deprecated Use getActionExpression() instead.
      */
     public MethodBinding getAction()
     {
-        return _action;
-    }
-
-    public void setActionListener(MethodBinding actionListener)
-    {
-        _actionListener = actionListener;
+        MethodExpression actionExpression = getActionExpression();
+        if (actionExpression instanceof _MethodBindingToMethodExpression)
+        {
+            return ((_MethodBindingToMethodExpression) actionExpression)
+                    .getMethodBinding();
+        }
+        if (actionExpression != null)
+        {
+            return new _MethodExpressionToMethodBinding(actionExpression);
+        }
+        return null;
     }
 
     /**
-     * A method binding EL expression that identifies an action listener method
-     * to be invoked if this component is activated by the user. An action
-     * listener method accepts a parameter of type javax.faces.event.ActionEvent
-     * and returns void. The phase that this event is fired in can be controlled
-     * via the immediate attribute.
-     *  
-     * @JSFProperty
-     *   returnSignature="void"
-     *   methodSignature="javax.faces.event.ActionEvent"
+     * @deprecated Use setActionExpression instead.
      */
-    public MethodBinding getActionListener()
+    public void setAction(MethodBinding action)
     {
-        return _actionListener;
+        if (action != null)
+        {
+            setActionExpression(new _MethodBindingToMethodExpression(action));
+        }
+        else
+        {
+            setActionExpression(null);
+        }
     }
 
-    public void addActionListener(ActionListener listener)
-    {
-        addFacesListener(listener);
-    }
-
-    public ActionListener[] getActionListeners()
-    {
-        return (ActionListener[])getFacesListeners(ActionListener.class);
-    }
-
-    public void removeActionListener(ActionListener listener)
-    {
-        removeFacesListener(listener);
-    }
-
-    public void broadcast(FacesEvent event)
-            throws AbortProcessingException
+    @Override
+    public void broadcast(FacesEvent event) throws AbortProcessingException
     {
         super.broadcast(event);
 
@@ -123,39 +125,26 @@ public class UICommand extends UIComponentBase implements ActionSource
         {
             FacesContext context = getFacesContext();
 
-            MethodBinding actionListenerBinding = getActionListener();
-            if (actionListenerBinding != null)
+            MethodBinding mb = getActionListener();
+            if (mb != null)
             {
-                try
-                {
-                    actionListenerBinding.invoke(context, new Object[] {event});
-                }
-                catch (EvaluationException e)
-                {
-                    Throwable cause = e.getCause();
-                    if (cause != null && cause instanceof AbortProcessingException)
-                    {
-                        throw (AbortProcessingException)cause;
-                    }
-                    else
-                    {
-                        throw e;
-                    }
-                }
+                mb.invoke(context, new Object[]
+                { event });
             }
 
-            ActionListener defaultActionListener
-                    = context.getApplication().getActionListener();
+            ActionListener defaultActionListener = context.getApplication()
+                    .getActionListener();
             if (defaultActionListener != null)
             {
-                defaultActionListener.processAction((ActionEvent)event);
+                defaultActionListener.processAction((ActionEvent) event);
             }
         }
     }
 
+    @Override
     public void queueEvent(FacesEvent event)
     {
-        if (event != null && this == event.getSource() && event instanceof ActionEvent)
+        if (event != null && event instanceof ActionEvent)
         {
             if (isImmediate())
             {
@@ -169,80 +158,294 @@ public class UICommand extends UIComponentBase implements ActionSource
         super.queueEvent(event);
     }
 
-
-    public UICommand()
+    /**
+     * A boolean value that identifies the phase during which action events
+     * should fire.
+     * <p>
+     * During normal event processing, action methods and action listener methods are fired during the
+     * "invoke application" phase of request processing. If this attribute is set to "true", these methods
+     * are fired instead at the end of the "apply request values" phase.
+     * </p>
+     */
+    @JSFProperty
+    public boolean isImmediate()
     {
-        setRendererType(DEFAULT_RENDERER_TYPE);
-    }
-
-    public String getFamily()
-    {
-        return COMPONENT_FAMILY;
+        return (Boolean) getStateHelper().eval(PropertyKeys.immediate, Boolean.FALSE);
     }
 
     public void setImmediate(boolean immediate)
     {
-        _immediate = Boolean.valueOf(immediate);
+        getStateHelper().put(PropertyKeys.immediate, immediate );
     }
 
-    
-
     /**
-     * A boolean value that identifies the phase during which action events
-     * should fire. During normal event processing, action methods and
-     * action listener methods are fired during the "invoke application"
-     * phase of request processing. If this attribute is set to "true",
-     * these methods are fired instead at the end of the "apply request
-     * values" phase.
-     * 
-     * @JSFProperty
-     *   defaultValue="false"
+     * The text to display to the user for this command component.
      */
-    public boolean isImmediate()
+    @JSFProperty
+    public Object getValue()
     {
-        if (_immediate != null) return _immediate.booleanValue();
-        ValueBinding vb = getValueBinding("immediate");
-        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
-        return v != null ? v.booleanValue() : DEFAULT_IMMEDIATE;
+        return  getStateHelper().eval(PropertyKeys.value);
     }
 
     public void setValue(Object value)
     {
-        _value = value;
+        getStateHelper().put(PropertyKeys.value, value );
+    }
+
+    private boolean _isSetActionExpression()
+    {
+        Boolean value = (Boolean) getStateHelper().get(PropertyKeys.actionExpressionSet);
+        return value == null ? false : value;
     }
 
     /**
-     * The initial value of this component.
-     * 
-     * @JSFProperty
+     * The action to take when this command is invoked.
+     * <p>
+     * If the value is an expression, it is expected to be a method binding EL expression that identifies
+     * an action method. An action method accepts no parameters and has a String return value, called the
+     * action outcome, that identifies the next view displayed. The phase that this event is fired in
+     * can be controlled via the immediate attribute.
+     * </p>
+     * <p> 
+     * If the value is a string literal, it is treated as a navigation outcome for the current view. This
+     * is functionally equivalent to a reference to an action method that returns the string literal.
+     * </p>
      */
-    public Object getValue()
+    @JSFProperty(stateHolder = true, returnSignature = "java.lang.Object", jspName = "action")
+    public MethodExpression getActionExpression()
     {
-        if (_value != null) return _value;
-        ValueBinding vb = getValueBinding("value");
-        return vb != null ? vb.getValue(getFacesContext()) : null;
+        if (_actionExpression != null)
+        {
+            return _actionExpression;
+        }
+        ValueExpression expression = getValueExpression("actionExpression");
+        if (expression != null)
+        {
+            return (MethodExpression) expression.getValue(getFacesContext()
+                    .getELContext());
+        }
+        return null;
     }
 
-
-
-    public Object saveState(FacesContext context)
+    public void setActionExpression(MethodExpression actionExpression)
     {
-        Object values[] = new Object[5];
-        values[0] = super.saveState(context);
-        values[1] = saveAttachedState(context, _action);
-        values[2] = saveAttachedState(context, _actionListener);
-        values[3] = _immediate;
-        values[4] = _value;
-        return values;
+        this._actionExpression = actionExpression;
+        if (initialStateMarked())
+        {
+            getStateHelper().put(PropertyKeys.actionExpressionSet,Boolean.TRUE);
+        }
+    }
+    
+    private boolean _isSetActionListener()
+    {
+        Boolean value = (Boolean) getStateHelper().get(PropertyKeys.actionListenerSet);
+        return value == null ? false : value;
     }
 
-    public void restoreState(FacesContext context, Object state)
+    /**
+     * A method binding EL expression that identifies an action listener method to be invoked if
+     * this component is activated by the user.
+     * <p>
+     * An action listener method accepts a parameter of type javax.faces.event.ActionEvent and returns void.
+     * The phase that this event is fired in can be controlled via the immediate attribute.
+     * 
+     * @deprecated
+     */
+    @JSFProperty(stateHolder = true, returnSignature = "void", methodSignature = "javax.faces.event.ActionEvent")
+    public MethodBinding getActionListener()
     {
-        Object values[] = (Object[])state;
-        super.restoreState(context, values[0]);
-        _action = (MethodBinding)restoreAttachedState(context, values[1]);
-        _actionListener = (MethodBinding)restoreAttachedState(context, values[2]);
-        _immediate = (Boolean)values[3];
-        _value = values[4];
+        if (_actionListener != null)
+        {
+            return _actionListener;
+        }
+        ValueExpression expression = getValueExpression("actionListener");
+        if (expression != null)
+        {
+            return (MethodBinding) expression.getValue(getFacesContext()
+                    .getELContext());
+        }
+        return null;
+    }
+
+    /**
+     * @deprecated
+     */
+    @JSFProperty(returnSignature="void",methodSignature="javax.faces.event.ActionEvent")
+    public void setActionListener(MethodBinding actionListener)
+    {
+        this._actionListener = actionListener;
+        if (initialStateMarked())
+        {
+            getStateHelper().put(PropertyKeys.actionListenerSet,Boolean.TRUE);
+        }
+    }
+
+    public void addActionListener(ActionListener listener)
+    {
+        addFacesListener(listener);
+    }
+
+    public void removeActionListener(ActionListener listener)
+    {
+        removeFacesListener(listener);
+    }
+
+    public ActionListener[] getActionListeners()
+    {
+        return (ActionListener[]) getFacesListeners(ActionListener.class);
+    }
+
+    enum PropertyKeys
+    {
+         immediate
+        , value
+        , actionExpressionSet
+        , actionListenerSet
+    }
+
+    public void markInitialState()
+    {
+        super.markInitialState();
+        if (_actionListener != null && 
+            _actionListener instanceof PartialStateHolder)
+        {
+            ((PartialStateHolder)_actionListener).markInitialState();
+        }
+        if (_actionExpression != null && 
+            _actionExpression instanceof PartialStateHolder)
+        {
+            ((PartialStateHolder)_actionExpression).markInitialState();
+        }
+    }
+    
+    public void clearInitialState()
+    {
+        if (initialStateMarked())
+        {
+            super.clearInitialState();
+            if (_actionListener != null && 
+                _actionListener instanceof PartialStateHolder)
+            {
+                ((PartialStateHolder)_actionListener).clearInitialState();
+            }
+            if (_actionExpression != null && 
+                _actionExpression instanceof PartialStateHolder)
+            {
+                ((PartialStateHolder)_actionExpression).clearInitialState();
+            }
+        }
+    }
+
+    @Override
+    public Object saveState(FacesContext facesContext)
+    {
+        if (initialStateMarked())
+        {
+            boolean nullDelta = true;
+            Object parentSaved = super.saveState(facesContext);
+            Object actionListenerSaved = null;
+            if (!_isSetActionListener() &&
+                _actionListener != null && _actionListener instanceof PartialStateHolder)
+            {
+                //Delta
+                StateHolder holder = (StateHolder) _actionListener;
+                if (!holder.isTransient())
+                {
+                    Object attachedState = holder.saveState(facesContext);
+                    if (attachedState != null)
+                    {
+                        nullDelta = false;
+                    }
+                    actionListenerSaved = new _AttachedDeltaWrapper(_actionListener.getClass(),
+                        attachedState);
+                }
+            }
+            else
+            {
+                //Full
+                actionListenerSaved = saveAttachedState(facesContext,_actionListener);
+                nullDelta = false;
+            }        
+            Object actionExpressionSaved = null;
+            if (!_isSetActionExpression() &&
+                _actionExpression != null && _actionExpression instanceof PartialStateHolder)
+            {
+                //Delta
+                StateHolder holder = (StateHolder) _actionExpression;
+                if (!holder.isTransient())
+                {
+                    Object attachedState = holder.saveState(facesContext);
+                    if (attachedState != null)
+                    {
+                        nullDelta = false;
+                    }
+                    actionExpressionSaved = new _AttachedDeltaWrapper(_actionExpression.getClass(),
+                        attachedState);
+                }
+            }
+            else
+            {
+                //Full
+                actionExpressionSaved = saveAttachedState(facesContext,_actionExpression);
+                nullDelta = false;
+            }        
+            if (parentSaved == null && nullDelta)
+            {
+                //No values
+                return null;
+            }
+            
+            Object[] values = new Object[3];
+            values[0] = parentSaved;
+            values[1] = actionListenerSaved;
+            values[2] = actionExpressionSaved;
+            return values;
+        }
+        else
+        {
+            Object[] values = new Object[3];
+            values[0] = super.saveState(facesContext);
+            values[1] = saveAttachedState(facesContext,_actionListener);
+            values[2] = saveAttachedState(facesContext,_actionExpression);
+            return values;
+        }
+    }
+
+    @Override
+    public void restoreState(FacesContext facesContext, Object state)
+    {
+        if (state == null)
+        {
+            return;
+        }
+        
+        Object[] values = (Object[])state;
+        super.restoreState(facesContext,values[0]);
+        if (values[1] instanceof _AttachedDeltaWrapper)
+        {
+            //Delta
+            ((StateHolder)_actionListener).restoreState(facesContext, ((_AttachedDeltaWrapper) values[1]).getWrappedStateObject());
+        }
+        else
+        {
+            //Full
+            _actionListener = (javax.faces.el.MethodBinding) restoreAttachedState(facesContext,values[1]);
+        }         
+        if (values[2] instanceof _AttachedDeltaWrapper)
+        {
+            //Delta
+            ((StateHolder)_actionExpression).restoreState(facesContext, ((_AttachedDeltaWrapper) values[2]).getWrappedStateObject());
+        }
+        else
+        {
+            //Full
+            _actionExpression = (javax.el.MethodExpression) restoreAttachedState(facesContext,values[2]);
+        }         
+    }
+
+    @Override
+    public String getFamily()
+    {
+        return COMPONENT_FAMILY;
     }
 }

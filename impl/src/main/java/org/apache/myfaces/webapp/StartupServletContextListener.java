@@ -18,108 +18,120 @@
  */
 package org.apache.myfaces.webapp;
 
+import java.util.Enumeration;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.myfaces.config.FacesConfigValidator;
-import org.apache.myfaces.config.FacesConfigurator;
-import org.apache.myfaces.context.servlet.ServletExternalContextImpl;
-import org.apache.myfaces.shared_impl.util.StateUtils;
-import org.apache.myfaces.shared_impl.webapp.webxml.WebXml;
+import org.apache.myfaces.config.ManagedBeanBuilder;
+import org.apache.myfaces.util.ContainerUtils;
 
 import javax.faces.FactoryFinder;
-import javax.faces.context.ExternalContext;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Initialise the MyFaces system.
  * <p>
- * This context listener is registered by the JSP TLD file for the standard
- * JSF "f" components. Normally, servlet containers will automatically load
- * and process .tld files at startup time, and therefore register and run
- * this class automatically.
+ * This context listener is registered by the JSP TLD file for the standard JSF "f" components. Normally, servlet
+ * containers will automatically load and process .tld files at startup time, and therefore register and run this class
+ * automatically.
  * <p>
- * Some very old servlet containers do not do this correctly, so in those
- * cases this listener may be registered manually in web.xml. Registering
- * it twice (ie in both .tld and web.xml) will result in a harmless warning
- * message being generated. Very old versions of MyFaces Core do not register
- * the listener in the .tld file, so those also need a manual entry in web.xml.
- * However all versions since at least 1.1.2 have this entry in the tld.
+ * Some very old servlet containers do not do this correctly, so in those cases this listener may be registered manually
+ * in web.xml. Registering it twice (ie in both .tld and web.xml) will result in a harmless warning message being
+ * generated. Very old versions of MyFaces Core do not register the listener in the .tld file, so those also need a
+ * manual entry in web.xml. However all versions since at least 1.1.2 have this entry in the tld.
  * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class StartupServletContextListener
-        implements ServletContextListener
+public class StartupServletContextListener extends AbstractMyFacesListener implements ServletContextListener
 {
+    static final String FACES_INIT_DONE = StartupServletContextListener.class.getName() + ".FACES_INIT_DONE";
+
     private static final Log log = LogFactory.getLog(StartupServletContextListener.class);
 
-    static final String FACES_INIT_DONE
-            = StartupServletContextListener.class.getName() + ".FACES_INIT_DONE";
+    private FacesInitializer _facesInitializer;
+    private ServletContext _servletContext;
 
     public void contextInitialized(ServletContextEvent event)
     {
-        initFaces(event.getServletContext());
+        if (_servletContext != null)
+        {
+            throw new IllegalStateException("context is already initialized");
+        }
+        _servletContext = event.getServletContext();
+        Boolean b = (Boolean) _servletContext.getAttribute(FACES_INIT_DONE);
+
+        if (b == null || b.booleanValue() == false)
+        {
+            getFacesInitializer().initFaces(_servletContext);
+            _servletContext.setAttribute(FACES_INIT_DONE, Boolean.TRUE);
+        }
+        else
+        {
+            log.info("MyFaces already initialized");
+        }
     }
 
-    public static void initFaces(ServletContext servletContext)
+    protected FacesInitializer getFacesInitializer()
     {
-        try
+        if (_facesInitializer == null)
         {
-            Boolean b = (Boolean)servletContext.getAttribute(FACES_INIT_DONE);
-
-            if (b == null || b.booleanValue() == false)
+            if (ContainerUtils.isJsp21())
             {
-                log.trace("Initializing MyFaces");
-
-                //Load the configuration
-                ExternalContext externalContext = new ServletExternalContextImpl(servletContext, null, null);
-
-                //And configure everything
-                new FacesConfigurator(externalContext).configure();
-
-                if ("true".equals(servletContext
-                                .getInitParameter(FacesConfigValidator.VALIDATE_CONTEXT_PARAM)) || "true".equals(servletContext
-                                .getInitParameter(FacesConfigValidator.VALIDATE_CONTEXT_PARAM.toLowerCase())))
-                {
-                    List list = FacesConfigValidator.validate(externalContext,
-                            servletContext.getRealPath("/"));
-
-                    Iterator iterator = list.iterator();
-
-                    while (iterator.hasNext())
-                        log.warn(iterator.next());
-
-                }
-                
-                // parse web.xml
-                WebXml.init(externalContext);
-
-                servletContext.setAttribute(FACES_INIT_DONE, Boolean.TRUE);
+                _facesInitializer = new Jsp21FacesInitializer();
             }
             else
             {
-                log.info("MyFaces already initialized");
+                _facesInitializer = new Jsp20FacesInitializer();
             }
         }
-        catch (Exception ex)
-        {
-            log.error("Error initializing ServletContext", ex);
-            ex.printStackTrace();
-        }
-        log.info("ServletContext '" + servletContext.getRealPath("/") + "' initialized.");
-        
-        if(servletContext.getInitParameter(StateUtils.INIT_SECRET) != null
-                || servletContext.getInitParameter(StateUtils.INIT_SECRET.toLowerCase()) != null)
-            StateUtils.initSecret(servletContext);
+
+        return _facesInitializer;
     }
 
-
-    public void contextDestroyed(ServletContextEvent e)
+    /**
+     * configure the faces initializer
+     * 
+     * @param facesInitializer
+     */
+    public void setFacesInitializer(FacesInitializer facesInitializer)
     {
+        if (_facesInitializer != null && _facesInitializer != facesInitializer && _servletContext != null)
+        {
+            _facesInitializer.destroyFaces(_servletContext);
+        }
+        _facesInitializer = facesInitializer;
+        if (_servletContext != null)
+        {
+            facesInitializer.initFaces(_servletContext);
+        }
+    }
+
+    public void contextDestroyed(ServletContextEvent event)
+    {
+        doPredestroy(event);
+
+        if (_facesInitializer != null && _servletContext != null)
+        {
+            _facesInitializer.destroyFaces(_servletContext);
+        }
         FactoryFinder.releaseFactories();
+        _servletContext = null;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void doPredestroy(ServletContextEvent event)
+    {
+        ServletContext ctx = event.getServletContext();
+        Enumeration<String> attributes = ctx.getAttributeNames();
+
+        while (attributes.hasMoreElements())
+        {
+            String name = attributes.nextElement();
+            Object value = ctx.getAttribute(name);
+            doPreDestroy(value, name, ManagedBeanBuilder.APPLICATION);
+        }
     }
 }

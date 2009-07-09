@@ -20,13 +20,14 @@ package javax.faces.component.html;
 
 import javax.faces.component.UISelectMany;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+
 /**
- * Allow the user to select zero or more items from a set of
- * available options.
- * <p>
- * This is presented as a table with one cell per available option; each
- * cell contains a checkbox and the option's label. The "layout" attribute
- * determines whether the checkboxes are laid out horizontally or vertically.
+ * Allow the user to select zero or more items from a set of available options.
+ * 
+ * This is presented as a table with one cell per available option; each cell contains a
+ * checkbox and the option's label. The "layout" attribute determines whether the checkboxes
+ * are laid out horizontally or vertically.
  * <p>
  * The set of available options is defined by adding child
  * f:selectItem or f:selectItems components to this component.
@@ -41,46 +42,55 @@ import javax.faces.component.UISelectMany;
  * new collection object of the appropriate type. The new collection
  * object contains the value of each child SelectItem object that
  * is currently selected.
- * <p>
- * Unless otherwise specified, all attributes accept static values
- * or EL expressions.
- * <p>
- * See Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
  *
- * @JSFComponent
- *   name = "h:selectManyCheckbox"
- *   class = "javax.faces.component.html.HtmlSelectManyCheckbox"
- *   tagClass = "org.apache.myfaces.taglib.html.HtmlSelectManyCheckboxTag"
- *   template = "true"
- *   desc = "h:selectManyCheckbox"
- *
- * @author Thomas Spiegl (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * <h4>Events:</h4>
+ * <table border="1" width="100%" cellpadding="3" summary="">
+ * <tr bgcolor="#CCCCFF" class="TableHeadingColor">
+ * <th align="left">Type</th>
+ * <th align="left">Phases</th>
+ * <th align="left">Description</th>
+ * </tr>
+ * <tr class="TableRowColor">
+ * <td valign="top"><code>javax.faces.event.ValueChangeEvent</code></td>
+ * <td valign="top" nowrap></td>
+ * <td valign="top">The valueChange event is delivered when the value
+                attribute is changed.</td>
+ * </tr>
+ * </table>
  */
+@JSFComponent
+(name = "h:selectManyCheckbox",
+clazz = "javax.faces.component.html.HtmlSelectManyCheckbox",template=true,
+tagClass = "org.apache.myfaces.taglib.html.HtmlSelectManyCheckboxTag",
+defaultRendererType = "javax.faces.Checkbox",
+implementz = "javax.faces.component.behavior.ClientBehaviorHolder"
+)
 abstract class _HtmlSelectManyCheckbox extends UISelectMany implements 
     _AccesskeyProperty, _UniversalProperties, _FocusBlurProperties,
     _ChangeSelectProperties, _EventProperties, _StyleProperties,
     _TabindexProperty, _DisabledReadonlyProperties, 
-    _DisabledClassEnabledClassProperties
+    _DisabledClassEnabledClassProperties, _LabelProperty
 {
 
-    public static final String COMPONENT_TYPE = "javax.faces.HtmlSelectManyCheckbox";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Checkbox";
+  static public final String COMPONENT_FAMILY =
+    "javax.faces.SelectMany";
+  static public final String COMPONENT_TYPE =
+    "javax.faces.HtmlSelectManyCheckbox";
 
-    /**
-     * HTML: Specifies the width of the border of this element, in pixels.  Deprecated in HTML 4.01.
-     * 
-     * @JSFProperty
-     *   defaultValue="Integer.MIN_VALUE"
-     */
-    public abstract int getBorder();
-    
-    /**
-     * Controls the layout direction of the child elements.  Values include:  
-     * lineDirection (vertical) and pageDirection (horzontal).
-     * 
-     * @JSFProperty
-     */
-    public abstract String getLayout();
+  /**
+   * HTML: Specifies the width of the border of this element, in pixels.  Deprecated in HTML 4.01.
+   * 
+   * @JSFProperty
+   *   defaultValue="Integer.MIN_VALUE"
+   */
+  public abstract int getBorder();
+  
+  /**
+   * Controls the layout direction of the child elements.  Values include:  
+   * lineDirection (vertical) and pageDirection (horzontal).
+   * 
+   * @JSFProperty
+   */
+  public abstract String getLayout();
 
 }

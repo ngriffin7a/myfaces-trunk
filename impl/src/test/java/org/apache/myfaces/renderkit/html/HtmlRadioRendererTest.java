@@ -35,6 +35,10 @@ import org.apache.shale.test.base.AbstractJsfTestCase;
 import org.apache.shale.test.mock.MockRenderKitFactory;
 import org.apache.shale.test.mock.MockResponseWriter;
 
+/**
+ * @author Bruno Aranda (latest modification by $Author$)
+ * @version $Revision$ $Date$
+ */
 public class HtmlRadioRendererTest extends AbstractJsfTestCase
 {
     private MockResponseWriter writer ;
@@ -49,7 +53,7 @@ public class HtmlRadioRendererTest extends AbstractJsfTestCase
         return new TestSuite(HtmlRadioRendererTest.class);
     }
 
-    public void setUp() 
+    public void setUp() throws Exception
     {
         super.setUp();
 
@@ -66,7 +70,7 @@ public class HtmlRadioRendererTest extends AbstractJsfTestCase
 
     }
 
-    public void tearDown()
+    public void tearDown() throws Exception
     {
         super.tearDown();
         selectOneRadio = null;
@@ -100,14 +104,14 @@ public class HtmlRadioRendererTest extends AbstractJsfTestCase
             new HtmlRenderedAttr("onmouseover"), 
             new HtmlRenderedAttr("onmouseup"),
             //_StyleProperties
-            new HtmlRenderedAttr("style", 2), 
-            new HtmlRenderedAttr("styleClass", "styleClass", "class=\"styleClass\"", 2),
+            new HtmlRenderedAttr("style", 1), 
+            new HtmlRenderedAttr("styleClass", "styleClass", "class=\"styleClass\"", 1),
 
             //_TabindexProperty
             new HtmlRenderedAttr("tabindex")
         };
         
-        List items = new ArrayList();
+        List<SelectItem> items = new ArrayList<SelectItem>();
         items.add(new SelectItem("mars"));
 
         UISelectItems selectItems = new UISelectItems();

@@ -30,21 +30,22 @@ import java.util.Map;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class LifecycleFactoryImpl
-        extends LifecycleFactory
+public class LifecycleFactoryImpl extends LifecycleFactory
 {
-    private final Map _lifecycles = new HashMap();
+    private final Map<String, Lifecycle> _lifecycles = new HashMap<String, Lifecycle>();
 
     public LifecycleFactoryImpl()
     {
         addLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE, new LifecycleImpl());
     }
 
-    public void purgeLifecycle(){
+    public void purgeLifecycle()
+    {
         _lifecycles.clear();
         addLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE, new LifecycleImpl());
     }
 
+    @Override
     public void addLifecycle(String id, Lifecycle lifecycle)
     {
         synchronized (_lifecycles)
@@ -57,12 +58,12 @@ public class LifecycleFactoryImpl
         }
     }
 
-    public Lifecycle getLifecycle(String id)
-            throws FacesException
+    @Override
+    public Lifecycle getLifecycle(String id) throws FacesException
     {
         synchronized (_lifecycles)
         {
-            Lifecycle lifecycle = (Lifecycle)_lifecycles.get(id);
+            Lifecycle lifecycle = _lifecycles.get(id);
             if (lifecycle == null)
             {
                 throw new IllegalArgumentException("Unknown lifecycle '" + id + "'.");
@@ -71,7 +72,8 @@ public class LifecycleFactoryImpl
         }
     }
 
-    public Iterator getLifecycleIds()
+    @Override
+    public Iterator<String> getLifecycleIds()
     {
         return _lifecycles.keySet().iterator();
     }

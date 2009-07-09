@@ -25,27 +25,29 @@ import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 
+import javax.el.ValueExpression;
 import javax.faces.FacesException;
+import javax.faces.application.Resource;
 import javax.faces.context.FacesContext;
-import javax.faces.el.ValueBinding;
 
 /**
  * A custom implementation of the Map interface, where get and put calls
  * try to access getter/setter methods of an associated UIComponent before
  * falling back to accessing a real Map object.
- * <p>
+ * <p/>
  * Some of the behaviours of this class don't really comply with the
  * definitions of the Map class; for example the key parameter to all
  * methods is required to be of type String only, and after clear(),
  * calls to get can return non-null values. However the JSF spec
  * requires that this class behave in the way implemented below. See
  * UIComponent.getAttributes for more details.
- * <p>
+ * <p/>
  * The term "property" is used here to refer to real javabean properties
  * on the underlying UIComponent, while "attribute" refers to an entry
  * in the associated Map.
@@ -53,8 +55,7 @@ import javax.faces.el.ValueBinding;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-class _ComponentAttributesMap
-        implements Map, Serializable
+class _ComponentAttributesMap implements Map<String, Object>, Serializable
 {
     private static final long serialVersionUID = -9106832179394257866L;
 
@@ -65,23 +66,27 @@ class _ComponentAttributesMap
 
     // We delegate instead of derive from HashMap, so that we can later
     // optimize Serialization
-    private Map _attributes = null;
+    // JSF 2.0 Changed getUnderlyingMap to point to StateHelper attributesMap
+    //private Map<String, Object> _attributes = null;
 
     // A cached hashmap of propertyName => PropertyDescriptor object for all
     // the javabean properties of the associated component. This is built by
     // introspection on the associated UIComponent. Don't serialize this as
     // it can always be recreated when needed.
-    private transient Map _propertyDescriptorMap = null;
+    private transient Map<String, PropertyDescriptor> _propertyDescriptorMap = null;
+
+    // Cache for component property descriptors
+    private static Map<Class<?>, Map<String, PropertyDescriptor>> _propertyDescriptorCache = 
+        new WeakHashMap<Class<?>, Map<String, PropertyDescriptor>>();
 
     /**
      * Create a map backed by the specified component.
-     * <p>
+     * <p/>
      * This method is expected to be called when a component is first created.
      */
     _ComponentAttributesMap(UIComponent component)
     {
         _component = component;
-        _attributes = new HashMap();
     }
 
     /**
@@ -89,19 +94,20 @@ class _ComponentAttributesMap
      * associated with the component are provided in the specified Map
      * class. A reference to the provided map is kept; this object's contents
      * are updated during put calls on this instance.
-     * <p>
-     * This method is expected to be called during the "restore view" phase. 
+     * <p/>
+     * This method is expected to be called during the "restore view" phase.
      */
-    _ComponentAttributesMap(UIComponent component, Map attributes)
-    {
-        _component = component;
-        _attributes = attributes;
-    }
-
+    //JSF 2.0 removed because _attributes has been replaced with StateHelper attributesMap
+    //_ComponentAttributesMap(UIComponent component, Map<String, Object> attributes)
+    //{
+    //    _component = component;
+        //_attributes = new HashMap<String, Object>(attributes);
+    //}
+    
     /**
      * Return the number of <i>attributes</i> in this map. Properties of the
      * underlying UIComponent are not counted.
-     * <p>
+     * <p/>
      * Note that because the get method can read properties of the
      * UIComponent and evaluate value-bindings, it is possible to have
      * size return zero while calls to the get method return non-null
@@ -109,13 +115,13 @@ class _ComponentAttributesMap
      */
     public int size()
     {
-        return _attributes.size();
+        return getUnderlyingMap().size();
     }
 
     /**
      * Clear all the <i>attributes</i> in this map. Properties of the
      * underlying UIComponent are not modified.
-     * <p>
+     * <p/>
      * Note that because the get method can read properties of the
      * UIComponent and evaluate value-bindings, it is possible to have
      * calls to the get method return non-null values immediately after
@@ -123,13 +129,13 @@ class _ComponentAttributesMap
      */
     public void clear()
     {
-        _attributes.clear();
+        getUnderlyingMap().clear();
     }
 
     /**
      * Return true if there are no <i>attributes</i> in this map. Properties
      * of the underlying UIComponent are not counted.
-     * <p>
+     * <p/>
      * Note that because the get method can read properties of the
      * UIComponent and evaluate value-bindings, it is possible to have
      * isEmpty return true, while calls to the get method return non-null
@@ -137,63 +143,56 @@ class _ComponentAttributesMap
      */
     public boolean isEmpty()
     {
-        return _attributes.isEmpty();
+        return getUnderlyingMap().isEmpty();
     }
 
     /**
      * Return true if there is an <i>attribute</i> with the specified name,
      * but false if there is a javabean <i>property</i> of that name on the
      * associated UIComponent.
-     * <p>
+     * <p/>
      * Note that it should be impossible for the attributes map to contain
      * an entry with the same name as a javabean property on the associated
      * UIComponent.
-     * 
+     *
      * @param key <i>must</i> be a String. Anything else will cause a
-     * ClassCastException to be thrown.
+     *            ClassCastException to be thrown.
      */
     public boolean containsKey(Object key)
     {
         checkKey(key);
-        if (getPropertyDescriptor((String)key) == null)
-        {
-            return _attributes.containsKey(key);
-        }
-        else
-        {
-            return false;
-        }
+
+        return getPropertyDescriptor((String) key) == null ? getUnderlyingMap().containsKey(key) : false;
     }
 
     /**
      * Returns true if there is an <i>attribute</i> with the specified
      * value. Properties of the underlying UIComponent aren't examined,
      * nor value-bindings.
-     * 
+     *
      * @param value null is allowed
      */
     public boolean containsValue(Object value)
     {
-        return _attributes.containsValue(value);
+        return getUnderlyingMap().containsValue(value);
     }
 
     /**
      * Return a collection of the values of all <i>attributes</i>. Property
      * values are not included, nor value-bindings.
      */
-    public Collection values()
+    public Collection<Object> values()
     {
-        return _attributes.values();
+        return getUnderlyingMap().values();
     }
 
     /**
      * Call put(key, value) for each entry in the provided map.
      */
-    public void putAll(Map t)
+    public void putAll(Map<? extends String, ? extends Object> t)
     {
-        for (Iterator it = t.entrySet().iterator(); it.hasNext(); )
+        for (Map.Entry<? extends String, ? extends Object> entry : t.entrySet())
         {
-            Map.Entry entry = (Entry)it.next();
             put(entry.getKey(), entry.getValue());
         }
     }
@@ -202,74 +201,90 @@ class _ComponentAttributesMap
      * Return a set of all <i>attributes</i>. Properties of the underlying
      * UIComponent are not included, nor value-bindings.
      */
-    public Set entrySet()
+    public Set<Map.Entry<String, Object>> entrySet()
     {
-        return _attributes.entrySet();
+        return getUnderlyingMap().entrySet();
     }
 
     /**
      * Return a set of the keys for all <i>attributes</i>. Properties of the
      * underlying UIComponent are not included, nor value-bindings.
      */
-    public Set keySet()
+    public Set<String> keySet()
     {
-        return _attributes.keySet();
+        return getUnderlyingMap().keySet();
     }
 
     /**
      * In order: get the value of a <i>property</i> of the underlying
      * UIComponent, read an <i>attribute</i> from this map, or evaluate
      * the component's value-binding of the specified name.
-     * 
+     *
      * @param key must be a String. Any other type will cause ClassCastException.
      */
     public Object get(Object key)
     {
         checkKey(key);
         
+        Object value;
+
         // is there a javabean property to read?
-        PropertyDescriptor propertyDescriptor
-           = getPropertyDescriptor((String)key);
+        PropertyDescriptor propertyDescriptor = getPropertyDescriptor((String) key);
         if (propertyDescriptor != null)
         {
-            return getComponentProperty(propertyDescriptor);
+            value = getComponentProperty(propertyDescriptor);
+        }
+        else
+        {
+            // is there a literal value to read?
+            value = getUnderlyingMap().get(key);
+            if (value == null)
+            {
+                // is there a value-binding to read?
+                ValueExpression ve = _component.getValueExpression((String) key);
+                if (ve != null)
+                {
+                    value = ve.getValue(FacesContext.getCurrentInstance().getELContext());
+                }
+                else
+                {
+                    // no value found
+                    return null;
+                }
+            }
         }
         
-        // is there a literal value to read?
-        Object mapValue = _attributes.get(key);
-        if (mapValue != null)
+        // The get() method of the Map must take the following additional action if this component instance is a 
+        // composite component instance (indicated by the presence of a component attribute under the key given 
+        // by the value of Resource.COMPONENT_RESOURCE_KEY)
+        if (value instanceof ValueExpression && getUnderlyingMap().containsKey(Resource.COMPONENT_RESOURCE_KEY))
         {
-            return mapValue;
+            // call the ValueExpression.getValue(javax.el.ELContext) method and return the result from get().
+            value = ((ValueExpression)value).getValue(FacesContext.getCurrentInstance().getELContext());
         }
         
-        // is there a value-binding to read?
-        ValueBinding vb = _component.getValueBinding((String) key);
-        if (vb != null)
-        {
-            return vb.getValue(FacesContext.getCurrentInstance());
-        }
-
-        // no value found
-        return null;
+        // Otherwise, return the actual value from the get() method. 
+        return value;
     }
 
     /**
      * Remove the attribute with the specified name. An attempt to
      * remove an entry whose name is that of a <i>property</i> on
      * the underlying UIComponent will cause an IllegalArgumentException.
-     * Value-bindings for the underlying component are ignored. 
-     * 
+     * Value-bindings for the underlying component are ignored.
+     *
      * @param key must be a String. Any other type will cause ClassCastException.
      */
     public Object remove(Object key)
     {
         checkKey(key);
-        PropertyDescriptor propertyDescriptor = getPropertyDescriptor((String)key);
+        PropertyDescriptor propertyDescriptor = getPropertyDescriptor((String) key);
         if (propertyDescriptor != null)
         {
             throw new IllegalArgumentException("Cannot remove component property attribute");
         }
-        return _attributes.remove(key);
+        return _component.getStateHelper().remove(
+                UIComponentBase.PropertyKeys.attributesMap, key);
     }
 
     /**
@@ -278,12 +293,12 @@ class _ComponentAttributesMap
      * exists. Value-bindings associated with the component are ignored; to
      * write to a value-binding, the value-binding must be explicitly
      * retrieved from the component and evaluated.
-     * <p>
+     * <p/>
      * Note that this method is different from the get method, which
      * does read from a value-binding if one exists. When a value-binding
      * exists for a non-property, putting a value here essentially "masks"
      * the value-binding until that attribute is removed.
-     * <p>
+     * <p/>
      * The put method is expected to return the previous value of the
      * property/attribute (if any). Because UIComponent property getter
      * methods typically try to evaluate any value-binding expression of
@@ -295,23 +310,23 @@ class _ComponentAttributesMap
      * attributes). Because the UIComponent.getAttributes method
      * only returns a Map class and this class must be package-private,
      * there is no way of exposing a "putNoReturn" type method.
-     *  
-     * @param key String, null is not allowed
+     *
+     * @param key   String, null is not allowed
      * @param value null is allowed
      */
-    public Object put(Object key, Object value)
+    public Object put(String key, Object value)
     {
         checkKey(key);
 
-        PropertyDescriptor propertyDescriptor = getPropertyDescriptor((String)key);
-
-        if(propertyDescriptor == null)
+        PropertyDescriptor propertyDescriptor = getPropertyDescriptor(key);
+        if (propertyDescriptor == null)
         {
-            if(value==null)
+            if (value == null)
+            {
                 throw new NullPointerException("value is null for a not available property: " + key);
+            }
         }
-
-        if (propertyDescriptor != null)
+        else
         {
             if (propertyDescriptor.getReadMethod() != null)
             {
@@ -319,26 +334,20 @@ class _ComponentAttributesMap
                 setComponentProperty(propertyDescriptor, value);
                 return oldValue;
             }
-            else
-            {
-                setComponentProperty(propertyDescriptor, value);
-                return null;
-            }
+            setComponentProperty(propertyDescriptor, value);
+            return null;
         }
-        else
-        {
-            return _attributes.put(key, value);
-        }
+        return _component.getStateHelper().put(UIComponentBase.PropertyKeys.attributesMap, key, value);
     }
 
     /**
      * Retrieve info about getter/setter methods for the javabean property
      * of the specified name on the underlying UIComponent object.
-     * <p>
+     * <p/>
      * This method optimises access to javabean properties of the underlying
      * UIComponent by maintaining a cache of ProperyDescriptor objects for
      * that class.
-     * <p>
+     * <p/>
      * TODO: Consider making the cache shared between component instances;
      * currently 100 UIInputText components means performing introspection
      * on the UIInputText component 100 times.
@@ -347,40 +356,49 @@ class _ComponentAttributesMap
     {
         if (_propertyDescriptorMap == null)
         {
-            BeanInfo beanInfo;
-            try
+            // Try to get descriptor map from cache
+            _propertyDescriptorMap = _propertyDescriptorCache.get(_component.getClass());
+            // Cache miss: create descriptor map and put it in cache
+            if (_propertyDescriptorMap == null)
             {
-                beanInfo = Introspector.getBeanInfo(_component.getClass());
-            }
-            catch (IntrospectionException e)
-            {
-                throw new FacesException(e);
-            }
-            PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-            _propertyDescriptorMap = new HashMap();
-            for (int i = 0; i < propertyDescriptors.length; i++)
-            {
-                PropertyDescriptor propertyDescriptor = propertyDescriptors[i];
-                if (propertyDescriptor.getReadMethod() != null)
+                // Create descriptor map...
+                BeanInfo beanInfo;
+                try
                 {
-                    _propertyDescriptorMap.put(propertyDescriptor.getName(),
-                                               propertyDescriptor);
+                    beanInfo = Introspector.getBeanInfo(_component.getClass());
                 }
+                catch (IntrospectionException e)
+                {
+                    throw new FacesException(e);
+                }
+                PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+                _propertyDescriptorMap = new HashMap<String, PropertyDescriptor>();
+                for (int i = 0; i < propertyDescriptors.length; i++)
+                {
+                    PropertyDescriptor propertyDescriptor = propertyDescriptors[i];
+                    if (propertyDescriptor.getReadMethod() != null)
+                    {
+                        _propertyDescriptorMap.put(propertyDescriptor.getName(),
+                                propertyDescriptor);
+                    }
+                }
+                // ... and put it in cache
+                _propertyDescriptorCache.put(_component.getClass(), _propertyDescriptorMap);
             }
         }
-        return (PropertyDescriptor)_propertyDescriptorMap.get(key);
+        return _propertyDescriptorMap.get(key);
     }
 
 
     /**
      * Execute the getter method of the specified property on the underlying
      * component.
-     * 
+     *
      * @param propertyDescriptor specifies which property to read.
      * @return the value returned by the getter method.
      * @throws IllegalArgumentException if the property is not readable.
-     * @throws FacesException if any other problem occurs while invoking
-     *  the getter method. 
+     * @throws FacesException           if any other problem occurs while invoking
+     *                                  the getter method.
      */
     private Object getComponentProperty(PropertyDescriptor propertyDescriptor)
     {
@@ -403,11 +421,11 @@ class _ComponentAttributesMap
     /**
      * Execute the setter method of the specified property on the underlying
      * component.
-     * 
+     *
      * @param propertyDescriptor specifies which property to write.
      * @throws IllegalArgumentException if the property is not writable.
-     * @throws FacesException if any other problem occurs while invoking
-     *  the getter method. 
+     * @throws FacesException           if any other problem occurs while invoking
+     *                                  the getter method.
      */
     private void setComponentProperty(PropertyDescriptor propertyDescriptor, Object value)
     {
@@ -418,45 +436,54 @@ class _ComponentAttributesMap
         }
         try
         {
-            writeMethod.invoke(_component, new Object[] {value});
+            writeMethod.invoke(_component, new Object[]{value});
         }
         catch (Exception e)
         {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             throw new FacesException("Could not set property " + propertyDescriptor.getName() +
-                    " of component " + _component.getClientId(facesContext) +" to value : "+value+" with type : "+
-                    (value==null?"null":value.getClass().getName()), e);
+                    " of component " + _component.getClientId(facesContext) + " to value : " + value + " with type : " +
+                    (value == null ? "null" : value.getClass().getName()), e);
         }
     }
 
     private void checkKey(Object key)
     {
-        if (key == null) throw new NullPointerException("key");
-        if (!(key instanceof String)) throw new ClassCastException("key is not a String");
+        if (key == null)
+        {
+            throw new NullPointerException("key");
+        }
+        if (!(key instanceof String))
+        {
+            throw new ClassCastException("key is not a String");
+        }
     }
 
     /**
      * Return the map containing the attributes.
-     * <p>
+     * <p/>
      * This method is package-scope so that the UIComponentBase class can access it
      * directly when serializing the component.
      */
-    Map getUnderlyingMap()
+    Map<String, Object> getUnderlyingMap()
     {
-        return _attributes;
+        Map _attributes = (Map<String, Object>) _component.getStateHelper().get(UIComponentBase.PropertyKeys.attributesMap);
+        return _attributes == null ? Collections.EMPTY_MAP : _attributes; 
     }
 
     /**
      * TODO: Document why this method is necessary, and why it doesn't try to
      * compare the _component field.
      */
+    @Override
     public boolean equals(Object obj)
     {
-        return _attributes.equals(obj);
+        return getUnderlyingMap().equals(obj);
     }
 
+    @Override
     public int hashCode()
     {
-        return _attributes.hashCode();
+        return getUnderlyingMap().hashCode();
     }
 }

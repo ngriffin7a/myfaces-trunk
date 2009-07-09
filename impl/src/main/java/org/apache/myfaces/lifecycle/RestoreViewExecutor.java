@@ -18,139 +18,134 @@
  */
 package org.apache.myfaces.lifecycle;
 
-import java.io.IOException;
-import java.util.Map;
-
 import javax.faces.FacesException;
 import javax.faces.application.Application;
+import javax.faces.application.ViewExpiredException;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseId;
-import javax.portlet.PortletRequest;
+import javax.faces.event.PostAddToViewEvent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.myfaces.portlet.MyFacesGenericPortlet;
-import org.apache.myfaces.portlet.PortletUtil;
-import org.apache.myfaces.shared_impl.util.RestoreStateUtils;
-import org.apache.myfaces.util.DebugUtils;
-import org.apache.myfaces.renderkit.html.HtmlResponseStateManager;
 
 /**
- * Implements the lifecycle as described in Spec. 1.0 PFD Chapter 2
+ * Implements the Restore View Phase (JSF Spec 2.2.1)
+ * 
  * @author Nikolay Petrov
- *
- * Restore view phase (JSF Spec 2.2.1)
+ * @author Bruno Aranda (JSF 1.2)
+ * @version $Revision$ $Date$
+ * 
  */
-class RestoreViewExecutor implements PhaseExecutor {
+class RestoreViewExecutor implements PhaseExecutor
+{
 
-    private static final Log log = LogFactory.getLog(LifecycleImpl.class);
+    private static final Log log = LogFactory.getLog(RestoreViewExecutor.class);
+    private RestoreViewSupport _restoreViewSupport;
 
-    public boolean execute(FacesContext facesContext) {
-        if(facesContext.getViewRoot() != null) {
-            facesContext.getViewRoot().setLocale(facesContext.getExternalContext().getRequestLocale());
-            RestoreStateUtils.recursivelyHandleComponentReferencesAndSetValid(facesContext, facesContext.getViewRoot());
+    public boolean execute(FacesContext facesContext)
+    {
+        if (facesContext == null)
+        {
+            throw new FacesException("FacesContext is null");
+        }
+
+        // init the View
+        Application application = facesContext.getApplication();
+        ViewHandler viewHandler = application.getViewHandler();
+        
+        // Call initView() on the ViewHandler. This will set the character encoding properly for this request.
+        viewHandler.initView(facesContext);
+
+        UIViewRoot viewRoot = facesContext.getViewRoot();
+
+        RestoreViewSupport restoreViewSupport = getRestoreViewSupport();
+
+        // Examine the FacesContext instance for the current request. If it already contains a UIViewRoot
+        if (viewRoot != null)
+        {
+            if (log.isTraceEnabled())
+                log.trace("View already exists in the FacesContext");
+            
+            // Set the locale on this UIViewRoot to the value returned by the getRequestLocale() method on the
+            // ExternalContext for this request
+            viewRoot.setLocale(facesContext.getExternalContext().getRequestLocale());
+            restoreViewSupport.processComponentBinding(facesContext, viewRoot);
             return false;
         }
 
-        // Derive view identifier
-        String viewId = deriveViewId(facesContext);
+        String viewId = restoreViewSupport.calculateViewId(facesContext);
 
-        if (viewId == null) {
-            ExternalContext externalContext = facesContext.getExternalContext();
+        // Determine if this request is a postback or initial request
+        if (restoreViewSupport.isPostback(facesContext))
+        { // If the request is a postback
+            if (log.isTraceEnabled())
+                log.trace("Request is a postback");
 
-            if(externalContext.getRequestServletPath() == null) {
-                return true;
+            // call ViewHandler.restoreView(), passing the FacesContext instance for the current request and the 
+            // view identifier, and returning a UIViewRoot for the restored view.
+            viewRoot = viewHandler.restoreView(facesContext, viewId);
+            if (viewRoot == null)
+            {
+                // If the return from ViewHandler.restoreView() is null, throw a ViewExpiredException with an 
+                // appropriate error message.
+                throw new ViewExpiredException("No saved view state could be found for the view identifier: " + viewId,
+                    viewId);
             }
             
-            if (!externalContext.getRequestServletPath().endsWith("/")) {
-                try {
-                    externalContext.redirect(externalContext.getRequestServletPath() + "/");
-                    facesContext.responseComplete();
-                    return true;
-                } catch (IOException e) {
-                    throw new FacesException("redirect failed", e);
-                }
-            }
+            // Restore binding
+            restoreViewSupport.processComponentBinding(facesContext, viewRoot);
+            
+            // Store the restored UIViewRoot in the FacesContext.
+            facesContext.setViewRoot(viewRoot);
         }
+        else
+        { // If the request is a non-postback
+            if (log.isTraceEnabled())
+                log.trace("Request is not a postback. New UIViewRoot will be created");
 
-        Application application = facesContext.getApplication();
-        ViewHandler viewHandler = application.getViewHandler();
-
-        // boolean viewCreated = false;
-        UIViewRoot viewRoot = viewHandler.restoreView(facesContext, viewId);
-        if (viewRoot == null) {
+            // call ViewHandler.createView(), passing the FacesContext instance for the current request and 
+            // the view identifier
             viewRoot = viewHandler.createView(facesContext, viewId);
-            viewRoot.setViewId(viewId);
+            
+            // Subscribe the newly created UIViewRoot instance to the AfterAddToParent event, passing the 
+            // UIViewRoot instance itself as the listener.
+            viewRoot.subscribeToEvent(PostAddToViewEvent.class, viewRoot);
+            
+            // Store the new UIViewRoot instance in the FacesContext.
+            facesContext.setViewRoot(viewRoot);
+            
+            // Call renderResponse() on the FacesContext.
             facesContext.renderResponse();
-            // viewCreated = true;
+            
+            // Publish an AfterAddToParent event with the created UIViewRoot as the event source.
+            application.publishEvent(facesContext, PostAddToViewEvent.class, viewRoot);
         }
 
-        facesContext.setViewRoot(viewRoot);
-
-    if (!isPostback(facesContext)) {
-            // no POST or query parameters --> set render response flag
-            facesContext.renderResponse();
-        }
-
-        RestoreStateUtils.recursivelyHandleComponentReferencesAndSetValid(facesContext, viewRoot);
         return false;
     }
-  
-    
-  /**
-   * Return <code>true</code> if the current request is a post back and
-   * <code>false</code> otherwise.
-   * 
-   * @param  facesContext  the current faces context
-   * @return <code>true</code> if the current request is a post back and
-   *         <code>false</code> otherwise
-   */
-  private boolean isPostback(FacesContext facesContext) {
-      Map requestParameterMap = facesContext.getExternalContext().getRequestParameterMap(); 
-      return (requestParameterMap.containsKey(HtmlResponseStateManager.STANDARD_STATE_SAVING_PARAM) ||
-          requestParameterMap.containsKey("org.apache.myfaces.trinidad.faces.STATE"));
-  } 
 
-    public PhaseId getPhase() {
-        return PhaseId.RESTORE_VIEW;
+    protected RestoreViewSupport getRestoreViewSupport()
+    {
+        if (_restoreViewSupport == null)
+        {
+            _restoreViewSupport = new DefaultRestoreViewSupport();
+        }
+        return _restoreViewSupport;
     }
 
-    private static String deriveViewId(FacesContext facesContext) {
-        ExternalContext externalContext = facesContext.getExternalContext();
+    /**
+     * @param restoreViewSupport
+     *            the restoreViewSupport to set
+     */
+    public void setRestoreViewSupport(RestoreViewSupport restoreViewSupport)
+    {
+        _restoreViewSupport = restoreViewSupport;
+    }
 
-        if (PortletUtil.isPortletRequest(facesContext)) {
-            PortletRequest request = (PortletRequest) externalContext.getRequest();
-            return request.getParameter(MyFacesGenericPortlet.VIEW_ID);
-        }
-
-        String viewId = externalContext.getRequestPathInfo(); // getPathInfo
-        if (viewId == null) {
-            // No extra path info found, so it is probably extension mapping
-            viewId = externalContext.getRequestServletPath(); // getServletPath
-            DebugUtils.assertError(viewId != null, log,
-                    "RequestServletPath is null, cannot determine viewId of current page.");
-            if (viewId == null)
-                return null;
-
-            // TODO: JSF Spec 2.2.1 - what do they mean by "if the default
-            // ViewHandler implementation is used..." ?
-            String defaultSuffix = externalContext.getInitParameter(ViewHandler.DEFAULT_SUFFIX_PARAM_NAME);
-            String suffix = defaultSuffix != null ? defaultSuffix : ViewHandler.DEFAULT_SUFFIX;
-            DebugUtils.assertError(suffix.charAt(0) == '.', log, "Default suffix must start with a dot!");
-
-            int slashPos = viewId.lastIndexOf('/');
-            int extensionPos = viewId.lastIndexOf('.');
-            if (extensionPos == -1 || extensionPos <= slashPos) {
-                log.error("Assumed extension mapping, but there is no extension in " + viewId);
-                viewId = null;
-            } else {
-                viewId = viewId.substring(0, extensionPos) + suffix;
-            }
-        }
-
-        return viewId;
+    public PhaseId getPhase()
+    {
+        return PhaseId.RESTORE_VIEW;
     }
 }

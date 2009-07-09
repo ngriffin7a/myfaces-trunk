@@ -18,14 +18,15 @@
  */
 package javax.faces.component.html;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
+
 interface _EscapeProperty
 {
     /**
      * Indicates whether rendered markup should be escaped.
      * Default: true
      * 
-     * @JSFProperty
-     *   defaultValue = "true"
      */
+    @JSFProperty(defaultValue="true")    
     public boolean isEscape();
 }

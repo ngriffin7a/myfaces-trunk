@@ -26,6 +26,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.myfaces.util.AbstractAttributeMap;
 
 /**
  * HttpServletRequest header values (multi-value headers) as Map of String[].
@@ -33,54 +34,57 @@ import javax.servlet.http.HttpServletRequest;
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class RequestHeaderValuesMap extends AbstractAttributeMap
+public final class RequestHeaderValuesMap extends AbstractAttributeMap<String[]>
 {
     private final HttpServletRequest _httpServletRequest;
-    private final Map                _valueCache = new HashMap();
+    private final Map<String, String[]> _valueCache = new HashMap<String, String[]>();
 
-    RequestHeaderValuesMap(HttpServletRequest httpServletRequest)
+    RequestHeaderValuesMap(final HttpServletRequest httpServletRequest)
     {
         _httpServletRequest = httpServletRequest;
     }
 
-    protected Object getAttribute(String key)
+    @Override
+    @SuppressWarnings("unchecked")
+    protected String[] getAttribute(final String key)
     {
-        Object ret = _valueCache.get(key);
+        String[] ret = _valueCache.get(key);
         if (ret == null)
         {
-            _valueCache.put(key, ret = toArray(_httpServletRequest
-                .getHeaders(key)));
+            _valueCache.put(key, ret = toArray(_httpServletRequest.getHeaders(key)));
         }
 
         return ret;
     }
 
-    protected void setAttribute(String key, Object value)
+    @Override
+    protected void setAttribute(final String key, final String[] value)
     {
-        throw new UnsupportedOperationException(
-            "Cannot set HttpServletRequest HeaderValues");
+        throw new UnsupportedOperationException("Cannot set HttpServletRequest HeaderValues");
     }
 
-    protected void removeAttribute(String key)
+    @Override
+    protected void removeAttribute(final String key)
     {
-        throw new UnsupportedOperationException(
-            "Cannot remove HttpServletRequest HeaderValues");
+        throw new UnsupportedOperationException("Cannot remove HttpServletRequest HeaderValues");
     }
 
-    protected Enumeration getAttributeNames()
+    @Override
+    @SuppressWarnings("unchecked")
+    protected Enumeration<String> getAttributeNames()
     {
         return _httpServletRequest.getHeaderNames();
     }
 
-    private String[] toArray(Enumeration e)
+    private String[] toArray(Enumeration<String> e)
     {
-        List ret = new ArrayList();
+        List<String> ret = new ArrayList<String>();
 
         while (e.hasMoreElements())
         {
             ret.add(e.nextElement());
         }
 
-        return (String[]) ret.toArray(new String[ret.size()]);
+        return ret.toArray(new String[ret.size()]);
     }
 }

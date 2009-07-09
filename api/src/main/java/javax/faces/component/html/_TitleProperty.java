@@ -18,12 +18,14 @@
  */
 package javax.faces.component.html;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
+
 interface _TitleProperty
 {
     /**
      * HTML: An advisory title for this element.  Often used by the user agent as a tooltip.
      * 
-     * @JSFProperty
      */
+    @JSFProperty
     public abstract String getTitle();
 }

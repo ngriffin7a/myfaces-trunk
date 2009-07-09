@@ -22,7 +22,7 @@ package org.apache.myfaces.config.element;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public interface MapEntry extends ElementBase
+public interface MapEntry
 {
     // <!ELEMENT map-entry (key, (null-value|value))>
 

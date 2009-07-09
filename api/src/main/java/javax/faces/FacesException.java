@@ -19,25 +19,14 @@
 package javax.faces;
 
 /**
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- * 
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
  * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class FacesException
-        extends RuntimeException
+public class FacesException extends RuntimeException
 {
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * The cause of this exception, i.e. the Throwable that caused this exception to be thrown.
-     *<p>
-     * Note that JSF1.1 is required to be compatible with java 1.3; so no "exception chaining"
-     * support can be assumed in the base RuntimeException class. Here it is emulated so that
-     * in a java-1.4 (or later) environment this class works like other exceptions.
-     */
-    private Throwable cause;
+    private static final long serialVersionUID = 6592152487577416317L;
 
     public FacesException()
     {
@@ -46,7 +35,7 @@ public class FacesException
 
     public FacesException(Throwable cause)
     {
-        this.cause = cause;
+        super(cause);
     }
 
     public FacesException(String message)
@@ -54,15 +43,14 @@ public class FacesException
         super(message);
     }
 
-    public FacesException(String message,
-                          Throwable cause)
+    public FacesException(String message, Throwable cause)
     {
-        super(message);
-        this.cause = cause;
+        super(message, cause);
     }
 
+    @Override
     public Throwable getCause()
     {
-        return cause;
+        return super.getCause();
     }
 }

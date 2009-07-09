@@ -18,21 +18,23 @@
  */
 package javax.faces.component.html;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
+
 interface _FocusBlurProperties
 {
 
     /**
      * HTML: Specifies a script to be invoked when the element loses focus.
      * 
-     * @JSFProperty
      */
+    @JSFProperty
     public String getOnblur();
     
     /**
      * HTML: Specifies a script to be invoked when the element receives focus.
      * 
-     * @JSFProperty
      */
+    @JSFProperty
     public String getOnfocus();
     
 }

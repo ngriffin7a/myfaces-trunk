@@ -21,29 +21,46 @@ package javax.faces.el;
 import javax.faces.context.FacesContext;
 
 /**
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
+ * 
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * @deprecated
  */
+@Deprecated
 public abstract class ValueBinding
 {
-    private String _expressionString = null;
-
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public String getExpressionString()
     {
-        return _expressionString;
+        return null;
     }
 
-    abstract public Class getType(FacesContext facesContext)
-            throws EvaluationException, PropertyNotFoundException;
+    /**
+     * @deprecated
+     */
+    @Deprecated
+    abstract public Class getType(FacesContext facesContext) throws EvaluationException, PropertyNotFoundException;
 
-    public abstract Object getValue(FacesContext facesContext)
-            throws EvaluationException, PropertyNotFoundException;
+    /**
+     * @deprecated
+     */
+    @Deprecated
+    public abstract Object getValue(FacesContext facesContext) throws EvaluationException, PropertyNotFoundException;
 
-    public abstract boolean isReadOnly(FacesContext facesContext)
-            throws EvaluationException, PropertyNotFoundException;
+    /**
+     * @deprecated
+     */
+    @Deprecated
+    public abstract boolean isReadOnly(FacesContext facesContext) throws EvaluationException, PropertyNotFoundException;
 
-    public abstract void setValue(FacesContext facesContext, Object value)
-            throws EvaluationException, PropertyNotFoundException;
+    /**
+     * @deprecated
+     */
+    @Deprecated
+    public abstract void setValue(FacesContext facesContext, Object value) throws EvaluationException,
+        PropertyNotFoundException;
 }

@@ -20,31 +20,29 @@ package javax.faces.component.html;
 
 import javax.faces.component.UIOutput;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+
 /**
- * Renders a HTML a element.  Child f:param elements are added to the href
- * attribute as query parameters.  Other children are rendered as the link text or image.
- * <p>
- * Unless otherwise specified, all attributes accept static values
- * or EL expressions.
- * <p>
- * See Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
- * @JSFComponent
- *   name = "h:outputLink"
- *   class = "javax.faces.component.html.HtmlOutputLink"
- *   tagClass = "org.apache.myfaces.taglib.html.HtmlOutputLinkTag"
- *   template = "true"
- *   desc = "h:outputLink"
+ * Renders a HTML a element.
  * 
- * @author Thomas Spiegl (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * Child f:param elements are added to the href attribute as query parameters.  Other children
+ * are rendered as the link text or image.
  */
+@JSFComponent
+(name = "h:outputLink",
+clazz = "javax.faces.component.html.HtmlOutputLink",template=true,
+tagClass = "org.apache.myfaces.taglib.html.HtmlOutputLinkTag",
+defaultRendererType = "javax.faces.Link",
+implementz = "javax.faces.component.behavior.ClientBehaviorHolder"
+)
 abstract class _HtmlOutputLink extends UIOutput implements _AccesskeyProperty,
-    _UniversalProperties, _FocusBlurProperties, _EventProperties, _StyleProperties,
-    _TabindexProperty, _LinkProperties
+_UniversalProperties, _FocusBlurProperties, _EventProperties, _StyleProperties,
+_TabindexProperty, _LinkProperties
 {
 
-    public static final String COMPONENT_TYPE = "javax.faces.HtmlOutputLink";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Link";
+  static public final String COMPONENT_FAMILY =
+    "javax.faces.Output";
+  static public final String COMPONENT_TYPE =
+    "javax.faces.HtmlOutputLink";
 
 }

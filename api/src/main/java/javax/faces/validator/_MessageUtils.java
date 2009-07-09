@@ -18,12 +18,15 @@
  */
 package javax.faces.validator;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+
+import javax.el.ValueExpression;
+import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -55,6 +58,11 @@ class _MessageUtils
         String summary;
         String detail;
 
+        if(locale == null)
+        {
+            locale = Locale.getDefault();
+        }
+
         appBundle = getApplicationBundle(facesContext, locale);
         summary = getBundleString(appBundle, messageId);
         if (summary != null)
@@ -73,18 +81,10 @@ class _MessageUtils
             {
                 //Try to find detail alone
                 detail = getBundleString(appBundle, messageId + DETAIL_SUFFIX);
-                if (detail != null)
-                {
-                    summary = null;
-                }
-                else
+                if (detail == null)
                 {
                     detail = getBundleString(defBundle, messageId + DETAIL_SUFFIX);
-                    if (detail != null)
-                    {
-                        summary = null;
-                    }
-                    else
+                    if (detail == null)
                     {
                         //Neither detail nor summary found
                         facesContext.getExternalContext().log("No message with id " + messageId + " found in any bundle");
@@ -111,7 +111,7 @@ class _MessageUtils
             }
         }
 
-        return new FacesMessage(severity, summary, detail);
+        return new _LabeledFacesMessage(severity, summary, detail);
     }
 
 
@@ -131,14 +131,8 @@ class _MessageUtils
     private static ResourceBundle getApplicationBundle(FacesContext facesContext, Locale locale)
     {
         String bundleName = facesContext.getApplication().getMessageBundle();
-        if (bundleName != null)
-        {
-            return getBundle(facesContext, locale, bundleName);
-        }
-        else
-        {
-            return null;
-        }
+        
+        return bundleName != null ? getBundle(facesContext, locale, bundleName) : null;
     }
 
     private static ResourceBundle getDefaultBundle(FacesContext facesContext,
@@ -183,6 +177,20 @@ class _MessageUtils
                 }
             }
         }
+    }
+    
+    static String getLabel(FacesContext facesContext, UIComponent component) {
+        Object label = component.getAttributes().get("label");
+        if(label != null)
+            return label.toString();
+        
+        ValueExpression expression = component.getValueExpression("label");
+        if(expression != null)
+            return expression.getExpressionString();
+            //return (String)expression.getValue(facesContext.getELContext());
+        
+        //If no label is not specified, use clientId
+        return component.getClientId( facesContext );
     }
 
 }

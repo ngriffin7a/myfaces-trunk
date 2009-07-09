@@ -20,9 +20,9 @@ package org.apache.myfaces.config.impl.digester.elements;
 
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
-import javax.faces.webapp.UIComponentTag;
 
 import org.apache.myfaces.config.impl.digester.elements.ListEntries;
+import org.apache.myfaces.util.ContainerUtils;
 
 
 /**
@@ -31,7 +31,7 @@ import org.apache.myfaces.config.impl.digester.elements.ListEntries;
  *
  * @version $Revision$ $Date$
  */
-public class ManagedProperty extends ElementBaseImpl implements org.apache.myfaces.config.element.ManagedProperty
+public class ManagedProperty implements org.apache.myfaces.config.element.ManagedProperty
 {
     private static final ValueBinding DUMMY_VB = new DummyValueBinding();
 
@@ -47,70 +47,59 @@ public class ManagedProperty extends ElementBaseImpl implements org.apache.myfac
     {
         return _type;
     }
-
-
+    
     public org.apache.myfaces.config.element.MapEntries getMapEntries()
     {
         return _mapEntries;
     }
-
-
+    
     public void setMapEntries(MapEntries mapEntries)
     {
         _mapEntries = mapEntries;
         _type = TYPE_MAP;
     }
-
-
+    
     public org.apache.myfaces.config.element.ListEntries getListEntries()
     {
         return _listEntries;
     }
-
-
+    
     public void setListEntries(ListEntries listEntries)
     {
         _listEntries = listEntries;
         _type = TYPE_LIST;
     }
-
-
+    
     public String getPropertyName()
     {
         return _propertyName;
     }
-
-
+    
     public void setPropertyName(String propertyName)
     {
         _propertyName = propertyName;
     }
-
-
+    
     public String getPropertyClass()
     {
         return _propertyClass;
     }
-
-
+    
     public void setPropertyClass(String propertyClass)
     {
         _propertyClass = propertyClass;
     }
-
-
+    
     public boolean isNullValue()
     {
         return _type == TYPE_NULL;
     }
-
-
+    
     public void setNullValue()
     {
         _type = TYPE_NULL;
     }
-
-
+    
     public void setValue(String value)
     {
         _value = value;
@@ -121,8 +110,7 @@ public class ManagedProperty extends ElementBaseImpl implements org.apache.myfac
     {
         return _value;
     }
-
-
+    
     public Object getRuntimeValue(FacesContext facesContext)
     {
         getValueBinding(facesContext);
@@ -130,8 +118,7 @@ public class ManagedProperty extends ElementBaseImpl implements org.apache.myfac
         return (_valueBinding == DUMMY_VB)
             ? _value : _valueBinding.getValue(facesContext);
     }
-
-
+    
     public ValueBinding getValueBinding(FacesContext facesContext)
     {
         if (_valueBinding == null)
@@ -143,36 +130,39 @@ public class ManagedProperty extends ElementBaseImpl implements org.apache.myfac
         }
         return _valueBinding;
     }
-
-
+    
     public boolean isValueReference()
     {
-        return UIComponentTag.isValueReference(_value);
+        return ContainerUtils.isValueReference(_value);
     }
-
-
+    
     private static class DummyValueBinding extends ValueBinding
     {
+        @Override
         public String getExpressionString()
         {
             throw new UnsupportedOperationException();
         }
 
-        public Class getType(FacesContext facesContext)
+        @Override
+        public Class<?> getType(FacesContext facesContext)
         {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public Object getValue(FacesContext facesContext)
         {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public boolean isReadOnly(FacesContext facesContext)
         {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public void setValue(FacesContext facesContext, Object value)
         {
             throw new UnsupportedOperationException();

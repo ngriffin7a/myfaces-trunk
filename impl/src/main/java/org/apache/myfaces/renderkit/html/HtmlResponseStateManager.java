@@ -21,22 +21,26 @@ package org.apache.myfaces.renderkit.html;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.myfaces.renderkit.MyfacesResponseStateManager;
-import org.apache.myfaces.shared_impl.renderkit.html.HTML;
-import org.apache.myfaces.shared_impl.util.StateUtils;
 import org.apache.myfaces.shared_impl.config.MyfacesConfig;
+import org.apache.myfaces.shared_impl.renderkit.html.HTML;
+import org.apache.myfaces.shared_impl.renderkit.html.HtmlRendererUtils;
+import org.apache.myfaces.shared_impl.renderkit.html.util.JavascriptUtils;
+import org.apache.myfaces.shared_impl.util.StateUtils;
 
 import javax.faces.application.StateManager;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.render.RenderKitFactory;
+import javax.faces.render.ResponseStateManager;
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class HtmlResponseStateManager
-    extends MyfacesResponseStateManager {
+public class HtmlResponseStateManager extends MyfacesResponseStateManager
+{
     private static final Log log = LogFactory.getLog(HtmlResponseStateManager.class);
 
     private static final int TREE_PARAM = 0;
@@ -45,36 +49,48 @@ public class HtmlResponseStateManager
 
     public static final String STANDARD_STATE_SAVING_PARAM = "javax.faces.ViewState";
 
-    public void writeState(FacesContext facescontext,
-                           StateManager.SerializedView serializedview) throws IOException {
+    @Override
+    public void writeState(FacesContext facescontext, StateManager.SerializedView serializedview) throws IOException
+    {
         ResponseWriter responseWriter = facescontext.getResponseWriter();
 
         Object[] savedState = new Object[3];
 
-        if (facescontext.getApplication().getStateManager().isSavingStateInClient(facescontext)) {
+        if (facescontext.getApplication().getStateManager().isSavingStateInClient(facescontext))
+        {
+            if (log.isTraceEnabled())
+                log.trace("Writing state in client");
             Object treeStruct = serializedview.getStructure();
             Object compStates = serializedview.getState();
 
-            if(treeStruct != null)
+            if (treeStruct != null)
             {
-                savedState[TREE_PARAM]=treeStruct;
+                savedState[TREE_PARAM] = treeStruct;
             }
-            else {
+            else
+            {
                 log.error("No tree structure to be saved in client response!");
             }
 
-            if (compStates != null) {
+            if (compStates != null)
+            {
                 savedState[STATE_PARAM] = compStates;
             }
-            else {
+            else
+            {
                 log.error("No component states to be saved in client response!");
             }
         }
-        else {
+        else
+        {
+            if (log.isTraceEnabled())
+                log.trace("Writing state in server");
             // write viewSequence
             Object treeStruct = serializedview.getStructure();
-            if (treeStruct != null) {
-                if (treeStruct instanceof String) {
+            if (treeStruct != null)
+            {
+                if (treeStruct instanceof String)
+                {
                     savedState[TREE_PARAM] = treeStruct;
                 }
             }
@@ -82,121 +98,138 @@ public class HtmlResponseStateManager
 
         savedState[VIEWID_PARAM] = facescontext.getViewRoot().getViewId();
 
-        responseWriter.startElement(HTML.INPUT_ELEM, null);
-        responseWriter.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_HIDDEN, null);
-        responseWriter.writeAttribute(HTML.NAME_ATTR, STANDARD_STATE_SAVING_PARAM, null);
+        if (log.isTraceEnabled())
+            log.trace("Writing view state and renderKit fields");
 
-        MyfacesConfig myfacesConfig = MyfacesConfig.getCurrentInstance(facescontext.getExternalContext());
-        if (myfacesConfig.isRenderViewStateId()) {
-            responseWriter.writeAttribute(HTML.ID_ATTR, STANDARD_STATE_SAVING_PARAM, null);
-        }
-        responseWriter.writeAttribute(HTML.VALUE_ATTR, StateUtils.construct(savedState,
-                facescontext.getExternalContext()), null);
-        responseWriter.endElement(HTML.INPUT_ELEM);
+        // write the view state field
+        writeViewStateField(facescontext, responseWriter, savedState);
+
+        // renderKitId field
+        writeRenderKitIdField(facescontext, responseWriter);
     }
 
-    /**
-     * MyFaces extension
-     *
-     * @param facescontext
-     * @param serializedview
-     * @throws IOException
-     */
-    public void writeStateAsUrlParams(FacesContext facescontext,
-                                      StateManager.SerializedView serializedview) throws IOException {
-
-        throw new UnsupportedOperationException("long been deprecated...");
-/*        ResponseWriter responseWriter = facescontext.getResponseWriter();
-        Object treeStruct = serializedview.getStructure();
-        Object compStates = serializedview.getState();
-
-        if (treeStruct != null) {
-            if (treeStruct instanceof String) {
-                if (StateUtils.isSecure(facescontext.getExternalContext()))
-                    treeStruct = StateUtils.construct(treeStruct, facescontext.getExternalContext());
-                writeStateParam(responseWriter, TREE_PARAM, (String) treeStruct);
+    private void writeViewStateField(FacesContext facesContext, ResponseWriter responseWriter, Object savedState)
+        throws IOException
+    {
+        String serializedState = StateUtils.construct(savedState, facesContext.getExternalContext());
+        ExternalContext extContext = facesContext.getExternalContext();
+        MyfacesConfig myfacesConfig = MyfacesConfig.getCurrentInstance(extContext);
+        // Write Javascript viewstate if enabled and if javascript is allowed,
+        // otherwise write hidden input
+        if (JavascriptUtils.isJavascriptAllowed(extContext) && myfacesConfig.isViewStateJavascript())
+        {
+            HtmlRendererUtils.renderViewStateJavascript(facesContext, STANDARD_STATE_SAVING_PARAM, serializedState);
+        }
+        else
+        {
+            responseWriter.startElement(HTML.INPUT_ELEM, null);
+            responseWriter.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_HIDDEN, null);
+            responseWriter.writeAttribute(HTML.NAME_ATTR, STANDARD_STATE_SAVING_PARAM, null);
+            if (myfacesConfig.isRenderViewStateId())
+            {
+                responseWriter.writeAttribute(HTML.ID_ATTR, STANDARD_STATE_SAVING_PARAM, null);
             }
-            else {
-                writeStateParam(responseWriter, BASE64_TREE_PARAM,
-                                StateUtils.construct(treeStruct, facescontext.getExternalContext()));
-            }
+            responseWriter.writeAttribute(HTML.VALUE_ATTR, serializedState, null);
+            responseWriter.endElement(HTML.INPUT_ELEM);
         }
-        else {
-            log.error("No tree structure to be saved in client response!");
-        }
-
-        if (compStates != null) {
-            if (treeStruct != null) {
-                responseWriter.write('&');
-            }
-            if (compStates instanceof String) {
-                if (StateUtils.isSecure(facescontext.getExternalContext()))
-                    compStates = StateUtils.construct(compStates, facescontext.getExternalContext());
-                writeStateParam(responseWriter, STATE_PARAM, (String) compStates);
-            }
-            else {
-                writeStateParam(responseWriter, BASE64_STATE_PARAM, StateUtils.construct(compStates, facescontext.getExternalContext()));
-            }
-        }
-        else {
-            log.error("No component states to be saved in client response!");
-        }
-
-        if (treeStruct != null || compStates != null) {
-            responseWriter.write('&');
-        }
-        writeStateParam(responseWriter, VIEWID_PARAM, facescontext.getViewRoot().getViewId());
-
-
-        private void writeStateParam(ResponseWriter writer, String name, String value)
-            throws IOException {
-            writer.write(name);
-            writer.write('=');
-            writer.write(URLEncoder.encode(value, writer.getCharacterEncoding()));
-        }
-
-        */
     }
 
-    public Object getTreeStructureToRestore(FacesContext facesContext, String viewId) {
-        Map reqParamMap = facesContext.getExternalContext().getRequestParameterMap();
+    private void writeRenderKitIdField(FacesContext facesContext, ResponseWriter responseWriter) throws IOException
+    {
 
-        Object encodedState = reqParamMap.get(STANDARD_STATE_SAVING_PARAM);
+        String defaultRenderKitId = facesContext.getApplication().getDefaultRenderKitId();
+        if (defaultRenderKitId != null && !RenderKitFactory.HTML_BASIC_RENDER_KIT.equals(defaultRenderKitId))
+        {
+            responseWriter.startElement(HTML.INPUT_ELEM, null);
+            responseWriter.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_HIDDEN, null);
+            responseWriter.writeAttribute(HTML.NAME_ATTR, ResponseStateManager.RENDER_KIT_ID_PARAM, null);
+            responseWriter.writeAttribute(HTML.VALUE_ATTR, defaultRenderKitId, null);
+            responseWriter.endElement(HTML.INPUT_ELEM);
+        }
+    }
 
-        if(encodedState==null  || (((String) encodedState).length() == 0))
-            return null;        
+    @Override
+    public Object getState(FacesContext facesContext, String viewId)
+    {
+        Object[] savedState = getSavedState(facesContext);
+        if (savedState == null)
+        {
+            return null;
+        }
 
-        Object[] savedState = (Object[]) StateUtils.reconstruct((String) encodedState, facesContext.getExternalContext());
+        return new Object[] { savedState[TREE_PARAM], savedState[STATE_PARAM] };
+    }
 
-        String restoredViewId = (String) savedState[VIEWID_PARAM];
-
-        if (restoredViewId == null || !restoredViewId.equals(viewId)) {
-            //no saved state or state of different viewId
+    @Override
+    public Object getTreeStructureToRestore(FacesContext facesContext, String viewId)
+    {
+        // Although this method won't be called anymore,
+        // it has been kept for backward compatibility.
+        Object[] savedState = getSavedState(facesContext);
+        if (savedState == null)
+        {
             return null;
         }
 
         return savedState[TREE_PARAM];
     }
 
-    public Object getComponentStateToRestore(FacesContext facesContext) {
-        Map reqParamMap = facesContext.getExternalContext().getRequestParameterMap();
-
-        Object encodedState = reqParamMap.get(STANDARD_STATE_SAVING_PARAM);
-
-        if(encodedState==null  || (((String) encodedState).length() == 0))
-            return null;
-
-        Object[] savedState = (Object[]) StateUtils.reconstruct((String) encodedState, facesContext.getExternalContext());
-
-        String restoredViewId = (String) savedState[VIEWID_PARAM];
-
-        if (restoredViewId == null) {
-            //no saved state or state of different viewId
+    @Override
+    public Object getComponentStateToRestore(FacesContext facesContext)
+    {
+        // Although this method won't be called anymore,
+        // it has been kept for backward compatibility.
+        Object[] savedState = getSavedState(facesContext);
+        if (savedState == null)
+        {
             return null;
         }
 
         return savedState[STATE_PARAM];
     }
 
-}
+    /**
+     * Reconstructs the state from the "javax.faces.ViewState" request parameter.
+     * 
+     * @param facesContext
+     *            the current FacesContext
+     * 
+     * @return the reconstructed state, or <code>null</code> if there was no saved state
+     */
+    private Object[] getSavedState(FacesContext facesContext) {
+        Object encodedState = 
+            facesContext.getExternalContext().
+                getRequestParameterMap().get(STANDARD_STATE_SAVING_PARAM);
+        if(encodedState==null || (((String) encodedState).length() == 0)) { 
+            return null;
+        }
 
+        Object[] savedState = (Object[])StateUtils.reconstruct((String)encodedState, facesContext.getExternalContext());
+
+        String restoredViewId = (String)savedState[VIEWID_PARAM];
+
+        if (restoredViewId == null)
+        {
+            // no saved state or state of different viewId
+            if (log.isTraceEnabled())
+            {
+                log.trace("No saved state or state of a different viewId: " + restoredViewId);
+            }
+
+            return null;
+        }
+
+        return savedState;
+    }
+
+    /**
+     * Checks if the current request is a postback
+     * 
+     * @since 1.2
+     */
+    @Override
+    public boolean isPostback(FacesContext context)
+    {
+        return context.getExternalContext().getRequestParameterMap().containsKey(ResponseStateManager.VIEW_STATE_PARAM);
+    }
+}

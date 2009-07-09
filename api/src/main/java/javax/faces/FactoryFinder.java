@@ -18,113 +18,174 @@
  */
 package javax.faces;
 
-
-import javax.faces.application.ApplicationFactory;
-import javax.faces.context.FacesContextFactory;
-import javax.faces.lifecycle.LifecycleFactory;
-import javax.faces.render.RenderKitFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.faces.application.ApplicationFactory;
+import javax.faces.component.visit.VisitContextFactory;
+import javax.faces.context.ExceptionHandlerFactory;
+import javax.faces.context.ExternalContextFactory;
+import javax.faces.context.FacesContextFactory;
+import javax.faces.context.PartialViewContextFactory;
+import javax.faces.lifecycle.LifecycleFactory;
+import javax.faces.render.RenderKitFactory;
+import javax.faces.view.ViewDeclarationLanguageFactory;
+import javax.faces.view.facelets.TagHandlerDelegateFactory;
 
 /**
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
+ * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public final class FactoryFinder
 {
     public static final String APPLICATION_FACTORY = "javax.faces.application.ApplicationFactory";
+    public static final String EXCEPTION_HANDLER_FACTORY = "javax.faces.context.ExceptionHandlerFactory";
+    public static final String EXTERNAL_CONTEXT_FACTORY = "javax.faces.context.ExternalContextFactory";
     public static final String FACES_CONTEXT_FACTORY = "javax.faces.context.FacesContextFactory";
     public static final String LIFECYCLE_FACTORY = "javax.faces.lifecycle.LifecycleFactory";
+    public static final String PARTIAL_VIEW_CONTEXT_FACTORY = "javax.faces.context.PartialViewContextFactory";
     public static final String RENDER_KIT_FACTORY = "javax.faces.render.RenderKitFactory";
+    public static final String TAG_HANDLER_DELEGATE_FACTORY = "javax.faces.view.facelets.TagHandlerDelegateFactory";
+    public static final String VIEW_DECLARATION_LANGUAGE_FACTORY = "javax.faces.view.ViewDeclarationLanguageFactory";
+    public static final String VISIT_CONTEXT_FACTORY = "javax.faces.component.visit.VisitContextFactory";
 
     /**
-     * used as a monitor for itself and _factories.
-     * Maps in this map are used as monitors for themselves and the corresponding maps in _factories.
+     * used as a monitor for itself and _factories. Maps in this map are used as monitors for themselves and the
+     * corresponding maps in _factories.
      */
-    private static Map _registeredFactoryNames = new HashMap();
-    /**
-     * Maps from classLoader to another map, the container (i.e. Tomcat) will create a class loader for
-     * each web app that it controls (typically anyway) and that class loader is used as the key.
-     *
-     * The secondary map maps the factory name (i.e. FactoryFinder.APPLICATION_FACTORY) to actual instances
-     * that are created via getFactory. The instances will be of the class specified in the setFactory method
-     * for the factory name, i.e. FactoryFinder.setFactory(FactoryFinder.APPLICATION_FACTORY, MyFactory.class).
-     */
-    private static Map _factories = new HashMap();
+    private static Map<ClassLoader, Map<String, List<String>>> _registeredFactoryNames = new HashMap<ClassLoader, Map<String, List<String>>>();
 
-    private static final Set VALID_FACTORY_NAMES = new HashSet();
-    private static final Map ABSTRACT_FACTORY_CLASSES = new HashMap();
-    static {
+    /**
+     * Maps from classLoader to another map, the container (i.e. Tomcat) will create a class loader for each web app
+     * that it controls (typically anyway) and that class loader is used as the key.
+     * 
+     * The secondary map maps the factory name (i.e. FactoryFinder.APPLICATION_FACTORY) to actual instances that are
+     * created via getFactory. The instances will be of the class specified in the setFactory method for the factory
+     * name, i.e. FactoryFinder.setFactory(FactoryFinder.APPLICATION_FACTORY, MyFactory.class).
+     */
+    private static Map<ClassLoader, Map<String, Object>> _factories = new HashMap<ClassLoader, Map<String, Object>>();
+
+    private static final Set<String> VALID_FACTORY_NAMES = new HashSet<String>();
+    private static final Map<String, Class<?>> ABSTRACT_FACTORY_CLASSES = new HashMap<String, Class<?>>();
+
+    static
+    {
         VALID_FACTORY_NAMES.add(APPLICATION_FACTORY);
+        VALID_FACTORY_NAMES.add(EXCEPTION_HANDLER_FACTORY);
+        VALID_FACTORY_NAMES.add(EXTERNAL_CONTEXT_FACTORY);
         VALID_FACTORY_NAMES.add(FACES_CONTEXT_FACTORY);
         VALID_FACTORY_NAMES.add(LIFECYCLE_FACTORY);
+        VALID_FACTORY_NAMES.add(PARTIAL_VIEW_CONTEXT_FACTORY);
         VALID_FACTORY_NAMES.add(RENDER_KIT_FACTORY);
-
+        VALID_FACTORY_NAMES.add(TAG_HANDLER_DELEGATE_FACTORY);
+        VALID_FACTORY_NAMES.add(VIEW_DECLARATION_LANGUAGE_FACTORY);
+        VALID_FACTORY_NAMES.add(VISIT_CONTEXT_FACTORY);
+        
         ABSTRACT_FACTORY_CLASSES.put(APPLICATION_FACTORY, ApplicationFactory.class);
+        ABSTRACT_FACTORY_CLASSES.put(EXCEPTION_HANDLER_FACTORY, ExceptionHandlerFactory.class);
+        ABSTRACT_FACTORY_CLASSES.put(EXTERNAL_CONTEXT_FACTORY, ExternalContextFactory.class);
         ABSTRACT_FACTORY_CLASSES.put(FACES_CONTEXT_FACTORY, FacesContextFactory.class);
         ABSTRACT_FACTORY_CLASSES.put(LIFECYCLE_FACTORY, LifecycleFactory.class);
+        ABSTRACT_FACTORY_CLASSES.put(PARTIAL_VIEW_CONTEXT_FACTORY, PartialViewContextFactory.class);
         ABSTRACT_FACTORY_CLASSES.put(RENDER_KIT_FACTORY, RenderKitFactory.class);
+        ABSTRACT_FACTORY_CLASSES.put(TAG_HANDLER_DELEGATE_FACTORY, TagHandlerDelegateFactory.class);
+        ABSTRACT_FACTORY_CLASSES.put(VIEW_DECLARATION_LANGUAGE_FACTORY, ViewDeclarationLanguageFactory.class);
+        ABSTRACT_FACTORY_CLASSES.put(VISIT_CONTEXT_FACTORY, VisitContextFactory.class);
     }
 
-
-  // avoid instantiation
-  FactoryFinder() {
-  }
-
-  public static Object getFactory(String factoryName)
-            throws FacesException
+    // avoid instantiation
+    FactoryFinder()
     {
-        if(factoryName == null)
+    }
+
+    /**
+     * <p>
+     * Create (if necessary) and return a per-web-application instance of the appropriate implementation class for the
+     * specified JavaServer Faces factory class, based on the discovery algorithm described in the class description.
+     * </p>
+     * 
+     * <p>
+     * The standard factories and wrappers in JSF all implement the interface {@link FacesWrapper}. If the returned
+     * <code>Object</code> is an implementation of one of the standard factories, it must be legal to cast it to an
+     * instance of <code>FacesWrapper</code> and call {@link FacesWrapper#getWrapped()} on the instance.
+     * </p>
+     * 
+     * @param factoryName
+     *            Fully qualified name of the JavaServer Faces factory for which an implementation instance is requested
+     * 
+     * @return A per-web-application instance of the appropriate implementation class for the specified JavaServer Faces
+     *         factory class
+     * 
+     * @throws FacesException
+     *             if the web application class loader cannot be identified
+     * @throws FacesException
+     *             if an instance of the configured factory implementation class cannot be loaded
+     * @throws FacesException
+     *             if an instance of the configured factory implementation class cannot be instantiated
+     * @throws IllegalArgumentException
+     *             if <code>factoryname</code> does not identify a standard JavaServer Faces factory name
+     * @throws IllegalStateException
+     *             if there is no configured factory implementation class for the specified factory name
+     * @throws NullPointerException
+     *             if <code>factoryname</code> is null
+     */
+    public static Object getFactory(String factoryName) throws FacesException
+    {
+        if (factoryName == null)
+        {
             throw new NullPointerException("factoryName may not be null");
+        }
 
         ClassLoader classLoader = getClassLoader();
-        
-        //This code must be synchronized because this could cause a problem when
-        //using update feature each time of myfaces (org.apache.myfaces.CONFIG_REFRESH_PERIOD)
-        //In this moment, a concurrency problem could happen
-        Map factoryClassNames = null;
-        Map factoryMap = null;
-        
-        synchronized(_registeredFactoryNames)
-        {        
-            factoryClassNames = (Map) _registeredFactoryNames.get(classLoader);
-    
+
+        // This code must be synchronized because this could cause a problem when
+        // using update feature each time of myfaces (org.apache.myfaces.CONFIG_REFRESH_PERIOD)
+        // In this moment, a concurrency problem could happen
+        Map<String, List<String>> factoryClassNames = null;
+        Map<String, Object> factoryMap = null;
+
+        synchronized (_registeredFactoryNames)
+        {
+            factoryClassNames = _registeredFactoryNames.get(classLoader);
+
             if (factoryClassNames == null)
             {
-                String message = "No Factories configured for this Application. This happens if the faces-initialization "+
-                "does not work at all - make sure that you properly include all configuration settings necessary for a basic faces application " +
-                "and that all the necessary libs are included. <br/>\n "+
-                "Make sure that the JSF-API (myfaces-api-xxx.jar) is not included twice on the classpath - if not, the factories might be configured in the wrong class instance. <br/>\n"+
-                "If you use Tomcat, it might also pay off to clear your /[tomcat-installation]/work/ directory - Tomcat sometimes stumbles over its own tld-cache stored there, and doesn't load the StartupServletContextListener. <br/>\n"+
-                "Also check the logging output of your web application and your container for any exceptions! \n<br/>" +
-                "If you did that and find nothing, the mistake might be due to the fact that you use one of the very few web-containers which "+
-                "do not support registering context-listeners via TLD files and " +
-                "a context listener is not setup in your web.xml. <br/>\n" +
-                "Add the following lines to your web.xml file to work around this issue : <br/>\n&lt;listener&gt;\n<br/>" +
-                "  &lt;listener-class&gt;org.apache.myfaces.webapp.StartupServletContextListener&lt;/listener-class&gt;\n<br/>" +
-                "&lt;/listener&gt;";
-    
+                String message = "No Factories configured for this Application. This happens if the faces-initialization "
+                        + "does not work at all - make sure that you properly include all configuration settings necessary for a basic faces application "
+                        + "and that all the necessary libs are included. Also check the logging output of your web application and your container for any exceptions!"
+                        + "\nIf you did that and find nothing, the mistake might be due to the fact that you use some special web-containers which "
+                        + "do not support registering context-listeners via TLD files and "
+                        + "a context listener is not setup in your web.xml.\n"
+                        + "A typical config looks like this;\n<listener>\n"
+                        + "  <listener-class>org.apache.myfaces.webapp.StartupServletContextListener</listener-class>\n"
+                        + "</listener>\n";
                 throw new IllegalStateException(message);
             }
-    
-            if (! factoryClassNames.containsKey(factoryName))
+
+            if (!factoryClassNames.containsKey(factoryName))
             {
                 throw new IllegalArgumentException("no factory " + factoryName + " configured for this application.");
             }
-    
-            factoryMap = (Map) _factories.get(classLoader);
-    
+
+            factoryMap = _factories.get(classLoader);
+
             if (factoryMap == null)
             {
-                factoryMap = new HashMap();
+                factoryMap = new HashMap<String, Object>();
                 _factories.put(classLoader, factoryMap);
             }
         }
-        
-        List classNames = null;
+
+        List<String> classNames = null;
         Object factory = null;
         synchronized (factoryClassNames)
         {
@@ -133,25 +194,27 @@ public final class FactoryFinder
             {
                 return factory;
             }
-            classNames = (List) factoryClassNames.get(factoryName);
+
+            classNames = factoryClassNames.get(factoryName);
         }
-        
-        //release lock while calling out
-        factory = newFactoryInstance((Class)ABSTRACT_FACTORY_CLASSES.get(factoryName), classNames.iterator(), classLoader);
-        
+
+        // release lock while calling out
+        factory = newFactoryInstance(ABSTRACT_FACTORY_CLASSES.get(factoryName), classNames.iterator(), classLoader);
+
         synchronized (factoryClassNames)
         {
-            //check if someone else already installed the factory
+            // check if someone else already installed the factory
             if (factoryMap.get(factoryName) == null)
             {
                 factoryMap.put(factoryName, factory);
-            }            
+            }
         }
+
         return factory;
     }
 
-
-    private static Object newFactoryInstance(Class interfaceClass, Iterator classNamesIterator, ClassLoader classLoader)
+    private static Object newFactoryInstance(Class<?> interfaceClass, Iterator<String> classNamesIterator,
+                                             ClassLoader classLoader)
     {
         try
         {
@@ -159,8 +222,8 @@ public final class FactoryFinder
 
             while (classNamesIterator.hasNext())
             {
-                String implClassName = (String) classNamesIterator.next();
-                Class implClass = classLoader.loadClass(implClassName);
+                String implClassName = classNamesIterator.next();
+                Class<?> implClass = classLoader.loadClass(implClassName);
 
                 // check, if class is of expected interface type
                 if (!interfaceClass.isAssignableFrom(implClass))
@@ -172,28 +235,33 @@ public final class FactoryFinder
                 {
                     // nothing to decorate
                     current = implClass.newInstance();
-                } else
+                }
+                else
                 {
                     // let's check if class supports the decorator pattern
                     try
                     {
-                        Constructor delegationConstructor = implClass.getConstructor(new Class[]{interfaceClass});
+                        Constructor<?> delegationConstructor = implClass.getConstructor(new Class[] { interfaceClass });
                         // impl class supports decorator pattern,
                         try
                         {
                             // create new decorator wrapping current
-                            current = delegationConstructor.newInstance(new Object[]{current});
-                        } catch (InstantiationException e)
-                        {
-                            throw new FacesException(e);
-                        } catch (IllegalAccessException e)
-                        {
-                            throw new FacesException(e);
-                        } catch (InvocationTargetException e)
+                            current = delegationConstructor.newInstance(new Object[] { current });
+                        }
+                        catch (InstantiationException e)
                         {
                             throw new FacesException(e);
                         }
-                    } catch (NoSuchMethodException e)
+                        catch (IllegalAccessException e)
+                        {
+                            throw new FacesException(e);
+                        }
+                        catch (InvocationTargetException e)
+                        {
+                            throw new FacesException(e);
+                        }
+                    }
+                    catch (NoSuchMethodException e)
                     {
                         // no decorator pattern support
                         current = implClass.newInstance();
@@ -202,83 +270,89 @@ public final class FactoryFinder
             }
 
             return current;
-        } catch (ClassNotFoundException e)
+        }
+        catch (ClassNotFoundException e)
         {
             throw new FacesException(e);
-        } catch (InstantiationException e)
+        }
+        catch (InstantiationException e)
         {
             throw new FacesException(e);
-        } catch (IllegalAccessException e)
+        }
+        catch (IllegalAccessException e)
         {
             throw new FacesException(e);
         }
     }
 
-
-    public static void setFactory(String factoryName,
-                                  String implName)
+    public static void setFactory(String factoryName, String implName)
     {
         checkFactoryName(factoryName);
 
         ClassLoader classLoader = getClassLoader();
-        Map factoryClassNames = null;
-        synchronized(_registeredFactoryNames)
+        Map<String, List<String>> factoryClassNames = null;
+        synchronized (_registeredFactoryNames)
         {
-            Map factories = (Map) _factories.get(classLoader);
+            Map<String, Object> factories = _factories.get(classLoader);
 
-            if (factories != null && factories.containsKey(factoryName)) {
+            if (factories != null && factories.containsKey(factoryName))
+            {
                 // Javadoc says ... This method has no effect if getFactory() has already been
                 // called looking for a factory for this factoryName.
                 return;
             }
 
-            factoryClassNames = (Map) _registeredFactoryNames.get(classLoader);
+            factoryClassNames = _registeredFactoryNames.get(classLoader);
 
             if (factoryClassNames == null)
             {
-                factoryClassNames = new HashMap();
+                factoryClassNames = new HashMap<String, List<String>>();
                 _registeredFactoryNames.put(classLoader, factoryClassNames);
             }
         }
+
         synchronized (factoryClassNames)
         {
-            List classNameList = (List) factoryClassNames.get(factoryName);
+            List<String> classNameList = factoryClassNames.get(factoryName);
 
-            if (classNameList == null) {
-                classNameList = new ArrayList();
+            if (classNameList == null)
+            {
+                classNameList = new ArrayList<String>();
                 factoryClassNames.put(factoryName, classNameList);
             }
+
             classNameList.add(implName);
         }
     }
 
-
-    public static void releaseFactories()
-            throws FacesException
+    public static void releaseFactories() throws FacesException
     {
         ClassLoader classLoader = getClassLoader();
-        
-        //This code must be synchronized
-        synchronized(_registeredFactoryNames)
+
+        // This code must be synchronized
+        synchronized (_registeredFactoryNames)
         {
-            _factories.remove(classLoader);            
-            
+            _factories.remove(classLoader);
+
             // _registeredFactoryNames has as value type Map<String,List> and this must
-            //be cleaned before release (for gc).
-            Map factoryClassNames = (Map) _registeredFactoryNames.get(classLoader);
-            if (factoryClassNames != null) factoryClassNames.clear();
+            // be cleaned before release (for gc).
+            Map<String, List<String>> factoryClassNames = _registeredFactoryNames.get(classLoader);
+            if (factoryClassNames != null)
+            {
+                factoryClassNames.clear();
+            }
+
             _registeredFactoryNames.remove(classLoader);
         }
     }
 
     private static void checkFactoryName(String factoryName)
     {
-        if (! VALID_FACTORY_NAMES.contains(factoryName))
+        if (!VALID_FACTORY_NAMES.contains(factoryName))
         {
             throw new IllegalArgumentException("factoryName '" + factoryName + "'");
         }
     }
-
 
     private static ClassLoader getClassLoader()
     {

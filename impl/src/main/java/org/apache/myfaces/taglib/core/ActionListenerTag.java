@@ -18,94 +18,61 @@
  */
 package org.apache.myfaces.taglib.core;
 
-import org.apache.myfaces.shared_impl.util.ClassUtils;
-
+import javax.el.ValueExpression;
 import javax.faces.component.ActionSource;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.el.ValueBinding;
 import javax.faces.event.ActionListener;
-import javax.faces.webapp.UIComponentTag;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.Tag;
-import javax.servlet.jsp.tagext.TagSupport;
+
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFJspAttribute;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFJspTag;
+
 /**
- * This tag creates an instance of the specified ActionListener, and
- * associates it with the nearest parent UIComponent.
+ * This tag creates an instance of the specified ActionListener, and associates it with the nearest parent UIComponent.
+ * <p>
+ * Unless otherwise specified, all attributes accept static values or EL expressions.
+ * </p>
  * 
- * Unless otherwise specified, all attributes accept static values
- * or EL expressions.
- * 
- * @JSFJspTag
- *   name="f:actionListener"
- *   bodyContent="empty"
- *   
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ActionListenerTag
-        extends TagSupport
+@JSFJspTag(name = "f:actionListener", bodyContent = "empty")
+public class ActionListenerTag extends GenericListenerTag<ActionSource, ActionListener>
 {
-    //private static final Log log = LogFactory.getLog(ActionListenerTag.class);
     private static final long serialVersionUID = -2021978765020549175L;
-    private String _type = null;
 
     public ActionListenerTag()
     {
+        super(ActionSource.class);
+    }
+
+    @Override
+    protected void addListener(ActionSource actionSource, ActionListener actionListener)
+    {
+        actionSource.addActionListener(actionListener);
+    }
+
+    @Override
+    protected ActionListener createDelegateListener(ValueExpression type, ValueExpression binding)
+    {
+        return new DelegateActionListener(type, binding);
     }
 
     /**
      * The fully qualified class name of the ActionListener class.
-     * 
-     * @JSFJspAttribute
-     *   required="true"
      */
-    public void setType(String type)
+    @Override
+    @JSFJspAttribute(className = "java.lang.String", rtexprvalue = true)
+    public void setType(ValueExpression type)
     {
-        _type = type;
+        super.setType(type);
     }
 
-
-    public int doStartTag() throws JspException
+    /**
+     * Value binding expression that evaluates to an object that implements javax.faces.event.ActionListener.
+     */
+    @Override
+    @JSFJspAttribute(className = "javax.faces.event.ActionListener", rtexprvalue = true)
+    public void setBinding(ValueExpression binding)
     {
-        if (_type == null)
-        {
-            throw new JspException("type attribute not set");
-        }
-
-        //Find parent UIComponentTag
-        UIComponentTag componentTag = UIComponentTag.getParentUIComponentTag(pageContext);
-        if (componentTag == null)
-        {
-            throw new JspException("ActionListenerTag has no UIComponentTag ancestor");
-        }
-
-        if (componentTag.getCreated())
-        {
-            //Component was just created, so we add the Listener
-            UIComponent component = componentTag.getComponentInstance();
-            if (component instanceof ActionSource)
-            {
-                String className;
-                if (UIComponentTag.isValueReference(_type))
-                {
-                    FacesContext facesContext = FacesContext.getCurrentInstance();
-                    ValueBinding vb = facesContext.getApplication().createValueBinding(_type);
-                    className = (String)vb.getValue(facesContext);
-                }
-                else
-                {
-                    className = _type;
-                }
-                ActionListener al = (ActionListener)ClassUtils.newInstance(className);
-                ((ActionSource)component).addActionListener(al);
-            }
-            else
-            {
-                throw new JspException("Component " + component.getId() + " is no ActionSource");
-            }
-        }
-
-        return Tag.SKIP_BODY;
+        super.setBinding(binding);
     }
 }

@@ -45,7 +45,7 @@ public class HtmlLabelRendererTest extends AbstractJsfTestCase
         return new TestSuite(HtmlLabelRendererTest.class);
     }
     
-    public void setUp() {
+    public void setUp() throws Exception {
         super.setUp();
         label = new HtmlOutputLabel();
         writer = new MockResponseWriter(new StringWriter(), null, null);
@@ -58,7 +58,7 @@ public class HtmlLabelRendererTest extends AbstractJsfTestCase
                 new HtmlLabelRenderer());
     }
     
-    public void tearDown() {
+    public void tearDown() throws Exception {
         super.tearDown();
         writer = null;
         label = null;

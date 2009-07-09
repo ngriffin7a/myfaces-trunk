@@ -22,79 +22,103 @@ package org.apache.myfaces.lifecycle;
 import java.util.HashMap;
 import java.util.Map;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ExceptionQueuedEvent;
+import javax.faces.event.ExceptionQueuedEventContext;
 import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
 import javax.faces.lifecycle.Lifecycle;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
- * This class encapsulates the logic used to call PhaseListeners.  It was 
- * needed because of issue 9 of the JSF 1.2 spec.  See section 11.3 for more
- * details.
- *
+ * This class encapsulates the logic used to call PhaseListeners. It was needed because of issue 9 of the JSF 1.2 spec.
+ * See section 11.3 for more details.
+ * 
  * @author Stan Silvert
  */
-class PhaseListenerManager {
-    
-    private static final Log log = LogFactory.getLog(PhaseListenerManager.class);
-    
+class PhaseListenerManager
+{
     private Lifecycle lifecycle;
     private FacesContext facesContext;
     private PhaseListener[] phaseListeners;
-    
-    // Tracks success in the beforePhase.  Listeners that throw an exception
+
+    // Tracks success in the beforePhase. Listeners that throw an exception
     // in beforePhase or were never called because a previous listener threw
     // an exception should not have its afterPhase called
-    private Map listenerSuccessMap = new HashMap();
-    
+    private Map<PhaseId, boolean[]> listenerSuccessMap = new HashMap<PhaseId, boolean[]>();
+
     /** Creates a new instance of PhaseListenerManager */
-    PhaseListenerManager(Lifecycle lifecycle, FacesContext facesContext, PhaseListener[] phaseListeners) {
+    PhaseListenerManager(Lifecycle lifecycle, FacesContext facesContext, PhaseListener[] phaseListeners)
+    {
         this.lifecycle = lifecycle;
         this.facesContext = facesContext;
         this.phaseListeners = phaseListeners;
     }
-    
-    private boolean isListenerForThisPhase(PhaseListener phaseListener, PhaseId phaseId) {
+
+    private boolean isListenerForThisPhase(PhaseListener phaseListener, PhaseId phaseId)
+    {
         int listenerPhaseId = phaseListener.getPhaseId().getOrdinal();
-        return (listenerPhaseId == PhaseId.ANY_PHASE.getOrdinal() ||
-                listenerPhaseId == phaseId.getOrdinal());
+        return (listenerPhaseId == PhaseId.ANY_PHASE.getOrdinal() || listenerPhaseId == phaseId.getOrdinal());
     }
-    
-    void informPhaseListenersBefore(PhaseId phaseId) {
+
+    void informPhaseListenersBefore(PhaseId phaseId)
+    {
         boolean[] beforePhaseSuccess = new boolean[phaseListeners.length];
         listenerSuccessMap.put(phaseId, beforePhaseSuccess);
-        
-        for (int i = 0; i < phaseListeners.length; i++) {
+
+        for (int i = 0; i < phaseListeners.length; i++)
+        {
             PhaseListener phaseListener = phaseListeners[i];
-            if (isListenerForThisPhase(phaseListener, phaseId)) {
-                try {
+            if (isListenerForThisPhase(phaseListener, phaseId))
+            {
+                try
+                {
                     phaseListener.beforePhase(new PhaseEvent(facesContext, phaseId, lifecycle));
                     beforePhaseSuccess[i] = true;
-                } catch (Exception e) {
+                }
+                catch (Throwable e)
+                {
                     beforePhaseSuccess[i] = false; // redundant - for clarity
-                    log.error("Exception in PhaseListener " + phaseId.toString() + " beforePhase.", e);
+                    
+                    // JSF 2.0: publish exceptions instead of logging them.
+                    
+                    publishException (e, phaseId, ExceptionQueuedEventContext.IN_BEFORE_PHASE_KEY);
+                    
                     return;
                 }
             }
         }
     }
 
-    void informPhaseListenersAfter(PhaseId phaseId) {
-        boolean[] beforePhaseSuccess = (boolean[])listenerSuccessMap.get(phaseId);
-        
-        for (int i = phaseListeners.length - 1; i >= 0; i--)  {
+    void informPhaseListenersAfter(PhaseId phaseId)
+    {
+        boolean[] beforePhaseSuccess = listenerSuccessMap.get(phaseId);
+
+        for (int i = phaseListeners.length - 1; i >= 0; i--)
+        {
             PhaseListener phaseListener = phaseListeners[i];
-            if (isListenerForThisPhase(phaseListener, phaseId) 
-                && beforePhaseSuccess[i]) {
-                try {
+            if (isListenerForThisPhase(phaseListener, phaseId) && beforePhaseSuccess[i])
+            {
+                try
+                {
                     phaseListener.afterPhase(new PhaseEvent(facesContext, phaseId, lifecycle));
-                } catch (Exception e) {
-                    log.error("Exception in PhaseListener " + phaseId.toString() + " afterPhase", e);
+                }
+                catch (Throwable e)
+                {
+                    // JSF 2.0: publish exceptions instead of logging them.
+                    
+                    publishException (e, phaseId, ExceptionQueuedEventContext.IN_AFTER_PHASE_KEY);
                 }
             }
         }
 
+    }
+    
+    private void publishException (Throwable e, PhaseId phaseId, String key)
+    {
+        ExceptionQueuedEventContext context = new ExceptionQueuedEventContext (facesContext, e, null, phaseId);
+        
+        context.getAttributes().put (key, Boolean.TRUE);
+        
+        facesContext.getApplication().publishEvent (facesContext, ExceptionQueuedEvent.class, context);
     }
 }

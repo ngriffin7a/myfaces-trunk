@@ -18,67 +18,16 @@
  */
 package javax.faces.webapp;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.tagext.BodyContent;
-import javax.servlet.jsp.tagext.BodyTag;
-
 /**
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
+ * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * 
+ * @deprecated replaced by {@link UIComponentELTag}
  */
-public abstract class UIComponentBodyTag
-    extends UIComponentTag
-    implements BodyTag
+@Deprecated
+public abstract class UIComponentBodyTag extends UIComponentTag
 {
-    // API field
-    protected BodyContent bodyContent;
-
-    
-    public int doAfterBody()
-            throws JspException
-    {
-        return getDoAfterBodyValue();
-    }
-
-    public void doInitBody()
-            throws JspException
-    {
-    }
-
-    public void release()
-    {
-        super.release();
-        bodyContent = null;
-    }
-
-    public BodyContent getBodyContent()
-    {
-        return bodyContent;
-    }
-
-    public void setBodyContent(BodyContent bodyContent)
-    {
-        this.bodyContent = bodyContent;
-    }
-
-    public JspWriter getPreviousOut()
-    {
-        return bodyContent.getEnclosingWriter();
-    }
-
-    protected int getDoStartValue()
-            throws JspException
-    {
-        return BodyTag.EVAL_BODY_BUFFERED;
-    }
-
-    protected int getDoAfterBodyValue()
-            throws JspException
-    {
-        return BodyTag.SKIP_BODY;
-    }
 
 }

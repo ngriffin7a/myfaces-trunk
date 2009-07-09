@@ -29,53 +29,27 @@ import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagSupport;
 
 /**
- * Creates a validator and associates it with the nearest parent
- * UIComponent.  During the validation phase (or the apply-request-values
- * phase for immediate components), if the associated component has any
- * submitted value and the conversion of that value to the required
- * type has succeeded then the specified validator type is
- * invoked to test the validity of the converted value.
- * <p>
- * Commonly associated with an h:inputText entity, but may be applied to
- * any input component.
- * <p>
- * Some validators may allow the component to use attributes to define
- * component-specific validation constraints; see the f:attribute tag.
- * See also the "validator" attribute of all input components, which
- * allows a component to specify an arbitrary validation <i>method</i>
- * (rather than a registered validation type, as this tag does).
- * <p>
- * Unless otherwise specified, all attributes accept static values
- * or EL expressions.
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
  * 
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
- * @JSFJspTag
- *   name="f:validator"
- *   bodyContent="empty"
- *   
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * 
+ * @deprecated replaced by {@link ValidatorELTag}
  */
-public class ValidatorTag
-        extends TagSupport
+@Deprecated
+public class ValidatorTag extends TagSupport
 {
     private static final long serialVersionUID = 8794036166323016663L;
     private String _validatorId;
+    private String _binding;
 
-    /**
-     * The registered ID of the desired Validator.
-     * 
-     * @JSFJspAttribute
-     *   required="true"
-     */
     public void setValidatorId(String validatorId)
     {
         _validatorId = validatorId;
     }
 
-    public int doStartTag()
-            throws javax.servlet.jsp.JspException
+    @Override
+    public int doStartTag() throws JspException
     {
         UIComponentTag componentTag = UIComponentTag.getParentUIComponentTag(pageContext);
         if (componentTag == null)
@@ -103,25 +77,59 @@ public class ValidatorTag
         return Tag.SKIP_BODY;
     }
 
+    @Override
     public void release()
     {
         super.release();
         _validatorId = null;
+        _binding = null;
     }
 
-    protected Validator createValidator()
-            throws JspException
+    /**
+     * @throws JspException  
+     */
+    protected Validator createValidator() throws JspException
     {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         Application application = facesContext.getApplication();
+
+        if (_binding != null)
+        {
+            ValueBinding vb = application.createValueBinding(_binding);
+            if (vb != null)
+            {
+                Validator validator = (Validator)vb.getValue(facesContext);
+                if (validator != null)
+                {
+                    return validator;
+                }
+            }
+        }
+
         if (UIComponentTag.isValueReference(_validatorId))
         {
             ValueBinding vb = facesContext.getApplication().createValueBinding(_validatorId);
             return application.createValidator((String)vb.getValue(facesContext));
         }
-        else
+
+        return application.createValidator(_validatorId);
+
+    }
+
+    /**
+     * 
+     * @param binding
+     * @throws javax.servlet.jsp.JspException
+     * 
+     * @deprecated
+     */
+    @Deprecated
+    public void setBinding(java.lang.String binding) throws javax.servlet.jsp.JspException
+    {
+        if (binding != null && !UIComponentTag.isValueReference(binding))
         {
-            return application.createValidator(_validatorId);
+            throw new IllegalArgumentException("not a valid binding: " + binding);
         }
+        _binding = binding;
     }
 }

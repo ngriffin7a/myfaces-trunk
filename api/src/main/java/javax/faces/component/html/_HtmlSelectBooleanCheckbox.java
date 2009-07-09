@@ -20,6 +20,8 @@ package javax.faces.component.html;
 
 import javax.faces.component.UISelectBoolean;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+
 /**
  * Allow the user to choose a "true" or "false" value, presented as a
  * checkbox.
@@ -27,29 +29,39 @@ import javax.faces.component.UISelectBoolean;
  * Renders as an HTML input tag with its type set to "checkbox", and
  * its name attribute set to the id. The "checked" attribute is rendered
  * if the value of this component is true.
- * <p>
- * Unless otherwise specified, all attributes accept static values
- * or EL expressions.
- * <p>
- * See Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
+ * </p>
  *
- * @JSFComponent
- *   name = "h:selectBooleanCheckbox"
- *   class = "javax.faces.component.html.HtmlSelectBooleanCheckbox"
- *   tagClass = "org.apache.myfaces.taglib.html.HtmlSelectBooleanCheckboxTag"
- *   template = "true"
- *   desc = "h:selectBooleanCheckbox"
- *
- * @author Thomas Spiegl (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * <h4>Events:</h4>
+ * <table border="1" width="100%" cellpadding="3" summary="">
+ * <tr bgcolor="#CCCCFF" class="TableHeadingColor">
+ * <th align="left">Type</th>
+ * <th align="left">Phases</th>
+ * <th align="left">Description</th>
+ * </tr>
+ * <tr class="TableRowColor">
+ * <td valign="top"><code>javax.faces.event.ValueChangeEvent</code></td>
+ * <td valign="top" nowrap></td>
+ * <td valign="top">The valueChange event is delivered when the value
+                attribute is changed.</td>
+ * </tr>
+ * </table>
  */
+@JSFComponent
+(name = "h:selectBooleanCheckbox",
+clazz = "javax.faces.component.html.HtmlSelectBooleanCheckbox",template=true,
+tagClass = "org.apache.myfaces.taglib.html.HtmlSelectBooleanCheckboxTag",
+defaultRendererType = "javax.faces.Checkbox",
+implementz = "javax.faces.component.behavior.ClientBehaviorHolder"
+)
 abstract class _HtmlSelectBooleanCheckbox extends UISelectBoolean implements
-    _AccesskeyProperty, _UniversalProperties, _DisabledReadonlyProperties,
-    _FocusBlurProperties, _ChangeSelectProperties, _EventProperties,
-    _StyleProperties, _TabindexProperty
+_AccesskeyProperty, _UniversalProperties, _DisabledReadonlyProperties,
+_FocusBlurProperties, _ChangeSelectProperties, _EventProperties,
+_StyleProperties, _TabindexProperty, _LabelProperty
 {
 
-    public static final String COMPONENT_TYPE = "javax.faces.HtmlSelectBooleanCheckbox";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Checkbox";
+  static public final String COMPONENT_FAMILY =
+    "javax.faces.SelectBoolean";
+  static public final String COMPONENT_TYPE =
+    "javax.faces.HtmlSelectBooleanCheckbox";
 
 }

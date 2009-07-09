@@ -21,21 +21,22 @@ package javax.faces.convert;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFConverter;
+
 /**
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
- * @JSFConverter
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
  *
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
+@JSFConverter
 public class IntegerConverter
         implements Converter
 {
-    private static final String CONVERSION_MESSAGE_ID = "javax.faces.convert.IntegerConverter.CONVERSION";
-
     // FIELDS
     public static final String CONVERTER_ID = "javax.faces.Integer";
+    public static final String STRING_ID = "javax.faces.converter.STRING";
+    public static final String INTEGER_ID = "javax.faces.converter.IntegerConverter.INTEGER";
 
     // CONSTRUCTORS
     public IntegerConverter()
@@ -55,13 +56,13 @@ public class IntegerConverter
             {
                 try
                 {
-                    return new Integer(value);
+                    return Integer.valueOf(value);
                 }
                 catch (NumberFormatException e)
                 {
                     throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
-                                                                               CONVERSION_MESSAGE_ID,
-                                                                               new Object[]{uiComponent.getId(),value}), e);
+                                                                               INTEGER_ID,
+                                                                               new Object[]{value,"21",_MessageUtils.getLabel(facesContext, uiComponent)}), e);
                 }
             }
         }
@@ -87,7 +88,7 @@ public class IntegerConverter
         }
         catch (Exception e)
         {
-            throw new ConverterException(e);
+            throw new ConverterException(_MessageUtils.getErrorMessage(facesContext, STRING_ID, new Object[]{value,_MessageUtils.getLabel(facesContext, uiComponent)}),e);
         }
     }
 }

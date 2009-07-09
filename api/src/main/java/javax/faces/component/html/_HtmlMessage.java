@@ -20,30 +20,26 @@ package javax.faces.component.html;
 
 import javax.faces.component.UIMessage;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+
 /**
- * Renders the first FacesMessage that is assigned to the component
- * referenced by the "for" attribute.
- * <p>
- * Unless otherwise specified, all attributes accept static values
- * or EL expressions.
- * <p>
- * See Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
  *
- * @JSFComponent
- *   name = "h:message"
- *   class = "javax.faces.component.html.HtmlMessage"
- *   tagClass = "org.apache.myfaces.taglib.html.HtmlMessageTag"
- *   template = "true"
- *   desc = "h:message"
- *   
- * @author Thomas Spiegl (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * Renders text displaying information about the first FacesMessage
+ *           that is assigned to the component referenced by the "for" attribute.
  */
+@JSFComponent
+(name = "h:message",
+clazz = "javax.faces.component.html.HtmlMessage",template=true,
+tagClass = "org.apache.myfaces.taglib.html.HtmlMessageTag",
+defaultRendererType = "javax.faces.Message"
+)
 abstract class _HtmlMessage extends UIMessage implements _StyleProperties, 
-    _MessageProperties
+    _MessageProperties, _UniversalProperties
 {
 
-    public static final String COMPONENT_TYPE = "javax.faces.HtmlMessage";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Message";
-    
+  static public final String COMPONENT_FAMILY =
+    "javax.faces.Message";
+  static public final String COMPONENT_TYPE =
+    "javax.faces.HtmlMessage";
+
 }

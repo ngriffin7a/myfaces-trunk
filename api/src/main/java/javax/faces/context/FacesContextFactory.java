@@ -19,19 +19,31 @@
 package javax.faces.context;
 
 import javax.faces.FacesException;
+import javax.faces.FacesWrapper;
 import javax.faces.lifecycle.Lifecycle;
 
 /**
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
+ * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public abstract class FacesContextFactory
+public abstract class FacesContextFactory implements FacesWrapper<FacesContextFactory>
 {
-    public abstract FacesContext getFacesContext(Object context,
-                                                 Object request,
-                                                 Object response,
-                                                 Lifecycle lifecycle)
+    public abstract FacesContext getFacesContext(Object context, Object request, Object response, Lifecycle lifecycle)
             throws FacesException;
+
+    /**
+     * If this factory has been decorated, the implementation doing the decorating may override this method to provide
+     * access to the implementation being wrapped. A default implementation is provided that returns <code>null</code>.
+     * 
+     * @return the decorated <code>FacesContextFactory</code> if this factory decorates another, or <code>null</code>
+     *         otherwise
+     * 
+     * @since 2.0
+     */
+    public FacesContextFactory getWrapped()
+    {
+        return null;
+    }
 }

@@ -18,13 +18,17 @@
  */
 package javax.faces.context;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Writer;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
@@ -36,75 +40,406 @@ public abstract class ExternalContext
     public static final String DIGEST_AUTH = "DIGEST";
     public static final String FORM_AUTH = "FORM";
 
-    public abstract void dispatch(String path)
-            throws java.io.IOException;
+    /**
+     *
+     * @param name
+     * @param value
+     * @param properties
+     *
+     * @since 2.0
+     */
+    public void addResponseCookie(String name, String value, Map<String, Object> properties)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     *
+     * @param name
+     * @param value
+     *
+     * @since 2.0
+     */
+    public void addResponseHeader(String name, String value)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    public abstract void dispatch(String path) throws IOException;
 
     public abstract String encodeActionURL(String url);
 
+    /**
+     *
+     * @param baseUrl
+     * @param parameters
+     *
+     * @since 2.0
+     */
+    public String encodeBookmarkableURL(String baseUrl, Map<String,List<String>> parameters)
+    {
+        throw new UnsupportedOperationException();
+    }
+
     public abstract String encodeNamespace(String name);
+
+
+    /**
+     * @since 2.0
+     */
+    public abstract String encodePartialActionURL(String url);     // TODO: IMPLEMENT IMPL
+
+    /**
+     *
+     * @param baseUrl
+     * @param parameters
+     *
+     * @since 2.0
+     */
+    public String encodeRedirectURL(String baseUrl, Map<String,List<String>> parameters)
+    {
+        throw new UnsupportedOperationException();
+    }
 
     public abstract String encodeResourceURL(String url);
 
-    public abstract Map getApplicationMap();
+    public abstract Map<String, Object> getApplicationMap();
 
     public abstract String getAuthType();
 
     public abstract Object getContext();
 
+    /**
+     * Returns the name of the underlying context
+     *
+     * @return the name or null
+     *
+     * @since 2.0
+     */
+    public String getContextName()
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * @since 2.0
+     */
+    public Flash getFlash()
+    {
+        throw new UnsupportedOperationException();
+    }
+
     public abstract String getInitParameter(String name);
 
+    // FIXME: Notify EG about generic usage
     public abstract Map getInitParameterMap();
+
+    /**
+     * @since JSF 2.0
+     */
+    public String getMimeType(String file)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * @since JSF 2.0
+     */
+    public String getRealPath(String path)
+    {
+        throw new UnsupportedOperationException();
+    }
 
     public abstract String getRemoteUser();
 
     public abstract Object getRequest();
 
+    public String getRequestCharacterEncoding()
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     *
+     * @return
+     *
+     * @since 2.0
+     */
+    public int getRequestContentLength()
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    public String getRequestContentType()
+    {
+        throw new UnsupportedOperationException();
+    }
+
     public abstract String getRequestContextPath();
 
-    public abstract Map getRequestCookieMap();
+    public abstract Map<String, Object> getRequestCookieMap();
 
-    public abstract Map getRequestHeaderMap();
+    public abstract Map<String, String> getRequestHeaderMap();
 
-    public abstract Map getRequestHeaderValuesMap();
+    public abstract Map<String, String[]> getRequestHeaderValuesMap();
 
     public abstract Locale getRequestLocale();
 
-    public abstract Iterator getRequestLocales();
+    public abstract Iterator<Locale> getRequestLocales();
 
-    public abstract Map getRequestMap();
+    public abstract Map<String, Object> getRequestMap();
 
-    public abstract Map getRequestParameterMap();
+    public abstract Map<String, String> getRequestParameterMap();
 
-    public abstract Iterator getRequestParameterNames();
+    public abstract Iterator<String> getRequestParameterNames();
 
-    public abstract Map getRequestParameterValuesMap();
+    public abstract Map<String, String[]> getRequestParameterValuesMap();
 
     public abstract String getRequestPathInfo();
 
+    /**
+     * @since JSF 2.0
+     */
+    public String getRequestScheme()
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * @since JSF 2.0
+     */
+    public String getRequestServerName()
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * @since JSF 2.0
+     */
+    public int getRequestServerPort()
+    {
+        throw new UnsupportedOperationException();
+    }
+
     public abstract String getRequestServletPath();
 
-    public abstract java.net.URL getResource(String path)
-            throws java.net.MalformedURLException;
+    public abstract java.net.URL getResource(String path) throws java.net.MalformedURLException;
 
     public abstract java.io.InputStream getResourceAsStream(String path);
 
-    public abstract Set getResourcePaths(String path);
+    public abstract Set<String> getResourcePaths(String path);
 
     public abstract Object getResponse();
 
+    /**
+     *
+     * @return
+     *
+     * @since 2.0
+     */
+    public int getResponseBufferSize()
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    public String getResponseCharacterEncoding()
+    {
+        throw new UnsupportedOperationException("JSF 1.2 : figure out how to tell if this is a Portlet request");
+    }
+
+    /**
+     * throws <code>UnsupportedOperationException</code> by default.
+     *
+     * @since JSF 1.2
+     */
+    public String getResponseContentType()
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * @since JSF 2.0
+     */
+    public OutputStream getResponseOutputStream() throws IOException
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * @since JSF 2.0
+     */
+    public Writer getResponseOutputWriter() throws IOException
+    {
+        throw new UnsupportedOperationException();
+    }
+
     public abstract Object getSession(boolean create);
 
-    public abstract Map getSessionMap();
+    public abstract Map<String, Object> getSessionMap();
 
     public abstract java.security.Principal getUserPrincipal();
 
+    /**
+     * @since 2.0
+     */
+    public void invalidateSession()
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * @since 2.0
+     */
+    public boolean isResponseCommitted()
+    {
+        throw new UnsupportedOperationException();
+    }
+
     public abstract boolean isUserInRole(String role);
 
+    /**
+     * @since 2.0
+     */
     public abstract void log(String message);
 
-    public abstract void log(String message,
-                             Throwable exception);
+    /**
+     * @since 2.0
+     */
+    public abstract void log(String message, Throwable exception);
 
-    public abstract void redirect(String url)
-            throws java.io.IOException;
+    public abstract void redirect(String url) throws java.io.IOException;
+
+    /**
+     *
+     * @throws IOException
+     *
+     * @since 2.0
+     */
+    public void responseFlushBuffer() throws IOException
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     *
+     * @since 2.0
+     */
+    public void responseReset()
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     *
+     * @param statusCode
+     * @param message
+     * @throws IOException
+     *
+     * @since 2.0
+     */
+    public void responseSendError(int statusCode, String message) throws IOException
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * throws <code>UnsupportedOperationException</code> by default.
+     *
+     * @since JSF 1.2
+     * @param request
+     */
+    public void setRequest(Object request)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * throws <code>UnsupportedOperationException</code> by default.
+     *
+     * @since JSF 1.2
+     * @param encoding
+     * @throws java.io.UnsupportedEncodingException
+     */
+    public void setRequestCharacterEncoding(String encoding) throws java.io.UnsupportedEncodingException
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * throws <code>UnsupportedOperationException</code> by default.
+     *
+     * @since JSF 1.2
+     * @param response
+     */
+    public void setResponse(Object response)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     *
+     * @param size
+     *
+     * @since 2.0
+     */
+    public void setResponseBufferSize(int size)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * throws <code>UnsupportedOperationException</code> by default.
+     *
+     * @since JSF 1.2
+     * @param encoding
+     */
+    public void setResponseCharacterEncoding(String encoding)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     *
+     * @param length
+     *
+     * @since 2.0
+     */
+    public void setResponseContentLength(int length)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     *
+     * @param contentType
+     *
+     * @since 2.0
+     */
+    public void setResponseContentType(String contentType)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     *
+     * @param name
+     * @param value
+     *
+     * @since 2.0
+     */
+    public void setResponseHeader(String name, String value)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     *
+     * @param statusCode
+     *
+     * @since 2.0
+     */
+    public void setResponseStatus(int statusCode)
+    {
+        throw new UnsupportedOperationException();
+    }
 }

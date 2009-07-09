@@ -20,38 +20,51 @@ package javax.faces.component.html;
 
 import javax.faces.component.UICommand;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
+
 /**
  * This tag renders as an HTML input element.
- * <p>
- * Unless otherwise specified, all attributes accept static values
- * or EL expressions.
- * <p>
- * See Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
  *
- * @JSFComponent
- *   name = "h:commandButton"
- *   class = "javax.faces.component.html.HtmlCommandButton"
- *   tagClass = "org.apache.myfaces.taglib.html.HtmlCommandButtonTag"
- *   template = "true"
- *   desc = "h:commandButton"
- *   
- * @author Manfred Geiler (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * <h4>Events:</h4>
+ * <table border="1" width="100%" cellpadding="3" summary="">
+ * <tr bgcolor="#CCCCFF" class="TableHeadingColor">
+ * <th align="left">Type</th>
+ * <th align="left">Phases</th>
+ * <th align="left">Description</th>
+ * </tr>
+ * <tr class="TableRowColor">
+ * <td valign="top"><code>javax.faces.event.ActionEvent</code></td>
+ * <td valign="top" nowrap>Invoke Application<br>Apply Request Values</td>
+ * <td valign="top">Event delivered when the "action" of the component has been
+ * invoked;  for example, by clicking on a button.  The action may result
+ * in page navigation.</td>
+ * </tr>
+ * </table>
  */
-abstract class _HtmlCommandButton
-        extends UICommand implements _FocusBlurProperties, 
-        _EventProperties, _StyleProperties, _UniversalProperties,
-        _AccesskeyProperty, _TabindexProperty, _AltProperty, 
-        _ChangeSelectProperties, _DisabledReadonlyProperties
+@JSFComponent
+(name = "h:commandButton",
+clazz = "javax.faces.component.html.HtmlCommandButton",template=true,
+tagClass = "org.apache.myfaces.taglib.html.HtmlCommandButtonTag",
+defaultRendererType = "javax.faces.Button",
+implementz = "javax.faces.component.behavior.ClientBehaviorHolder"
+)
+abstract class _HtmlCommandButton extends UICommand
+    implements _FocusBlurProperties, 
+    _EventProperties, _StyleProperties, _UniversalProperties,
+    _AccesskeyProperty, _TabindexProperty, _AltProperty, 
+    _ChangeSelectProperties, _DisabledReadonlyProperties,
+    _LabelProperty
 {
-    public static final String COMPONENT_TYPE = "javax.faces.HtmlCommandButton";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Button";
-            
+
+    static public final String COMPONENT_FAMILY = "javax.faces.Command";
+    static public final String COMPONENT_TYPE = "javax.faces.HtmlCommandButton";
+
     /**
      * HTML: The URL of an image that renders in place of the button.
      * 
-     * @JSFProperty
      */
+    @JSFProperty
     public abstract String getImage();
 
     /**
@@ -60,6 +73,7 @@ abstract class _HtmlCommandButton
      * @JSFProperty
      *   defaultValue = "submit"
      */
+    @JSFProperty(defaultValue = "submit")
     public abstract String getType();
 
 }

@@ -26,11 +26,11 @@ import java.util.Iterator;
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  */
-public class ListEntries extends ElementBaseImpl implements org.apache.myfaces.config.element.ListEntries
+public class ListEntries implements org.apache.myfaces.config.element.ListEntries
 {
 
     private String valueClass;
-    private List entries = new ArrayList();
+    private List<Entry> entries = new ArrayList<Entry>();
 
 
     public String getValueClass()
@@ -52,13 +52,13 @@ public class ListEntries extends ElementBaseImpl implements org.apache.myfaces.c
     }
 
 
-    public Iterator getListEntries()
+    public Iterator<Entry> getListEntries()
     {
         return entries.iterator();
     }
 
 
-    public static class Entry extends ElementBaseImpl implements org.apache.myfaces.config.element.ListEntry {
+    public static class Entry implements org.apache.myfaces.config.element.ListEntry {
         private boolean nullValue;
         private String value;
 

@@ -31,28 +31,32 @@ import java.util.Map;
 
 /**
  * RenderKitFactory implementation as defined in Spec. JSF.7.3
+ * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class RenderKitFactoryImpl
-    extends RenderKitFactory
+public class RenderKitFactoryImpl extends RenderKitFactory
 {
     private static final Log log = LogFactory.getLog(RenderKitFactoryImpl.class);
 
-    private Map _renderkits = new HashMap();
+    private Map<String, RenderKit> _renderkits = new HashMap<String, RenderKit>();
 
     public RenderKitFactoryImpl()
     {
     }
 
-    public void purgeRenderKit(){
+    public void purgeRenderKit()
+    {
         _renderkits.clear();
     }
 
+    @Override
     public void addRenderKit(String renderKitId, RenderKit renderKit)
     {
-        if (renderKitId == null) throw new NullPointerException("renderKitId");
-        if (renderKit == null) throw new NullPointerException("renderKit");
+        if (renderKitId == null)
+            throw new NullPointerException("renderKitId");
+        if (renderKit == null)
+            throw new NullPointerException("renderKit");
         if (log.isInfoEnabled())
         {
             if (_renderkits.containsKey(renderKitId))
@@ -63,27 +67,26 @@ public class RenderKitFactoryImpl
         _renderkits.put(renderKitId, renderKit);
     }
 
-
-    public RenderKit getRenderKit(FacesContext context, String renderKitId)
-            throws FacesException
+    @Override
+    public RenderKit getRenderKit(FacesContext context, String renderKitId) throws FacesException
     {
-        if (renderKitId == null) throw new NullPointerException("renderKitId");
-        RenderKit renderkit = (RenderKit)_renderkits.get(renderKitId);
+        if (renderKitId == null)
+            throw new NullPointerException("renderKitId");
+        RenderKit renderkit = _renderkits.get(renderKitId);
         if (renderkit == null)
         {
-            //throw new IllegalArgumentException("Unknown RenderKit '" + renderKitId + "'.");
-            //JSF Spec API Doc says:
+            // throw new IllegalArgumentException("Unknown RenderKit '" + renderKitId + "'.");
+            // JSF Spec API Doc says:
             // "If there is no registered RenderKit for the specified identifier, return null"
             // vs "IllegalArgumentException - if no RenderKit instance can be returned for the specified identifier"
-            //First sentence is more precise, so we just log a warning
-            //RI doesn't even log a warning. Warning seems appropriate, though.
+            // First sentence is more precise, so we just log a warning
             log.warn("Unknown RenderKit '" + renderKitId + "'.");
         }
         return renderkit;
     }
 
-
-    public Iterator getRenderKitIds()
+    @Override
+    public Iterator<String> getRenderKitIds()
     {
         return _renderkits.keySet().iterator();
     }

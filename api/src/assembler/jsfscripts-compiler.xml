@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<assembler>
+    <scripts>
+        <script>
+            <fileName>jsf.js</fileName>
+            <includes>
+                <include>**/_impl/_util/_LangUtils.js</include>
+                <include>**/_impl/_util/_ListenerQueue.js</include>
+                <include>**/_impl/_util/_Utils.js</include>
+                <include>**/_impl/_util/_HtmlStripper.js</include>
+                <include>**/_impl/xhrCore/_Exception.js</include>
+                <include>**/_impl/xhrCore/_AjaxUtils.js</include>
+                <include>**/_impl/xhrCore/_AjaxRequestQueue.js</include>
+                <include>**/_impl/xhrCore/_AjaxRequest.js</include>
+                <include>**/_impl/xhrCore/_AjaxResponse.js</include>
+                <include>**/_impl/xhrCore/_xhrCoreAdapter.js</include>
+                <include>**/_impl/core/jsf_impl.js</include>
+                <include>**/api/jsf.js</include>
+            </includes>
+        </script>
+    </scripts>
+</assembler>

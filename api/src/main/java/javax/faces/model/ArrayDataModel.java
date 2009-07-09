@@ -19,16 +19,16 @@
 package javax.faces.model;
 
 /**
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
+ * 
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ArrayDataModel extends DataModel
+public class ArrayDataModel<E> extends DataModel<E>
 {
     // FIELDS
     private int _rowIndex = -1;
-    private Object[] _data;
+    private E[] _data;
 
     // CONSTRUCTORS
     public ArrayDataModel()
@@ -36,13 +36,15 @@ public class ArrayDataModel extends DataModel
         super();
     }
 
-    public ArrayDataModel(Object[] array)
+    public ArrayDataModel(E[] array)
     {
-        if (array == null) throw new NullPointerException("array");
+        if (array == null)
+            throw new NullPointerException("array");
         setWrappedData(array);
     }
 
     // METHODS
+    @Override
     public int getRowCount()
     {
         if (_data == null)
@@ -52,7 +54,8 @@ public class ArrayDataModel extends DataModel
         return _data.length;
     }
 
-    public Object getRowData()
+    @Override
+    public E getRowData()
     {
         if (_data == null)
         {
@@ -65,25 +68,25 @@ public class ArrayDataModel extends DataModel
         return _data[_rowIndex];
     }
 
+    @Override
     public int getRowIndex()
     {
         return _rowIndex;
     }
 
+    @Override
     public Object getWrappedData()
     {
         return _data;
     }
 
+    @Override
     public boolean isRowAvailable()
     {
-        if (_data == null)
-        {
-            return false;
-        }
-        return _rowIndex >= 0 && _rowIndex < _data.length;
+        return _data != null && _rowIndex >= 0 && _rowIndex < _data.length;
     }
 
+    @Override
     public void setRowIndex(int rowIndex)
     {
         if (rowIndex < -1)
@@ -104,9 +107,10 @@ public class ArrayDataModel extends DataModel
         }
     }
 
+    @Override
     public void setWrappedData(Object data)
     {
-        _data = (Object[])data;
+        _data = (E[])data;
         int rowIndex = _data != null ? 0 : -1;
         setRowIndex(rowIndex);
     }

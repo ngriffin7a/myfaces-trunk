@@ -18,20 +18,22 @@
  */
 package javax.faces.component.html;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
+
 interface _DisabledClassEnabledClassProperties
 {
     /**
      * The CSS class assigned to the label element for enabled choices.
      * 
-     * @JSFProperty
      */
+    @JSFProperty
     public String getDisabledClass();
 
     /**
      * The CSS class assigned to the label element for enabled choices.
      * 
-     * @JSFProperty
      */
+    @JSFProperty
     public String getEnabledClass();
 
 }

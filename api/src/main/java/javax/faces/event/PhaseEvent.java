@@ -23,8 +23,8 @@ import javax.faces.lifecycle.Lifecycle;
 import java.util.EventObject;
 
 /**
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
+ * 
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
@@ -39,9 +39,12 @@ public class PhaseEvent extends EventObject
     public PhaseEvent(FacesContext facesContext, PhaseId phaseId, Lifecycle lifecycle)
     {
         super(lifecycle);
-        if (facesContext == null) throw new NullPointerException("facesContext");
-        if (phaseId == null) throw new NullPointerException("phaseId");
-        if (lifecycle == null) throw new NullPointerException("lifecycle");
+        if (facesContext == null)
+            throw new NullPointerException("facesContext");
+        if (phaseId == null)
+            throw new NullPointerException("phaseId");
+        if (lifecycle == null)
+            throw new NullPointerException("lifecycle");
 
         _facesContext = facesContext;
         _phaseId = phaseId;
@@ -56,6 +59,51 @@ public class PhaseEvent extends EventObject
     public PhaseId getPhaseId()
     {
         return _phaseId;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        final int PRIME = 31;
+        int result = 1;
+        result = PRIME * result + ((source == null) ? 0 : source.hashCode());
+        result = PRIME * result + ((_facesContext == null) ? 0 : _facesContext.hashCode());
+        result = PRIME * result + ((_phaseId == null) ? 0 : _phaseId.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        final PhaseEvent other = (PhaseEvent) obj;
+        if (source == null)
+        {
+            if (other.source != null)
+                return false;
+        }
+        else if (!source.equals(other.source))
+            return false;
+        if (_facesContext == null)
+        {
+            if (other._facesContext != null)
+                return false;
+        }
+        else if (!_facesContext.equals(other._facesContext))
+            return false;
+        if (_phaseId == null)
+        {
+            if (other._phaseId != null)
+                return false;
+        }
+        else if (!_phaseId.equals(other._phaseId))
+            return false;
+        return true;
     }
 
 }

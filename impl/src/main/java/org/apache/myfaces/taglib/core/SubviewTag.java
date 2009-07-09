@@ -18,47 +18,78 @@
  */
 package org.apache.myfaces.taglib.core;
 
-import javax.faces.webapp.UIComponentTag;
+import javax.faces.component.UIComponent;
 import javax.faces.component.UINamingContainer;
+import javax.faces.component.UIOutput;
+import javax.faces.context.FacesContext;
+import javax.faces.webapp.UIComponentELTag;
+
+import org.apache.myfaces.application.jsp.ViewResponseWrapper;
 
 /**
- * This tag associates a set of UIComponents with the nearest parent
- * UIComponent.  It acts as a naming container to make the IDs of its
- * component elements unique.
- * 
- * Unless otherwise specified, all attributes accept static values or EL expressions.
- * 
- * @JSFJspTag
- *   name="f:subview"
- *   bodyContent="JSP" 
- * @JSFJspAttribute
- *   name="id"
- *   className="java.lang.String"
- *   required="true"
- *   longDescription="The developer-assigned ID of this component."
- * @JSFJspAttribute
- *   name="binding"
- *   className="java.lang.String"
- *   longDescription="Identifies a backing bean property to bind to this component instance."
- * @JSFJspAttribute
- *   name="rendered"
- *   className="java.lang.String"
- *   longDescription="A boolean value that indicates whether this component should be rendered."
- *   
- *   
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class SubviewTag
-    extends UIComponentTag
+public class SubviewTag extends UIComponentELTag
 {
+    public SubviewTag()
+    {
+        super();
+    }
+
+    @Override
     public String getComponentType()
     {
         return UINamingContainer.COMPONENT_TYPE;
     }
 
+    @Override
     public String getRendererType()
     {
         return null;
     }
+
+    /**
+     * Creates a UIComponent from the BodyContent If a Subview is included via the <jsp:include> tag the corresponding
+     * jsp is rendered with getServletContext().getRequestDispatcher("includedSite").include(request,response) and it is
+     * possible that something was written to the Response direct. So is is necessary that the content of the wrapped
+     * response is added to the componenttree.
+     * 
+     * @return UIComponent or null
+     */
+    @Override
+    protected UIComponent createVerbatimComponentFromBodyContent()
+    {
+        UIOutput component = (UIOutput)super.createVerbatimComponentFromBodyContent();
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        Object response = facesContext.getExternalContext().getResponse();
+        String wrappedOutput;
+
+        if (response instanceof ViewResponseWrapper)
+        {
+            ViewResponseWrapper wrappedResponse = (ViewResponseWrapper)response;
+            wrappedOutput = wrappedResponse.toString();
+            if (wrappedOutput != null && wrappedOutput.length() > 0)
+            {
+                String componentvalue = null;
+                if (component != null)
+                {
+                    // save the Value of the Bodycontent
+                    componentvalue = (String)component.getValue();
+                }
+                component = super.createVerbatimComponent();
+                if (componentvalue != null)
+                {
+                    component.setValue(wrappedOutput + componentvalue);
+                }
+                else
+                {
+                    component.setValue(wrappedOutput);
+                }
+                wrappedResponse.reset();
+            }
+        }
+        return component;
+    }
+
 }

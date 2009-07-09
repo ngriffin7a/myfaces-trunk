@@ -1,20 +1,17 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Copyright 2004-2006 The Apache Software Foundation.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.apache.myfaces.application.jsp;
@@ -27,9 +24,7 @@ import java.io.CharArrayWriter;
 import javax.faces.application.StateManager;
 import javax.faces.component.UIOutput;
 import javax.faces.component.UIViewRoot;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import javax.faces.render.RenderKitFactory;
 
 import org.apache.shale.test.base.AbstractJsfTestCase;
 import org.apache.shale.test.mock.MockResponseWriter;
@@ -60,21 +55,34 @@ public class JspStateManagerImplTest extends AbstractJsfTestCase {
         output.setValue("foo");
         output.setId("foo");
 
-                /*todo: java.lang.UnsupportedOperationException
-    at org.apache.shale.test.mock.MockRenderKit.getResponseStateManager(MockRenderKit.java:125)
-    at org.apache.myfaces.application.jsp.JspStateManagerImpl.writeState(JspStateManagerImpl.java:428)
-    at org.apache.myfaces.application.jsp.JspStateManagerImplTest.testWriteAndRestoreState(JspStateManagerImplTest.java:61)
         stateManager.writeState(facesContext, stateManager.saveSerializedView(facesContext));
 
         UIViewRoot restoredViewRoot = stateManager.restoreView(facesContext, "/root", RenderKitFactory.HTML_BASIC_RENDER_KIT);
-
-
-        assertNotNull("restored view root should not be null", restoredViewRoot); */
+        assertNotNull("restored view root should not be null", restoredViewRoot);
     }
 
-    // Return the tests included in this test case.
-    public static Test suite()
+    public void testSaveInSessionWithoutSerialize() throws Exception
     {
-        return (new TestSuite(JspStateManagerImplTest.class));
+        // create a fake viewRoot
+        UIViewRoot root = new UIViewRoot();
+        root.getAttributes().put("key", "value");
+
+        // simulate server-side-state-saving without serialization
+        Object state = root.saveState(facesContext);
+
+        // restore view
+        UIViewRoot root1 = new UIViewRoot();
+        root1.restoreState(facesContext, state);
+
+        // restore view .. next request
+        UIViewRoot root2 = new UIViewRoot();
+        root2.restoreState(facesContext, state);
+
+        // chaange attribute in root1
+        root1.getAttributes().put("key", "borken");
+
+        // other values should not have been changed
+        assertEquals("value", root2.getAttributes().get("key"));
+        assertEquals("value", root.getAttributes().get("key"));
     }
 }

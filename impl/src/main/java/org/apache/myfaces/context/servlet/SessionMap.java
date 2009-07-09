@@ -18,12 +18,14 @@
  */
 package org.apache.myfaces.context.servlet;
 
-import org.apache.myfaces.shared_impl.util.NullEnumeration;
+import java.util.Enumeration;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Enumeration;
-import java.util.Map;
+
+import org.apache.myfaces.shared_impl.util.NullEnumeration;
+import org.apache.myfaces.util.AbstractAttributeMap;
 
 
 /**
@@ -32,42 +34,44 @@ import java.util.Map;
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class SessionMap extends AbstractAttributeMap
+public final class SessionMap extends AbstractAttributeMap<Object>
 {
     private final HttpServletRequest _httpRequest;
 
-    SessionMap(HttpServletRequest httpRequest)
+    SessionMap(final HttpServletRequest httpRequest)
     {
         _httpRequest = httpRequest;
     }
 
-    protected Object getAttribute(String key)
+    @Override
+    protected Object getAttribute(final String key)
     {
-        HttpSession httpSession = getSession();
-        return (httpSession == null)
-            ? null : httpSession.getAttribute(key.toString());
+        final HttpSession httpSession = getSession();
+        return (httpSession == null) ? null : httpSession.getAttribute(key);
     }
 
-    protected void setAttribute(String key, Object value)
+    @Override
+    protected void setAttribute(final String key, final Object value)
     {
         _httpRequest.getSession(true).setAttribute(key, value);
     }
 
-    protected void removeAttribute(String key)
+    @Override
+    protected void removeAttribute(final String key)
     {
-        HttpSession httpSession = getSession();
+        final HttpSession httpSession = getSession();
         if (httpSession != null)
         {
             httpSession.removeAttribute(key);
         }
     }
 
-    protected Enumeration getAttributeNames()
+    @Override
+    @SuppressWarnings("unchecked")
+    protected Enumeration<String> getAttributeNames()
     {
-        HttpSession httpSession = getSession();
-        return (httpSession == null)
-            ? NullEnumeration.instance()
-            : httpSession.getAttributeNames();
+        final HttpSession httpSession = getSession();
+        return (httpSession == null) ? NullEnumeration.instance() : httpSession.getAttributeNames();
     }
 
     private HttpSession getSession()
@@ -75,15 +79,29 @@ public class SessionMap extends AbstractAttributeMap
         return _httpRequest.getSession(false);
     }
 
-
-    public void putAll(Map t)
+    @Override
+    public void putAll(final Map<? extends String, ? extends Object> t)
     {
         throw new UnsupportedOperationException();
     }
 
-
+    /**
+     * This will clear the session without invalidation. If no session has been created, it will simply return.
+     */
+    @SuppressWarnings("unchecked")
+    @Override
     public void clear()
     {
-        throw new UnsupportedOperationException();
+        final HttpSession session = getSession();
+        if (session == null)
+        {
+            return;
+        }
+        
+        Enumeration<String> attributeNames = session.getAttributeNames();
+        while (attributeNames.hasMoreElements())
+        {
+            session.removeAttribute(attributeNames.nextElement());
+        }
     }
 }

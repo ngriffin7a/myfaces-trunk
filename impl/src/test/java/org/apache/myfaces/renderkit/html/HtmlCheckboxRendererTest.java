@@ -33,7 +33,10 @@ import org.apache.shale.test.base.AbstractJsfTestCase;
 import org.apache.shale.test.mock.MockRenderKitFactory;
 import org.apache.shale.test.mock.MockResponseWriter;
 
-
+/**
+ * @author Bruno Aranda (latest modification by $Author$)
+ * @version $Revision$ $Date$
+ */
 public class HtmlCheckboxRendererTest extends AbstractJsfTestCase
 {
     private MockResponseWriter writer ;
@@ -49,7 +52,7 @@ public class HtmlCheckboxRendererTest extends AbstractJsfTestCase
         return new TestSuite(HtmlCheckboxRendererTest.class);
     }
 
-    public void setUp()
+    public void setUp() throws Exception
     {
         super.setUp();
 
@@ -71,7 +74,7 @@ public class HtmlCheckboxRendererTest extends AbstractJsfTestCase
 
     }
 
-    public void tearDown()
+    public void tearDown() throws Exception
     {
         super.tearDown();
         selectManyCheckbox = null;
@@ -106,8 +109,8 @@ public class HtmlCheckboxRendererTest extends AbstractJsfTestCase
             new HtmlRenderedAttr("onmouseover"), 
             new HtmlRenderedAttr("onmouseup"),
             //_StyleProperties
-            new HtmlRenderedAttr("style", 2), 
-            new HtmlRenderedAttr("styleClass", "styleClass", "class=\"styleClass\"", 2),
+            new HtmlRenderedAttr("style", 1), 
+            new HtmlRenderedAttr("styleClass", "styleClass", "class=\"styleClass\"", 1),
             //_TabindexProperty
             new HtmlRenderedAttr("tabindex")
         };

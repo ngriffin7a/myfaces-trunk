@@ -23,6 +23,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.myfaces.util.AbstractAttributeMap;
+
 
 /**
  * HttpServletRequest headers as Map.
@@ -30,43 +32,50 @@ import javax.servlet.http.HttpServletRequest;
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class RequestHeaderMap extends AbstractAttributeMap
+public final class RequestHeaderMap extends AbstractAttributeMap<String>
 {
     private final HttpServletRequest _httpServletRequest;
 
-    RequestHeaderMap(HttpServletRequest httpServletRequest)
+    RequestHeaderMap(final HttpServletRequest httpServletRequest)
     {
         _httpServletRequest = httpServletRequest;
     }
 
-    protected Object getAttribute(String key)
+    @Override
+    protected String getAttribute(final String key)
     {
         return _httpServletRequest.getHeader(key);
     }
 
-    protected void setAttribute(String key, Object value)
+    @Override
+    protected void setAttribute(final String key, final String value)
     {
         throw new UnsupportedOperationException(
             "Cannot set HttpServletRequest Header");
     }
 
-    protected void removeAttribute(String key)
+    @Override
+    protected void removeAttribute(final String key)
     {
         throw new UnsupportedOperationException(
             "Cannot remove HttpServletRequest Header");
     }
 
-    protected Enumeration getAttributeNames()
+    @Override
+    @SuppressWarnings("unchecked")
+    protected Enumeration<String> getAttributeNames()
     {
         return _httpServletRequest.getHeaderNames();
     }
 
-    public void putAll(Map t)
+    @Override
+    public void putAll(final Map<? extends String, ? extends String> t)
     {
         throw new UnsupportedOperationException();
     }
 
 
+    @Override
     public void clear()
     {
         throw new UnsupportedOperationException();

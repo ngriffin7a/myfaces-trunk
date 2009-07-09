@@ -19,17 +19,15 @@
 
 package javax.faces.convert;
 
-import org.apache.shale.test.base.AbstractJsfTestCase;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
-import java.util.Date;
-import java.util.TimeZone;
-import java.util.Locale;
-import java.text.SimpleDateFormat;
-import java.text.DateFormat;
 
-import junit.framework.Test;
+import org.apache.shale.test.base.AbstractJsfTestCase;
 
 public class DateTimeConverterTest extends AbstractJsfTestCase
 {
@@ -40,25 +38,24 @@ public class DateTimeConverterTest extends AbstractJsfTestCase
         junit.textui.TestRunner.run(DateTimeConverterTest.class);
     }
 
-    public static Test suite() {
-        return null; // keep this method or maven won't run it
-    }
-    
     public DateTimeConverterTest(String name)
     {
         super(name);
     }
 
-    public void setUp()
+    @Override
+    protected void setUp() throws Exception
     {
         super.setUp();
 
         mock = new DateTimeConverter();
         mock.setTimeZone(TimeZone.getDefault());
+        FacesContext.getCurrentInstance().getViewRoot().setLocale(Locale.GERMANY);
 
     }
 
-    public void tearDown()
+    @Override
+    protected void tearDown() throws Exception
     {
         super.tearDown();
 
@@ -66,8 +63,8 @@ public class DateTimeConverterTest extends AbstractJsfTestCase
     }
 
     /*
-    * Test method for 'javax.faces.component.UIComponentBase.getAsObject()'
-    */
+     * Test method for 'javax.faces.component.UIComponentBase.getAsObject()'
+     */
     public void testGetAsObject()
     {
 
@@ -75,55 +72,40 @@ public class DateTimeConverterTest extends AbstractJsfTestCase
 
         mock.setPattern("MM/dd/yyyy");
 
-        //should trow a ConverterException
+        // should trow a ConverterException
         try
         {
-            mock.getAsObject(FacesContext.getCurrentInstance(),input,"15/15/15");
+            mock.getAsObject(FacesContext.getCurrentInstance(), input, "15/15/15");
 
-            assertTrue("this date should not be parsable - and it is, so this is wrong.",false);
+            assertTrue("this date should not be parsable - and it is, so this is wrong.", false);
         }
         catch (ConverterException e)
         {
 
         }
 
-        //should not trow a ConverterException
+        // should not trow a ConverterException
         try
         {
-            Date date = (Date) mock.getAsObject(FacesContext.getCurrentInstance(),input,"12/01/01");
+            Date date = (Date) mock.getAsObject(FacesContext.getCurrentInstance(), input, "12/01/01");
 
             SimpleDateFormat format = new SimpleDateFormat("MM/dd/yy");
             format.setTimeZone(TimeZone.getDefault());
 
             String str = format.format(date);
 
-            assertEquals("12/01/01",str);
+            assertEquals("12/01/01", str);
 
             format = new SimpleDateFormat("MM/dd/yyyy");
             format.setTimeZone(TimeZone.getDefault());
 
             str = format.format(date);
 
-            assertEquals("12/01/0001",str);            
+            assertEquals("12/01/0001", str);
         }
         catch (ConverterException e)
         {
-            assertTrue("this date should not be parsable - and it is, so this is wrong.",false);
+            assertTrue("this date should not be parsable - and it is, so this is wrong.", false);
         }
-    }
-
-    public void testGetAsObjectTimeStyle()
-    {
-        DateFormat df = DateFormat.getTimeInstance(DateFormat.DEFAULT, Locale.US);
-        TimeZone timeZone = TimeZone.getTimeZone("America/New_York");
-        df.setTimeZone(timeZone);
-        mock.setType("time");
-        mock.setTimeZone(timeZone);
-        mock.setLocale(Locale.US);
-        String current = df.format(new Date());
-        UIInput input = new UIInput();
-        input.setValue(new Date());
-        Date date = (Date) mock.getAsObject(FacesContext.getCurrentInstance(), input, current);
-        assertEquals(df.format(date),current);
     }
 }

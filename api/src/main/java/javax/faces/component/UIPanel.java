@@ -18,37 +18,30 @@
  */
 package javax.faces.component;
 
-
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
 
 /**
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
- * @JSFComponent
- *   type = "javax.faces.Panel"
- *   family = "javax.faces.Panel"
- *   desc = "UIPanel"
- *
- * @author Manfred Geiler (latest modification by $Author$)
- * @version $Revision$ $Date$
  */
-public class UIPanel
-        extends UIComponentBase
+@JSFComponent
+public class UIPanel extends UIComponentBase
 {
-    //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "javax.faces.Panel";
-    public static final String COMPONENT_FAMILY = "javax.faces.Panel";
+  static public final String COMPONENT_FAMILY =
+    "javax.faces.Panel";
+  static public final String COMPONENT_TYPE =
+    "javax.faces.Panel";
 
+  /**
+   * Construct an instance of the UIPanel.
+   */
+  public UIPanel()
+  {
+    setRendererType(null);
+  }
 
-    public UIPanel()
-    {
-    }
-
-    public String getFamily()
-    {
-        return COMPONENT_FAMILY;
-    }
-
-
-    //------------------ GENERATED CODE END ---------------------------------------
+  @Override
+  public String getFamily()
+  {
+    return COMPONENT_FAMILY;
+  }
 }

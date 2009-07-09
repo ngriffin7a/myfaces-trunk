@@ -20,12 +20,8 @@ package org.apache.myfaces.taglib.core;
 
 import org.apache.myfaces.convert.ConverterUtils;
 
-import javax.faces.context.FacesContext;
-import javax.faces.el.ValueBinding;
 import javax.faces.validator.LengthValidator;
 import javax.faces.validator.Validator;
-import javax.faces.webapp.UIComponentTag;
-import javax.faces.webapp.ValidatorTag;
 import javax.servlet.jsp.JspException;
 
 /**
@@ -33,63 +29,37 @@ import javax.servlet.jsp.JspException;
  * @author Manfred Geiler
  * @version $Revision$ $Date$
  */
-public class ValidateLengthTag
-    extends ValidatorTag
+public class ValidateLengthTag extends GenericMinMaxValidatorTag<Integer>
 {
     private static final long serialVersionUID = 4858632671998693059L;
-    private String _minimum = null;
-    private String _maximum = null;
 
     private static final String VALIDATOR_ID = "javax.faces.Length";
 
-    public void release()
+    @Override
+    protected Validator createValidator() throws JspException
     {
-        _minimum = null;
-        _maximum  = null;
-    }
-
-    public void setMinimum(String minimum)
-    {
-        _minimum = minimum;
-    }
-
-    public void setMaximum(String maximum)
-    {
-        _maximum = maximum;
-    }
-
-    protected Validator createValidator()
-        throws JspException
-    {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        setValidatorId(VALIDATOR_ID);
+        setValidatorIdString(VALIDATOR_ID);
         LengthValidator validator = (LengthValidator)super.createValidator();
-        if (_minimum != null)
+        if (null != _min)
         {
-            if (UIComponentTag.isValueReference(_minimum))
-            {
-                ValueBinding vb = facesContext.getApplication().createValueBinding(_minimum);
-                validator.setMinimum(ConverterUtils.convertToInt(vb.getValue(facesContext)));
-            }
-            else
-            {
-                validator.setMinimum(ConverterUtils.convertToInt(_minimum));
-            }
+            validator.setMinimum(_min);
         }
-        if (_maximum != null)
+        if (null != _max)
         {
-            if (UIComponentTag.isValueReference(_maximum))
-            {
-                ValueBinding vb = facesContext.getApplication().createValueBinding(_maximum);
-                validator.setMaximum(ConverterUtils.convertToInt(vb.getValue(facesContext)));
-            }
-            else
-            {
-                validator.setMaximum(ConverterUtils.convertToInt(_maximum));
-            }
+            validator.setMaximum(_max);
         }
         return validator;
     }
 
+    @Override
+    protected boolean isMinLTMax()
+    {
+        return _min <= _max;
+    }
 
+    @Override
+    protected Integer getValue(Object value)
+    {
+        return ConverterUtils.convertToInt(value);
+    }
 }

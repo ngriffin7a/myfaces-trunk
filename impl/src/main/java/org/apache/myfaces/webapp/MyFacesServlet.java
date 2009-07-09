@@ -21,6 +21,7 @@ package org.apache.myfaces.webapp;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.myfaces.shared_impl.webapp.webxml.DelegatedFacesServlet;
+import org.apache.myfaces.util.ContainerUtils;
 
 import javax.faces.webapp.FacesServlet;
 import javax.servlet.*;
@@ -37,7 +38,31 @@ public class MyFacesServlet implements Servlet, DelegatedFacesServlet
 {
     private static final Log log = LogFactory.getLog(MyFacesServlet.class);
 
-    private FacesServlet delegate = new FacesServlet();
+    private final FacesServlet delegate = new FacesServlet();
+    
+    private FacesInitializer _facesInitializer;
+    
+    protected FacesInitializer getFacesInitializer()
+    {
+        if (_facesInitializer == null)
+        {
+            if (ContainerUtils.isJsp21()) 
+            {
+                _facesInitializer = new Jsp21FacesInitializer();
+            } 
+            else 
+            {
+                _facesInitializer = new Jsp20FacesInitializer();
+            }
+        }
+        
+        return _facesInitializer;
+    }
+    
+    public void setFacesInitializer(FacesInitializer facesInitializer)
+    {
+        _facesInitializer = facesInitializer;
+    }
 
     public void destroy()
     {
@@ -59,11 +84,12 @@ public class MyFacesServlet implements Servlet, DelegatedFacesServlet
     {
         //Check, if ServletContextListener already called
         ServletContext servletContext = servletConfig.getServletContext();
-        Boolean b = (Boolean)servletContext.getAttribute(org.apache.myfaces.webapp.StartupServletContextListener.FACES_INIT_DONE);
+        Boolean b = (Boolean)servletContext.getAttribute(StartupServletContextListener.FACES_INIT_DONE);
         if (b == null || b.booleanValue() == false)
         {
-            log.warn("ServletContextListener not yet called");
-            org.apache.myfaces.webapp.StartupServletContextListener.initFaces(servletConfig.getServletContext());
+            if(log.isWarnEnabled())
+                log.warn("ServletContextListener not yet called");
+            getFacesInitializer().initFaces(servletConfig.getServletContext());
         }
         delegate.init(servletConfig);
         log.info("MyFacesServlet for context '" + servletConfig.getServletContext().getRealPath("/") + "' initialized.");

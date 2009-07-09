@@ -32,7 +32,10 @@ import org.apache.shale.test.base.AbstractJsfTestCase;
 import org.apache.shale.test.mock.MockRenderKitFactory;
 import org.apache.shale.test.mock.MockResponseWriter;
 
-
+/**
+ * @author Bruno Aranda (latest modification by $Author$)
+ * @version $Revision$ $Date$
+ */
 public class HtmlGroupRendererTest extends AbstractJsfTestCase
 {
     private static String PANEL_CHILD_TEXT = "PANEL";
@@ -49,7 +52,7 @@ public class HtmlGroupRendererTest extends AbstractJsfTestCase
         return new TestSuite(HtmlGroupRendererTest.class);
     }
 
-    public void setUp()
+    public void setUp() throws Exception
     {
         super.setUp();
 
@@ -74,7 +77,7 @@ public class HtmlGroupRendererTest extends AbstractJsfTestCase
 
     }
 
-    public void tearDown()
+    public void tearDown()throws Exception
     {
         super.tearDown();
         writer = null;

@@ -20,32 +20,53 @@ package javax.faces.component.html;
 
 import javax.faces.component.UICommand;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
+
 /**
  * This tag renders as an HTML a element.
- * <p>
- * Unless otherwise specified, all attributes accept static values
- * or EL expressions. 
- * <p>
- * See Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- * 
- * @JSFComponent
- *   name = "h:commandLink"
- *   class = "javax.faces.component.html.HtmlCommandLink"
- *   tagClass = "org.apache.myfaces.taglib.html.HtmlCommandLinkTag"
- *   template = "true"
- *   desc = "h:commandLink"
- *   
- * @author Thomas Spiegl (latest modification by $Author$)
- * @version $Revision$ $Date$
+ *
+ * <h4>Events:</h4>
+ * <table border="1" width="100%" cellpadding="3" summary="">
+ * <tr bgcolor="#CCCCFF" class="TableHeadingColor">
+ * <th align="left">Type</th>
+ * <th align="left">Phases</th>
+ * <th align="left">Description</th>
+ * </tr>
+ * <tr class="TableRowColor">
+ * <td valign="top"><code>javax.faces.event.ActionEvent</code></td>
+ * <td valign="top" nowrap>Invoke Application<br>Apply Request Values</td>
+ * <td valign="top">Event delivered when the "action" of the component has been
+ * invoked;  for example, by clicking on a button.  The action may result
+ * in page navigation.</td>
+ * </tr>
+ * </table>
  */
-abstract class _HtmlCommandLink extends UICommand 
+@JSFComponent
+(name = "h:commandLink",
+clazz = "javax.faces.component.html.HtmlCommandLink",template=true,
+tagClass = "org.apache.myfaces.taglib.html.HtmlCommandLinkTag",
+defaultRendererType = "javax.faces.Link",
+implementz = "javax.faces.component.behavior.ClientBehaviorHolder"
+)
+abstract class _HtmlCommandLink extends UICommand
     implements _EventProperties, _UniversalProperties, _StyleProperties,
     _FocusBlurProperties, _AccesskeyProperty, _TabindexProperty,
     _LinkProperties
 {
 
-    public static final String COMPONENT_TYPE = "javax.faces.HtmlCommandLink";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Link";
+  static public final String COMPONENT_FAMILY =
+    "javax.faces.Command";
+  static public final String COMPONENT_TYPE =
+    "javax.faces.HtmlCommandLink";
 
+  /**
+   * When true, this element cannot receive focus.
+   *
+   * @return  the new disabled value
+   */
+  @JSFProperty
+  (defaultValue = "false")
+  public abstract boolean isDisabled();
 
 }

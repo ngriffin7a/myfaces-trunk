@@ -16,14 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-
 package org.apache.myfaces.config;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -43,87 +40,83 @@ public class FacesConfigValidator
         // hidden 
     }
 
-    public static List validate(ExternalContext ctx, String ctxPath){
+    public static List<String> validate(ExternalContext ctx, String ctxPath){
         
         RuntimeConfig runtimeConfig = RuntimeConfig.getCurrentInstance(ctx);
         
-        Map managedBeansMap = runtimeConfig.getManagedBeans();
+        Map<String, ManagedBean> managedBeansMap = runtimeConfig.getManagedBeans();
         
-        Iterator managedBeans = managedBeansMap == null ? null : 
-                                managedBeansMap.values() == null ? null :
-                                    managedBeansMap.values().iterator();
+        Collection<? extends ManagedBean> managedBeans = null;
+        if (managedBeansMap != null)
+        {
+            managedBeans = managedBeansMap.values();
+        }
         
-        Iterator navRules = runtimeConfig.getNavigationRules() == null ? 
-                            null : runtimeConfig.getNavigationRules().iterator();
+        Collection<? extends NavigationRule> navRules = runtimeConfig.getNavigationRules();
         
         return validate(managedBeans, navRules, ctxPath);
         
     }
     
-    public static List validate(Iterator managedBeans, Iterator navRules, String ctxPath){
+    public static List<String> validate(Collection<? extends ManagedBean> managedBeans, 
+                                        Collection<? extends NavigationRule> navRules, String ctxPath)
+    {
         
-        List list = new ArrayList();
+        List<String> list = new ArrayList<String>();
         
-        if(navRules != null)
-            validateNavRules(navRules, list, ctxPath);
-        
-        if(managedBeans != null)
+        if (managedBeans != null)
+        {
             validateManagedBeans(managedBeans, list);
+        }
+        
+        if (navRules != null)
+        {
+            validateNavRules(navRules, list, ctxPath);
+        }
         
         return list;
     }
 
-    private static void validateNavRules(Iterator navRules, List list, String ctxPath){
-        
-        while(navRules.hasNext()){
-            
-            NavigationRule navRule = (NavigationRule) navRules.next();
-            
+    private static void validateNavRules(Collection<? extends NavigationRule> navRules, List<String> list, 
+                                         String ctxPath)
+    {
+        for (NavigationRule navRule : navRules)
+        {
             validateNavRule(navRule, list, ctxPath);
-            
         }
-        
     }
     
-    private static void validateNavRule(NavigationRule navRule, List list, String ctxPath){
+    private static void validateNavRule(NavigationRule navRule, List<String> list, String ctxPath){
         
         String fromId = navRule.getFromViewId();
         String filePath = ctxPath + fromId;
         
         if(fromId != null && ! "*".equals(fromId) && ! new File(filePath).exists())
+        {
             list.add("File for navigation 'from id' does not exist " + filePath);
-        
-        Collection cases = navRule.getNavigationCases();
-        
-        Iterator iterator = cases.iterator();
-        
-        while(iterator.hasNext()){
+        }            
             
-            NavigationCase caze = (NavigationCase) iterator.next();
-            
+        for (NavigationCase caze : navRule.getNavigationCases())
+        {
             String toViewPath = ctxPath + caze.getToViewId();
             
-            if(! new File(toViewPath).exists())
+            if(!new File(toViewPath).exists())
+            {
                 list.add("File for navigation 'to id' does not exist " + toViewPath);
-            
+            }
         }
-        
     }
     
-    private static void validateManagedBeans(Iterator managedBeans, List list){
-        
-        while(managedBeans.hasNext()){
-            
-            ManagedBean managedBean = (ManagedBean) managedBeans.next();
-            
+    private static void validateManagedBeans(Collection<? extends ManagedBean> managedBeans, List<String> list)
+    {
+        for (ManagedBean managedBean : managedBeans)
+        {
             validateManagedBean(managedBean, list);
-            
         }
-        
     }
 
-    private static void validateManagedBean(ManagedBean managedBean, List list){
-        
+    private static void validateManagedBean(ManagedBean managedBean, List<String> list)
+    {
         String className = managedBean.getManagedBeanClassName();
         
         try
@@ -132,14 +125,10 @@ public class FacesConfigValidator
         }
         catch (ClassNotFoundException e)
         { 
-            
             String msg = "Could not locate class " 
                 + className + " for managed bean '" + managedBean.getManagedBeanName() + "'";
             
             list.add(msg);
-            
         }
-
     }
-
 }

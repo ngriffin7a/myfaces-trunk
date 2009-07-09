@@ -20,39 +20,35 @@ package javax.faces.component.html;
 
 import javax.faces.component.UIOutput;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+
 /**
  * Renders a HTML label element.
- * <p>
- * In addition to the JSF specification, MyFaces allows it to directly
- * give an output text via the "value" attribute.
- * <p>
- * Unless otherwise specified, all attributes accept static values
- * or EL expressions.
- * <p>
- * See Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
- * @JSFComponent
- *   name = "h:outputLabel"
- *   class = "javax.faces.component.html.HtmlOutputLabel"
- *   tagClass = "org.apache.myfaces.taglib.html.HtmlOutputLabelTag"
- *   template = "true"
- *   desc = "h:outputLabel"
  * 
- * @author Thomas Spiegl (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * In addition to the JSF specification, MyFaces allows it to directly give an output text via the "value" attribute.
  */
+@JSFComponent
+(name = "h:outputLabel",
+clazz = "javax.faces.component.html.HtmlOutputLabel",template=true,
+tagClass = "org.apache.myfaces.taglib.html.HtmlOutputLabelTag",
+defaultRendererType = "javax.faces.Label",
+implementz = "javax.faces.component.behavior.ClientBehaviorHolder"
+)
 abstract class _HtmlOutputLabel extends UIOutput implements _FocusBlurProperties,
-    _EventProperties, _StyleProperties, _UniversalProperties, _AccesskeyProperty,
-    _TabindexProperty
+_EventProperties, _StyleProperties, _UniversalProperties, _AccesskeyProperty,
+_TabindexProperty, _EscapeProperty
 {
-    public static final String COMPONENT_TYPE = "javax.faces.HtmlOutputLabel";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Label";
 
-    /**
-     * The client ID of the target input element of this label.
-     * 
-     * @JSFProperty
-     */
-    public abstract String getFor();
-    
+  static public final String COMPONENT_FAMILY =
+    "javax.faces.Output";
+  static public final String COMPONENT_TYPE =
+    "javax.faces.HtmlOutputLabel";
+
+  /**
+   * The client ID of the target input element of this label.
+   * 
+   * @JSFProperty
+   */
+  public abstract String getFor();
+
 }

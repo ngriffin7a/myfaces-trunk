@@ -51,7 +51,7 @@ public class HtmlButtonRendererTest extends AbstractJsfTestCase {
         return new TestSuite(HtmlButtonRendererTest.class);
     }
     
-    public void setUp() {
+    public void setUp() throws Exception {
         super.setUp();
         writer = new MockResponseWriter(new StringWriter(), null, null);
         facesContext.setResponseWriter(writer);
@@ -70,7 +70,7 @@ public class HtmlButtonRendererTest extends AbstractJsfTestCase {
                 new HtmlFormRenderer());
     }
     
-    public void tearDown() {
+    public void tearDown() throws Exception {
         super.tearDown();
         writer = null;
     }

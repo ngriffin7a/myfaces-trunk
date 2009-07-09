@@ -18,10 +18,10 @@
  */
 package javax.faces.component;
 
+import javax.el.ValueExpression;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
-import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -34,83 +34,27 @@ import java.util.ResourceBundle;
 class _MessageUtils
 {
     private static final String DETAIL_SUFFIX = "_detail";
-    private static final Class[] NO_ARGS = new Class[0];
 
-    static void addErrorMessage(FacesContext facesContext,
-                                UIComponent component,
-                                String messageId)
+    static void addErrorMessage(FacesContext facesContext, UIComponent component, String messageId)
     {
-        facesContext.addMessage(component.getClientId(facesContext),
-                                getMessage(facesContext,
-                                           facesContext.getViewRoot().getLocale(),
-                                           FacesMessage.SEVERITY_ERROR,
-                                           messageId,
-                                           null));
+        facesContext.addMessage(component.getClientId(facesContext), getMessage(facesContext,
+            facesContext.getViewRoot().getLocale(), FacesMessage.SEVERITY_ERROR, messageId, null));
     }
 
-    static void addErrorMessage(FacesContext facesContext,
-                                UIComponent component,
-                                String messageId, Object[] args)
+    static void addErrorMessage(FacesContext facesContext, UIComponent component, String messageId, Object[] args)
     {
-        facesContext.addMessage(component.getClientId(facesContext),
-                                getMessage(facesContext,
-                                           facesContext.getViewRoot().getLocale(),
-                                           FacesMessage.SEVERITY_ERROR,
-                                           messageId,
-                                           args));
+        facesContext.addMessage(component.getClientId(facesContext), getMessage(facesContext,
+            facesContext.getViewRoot().getLocale(), FacesMessage.SEVERITY_ERROR, messageId, args));
     }
 
-    static void addErrorMessage(FacesContext facesContext,
-            UIComponent component, Throwable cause)
+    static void addErrorMessage(FacesContext facesContext, UIComponent component, Throwable cause)
     {
-        StringBuffer buf = new StringBuffer();
-
-        while(cause != null)
-        {
-            Throwable parentCause = getCause(cause);
-            if (parentCause == cause)
-            {
-                break;
-            }
-
-            if(buf.length()>0)
-            {
-                buf.append(", ");
-            }
-            
-            buf.append(cause.getLocalizedMessage());
-
-            cause = parentCause;
-        }
-
-        facesContext.addMessage(component.getClientId(facesContext),
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, buf.toString(), buf.toString()));
+        facesContext.addMessage(component.getClientId(facesContext), new FacesMessage(FacesMessage.SEVERITY_ERROR,
+            cause.getLocalizedMessage(), cause.getLocalizedMessage()));
     }
 
-
-    /**
-     * Get the cause of an exception, if available. Reflection must be used because
-     * JSF11 supports java1.3 but Throwable.getCause was added in java1.4.
-     */
-    static Throwable getCause(Throwable ex)
-    {
-        try
-        {
-            Method causeGetter = ex.getClass().getMethod("getCause", NO_ARGS);
-            Throwable cause = (Throwable) causeGetter.invoke(ex, NO_ARGS);
-            return cause;
-        }
-        catch (Exception e1)
-        {
-            return null;
-        }
-    }
-    
-    static FacesMessage getMessage(FacesContext facesContext,
-                                   Locale locale,
-                                   FacesMessage.Severity severity,
-                                   String messageId,
-                                   Object args[])
+    static FacesMessage getMessage(FacesContext facesContext, Locale locale, FacesMessage.Severity severity,
+                                   String messageId, Object args[])
     {
         ResourceBundle appBundle;
         ResourceBundle defBundle;
@@ -133,23 +77,15 @@ class _MessageUtils
             }
             else
             {
-                //Try to find detail alone
+                // Try to find detail alone
                 detail = getBundleString(appBundle, messageId + DETAIL_SUFFIX);
-                if (detail != null)
-                {
-                    summary = null;
-                }
-                else
                 {
                     detail = getBundleString(defBundle, messageId + DETAIL_SUFFIX);
-                    if (detail != null)
+                    if (detail == null)
                     {
-                        summary = null;
-                    }
-                    else
-                    {
-                        //Neither detail nor summary found
-                        facesContext.getExternalContext().log("No message with id " + messageId + " found in any bundle");
+                        // Neither detail nor summary found
+                        facesContext.getExternalContext().log(
+                            "No message with id " + messageId + " found in any bundle");
                         return new FacesMessage(severity, messageId, null);
                     }
                 }
@@ -173,9 +109,8 @@ class _MessageUtils
             }
         }
 
-        return new FacesMessage(severity, summary, detail);
+        return new _LabeledFacesMessage(severity, summary, detail);
     }
-
 
     private static String getBundleString(ResourceBundle bundle, String key)
     {
@@ -189,54 +124,37 @@ class _MessageUtils
         }
     }
 
-
     private static ResourceBundle getApplicationBundle(FacesContext facesContext, Locale locale)
     {
         String bundleName = facesContext.getApplication().getMessageBundle();
-        if (bundleName != null)
-        {
-            return getBundle(facesContext, locale, bundleName);
-        }
-        else
-        {
-            return null;
-        }
+        return bundleName != null ? getBundle(facesContext, locale, bundleName) : null;
     }
 
-    private static ResourceBundle getDefaultBundle(FacesContext facesContext,
-                                                   Locale locale)
+    private static ResourceBundle getDefaultBundle(FacesContext facesContext, Locale locale)
     {
         return getBundle(facesContext, locale, FacesMessage.FACES_MESSAGES);
     }
 
-    private static ResourceBundle getBundle(FacesContext facesContext,
-                                            Locale locale,
-                                            String bundleName)
+    private static ResourceBundle getBundle(FacesContext facesContext, Locale locale, String bundleName)
     {
         try
         {
-            //First we try the JSF implementation class loader
-            return ResourceBundle.getBundle(bundleName,
-                                            locale,
-                                            facesContext.getClass().getClassLoader());
+            // First we try the JSF implementation class loader
+            return ResourceBundle.getBundle(bundleName, locale, facesContext.getClass().getClassLoader());
         }
         catch (MissingResourceException ignore1)
         {
             try
             {
-                //Next we try the JSF API class loader
-                return ResourceBundle.getBundle(bundleName,
-                                                locale,
-                                                _MessageUtils.class.getClassLoader());
+                // Next we try the JSF API class loader
+                return ResourceBundle.getBundle(bundleName, locale, _MessageUtils.class.getClassLoader());
             }
             catch (MissingResourceException ignore2)
             {
                 try
                 {
-                    //Last resort is the context class loader
-                    return ResourceBundle.getBundle(bundleName,
-                                                    locale,
-                                                    Thread.currentThread().getContextClassLoader());
+                    // Last resort is the context class loader
+                    return ResourceBundle.getBundle(bundleName, locale, Thread.currentThread().getContextClassLoader());
                 }
                 catch (MissingResourceException damned)
                 {
@@ -247,4 +165,18 @@ class _MessageUtils
         }
     }
 
+    static String getLabel(FacesContext facesContext, UIComponent component)
+    {
+        Object label = component.getAttributes().get("label");
+        if (label != null)
+            return label.toString();
+
+        ValueExpression expression = component.getValueExpression("label");
+        if (expression != null)
+            return expression.getExpressionString();
+        // return (String)expression.getValue(facesContext.getELContext());
+
+        // If no label is not specified, use clientId
+        return component.getClientId(facesContext);
+    }
 }

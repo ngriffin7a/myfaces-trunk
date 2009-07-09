@@ -48,12 +48,11 @@ public class HtmlFormRendererTest extends AbstractJsfTestCase
         return new TestSuite(HtmlFormRendererTest.class);
     }
 
-    public void setUp()
+    public void setUp() throws Exception
     {
         super.setUp();
 
         application.setViewHandler(new MockTestViewHandler());
-        
         form = new HtmlForm();
 
         writer = new MockResponseWriter(new StringWriter(), null, null);
@@ -67,7 +66,7 @@ public class HtmlFormRendererTest extends AbstractJsfTestCase
 
     }
 
-    public void tearDown()
+    public void tearDown() throws Exception
     {
         super.tearDown();
         form = null;

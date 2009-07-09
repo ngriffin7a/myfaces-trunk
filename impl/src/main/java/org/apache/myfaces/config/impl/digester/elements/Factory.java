@@ -18,65 +18,122 @@
  */
 package org.apache.myfaces.config.impl.digester.elements;
 
-import java.util.List;
 import java.util.ArrayList;
-
+import java.util.List;
 
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  */
-public class Factory extends ElementBaseImpl
+public class Factory
 {
-
-    private List applicationFactory = new ArrayList();
-    private List facesContextFactory = new ArrayList();
-    private List lifecycleFactory = new ArrayList();
-    private List renderkitFactory = new ArrayList();
+    private List<String> applicationFactories = new ArrayList<String>();
+    private List<String> exceptionHandlerFactories = new ArrayList<String>();
+    private List<String> externalContextFactories = new ArrayList<String>();
+    private List<String> facesContextFactories = new ArrayList<String>();
+    private List<String> lifecycleFactories = new ArrayList<String>();
+    private List<String> ViewDeclarationLanguageFactories = new ArrayList<String>();
+    private List<String> partialViewContextFactories = new ArrayList<String>();
+    private List<String> renderKitFactories = new ArrayList<String>();
+    private List<String> tagHandlerDelegateFactories = new ArrayList<String>();
+    private List<String> visitContextFactories = new ArrayList<String>();
 
     public void addApplicationFactory(String factory)
     {
-        applicationFactory.add(factory);
+        applicationFactories.add(factory);
     }
 
+    public void addExceptionHandlerFactory(String factory)
+    {
+        exceptionHandlerFactories.add(factory);
+    }
+
+    public void addExternalContextFactory(String factory)
+    {
+        externalContextFactories.add(factory);
+    }
 
     public void addFacesContextFactory(String factory)
     {
-        facesContextFactory.add(factory);
+        facesContextFactories.add(factory);
     }
-
 
     public void addLifecycleFactory(String factory)
     {
-        lifecycleFactory.add(factory);
+        lifecycleFactories.add(factory);
     }
 
+    public void addViewDeclarationLanguageFactory(String factory)
+    {
+        ViewDeclarationLanguageFactories.add(factory);
+    }
+
+    public void addPartialViewContextFactory(String factory)
+    {
+        partialViewContextFactories.add(factory);
+    }
 
     public void addRenderkitFactory(String factory)
     {
-        renderkitFactory.add(factory);
+        renderKitFactories.add(factory);
     }
 
-
-    public List getApplicationFactory()
+    public void addTagHandlerDelegateFactory(String factory)
     {
-        return applicationFactory;
+        tagHandlerDelegateFactories.add(factory);
     }
 
-
-    public List getFacesContextFactory()
+    public void addVisitContextFactory(String factory)
     {
-        return facesContextFactory;
+        visitContextFactories.add(factory);
     }
 
-
-    public List getLifecycleFactory()
+    public List<String> getApplicationFactory()
     {
-        return lifecycleFactory;
+        return applicationFactories;
     }
 
-
-    public List getRenderkitFactory()
+    public List<String> getExceptionHandlerFactory()
     {
-        return renderkitFactory;
+        return exceptionHandlerFactories;
+    }
+
+    public List<String> getExternalContextFactory()
+    {
+        return externalContextFactories;
+    }
+
+    public List<String> getFacesContextFactory()
+    {
+        return facesContextFactories;
+    }
+
+    public List<String> getLifecycleFactory()
+    {
+        return lifecycleFactories;
+    }
+
+    public List<String> getViewDeclarationLanguageFactory()
+    {
+        return ViewDeclarationLanguageFactories;
+    }
+
+    public List<String> getPartialViewContextFactory()
+    {
+        return partialViewContextFactories;
+    }
+
+    public List<String> getRenderkitFactory()
+    {
+        return renderKitFactories;
+    }
+
+    public List<String> getTagHandlerDelegateFactory()
+    {
+        return tagHandlerDelegateFactories;
+    }
+
+    public List<String> getVisitContextFactory()
+    {
+        return visitContextFactories;
     }
 }

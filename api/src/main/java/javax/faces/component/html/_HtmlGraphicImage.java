@@ -20,65 +20,66 @@ package javax.faces.component.html;
 
 import javax.faces.component.UIGraphic;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
+
 /**
  * Renders an HTML img element.
  * <p>
- * Unless otherwise specified, all attributes accept static values
- * or EL expressions.
- * <p>
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
- * @JSFComponent
- *   name = "h:graphicImage"
- *   class = "javax.faces.component.html.HtmlGraphicImage"
- *   tagClass = "org.apache.myfaces.taglib.html.HtmlGraphicImageTag"
- *   template = "true"
- *   desc = "h:graphicImage"
- *   
- * @author Thomas Spiegl (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * The value attribute specifies the url of the image to be displayed;
+ * see the documentation for attribute "url" for more details.
+ * </p>
  */
-abstract class _HtmlGraphicImage extends UIGraphic implements _EventProperties,
+@JSFComponent
+(name = "h:graphicImage",
+clazz = "javax.faces.component.html.HtmlGraphicImage",template=true,
+tagClass = "org.apache.myfaces.taglib.html.HtmlGraphicImageTag",
+defaultRendererType = "javax.faces.Image",
+implementz = "javax.faces.component.behavior.ClientBehaviorHolder"
+)
+abstract class _HtmlGraphicImage extends UIGraphic 
+    implements _EventProperties,
     _StyleProperties, _UniversalProperties, _AltProperty
 {
 
-    public static final String COMPONENT_TYPE = "javax.faces.HtmlGraphicImage";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Image";
+  static public final String COMPONENT_FAMILY =
+    "javax.faces.Graphic";
+  static public final String COMPONENT_TYPE =
+    "javax.faces.HtmlGraphicImage";
 
-    /**
-     * HTML: Overrides the natural height of this image, by specifying height in pixels.
-     * 
-     * @JSFProperty
-     */
-    public abstract String getHeight();
+  /**
+   * HTML: Overrides the natural height of this image, by specifying height in pixels.
+   * 
+   */
+  @JSFProperty
+  public abstract String getHeight();
 
-    /**
-     * HTML: Specifies server-side image map handling for this image.
-     * 
-     * @JSFProperty
-     *   defaultValue = "false"
-     */
-    public abstract boolean isIsmap();
-    
-    /**
-     * HTML: A link to a long description of the image.
-     * 
-     * @JSFProperty
-     */
-    public abstract String getLongdesc();
-    
-    /**
-     * HTML: Specifies an image map to use with this image.
-     * 
-     * @JSFProperty
-     */
-    public abstract String getUsemap();
-    
-    /**
-     * HTML: Overrides the natural width of this image, by specifying width in pixels.
-     * 
-     * @JSFProperty
-     */
-    public abstract String getWidth();
-    
+  /**
+   * HTML: Specifies server-side image map handling for this image.
+   * 
+   */
+  @JSFProperty(defaultValue="false")
+  public abstract boolean isIsmap();
+  
+  /**
+   * HTML: A link to a long description of the image.
+   * 
+   */
+  @JSFProperty
+  public abstract String getLongdesc();
+  
+  /**
+   * HTML: Specifies an image map to use with this image.
+   * 
+   */
+  @JSFProperty
+  public abstract String getUsemap();
+  
+  /**
+   * HTML: Overrides the natural width of this image, by specifying width in pixels.
+   * 
+   */
+  @JSFProperty
+  public abstract String getWidth();
+
 }

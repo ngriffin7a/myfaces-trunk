@@ -18,9 +18,6 @@
  */
 package javax.faces.convert;
 
-import javax.faces.component.UIComponent;
-import javax.faces.component.StateHolder;
-import javax.faces.context.FacesContext;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -28,31 +25,43 @@ import java.text.ParseException;
 import java.util.Currency;
 import java.util.Locale;
 
+import javax.faces.component.PartialStateHolder;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFConverter;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFJspProperty;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
+
 /**
  * This tag creates a number formatting converter and associates it
  * with the nearest parent UIComponent.
  * 
  * Unless otherwise specified, all attributes accept static values or EL expressions.
  * 
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
- * @JSFConverter
- *   name="f:convertNumber"
- *   bodyContent="empty"
- *   tagClass="org.apache.myfaces.taglib.core.ConvertNumberTag"
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
  *
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
+@JSFConverter(
+    name="f:convertNumber",
+    bodyContent="empty",
+    tagClass="org.apache.myfaces.taglib.core.ConvertNumberTag")
+@JSFJspProperty(
+    name="binding", 
+    returnType = "javax.faces.convert.NumberConverter",
+    longDesc = "A ValueExpression that evaluates to a NumberConverter.")
 public class NumberConverter
-        implements Converter, StateHolder
+        implements Converter, PartialStateHolder
 {
     // API FIELDS
     public static final String CONVERTER_ID = "javax.faces.Number";
-
-    // internal constants
-    private static final String CONVERSION_MESSAGE_ID = "javax.faces.convert.NumberConverter.CONVERSION";
-
+    public static final String STRING_ID = "javax.faces.converter.STRING";
+    public static final String CURRENCY_ID = "javax.faces.converter.NumberConverter.CURRENCY";
+    public static final String NUMBER_ID = "javax.faces.converter.NumberConverter.NUMBER";
+    public static final String PATTERN_ID = "javax.faces.converter.NumberConverter.PATTERN";
+    public static final String PERCENT_ID = "javax.faces.converter.NumberConverter.PERCENT";
 
     private static final boolean JAVA_VERSION_14;
 
@@ -98,15 +107,52 @@ public class NumberConverter
             {
                 NumberFormat format = getNumberFormat(facesContext);
                 format.setParseIntegerOnly(_integerOnly);
+                
+                DecimalFormat df = (DecimalFormat)format;
+                //df.setParseBigDecimal(true);
+                DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
+                boolean changed = false;
+                if(dfs.getGroupingSeparator() == '\u00a0')
+                {
+                  dfs.setGroupingSeparator(' ');
+                  df.setDecimalFormatSymbols(dfs);
+                  changed = true;
+                }
                 try
                 {
                     return format.parse(value);
                 }
                 catch (ParseException e)
                 {
-                    throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
-                                                                               CONVERSION_MESSAGE_ID,
-                                                                               new Object[]{uiComponent.getId(),value}), e);
+                  if(changed)
+                  {
+                    dfs.setGroupingSeparator('\u00a0');
+                    df.setDecimalFormatSymbols(dfs);
+                  }
+                  try
+                  {
+                    return format.parse(value);
+                  }
+                  catch (ParseException pe)
+                  {
+
+                    if(getPattern() != null)
+                        throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
+                                                                                    PATTERN_ID,
+                                                                                    new Object[]{value,"$###,###",_MessageUtils.getLabel(facesContext, uiComponent)}));
+                    else if(getType().equals("number"))
+                        throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
+                                                                                    NUMBER_ID,
+                                                                                    new Object[]{value,"21",_MessageUtils.getLabel(facesContext, uiComponent)}));
+                    else if(getType().equals("currency"))
+                        throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
+                                                                                    CURRENCY_ID,
+                                                                                    new Object[]{value,"42.25",_MessageUtils.getLabel(facesContext, uiComponent)}));
+                    else if(getType().equals("percent"))
+                        throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
+                                                                                    PERCENT_ID,
+                                                                                    new Object[]{value,".90",_MessageUtils.getLabel(facesContext, uiComponent)}));
+                  }
                 }
             }
         }
@@ -140,7 +186,7 @@ public class NumberConverter
         }
         catch (Exception e)
         {
-            throw new ConverterException("Cannot convert value '" + value + "'");
+            throw new ConverterException(_MessageUtils.getErrorMessage(facesContext, STRING_ID, new Object[]{value,_MessageUtils.getLabel(facesContext, uiComponent)}),e);
         }
     }
 
@@ -218,47 +264,54 @@ public class NumberConverter
     // STATE SAVE/RESTORE
     public void restoreState(FacesContext facesContext, Object state)
     {
-        Object values[] = (Object[])state;
-        _currencyCode = (String)values[0];
-        _currencySymbol = (String)values[1];
-        _locale = (Locale)values[2];
-        Integer value = (Integer)values[3];
-        _maxFractionDigits = value != null ? value.intValue() : 0;
-        value = (Integer)values[4];
-        _maxIntegerDigits = value != null ? value.intValue() : 0;
-        value = (Integer)values[5];
-        _minFractionDigits = value != null ? value.intValue() : 0;
-        value = (Integer)values[6];
-        _minIntegerDigits = value != null ? value.intValue() : 0;
-        _pattern = (String)values[7];
-        _type = (String)values[8];
-        _groupingUsed = ((Boolean)values[9]).booleanValue();
-        _integerOnly = ((Boolean)values[10]).booleanValue();
-        _maxFractionDigitsSet = ((Boolean)values[11]).booleanValue();
-        _maxIntegerDigitsSet = ((Boolean)values[12]).booleanValue();
-        _minFractionDigitsSet = ((Boolean)values[13]).booleanValue();
-        _minIntegerDigitsSet = ((Boolean)values[14]).booleanValue();
+        if (state != null)
+        {
+            Object values[] = (Object[])state;
+            _currencyCode = (String)values[0];
+            _currencySymbol = (String)values[1];
+            _locale = (Locale)values[2];
+            Integer value = (Integer)values[3];
+            _maxFractionDigits = value != null ? value.intValue() : 0;
+            value = (Integer)values[4];
+            _maxIntegerDigits = value != null ? value.intValue() : 0;
+            value = (Integer)values[5];
+            _minFractionDigits = value != null ? value.intValue() : 0;
+            value = (Integer)values[6];
+            _minIntegerDigits = value != null ? value.intValue() : 0;
+            _pattern = (String)values[7];
+            _type = (String)values[8];
+            _groupingUsed = ((Boolean)values[9]).booleanValue();
+            _integerOnly = ((Boolean)values[10]).booleanValue();
+            _maxFractionDigitsSet = ((Boolean)values[11]).booleanValue();
+            _maxIntegerDigitsSet = ((Boolean)values[12]).booleanValue();
+            _minFractionDigitsSet = ((Boolean)values[13]).booleanValue();
+            _minIntegerDigitsSet = ((Boolean)values[14]).booleanValue();
+        }
     }
 
     public Object saveState(FacesContext facesContext)
     {
-        Object values[] = new Object[15];
-        values[0] = _currencyCode;
-        values[1] = _currencySymbol;
-        values[2] = _locale;
-        values[3] = _maxFractionDigitsSet ? new Integer(_maxFractionDigits) : null;
-        values[4] = _maxIntegerDigitsSet ? new Integer(_maxIntegerDigits) : null;
-        values[5] = _minFractionDigitsSet ? new Integer(_minFractionDigits) : null;
-        values[6] = _minIntegerDigitsSet ? new Integer(_minIntegerDigits) : null;
-        values[7] = _pattern;
-        values[8] = _type;
-        values[9] = _groupingUsed ? Boolean.TRUE : Boolean.FALSE;
-        values[10] = _integerOnly ? Boolean.TRUE : Boolean.FALSE;
-        values[11] = _maxFractionDigitsSet ? Boolean.TRUE : Boolean.FALSE;
-        values[12] = _maxIntegerDigitsSet ? Boolean.TRUE : Boolean.FALSE;
-        values[13] = _minFractionDigitsSet ? Boolean.TRUE : Boolean.FALSE;
-        values[14] = _minIntegerDigitsSet ? Boolean.TRUE : Boolean.FALSE;
-        return values;
+        if (!initialStateMarked())
+        {
+            Object values[] = new Object[15];
+            values[0] = _currencyCode;
+            values[1] = _currencySymbol;
+            values[2] = _locale;
+            values[3] = _maxFractionDigitsSet ? new Integer(_maxFractionDigits) : null;
+            values[4] = _maxIntegerDigitsSet ? new Integer(_maxIntegerDigits) : null;
+            values[5] = _minFractionDigitsSet ? new Integer(_minFractionDigits) : null;
+            values[6] = _minIntegerDigitsSet ? new Integer(_minIntegerDigits) : null;
+            values[7] = _pattern;
+            values[8] = _type;
+            values[9] = _groupingUsed ? Boolean.TRUE : Boolean.FALSE;
+            values[10] = _integerOnly ? Boolean.TRUE : Boolean.FALSE;
+            values[11] = _maxFractionDigitsSet ? Boolean.TRUE : Boolean.FALSE;
+            values[12] = _maxIntegerDigitsSet ? Boolean.TRUE : Boolean.FALSE;
+            values[13] = _minFractionDigitsSet ? Boolean.TRUE : Boolean.FALSE;
+            values[14] = _minIntegerDigitsSet ? Boolean.TRUE : Boolean.FALSE;
+            return values;
+        }
+        return null;
     }
 
     // GETTER & SETTER
@@ -266,8 +319,8 @@ public class NumberConverter
     /**
      * ISO 4217 currency code
      * 
-     * @JSFProperty
-     */    
+     */
+    @JSFProperty
     public String getCurrencyCode()
     {
         return _currencyCode != null ?
@@ -278,14 +331,15 @@ public class NumberConverter
     public void setCurrencyCode(String currencyCode)
     {
         _currencyCode = currencyCode;
+        clearInitialState();
     }
 
     /**
      * The currency symbol used to format a currency value.  Defaults
      * to the currency symbol for locale.
      * 
-     * @JSFProperty
      */
+    @JSFProperty
     public String getCurrencySymbol()
     {
         return _currencySymbol != null ?
@@ -296,13 +350,14 @@ public class NumberConverter
     public void setCurrencySymbol(String currencySymbol)
     {
         _currencySymbol = currencySymbol;
+        clearInitialState();
     }
 
     /**
      * Specifies whether output will contain grouping separators.  Default: true.
      * 
-     * @JSFProperty
      */
+    @JSFProperty
     public boolean isGroupingUsed()
     {
         return _groupingUsed;
@@ -311,13 +366,14 @@ public class NumberConverter
     public void setGroupingUsed(boolean groupingUsed)
     {
         _groupingUsed = groupingUsed;
+        clearInitialState();
     }
 
     /**
      * Specifies whether only the integer part of the input will be parsed.  Default: false.
      * 
-     * @JSFProperty
      */
+    @JSFProperty
     public boolean isIntegerOnly()
     {
         return _integerOnly;
@@ -326,14 +382,15 @@ public class NumberConverter
     public void setIntegerOnly(boolean integerOnly)
     {
         _integerOnly = integerOnly;
+        clearInitialState();
     }
 
     /**
      * The name of the locale to be used, instead of the default as
      * specified in the faces configuration file.
      * 
-     * @JSFProperty
      */
+    @JSFProperty
     public Locale getLocale()
     {
         if (_locale != null) return _locale;
@@ -344,13 +401,14 @@ public class NumberConverter
     public void setLocale(Locale locale)
     {
         _locale = locale;
+        clearInitialState();
     }
 
     /**
      * The maximum number of digits in the fractional portion of the number.
      * 
-     * @JSFProperty
      */
+    @JSFProperty
     public int getMaxFractionDigits()
     {
         return _maxFractionDigits;
@@ -360,13 +418,14 @@ public class NumberConverter
     {
         _maxFractionDigitsSet = true;
         _maxFractionDigits = maxFractionDigits;
+        clearInitialState();
     }
 
     /**
      * The maximum number of digits in the integer portion of the number.
      * 
-     * @JSFProperty
      */
+    @JSFProperty
     public int getMaxIntegerDigits()
     {
         return _maxIntegerDigits;
@@ -376,13 +435,14 @@ public class NumberConverter
     {
         _maxIntegerDigitsSet = true;
         _maxIntegerDigits = maxIntegerDigits;
+        clearInitialState();
     }
 
     /**
      * The minimum number of digits in the fractional portion of the number.
      * 
-     * @JSFProperty
      */
+    @JSFProperty
     public int getMinFractionDigits()
     {
         return _minFractionDigits;
@@ -392,13 +452,14 @@ public class NumberConverter
     {
         _minFractionDigitsSet = true;
         _minFractionDigits = minFractionDigits;
+        clearInitialState();
     }
 
     /**
      * The minimum number of digits in the integer portion of the number.
      * 
-     * @JSFProperty
      */
+    @JSFProperty
     public int getMinIntegerDigits()
     {
         return _minIntegerDigits;
@@ -408,13 +469,14 @@ public class NumberConverter
     {
         _minIntegerDigitsSet = true;
         _minIntegerDigits = minIntegerDigits;
+        clearInitialState();
     }
 
     /**
      * A custom Date formatting pattern, in the format used by java.text.SimpleDateFormat.
      * 
-     * @JSFProperty
      */
+    @JSFProperty
     public String getPattern()
     {
         return _pattern;
@@ -423,6 +485,7 @@ public class NumberConverter
     public void setPattern(String pattern)
     {
         _pattern = pattern;
+        clearInitialState();
     }
 
     public boolean isTransient()
@@ -439,8 +502,8 @@ public class NumberConverter
      * The type of formatting/parsing to be performed.  Values include:
      * number, currency, and percent.  Default: number.
      * 
-     * @JSFProperty
      */
+    @JSFProperty
     public String getType()
     {
         return _type;
@@ -450,6 +513,7 @@ public class NumberConverter
     {
         //TODO: validate type
         _type = type;
+        clearInitialState();
     }
 
     private static boolean checkJavaVersion14()
@@ -508,5 +572,25 @@ public class NumberConverter
     private DecimalFormatSymbols getDecimalFormatSymbols()
     {
         return new DecimalFormatSymbols(getLocale());
+    }
+    
+    private boolean _initialStateMarked = false;
+
+    @Override
+    public void clearInitialState()
+    {
+        _initialStateMarked = false;
+    }
+
+    @Override
+    public boolean initialStateMarked()
+    {
+        return _initialStateMarked;
+    }
+
+    @Override
+    public void markInitialState()
+    {
+        _initialStateMarked = true;
     }
 }

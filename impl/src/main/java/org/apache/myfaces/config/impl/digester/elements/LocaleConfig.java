@@ -25,11 +25,11 @@ import java.util.List;
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  */
-public class LocaleConfig extends ElementBaseImpl
+public class LocaleConfig
 {
 
     private String defaultLocale;
-    private List supportedLocales = new ArrayList();
+    private List<String> supportedLocales = new ArrayList<String>();
 
 
     public void setDefaultLocale(String defaultLocale)
@@ -50,7 +50,7 @@ public class LocaleConfig extends ElementBaseImpl
     }
 
 
-    public List getSupportedLocales()
+    public List<String> getSupportedLocales()
     {
         return supportedLocales;
     }

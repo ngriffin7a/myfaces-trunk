@@ -54,7 +54,7 @@ public class HtmlMessageRendererTest extends AbstractJsfTestCase
         return new TestSuite(HtmlMessageRendererTest.class);
     }
 
-    public void setUp()
+    public void setUp() throws Exception
     {
         super.setUp();
 
@@ -94,7 +94,7 @@ public class HtmlMessageRendererTest extends AbstractJsfTestCase
                 new FacesMessage("Validation message here."));
     }
 
-    public void tearDown()
+    public void tearDown() throws Exception
     {
         super.tearDown();
     }    

@@ -20,46 +20,71 @@ package javax.faces.component.html;
 
 import javax.faces.component.UIInput;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
+
 /**
  * Renders a HTML input element.
- * <p>
- * See Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
  *
- * @JSFComponent
- *   name = "h:inputText"
- *   class = "javax.faces.component.html.HtmlInputText"
- *   tagClass = "org.apache.myfaces.taglib.html.HtmlInputTextTag"
- *   template = "true"
- *   desc = "h:inputText"
- *
- * @author Thomas Spiegl (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * <h4>Events:</h4>
+ * <table border="1" width="100%" cellpadding="3" summary="">
+ * <tr bgcolor="#CCCCFF" class="TableHeadingColor">
+ * <th align="left">Type</th>
+ * <th align="left">Phases</th>
+ * <th align="left">Description</th>
+ * </tr>
+ * <tr class="TableRowColor">
+ * <td valign="top"><code>javax.faces.event.ValueChangeEvent</code></td>
+ * <td valign="top" nowrap></td>
+ * <td valign="top">The valueChange event is delivered when the value
+                attribute is changed.</td>
+ * </tr>
+ * </table>
  */
-abstract class _HtmlInputText extends UIInput implements _AccesskeyProperty,
+@JSFComponent
+(name = "h:inputText",
+clazz = "javax.faces.component.html.HtmlInputText",template=true,
+tagClass = "org.apache.myfaces.taglib.html.HtmlInputTextTag",
+defaultRendererType = "javax.faces.Text",
+implementz = "javax.faces.component.behavior.ClientBehaviorHolder"
+)
+abstract class _HtmlInputText extends UIInput
+    implements _AccesskeyProperty,
     _AltProperty, _UniversalProperties, _DisabledReadonlyProperties,
     _FocusBlurProperties, _ChangeSelectProperties, _EventProperties,
-    _StyleProperties, _TabindexProperty
+    _StyleProperties, _TabindexProperty, _LabelProperty
 {
-    //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "javax.faces.HtmlInputText";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Text";
+  static public final String COMPONENT_FAMILY =
+    "javax.faces.Input";
+  static public final String COMPONENT_TYPE =
+    "javax.faces.HtmlInputText";
 
-    /**
-     * HTML: The maximum number of characters allowed to be entered.
-     * 
-     * @JSFProperty
-     *   defaultValue = "Integer.MIN_VALUE"
-     */
-    public abstract int getMaxlength();
+  /**
+   * HTML: The maximum number of characters allowed to be entered.
+   * 
+   * @JSFProperty
+   *   defaultValue = "Integer.MIN_VALUE"
+   */
+  public abstract int getMaxlength();
 
-    /**
-     * HTML: The initial width of this control, in characters.
-     * 
-     * @JSFProperty
-     *   defaultValue = "Integer.MIN_VALUE"
-     */
-    public abstract int getSize();
+  /**
+   * HTML: The initial width of this control, in characters.
+   * 
+   * @JSFProperty
+   *   defaultValue = "Integer.MIN_VALUE"
+   */
+  public abstract int getSize();
 
-    
+  /**
+   * If the value of this attribute is "off", render "off" as the value of the attribute.
+   * This indicates that the browser should disable its autocomplete feature for this component.
+   * This is useful for components that perform autocompletion and do not want the browser interfering.
+   * If this attribute is not set or the value is "on", render nothing.
+   *
+   * @return  the new autocomplete value
+   */
+  @JSFProperty
+  public abstract String getAutocomplete();
+
 }

@@ -25,14 +25,13 @@ import java.util.Iterator;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class EnumerationIterator
-        implements Iterator
+public final class EnumerationIterator<T> implements Iterator<T>
 {
     //private static final Log log = LogFactory.getLog(EnumerationIterator.class);
 
-    private Enumeration _enumeration;
+    private final Enumeration<? extends T> _enumeration;
 
-    public EnumerationIterator(Enumeration enumeration)
+    public EnumerationIterator(final Enumeration<? extends T> enumeration)
     {
         _enumeration = enumeration;
     }
@@ -42,7 +41,7 @@ public class EnumerationIterator
         return _enumeration.hasMoreElements();
     }
 
-    public Object next()
+    public T next()
     {
         return _enumeration.nextElement();
     }

@@ -18,25 +18,54 @@
  */
 package org.apache.myfaces.taglib.core;
 
-import org.apache.myfaces.shared_impl.taglib.UIComponentTagBase;
+import javax.el.ValueExpression;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UISelectItems;
+import javax.faces.webapp.UIComponentELTag;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class SelectItemsTag
-        extends UIComponentTagBase
+public class SelectItemsTag extends UIComponentELTag
 {
-    //private static final Log log = LogFactory.getLog(SelectItemsTag.class);
+    // private static final Log log = LogFactory.getLog(SelectItemsTag.class);
 
+    private ValueExpression _value;
+
+    public void setValue(ValueExpression value)
+    {
+        this._value = value;
+    }
+
+    @Override
     public String getComponentType()
     {
         return "javax.faces.SelectItems";
     }
 
+    @Override
     public String getRendererType()
     {
         return null;
+    }
+
+    @Override
+    protected void setProperties(UIComponent component)
+    {
+        super.setProperties(component);
+
+        if (_value != null)
+        {
+            if (!_value.isLiteralText())
+            {
+                component.setValueExpression("value", _value);
+            }
+            else
+            {
+                ((UISelectItems)component).setValue(_value.getExpressionString());
+            }
+        }
     }
 
     // UISelectItems attributes

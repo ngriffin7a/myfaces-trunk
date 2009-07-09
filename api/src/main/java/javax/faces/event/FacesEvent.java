@@ -24,37 +24,38 @@ import java.util.EventObject;
 import javax.faces.component.UIComponent;
 
 /**
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
+ * 
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public abstract class FacesEvent extends EventObject
 {
-    // FIELDS
     private PhaseId _phaseId;
 
-    // CONSTRUCTORS
     public FacesEvent(UIComponent uiComponent)
     {
         super(uiComponent);
-        if (uiComponent == null) throw new IllegalArgumentException("uiComponent");
+        if (uiComponent == null)
+        {
+            throw new IllegalArgumentException("uiComponent");
+        }
+
         _phaseId = PhaseId.ANY_PHASE;
     }
 
-    // METHODS
     public abstract boolean isAppropriateListener(FacesListener faceslistener);
 
     public abstract void processListener(FacesListener faceslistener);
 
     public UIComponent getComponent()
     {
-        return (UIComponent)getSource();
+        return (UIComponent) getSource();
     }
 
     public void queue()
     {
-        ((UIComponent)getSource()).queueEvent(this);
+        ((UIComponent) getSource()).queueEvent(this);
     }
 
     public PhaseId getPhaseId()

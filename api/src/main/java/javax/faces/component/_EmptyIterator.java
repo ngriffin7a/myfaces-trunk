@@ -21,14 +21,15 @@ package javax.faces.component;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-class _EmptyIterator implements Iterator
+class _EmptyIterator<T> implements Iterator<T>
 {
+
     public boolean hasNext()
     {
         return false;
     }
 
-    public Object next()
+    public T next()
     {
         throw new NoSuchElementException();
     }
@@ -37,5 +38,4 @@ class _EmptyIterator implements Iterator
     {
         throw new UnsupportedOperationException();
     }
-
 }

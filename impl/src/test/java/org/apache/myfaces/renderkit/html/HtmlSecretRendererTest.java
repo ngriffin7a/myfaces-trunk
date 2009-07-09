@@ -31,7 +31,10 @@ import org.apache.shale.test.base.AbstractJsfTestCase;
 import org.apache.shale.test.mock.MockRenderKitFactory;
 import org.apache.shale.test.mock.MockResponseWriter;
 
-
+/**
+ * @author Bruno Aranda (latest modification by $Author: baranda $)
+ * @version $Revision: 451814 $ $Date: 2006-10-01 22:28:42 +0100 (dom, 01 oct 2006) $
+ */
 public class HtmlSecretRendererTest extends AbstractJsfTestCase
 {
     private MockResponseWriter writer ;
@@ -46,7 +49,7 @@ public class HtmlSecretRendererTest extends AbstractJsfTestCase
         return new TestSuite(HtmlSecretRendererTest.class);
     }
 
-    public void setUp()
+    public void setUp() throws Exception
     {
         super.setUp();
 
@@ -63,7 +66,7 @@ public class HtmlSecretRendererTest extends AbstractJsfTestCase
 
     }
 
-    public void tearDown()
+    public void tearDown() throws Exception
     {
         super.tearDown();
         inputText = null;
@@ -76,7 +79,7 @@ public class HtmlSecretRendererTest extends AbstractJsfTestCase
         facesContext.renderResponse();
 
         String output = writer.getWriter().toString();
-        assertEquals("<input type=\"password\" name=\"_id0\"/>", output);
+        assertEquals("<input type=\"password\" name=\"j_id0\"/>", output);
     }
 
     public void testHtmlPropertyPassTru() throws Exception

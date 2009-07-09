@@ -19,96 +19,144 @@
 package javax.faces.component;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.faces.context.FacesContext;
+import javax.faces.event.PhaseId;
+import javax.faces.event.PostAddToViewEvent;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-class _ComponentChildrenList
-        extends AbstractList
-        implements Serializable
+class _ComponentChildrenList extends AbstractList<UIComponent> implements Serializable
 {
     private static final long serialVersionUID = -6775078929331154224L;
     private UIComponent _component;
-    private List _list = new ArrayList();
-    private Map _idIndexedMap = new HashMap();
+    private List<UIComponent> _list = new ArrayList<UIComponent>(4);
 
     _ComponentChildrenList(UIComponent component)
     {
         _component = component;
     }
-    
-    public UIComponent get(String id) {
-       return (UIComponent) _idIndexedMap.get(id);
-    }
 
-    public Object get(int index)
+    @Override
+    public UIComponent get(int index)
     {
         return _list.get(index);
     }
 
+    @Override
     public int size()
     {
         return _list.size();
     }
 
-    public Object set(int index, Object value)
+    @Override
+    public UIComponent set(int index, UIComponent value)
     {
         checkValue(value);
-        setNewParent((UIComponent)value);
-        UIComponent child = (UIComponent) _list.set(index, value);
-        resetParent(child);
+        
+        UIComponent child = _list.set(index, value);
+        if (child != value)
+        {
+            childAdded(value);
+            if (child != null)
+            {
+                child.setParent(null);
+            }
+        }
+        
         return child;
     }
 
-    public boolean add(Object value)
+    @Override
+    public boolean add(UIComponent value)
     {
         checkValue(value);
-        setNewParent((UIComponent)value);
-        return _list.add(value);
+        
+        boolean res = _list.add(value);
+        
+        childAdded(value);
+        
+        return res;
     }
 
-    public void add(int index, Object value)
+    @Override
+    public void add(int index, UIComponent value)
     {
         checkValue(value);
-        setNewParent((UIComponent)value);
+        
         _list.add(index, value);
+        
+        childAdded(value);
     }
 
-    public Object remove(int index)
+    @Override
+    public UIComponent remove(int index)
     {
-        UIComponent child = (UIComponent) _list.remove(index);
-        resetParent(child);
+        UIComponent child = _list.remove(index);
+        if (child != null)
+        {
+            childRemoved(child);
+        }
+        
         return child;
     }
 
+    private void checkValue(Object value)
+    {
+        if (value == null)
+        {
+            throw new NullPointerException("value");
+        }
+        
+        if (!(value instanceof UIComponent))
+        {
+            throw new ClassCastException("value is not a UIComponent");
+        }
+    }
 
-    private void setNewParent(UIComponent child)
+    private void childAdded(UIComponent child)
+    {
+        updateParent(child);
+        
+        /*
+        FacesContext context = FacesContext.getCurrentInstance();
+        
+        // After the child component has been added to the view, if the following condition is not met
+        // FacesContext.isPostback() returns true and FacesContext.getCurrentPhaseId() returns PhaseId.RESTORE_VIEW
+        if (!(context.isPostback() && PhaseId.RESTORE_VIEW.equals(context.getCurrentPhaseId())))
+        {
+            // Application.publishEvent(java.lang.Class, java.lang.Object)  must be called, passing 
+            // PostAddToViewEvent.class as the first argument and the newly added component as the second 
+            // argument. TODO: Deal with isInView
+            context.getApplication().publishEvent(PostAddToViewEvent.class, child);
+        }
+        */
+    }
+
+    private void childRemoved(UIComponent child)
+    {
+        child.setParent(null);
+    }
+
+    private void updateParent(UIComponent child)
     {
         UIComponent oldParent = child.getParent();
         if (oldParent != null)
         {
             oldParent.getChildren().remove(child);
         }
+        
         child.setParent(_component);
-        _idIndexedMap.put(child.getId(),child);
     }
 
-    private void resetParent(UIComponent child) {
-        if (child != null)
-                child.setParent(null);
-        _idIndexedMap.remove(child.getId());
-    }
-
-    private void checkValue(Object value)
+    @Override
+    public boolean remove(Object o)
     {
-        if (value == null) throw new NullPointerException("value");
-        if (!(value instanceof UIComponent)) throw new ClassCastException("value is not a UIComponent");
-    }
-
-    public void updateId(String oldId, UIComponent component) {
-        _idIndexedMap.remove(oldId);
-        _idIndexedMap.put(component.getId(), component);
+        return _list.remove(o);
     }
 }

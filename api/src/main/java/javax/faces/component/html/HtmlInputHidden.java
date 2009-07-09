@@ -19,38 +19,54 @@
 package javax.faces.component.html;
 
 import javax.faces.component.UIInput;
+
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+
 /**
+ *
  * Renders as an HTML input tag with its type set to "hidden".
- * <p>
  * Unless otherwise specified, all attributes accept static values
  * or EL expressions.
- * <p>
- * See Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
  *
- * @JSFComponent
- *   name = "h:inputHidden"
- *   type = "javax.faces.HtmlInputHidden"
- *   family = "javax.faces.Input"
- *   tagClass = "org.apache.myfaces.taglib.html.HtmlInputHiddenTag"
- *   desc = "h:inputHidden"
- *   
- * @author Thomas Spiegl (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * <h4>Events:</h4>
+ * <table border="1" width="100%" cellpadding="3" summary="">
+ * <tr bgcolor="#CCCCFF" class="TableHeadingColor">
+ * <th align="left">Type</th>
+ * <th align="left">Phases</th>
+ * <th align="left">Description</th>
+ * </tr>
+ * <tr class="TableRowColor">
+ * <td valign="top"><code>javax.faces.event.ValueChangeEvent</code></td>
+ * <td valign="top" nowrap></td>
+ * <td valign="top">The valueChange event is delivered when the value
+                attribute is changed.</td>
+ * </tr>
+ * </table>
  */
+@JSFComponent
+(name = "h:inputHidden",
+tagClass = "org.apache.myfaces.taglib.html.HtmlInputHiddenTag",
+defaultRendererType = "javax.faces.Hidden"
+)
 public class HtmlInputHidden extends UIInput
 {
-    //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "javax.faces.HtmlInputHidden";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Hidden";
+  static public final String COMPONENT_FAMILY =
+    "javax.faces.Input";
+  static public final String COMPONENT_TYPE =
+    "javax.faces.HtmlInputHidden";
 
+  /**
+   * Construct an instance of the HtmlInputHidden.
+   */
+  public HtmlInputHidden()
+  {
+    setRendererType("javax.faces.Hidden");
+  }
 
-    public HtmlInputHidden()
-    {
-        setRendererType(DEFAULT_RENDERER_TYPE);
-    }
-
-
-
-    //------------------ GENERATED CODE END ---------------------------------------
+  @Override
+  public String getFamily()
+  {
+    return COMPONENT_FAMILY;
+  }
 }

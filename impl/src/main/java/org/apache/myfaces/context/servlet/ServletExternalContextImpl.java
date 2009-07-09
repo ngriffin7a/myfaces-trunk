@@ -18,74 +18,79 @@
  */
 package org.apache.myfaces.context.servlet;
 
-import org.apache.myfaces.util.EnumerationIterator;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Writer;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import javax.faces.FacesException;
-import javax.faces.application.ViewHandler;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.servlet.*;
+import javax.faces.context.Flash;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.security.Principal;
-import java.util.*;
-import java.lang.reflect.Method;
 
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.logging.Log;
 import org.apache.myfaces.context.ReleaseableExternalContext;
+import org.apache.myfaces.context.flash.FlashImpl;
+import org.apache.myfaces.util.EnumerationIterator;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
- * JSF 1.0 PRD2, 6.1.1
+ * Implements the external context for servlet request. JSF 1.2, 6.1.3
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
- *
- * Revision 1.11 Sylvain Vieujot
- * Forward the message when an exception is thrown in dispatch
  */
-public class ServletExternalContextImpl
-    extends ExternalContext implements ReleaseableExternalContext
+public final class ServletExternalContextImpl extends ExternalContext implements ReleaseableExternalContext
 {
-
     private static final Log log = LogFactory.getLog(ServletExternalContextImpl.class);
 
     private static final String INIT_PARAMETER_MAP_ATTRIBUTE = InitParameterMap.class.getName();
+    private static final String URL_PARAM_SEPERATOR="&";
+    private static final String URL_QUERY_SEPERATOR="?";
+    private static final String URL_FRAGMENT_SEPERATOR="#";
+    private static final String URL_NAME_VALUE_PAIR_SEPERATOR="=";
 
     private ServletContext _servletContext;
     private ServletRequest _servletRequest;
     private ServletResponse _servletResponse;
-    private Map _applicationMap;
-    private Map _sessionMap;
-    private Map _requestMap;
-    private Map _requestParameterMap;
-    private Map _requestParameterValuesMap;
-    private Map _requestHeaderMap;
-    private Map _requestHeaderValuesMap;
-    private Map _requestCookieMap;
-    private Map _initParameterMap;
-    private boolean _isHttpServletRequest;
+    private Map<String, Object> _applicationMap;
+    private Map<String, Object> _sessionMap;
+    private Map<String, Object> _requestMap;
+    private Map<String, String> _requestParameterMap;
+    private Map<String, String[]> _requestParameterValuesMap;
+    private Map<String, String> _requestHeaderMap;
+    private Map<String, String[]> _requestHeaderValuesMap;
+    private Map<String, Object> _requestCookieMap;
+    private Map<String, String> _initParameterMap;
+    private HttpServletRequest _httpServletRequest;
+    private HttpServletResponse _httpServletResponse;
     private String _requestServletPath;
     private String _requestPathInfo;
-    private static Method setCharacterEncodingMethod = null;
-    
-    static {
-        try {
-            setCharacterEncodingMethod = ServletRequest.class.getMethod("setCharacterEncoding", new Class[]{String.class});
-        } catch (Exception e) {
-                    log.warn("Detecting request character encoding is disable.");
-                    log.warn("Failed to obtain ServletRequest#setCharacterEncoding() method: " + e);
-        }
-    } 
 
-    public ServletExternalContextImpl(ServletContext servletContext,
-                                      ServletRequest servletRequest,
-                                      ServletResponse servletResponse)
+    public ServletExternalContextImpl(final ServletContext servletContext, final ServletRequest servletRequest,
+            final ServletResponse servletResponse)
     {
         _servletContext = servletContext;
         _servletRequest = servletRequest;
@@ -99,81 +104,18 @@ public class ServletExternalContextImpl
         _requestHeaderValuesMap = null;
         _requestCookieMap = null;
         _initParameterMap = null;
-        _isHttpServletRequest = (servletRequest != null &&
-                                 servletRequest instanceof HttpServletRequest);
-        if (_isHttpServletRequest)
+        _httpServletRequest = isHttpServletRequest(servletRequest) ? (HttpServletRequest) servletRequest : null;
+        _httpServletResponse = isHttpServletResponse(servletResponse) ? (HttpServletResponse) servletResponse : null;
+
+        if (_httpServletRequest != null)
         {
-            //HACK: MultipartWrapper scrambles the servletPath for some reason in Tomcat 4.1.29 embedded in JBoss 3.2.3!?
+            // HACK: MultipartWrapper scrambles the servletPath for some reason in Tomcat 4.1.29 embedded in JBoss
+            // 3.2.3!?
             // (this was reported by frederic.auge [frederic.auge@laposte.net])
-            HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
-
-            _requestServletPath = httpServletRequest.getServletPath();
-            _requestPathInfo = httpServletRequest.getPathInfo();
-
-            // try to set character encoding as described in section 2.5.2.2 of JSF 1.1 spec
-            // we have to use reflection as method setCharacterEncoding is not supported Servlet API <= 2.3
-            try
-            {
-                if (setCharacterEncodingMethod != null) {
-                    String contentType = httpServletRequest.getHeader("Content-Type");
-
-                    String characterEncoding = lookupCharacterEncoding(contentType);
-
-                    if (characterEncoding == null) {
-                        HttpSession session = httpServletRequest.getSession(false);
-
-                        if (session != null) {
-                            characterEncoding = (String) session.getAttribute(ViewHandler.CHARACTER_ENCODING_KEY);
-                        }
-                    }
-
-                    if (characterEncoding != null)
-                    {
-                        setCharacterEncodingMethod.invoke(servletRequest, new Object[]{characterEncoding});
-                    }
-                }
-            } catch (Exception e)
-            {
-                if (log.isWarnEnabled())
-                    log.warn("Failed to set character encoding " + e);
-            }
+            _requestServletPath = _httpServletRequest.getServletPath();
+            _requestPathInfo = _httpServletRequest.getPathInfo();
         }
     }
-
-
-    private String lookupCharacterEncoding(String contentType)
-    {
-        String characterEncoding = null;
-
-        if (contentType != null)
-        {
-            int charsetFind = contentType.indexOf("charset=");
-            if (charsetFind != -1)
-            {
-                if (charsetFind == 0)
-                {
-                    //charset at beginning of Content-Type, curious
-                    characterEncoding = contentType.substring(8);
-                }
-                else
-                {
-                    char charBefore = contentType.charAt(charsetFind - 1);
-                    if (charBefore == ';' || Character.isWhitespace(charBefore))
-                    {
-                        //Correct charset after mime type
-                        characterEncoding = contentType.substring(charsetFind + 8);
-                    }
-                }
-                if (log.isDebugEnabled()) log.debug("Incoming request has Content-Type header with character encoding " + characterEncoding);
-            }
-            else
-            {
-                if (log.isDebugEnabled()) log.debug("Incoming request has Content-Type header without character encoding: " + contentType);
-            }
-        }
-        return characterEncoding;
-    }
-
 
     public void release()
     {
@@ -189,40 +131,76 @@ public class ServletExternalContextImpl
         _requestHeaderValuesMap = null;
         _requestCookieMap = null;
         _initParameterMap = null;
+        _httpServletRequest = null;
+        _httpServletResponse = null;
     }
 
-
+    @Override
     public Object getSession(boolean create)
     {
-        if (!_isHttpServletRequest)
-        {
-            throw new IllegalArgumentException("Only HttpServletRequest supported");
-        }
-        return ((HttpServletRequest)_servletRequest).getSession(create);
+        checkHttpServletRequest();
+        return ((HttpServletRequest) _servletRequest).getSession(create);
     }
 
+    @Override
     public Object getContext()
     {
         return _servletContext;
     }
 
+    @Override
     public Object getRequest()
     {
         return _servletRequest;
     }
 
+    /**
+     * @since 2.0
+     */
+    @Override
+    public int getRequestContentLength()
+    {
+        return _servletRequest.getContentLength();
+    }
+
+    @Override
     public Object getResponse()
     {
         return _servletResponse;
     }
 
-    public void setResponse(Object response) {
-        if (response instanceof ServletResponse) {
-            this._servletResponse = (ServletResponse) response;
-        }
+    /**
+     * @since 2.0
+     */
+    @Override
+    public int getResponseBufferSize()
+    {
+        return _servletResponse.getBufferSize();
     }
 
-    public Map getApplicationMap()
+    @Override
+    public String getResponseContentType()
+    {
+        return _servletResponse.getContentType();
+    }
+
+    @Override
+    public OutputStream getResponseOutputStream() throws IOException
+    {
+        return _servletResponse.getOutputStream();
+    }
+
+    /**
+     * @since JSF 2.0
+     */
+    @Override
+    public Writer getResponseOutputWriter() throws IOException
+    {
+        return _servletResponse.getWriter();
+    }
+
+    @Override
+    public Map<String, Object> getApplicationMap()
     {
         if (_applicationMap == null)
         {
@@ -231,20 +209,19 @@ public class ServletExternalContextImpl
         return _applicationMap;
     }
 
-    public Map getSessionMap()
+    @Override
+    public Map<String, Object> getSessionMap()
     {
         if (_sessionMap == null)
         {
-            if (!_isHttpServletRequest)
-            {
-                throw new IllegalArgumentException("Only HttpServletRequest supported");
-            }
-            _sessionMap = new SessionMap((HttpServletRequest) _servletRequest);
+            checkHttpServletRequest();
+            _sessionMap = new SessionMap(_httpServletRequest);
         }
         return _sessionMap;
     }
 
-    public Map getRequestMap()
+    @Override
+    public Map<String, Object> getRequestMap()
     {
         if (_requestMap == null)
         {
@@ -253,7 +230,8 @@ public class ServletExternalContextImpl
         return _requestMap;
     }
 
-    public Map getRequestParameterMap()
+    @Override
+    public Map<String, String> getRequestParameterMap()
     {
         if (_requestParameterMap == null)
         {
@@ -262,7 +240,8 @@ public class ServletExternalContextImpl
         return _requestParameterMap;
     }
 
-    public Map getRequestParameterValuesMap()
+    @Override
+    public Map<String, String[]> getRequestParameterValuesMap()
     {
         if (_requestParameterValuesMap == null)
         {
@@ -271,101 +250,97 @@ public class ServletExternalContextImpl
         return _requestParameterValuesMap;
     }
 
-    public Iterator getRequestParameterNames()
+    @Override
+    public int getRequestServerPort()
     {
-        final Enumeration enumer = _servletRequest.getParameterNames();
-        Iterator it = new Iterator()
-        {
-            public boolean hasNext() {
-                return enumer.hasMoreElements();
-            }
-
-            public Object next() {
-                return enumer.nextElement();
-            }
-
-            public void remove() {
-                throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
-            }
-        };
-        return it;
+        return _servletRequest.getServerPort();
     }
 
-    public Map getRequestHeaderMap()
+    @Override
+    @SuppressWarnings("unchecked")
+    public Iterator<String> getRequestParameterNames()
+    {
+        return new EnumerationIterator(_servletRequest.getParameterNames());
+    }
+
+    @Override
+    public Map<String, String> getRequestHeaderMap()
     {
         if (_requestHeaderMap == null)
         {
-            if (!_isHttpServletRequest)
-            {
-                throw new IllegalArgumentException("Only HttpServletRequest supported");
-            }
-            _requestHeaderMap = new RequestHeaderMap((HttpServletRequest)_servletRequest);
+            checkHttpServletRequest();
+            _requestHeaderMap = new RequestHeaderMap(_httpServletRequest);
         }
         return _requestHeaderMap;
     }
 
-    public Map getRequestHeaderValuesMap()
+    @Override
+    public Map<String, String[]> getRequestHeaderValuesMap()
     {
         if (_requestHeaderValuesMap == null)
         {
-            if (!_isHttpServletRequest)
-            {
-                throw new IllegalArgumentException("Only HttpServletRequest supported");
-            }
-            _requestHeaderValuesMap = new RequestHeaderValuesMap((HttpServletRequest)_servletRequest);
+            checkHttpServletRequest();
+            _requestHeaderValuesMap = new RequestHeaderValuesMap(_httpServletRequest);
         }
         return _requestHeaderValuesMap;
     }
 
-    public Map getRequestCookieMap()
+    // FIXME: See with the EG if we can get the return value changed to Map<String, Cookie> as it
+    //        would be more elegant -= Simon Lessard =-
+    @Override
+    public Map<String, Object> getRequestCookieMap()
     {
         if (_requestCookieMap == null)
         {
-            if (!_isHttpServletRequest)
-            {
-                throw new IllegalArgumentException("Only HttpServletRequest supported");
-            }
-            _requestCookieMap = new CookieMap((HttpServletRequest)_servletRequest);
+            checkHttpServletRequest();
+            _requestCookieMap = new CookieMap(_httpServletRequest);
         }
+
         return _requestCookieMap;
     }
 
+    @Override
     public Locale getRequestLocale()
     {
         return _servletRequest.getLocale();
     }
 
+    @Override
     public String getRequestPathInfo()
     {
-        if (!_isHttpServletRequest)
-        {
-            throw new IllegalArgumentException("Only HttpServletRequest supported");
-        }
-        //return ((HttpServletRequest)_servletRequest).getPathInfo();
-        //HACK: see constructor
+        checkHttpServletRequest();
+        // return (_httpServletRequest).getPathInfo();
+        // HACK: see constructor
         return _requestPathInfo;
     }
 
-    public String getRequestContextPath()
+    @Override
+    public String getRequestContentType()
     {
-        if (!_isHttpServletRequest)
-        {
-            throw new IllegalArgumentException("Only HttpServletRequest supported");
-        }
-        return ((HttpServletRequest)_servletRequest).getContextPath();
+        return _servletRequest.getContentType();
     }
 
-    public String getInitParameter(String s)
+    @Override
+    public String getRequestContextPath()
+    {
+        checkHttpServletRequest();
+        return _httpServletRequest.getContextPath();
+    }
+
+    @Override
+    public String getInitParameter(final String s)
     {
         return _servletContext.getInitParameter(s);
     }
 
-    public Map getInitParameterMap()
+    @Override
+    @SuppressWarnings("unchecked")
+    public Map<String, String> getInitParameterMap()
     {
         if (_initParameterMap == null)
         {
             // We cache it as an attribute in ServletContext itself (is this circular reference a problem?)
-            if ((_initParameterMap = (Map) _servletContext.getAttribute(INIT_PARAMETER_MAP_ATTRIBUTE)) == null)
+            if ((_initParameterMap = (Map<String, String>) _servletContext.getAttribute(INIT_PARAMETER_MAP_ATTRIBUTE)) == null)
             {
                 _initParameterMap = new InitParameterMap(_servletContext);
                 _servletContext.setAttribute(INIT_PARAMETER_MAP_ATTRIBUTE, _initParameterMap);
@@ -374,53 +349,88 @@ public class ServletExternalContextImpl
         return _initParameterMap;
     }
 
-    public Set getResourcePaths(String s)
+    @Override
+    public String getMimeType(String file)
     {
-        return _servletContext.getResourcePaths(s);
+        checkNull(file, "file");
+        return _servletContext.getMimeType(file);
     }
 
-    public InputStream getResourceAsStream(String s)
+    @Override
+    public String getRequestScheme()
     {
-        return _servletContext.getResourceAsStream(s);
+        return _servletRequest.getScheme();
     }
 
-    public String encodeActionURL(String s)
+    @Override
+    @SuppressWarnings("unchecked")
+    public Set<String> getResourcePaths(final String path)
     {
-        if (!_isHttpServletRequest)
-        {
-            throw new IllegalArgumentException("Only HttpServletRequest supported");
-        }
-        return ((HttpServletResponse)_servletResponse).encodeURL(s);
+        checkNull(path, "path");
+        return _servletContext.getResourcePaths(path);
     }
 
-    public String encodeResourceURL(String s)
+    @Override
+    public InputStream getResourceAsStream(final String path)
     {
-        if (!_isHttpServletRequest)
-        {
-            throw new IllegalArgumentException("Only HttpServletRequest supported");
-        }
-        return ((HttpServletResponse)_servletResponse).encodeURL(s);
+        checkNull(path, "path");
+        return _servletContext.getResourceAsStream(path);
     }
 
-    public String encodeNamespace(String s)
+    @Override
+    public String encodeActionURL(final String url)
+    {
+        checkNull(url, "url");
+        checkHttpServletRequest();
+        return ((HttpServletResponse) _servletResponse).encodeURL(url);
+    }
+
+    @Override
+    public String encodeBookmarkableURL(String baseUrl, Map<String,List<String>> parameters)
+    {
+        return _httpServletResponse.encodeURL(encodeURL(baseUrl, parameters));
+    }
+
+    @Override
+    public String encodeResourceURL(final String url)
+    {
+        checkNull(url, "url");
+        checkHttpServletRequest();
+        return ((HttpServletResponse) _servletResponse).encodeURL(url);
+    }
+
+    @Override
+    public String encodeNamespace(final String s)
     {
         return s;
     }
 
-    public void dispatch(String requestURI) throws IOException, FacesException
+    @Override
+    public String encodePartialActionURL(String url)
     {
-        RequestDispatcher requestDispatcher
-            = _servletRequest.getRequestDispatcher(requestURI);
-        
+        // TODO: IMPLEMENT HERE
+        return null;
+    }
+
+    @Override
+    public String encodeRedirectURL(String baseUrl, Map<String,List<String>> parameters)
+    {
+        return _httpServletResponse.encodeRedirectURL(encodeURL(baseUrl, parameters));
+    }
+
+    @Override
+    public void dispatch(final String requestURI) throws IOException, FacesException
+    {
+        RequestDispatcher requestDispatcher = _servletRequest.getRequestDispatcher(requestURI);
+
         // If there is no dispatcher, send NOT_FOUND
         if (requestDispatcher == null)
         {
-           ((HttpServletResponse)_servletResponse).sendError(
-                  HttpServletResponse.SC_NOT_FOUND);
+            ((HttpServletResponse) _servletResponse).sendError(HttpServletResponse.SC_NOT_FOUND);
 
-           return;
-       } 
-        
+            return;
+        }
+
         try
         {
             requestDispatcher.forward(_servletRequest, _servletResponse);
@@ -431,74 +441,105 @@ public class ServletExternalContextImpl
             {
                 throw new FacesException(e.getMessage(), e);
             }
-            else
-            {
-                throw new FacesException(e);
-            }
+
+            throw new FacesException(e);
+
         }
     }
 
+    @Override
+    public String getRequestServerName()
+    {
+        return _servletRequest.getServerName();
+    }
+
+    @Override
     public String getRequestServletPath()
     {
-        if (!_isHttpServletRequest)
-        {
-            throw new IllegalArgumentException("Only HttpServletRequest supported");
-        }
-        //return ((HttpServletRequest)_servletRequest).getServletPath();
-        //HACK: see constructor
+        checkHttpServletRequest();
+        // return (_httpServletRequest).getServletPath();
+        // HACK: see constructor
         return _requestServletPath;
     }
 
+    @Override
     public String getAuthType()
     {
-        if (!_isHttpServletRequest)
-        {
-            throw new IllegalArgumentException("Only HttpServletRequest supported");
-        }
-        return ((HttpServletRequest)_servletRequest).getAuthType();
+        checkHttpServletRequest();
+        return _httpServletRequest.getAuthType();
     }
 
+    @Override
+    public String getRealPath(String path)
+    {
+        checkNull(path, "path");
+        return _servletContext.getRealPath(path);
+    }
+
+    @Override
     public String getRemoteUser()
     {
-        if (!_isHttpServletRequest)
-        {
-            throw new IllegalArgumentException("Only HttpServletRequest supported");
-        }
-        return ((HttpServletRequest)_servletRequest).getRemoteUser();
+        checkHttpServletRequest();
+        return _httpServletRequest.getRemoteUser();
     }
 
-    public boolean isUserInRole(String role)
+    @Override
+    public boolean isUserInRole(final String role)
     {
-        if (!_isHttpServletRequest)
-        {
-            throw new IllegalArgumentException("Only HttpServletRequest supported");
-        }
-        return ((HttpServletRequest)_servletRequest).isUserInRole(role);
+        checkNull(role, "role");
+        checkHttpServletRequest();
+        return _httpServletRequest.isUserInRole(role);
     }
 
+    @Override
     public Principal getUserPrincipal()
     {
-        if (!_isHttpServletRequest)
-        {
-            throw new IllegalArgumentException("Only HttpServletRequest supported");
-        }
-        return ((HttpServletRequest)_servletRequest).getUserPrincipal();
+        checkHttpServletRequest();
+        return _httpServletRequest.getUserPrincipal();
     }
 
-    public void log(String message) {
+    @Override
+    public void invalidateSession()
+    {
+        HttpSession session = (HttpSession) getSession(false);
+
+        if (session != null)
+        {
+            session.invalidate();
+        }
+    }
+
+    /**
+     * @since 2.0
+     */
+    @Override
+    public boolean isResponseCommitted()
+    {
+        return _httpServletResponse.isCommitted();
+    }
+
+    @Override
+    public void log(final String message)
+    {
+        checkNull(message, "message");
         _servletContext.log(message);
     }
 
-    public void log(String message, Throwable t) {
-        _servletContext.log(message, t);
+    @Override
+    public void log(final String message, final Throwable exception)
+    {
+        checkNull(message, "message");
+        checkNull(exception, "exception");
+        _servletContext.log(message, exception);
     }
 
-    public void redirect(String url) throws IOException
+    @Override
+    public void redirect(final String url) throws IOException
     {
         if (_servletResponse instanceof HttpServletResponse)
         {
-            ((HttpServletResponse)_servletResponse).sendRedirect(url);
-            FacesContext.getCurrentInstance().responseComplete();            
+            ((HttpServletResponse) _servletResponse).sendRedirect(url);
+            FacesContext.getCurrentInstance().responseComplete();
         }
         else
         {
@@ -506,17 +547,362 @@ public class ServletExternalContextImpl
         }
     }
 
-    public Iterator getRequestLocales()
+    /**
+     * @since 2.0
+     */
+    @Override
+    public void responseFlushBuffer() throws IOException
     {
-        if (!_isHttpServletRequest)
-        {
-            throw new IllegalArgumentException("Only HttpServletRequest supported");
-        }
-        return new EnumerationIterator(((HttpServletRequest)_servletRequest).getLocales());
+        checkHttpServletResponse();
+        _httpServletResponse.flushBuffer();
     }
 
-    public URL getResource(String s) throws MalformedURLException
+    /**
+     * @since 2.0
+     */
+    @Override
+    public void responseReset()
     {
-        return _servletContext.getResource(s);
+        checkHttpServletResponse();
+        _httpServletResponse.reset();
+    }
+
+    /**
+     * @since 2.0
+     */
+    @Override
+    public void responseSendError(int statusCode, String message) throws IOException
+    {
+        checkHttpServletResponse();
+        if (message == null)
+        {
+            _httpServletResponse.sendError(statusCode);
+        }
+        else
+        {
+            _httpServletResponse.sendError(statusCode, message);
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Iterator<Locale> getRequestLocales()
+    {
+        checkHttpServletRequest();
+        return new EnumerationIterator(_httpServletRequest.getLocales());
+    }
+
+    @Override
+    public URL getResource(final String path) throws MalformedURLException
+    {
+        checkNull(path, "path");
+        return _servletContext.getResource(path);
+    }
+
+    /**
+     * @since JSF 1.2
+     * @param request
+     */
+    @Override
+    public void setRequest(final java.lang.Object request)
+    {
+        this._servletRequest = (ServletRequest) request;
+        this._httpServletRequest = isHttpServletRequest(_servletRequest) ? (HttpServletRequest) _servletRequest : null;
+        this._httpServletRequest = isHttpServletRequest(_servletRequest) ? (HttpServletRequest) _servletRequest : null;
+    }
+
+    /**
+     * @since JSF 1.2
+     * @param encoding
+     * @throws java.io.UnsupportedEncodingException
+     */
+    @Override
+    public void setRequestCharacterEncoding(final java.lang.String encoding) throws java.io.UnsupportedEncodingException
+    {
+
+        this._servletRequest.setCharacterEncoding(encoding);
+
+    }
+
+    /**
+     * @since JSF 1.2
+     */
+    @Override
+    public String getRequestCharacterEncoding()
+    {
+        return _servletRequest.getCharacterEncoding();
+    }
+
+    /**
+     * @since JSF 1.2
+     */
+    @Override
+    public String getResponseCharacterEncoding()
+    {
+        return _servletResponse.getCharacterEncoding();
+    }
+
+    /**
+     * @since JSF 1.2
+     * @param response
+     */
+    @Override
+    public void setResponse(final java.lang.Object response)
+    {
+        this._servletResponse = (ServletResponse) response;
+    }
+
+    /**
+     * @since 2.0
+     */
+    @Override
+    public void setResponseBufferSize(int size)
+    {
+        checkHttpServletResponse();
+        _httpServletResponse.setBufferSize(size);
+    }
+
+    /**
+     * @since JSF 1.2
+     * @param encoding
+     */
+    @Override
+    public void setResponseCharacterEncoding(final java.lang.String encoding)
+    {
+        this._servletResponse.setCharacterEncoding(encoding);
+    }
+
+    /**
+     * @since 2.0
+     */
+    @Override
+    public void setResponseContentLength(int length)
+    {
+        checkHttpServletResponse();
+        _httpServletResponse.setContentLength(length);
+    }
+
+    @Override
+    public void setResponseContentType(String contentType)
+    {
+        // If the response has not been committed yet.
+        if (!_servletResponse.isCommitted())
+        {
+            // Sets the content type of the response being sent to the client
+            _servletResponse.setContentType(contentType);
+        }
+        else
+        {
+            // I did not throw an exception just to be sure nothing breaks.
+            log.error("Cannot set content type. Response already committed");
+        }
+    }
+
+    /**
+     * @since 2.0
+     */
+    @Override
+    public void setResponseHeader(String name, String value)
+    {
+        checkHttpServletResponse();
+        _httpServletResponse.setHeader(name, value);
+    }
+
+    @Override
+    public void setResponseStatus(int statusCode)
+    {
+        checkHttpServletResponse();
+        _httpServletResponse.setStatus(statusCode);
+    }
+
+    private void checkNull(final Object o, final String param)
+    {
+        if (o == null)
+        {
+            throw new NullPointerException(param + " can not be null.");
+        }
+    }
+
+    private void checkHttpServletRequest()
+    {
+        if (_httpServletRequest == null)
+        {
+            throw new UnsupportedOperationException("Only HttpServletRequest supported");
+        }
+    }
+
+    private boolean isHttpServletRequest(final ServletRequest servletRequest)
+    {
+        return servletRequest instanceof HttpServletRequest;
+    }
+
+    private void checkHttpServletResponse()
+    {
+        if (_httpServletRequest == null)
+        {
+            throw new UnsupportedOperationException("Only HttpServletResponse supported");
+        }
+    }
+    private boolean isHttpServletResponse(final ServletResponse servletResponse)
+    {
+        return servletResponse instanceof HttpServletResponse;
+    }
+
+    /**
+     * @since JSF 2.0
+     */
+    @Override
+    public void addResponseCookie(final String name,
+            final String value, final Map<String, Object> properties)
+    {
+        checkHttpServletResponse();
+        Cookie cookie = new Cookie(name, value);
+        if (properties != null)
+        {
+            for (Map.Entry<String, Object> entry : properties.entrySet())
+            {
+                String propertyKey = entry.getKey();
+                Object propertyValue = entry.getValue();
+                if ("comment".equals(propertyKey))
+                {
+                    cookie.setComment((String) propertyValue);
+                    continue;
+                }
+                else if ("domain".equals(propertyKey))
+                {
+                    cookie.setDomain((String)propertyValue);
+                    continue;
+                }
+                else if ("maxAge".equals(propertyKey))
+                {
+                    cookie.setMaxAge((Integer) propertyValue);
+                    continue;
+                }
+                else if ("secure".equals(propertyKey))
+                {
+                    cookie.setSecure((Boolean) propertyValue);
+                    continue;
+                }
+                else if ("path".equals(propertyKey))
+                {
+                    cookie.setPath((String) propertyValue);
+                    continue;
+                }
+                throw new IllegalArgumentException("Unused key when creating Cookie");
+            }
+        }
+        _httpServletResponse.addCookie(cookie);
+    }
+
+    @Override
+    public void addResponseHeader(String name, String value)
+    {
+        _httpServletResponse.addHeader(name, value);
+    }
+
+    @Override
+    public String getContextName() {
+        return _servletContext.getServletContextName();
+    }
+
+    private String encodeURL(String baseUrl, Map<String, List<String>> parameters)
+    {
+        checkNull(baseUrl, "url");
+        checkHttpServletRequest();
+
+        String fragment = null;
+        String queryString = null;
+        Map<String, List<String>> paramMap = new HashMap<String, List<String>>();
+
+        //extract any URL fragment
+        int index = baseUrl.indexOf(URL_FRAGMENT_SEPERATOR);
+        if (index != -1)
+        {
+            fragment = baseUrl.substring(index+1);
+            baseUrl = baseUrl.substring(0,index);
+        }
+
+        //extract the current query string and add the params to the paramMap
+        index = baseUrl.indexOf(URL_QUERY_SEPERATOR);
+        if (index != -1)
+        {
+            queryString = baseUrl.substring(index + 1);
+            baseUrl = baseUrl.substring(0, index);
+            String[] nameValuePairs = queryString.split(URL_PARAM_SEPERATOR);
+            for (int i = 0; i < nameValuePairs.length; i++)
+            {
+                String[] currentPair = nameValuePairs[i].split(URL_NAME_VALUE_PAIR_SEPERATOR);
+                if (currentPair[1] != null)
+                {
+                    ArrayList<String> value = new ArrayList<String>(1);
+                    value.add(currentPair[1]);
+                    paramMap.put(currentPair[0], value);
+                }
+            }
+        }
+
+        //add/update with new params on the paramMap
+        if (parameters != null && parameters.size() > 0)
+        {
+            for (Map.Entry<String, List<String>> pair : parameters.entrySet())
+            {
+                if (pair.getKey() != null && pair.getKey().trim().length() != 0)
+                {
+                    paramMap.put(pair.getKey(), pair.getValue());
+                }
+            }
+        }
+
+        // start building the new URL
+        StringBuilder newUrl = new StringBuilder();
+
+        //now add the updated param list onto the url
+        if (paramMap.size()>0)
+        {
+            boolean isFirstPair = true;
+            for (Map.Entry<String, List<String>> pair : paramMap.entrySet())
+            {
+                for (String value : pair.getValue())
+                {
+                    if (!isFirstPair)
+                    {
+                        newUrl.append(URL_PARAM_SEPERATOR);
+                    }
+                    else
+                    {
+                        newUrl.append(URL_QUERY_SEPERATOR);
+                        isFirstPair = false;
+                    }
+
+                    newUrl.append(pair.getKey());
+                    newUrl.append(URL_NAME_VALUE_PAIR_SEPERATOR);
+                    try
+                    {
+                        newUrl.append(URLEncoder.encode(value,getResponseCharacterEncoding()));
+                    }
+                    catch (UnsupportedEncodingException e)
+                    {
+                        //shouldn't ever get here
+                        throw new UnsupportedOperationException("Encoding type=" + getResponseCharacterEncoding() + " not supported", e);
+                    }
+                }
+            }
+        }
+
+        //add the fragment back on (if any)
+        if (fragment != null)
+        {
+            newUrl.append(URL_FRAGMENT_SEPERATOR + fragment);
+        }
+
+        return newUrl.toString();
+    }
+    
+    /**
+     * @since 2.0
+     */
+    public Flash getFlash()
+    {
+        return FlashImpl.getCurrentInstance(this);
     }
 }

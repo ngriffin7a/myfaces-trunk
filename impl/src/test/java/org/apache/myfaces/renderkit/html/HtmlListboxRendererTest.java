@@ -36,6 +36,10 @@ import org.apache.shale.test.base.AbstractJsfTestCase;
 import org.apache.shale.test.mock.MockRenderKitFactory;
 import org.apache.shale.test.mock.MockResponseWriter;
 
+/**
+ * @author Bruno Aranda (latest modification by $Author$)
+ * @version $Revision$ $Date$
+ */
 public class HtmlListboxRendererTest extends AbstractJsfTestCase
 {
     private MockResponseWriter writer ;
@@ -51,7 +55,7 @@ public class HtmlListboxRendererTest extends AbstractJsfTestCase
         return new TestSuite(HtmlListboxRendererTest.class);
     }
 
-    public void setUp()
+    public void setUp() throws Exception
     {
         super.setUp();
 
@@ -72,7 +76,7 @@ public class HtmlListboxRendererTest extends AbstractJsfTestCase
                 new HtmlListboxRenderer());
     }
 
-    public void tearDown()
+    public void tearDown() throws Exception
     {
         super.tearDown();
         selectOneListbox = null;

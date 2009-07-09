@@ -1,52 +1,45 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Copyright 2004-2006 The Apache Software Foundation.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 
 package org.apache.myfaces.config;
 
 import java.io.ByteArrayInputStream;
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
+import org.apache.myfaces.config.element.ManagedBean;
+import org.apache.myfaces.config.element.NavigationRule;
 import org.apache.myfaces.config.impl.digester.DigesterFacesConfigDispenserImpl;
 import org.apache.myfaces.config.impl.digester.DigesterFacesConfigUnmarshallerImpl;
+import org.apache.myfaces.config.impl.digester.elements.FacesConfig;
 import org.apache.shale.test.base.AbstractJsfTestCase;
 
 public class FacesConfigValidatorTestCase extends AbstractJsfTestCase
 {
 
-    private FacesConfigDispenser dispenser;
-    private FacesConfigUnmarshaller unmarshaller;
+    private FacesConfigDispenser<FacesConfig> dispenser;
+    private FacesConfigUnmarshaller<FacesConfig> unmarshaller;
     
     public FacesConfigValidatorTestCase(String name)
     {
         super(name);
     }
     
-    public static Test suite() {
-        return new TestSuite(FacesConfigValidatorTestCase.class); // keep this method or maven won't run it
-    }
-    
-    public void setUp()
+    protected void setUp() throws Exception
     {
 
         super.setUp();
@@ -67,10 +60,10 @@ public class FacesConfigValidatorTestCase extends AbstractJsfTestCase
     
     public void testVerifyExistence(){
         
-        Iterator managedBeans = dispenser.getManagedBeans();
-        Iterator navRules = dispenser.getNavigationRules();
+        Collection<ManagedBean> managedBeans = dispenser.getManagedBeans();
+        Collection<NavigationRule> navRules = dispenser.getNavigationRules();
         
-        List list = FacesConfigValidator.validate(managedBeans, navRules, "C:/somePath/");
+        List<String> list = FacesConfigValidator.validate(managedBeans, navRules, "C:/somePath/");
         
         int expected = 3;
         

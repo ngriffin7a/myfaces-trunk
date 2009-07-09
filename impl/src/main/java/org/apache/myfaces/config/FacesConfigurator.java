@@ -18,16 +18,77 @@
  */
 package org.apache.myfaces.config;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.el.ELResolver;
+import javax.faces.FacesException;
+import javax.faces.FactoryFinder;
+import javax.faces.application.Application;
+import javax.faces.application.ApplicationFactory;
+import javax.faces.application.NavigationHandler;
+import javax.faces.application.ResourceHandler;
+import javax.faces.application.StateManager;
+import javax.faces.application.ViewHandler;
+import javax.faces.context.ExternalContext;
+import javax.faces.el.PropertyResolver;
+import javax.faces.el.VariableResolver;
+import javax.faces.event.ActionListener;
+import javax.faces.event.PhaseListener;
+import javax.faces.event.SystemEvent;
+import javax.faces.lifecycle.Lifecycle;
+import javax.faces.lifecycle.LifecycleFactory;
+import javax.faces.render.RenderKit;
+import javax.faces.render.RenderKitFactory;
+import javax.faces.webapp.FacesServlet;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.myfaces.application.ApplicationFactoryImpl;
 import org.apache.myfaces.application.ApplicationImpl;
+import org.apache.myfaces.component.visit.VisitContextFactoryImpl;
+import org.apache.myfaces.config.annotation.AnnotationConfigurator;
+import org.apache.myfaces.config.element.Behavior;
 import org.apache.myfaces.config.element.ManagedBean;
 import org.apache.myfaces.config.element.NavigationRule;
 import org.apache.myfaces.config.element.Renderer;
 import org.apache.myfaces.config.impl.digester.DigesterFacesConfigDispenserImpl;
 import org.apache.myfaces.config.impl.digester.DigesterFacesConfigUnmarshallerImpl;
+import org.apache.myfaces.config.impl.digester.elements.ConfigOthersSlot;
+import org.apache.myfaces.config.impl.digester.elements.FacesConfig;
+import org.apache.myfaces.config.impl.digester.elements.FacesConfigNameSlot;
+import org.apache.myfaces.config.impl.digester.elements.OrderSlot;
+import org.apache.myfaces.config.impl.digester.elements.ResourceBundle;
+import org.apache.myfaces.config.impl.digester.elements.SystemEventListener;
 import org.apache.myfaces.context.FacesContextFactoryImpl;
+import org.apache.myfaces.context.PartialViewContextFactoryImpl;
+import org.apache.myfaces.el.DefaultPropertyResolver;
+import org.apache.myfaces.el.VariableResolverImpl;
 import org.apache.myfaces.lifecycle.LifecycleFactoryImpl;
 import org.apache.myfaces.renderkit.RenderKitFactoryImpl;
 import org.apache.myfaces.renderkit.html.HtmlRenderKitImpl;
@@ -37,46 +98,25 @@ import org.apache.myfaces.shared_impl.util.LocaleUtils;
 import org.apache.myfaces.shared_impl.util.StateUtils;
 import org.apache.myfaces.shared_impl.util.serial.DefaultSerialFactory;
 import org.apache.myfaces.shared_impl.util.serial.SerialFactory;
+import org.apache.myfaces.view.facelets.util.Classpath;
 import org.xml.sax.SAXException;
 
-import javax.faces.FacesException;
-import javax.faces.FactoryFinder;
-import javax.faces.application.*;
-import javax.faces.context.ExternalContext;
-import javax.faces.el.PropertyResolver;
-import javax.faces.el.VariableResolver;
-import javax.faces.event.ActionListener;
-import javax.faces.event.PhaseListener;
-import javax.faces.lifecycle.Lifecycle;
-import javax.faces.lifecycle.LifecycleFactory;
-import javax.faces.render.RenderKit;
-import javax.faces.render.RenderKitFactory;
-import javax.faces.webapp.FacesServlet;
-import java.io.*;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.JarURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.*;
-
-
 /**
- * Configures everything for a given context.
- * The FacesConfigurator is independent of the concrete implementations that lie
- * behind FacesConfigUnmarshaller and FacesConfigDispenser.
- *
+ * Configures everything for a given context. The FacesConfigurator is independent of the concrete implementations that
+ * lie behind FacesConfigUnmarshaller and FacesConfigDispenser.
+ * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
+@SuppressWarnings("deprecation")
 public class FacesConfigurator
 {
     private static final Log log = LogFactory.getLog(FacesConfigurator.class);
 
-    private static final String STANDARD_FACES_CONFIG_RESOURCE
-        = "org.apache.myfaces.resource".replace('.', '/') + "/standard-faces-config.xml";
+    private static final String STANDARD_FACES_CONFIG_RESOURCE = "META-INF/standard-faces-config.xml";
     private static final String FACES_CONFIG_RESOURCE = "META-INF/faces-config.xml";
+    private static final String META_INF_PREFIX = "META-INF/";
+    private static final String FACES_CONFIG_SUFFIX = ".faces-config.xml";
 
     private static final String META_INF_SERVICES_RESOURCE_PREFIX = "META-INF/services/";
 
@@ -85,23 +125,26 @@ public class FacesConfigurator
     private static final String DEFAULT_FACES_CONTEXT_FACTORY = FacesContextFactoryImpl.class.getName();
     private static final String DEFAULT_LIFECYCLE_FACTORY = LifecycleFactoryImpl.class.getName();
     private static final String DEFAULT_RENDER_KIT_FACTORY = RenderKitFactoryImpl.class.getName();
+    private static final String DEFAULT_PARTIAL_VIEW_CONTEXT_FACTORY = PartialViewContextFactoryImpl.class.getName();
+    private static final String DEFAULT_VISIT_CONTEXT_FACTORY = VisitContextFactoryImpl.class.getName();
     private static final String DEFAULT_FACES_CONFIG = "/WEB-INF/faces-config.xml";
 
-    private static final Set FACTORY_NAMES  = new HashSet();
+    private static final Set<String> FACTORY_NAMES = new HashSet<String>();
     {
         FACTORY_NAMES.add(FactoryFinder.APPLICATION_FACTORY);
         FACTORY_NAMES.add(FactoryFinder.FACES_CONTEXT_FACTORY);
         FACTORY_NAMES.add(FactoryFinder.LIFECYCLE_FACTORY);
         FACTORY_NAMES.add(FactoryFinder.RENDER_KIT_FACTORY);
+        FACTORY_NAMES.add(FactoryFinder.PARTIAL_VIEW_CONTEXT_FACTORY);
+        FACTORY_NAMES.add(FactoryFinder.VISIT_CONTEXT_FACTORY);
     }
 
+    private final ExternalContext _externalContext;
+    private FacesConfigUnmarshaller<? extends FacesConfig> _unmarshaller;
+    private FacesConfigDispenser<FacesConfig> _dispenser;
+    private AnnotationConfigurator _annotationConfigurator;
 
-    private ExternalContext _externalContext;
-    private FacesConfigUnmarshaller _unmarshaller;
-    private FacesConfigDispenser _dispenser;
-    private static final String JAR_EXTENSION = ".jar";
-    private static final String META_INF_MANIFEST_SUFFIX = "!/META-INF/MANIFEST.MF";
-    private static final String JAR_PREFIX = "jar:";
+    private RuntimeConfig _runtimeConfig;
 
     private static long lastUpdate;
 
@@ -109,13 +152,94 @@ public class FacesConfigurator
     public static final String MYFACES_IMPL_PACKAGE_NAME = "myfaces-impl";
     public static final String MYFACES_TOMAHAWK_PACKAGE_NAME = "tomahawk";
     public static final String MYFACES_TOMAHAWK_SANDBOX_PACKAGE_NAME = "tomahawk-sandbox";
+    public static final String MYFACES_TOMAHAWK_SANDBOX15_PACKAGE_NAME = "tomahawk-sandbox15";
     public static final String COMMONS_EL_PACKAGE_NAME = "commons-el";
     public static final String JSP_API_PACKAGE_NAME = "jsp-api";
 
+    /**
+     * Regular expression used to extract the jar information from the files present in the classpath.
+     * <p>
+     * The groups found with the regular expression are:
+     * </p>
+     * <ul>
+     * <li>Group 1: file path (required)</li>
+     * <li>Group 2: artifact id (required)</li>
+     * <li>Group 3: major version (required)</li>
+     * <li>Group 5: minor version (optional)</li>
+     * <li>Group 7: maintenance version (optional)</li>
+     * <li>Group 9: extra version (optional)</li>
+     * <li>Group 10: SNAPSHOT marker (optional)</li>
+     * </ul>
+     */
+    public static final String REGEX_LIBRARY = "jar:(file:.*/(.+)-"
+            + "(\\d+)(\\.(\\d+)(\\.(\\d+)(\\.(\\d+))?)?)?(-SNAPSHOT)?" + "\\.jar)!/META-INF/MANIFEST.MF";
+
     public FacesConfigurator(ExternalContext externalContext)
     {
+        if (externalContext == null)
+        {
+            throw new IllegalArgumentException("external context must not be null");
+        }
         _externalContext = externalContext;
 
+    }
+
+    /**
+     * @param unmarshaller
+     *            the unmarshaller to set
+     */
+    public void setUnmarshaller(FacesConfigUnmarshaller<? extends FacesConfig> unmarshaller)
+    {
+        _unmarshaller = unmarshaller;
+    }
+
+    /**
+     * @return the unmarshaller
+     */
+    protected FacesConfigUnmarshaller<? extends FacesConfig> getUnmarshaller()
+    {
+        if (_unmarshaller == null)
+        {
+            _unmarshaller = new DigesterFacesConfigUnmarshallerImpl(_externalContext);
+        }
+
+        return _unmarshaller;
+    }
+
+    /**
+     * @param dispenser
+     *            the dispenser to set
+     */
+    public void setDispenser(FacesConfigDispenser<FacesConfig> dispenser)
+    {
+        _dispenser = dispenser;
+    }
+
+    /**
+     * @return the dispenser
+     */
+    protected FacesConfigDispenser<FacesConfig> getDispenser()
+    {
+        if (_dispenser == null)
+        {
+            _dispenser = new DigesterFacesConfigDispenserImpl();
+        }
+
+        return _dispenser;
+    }
+    
+    public void setAnnotationConfigurator(AnnotationConfigurator configurator)
+    {
+        _annotationConfigurator = configurator;
+    }
+    
+    protected AnnotationConfigurator getAnnotationConfigurator()
+    {
+        if (_annotationConfigurator == null)
+        {
+            _annotationConfigurator = new AnnotationConfigurator(_externalContext);
+        }
+        return _annotationConfigurator;
     }
 
     private long getResourceLastModified(String resource)
@@ -194,8 +318,9 @@ public class FacesConfigurator
 
         return modified;
     }    
-
-    private long getLastModifiedTime(){
+    
+    private long getLastModifiedTime()
+    {
         long lastModified = 0;
         long resModified;
 
@@ -203,91 +328,119 @@ public class FacesConfigurator
         if (resModified > lastModified)
             lastModified = resModified;
 
-
-        List configFilesList = getConfigFilesList();
-
-        for (int i = 0; i < configFilesList.size(); i++) {
-            String systemId = (String) configFilesList.get(i);
-
+        for (String systemId : getConfigFilesList())
+        {
             resModified = getResourceLastModified(systemId);
-                if (resModified > lastModified)
-                    lastModified = resModified;
-
+            if (resModified > lastModified)
+            {
+                lastModified = resModified;
+            }
         }
 
         return lastModified;
     }
 
-    public void update(){
-        long refreshPeriod = (MyfacesConfig.getCurrentInstance(_externalContext).getConfigRefreshPeriod())*1000;
+    public void update()
+    {
+        long refreshPeriod = (MyfacesConfig.getCurrentInstance(_externalContext).getConfigRefreshPeriod()) * 1000;
 
-        if (refreshPeriod > 0){
+        if (refreshPeriod > 0)
+        {
             long ttl = lastUpdate + refreshPeriod;
-            if ((System.currentTimeMillis() > ttl) && (getLastModifiedTime() > ttl)) {
-                log.info("Faces config-files are being reloaded. If you don't want this reload to happen (e.g. in production), set the web-xml-parameter: "+MyfacesConfig.INIT_PARAM_CONFIG_REFRESH_PERIOD +" to -1.");
-                purgeConfiguration();
+            if ((System.currentTimeMillis() > ttl) && (getLastModifiedTime() > ttl))
+            {
+                try
+                {
+                    purgeConfiguration();
+                }
+                catch (NoSuchMethodException e)
+                {
+                    log.error("Configuration objects do not support clean-up. Update aborted");
+
+                    // We still want to update the timestamp to avoid running purge on every subsequent
+                    // request after this one.
+                    //
+                    lastUpdate = System.currentTimeMillis();
+
+                    return;
+                }
+                catch (IllegalAccessException e)
+                {
+                    log.fatal("Error during configuration clean-up" + e.getMessage());
+                }
+                catch (InvocationTargetException e)
+                {
+                    log.fatal("Error during configuration clean-up" + e.getMessage());
+                }
                 configure();
             }
         }
     }
 
-    private void purgeConfiguration() {
+    private void purgeConfiguration() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException
+    {
+        final Class<?>[] NO_PARAMETER_TYPES = new Class[]{};
+        final Object[] NO_PARAMETERS = new Object[]{};
 
-        try {
-            Method purgeMethod;
-            Class[] emptyParameterList = new Class[]{};
+        Method appFactoryPurgeMethod;
+        Method renderKitPurgeMethod;
+        Method lifecyclePurgeMethod;
 
-            ApplicationFactory applicationFactory = (ApplicationFactory) FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
-            purgeMethod = applicationFactory.getClass().getMethod("purgeApplication", emptyParameterList);
-            purgeMethod.invoke(applicationFactory, emptyParameterList);
+        // Check that we have access to all of the necessary purge methods before purging anything
+        //
+        ApplicationFactory applicationFactory = (ApplicationFactory) FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+        appFactoryPurgeMethod = applicationFactory.getClass().getMethod("purgeApplication", NO_PARAMETER_TYPES);
 
-            RenderKitFactory renderKitFactory = (RenderKitFactory) FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-            purgeMethod = renderKitFactory.getClass().getMethod("purgeRenderKit", emptyParameterList);
-            purgeMethod.invoke(renderKitFactory, emptyParameterList);
+        RenderKitFactory renderKitFactory = (RenderKitFactory) FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+        renderKitPurgeMethod = renderKitFactory.getClass().getMethod("purgeRenderKit", NO_PARAMETER_TYPES);
+        
+        LifecycleFactory lifecycleFactory = (LifecycleFactory) FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
+        lifecyclePurgeMethod = lifecycleFactory.getClass().getMethod("purgeLifecycle", NO_PARAMETER_TYPES);
 
-            RuntimeConfig.getCurrentInstance(_externalContext).purge();
+        // If there was no exception so far, now we can purge
+        //
+        appFactoryPurgeMethod.invoke(applicationFactory, NO_PARAMETERS);
+        renderKitPurgeMethod.invoke(renderKitFactory, NO_PARAMETERS);
+        RuntimeConfig.getCurrentInstance(_externalContext).purge();
+        lifecyclePurgeMethod.invoke(lifecycleFactory, NO_PARAMETERS);
 
-            LifecycleFactory lifecycleFactory = (LifecycleFactory) FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
-            purgeMethod = lifecycleFactory.getClass().getMethod("purgeLifecycle", emptyParameterList);
-            purgeMethod.invoke(lifecycleFactory, emptyParameterList);
-
-            // factories and serial factory need not be purged...
-        } catch (NoSuchMethodException e) {
-            log.error("Configuration objects do not support clean-up. Update aborted",e);
-            return;
-        } catch (IllegalAccessException e) {
-            log.fatal("Error during configuration clean-up" + e.getMessage(),e);
-        } catch (InvocationTargetException e) {
-            log.fatal("Error during configuration clean-up" + e.getMessage(),e);
-        }
+        // factories and serial factory need not be purged...
     }
 
-    public void configure()
-        throws FacesException
+    public void configure() throws FacesException
     {
-        //These two classes can be easily replaced by alternative implementations.
-        //As long as there is no need to switch implementations we need no
-        //factory pattern to create them.
-        _unmarshaller = new DigesterFacesConfigUnmarshallerImpl(_externalContext);
-        _dispenser = new DigesterFacesConfigDispenserImpl();
-
+        boolean metadataComplete = false;
         try
         {
+            //1. Feed standard-faces-config.xml first.
             feedStandardConfig();
+            //2. Feed META-INF/services factories
             feedMetaInfServicesFactories();
-            //feedJarFileConfigurations();
-            feedClassloaderConfigurations();
-            feedContextSpecifiedConfig();
-            feedWebAppConfig();
+            
+            //3. Retrieve all appConfigResources
+            List<FacesConfig> appConfigResources = new ArrayList<FacesConfig>();
+            addClassloaderConfigurations(appConfigResources);
+            addContextSpecifiedConfig(appConfigResources);
+            
+            //4. Retrieve webAppFacesConfig
+            FacesConfig webAppFacesConfig = getWebAppConfig();
+            
+            //read metadata-complete attribute on WEB-INF/faces-config.xml
+            metadataComplete = Boolean.valueOf(webAppFacesConfig.getMetadataComplete());
+            
+            //5. Ordering of Artifacts (see section 11.4.7 of the spec)
+            orderAndFeedArtifacts(appConfigResources,webAppFacesConfig);
 
-            if(log.isInfoEnabled())
+            if (log.isInfoEnabled())
             {
                 logMetaInf();
             }
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             throw new FacesException(e);
-        } catch (SAXException e)
+        }
+        catch (SAXException e)
         {
             throw new FacesException(e);
         }
@@ -295,20 +448,30 @@ public class FacesConfigurator
         configureFactories();
         configureApplication();
         configureRenderKits();
+        
+                //Now we can configure annotations
+        getAnnotationConfigurator().configure(
+                ((ApplicationFactory) FactoryFinder.getFactory(
+                        FactoryFinder.APPLICATION_FACTORY)).getApplication(),
+                getDispenser(), metadataComplete);
+        
         configureRuntimeConfig();
         configureLifecycle();
         handleSerialFactory();
+        
 
-        //record the time of update
+        // record the time of update
         lastUpdate = System.currentTimeMillis();
     }
 
     private void feedStandardConfig() throws IOException, SAXException
     {
         InputStream stream = ClassUtils.getResourceAsStream(STANDARD_FACES_CONFIG_RESOURCE);
-        if (stream == null) throw new FacesException("Standard faces config " + STANDARD_FACES_CONFIG_RESOURCE + " not found");
-        if (log.isInfoEnabled()) log.info("Reading standard config " + STANDARD_FACES_CONFIG_RESOURCE);
-        _dispenser.feed(_unmarshaller.getFacesConfig(stream, STANDARD_FACES_CONFIG_RESOURCE));
+        if (stream == null)
+            throw new FacesException("Standard faces config " + STANDARD_FACES_CONFIG_RESOURCE + " not found");
+        if (log.isInfoEnabled())
+            log.info("Reading standard config " + STANDARD_FACES_CONFIG_RESOURCE);
+        getDispenser().feed(getUnmarshaller().getFacesConfig(stream, STANDARD_FACES_CONFIG_RESOURCE));
         stream.close();
     }
 
@@ -319,44 +482,85 @@ public class FacesConfigurator
     {
         try
         {
-            List li = new ArrayList();
-            li.add(new VersionInfo(MYFACES_API_PACKAGE_NAME));
-            li.add(new VersionInfo(MYFACES_IMPL_PACKAGE_NAME));
-            li.add(new VersionInfo(MYFACES_TOMAHAWK_SANDBOX_PACKAGE_NAME));
-            li.add(new VersionInfo(MYFACES_TOMAHAWK_PACKAGE_NAME));
+            Map<String, List<JarInfo>> libs = new HashMap<String, List<JarInfo>>(30);
 
-            Iterator it = ClassUtils.getResources("META-INF/MANIFEST.MF",
-                                                  this);
+            Pattern pattern = Pattern.compile(REGEX_LIBRARY);
+
+            Iterator<URL> it = ClassUtils.getResources("META-INF/MANIFEST.MF", this);
             while (it.hasNext())
             {
-                URL url = (URL)it.next();
-
-                for (int i = 0; i < li.size(); i++)
+                URL url = it.next();
+                Matcher matcher = pattern.matcher(url.toString());
+                if (matcher.matches())
                 {
-                    VersionInfo versionInfo = (VersionInfo) li.get(i);
-                    if(checkJar(versionInfo, url))
-                        break;
+                    // We have a valid JAR
+                    String artifactId = matcher.group(2);
+                    List<JarInfo> versions = libs.get(artifactId);
+                    if (versions == null)
+                    {
+                        versions = new ArrayList<JarInfo>(2);
+                        libs.put(artifactId, versions);
+                    }
+
+                    String path = matcher.group(1);
+
+                    Version version = new Version(matcher.group(3), matcher.group(5), matcher.group(7),
+                                                  matcher.group(9), matcher.group(10));
+
+                    JarInfo newInfo = new JarInfo(path, version);
+                    if (!versions.contains(newInfo))
+                    {
+                        versions.add(newInfo);
+                    }
                 }
             }
 
-            for (int i = 0; i < li.size(); i++)
+            if (log.isInfoEnabled())
             {
-                VersionInfo versionInfo = (VersionInfo) li.get(i);
+                String[] artifactIds = { MYFACES_API_PACKAGE_NAME, MYFACES_IMPL_PACKAGE_NAME,
+                        MYFACES_TOMAHAWK_PACKAGE_NAME, MYFACES_TOMAHAWK_SANDBOX_PACKAGE_NAME,
+                        MYFACES_TOMAHAWK_SANDBOX15_PACKAGE_NAME, COMMONS_EL_PACKAGE_NAME, JSP_API_PACKAGE_NAME };
 
-                if(versionInfo.getUsedVersion()!=null)
+                if (log.isWarnEnabled())
                 {
-                    if(log.isInfoEnabled())
+                    for (String artifactId : artifactIds)
                     {
-                        log.info("Starting up MyFaces-package : "+versionInfo.getPackageName()+" in version : "
-                                +versionInfo.getUsedVersion()+" from path : "+versionInfo.getUsedVersionPath());
+                        List<JarInfo> versions = libs.get(artifactId);
+                        if (versions != null && versions.size() > 1)
+                        {
+                            StringBuilder builder = new StringBuilder(1024);
+                            builder.append("You are using the library: ");
+                            builder.append(artifactId);
+                            builder.append(" in different versions; first (and probably used) version is: ");
+                            builder.append(versions.get(0).getVersion());
+                            builder.append(" loaded from: ");
+                            builder.append(versions.get(0).getUrl());
+                            builder.append(", but also found the following versions: ");
+
+                            boolean needComma = false;
+                            for (int i = 1; i < versions.size(); i++)
+                            {
+                                JarInfo info = versions.get(i);
+                                if (needComma)
+                                {
+                                    builder.append(", ");
+                                }
+
+                                builder.append(info.getVersion());
+                                builder.append(" loaded from: ");
+                                builder.append(info.getUrl());
+
+                                needComma = true;
+                            }
+
+                            log.warn(builder);
+                        }
                     }
                 }
-                else
+
+                for (String artifactId : artifactIds)
                 {
-                    if(log.isInfoEnabled())
-                    {
-                        log.info("MyFaces-package : "+versionInfo.getPackageName()+" not found.");
-                    }
+                    startLib(artifactId, libs);
                 }
             }
         }
@@ -366,74 +570,6 @@ public class FacesConfigurator
         }
     }
 
-    private static boolean checkJar(VersionInfo versionInfo, URL path)
-    {
-        int index;
-
-        String version = versionInfo.getLastVersion();
-
-        String pathString = path.toString();
-
-        if(!pathString.startsWith(JAR_PREFIX))
-            return false;
-
-        if(!(pathString.length()>(META_INF_MANIFEST_SUFFIX.length()+JAR_PREFIX.length())))
-        {
-            if(log.isDebugEnabled())
-                log.debug("PathString : "+pathString+" not long enough to be parsed.");
-            return false;
-        }
-
-        pathString = pathString.substring(JAR_PREFIX.length(),pathString.length()-META_INF_MANIFEST_SUFFIX.length());
-
-        File file = new File(pathString);
-
-        String fileName = file.getName();
-
-        if(fileName.endsWith(JAR_EXTENSION) && ((index=fileName.indexOf(versionInfo.getPackageName()))!=-1))
-        {
-            int beginIndex = index+versionInfo.getPackageName().length()+1;
-
-            if(beginIndex > fileName.length()-1)
-            {
-                log.debug("beginIndex out of bounds. fileName: "+fileName);
-                return false;
-            }
-
-            int endIndex = fileName.length()-JAR_EXTENSION.length();
-
-            if(endIndex<0 || endIndex<=beginIndex)
-            {
-                log.debug("endIndex out of bounds. fileName: "+fileName);
-                return false;
-            }
-
-            String newVersion = fileName.substring(beginIndex, endIndex);
-
-            if(version == null)
-            {
-                versionInfo.addJarInfo(pathString,newVersion);
-           }
-            else if(version.equals(newVersion))
-            {
-                versionInfo.addJarInfo(pathString, version);
-            }
-            else
-            {
-                log.error("You are using the MyFaces-package : "+versionInfo.getPackageName() +
-                        " in different versions; first (and probably used) version is : "+versionInfo.getUsedVersion() +", currently encountered version is : "+newVersion+
-                        ". This will cause undesired behaviour. Please clean out your class-path." +
-                        " The first encountered version is loaded from : "+versionInfo.getUsedVersionPath()+". The currently encountered version is loaded from : "+
-                        path);
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-
     /**
      * This method performs part of the factory search outlined in section 10.2.6.1.
      */
@@ -441,14 +577,12 @@ public class FacesConfigurator
     {
         try
         {
-            for (Iterator iterator = FACTORY_NAMES.iterator(); iterator.hasNext();)
+            for (String factoryName : FACTORY_NAMES)
             {
-                String factoryName = (String)iterator.next();
-                Iterator it = ClassUtils.getResources(META_INF_SERVICES_RESOURCE_PREFIX + factoryName,
-                                                      this);
+                Iterator<URL> it = ClassUtils.getResources(META_INF_SERVICES_RESOURCE_PREFIX + factoryName, this);
                 while (it.hasNext())
                 {
-                    URL url = (URL)it.next();
+                    URL url = it.next();
                     InputStream stream = openStreamWithoutCache(url);
                     InputStreamReader isr = new InputStreamReader(stream);
                     BufferedReader br = new BufferedReader(isr);
@@ -459,27 +593,48 @@ public class FacesConfigurator
                     }
                     catch (IOException e)
                     {
-                        throw new FacesException("Unable to read class name from file "
-                                                 + url.toExternalForm(), e);
+                        throw new FacesException("Unable to read class name from file " + url.toExternalForm(), e);
                     }
-                    br.close();
-                    isr.close();
-                    stream.close();
+                    finally
+                    {
+                        if (br != null)
+                        {
+                            br.close();
+                        }
+                        if (isr != null)
+                        {
+                            isr.close();
+                        }
+                        if (stream != null)
+                        {
+                            stream.close();
+                        }
+                    }
 
-                    if (log.isInfoEnabled()) log.info("Found " + factoryName + " factory implementation: " + className);
+
+                    if (log.isInfoEnabled())
+                    {
+                        log.info("Found " + factoryName + " factory implementation: " + className);
+                    }
 
                     if (factoryName.equals(FactoryFinder.APPLICATION_FACTORY))
                     {
-                        _dispenser.feedApplicationFactory(className);
+                        getDispenser().feedApplicationFactory(className);
                     } else if (factoryName.equals(FactoryFinder.FACES_CONTEXT_FACTORY))
                     {
-                        _dispenser.feedFacesContextFactory(className);
+                        getDispenser().feedFacesContextFactory(className);
                     } else if (factoryName.equals(FactoryFinder.LIFECYCLE_FACTORY))
                     {
-                        _dispenser.feedLifecycleFactory(className);
+                        getDispenser().feedLifecycleFactory(className);
                     } else if (factoryName.equals(FactoryFinder.RENDER_KIT_FACTORY))
                     {
-                        _dispenser.feedRenderKitFactory(className);
+                        getDispenser().feedRenderKitFactory(className);
+                    } else if (factoryName.equals(FactoryFinder.PARTIAL_VIEW_CONTEXT_FACTORY))
+                    {
+                        getDispenser().feedPartialViewContextFactory(className);
+                    } else if(factoryName.equals(FactoryFinder.VISIT_CONTEXT_FACTORY)) 
+                    {
+                        getDispenser().feedVisitContextFactory(className);
                     } else
                     {
                         throw new IllegalStateException("Unexpected factory name " + factoryName);
@@ -493,43 +648,58 @@ public class FacesConfigurator
         }
     }
 
-    private InputStream openStreamWithoutCache(URL url)
-            throws IOException
+    private InputStream openStreamWithoutCache(URL url) throws IOException
     {
         URLConnection connection = url.openConnection();
         connection.setUseCaches(false);
         return connection.getInputStream();
     }
 
-    /*private Map expandFactoryNames(Set factoryNames)
-   {
-       Map names = new HashMap();
-       Iterator itr = factoryNames.iterator();
-       while (itr.hasNext())
-       {
-           String name = (String) itr.next();
-           names.put(META_INF_SERVICES_LOCATION + name, name);
-       }
-       return names;
-   } */
-
-
     /**
      * This method fixes MYFACES-208
      */
-    private void feedClassloaderConfigurations()
+    private void addClassloaderConfigurations(List<FacesConfig> appConfigResources)
     {
         try
         {
-            Iterator it = ClassUtils.getResources(FACES_CONFIG_RESOURCE, this);
+            Map<String, URL> facesConfigs = new TreeMap<String, URL>();
+            Iterator<URL> it = ClassUtils.getResources(FACES_CONFIG_RESOURCE, this);
             while (it.hasNext())
             {
-                URL url = (URL)it.next();
-                InputStream stream = openStreamWithoutCache(url);
+                URL url = it.next();
                 String systemId = url.toExternalForm();
-                if (log.isInfoEnabled()) log.info("Reading config " + systemId);
-                _dispenser.feed(_unmarshaller.getFacesConfig(stream, systemId));
-                stream.close();
+                facesConfigs.put(systemId, url);
+            }
+            
+            //Scan files inside META-INF ending with .faces-config.xml
+            //TODO: specify classpath for make easier configuration security java 2
+            URL[] urls = Classpath.search(META_INF_PREFIX, FACES_CONFIG_SUFFIX);
+            for (int i = 0; i < urls.length; i++)
+            {
+                String systemId = urls[i].toExternalForm();
+                facesConfigs.put(systemId, urls[i]);
+            }
+
+            for (Map.Entry<String, URL> entry : facesConfigs.entrySet())
+            {
+                InputStream stream = null;
+                try
+                {
+                    stream = openStreamWithoutCache(entry.getValue());
+                    if (log.isInfoEnabled())
+                    {
+                        log.info("Reading config : " + entry.getKey());
+                    }
+                    appConfigResources.add(getUnmarshaller().getFacesConfig(stream, entry.getKey()));
+                    //getDispenser().feed(getUnmarshaller().getFacesConfig(stream, entry.getKey()));
+                }
+                finally
+                {
+                    if (stream != null)
+                    {
+                        stream.close();
+                    }
+                }
             }
         }
         catch (Throwable e)
@@ -538,124 +708,10 @@ public class FacesConfigurator
         }
     }
 
-
-    /*
-     * To make this easier AND to fix MYFACES-208 at the same time, this method is replaced by
-     * {@link FacesConfigurator#feedClassloaderConfigurations}
-     *
-     * @deprecated {@link FacesConfigurator#feedClassloaderConfigurations} replaces this one
-
-    private void feedJarFileConfigurations()
+    private void addContextSpecifiedConfig(List<FacesConfig> appConfigResources) throws IOException, SAXException
     {
-        Set jars = _externalContext.getResourcePaths("/WEB-INF/lib/");
-        if (jars != null)
+        for (String systemId : getConfigFilesList())
         {
-            for (Iterator it = jars.iterator(); it.hasNext();)
-            {
-                String path = (String) it.next();
-                if (path.toLowerCase().endsWith(".jar"))
-                {
-                    feedJarConfig(path);
-                }
-            }
-        }
-    }
-
-    private void feedJarConfig(String jarPath)
-        throws FacesException
-    {
-        try
-        {
-            // not all containers expand archives, so we have to do it the generic way:
-            // 1. get the stream from external context
-            InputStream in = _externalContext.getResourceAsStream(jarPath);
-            if (in == null)
-            {
-                if (jarPath.startsWith("/"))
-                {
-                    in = _externalContext.getResourceAsStream(jarPath.substring(1));
-                } else
-                {
-                    in = _externalContext.getResourceAsStream("/" + jarPath);
-                }
-            }
-            if (in == null)
-            {
-                log.error("Resource " + jarPath + " not found");
-                return;
-            }
-
-            // 2. search the jar stream for META-INF/faces-config.xml
-            JarInputStream jar = new JarInputStream(in);
-            JarEntry entry = jar.getNextJarEntry();
-            boolean found = false;
-
-            while (entry != null)
-            {
-                if (entry.getName().equals(FACES_CONFIG_RESOURCE))
-                {
-                    if (log.isDebugEnabled()) log.debug("faces-config.xml found in " + jarPath);
-                    found = true;
-                    break;
-                }
-                entry = jar.getNextJarEntry();
-            }
-            jar.close();
-
-            File tmp;
-
-            // 3. if faces-config.xml was found, extract the jar and copy it to a temp file; hand over the temp file
-            // to the parser and delete it afterwards
-            if (found)
-            {
-                tmp = File.createTempFile("myfaces", ".jar");
-                tmp.deleteOnExit(); // just to make sure the file will be deleted
-
-                in = _externalContext.getResourceAsStream(jarPath);
-                FileOutputStream out = new FileOutputStream(tmp);
-                byte[] buffer = new byte[4096];
-                int r;
-
-                while ((r = in.read(buffer)) != -1)
-                {
-                    out.write(buffer, 0, r);
-                }
-                out.close();
-
-                JarFile jarFile = new JarFile(tmp);
-                try
-                {
-                    JarEntry configFile = jarFile.getJarEntry(FACES_CONFIG_RESOURCE);
-                    if (configFile != null)
-                    {
-                        if (log.isInfoEnabled()) log.info("faces-config.xml found in jar " + jarPath);
-                        InputStream stream = jarFile.getInputStream(configFile);
-                        String systemId = "jar:" + tmp.toURL() + "!/" + configFile.getName();
-                        if (log.isDebugEnabled()) log.debug("Reading config " + systemId);
-                        _dispenser.feed(_unmarshaller.getFacesConfig(stream, systemId));
-                        stream.close();
-                    }
-                } finally
-                {
-                    jarFile.close();
-                    tmp.delete();
-                }
-            } else
-            {
-                if (log.isDebugEnabled()) log.debug("Jar " + jarPath + " contains no faces-config.xml");
-            }
-        } catch (Exception e)
-        {
-            throw new FacesException(e);
-        }
-    }
-     */
-
-    private void feedContextSpecifiedConfig() throws IOException, SAXException
-    {
-        List configFilesList = getConfigFilesList();
-        for (int i = 0; i < configFilesList.size(); i++) {
-            String systemId = (String) configFilesList.get(i);
             InputStream stream = _externalContext.getResourceAsStream(systemId);
             if (stream == null)
             {
@@ -663,15 +719,19 @@ public class FacesConfigurator
                 continue;
             }
 
-            if (log.isInfoEnabled()) log.info("Reading config " + systemId);
-            _dispenser.feed(_unmarshaller.getFacesConfig(stream, systemId));
+            if (log.isInfoEnabled())
+            {
+                log.info("Reading config " + systemId);
+            }
+            appConfigResources.add(getUnmarshaller().getFacesConfig(stream, systemId));
+            //getDispenser().feed(getUnmarshaller().getFacesConfig(stream, systemId));
             stream.close();
         }
     }
 
-    private List getConfigFilesList() {
+    private List<String> getConfigFilesList() {
         String configFiles = _externalContext.getInitParameter(FacesServlet.CONFIG_FILES_ATTR);
-        List configFilesList = new ArrayList();
+        List<String> configFilesList = new ArrayList<String>();
         if (configFiles != null)
         {
             StringTokenizer st = new StringTokenizer(configFiles, ",", false);
@@ -681,149 +741,926 @@ public class FacesConfigurator
 
                 if (DEFAULT_FACES_CONFIG.equals(systemId))
                 {
-                    if(log.isWarnEnabled())
-                        log.warn(DEFAULT_FACES_CONFIG + " has been specified in the " +
-                                FacesServlet.CONFIG_FILES_ATTR + " context parameter of " +
-                                "the deployment descriptor. This will automatically be removed, " +
-                                "if we wouldn't do this, it would be loaded twice.  See JSF spec 1.1, 10.3.2");
+                    if (log.isWarnEnabled())
+                    {
+                        log.warn(DEFAULT_FACES_CONFIG + " has been specified in the " + FacesServlet.CONFIG_FILES_ATTR
+                                + " context parameter of "
+                                + "the deployment descriptor. This will automatically be removed, "
+                                + "if we wouldn't do this, it would be loaded twice.  See JSF spec 1.1, 10.3.2");
+                    }
                 }
                 else
+                {
                     configFilesList.add(systemId);
-
-
+                }
             }
         }
         return configFilesList;
     }
 
-
-    private void feedWebAppConfig() throws IOException, SAXException
+    private FacesConfig getWebAppConfig() throws IOException, SAXException
     {
-        //web application config
+        FacesConfig webAppConfig = null;
+        // web application config
         InputStream stream = _externalContext.getResourceAsStream(DEFAULT_FACES_CONFIG);
         if (stream != null)
         {
-            if (log.isInfoEnabled()) log.info("Reading config /WEB-INF/faces-config.xml");
-            _dispenser.feed(_unmarshaller.getFacesConfig(stream, DEFAULT_FACES_CONFIG));
+            if (log.isInfoEnabled())
+                log.info("Reading config /WEB-INF/faces-config.xml");
+            webAppConfig = getUnmarshaller().getFacesConfig(stream, DEFAULT_FACES_CONFIG);
+            //getDispenser().feed(getUnmarshaller().getFacesConfig(stream, DEFAULT_FACES_CONFIG));
             stream.close();
         }
+        return webAppConfig;
+    }
+    
+    protected void orderAndFeedArtifacts(List<FacesConfig> appConfigResources, FacesConfig webAppConfig)
+        throws FacesException
+    {
+        if (webAppConfig != null && webAppConfig.getAbsoluteOrdering() != null)
+        {
+            if (webAppConfig.getOrdering() != null)
+            {
+                if (log.isWarnEnabled())
+                {
+                    log.warn("<ordering> element found in application faces config. " +
+                            "This description will be ignored and the actions described " +
+                            "in <absolute-ordering> element will be taken into account instead.");
+                }                
+            }
+            //Absolute ordering
+            
+            //1. Scan all appConfigResources and create a list
+            //containing all resources not mentioned directly, preserving the
+            //order founded
+            List<FacesConfig> othersResources = new ArrayList<FacesConfig>();
+            List<OrderSlot> slots = webAppConfig.getAbsoluteOrdering().getOrderList();
+            for (FacesConfig resource : appConfigResources)
+            {
+                if (resource.getName() != null && containsResourceInSlot(slots, resource.getName()))
+                {
+                    othersResources.add(resource);
+                }
+            }
+            
+            //2. Scan slot by slot and merge information according
+            for (OrderSlot slot : webAppConfig.getAbsoluteOrdering().getOrderList())
+            {
+                if (slot instanceof ConfigOthersSlot)
+                {
+                    //Add all mentioned in othersResources
+                    for (FacesConfig resource : othersResources)
+                    {
+                        getDispenser().feed(resource);
+                    }
+                }
+                else
+                {
+                    //Add it to the sorted list
+                    FacesConfigNameSlot nameSlot = (FacesConfigNameSlot) slot;
+                    getDispenser().feed(getFacesConfig(appConfigResources, nameSlot.getName()));
+                }
+            }
+        }
+        else
+        {
+            //Relative ordering
+            for (FacesConfig resource : appConfigResources)
+            {
+                if (resource.getOrdering() != null)
+                {
+                    if (log.isWarnEnabled())
+                    {
+                        log.warn("<absolute-ordering> element found in application " +
+                                "configuration resource "+resource.getName()+". " +
+                                "This description will be ignored and the actions described " +
+                                "in <ordering> elements will be taken into account instead.");
+                    }
+                }
+            }
+            
+            List<FacesConfig> postOrderedList = getPostOrderedList(appConfigResources);
+            
+            List<FacesConfig> sortedList = sortRelativeOrderingList(postOrderedList);
+            
+            for (FacesConfig resource : sortedList)
+            {
+                //Feed
+                getDispenser().feed(resource);
+            }            
+        }
+        getDispenser().feed(webAppConfig);
     }
 
+    /**
+     * Sort a list of pre ordered elements. It scans one by one the elements
+     * and apply the conditions mentioned by Ordering object if it is available.
+     * 
+     * The preOrderedList ensures that application config resources referenced by
+     * other resources are processed first, making more easier the sort procedure. 
+     * 
+     * @param preOrderedList
+     * @return
+     */
+    protected List<FacesConfig> sortRelativeOrderingList(List<FacesConfig> preOrderedList) throws FacesException
+    {
+        List<FacesConfig> sortedList = new ArrayList<FacesConfig>();
+        
+        for (int i=0; i < preOrderedList.size(); i++)
+        {
+            FacesConfig resource = preOrderedList.get(i);
+            if (resource.getOrdering() != null)
+            {
+                if (resource.getOrdering().getBeforeList().isEmpty() &&
+                    resource.getOrdering().getAfterList().isEmpty())
+                {
+                    //No order rules, just put it as is
+                    sortedList.add(resource);
+                }
+                else if (resource.getOrdering().getBeforeList().isEmpty())
+                {
+                    //Only after rules
+                    applyAfterRule(sortedList, resource);
+                }
+                else if (resource.getOrdering().getAfterList().isEmpty())
+                {
+                    //Only before rules
+                    
+                    //Resolve if there is a later reference to this node before
+                    //apply it
+                    boolean referenceNode = false;
+
+                    for (int j = i+1; j < preOrderedList.size(); j++)
+                    {
+                        FacesConfig pointingResource = preOrderedList.get(j);
+                        for (OrderSlot slot : pointingResource.getOrdering().getBeforeList())
+                        {
+                            if (slot instanceof FacesConfigNameSlot &&
+                                    resource.getName().equals(((FacesConfigNameSlot)slot).getName()) )
+                            {
+                                referenceNode = true;
+                            }
+                            if (slot instanceof ConfigOthersSlot)
+                            {
+                                //No matter if there is a reference, because this rule
+                                //is not strict and before other ordering is unpredictable.
+                                //
+                                referenceNode = false;
+                                break;
+                            }
+                        }
+                        if (referenceNode)
+                        {
+                            break;
+                        }
+                        for (OrderSlot slot : pointingResource.getOrdering().getAfterList())
+                        {
+                            if (slot instanceof FacesConfigNameSlot &&
+                                resource.getName().equals(((FacesConfigNameSlot)slot).getName()) )
+                            {
+                                referenceNode = true;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    applyBeforeRule(sortedList, resource, referenceNode);
+                }
+                else
+                {
+                    //Both before and after rules
+                    //In this case we should compare before and after rules
+                    //and the one with names takes precedence over the other one.
+                    //It both have names references, before rules takes
+                    //precedence over after
+                    //after some action is applied a check of the condition is made.
+                    int beforeWeight = 0;
+                    int afterWeight = 0;
+                    for (OrderSlot slot : resource.getOrdering()
+                            .getBeforeList())
+                    {
+                        if (slot instanceof FacesConfigNameSlot)
+                        {
+                            beforeWeight++;
+                        }
+                    }
+                    for (OrderSlot slot : resource.getOrdering()
+                            .getAfterList())
+                    {
+                        if (slot instanceof FacesConfigNameSlot)
+                        {
+                            afterWeight++;
+                        }
+                    }
+                    
+                    if (beforeWeight >= afterWeight)
+                    {
+                        applyBeforeRule(sortedList, resource,false);
+                    }
+                    else
+                    {
+                        applyAfterRule(sortedList, resource);
+                    }
+                    
+                    
+                }
+            }
+            else
+            {
+                //No order rules, just put it as is
+                sortedList.add(resource);
+            }
+        }
+        
+        //Check
+        for (int i = 0; i < sortedList.size(); i++)
+        {
+            FacesConfig resource = sortedList.get(i);
+            
+            if (resource.getOrdering() != null)
+            {
+                for (OrderSlot slot : resource.getOrdering().getBeforeList())
+                {
+                    if (slot instanceof FacesConfigNameSlot)
+                    {
+                        String name = ((FacesConfigNameSlot) slot).getName();
+                        if (name != null && !"".equals(name))
+                        {
+                            boolean founded = false;                                
+                            for (int j = i-1; j >= 0; j--)
+                            {
+                                if (name.equals(sortedList.get(j).getName()))
+                                {
+                                    founded=true;
+                                    break;
+                                }
+                            }
+                            if (founded)
+                            {
+                                log.fatal("Circular references detected when sorting " +
+                                          "application config resources. Use absolute ordering instead.");
+                                throw new FacesException("Circular references detected when sorting " +
+                                        "application config resources. Use absolute ordering instead.");
+                            }
+                        }
+                    }
+                }
+                for (OrderSlot slot : resource.getOrdering().getAfterList())
+                {
+                    if (slot instanceof FacesConfigNameSlot)
+                    {
+                        String name = ((FacesConfigNameSlot) slot).getName();
+                        if (name != null && !"".equals(name))
+                        {
+                            boolean founded = false;                                
+                            for (int j = i+1; j < sortedList.size(); j++)
+                            {
+                                if (name.equals(sortedList.get(j).getName()))
+                                {
+                                    founded=true;
+                                    break;
+                                }
+                            }
+                            if (founded)
+                            {
+                                log.fatal("Circular references detected when sorting " +
+                                    "application config resources. Use absolute ordering instead.");
+                                throw new FacesException("Circular references detected when sorting " +
+                                    "application config resources. Use absolute ordering instead.");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return sortedList;
+    }
+    
+    private void applyBeforeRule(List<FacesConfig> sortedList, FacesConfig resource, boolean referenced) throws FacesException
+    {
+        //Only before rules
+        boolean configOthers = false;
+        List<String> names = new ArrayList<String>();
+        
+        for (OrderSlot slot : resource.getOrdering().getBeforeList())
+        {
+            if (slot instanceof ConfigOthersSlot)
+            {
+                configOthers = true;
+                break;
+            }
+            else
+            {
+                FacesConfigNameSlot nameSlot = (FacesConfigNameSlot) slot;
+                names.add(nameSlot.getName());
+            }
+        }
+        
+        if (configOthers)
+        {
+            //<before>....<others/></before> case
+            //other reference where already considered when
+            //pre ordered list was calculated, so just add to the end.
+            
+            //There is one very special case, and it is when there
+            //is another resource with a reference on it. In this case,
+            //it is better do not apply this rule and add it to the end
+            //to give the chance to the other one to be applied.
+            if (resource.getOrdering().getBeforeList().size() > 1)
+            {
+                //If there is a reference apply it
+                sortedList.add(0,resource);
+            }
+            else if (!referenced)
+            {
+                //If it is not referenced apply it
+                sortedList.add(0,resource);
+            }
+            else
+            {
+                //if it is referenced bypass the rule and add it to the end
+                sortedList.add(resource);
+            }
+        }
+        else
+        {
+            //Scan the nearest reference and add it after
+            boolean founded = false;
+            for (int i = 0; i < sortedList.size() ; i++)
+            {
+                if (names.contains(sortedList.get(i).getName()))
+                {
+                    sortedList.add(i,resource);
+                    founded = true;
+                    break;
+                }
+            }
+            if (!founded)
+            {
+                //just add it to the end
+                sortedList.add(resource);
+            }
+        }        
+    }
+    
+    private void applyAfterRule(List<FacesConfig> sortedList, FacesConfig resource) throws FacesException
+    {
+        boolean configOthers = false;
+        List<String> names = new ArrayList<String>();
+        
+        for (OrderSlot slot : resource.getOrdering().getAfterList())
+        {
+            if (slot instanceof ConfigOthersSlot)
+            {
+                configOthers = true;
+                break;
+            }
+            else
+            {
+                FacesConfigNameSlot nameSlot = (FacesConfigNameSlot) slot;
+                names.add(nameSlot.getName());
+            }
+        }
+        
+        if (configOthers)
+        {
+            //<after>....<others/></after> case
+            //other reference where already considered when
+            //pre ordered list was calculated, so just add to the end.
+            sortedList.add(resource);
+        }
+        else
+        {
+            //Scan the nearest reference and add it after
+            boolean founded = false;
+            for (int i = sortedList.size()-1 ; i >=0 ; i--)
+            {
+                if (names.contains(sortedList.get(i).getName()))
+                {
+                    if (i+1 < sortedList.size())
+                    {
+                        sortedList.add(i+1,resource);
+                    }
+                    else
+                    {
+                        sortedList.add(resource);
+                    }
+                    founded = true;
+                    break;
+                }
+            }
+            if (!founded)
+            {
+                //just add it to the end
+                sortedList.add(resource);
+            }
+        }        
+    }
+    
+    
+    /**
+     * Pre Sort the appConfigResources, detecting cyclic references, so when sort process
+     * start, it is just necessary to traverse the preOrderedList once. To do that, we just
+     * scan "before" and "after" lists for references, and then those references are traversed
+     * again, so the first elements of the pre ordered list does not have references and
+     * the next elements has references to the already added ones.
+     * 
+     * The elements on the preOrderedList looks like this:
+     * 
+     * [ no ordering elements , referenced elements ... more referenced elements, 
+     *  before others / after others non referenced elements]
+     * 
+     * @param appConfigResources
+     * @return
+     */
+    protected List<FacesConfig> getPostOrderedList(final List<FacesConfig> appConfigResources) throws FacesException
+    {
+        
+        List<FacesConfig> appFilteredConfigResources = new ArrayList<FacesConfig>(); 
+        
+        //0. Clean up: remove all not found resource references from the ordering 
+        //descriptions.
+        List<String> availableReferences = new ArrayList<String>();
+        for (FacesConfig resource : appFilteredConfigResources)
+        {
+            String name = resource.getName();
+            if (name != null && "".equals(name))
+            {
+                availableReferences.add(name);
+            }
+        }
+        
+        for (FacesConfig resource : appFilteredConfigResources)
+        {
+            for (Iterator<OrderSlot> it =  resource.getOrdering().getBeforeList().iterator();it.hasNext();)
+            {
+                OrderSlot slot = it.next();
+                if (slot instanceof FacesConfigNameSlot)
+                {
+                    String name = ((FacesConfigNameSlot) slot).getName();
+                    if (!availableReferences.contains(name))
+                    {
+                        it.remove();
+                    }
+                }
+            }
+            for (Iterator<OrderSlot> it =  resource.getOrdering().getAfterList().iterator();it.hasNext();)
+            {
+                OrderSlot slot = it.next();
+                if (slot instanceof FacesConfigNameSlot)
+                {
+                    String name = ((FacesConfigNameSlot) slot).getName();
+                    if (!availableReferences.contains(name))
+                    {
+                        it.remove();
+                    }
+                }
+            }
+        }
+        
+        //1. Pre filtering: Sort nodes according to its weight. The weight is the number of named
+        //nodes containing in both before and after lists. The sort is done from the more complex
+        //to the most simple
+        if (appConfigResources instanceof ArrayList)
+        {
+            appFilteredConfigResources = (List<FacesConfig>)
+                ((ArrayList<FacesConfig>)appConfigResources).clone();
+        }
+        else
+        {
+            appFilteredConfigResources = new ArrayList<FacesConfig>();
+            appFilteredConfigResources.addAll(appConfigResources);
+        }
+        Collections.sort(appFilteredConfigResources,
+                new Comparator<FacesConfig>()
+                {
+                    public int compare(FacesConfig o1, FacesConfig o2)
+                    {
+                        int o1Weight = 0;
+                        int o2Weight = 0;
+                        if (o1.getOrdering() != null)
+                        {
+                            for (OrderSlot slot : o1.getOrdering()
+                                    .getBeforeList())
+                            {
+                                if (slot instanceof FacesConfigNameSlot)
+                                {
+                                    o1Weight++;
+                                }
+                            }
+                            for (OrderSlot slot : o1.getOrdering()
+                                    .getAfterList())
+                            {
+                                if (slot instanceof FacesConfigNameSlot)
+                                {
+                                    o1Weight++;
+                                }
+                            }
+                        }
+                        if (o2.getOrdering() != null)
+                        {
+                            for (OrderSlot slot : o2.getOrdering()
+                                    .getBeforeList())
+                            {
+                                if (slot instanceof FacesConfigNameSlot)
+                                {
+                                    o2Weight++;
+                                }
+                            }
+                            for (OrderSlot slot : o2.getOrdering()
+                                    .getAfterList())
+                            {
+                                if (slot instanceof FacesConfigNameSlot)
+                                {
+                                    o2Weight++;
+                                }
+                            }
+                        }
+                        return o2Weight - o1Weight;
+                    }
+                });
+        
+        List<FacesConfig> postOrderedList = new LinkedList<FacesConfig>();
+        List<FacesConfig> othersList = new ArrayList<FacesConfig>();
+        
+        List<String> nameBeforeStack = new ArrayList<String>();
+        List<String> nameAfterStack = new ArrayList<String>();
+        
+        boolean[] visitedSlots = new boolean[appFilteredConfigResources.size()];
+        
+        //2. Scan and resolve conflicts
+        for (int i = 0; i < appFilteredConfigResources.size(); i++)
+        {
+            if (!visitedSlots[i])
+            {
+                resolveConflicts(appFilteredConfigResources, i, visitedSlots, 
+                        nameBeforeStack, nameAfterStack, postOrderedList, othersList, false);
+            }
+        }
+        
+        //Add othersList to postOrderedList so <before><others/></before> and <after><others/></after>
+        //ordering conditions are handled at last if there are not referenced by anyone
+        postOrderedList.addAll(othersList);
+        
+        return postOrderedList;
+    }
+        
+    private void resolveConflicts(final List<FacesConfig> appConfigResources, int index, boolean[] visitedSlots,
+            List<String> nameBeforeStack, List<String> nameAfterStack, List<FacesConfig> postOrderedList,
+            List<FacesConfig> othersList, boolean indexReferenced) throws FacesException
+    {
+        FacesConfig facesConfig = appConfigResources.get(index);
+        
+        if (nameBeforeStack.contains(facesConfig.getName()))
+        {
+            //Already referenced, just return. Later if there exists a
+            //circular reference, it will be detected and solved.
+            return;
+        }
+        
+        if (nameAfterStack.contains(facesConfig.getName()))
+        {
+            //Already referenced, just return. Later if there exists a
+            //circular reference, it will be detected and solved.
+            return;
+        }
+        
+        if (facesConfig.getOrdering() != null)
+        {
+            boolean pointingResource = false;
+            
+            //Deal with before restrictions first
+            for (OrderSlot slot : facesConfig.getOrdering().getBeforeList())
+            {
+                if (slot instanceof FacesConfigNameSlot)
+                {
+                    FacesConfigNameSlot nameSlot = (FacesConfigNameSlot) slot;
+                    //The resource pointed is not added yet?
+                    boolean alreadyAdded = false;
+                    for (FacesConfig res : postOrderedList)
+                    {
+                        if (nameSlot.getName().equals(res.getName()))
+                        {
+                            alreadyAdded = true;
+                            break;
+                        }
+                    }
+                    if (!alreadyAdded)
+                    {
+                        int indexSlot = -1;
+                        //Find it
+                        for (int i = 0; i < appConfigResources.size(); i++)
+                        {
+                            FacesConfig resource = appConfigResources.get(i);
+                            if (resource.getName() != null && nameSlot.getName().equals(resource.getName()))
+                            {
+                                indexSlot = i;
+                                break;
+                            }
+                        }
+                        
+                        //Resource founded on appConfigResources
+                        if (indexSlot != -1)
+                        {
+                            pointingResource = true;
+                            //Add to nameStac
+                            nameBeforeStack.add(facesConfig.getName());
+                            
+                            resolveConflicts(appConfigResources, indexSlot, visitedSlots, 
+                                    nameBeforeStack, nameAfterStack, postOrderedList,
+                                    othersList,true);
+                            
+                            nameBeforeStack.remove(facesConfig.getName());
+                        }
+                    }
+                    else
+                    {
+                        pointingResource = true;
+                    }
+                }
+            }
+            
+            for (OrderSlot slot : facesConfig.getOrdering().getAfterList())
+            {
+                if (slot instanceof FacesConfigNameSlot)
+                {
+                    FacesConfigNameSlot nameSlot = (FacesConfigNameSlot) slot;
+                    //The resource pointed is not added yet?
+                    boolean alreadyAdded = false;
+                    for (FacesConfig res : postOrderedList)
+                    {
+                        if (nameSlot.getName().equals(res.getName()))
+                        {
+                            alreadyAdded = true;
+                            break;
+                        }
+                    }
+                    if (!alreadyAdded)
+                    {
+                        int indexSlot = -1;
+                        //Find it
+                        for (int i = 0; i < appConfigResources.size(); i++)
+                        {
+                            FacesConfig resource = appConfigResources.get(i);
+                            if (resource.getName() != null && nameSlot.getName().equals(resource.getName()))
+                            {
+                                indexSlot = i;
+                                break;
+                            }
+                        }
+                        
+                        //Resource founded on appConfigResources
+                        if (indexSlot != -1)
+                        {
+                            pointingResource = true;
+                            //Add to nameStac
+                            nameAfterStack.add(facesConfig.getName());
+                            
+                            resolveConflicts(appConfigResources, indexSlot, visitedSlots, 
+                                    nameBeforeStack, nameAfterStack, postOrderedList,
+                                    othersList,true);
+                            
+                            nameAfterStack.remove(facesConfig.getName());
+                        }
+                    }
+                    else
+                    {
+                        pointingResource = true;
+                    }
+                }
+            }
+            
+            if (facesConfig.getOrdering().getBeforeList().isEmpty() &&
+                facesConfig.getOrdering().getAfterList().isEmpty())
+            {
+                //Fits in the category "others", put at beginning
+                postOrderedList.add(0,appConfigResources.get(index));
+            }
+            else if (pointingResource || indexReferenced)
+            {
+                //If the node points to other or is referenced from other,
+                //add to the postOrderedList at the end
+                postOrderedList.add(appConfigResources.get(index));                    
+            }
+            else
+            {
+                //Add to othersList
+                othersList.add(appConfigResources.get(index));
+            }
+        }
+        else
+        {
+            //Add at start of the list, since does not have any ordering
+            //instructions and on the next step makes than "before others" and "after others"
+            //works correctly
+            postOrderedList.add(0,appConfigResources.get(index));
+        }
+        //Set the node as visited
+        visitedSlots[index] = true;
+    }    
+    
+    private FacesConfig getFacesConfig(List<FacesConfig> appConfigResources, String name)
+    {
+        for (FacesConfig cfg: appConfigResources)
+        {
+            if (cfg.getName() != null && name.equals(cfg.getName()));
+            {
+                return cfg;
+            }
+        }
+        return null;
+    }
+    
+    private boolean containsResourceInSlot(List<OrderSlot> slots, String name)
+    {
+        for (OrderSlot slot: slots)
+        {
+            if (slot instanceof FacesConfigNameSlot)
+            {
+                FacesConfigNameSlot nameSlot = (FacesConfigNameSlot) slot;
+                if (name.equals(nameSlot.getName()))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     private void configureFactories()
     {
-        setFactories(FactoryFinder.APPLICATION_FACTORY, _dispenser.getApplicationFactoryIterator(), DEFAULT_APPLICATION_FACTORY);
-        setFactories(FactoryFinder.FACES_CONTEXT_FACTORY, _dispenser.getFacesContextFactoryIterator(), DEFAULT_FACES_CONTEXT_FACTORY);
-        setFactories(FactoryFinder.LIFECYCLE_FACTORY, _dispenser.getLifecycleFactoryIterator(), DEFAULT_LIFECYCLE_FACTORY);
-        setFactories(FactoryFinder.RENDER_KIT_FACTORY, _dispenser.getRenderKitFactoryIterator(), DEFAULT_RENDER_KIT_FACTORY);
+        FacesConfigDispenser<FacesConfig> dispenser = getDispenser();
+        setFactories(FactoryFinder.APPLICATION_FACTORY, dispenser.getApplicationFactoryIterator(),
+                     DEFAULT_APPLICATION_FACTORY);
+        setFactories(FactoryFinder.FACES_CONTEXT_FACTORY, dispenser.getFacesContextFactoryIterator(),
+                     DEFAULT_FACES_CONTEXT_FACTORY);
+        setFactories(FactoryFinder.LIFECYCLE_FACTORY, dispenser.getLifecycleFactoryIterator(),
+                     DEFAULT_LIFECYCLE_FACTORY);
+        setFactories(FactoryFinder.RENDER_KIT_FACTORY, dispenser.getRenderKitFactoryIterator(),
+                     DEFAULT_RENDER_KIT_FACTORY);
+        setFactories(FactoryFinder.PARTIAL_VIEW_CONTEXT_FACTORY, dispenser.getPartialViewContextFactoryIterator(),
+                     DEFAULT_PARTIAL_VIEW_CONTEXT_FACTORY);
+        setFactories(FactoryFinder.VISIT_CONTEXT_FACTORY, dispenser.getVisitContextFactoryIterator(),
+                     DEFAULT_VISIT_CONTEXT_FACTORY);
     }
 
-
-    private void setFactories(String factoryName, Iterator factories, String defaultFactory)
+    private void setFactories(String factoryName, Collection<String> factories, String defaultFactory)
     {
         FactoryFinder.setFactory(factoryName, defaultFactory);
-        while (factories.hasNext())
+        for (String factory : factories)
         {
-            FactoryFinder.setFactory(factoryName, (String) factories.next());
+            if (!factory.equals(defaultFactory))
+            {
+                FactoryFinder.setFactory(factoryName, factory);
+            }
         }
     }
 
+    private void startLib(String artifactId, Map<String, List<JarInfo>> libs)
+    {
+        List<JarInfo> versions = libs.get(artifactId);
+        if (versions == null)
+        {
+            log.info("MyFaces-package : " + artifactId + " not found.");
+        }
+        else
+        {
+            JarInfo info = versions.get(0);
+            log.info("Starting up MyFaces-package : " + artifactId + " in version : " + info.getVersion()
+                    + " from path : " + info.getUrl());
+        }
+    }
 
     private void configureApplication()
     {
         Application application = ((ApplicationFactory) FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY)).getApplication();
-        application.setActionListener((ActionListener) getApplicationObject(ActionListener.class, _dispenser.getActionListenerIterator(), null));
 
-        if (_dispenser.getDefaultLocale() != null)
+        FacesConfigDispenser<FacesConfig> dispenser = getDispenser();
+        application.setActionListener(getApplicationObject(ActionListener.class,
+                                                           dispenser.getActionListenerIterator(), null));
+
+        if (dispenser.getDefaultLocale() != null)
         {
-            application.setDefaultLocale(
-                LocaleUtils.toLocale(_dispenser.getDefaultLocale()));
+            application.setDefaultLocale(LocaleUtils.toLocale(dispenser.getDefaultLocale()));
         }
 
-        if (_dispenser.getDefaultRenderKitId() != null)
+        if (dispenser.getDefaultRenderKitId() != null)
         {
-            application.setDefaultRenderKitId(_dispenser.getDefaultRenderKitId());
+            application.setDefaultRenderKitId(dispenser.getDefaultRenderKitId());
         }
 
-        if (_dispenser.getMessageBundle() != null)
+        if (dispenser.getMessageBundle() != null)
         {
-            application.setMessageBundle(_dispenser.getMessageBundle());
+            application.setMessageBundle(dispenser.getMessageBundle());
         }
 
-        application.setNavigationHandler((NavigationHandler) getApplicationObject(NavigationHandler.class,
-                                                                                  _dispenser.getNavigationHandlerIterator(), application.getNavigationHandler()));
-        application.setPropertyResolver((PropertyResolver) getApplicationObject(PropertyResolver.class,
-                                                                                _dispenser.getPropertyResolverIterator(), application.getPropertyResolver()));
-        application.setStateManager((StateManager) getApplicationObject(StateManager.class,
-                                                                        _dispenser.getStateManagerIterator(), application.getStateManager()));
-        List locales = new ArrayList();
-        for (Iterator it = _dispenser.getSupportedLocalesIterator(); it.hasNext();)
+        application.setNavigationHandler(getApplicationObject(NavigationHandler.class,
+                                                              dispenser.getNavigationHandlerIterator(),
+                                                              application.getNavigationHandler()));
+
+        application.setStateManager(getApplicationObject(StateManager.class,
+                                                         dispenser.getStateManagerIterator(),
+                                                         application.getStateManager()));
+
+        application.setResourceHandler(getApplicationObject(ResourceHandler.class,
+                                                            dispenser.getResourceHandlerIterator(),
+                                                            application.getResourceHandler()));
+
+        List<Locale> locales = new ArrayList<Locale>();
+        for (String locale : dispenser.getSupportedLocalesIterator())
         {
-            locales.add(LocaleUtils.toLocale((String) it.next()));
+            locales.add(LocaleUtils.toLocale(locale));
         }
+
         application.setSupportedLocales(locales);
 
-        application.setVariableResolver((VariableResolver) getApplicationObject(VariableResolver.class,
-                                                                                _dispenser.getVariableResolverIterator(), application.getVariableResolver()));
-        application.setViewHandler((ViewHandler) getApplicationObject(ViewHandler.class,
-                                                                      _dispenser.getViewHandlerIterator(), application.getViewHandler()));
+        application.setViewHandler(getApplicationObject(ViewHandler.class,
+                                                        dispenser.getViewHandlerIterator(),
+                                                        application.getViewHandler()));
 
-        for (Iterator it = _dispenser.getComponentTypes(); it.hasNext();)
+        for (SystemEventListener systemEventListener : dispenser.getSystemEventListeners())
         {
-            String componentType = (String) it.next();
-            application.addComponent(componentType,
-                                     _dispenser.getComponentClass(componentType));
+            
+            application.subscribeToEvent(
+                    (Class<? extends SystemEvent>)ClassUtils.newInstance(systemEventListener.getSystemEventClass(),SystemEvent.class), 
+                    (Class<?>)ClassUtils.newInstance(systemEventListener.getSourceClass()), 
+                    (javax.faces.event.SystemEventListener)ClassUtils.newInstance(systemEventListener.getSystemEventClass(),javax.faces.event.SystemEventListener.class));
+        }
+        
+        for (String componentType : dispenser.getComponentTypes())
+        {
+            application.addComponent(componentType, dispenser.getComponentClass(componentType));
         }
 
-        for (Iterator it = _dispenser.getConverterIds(); it.hasNext();)
+        for (String converterId : dispenser.getConverterIds())
         {
-            String converterId = (String) it.next();
-            application.addConverter(converterId,
-                                     _dispenser.getConverterClassById(converterId));
+            application.addConverter(converterId, dispenser.getConverterClassById(converterId));
         }
 
-        for (Iterator it = _dispenser.getConverterClasses(); it.hasNext();)
+        for (String converterClass : dispenser.getConverterClasses())
         {
-            String converterClass = (String) it.next();
             try
             {
                 application.addConverter(ClassUtils.simpleClassForName(converterClass),
-                                         _dispenser.getConverterClassByClass(converterClass));
+                                         dispenser.getConverterClassByClass(converterClass));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                log.error("Converter could not be added. Reason:",ex);
+                log.error("Converter could not be added. Reason:", ex);
             }
         }
 
-        if(application instanceof ApplicationImpl)
+        if (application instanceof ApplicationImpl)
         {
-            for (Iterator it = _dispenser.getConverterConfigurationByClassName(); it.hasNext();)
+            for (String converterClassName : dispenser.getConverterConfigurationByClassName())
             {
-                String converterClassName = (String) it.next();
-
-                ((ApplicationImpl) application).addConverterConfiguration(converterClassName,
-                                                                          _dispenser.getConverterConfiguration(converterClassName));
+                ApplicationImpl app = (ApplicationImpl)application;
+                app.addConverterConfiguration(converterClassName, dispenser.getConverterConfiguration(converterClassName));
             }
         }
 
-        for (Iterator it = _dispenser.getValidatorIds(); it.hasNext();)
+        for (String validatorId : dispenser.getValidatorIds())
         {
-            String validatorId = (String) it.next();
-            application.addValidator(validatorId,
-                                     _dispenser.getValidatorClass(validatorId));
+            application.addValidator(validatorId, dispenser.getValidatorClass(validatorId));
         }
+        
+        for (Behavior behavior : dispenser.getBehaviors()) {
+            application.addBehavior(behavior.getBehaviorId(), behavior.getBehaviorClass());
+        }
+        
+        RuntimeConfig runtimeConfig = getRuntimeConfig();
+
+        runtimeConfig.setPropertyResolverChainHead(getApplicationObject(PropertyResolver.class,
+                                                                        dispenser.getPropertyResolverIterator(),
+                                                                        new DefaultPropertyResolver()));
+
+        runtimeConfig.setVariableResolverChainHead(getApplicationObject(VariableResolver.class,
+                                                                        dispenser.getVariableResolverIterator(),
+                                                                        new VariableResolverImpl()));
     }
 
-
-    private Object getApplicationObject(Class interfaceClass, Iterator classNamesIterator, Object defaultObject)
+    protected RuntimeConfig getRuntimeConfig()
     {
-        Object current = defaultObject;
-
-        while (classNamesIterator.hasNext())
+        if (_runtimeConfig == null)
         {
-            String implClassName = (String) classNamesIterator.next();
-            Class implClass = ClassUtils.simpleClassForName(implClassName);
+            _runtimeConfig = RuntimeConfig.getCurrentInstance(_externalContext);
+        }
+        return _runtimeConfig;
+    }
+
+    public void setRuntimeConfig(RuntimeConfig runtimeConfig)
+    {
+        _runtimeConfig = runtimeConfig;
+    }
+
+    private <T> T getApplicationObject(Class<T> interfaceClass, Collection<String> classNamesIterator, T defaultObject)
+    {
+        T current = defaultObject;
+
+        for (String implClassName : classNamesIterator)
+        {
+            Class<? extends T> implClass = ClassUtils.simpleClassForName(implClassName);
 
             // check, if class is of expected interface type
             if (!interfaceClass.isAssignableFrom(implClass))
@@ -834,35 +1671,41 @@ public class FacesConfigurator
             if (current == null)
             {
                 // nothing to decorate
-                current = ClassUtils.newInstance(implClass);
-            } else
+                current = (T) ClassUtils.newInstance(implClass);
+            }
+            else
             {
                 // let's check if class supports the decorator pattern
                 try
                 {
-                    Constructor delegationConstructor = implClass.getConstructor(new Class[]{interfaceClass});
+                    Constructor<? extends T> delegationConstructor = 
+                        implClass.getConstructor(new Class[] {interfaceClass});
                     // impl class supports decorator pattern,
                     try
                     {
                         // create new decorator wrapping current
-                        current = delegationConstructor.newInstance(new Object[]{current});
-                    } catch (InstantiationException e)
-                    {
-                        log.error(e.getMessage(), e);
-                        throw new FacesException(e);
-                    } catch (IllegalAccessException e)
-                    {
-                        log.error(e.getMessage(), e);
-                        throw new FacesException(e);
-                    } catch (InvocationTargetException e)
+                        current = delegationConstructor.newInstance(new Object[] { current });
+                    }
+                    catch (InstantiationException e)
                     {
                         log.error(e.getMessage(), e);
                         throw new FacesException(e);
                     }
-                } catch (NoSuchMethodException e)
+                    catch (IllegalAccessException e)
+                    {
+                        log.error(e.getMessage(), e);
+                        throw new FacesException(e);
+                    }
+                    catch (InvocationTargetException e)
+                    {
+                        log.error(e.getMessage(), e);
+                        throw new FacesException(e);
+                    }
+                }
+                catch (NoSuchMethodException e)
                 {
                     // no decorator pattern support
-                    current = ClassUtils.newInstance(implClass);
+                    current = (T) ClassUtils.newInstance(implClass);
                 }
             }
         }
@@ -870,21 +1713,18 @@ public class FacesConfigurator
         return current;
     }
 
-
     private void configureRuntimeConfig()
     {
         RuntimeConfig runtimeConfig = RuntimeConfig.getCurrentInstance(_externalContext);
 
-        for (Iterator iterator = _dispenser.getManagedBeans(); iterator.hasNext();)
+        FacesConfigDispenser<FacesConfig> dispenser = getDispenser();
+        for (ManagedBean bean : dispenser.getManagedBeans())
         {
-            ManagedBean bean = (ManagedBean) iterator.next();
-            ManagedBean oldBean = runtimeConfig.getManagedBean(bean.getManagedBeanName());
-
-            if(log.isWarnEnabled() && oldBean != null)
-                log.warn("More than one managed bean w/ the name of '" 
-                        + bean.getManagedBeanName() + "' registered. First managed bean was registered in :" +
-                            oldBean.getConfigLocation()+", new managed bean was registered in : "+
-                            bean.getConfigLocation()+". The first definition of the managed-bean will be ignored by the standard MyFaces variable resolver!");
+            if (log.isWarnEnabled() && runtimeConfig.getManagedBean(bean.getManagedBeanName()) != null)
+            {
+                log.warn("More than one managed bean w/ the name of '" + bean.getManagedBeanName()
+                        + "' - only keeping the last ");
+            }
 
             runtimeConfig.addManagedBean(bean.getManagedBeanName(), bean);
 
@@ -892,44 +1732,56 @@ public class FacesConfigurator
 
         removePurgedBeansFromSessionAndApplication(runtimeConfig);
 
-        for (Iterator iterator = _dispenser.getNavigationRules(); iterator.hasNext();)
+        for (NavigationRule rule : dispenser.getNavigationRules())
         {
-            NavigationRule rule = (NavigationRule) iterator.next();
             runtimeConfig.addNavigationRule(rule);
-
         }
+
+        for (ResourceBundle bundle : dispenser.getResourceBundles())
+        {
+            runtimeConfig.addResourceBundle(bundle);
+        }
+
+        for (String className : dispenser.getElResolvers())
+        {
+            runtimeConfig.addFacesConfigElResolver((ELResolver)ClassUtils.newInstance(className, ELResolver.class));
+        }
+
     }
 
-    private void removePurgedBeansFromSessionAndApplication(RuntimeConfig runtimeConfig) {
-        Map oldManagedBeans = runtimeConfig.getManagedBeansNotReaddedAfterPurge();
-        if(oldManagedBeans!=null) {
-            Iterator it=oldManagedBeans.entrySet().iterator();
-            while(it.hasNext()) {
-                Map.Entry entry = (Map.Entry) it.next();
-                ManagedBean bean = (ManagedBean) entry.getValue();
+    private void removePurgedBeansFromSessionAndApplication(RuntimeConfig runtimeConfig)
+    {
+        Map<String, ManagedBean> oldManagedBeans = runtimeConfig.getManagedBeansNotReaddedAfterPurge();
+        if (oldManagedBeans != null)
+        {
+            for (Map.Entry<String, ManagedBean> entry : oldManagedBeans.entrySet())
+            {
+                ManagedBean bean = entry.getValue();
 
                 String scope = bean.getManagedBeanScope();
 
-                if(scope!=null && scope.equalsIgnoreCase("session")) {
+                if (scope != null && scope.equalsIgnoreCase("session"))
+                {
                     _externalContext.getSessionMap().remove(entry.getKey());
                 }
-                else if(scope!=null && scope.equalsIgnoreCase("application")) {
+                else if (scope != null && scope.equalsIgnoreCase("application"))
+                {
                     _externalContext.getApplicationMap().remove(entry.getKey());
                 }
             }
         }
+        
         runtimeConfig.resetManagedBeansNotReaddedAfterPurge();
     }
 
-
     private void configureRenderKits()
     {
-        RenderKitFactory renderKitFactory = (RenderKitFactory) FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+        RenderKitFactory renderKitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
 
-        for (Iterator iterator = _dispenser.getRenderKitIds(); iterator.hasNext();)
+        FacesConfigDispenser<FacesConfig> dispenser = getDispenser();
+        for (String renderKitId : dispenser.getRenderKitIds())
         {
-            String renderKitId = (String) iterator.next();
-            String renderKitClass = _dispenser.getRenderKitClass(renderKitId);
+            String renderKitClass = dispenser.getRenderKitClass(renderKitId);
 
             if (renderKitClass == null)
             {
@@ -938,16 +1790,18 @@ public class FacesConfigurator
 
             RenderKit renderKit = (RenderKit) ClassUtils.newInstance(renderKitClass);
 
-            for (Iterator renderers = _dispenser.getRenderers(renderKitId); renderers.hasNext();)
+            for (Renderer element : dispenser.getRenderers(renderKitId))
             {
-                Renderer element = (Renderer) renderers.next();
                 javax.faces.render.Renderer renderer;
-                try {
-                  renderer = (javax.faces.render.Renderer) ClassUtils.newInstance(element.getRendererClass());
-                } catch(Throwable e) {
-                  // ignore the failure so that the render kit is configured
-                  log.error("failed to configure class " + element.getRendererClass(), e);
-                  continue;
+                try
+                {
+                    renderer = (javax.faces.render.Renderer) ClassUtils.newInstance(element.getRendererClass());
+                }
+                catch (Throwable e)
+                {
+                    // ignore the failure so that the render kit is configured
+                    log.error("failed to configure class " + element.getRendererClass(), e);
+                    continue;
                 }
 
                 renderKit.addRenderer(element.getComponentFamily(), element.getRendererType(), renderer);
@@ -957,7 +1811,6 @@ public class FacesConfigurator
         }
     }
 
-
     private void configureLifecycle()
     {
         // create the lifecycle used by the app
@@ -965,19 +1818,18 @@ public class FacesConfigurator
         Lifecycle lifecycle = lifecycleFactory.getLifecycle(getLifecycleId());
 
         // add phase listeners
-        for (Iterator iterator = _dispenser.getLifecyclePhaseListeners(); iterator.hasNext();)
+        for (String listenerClassName : getDispenser().getLifecyclePhaseListeners())
         {
-            String listenerClassName = (String) iterator.next();
             try
             {
-                lifecycle.addPhaseListener((PhaseListener) ClassUtils.newInstance(listenerClassName));
-            } catch (ClassCastException e)
+                lifecycle.addPhaseListener((PhaseListener) ClassUtils.newInstance(listenerClassName, PhaseListener.class));
+            }
+            catch (ClassCastException e)
             {
-                log.error("Class " + listenerClassName + " does not implement PhaseListener",e);
+                log.error("Class " + listenerClassName + " does not implement PhaseListener");
             }
         }
     }
-
 
     private String getLifecycleId()
     {
@@ -991,98 +1843,61 @@ public class FacesConfigurator
         return LifecycleFactory.DEFAULT_LIFECYCLE;
     }
 
-    public static class VersionInfo
-    {
-        private String packageName;
-        private List jarInfos;
-
-        public VersionInfo(String packageName)
-        {
-
-            this.packageName = packageName;
-        }
-
-        public String getPackageName()
-        {
-            return packageName;
-        }
-
-        public void setPackageName(String packageName)
-        {
-            this.packageName = packageName;
-        }
-
-        public void addJarInfo(String path, String version)
-        {
-            if(jarInfos == null)
-            {
-                jarInfos = new ArrayList();
-            }
-
-            jarInfos.add(new JarInfo(path, version));
-        }
-
-        public String getLastVersion()
-        {
-            if(jarInfos == null)
-                return null;
-            if(jarInfos.size()==0)
-                return null;
-
-            return ((JarInfo) jarInfos.get(jarInfos.size()-1)).getVersion();
-        }
-
-        /**Probably, the first encountered version will be used.
-         *
-         * @return probably used version
-         */
-        public String getUsedVersion()
-        {
-
-            if(jarInfos == null)
-                return null;
-            if(jarInfos.size()==0)
-                return null;
-
-            return ((JarInfo) jarInfos.get(0)).getVersion();
-        }
-
-        /**Probably, the first encountered version will be used.
-         *
-         * @return probably used classpath
-         */
-        public String getUsedVersionPath()
-        {
-
-            if(jarInfos == null)
-                return null;
-            if(jarInfos.size()==0)
-                return null;
-
-            return ((JarInfo) jarInfos.get(0)).getUrl();
-
-        }
-    }
-
-    public static class JarInfo
+    /*
+     * public static class VersionInfo { private String artifactId; private List<JarInfo> jarInfos;
+     * 
+     * public VersionInfo(String artifactId) { this.artifactId = artifactId; }
+     * 
+     * public String getArtifactId() { return packageName; }
+     * 
+     * public void addJarInfo(Matcher matcher) { if (jarInfos == null) { jarInfos = new ArrayList<JarInfo>(); }
+     * 
+     * String path = matcher.group(1);
+     * 
+     * Version version = new Version(matcher.group(3), matcher.group(5), matcher.group(7), matcher.group(9),
+     * matcher.group(10));
+     * 
+     * jarInfos.add(new JarInfo(path, version)); }
+     * 
+     * public String getLastVersion() { if (jarInfos == null) return null; if (jarInfos.size() == 0) return null;
+     * 
+     * return ""; //return jarInfos.get(jarInfos.size() - 1).getVersion(); }
+     * 
+     * / Probably, the first encountered version will be used.
+     * 
+     * @return probably used version
+     * 
+     * public String getUsedVersion() {
+     * 
+     * if (jarInfos == null) return null; if (jarInfos.size() == 0) return null; return ""; //return
+     * jarInfos.get(0).getVersion(); }
+     * 
+     * / Probably, the first encountered version will be used.
+     * 
+     * @return probably used classpath
+     * 
+     * public String getUsedVersionPath() {
+     * 
+     * if (jarInfos == null) return null; if (jarInfos.size() == 0) return null;
+     * 
+     * return jarInfos.get(0).getUrl();
+     * 
+     * } }
+     */
+    private static class JarInfo implements Comparable<JarInfo>
     {
         private String url;
-        private String version;
+        private Version version;
 
-        public JarInfo(String url, String version)
+        public JarInfo(String url, Version version)
         {
             this.url = url;
             this.version = version;
         }
 
-        public String getVersion()
+        public Version getVersion()
         {
             return version;
-        }
-
-        public void setVersion(String version)
-        {
-            this.version = version;
         }
 
         public String getUrl()
@@ -1090,19 +1905,189 @@ public class FacesConfigurator
             return url;
         }
 
-        public void setUrl(String url)
+        public int compareTo(JarInfo info)
         {
-            this.url = url;
+            return version.compareTo(info.version);
+        }
+
+        @Override
+        public boolean equals(Object o)
+        {
+            if (o == this)
+            {
+                return true;
+            }
+            else if (o instanceof JarInfo)
+            {
+                JarInfo other = (JarInfo) o;
+                return version.equals(other.version);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        @Override
+        public int hashCode()
+        {
+            return version.hashCode();
         }
     }
 
+    private static class Version implements Comparable<Version>
+    {
+        private Integer[] parts;
 
-    private void handleSerialFactory(){
+        private boolean snapshot;
+
+        public Version(String major, String minor, String maintenance, String extra, String snapshot)
+        {
+            parts = new Integer[4];
+            parts[0] = Integer.valueOf(major);
+
+            if (minor != null)
+            {
+                parts[1] = Integer.valueOf(minor);
+
+                if (maintenance != null)
+                {
+                    parts[2] = Integer.valueOf(maintenance);
+
+                    if (extra != null)
+                    {
+                        parts[3] = Integer.valueOf(extra);
+                    }
+                }
+            }
+
+            this.snapshot = snapshot != null;
+        }
+
+        public int compareTo(Version v)
+        {
+            for (int i = 0; i < parts.length; i++)
+            {
+                Integer left = parts[i];
+                Integer right = v.parts[i];
+                if (left == null)
+                {
+                    if (right == null)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                }
+                else
+                {
+                    if (right == null)
+                    {
+                        return 1;
+                    }
+                    else if (left < right)
+                    {
+                        return -1;
+                    }
+                    else if (left > right)
+                    {
+                        return 1;
+                    }
+                }
+            }
+
+            if (snapshot)
+            {
+                return v.snapshot ? 0 : -1;
+            }
+            else
+            {
+                return v.snapshot ? 1 : 0;
+            }
+        }
+
+        @Override
+        public boolean equals(Object o)
+        {
+            if (o == this)
+            {
+                return true;
+            }
+            else if (o instanceof Version)
+            {
+                Version other = (Version) o;
+                if (snapshot != other.snapshot)
+                {
+                    return false;
+                }
+
+                for (int i = 0; i < parts.length; i++)
+                {
+                    Integer thisPart = parts[i];
+                    Integer otherPart = other.parts[i];
+                    if (thisPart == null ? otherPart != null : !thisPart.equals(otherPart))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        @Override
+        public int hashCode()
+        {
+            int hash = 0;
+            for (Integer part : parts)
+            {
+                if (part != null)
+                {
+                    hash ^= part.hashCode();
+                }
+            }
+
+            hash ^= Boolean.valueOf(snapshot).hashCode();
+
+            return hash;
+        }
+
+        @Override
+        public String toString()
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.append(parts[0]);
+            for (int i = 1; i < parts.length; i++)
+            {
+                Integer val = parts[i];
+                if (val != null)
+                {
+                    builder.append('.').append(val);
+                }
+            }
+
+            if (snapshot)
+            {
+                builder.append("-SNAPSHOT");
+            }
+
+            return builder.toString();
+        }
+    }
+
+    private void handleSerialFactory()
+    {
 
         String serialProvider = _externalContext.getInitParameter(StateUtils.SERIAL_FACTORY);
         SerialFactory serialFactory = null;
 
-        if(serialProvider == null)
+        if (serialProvider == null)
         {
             serialFactory = new DefaultSerialFactory();
         }
@@ -1112,16 +2097,18 @@ public class FacesConfigurator
             {
                 serialFactory = (SerialFactory) ClassUtils.newInstance(serialProvider);
 
-            }catch(ClassCastException e){
-                log.error("Make sure '" + serialProvider +
-                        "' implements the correct interface", e);
             }
-            catch(Exception e){
+            catch (ClassCastException e)
+            {
+                log.error("Make sure '" + serialProvider + "' implements the correct interface", e);
+            }
+            catch (Exception e)
+            {
                 log.error(e);
             }
             finally
             {
-                if(serialFactory == null)
+                if (serialFactory == null)
                 {
                     serialFactory = new DefaultSerialFactory();
                     log.error("Using default serialization provider");
@@ -1132,7 +2119,5 @@ public class FacesConfigurator
 
         log.info("Serialization provider : " + serialFactory.getClass());
         _externalContext.getApplicationMap().put(StateUtils.SERIAL_FACTORY, serialFactory);
-
     }
-
 }

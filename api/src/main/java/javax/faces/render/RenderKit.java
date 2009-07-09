@@ -18,32 +18,96 @@
  */
 package javax.faces.render;
 
-import javax.faces.context.ResponseWriter;
-import javax.faces.context.ResponseStream;
-import java.io.Writer;
 import java.io.OutputStream;
+import java.io.Writer;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.faces.context.ResponseStream;
+import javax.faces.context.ResponseWriter;
 
 /**
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
+ * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public abstract class RenderKit
 {
-    public abstract void addRenderer(String family,
-                                     String rendererType,
-                                     Renderer renderer);
+    public void addClientBehaviorRenderer(String type, ClientBehaviorRenderer renderer)
+    {
+        throw new UnsupportedOperationException();
+    }
 
-    public abstract Renderer getRenderer(String family,
-                                         String rendererType);
-
-    public abstract ResponseStateManager getResponseStateManager();
-
-    public abstract ResponseWriter createResponseWriter(Writer writer,
-                                                        String contentTypeList,
-                                                        String characterEncoding);
+    public abstract void addRenderer(String family, String rendererType, Renderer renderer);
 
     public abstract ResponseStream createResponseStream(OutputStream out);
 
+    public abstract ResponseWriter createResponseWriter(Writer writer, String contentTypeList, String characterEncoding);
+    
+    public ClientBehaviorRenderer getClientBehaviorRenderer(String type)
+    {
+        throw new UnsupportedOperationException();
+    }
+    
+    public Iterator<String> getClientBehaviorRendererTypes()
+    {
+        List<String> emptyList = Collections.emptyList();
+
+        return emptyList.iterator();
+    }
+
+    /**
+     * <p>
+     * Return an <code>Iterator</code> over the component-family entries supported by this <code>RenderKit</code>
+     * instance.
+     * </p>
+     * 
+     * <p>
+     * The default implementation of this method returns an empty <code>Iterator</code>
+     * </p>
+     * 
+     * @return an iterator over the component families supported by this <code>RenderKit</code>.
+     * 
+     * @since 2.0
+     */
+    public Iterator<String> getComponentFamilies()
+    {
+        List<String> emptyList = Collections.emptyList();
+
+        return emptyList.iterator();
+    }
+
+    public abstract Renderer getRenderer(String family, String rendererType);
+
+    /**
+     * <p>
+     * Return an <code>Iterator</code> over the renderer-type entries for the given component-family.
+     * </p>
+     * 
+     * <p>
+     * If the specified <code>componentFamily</code> is not known to this <code>RenderKit</code> implementation, return
+     * an empty <code>Iterator</code>
+     * </p>
+     * 
+     * <p>
+     * The default implementation of this method returns an empty <code>Iterator</code>
+     * </p>
+     * 
+     * @param componentFamily
+     *            one of the members of the <code>Iterator</code> returned by {@link #getComponentFamilies()}
+     * 
+     * @return an iterator over the renderer-type entries for the given component-family.
+     * 
+     * @since 2.0
+     */
+    public Iterator<String> getRendererTypes(String componentFamily)
+    {
+        List<String> emptyList = Collections.emptyList();
+
+        return emptyList.iterator();
+    }
+
+    public abstract ResponseStateManager getResponseStateManager();
 }

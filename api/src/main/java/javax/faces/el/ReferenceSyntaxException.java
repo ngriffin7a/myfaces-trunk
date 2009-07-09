@@ -19,33 +19,51 @@
 package javax.faces.el;
 
 /**
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
+ * 
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * @deprecated
  */
+@Deprecated
 public class ReferenceSyntaxException extends EvaluationException
 {
-  private static final long serialVersionUID = -2099185257291689817L;
+    private static final long serialVersionUID = -2099185257291689817L;
 
     // FIELDS
 
-  // CONSTRUCTORS
+    // CONSTRUCTORS
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public ReferenceSyntaxException()
     {
         super();
     }
 
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public ReferenceSyntaxException(String message)
     {
         super(message);
     }
 
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public ReferenceSyntaxException(String message, Throwable cause)
     {
         super(message, cause);
     }
 
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public ReferenceSyntaxException(Throwable cause)
     {
         super(cause);

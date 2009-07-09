@@ -25,12 +25,11 @@ import java.util.*;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-class _ComponentFacetMap
-        implements Map, Serializable
+class _ComponentFacetMap<V extends UIComponent> implements Map<String, V>, Serializable
 {
     private static final long serialVersionUID = -3456937594422167629L;
     private UIComponent _component;
-    private Map _map = new HashMap();
+    private Map<String, V> _map = new HashMap<String, V>();
 
     _ComponentFacetMap(UIComponent component)
     {
@@ -64,52 +63,51 @@ class _ComponentFacetMap
         return _map.containsValue(value);
     }
 
-    public Collection values()
+    public Collection<V> values()
     {
         return _map.values();
     }
 
-    public void putAll(Map t)
+    public void putAll(Map<? extends String, ? extends V> t)
     {
-        for (Iterator it = t.entrySet().iterator(); it.hasNext(); )
+        for (Map.Entry<? extends String, ? extends V> entry : t.entrySet())
         {
-            Map.Entry entry = (Entry)it.next();
             put(entry.getKey(), entry.getValue());
         }
     }
 
-    public Set entrySet()
+    public Set<Entry<String, V>> entrySet()
     {
         return _map.entrySet();
     }
 
-    public Set keySet()
+    public Set<String> keySet()
     {
         return _map.keySet();
     }
 
-    public Object get(Object key)
+    public V get(Object key)
     {
         checkKey(key);
         return _map.get(key);
     }
 
-    public Object remove(Object key)
+    public V remove(Object key)
     {
         checkKey(key);
-        UIComponent facet = (UIComponent)_map.remove(key);
-        if (facet != null) facet.setParent(null);
+        V facet = _map.remove(key);
+        if (facet != null)
+            facet.setParent(null);
         return facet;
     }
 
-    public Object put(Object key, Object value)
+    public V put(String key, V value)
     {
         checkKey(key);
         checkValue(value);
-        setNewParent((String)key, (UIComponent)value);
+        setNewParent(key, value);
         return _map.put(key, value);
     }
-
 
     private void setNewParent(String facetName, UIComponent facet)
     {
@@ -123,14 +121,18 @@ class _ComponentFacetMap
 
     private void checkKey(Object key)
     {
-        if (key == null) throw new NullPointerException("key");
-        if (!(key instanceof String)) throw new ClassCastException("key is not a String");
+        if (key == null)
+            throw new NullPointerException("key");
+        if (!(key instanceof String))
+            throw new ClassCastException("key is not a String");
     }
 
     private void checkValue(Object value)
     {
-        if (value == null) throw new NullPointerException("value");
-        if (!(value instanceof UIComponent)) throw new ClassCastException("value is not a UIComponent");
+        if (value == null)
+            throw new NullPointerException("value");
+        if (!(value instanceof UIComponent))
+            throw new ClassCastException("value is not a UIComponent");
     }
 
 }

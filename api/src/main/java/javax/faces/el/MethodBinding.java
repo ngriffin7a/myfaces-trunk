@@ -21,33 +21,50 @@ package javax.faces.el;
 import javax.faces.context.FacesContext;
 
 /**
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
+ * 
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * @deprecated
  */
+@Deprecated
 public abstract class MethodBinding
 {
 
     // FIELDS
 
     // CONSTRUCTORS
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public MethodBinding()
     {
     }
 
     // METHODS
-    
+
     /**
      * returns the <code>String</code> of your expression like <code>#{bean.foo}</code>.
+     * 
+     * @deprecated
      */
+    @Deprecated
     public String getExpressionString()
     {
         return null;
     }
-    
+
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public abstract Class getType(FacesContext facescontext) throws MethodNotFoundException;
 
-    public abstract Object invoke(FacesContext facescontext, Object aobj[])
-        throws EvaluationException, MethodNotFoundException;
+    /**
+     * @deprecated
+     */
+    @Deprecated
+    public abstract Object invoke(FacesContext facescontext, Object aobj[]) throws EvaluationException,
+        MethodNotFoundException;
 }

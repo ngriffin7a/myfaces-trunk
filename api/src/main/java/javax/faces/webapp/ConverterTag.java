@@ -29,44 +29,36 @@ import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagSupport;
 
 /**
- * This tag creates an instance of the specified Converter, and
- * associates it with the nearest parent UIComponent.
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
  * 
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
- * @JSFJspTag
- *   name="f:converter"
- *   bodyContent="empty"
- *   
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * @deprecated replaced by {@link ConverterELTag}
  */
-public class ConverterTag
-        extends TagSupport
+@Deprecated
+public class ConverterTag extends TagSupport
 {
     private static final long serialVersionUID = -6168345066829108081L;
     private String _converterId;
+    private String _binding;
 
     public ConverterTag()
     {
         super();
     }
 
-    /**
-     * The converter's registered ID.
-     * 
-     * @JSFJspAttribute
-     *   required="true"
-     */
     public void setConverterId(String converterId)
     {
         _converterId = converterId;
     }
 
-    public int doStartTag()
-            throws JspException
+    @Override
+    public int doStartTag() throws JspException
     {
-        UIComponentTag componentTag = UIComponentTag.getParentUIComponentTag(pageContext);
+
+        UIComponentClassicTagBase componentTag =
+                UIComponentClassicTagBase.getParentUIComponentClassicTagBase(pageContext);
+
         if (componentTag == null)
         {
             throw new JspException("no parent UIComponentTag found");
@@ -92,26 +84,50 @@ public class ConverterTag
         return Tag.SKIP_BODY;
     }
 
+    @Override
     public void release()
     {
         super.release();
         _converterId = null;
+        _binding = null;
     }
 
-    protected Converter createConverter()
-            throws JspException
+    /**
+     * @throws JspException  
+     */
+    protected Converter createConverter() throws JspException
     {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         Application application = facesContext.getApplication();
+
+        if (_binding != null)
+        {
+            ValueBinding vb = application.createValueBinding(_binding);
+            if (vb != null)
+            {
+                Converter converter = (Converter)vb.getValue(facesContext);
+                if (converter != null)
+                {
+                    return converter;
+                }
+            }
+        }
+
         if (UIComponentTag.isValueReference(_converterId))
         {
             ValueBinding vb = facesContext.getApplication().createValueBinding(_converterId);
             return application.createConverter((String)vb.getValue(facesContext));
         }
-        else
-        {
-            return application.createConverter(_converterId);
-        }
+
+        return application.createConverter(_converterId);
+
     }
 
+    /**
+     * @throws JspException  
+     */
+    public void setBinding(String binding) throws JspException
+    {
+        _binding = binding;
+    }
 }

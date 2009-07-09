@@ -18,26 +18,25 @@
  */
 package org.apache.myfaces.config.impl.digester.elements;
 
-import org.apache.myfaces.shared_impl.util.ClassUtils;
-
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.List;
+
+import org.apache.myfaces.shared_impl.util.ClassUtils;
 
 
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  */
-public class ManagedBean extends ElementBaseImpl
-        implements org.apache.myfaces.config.element.ManagedBean
-
+public class ManagedBean implements org.apache.myfaces.config.element.ManagedBean
 {
 
+    private String description;
     private String name;
     private String beanClassName;
-    private Class beanClass;
+    private Class<?> beanClass;
     private String scope;
-    private List property = new ArrayList();
+    private List<ManagedProperty> property = new ArrayList<ManagedProperty>();
     private MapEntries mapEntries;
     private ListEntries listEntries;
 
@@ -82,6 +81,14 @@ public class ManagedBean extends ElementBaseImpl
     }
 
 
+    public String getDescription() {
+        return description;
+    }
+    
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    
     public String getManagedBeanName()
     {
         return name;
@@ -100,16 +107,18 @@ public class ManagedBean extends ElementBaseImpl
     }
 
 
-    public Class getManagedBeanClass()
+    public Class<?> getManagedBeanClass()
     {
         if (beanClassName == null)
         {
             return null;
         }
+        
         if (beanClass == null)
         {
             beanClass = ClassUtils.simpleClassForName(beanClassName);
         }
+        
         return beanClass;
     }
 
@@ -138,8 +147,8 @@ public class ManagedBean extends ElementBaseImpl
     }
 
 
-    public Iterator getManagedProperties()
+    public Collection<? extends ManagedProperty> getManagedProperties()
     {
-        return property.iterator();
+        return property;
     }
 }

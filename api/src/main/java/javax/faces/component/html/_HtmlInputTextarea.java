@@ -20,47 +20,58 @@ package javax.faces.component.html;
 
 import javax.faces.component.UIInput;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+
 /**
  * Renders a HTML textarea element.
- * <p>
- * Unless otherwise specified, all attributes accept static values
- * or EL expressions.
- * <p>
- * See Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
  *
- * @JSFComponent
- *   name = "h:inputTextarea"
- *   class = "javax.faces.component.html.HtmlInputTextarea"
- *   tagClass = "org.apache.myfaces.taglib.html.HtmlInputTextareaTag"
- *   template = "true"
- *   desc = "h:inputTextarea"
- *
- * @author Thomas Spiegl (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * <h4>Events:</h4>
+ * <table border="1" width="100%" cellpadding="3" summary="">
+ * <tr bgcolor="#CCCCFF" class="TableHeadingColor">
+ * <th align="left">Type</th>
+ * <th align="left">Phases</th>
+ * <th align="left">Description</th>
+ * </tr>
+ * <tr class="TableRowColor">
+ * <td valign="top"><code>javax.faces.event.ValueChangeEvent</code></td>
+ * <td valign="top" nowrap></td>
+ * <td valign="top">The valueChange event is delivered when the value
+                attribute is changed.</td>
+ * </tr>
+ * </table>
  */
+@JSFComponent
+(name = "h:inputTextarea",
+clazz = "javax.faces.component.html.HtmlInputTextarea",template=true,
+tagClass = "org.apache.myfaces.taglib.html.HtmlInputTextareaTag",
+defaultRendererType = "javax.faces.Textarea",
+implementz = "javax.faces.component.behavior.ClientBehaviorHolder"
+)
 abstract class _HtmlInputTextarea extends UIInput implements _AccesskeyProperty,
     _UniversalProperties, _FocusBlurProperties, _ChangeSelectProperties,
     _EventProperties, _StyleProperties, _TabindexProperty, 
-    _DisabledReadonlyProperties
+    _DisabledReadonlyProperties, _LabelProperty
 {
 
-    public static final String COMPONENT_TYPE = "javax.faces.HtmlInputTextarea";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Textarea";
+  static public final String COMPONENT_FAMILY =
+    "javax.faces.Input";
+  static public final String COMPONENT_TYPE =
+    "javax.faces.HtmlInputTextarea";
 
-    /**
-     * HTML: The width of this element, in characters.
-     * 
-     * @JSFProperty
-     *   defaultValue = "Integer.MIN_VALUE"
-     */
-    public abstract int getCols();
-    
-    /**
-     * HTML: The height of this element, in characters.
-     * 
-     * @JSFProperty
-     *   defaultValue = "Integer.MIN_VALUE"
-     */
-    public abstract int getRows();
+  /**
+   * HTML: The width of this element, in characters.
+   * 
+   * @JSFProperty
+   *   defaultValue = "Integer.MIN_VALUE"
+   */
+  public abstract int getCols();
+  
+  /**
+   * HTML: The height of this element, in characters.
+   * 
+   * @JSFProperty
+   *   defaultValue = "Integer.MIN_VALUE"
+   */
+  public abstract int getRows();
 
 }

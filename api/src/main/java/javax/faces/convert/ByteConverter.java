@@ -21,21 +21,22 @@ package javax.faces.convert;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFConverter;
+
 /**
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
- * @JSFConverter
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
  *
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
+@JSFConverter
 public class ByteConverter
         implements Converter
 {
-    private static final String CONVERSION_MESSAGE_ID = "javax.faces.convert.ByteConverter.CONVERSION";
-
     // FIELDS
     public static final String CONVERTER_ID = "javax.faces.Byte";
+    public static final String STRING_ID = "javax.faces.converter.STRING";
+    public static final String BYTE_ID = "javax.faces.converter.ByteConverter.BYTE";
 
     // CONSTRUCTORS
     public ByteConverter()
@@ -60,8 +61,8 @@ public class ByteConverter
                 catch (NumberFormatException e)
                 {
                     throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
-                                                                               CONVERSION_MESSAGE_ID,
-                                                                               new Object[]{value,uiComponent.getId()}), e);
+                                                                               BYTE_ID,
+                                                                               new Object[]{value,"156",_MessageUtils.getLabel(facesContext, uiComponent)}), e);
                 }
             }
         }
@@ -87,7 +88,7 @@ public class ByteConverter
         }
         catch (Exception e)
         {
-            throw new ConverterException(e);
+            throw new ConverterException(_MessageUtils.getErrorMessage(facesContext, STRING_ID, new Object[]{value,_MessageUtils.getLabel(facesContext, uiComponent)}),e);
         }
 
     }

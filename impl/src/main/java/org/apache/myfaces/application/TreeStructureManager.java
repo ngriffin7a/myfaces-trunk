@@ -24,7 +24,6 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -56,37 +55,36 @@ public class TreeStructureManager
         //children
         if (component.getChildCount() > 0)
         {
-            List childList = component.getChildren();
-            List structChildList = new ArrayList();
-            for (int i = 0, len = childList.size(); i < len; i++)
+            List<TreeStructComponent> structChildList = new ArrayList<TreeStructComponent>();
+            for (UIComponent child : component.getChildren())
             {
-                UIComponent child = (UIComponent)childList.get(i);
                 if (!child.isTransient())
                 {
                     TreeStructComponent structChild = internalBuildTreeStructureToSave(child);
                     structChildList.add(structChild);
                 }
             }
-            TreeStructComponent[] childArray = (TreeStructComponent[])structChildList.toArray(new TreeStructComponent[structChildList.size()]);
+            
+            TreeStructComponent[] childArray = structChildList.toArray(new TreeStructComponent[structChildList.size()]);
             structComp.setChildren(childArray);
         }
 
         //facets
-        Map facetMap = component.getFacets();
+        Map<String, UIComponent> facetMap = component.getFacets();
         if (!facetMap.isEmpty())
         {
-            List structFacetList = new ArrayList();
-            for (Iterator it = facetMap.entrySet().iterator(); it.hasNext(); )
+            List<Object[]> structFacetList = new ArrayList<Object[]>();
+            for (Map.Entry<String, UIComponent> entry : facetMap.entrySet())
             {
-                Map.Entry entry = (Map.Entry)it.next();
-                UIComponent child = (UIComponent)entry.getValue();
+                UIComponent child = entry.getValue();
                 if (!child.isTransient())
                 {
-                    String facetName = (String)entry.getKey();
+                    String facetName = entry.getKey();
                     TreeStructComponent structChild = internalBuildTreeStructureToSave(child);
                     structFacetList.add(new Object[] {facetName, structChild});
                 }
             }
+            
             Object[] facetArray = structFacetList.toArray(new Object[structFacetList.size()]);
             structComp.setFacets(facetArray);
         }
@@ -101,10 +99,11 @@ public class TreeStructureManager
         {
             return (UIViewRoot)internalRestoreTreeStructure((TreeStructComponent)treeStructRoot);
         }
-        else
-        {
-            throw new IllegalArgumentException("TreeStructure of type " + treeStructRoot.getClass().getName() + " is not supported.");
-        }
+        
+        
+        throw new IllegalArgumentException("TreeStructure of type " + treeStructRoot.getClass().getName() + 
+                                           " is not supported.");
+        
     }
 
     private UIComponent internalRestoreTreeStructure(TreeStructComponent treeStructComp)
@@ -118,7 +117,7 @@ public class TreeStructureManager
         TreeStructComponent[] childArray = treeStructComp.getChildren();
         if (childArray != null)
         {
-            List childList = component.getChildren();
+            List<UIComponent> childList = component.getChildren();
             for (int i = 0, len = childArray.length; i < len; i++)
             {
                 UIComponent child = internalRestoreTreeStructure(childArray[i]);
@@ -130,7 +129,7 @@ public class TreeStructureManager
         Object[] facetArray = treeStructComp.getFacets();
         if (facetArray != null)
         {
-            Map facetMap = component.getFacets();
+            Map<String, UIComponent> facetMap = component.getFacets();
             for (int i = 0, len = facetArray.length; i < len; i++)
             {
                 Object[] tuple = (Object[])facetArray[i];

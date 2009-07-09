@@ -18,42 +18,46 @@
  */
 package org.apache.myfaces.taglib.core;
 
-import org.apache.myfaces.shared_impl.taglib.UIComponentTagBase;
+import org.apache.myfaces.shared_impl.taglib.UIComponentELTagBase;
 
 import javax.faces.component.UIComponent;
+import javax.el.ValueExpression;
 
 /**
  * DOCUMENT ME!
+ * 
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Bruno Aranda (JSR-252)
  * @version $Revision$ $Date$
  */
-public class ParamTag
-    extends UIComponentTagBase
+public class ParamTag extends UIComponentELTagBase
 {
+    @Override
     public String getComponentType()
     {
         return "javax.faces.Parameter";
     }
 
+    @Override
     public String getRendererType()
     {
         return null;
     }
 
-    // UIComponent attributes --> already implemented in UIComponentTagBase
+    // UIComponent attributes --> already implemented in UIComponentELTagBase
 
     // UIParameter attributes
-    // value already implemented in UIComponentTagBase
-    private String _name;
+    private ValueExpression _name;
 
+    @Override
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
-        
+
         setStringProperty(component, "name", _name);
     }
 
-    public void setName(String name)
+    public void setName(ValueExpression name)
     {
         _name = name;
     }

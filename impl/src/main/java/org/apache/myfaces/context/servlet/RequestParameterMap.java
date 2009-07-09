@@ -22,39 +22,46 @@ import java.util.Enumeration;
 
 import javax.servlet.ServletRequest;
 
+import org.apache.myfaces.util.AbstractAttributeMap;
+
 /**
  * ServletRequest parameters as Map.
  * 
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class RequestParameterMap extends AbstractAttributeMap
+public final class RequestParameterMap extends AbstractAttributeMap<String>
 {
     private final ServletRequest _servletRequest;
 
-    RequestParameterMap(ServletRequest servletRequest)
+    RequestParameterMap(final ServletRequest servletRequest)
     {
         _servletRequest = servletRequest;
     }
 
-    protected Object getAttribute(String key)
+    @Override
+    protected String getAttribute(final String key)
     {
         return _servletRequest.getParameter(key);
     }
 
-    protected void setAttribute(String key, Object value)
+    @Override
+    protected void setAttribute(final String key, final String value)
     {
         throw new UnsupportedOperationException(
             "Cannot set ServletRequest Parameter");
     }
 
-    protected void removeAttribute(String key)
+    @Override
+    protected void removeAttribute(final String key)
     {
         throw new UnsupportedOperationException(
             "Cannot remove ServletRequest Parameter");
     }
 
-    protected Enumeration getAttributeNames()
+    @Override
+    @SuppressWarnings("unchecked")
+    protected Enumeration<String> getAttributeNames()
     {
         return _servletRequest.getParameterNames();
     }

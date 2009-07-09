@@ -18,16 +18,18 @@
  */
 package javax.faces.model;
 
-import javax.servlet.jsp.jstl.sql.Result;
 import java.util.SortedMap;
 
+import javax.servlet.jsp.jstl.sql.Result;
+
+//import javax.servlet.jsp.
 /**
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
+ * 
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ResultDataModel extends DataModel
+public class ResultDataModel extends DataModel<SortedMap<String, Object>>
 {
     // FIELDS
     private int _rowIndex = -1;
@@ -41,11 +43,13 @@ public class ResultDataModel extends DataModel
 
     public ResultDataModel(Result result)
     {
-        if (result == null) throw new NullPointerException("result");
+        if (result == null)
+            throw new NullPointerException("result");
         setWrappedData(result);
     }
 
     // METHODS
+    @Override
     public int getRowCount()
     {
         if (getRows() == null)
@@ -55,7 +59,8 @@ public class ResultDataModel extends DataModel
         return getRows().length;
     }
 
-    public Object getRowData()
+    @Override
+    public SortedMap<String, Object> getRowData()
     {
         if (getRows() == null)
         {
@@ -68,25 +73,25 @@ public class ResultDataModel extends DataModel
         return getRows()[_rowIndex];
     }
 
+    @Override
     public int getRowIndex()
     {
         return _rowIndex;
     }
 
+    @Override
     public Object getWrappedData()
     {
         return _data;
     }
 
+    @Override
     public boolean isRowAvailable()
     {
-        if (getRows() == null)
-        {
-            return false;
-        }
-        return _rowIndex >= 0 && _rowIndex < getRows().length;
+        return getRows() != null && _rowIndex >= 0 && _rowIndex < getRows().length;
     }
 
+    @Override
     public void setRowIndex(int rowIndex)
     {
         if (rowIndex < -1)
@@ -97,7 +102,7 @@ public class ResultDataModel extends DataModel
         _rowIndex = rowIndex;
         if (getRows() != null && oldRowIndex != _rowIndex)
         {
-            Object data = isRowAvailable() ? getRowData() : null;
+            SortedMap<String, Object> data = isRowAvailable() ? getRowData() : null;
             DataModelEvent event = new DataModelEvent(this, _rowIndex, data);
             DataModelListener[] listeners = getDataModelListeners();
             for (int i = 0; i < listeners.length; i++)
@@ -107,14 +112,15 @@ public class ResultDataModel extends DataModel
         }
     }
 
-    private SortedMap[] getRows()
+    private SortedMap<String, Object>[] getRows()
     {
-        if(_data==null)
+        if (_data == null)
             return null;
 
         return _data.getRows();
     }
 
+    @Override
     public void setWrappedData(Object data)
     {
         if (data == null)

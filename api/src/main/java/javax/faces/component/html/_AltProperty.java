@@ -18,12 +18,14 @@
  */
 package javax.faces.component.html;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
+
 interface _AltProperty
 {   
     /**
      * HTML: Specifies alternative text that can be used by a browser that can't show this element.
      * 
-     * @JSFProperty
      */
+    @JSFProperty
     public abstract String getAlt();
 }

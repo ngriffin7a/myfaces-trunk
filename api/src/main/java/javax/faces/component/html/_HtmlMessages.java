@@ -20,48 +20,42 @@ package javax.faces.component.html;
 
 import javax.faces.component.UIMessages;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+
 /**
  * Renders all or some FacesMessages depending on the "for" and
  * "globalOnly" attributes.
- * <p>
- * The behaviour of this component is:
+ *
  * <ul>
- * <li>If globalOnly = true, only global messages, that have no associated
- * clientId, will be displayed.
+ * <li>If globalOnly = true, only global messages, that have no
+ * associated clientId, will be displayed.</li>
  * <li>else if there is a "for" attribute, only messages that are
  * assigned to the component referenced by the "for" attribute
- * are displayed.
- * <li>else all messages are displayed.
+ * are displayed.</li>
+ * <li>else all messages are displayed.</li>
  * </ul>
- * Unless otherwise specified, all attributes accept static values
- * or EL expressions.
- * <p>
- * See Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
- * @JSFComponent
- *   name = "h:messages"
- *   class = "javax.faces.component.html.HtmlMessages"
- *   tagClass = "org.apache.myfaces.taglib.html.HtmlMessagesTag"
- *   template = "true"
- *   desc = "h:messages"
- *   
- * @author Thomas Spiegl (latest modification by $Author$)
- * @version $Revision$ $Date$
  */
+@JSFComponent
+(name = "h:messages",
+clazz = "javax.faces.component.html.HtmlMessages",template=true,
+tagClass = "org.apache.myfaces.taglib.html.HtmlMessagesTag",
+defaultRendererType = "javax.faces.Messages"
+)
 abstract class _HtmlMessages extends UIMessages implements _StyleProperties, 
-    _MessageProperties
+_MessageProperties, _UniversalProperties
 {
-    //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
-    public static final String COMPONENT_TYPE = "javax.faces.HtmlMessages";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Messages";
+  static public final String COMPONENT_FAMILY =
+    "javax.faces.Messages";
+  static public final String COMPONENT_TYPE =
+    "javax.faces.HtmlMessages";
 
-    /**
-     * The layout: "table" or "list". Default: list
-     * 
-     * @JSFProperty
-     *   defaultValue = "list"
-     */
-    public abstract String getLayout();
-
+  /**
+   * The layout: "table" or "list". Default: list
+   * 
+   * @JSFProperty
+   *   defaultValue = "list"
+   */
+  public abstract String getLayout();
+  
 }

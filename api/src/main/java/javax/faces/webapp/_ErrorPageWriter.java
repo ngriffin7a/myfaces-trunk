@@ -18,48 +18,33 @@
  */
 package javax.faces.webapp;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.faces.context.FacesContext;
+import javax.faces.context.ExternalContext;
+import javax.faces.component.UIComponent;
+import javax.el.Expression;
+import javax.el.ValueExpression;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import java.util.regex.Matcher;
+import java.util.*;
 import java.util.regex.Pattern;
-
-import javax.faces.component.UIComponent;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.faces.el.MethodBinding;
-import javax.faces.el.ValueBinding;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.regex.Matcher;
 
 /**
  * @author Jacob Hookom (ICLA with ASF filed)
  */
-class _ErrorPageWriter {
+final class _ErrorPageWriter
+{
 
     private static final Log log = LogFactory.getLog(_ErrorPageWriter.class);
-    private static final Class[] NO_ARGS = new Class[0];
 
     private final static String TS = "&lt;";
 
@@ -70,15 +55,16 @@ class _ErrorPageWriter {
     private static String[] ERROR_PARTS;
 
     private static final String DEBUG_TEMPLATE = "META-INF/rsc/myfaces-dev-debug.xml";
-    
-    private static final String DEBUG_TEMPLATE_RESOURCE = "org.apache.myfaces.DEBUG_TEMPLATE_RESOURCE";    
+
+    private static final String DEBUG_TEMPLATE_RESOURCE = "org.apache.myfaces.DEBUG_TEMPLATE_RESOURCE";
 
     private static String[] DEBUG_PARTS;
 
-    public _ErrorPageWriter() {
+    public _ErrorPageWriter()
+    {
         super();
     }
-    
+
     private static String getErrorTemplate(FacesContext context)
     {
         String errorTemplate = context.getExternalContext().getInitParameter(ERROR_TEMPLATE_RESOURCE);
@@ -88,108 +74,139 @@ class _ErrorPageWriter {
         }
         return ERROR_TEMPLATE;
     }
-    
+
     private static String getDebugTemplate(FacesContext context)
     {
         String debugTemplate = context.getExternalContext().getInitParameter(DEBUG_TEMPLATE_RESOURCE);
         if (debugTemplate != null)
         {
             return debugTemplate;
-        }        
+        }
         return DEBUG_TEMPLATE;
     }
-    
-    private static void init(FacesContext context) throws IOException {
-        if (ERROR_PARTS == null) {
+
+    private static void init(FacesContext context) throws IOException
+    {
+        if (ERROR_PARTS == null)
+        {
             ERROR_PARTS = splitTemplate(getErrorTemplate(context));
         }
 
-        if (DEBUG_PARTS == null) {
+        if (DEBUG_PARTS == null)
+        {
             DEBUG_PARTS = splitTemplate(getDebugTemplate(context));
         }
     }
 
-    private static String[] splitTemplate(String rsc) throws IOException {
+    private static String[] splitTemplate(String rsc) throws IOException
+    {
         InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(rsc);
-        if (is == null) {
+        if (is == null)
+        {
             throw new FileNotFoundException(rsc);
         }
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte[] buff = new byte[512];
         int read;
-        while ((read = is.read(buff)) != -1) {
+        while ((read = is.read(buff)) != -1)
+        {
             baos.write(buff, 0, read);
         }
         String str = baos.toString();
         return str.split("@@");
     }
 
-    private static ArrayList getErrorId(Throwable e){
+    private static List<String> getErrorId(Throwable e)
+    {
         String message = e.getMessage();
 
-        if(message==null)
+        if (message == null)
             return null;
 
-        ArrayList list = new ArrayList();
+        List<String> list = new ArrayList<String>();
+        // TODO: Use a constant to reduce the compilation overhaul
         Pattern pattern = Pattern.compile(".*?\\Q,Id:\\E\\s*(\\S+)\\s*\\].*?");
         Matcher matcher = pattern.matcher(message);
 
-        while (matcher.find()){
+        while (matcher.find())
+        {
             list.add(matcher.group(1));
         }
-        if (list.size()>0) return list;
+        if (list.size() > 0)
+            return list;
         return null;
     }
 
-    public static void writeCause(Writer writer, Throwable ex) throws IOException {
+    public static void writeCause(Writer writer, Throwable ex) throws IOException
+    {
         String msg = ex.getMessage();
-        for(;;) {
-            Throwable t = getCause(ex);
-            if (t == null)
-                break;
-            
-            ex = t;
-            if (ex.getMessage()!=null) msg = ex.getMessage();
+        while (ex.getCause() != null)
+        {
+            ex = ex.getCause();
+            if (ex.getMessage() != null)
+                msg = ex.getMessage();
         }
 
-        if (msg != null) {
-            msg =ex.getClass().getName() + " - " + msg;
+        if (msg != null)
+        {
+            msg = ex.getClass().getName() + " - " + msg;
             writer.write(msg.replaceAll("<", TS));
-        } else {
+        }
+        else
+        {
             writer.write(ex.getClass().getName());
         }
     }
 
-    public static void debugHtml(Writer writer, FacesContext faces, Throwable e) throws IOException {
+    public static void debugHtml(Writer writer, FacesContext faces, Throwable e) throws IOException
+    {
         init(faces);
         Date now = new Date();
-        for (int i = 0; i < ERROR_PARTS.length; i++) {
-            if ("message".equals(ERROR_PARTS[i])) {
+        for (int i = 0; i < ERROR_PARTS.length; i++)
+        {
+            if ("message".equals(ERROR_PARTS[i]))
+            {
                 String msg = e.getMessage();
-                if (msg != null) {
+                if (msg != null)
+                {
                     writer.write(msg.replaceAll("<", TS));
-                } else {
+                }
+                else
+                {
                     writer.write(e.getClass().getName());
                 }
-            } else if ("trace".equals(ERROR_PARTS[i])) {
+            }
+            else if ("trace".equals(ERROR_PARTS[i]))
+            {
                 writeException(writer, e);
-            } else if ("now".equals(ERROR_PARTS[i])) {
+            }
+            else if ("now".equals(ERROR_PARTS[i]))
+            {
                 writer.write(DateFormat.getDateTimeInstance().format(now));
-            } else if ("tree".equals(ERROR_PARTS[i])) {
-                if (faces.getViewRoot() != null) {
+            }
+            else if ("tree".equals(ERROR_PARTS[i]))
+            {
+                if (faces.getViewRoot() != null)
+                {
                     writeComponent(writer, faces.getViewRoot(), getErrorId(e));
                 }
-            } else if ("vars".equals(ERROR_PARTS[i])) {
+            }
+            else if ("vars".equals(ERROR_PARTS[i]))
+            {
                 writeVariables(writer, faces);
-            } else if ("cause".equals(ERROR_PARTS[i])) {
+            }
+            else if ("cause".equals(ERROR_PARTS[i]))
+            {
                 writeCause(writer, e);
-            } else {
+            }
+            else
+            {
                 writer.write(ERROR_PARTS[i]);
             }
         }
     }
-    
-    public static void debugHtml(Writer writer, FacesContext faces, List exceptionList) throws IOException
+
+    public static void debugHtml(Writer writer, FacesContext faces, List<Exception> exceptionList) throws IOException
     {
         init(faces);
         Date now = new Date();
@@ -199,17 +216,17 @@ class _ErrorPageWriter {
             {
                 for (int j = 0; j < exceptionList.size(); j++)
                 {
-                    Exception e = (Exception) exceptionList.get(j);
+                    Exception e = exceptionList.get(j);
                     String msg = e.getMessage();
                     if (msg != null)
                     {
                         writer.write(msg.replaceAll("<", TS));
                     }
-                    else 
+                    else
                     {
                         writer.write(e.getClass().getName());
                     }
-                    if (!(j+1==exceptionList.size()))
+                    if (!(j + 1 == exceptionList.size()))
                     {
                         writer.write("<br>");
                     }
@@ -219,7 +236,7 @@ class _ErrorPageWriter {
             {
                 for (int j = 0; j < exceptionList.size(); j++)
                 {
-                    Exception e = (Exception) exceptionList.get(j);
+                    Exception e = exceptionList.get(j);
                     writeException(writer, e);
                 }
             }
@@ -231,10 +248,10 @@ class _ErrorPageWriter {
             {
                 if (faces.getViewRoot() != null)
                 {
-                    List highlightId = null;
+                    List<String> highlightId = null;
                     for (int j = 0; j < exceptionList.size(); j++)
                     {
-                        Exception e = (Exception) exceptionList.get(j);
+                        Exception e = exceptionList.get(j);
                         if (highlightId == null)
                         {
                             highlightId = getErrorId(e);
@@ -255,9 +272,9 @@ class _ErrorPageWriter {
             {
                 for (int j = 0; j < exceptionList.size(); j++)
                 {
-                    Exception e = (Exception) exceptionList.get(j);
+                    Exception e = exceptionList.get(j);
                     writeCause(writer, e);
-                    if (!(j+1==exceptionList.size()))
+                    if (!(j + 1 == exceptionList.size()))
                     {
                         writer.write("<br>");
                     }
@@ -268,9 +285,10 @@ class _ErrorPageWriter {
                 writer.write(ERROR_PARTS[i]);
             }
         }
-    }    
+    }
 
-    private static void writeException(Writer writer, Throwable e) throws IOException {
+    private static void writeException(Writer writer, Throwable e) throws IOException
+    {
         StringWriter str = new StringWriter(256);
         PrintWriter pstr = new PrintWriter(str);
         e.printStackTrace(pstr);
@@ -278,47 +296,62 @@ class _ErrorPageWriter {
         writer.write(str.toString().replaceAll("<", TS));
     }
 
-    public static void debugHtml(Writer writer, FacesContext faces) throws IOException {
+    public static void debugHtml(Writer writer, FacesContext faces) throws IOException
+    {
         init(faces);
         Date now = new Date();
-        for (int i = 0; i < DEBUG_PARTS.length; i++) {
-            if ("message".equals(DEBUG_PARTS[i])) {
+        for (int i = 0; i < DEBUG_PARTS.length; i++)
+        {
+            if ("message".equals(DEBUG_PARTS[i]))
+            {
                 writer.write(faces.getViewRoot().getViewId());
-            } else if ("now".equals(DEBUG_PARTS[i])) {
+            }
+            else if ("now".equals(DEBUG_PARTS[i]))
+            {
                 writer.write(DateFormat.getDateTimeInstance().format(now));
-            } else if ("tree".equals(DEBUG_PARTS[i])) {
+            }
+            else if ("tree".equals(DEBUG_PARTS[i]))
+            {
                 writeComponent(writer, faces.getViewRoot(), null);
-            } else if ("vars".equals(DEBUG_PARTS[i])) {
+            }
+            else if ("vars".equals(DEBUG_PARTS[i]))
+            {
                 writeVariables(writer, faces);
-            } else {
+            }
+            else
+            {
                 writer.write(DEBUG_PARTS[i]);
             }
         }
     }
 
-    private static void writeVariables(Writer writer, FacesContext faces) throws IOException {
+    private static void writeVariables(Writer writer, FacesContext faces) throws IOException
+    {
         ExternalContext ctx = faces.getExternalContext();
         writeVariables(writer, ctx.getRequestParameterMap(), "Request Parameters");
         writeVariables(writer, ctx.getRequestMap(), "Request Attributes");
-        if (ctx.getSession(false) != null) {
+        if (ctx.getSession(false) != null)
+        {
             writeVariables(writer, ctx.getSessionMap(), "Session Attributes");
         }
         writeVariables(writer, ctx.getApplicationMap(), "Application Attributes");
     }
 
-    private static void writeVariables(Writer writer, Map vars, String caption) throws IOException {
+    private static void writeVariables(Writer writer, Map<String, ? extends Object> vars, String caption) throws IOException
+    {
         writer.write("<table><caption>");
         writer.write(caption);
-        writer.write("</caption><thead><tr><th style=\"width: 10%; \">Name</th><th style=\"width: 90%; \">Value</th></tr></thead><tbody>");
+        writer
+              .write("</caption><thead><tr><th style=\"width: 10%; \">Name</th><th style=\"width: 90%; \">Value</th></tr></thead><tbody>");
         boolean written = false;
-        if (!vars.isEmpty()) {
-            SortedMap map = new TreeMap(vars);
-            Map.Entry entry = null;
-            String key = null;
-            for (Iterator itr = map.entrySet().iterator(); itr.hasNext(); ) {
-                entry = (Map.Entry) itr.next();
-                key = entry.getKey().toString();
-                if (key.indexOf('.') == -1) {
+        if (!vars.isEmpty())
+        {
+            SortedMap<String, Object> sortedMap = new TreeMap<String, Object>(vars);
+            for (Map.Entry<String, Object> entry : sortedMap.entrySet())
+            {
+                String key = entry.getKey().toString();
+                if (key.indexOf('.') == -1)
+                {
                     writer.write("<tr><td>");
                     writer.write(key.replaceAll("<", TS));
                     writer.write("</td><td>");
@@ -328,21 +361,27 @@ class _ErrorPageWriter {
                 }
             }
         }
-        if (!written) {
+        if (!written)
+        {
             writer.write("<tr><td colspan=\"2\"><em>None</em></td></tr>");
         }
         writer.write("</tbody></table>");
     }
 
-    private static void writeComponent(Writer writer, UIComponent c, List highlightId) throws IOException {
+    private static void writeComponent(Writer writer, UIComponent c, List<String> highlightId) throws IOException
+    {
         writer.write("<dl><dt");
-        if (isText(c)) {
+        if (isText(c))
+        {
             writer.write(" class=\"uicText\"");
         }
-        if (highlightId != null){
-            if ((highlightId.size() > 0) && (highlightId.get(0).equals(c.getId()))){
+        if (highlightId != null)
+        {
+            if ((highlightId.size() > 0) && (highlightId.get(0).equals(c.getId())))
+            {
                 highlightId.remove(0);
-                if (highlightId.size()==0){
+                if (highlightId.size() == 0)
+                {
                     writer.write(" class=\"highlightComponent\"");
                 }
             }
@@ -353,23 +392,26 @@ class _ErrorPageWriter {
 
         writeStart(writer, c, hasChildren);
         writer.write("</dt>");
-        if (hasChildren) {
-            if (c.getFacets().size() > 0) {
-                Map.Entry entry;
-                for (Iterator itr = c.getFacets().entrySet().iterator(); itr.hasNext(); ) {
-                    entry = (Map.Entry) itr.next();
+        if (hasChildren)
+        {
+            if (c.getFacets().size() > 0)
+            {
+                for (Map.Entry<String, UIComponent> entry : c.getFacets().entrySet())
+                {
                     writer.write("<dd class=\"uicFacet\">");
                     writer.write("<span>");
-                    writer.write((String) entry.getKey());
+                    writer.write(entry.getKey());
                     writer.write("</span>");
-                    writeComponent(writer, (UIComponent) entry.getValue(), highlightId);
+                    writeComponent(writer, entry.getValue(), highlightId);
                     writer.write("</dd>");
                 }
             }
-            if (c.getChildCount() > 0) {
-                for (Iterator itr = c.getChildren().iterator(); itr.hasNext(); ) {
+            if (c.getChildCount() > 0)
+            {
+                for (UIComponent child : c.getChildren())
+                {
                     writer.write("<dd>");
-                    writeComponent(writer, (UIComponent) itr.next(), highlightId);
+                    writeComponent(writer, child, highlightId);
                     writer.write("</dd>");
                 }
             }
@@ -380,8 +422,10 @@ class _ErrorPageWriter {
         writer.write("</dl>");
     }
 
-    private static void writeEnd(Writer writer, UIComponent c) throws IOException {
-        if (!isText(c)) {
+    private static void writeEnd(Writer writer, UIComponent c) throws IOException
+    {
+        if (!isText(c))
+        {
             writer.write(TS);
             writer.write('/');
             writer.write(getName(c));
@@ -391,75 +435,92 @@ class _ErrorPageWriter {
 
     private final static String[] IGNORE = new String[] { "parent", "rendererType" };
 
-    private static void writeAttributes(Writer writer, UIComponent c) {
-        try {
+    private static void writeAttributes(Writer writer, UIComponent c)
+    {
+        try
+        {
             BeanInfo info = Introspector.getBeanInfo(c.getClass());
             PropertyDescriptor[] pd = info.getPropertyDescriptors();
             Method m = null;
             Object v = null;
             String str = null;
-            for (int i = 0; i < pd.length; i++) {
-                if (pd[i].getWriteMethod() != null && Arrays.binarySearch(IGNORE, pd[i].getName()) < 0) {
+            for (int i = 0; i < pd.length; i++)
+            {
+                if (pd[i].getWriteMethod() != null && Arrays.binarySearch(IGNORE, pd[i].getName()) < 0)
+                {
                     m = pd[i].getReadMethod();
-                    try {
-                        v = m.invoke(c, null);
-                        if (v != null) {
-                            if (v instanceof Collection || v instanceof Map || v instanceof Iterator) {
+                    try
+                    {
+                        v = m.invoke(c, (Object[])null);
+                        if (v != null)
+                        {
+                            if (v instanceof Collection || v instanceof Map || v instanceof Iterator)
+                            {
                                 continue;
                             }
                             writer.write(" ");
                             writer.write(pd[i].getName());
                             writer.write("=\"");
-                            if (v instanceof ValueBinding) {
-                                str = ((ValueBinding) v).getExpressionString();
-                            } else if (v instanceof MethodBinding) {
-                                str = ((MethodBinding) v).getExpressionString();
-                            } else {
-                                ValueBinding vb = c.getValueBinding(pd[i].getName());
-                                str = vb!=null?(vb.getExpressionString()+"="+v.toString()):v.toString();
+                            if (v instanceof Expression)
+                            {
+                                str = ((Expression)v).getExpressionString();
                             }
                             writer.write(str.replaceAll("<", TS));
                             writer.write("\"");
                         }
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e)
+                    {
                         // do nothing
                     }
                 }
             }
 
-            ValueBinding binding = c.getValueBinding("binding");
-            if (binding != null) {
+            ValueExpression binding = c.getValueExpression("binding");
+            if (binding != null)
+            {
                 writer.write(" binding=\"");
                 writer.write(binding.getExpressionString().replaceAll("<", TS));
                 writer.write("\"");
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             // do nothing
         }
     }
 
-    private static void writeStart(Writer writer, UIComponent c, boolean children) throws IOException {
-        if (isText(c)) {
+    private static void writeStart(Writer writer, UIComponent c, boolean children) throws IOException
+    {
+        if (isText(c))
+        {
             String str = c.toString().trim();
             writer.write(str.replaceAll("<", TS));
-        } else {
+        }
+        else
+        {
             writer.write(TS);
             writer.write(getName(c));
             writeAttributes(writer, c);
-            if (children) {
+            if (children)
+            {
                 writer.write('>');
-            } else {
+            }
+            else
+            {
                 writer.write("/>");
             }
         }
     }
 
-    private static String getName(UIComponent c) {
+    private static String getName(UIComponent c)
+    {
         String nm = c.getClass().getName();
         return nm.substring(nm.lastIndexOf('.') + 1);
     }
 
-    private static boolean isText(UIComponent c) {
+    private static boolean isText(UIComponent c)
+    {
         return (c.getClass().getName().startsWith("com.sun.facelets.compiler"));
     }
 
@@ -467,15 +528,18 @@ class _ErrorPageWriter {
     {
         handleThrowable(facesContext, ex);
     }
-    
-    public static void handleThrowable(FacesContext facesContext, Throwable ex) throws ServletException, IOException {
+
+    public static void handleThrowable(FacesContext facesContext, Throwable ex) throws ServletException, IOException
+    {
 
         prepareExceptionStack(ex);
 
         Object response = facesContext.getExternalContext().getResponse();
-        if(response instanceof HttpServletResponse) {
-            HttpServletResponse httpResp = (HttpServletResponse) response;
-            if (!httpResp.isCommitted()) {
+        if (response instanceof HttpServletResponse)
+        {
+            HttpServletResponse httpResp = (HttpServletResponse)response;
+            if (!httpResp.isCommitted())
+            {
                 httpResp.reset();
                 httpResp.setContentType("text/html; charset=UTF-8");
                 Writer writer = httpResp.getWriter();
@@ -484,26 +548,29 @@ class _ErrorPageWriter {
 
                 log.error("An exception occurred", ex);
             }
-            else {
+            else
+            {
                 throwException(ex);
             }
         }
-        else {
+        else
+        {
             throwException(ex);
         }
     }
-    
-    public static void handleExceptionList(FacesContext facesContext, List exceptionList) throws ServletException, IOException
+
+    public static void handleExceptionList(FacesContext facesContext, List<Exception> exceptionList) throws ServletException,
+        IOException
     {
-        for (int i = 0; i < exceptionList.size(); i++)
+        for (Exception exception : exceptionList)
         {
-            prepareExceptionStack( (Exception) exceptionList.get(i));
+            prepareExceptionStack(exception);
         }
 
         Object response = facesContext.getExternalContext().getResponse();
-        if(response instanceof HttpServletResponse)
+        if (response instanceof HttpServletResponse)
         {
-            HttpServletResponse httpResp = (HttpServletResponse) response;
+            HttpServletResponse httpResp = (HttpServletResponse)response;
             if (!httpResp.isCommitted())
             {
                 httpResp.reset();
@@ -512,60 +579,53 @@ class _ErrorPageWriter {
 
                 debugHtml(writer, facesContext, exceptionList);
 
-                for (int i = 0; i < exceptionList.size(); i++)
+                for (Exception exception : exceptionList)
                 {
-                    log.error("An exception occurred", (Exception) exceptionList.get(i));
+                    log.error("An exception occurred", exception);
                 }
             }
             else
             {
-                throwException((Exception)exceptionList.get(0));
+                throwException(exceptionList.get(0));
             }
         }
         else
         {
-            throwException((Exception)exceptionList.get(0));
+            throwException(exceptionList.get(0));
         }
     }
 
-    private static void prepareExceptionStack(Throwable ex) {
+    private static void prepareExceptionStack(Throwable ex)
+    {
 
-        if(ex==null)
+        if (ex == null)
             return;
 
-        //check for getRootCause and getCause-methods
-        if(!initCausePerReflection(ex,"getRootCause")) {
-           initCausePerReflection(ex,"getCause");
+        // check for getRootCause and getCause-methods
+        if (!initCausePerReflection(ex, "getRootCause"))
+        {
+            initCausePerReflection(ex, "getCause");
         }
 
-        prepareExceptionStack(getCause(ex));
+        prepareExceptionStack(ex.getCause());
     }
 
-    /**
-     * Get the cause of an exception, if available. Reflection must be used because
-     * JSF11 supports java1.3 but Throwable.getCause was added in java1.4.
-     */
-    private static Throwable getCause(Throwable ex) {
-        try {
-            Method causeGetter = ex.getClass().getMethod("getCause", NO_ARGS);
-            Throwable cause = (Throwable) causeGetter.invoke(ex, NO_ARGS);
-            return cause;
-        } catch (Exception e1) {
-            return null;
+    private static boolean initCausePerReflection(Throwable ex, String methodName)
+    {
+        try
+        {
+            Method causeGetter = ex.getClass().getMethod(methodName, (Class[])null);
+            Throwable rootCause = (Throwable)causeGetter.invoke(ex, (Object[])null);
+            return initCauseIfAvailable(ex, rootCause);
         }
-    }
-    
-    private static boolean initCausePerReflection(Throwable ex, String methodName) {
-        try {
-            Method causeGetter = ex.getClass().getMethod(methodName, NO_ARGS);
-            Throwable rootCause = (Throwable) causeGetter.invoke(ex, NO_ARGS);
-            return initCauseIfAvailable(ex,rootCause);
-        } catch (Exception e1) {
+        catch (Exception e1)
+        {
             return false;
         }
     }
 
-    static void throwException(Throwable e) throws IOException, ServletException {
+    static void throwException(Throwable e) throws IOException, ServletException
+    {
 
         prepareExceptionStack(e);
 
@@ -581,11 +641,13 @@ class _ErrorPageWriter {
         {
             ServletException ex;
 
-            if (e.getMessage() != null) {
-                ex=new ServletException(e.getMessage(), e);
+            if (e.getMessage() != null)
+            {
+                ex = new ServletException(e.getMessage(), e);
             }
-            else {
-                ex=new ServletException(e);
+            else
+            {
+                ex = new ServletException(e);
             }
 
             initCauseIfAvailable(ex, e);
@@ -594,19 +656,21 @@ class _ErrorPageWriter {
         }
     }
 
-    private static boolean initCauseIfAvailable(Throwable th, Throwable cause) {
+    private static boolean initCauseIfAvailable(Throwable th, Throwable cause)
+    {
 
-        if(cause == null)
+        if (cause == null)
             return false;
 
-        try {
-            Method m = Throwable.class.getMethod("initCause",new Class[]{Throwable.class});
-            m.invoke(th,new Object[]{cause});
+        try
+        {
+            Method m = Throwable.class.getMethod("initCause", new Class[] { Throwable.class });
+            m.invoke(th, new Object[] { cause });
             return true;
         }
-        catch(Exception e) {
+        catch (Exception e)
+        {
             return false;
         }
     }
 }
-

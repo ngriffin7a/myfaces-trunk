@@ -18,39 +18,42 @@
  */
 package javax.faces.application;
 
+import java.io.IOException;
+
+import javax.faces.component.UIViewRoot;
+import javax.faces.context.FacesContext;
+
 /**
- * Responsible for storing sufficient information about a component tree so that an identical tree
- * can later be recreated.
+ * Responsible for storing sufficient information about a component tree so that an identical tree can later be
+ * recreated.
  * <p>
- * It is up to the concrete implementation to decide whether to use information from the "view template"
- * that was used to first create the view, or whether to store sufficient information to enable the
- * view to be restored without any reference to the original template. However as JSF components have
- * mutable fields that can be set by code, and affected by user input, at least some state does need
- * to be kept in order to recreate a previously-existing component tree.
+ * It is up to the concrete implementation to decide whether to use information from the "view template" that was used
+ * to first create the view, or whether to store sufficient information to enable the view to be restored without any
+ * reference to the original template. However as JSF components have mutable fields that can be set by code, and
+ * affected by user input, at least some state does need to be kept in order to recreate a previously-existing component
+ * tree.
  * <p>
  * There are two different options defined by the specification: "client" and "server" state.
  * <p>
- * When "client" state is configured, all state information required to create the tree is embedded within
- * the data rendered to the client. Note that because data received from a remote client must always be
- * treated as "tainted", care must be taken when using such data. Some StateManager implementations may
- * use encryption to ensure that clients cannot modify the data, and that the data received on postback
- * is therefore trustworthy.
+ * When "client" state is configured, all state information required to create the tree is embedded within the data
+ * rendered to the client. Note that because data received from a remote client must always be treated as "tainted",
+ * care must be taken when using such data. Some StateManager implementations may use encryption to ensure that clients
+ * cannot modify the data, and that the data received on postback is therefore trustworthy.
  * <p>
- * When "server" state is configured, the data is saved somewhere "on the back end", and (at most) a
- * token is embedded in the data rendered to the user.
+ * When "server" state is configured, the data is saved somewhere "on the back end", and (at most) a token is embedded
+ * in the data rendered to the user.
  * <p>
  * This class is usually invoked by a concrete implementation of ViewHandler.
  * <p>
- * Note that class ViewHandler isolates JSF components from the details of the request format. This class
- * isolates JSF components from the details of the response format. Because request and response are usually
- * tightly coupled, the StateManager and ViewHandler implementations are also usually fairly tightly coupled
- * (ie the ViewHandler/StateManager implementations come as pairs).
+ * Note that class ViewHandler isolates JSF components from the details of the request format. This class isolates JSF
+ * components from the details of the response format. Because request and response are usually tightly coupled, the
+ * StateManager and ViewHandler implementations are also usually fairly tightly coupled (ie the ViewHandler/StateManager
+ * implementations come as pairs).
  * <p>
- * See the javadoc for this class in the
- * <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- * for more details.
- *
+ * See also the <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
+ * 
  * @author Manfred Geiler (latest modification by $Author$)
+ * @author Stan Silvert
  * @version $Revision$ $Date$
  */
 public abstract class StateManager
@@ -58,62 +61,173 @@ public abstract class StateManager
     public static final String STATE_SAVING_METHOD_PARAM_NAME = "javax.faces.STATE_SAVING_METHOD";
     public static final String STATE_SAVING_METHOD_CLIENT = "client";
     public static final String STATE_SAVING_METHOD_SERVER = "server";
+    public static final String FULL_STATE_SAVING_VIEW_IDS_PARAM_NAME = "javax.faces.FULL_STATE_SAVING_VIEW_IDS";
+    public static final String PARTIAL_STATE_SAVING_PARAM_NAME = "javax.faces.PARTIAL_STATE_SAVING";
     private Boolean _savingStateInClient = null;
 
     /**
-     * Invokes getTreeStructureToSave and getComponentStateToSave, then return an object that wraps the two
-     * resulting objects. This object can then be passed to method writeState.
-     */
-    public abstract StateManager.SerializedView saveSerializedView(javax.faces.context.FacesContext context);
-
-    /**
-     * Return data that is sufficient to recreate the component tree that is the viewroot of the specified
-     * context, but without restoring the state in the components.
+     * Invokes getTreeStructureToSave and getComponentStateToSave, then return an object that wraps the two resulting
+     * objects. This object can then be passed to method writeState.
      * <p>
-     * Using this data, a tree of components which has the same "shape" as the original component
-     * tree can be recreated. However the component instances themselves will have only their default
-     * values, ie their member fields will not have been set to the original values.
+     * Deprecated; use saveView instead.
+     * 
+     * @deprecated
      */
-    protected abstract Object getTreeStructureToSave(javax.faces.context.FacesContext context);
+    @Deprecated
+    public StateManager.SerializedView saveSerializedView(FacesContext context)
+    {
+        return null;
+    }
 
     /**
-     * Return data that can be applied to a component tree created using the "getTreeStructureToSave"
-     * method.
+     * Returns an object that is sufficient to recreate the component tree that is the viewroot of the specified
+     * context.
+     * <p>
+     * The return value is suitable for passing to method writeState.
+     * 
+     * @since 1.2
      */
-    protected abstract Object getComponentStateToSave(javax.faces.context.FacesContext context);
+    public Object saveView(FacesContext context)
+    {
+        StateManager.SerializedView serializedView = saveSerializedView(context);
+        if (serializedView == null)
+            return null;
+
+        Object[] structureAndState = new Object[2];
+        structureAndState[0] = serializedView.getStructure();
+        structureAndState[1] = serializedView.getState();
+
+        return structureAndState;
+    }
+
+    /**
+     * Return data that is sufficient to recreate the component tree that is the viewroot of the specified context, but
+     * without restoring the state in the components.
+     * <p>
+     * Using this data, a tree of components which has the same "shape" as the original component tree can be recreated.
+     * However the component instances themselves will have only their default values, ie their member fields will not
+     * have been set to the original values.
+     * <p>
+     * Deprecated; use saveView instead.
+     * 
+     * @deprecated
+     */
+    @Deprecated
+    protected Object getTreeStructureToSave(FacesContext context)
+    {
+        return null;
+    }
+
+    /**
+     * Return data that can be applied to a component tree created using the "getTreeStructureToSave" method.
+     * <p>
+     * Deprecated; use saveView instead.
+     * 
+     * @deprecated
+     */
+    @Deprecated
+    protected Object getComponentStateToSave(FacesContext context)
+    {
+        return null;
+    }
 
     /**
      * Associate the provided state object with the current response being generated.
      * <p>
-     * When client-side state is enabled, it is expected that method writes the data contained in the
-     * state parameter to the response somehow.
+     * When client-side state is enabled, it is expected that method writes the data contained in the state parameter to
+     * the response somehow.
      * <p>
      * When server-side state is enabled, at most a "token" is expected to be written.
+     * <p>
+     * Deprecated; use writeState(FacesContext, Object) instead. This method was abstract in JSF1.1, but is now an empty
+     * non-abstract method so that old classes that implement this method continue to work, while new classes can just
+     * override the new writeState method rather than this one.
+     * 
+     * @throws IOException
+     *             never
+     * 
+     * @deprecated
      */
-    public abstract void writeState(javax.faces.context.FacesContext context,
-                                    StateManager.SerializedView state)
-            throws java.io.IOException;
-
-    public abstract javax.faces.component.UIViewRoot restoreView(javax.faces.context.FacesContext context,
-                                                                 String viewId,
-                                                                 String renderKitId);
-
-    protected abstract javax.faces.component.UIViewRoot restoreTreeStructure(javax.faces.context.FacesContext context,
-                                                                             String viewId,
-                                                                             String renderKitId);
-
-    protected abstract void restoreComponentState(javax.faces.context.FacesContext context,
-                                                  javax.faces.component.UIViewRoot viewRoot,
-                                                  String renderKitId);
-
-    public boolean isSavingStateInClient(javax.faces.context.FacesContext context)
+    @Deprecated
+    public void writeState(FacesContext context, StateManager.SerializedView state)
+        throws IOException
     {
-        if(context == null) throw new NullPointerException("context");
-        if (_savingStateInClient != null) return _savingStateInClient.booleanValue();
+        // default impl does nothing as per JSF 1.2 javadoc
+    }
+
+    /**
+     * Associate the provided state object with the current response being generated.
+     * <p>
+     * When client-side state is enabled, it is expected that method writes the data contained in the state parameter to
+     * the response somehow.
+     * <p>
+     * When server-side state is enabled, at most a "token" is expected to be written.
+     * <p>
+     * This method should be overridden by subclasses. It is not abstract because a default implementation is provided
+     * that forwards to the old writeState method; this allows subclasses of StateManager written using the JSF1.1 API
+     * to continue to work.
+     * <p>
+     * 
+     * @since 1.2
+     */
+    public void writeState(FacesContext context, Object state) throws IOException
+    {
+        if (!(state instanceof Object[]))
+            return;
+        Object[] structureAndState = (Object[]) state;
+        if (structureAndState.length < 2)
+            return;
+
+        writeState(context, new StateManager.SerializedView(structureAndState[0], structureAndState[1]));
+    }
+    
+    /**
+     * Convenience method to return the view state as a String with no RenderKit specific markup. This default 
+     * implementation of this method will call {@link #saveView(javax.faces.context.FacesContext)} and passing the 
+     * result to and returning the resulting value from 
+     * ResponseStateManager.getViewState(javax.faces.context.FacesContext, Object). 
+     * 
+     * @param context {@link FacesContext} for the current request
+     * 
+     * @return the view state as a String with no RenderKit specific markup.
+     * 
+     * @since 2.0
+     */
+    public String getViewState(FacesContext context)
+    {
+        return context.getRenderKit().getResponseStateManager().getViewState(context, saveView(context));
+    }
+
+    public abstract UIViewRoot restoreView(FacesContext context, String viewId, String renderKitId);
+
+    /**
+     * @deprecated
+     */
+    @Deprecated
+    protected UIViewRoot restoreTreeStructure(FacesContext context, String viewId, String renderKitId)
+    {
+        return null;
+    }
+
+    /**
+     * @deprecated
+     */
+    @Deprecated
+    protected void restoreComponentState(FacesContext context, UIViewRoot viewRoot, String renderKitId)
+    {
+        // default impl does nothing as per JSF 1.2 javadoc
+    }
+
+    public boolean isSavingStateInClient(FacesContext context)
+    {
+        if (context == null)
+            throw new NullPointerException("context");
+        if (_savingStateInClient != null)
+            return _savingStateInClient.booleanValue();
         String stateSavingMethod = context.getExternalContext().getInitParameter(STATE_SAVING_METHOD_PARAM_NAME);
         if (stateSavingMethod == null)
         {
-            _savingStateInClient = Boolean.FALSE; //Specs 10.1.3: default server saving
+            _savingStateInClient = Boolean.FALSE; // Specs 10.1.3: default server saving
             context.getExternalContext().log("No state saving method defined, assuming default server state saving");
         }
         else if (stateSavingMethod.equals(STATE_SAVING_METHOD_CLIENT))
@@ -126,29 +240,45 @@ public abstract class StateManager
         }
         else
         {
-            _savingStateInClient = Boolean.FALSE; //Specs 10.1.3: default server saving
-            context.getExternalContext().log("Illegal state saving method '" + stateSavingMethod + "', default server state saving will be used");
+            _savingStateInClient = Boolean.FALSE; // Specs 10.1.3: default server saving
+            context.getExternalContext().log(
+                "Illegal state saving method '" + stateSavingMethod + "', default server state saving will be used");
         }
         return _savingStateInClient.booleanValue();
     }
 
-
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public class SerializedView
     {
         private Object _structure;
         private Object _state;
 
+        /**
+         * @deprecated
+         */
+        @Deprecated
         public SerializedView(Object structure, Object state)
         {
             _structure = structure;
             _state = state;
         }
 
+        /**
+         * @deprecated
+         */
+        @Deprecated
         public Object getStructure()
         {
             return _structure;
         }
 
+        /**
+         * @deprecated
+         */
+        @Deprecated
         public Object getState()
         {
             return _state;

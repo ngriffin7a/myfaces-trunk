@@ -18,9 +18,18 @@
  */
 package org.apache.myfaces.config;
 
-import org.apache.myfaces.config.impl.digester.elements.Converter;
+import java.util.Collection;
 
-import java.util.Iterator;
+import javax.el.ELResolver;
+
+import org.apache.myfaces.config.element.Behavior;
+import org.apache.myfaces.config.element.ClientBehaviorRenderer;
+import org.apache.myfaces.config.element.ManagedBean;
+import org.apache.myfaces.config.element.NavigationRule;
+import org.apache.myfaces.config.element.Renderer;
+import org.apache.myfaces.config.impl.digester.elements.Converter;
+import org.apache.myfaces.config.impl.digester.elements.ResourceBundle;
+import org.apache.myfaces.config.impl.digester.elements.SystemEventListener;
 
 /**
  * Subsumes several unmarshalled faces config objects and presents a simple interface
@@ -29,19 +38,31 @@ import java.util.Iterator;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public interface FacesConfigDispenser
+public interface FacesConfigDispenser<C>
 {
     /**
      * Add another unmarshalled faces config object.
      * @param facesConfig unmarshalled faces config object
      */
-    public void feed(Object facesConfig);
+    public void feed(C facesConfig);
 
     /**
      * Add another ApplicationFactory class name
      * @param factoryClassName a class name
      */
     public void feedApplicationFactory(String factoryClassName);
+
+    /**
+     * Add another ExceptionHandlerFactory class name
+     * @param factoryClassName a class name
+     */
+    public void feedExceptionHandlerFactory(String factoryClassName);
+
+    /**
+     * Add another ExternalContextFactory class name
+     * @param factoryClassName a class name
+     */
+    public void feedExternalContextFactory(String factoryClassName);
 
     /**
      * Add another FacesContextFactory class name
@@ -54,30 +75,72 @@ public interface FacesConfigDispenser
      * @param factoryClassName a class name
      */
     public void feedLifecycleFactory(String factoryClassName);
+    
+    /**
+     * Add another ViewDeclarationLanguageFactory class name
+     * @param factoryClassName a class name
+     */
+    public void feedViewDeclarationLanguageFactory(String factoryClassName);
+
+    /**
+     * Add another PartialViewContextFactory class name
+     * @param factoryClassName a class name
+     */
+    public void feedPartialViewContextFactory(String factoryClassName);
 
     /**
      * Add another RenderKitFactory class name
      * @param factoryClassName a class name
      */
     public void feedRenderKitFactory(String factoryClassName);
+    
+    /**
+     * Add another TagHandlerDelegateFactory class name
+     * @param factoryClassName a class name
+     */
+    public void feedTagHandlerDelegateFactory(String factoryClassName);
+
+    /**
+     * Add another VisitContextFactory class name
+     * @param factoryClassName a class name
+     */
+    public void feedVisitContextFactory(String factoryClassName);
 
 
 
     /** @return Iterator over ApplicationFactory class names */
-    public Iterator getApplicationFactoryIterator();
+    public Collection<String> getApplicationFactoryIterator();
+    
+    /** @return Iterator over ExceptionHandlerFactory class names */
+    public Collection<String> getExceptionHandlerFactoryIterator();
+
+    /** @return Iterator over ExternalContextFactory class names */
+    public Collection<String> getExternalContextFactoryIterator();
 
     /** @return Iterator over FacesContextFactory class names */
-    public Iterator getFacesContextFactoryIterator();
+    public Collection<String> getFacesContextFactoryIterator();
 
     /** @return Iterator over LifecycleFactory class names */
-    public Iterator getLifecycleFactoryIterator();
+    public Collection<String> getLifecycleFactoryIterator();
+
+    /** @return Iterator over ViewDeclarationLanguageFactory class names */
+    public Collection<String> getViewDeclarationLanguageFactoryIterator();
+
+    /** @return Iterator over PartialViewContextFactory class names */
+    public Collection<String> getPartialViewContextFactoryIterator();
 
     /** @return Iterator over RenderKit factory class names */
-    public Iterator getRenderKitFactoryIterator();
+    public Collection<String> getRenderKitFactoryIterator();
+    
+    /** @return Iterator over TagHandlerDelegateFactory factory class names */
+    public Collection<String> getTagHandlerDelegateFactoryIterator();
+
+    /** @return Iterator over VisitContextFactory factory class names */
+    public Collection<String> getVisitContextFactoryIterator();
 
 
     /** @return Iterator over ActionListener class names (in reverse order!) */
-    public Iterator getActionListenerIterator();
+    public Collection<String> getActionListenerIterator();
 
     /** @return the default render kit id */
     public String getDefaultRenderKitId();
@@ -86,42 +149,45 @@ public interface FacesConfigDispenser
     public String getMessageBundle();
 
     /** @return Iterator over NavigationHandler class names */
-    public Iterator getNavigationHandlerIterator();
+    public Collection<String> getNavigationHandlerIterator();
 
     /** @return Iterator over ViewHandler class names */
-    public Iterator getViewHandlerIterator();
+    public Collection<String> getViewHandlerIterator();
 
     /** @return Iterator over StateManager class names*/
-    public Iterator getStateManagerIterator();
+    public Collection<String> getStateManagerIterator();
+    
+    /** @return Iterator over ResourceHandler class names*/
+    public Collection<String> getResourceHandlerIterator();
 
     /** @return Iterator over PropertyResolver class names */
-    public Iterator getPropertyResolverIterator();
+    public Collection<String> getPropertyResolverIterator();
 
     /** @return Iterator over VariableResolver class names  */
-    public Iterator getVariableResolverIterator();
+    public Collection<String> getVariableResolverIterator();
 
     /** @return the default locale name */
     public String getDefaultLocale();
 
     /** @return Iterator over supported locale names */
-    public Iterator getSupportedLocalesIterator();
+    public Collection<String> getSupportedLocalesIterator();
 
 
     /** @return Iterator over all defined component types */
-    public Iterator getComponentTypes();
+    public Collection<String> getComponentTypes();
 
     /** @return component class that belongs to the given component type */
     public String getComponentClass(String componentType);
 
 
     /** @return Iterator over all defined converter ids */
-    public Iterator getConverterIds();
+    public Collection<String> getConverterIds();
 
     /** @return Iterator over all classes with an associated converter  */
-    public Iterator getConverterClasses();
+    public Collection<String> getConverterClasses();
 
     /** @return Iterator over the config classes for the converters  */
-    Iterator getConverterConfigurationByClassName();
+    Collection<String> getConverterConfigurationByClassName();
 
     /** delivers a converter-configuration for one class-name */
     Converter getConverterConfiguration(String converterClassName);
@@ -134,7 +200,7 @@ public interface FacesConfigDispenser
 
 
     /** @return Iterator over all defined validator ids */
-    public Iterator getValidatorIds();
+    public Collection<String> getValidatorIds();
 
     /** @return validator class name that belongs to the given validator id */
     public String getValidatorClass(String validatorId);
@@ -143,29 +209,64 @@ public interface FacesConfigDispenser
     /**
      * @return Iterator over {@link org.apache.myfaces.config.element.ManagedBean ManagedBean}s
      */
-    public Iterator getManagedBeans();
+    public Collection<ManagedBean> getManagedBeans();
 
     /**
      * @return Iterator over {@link org.apache.myfaces.config.element.NavigationRule NavigationRule}s
      */
-    public Iterator getNavigationRules();
+    public Collection<NavigationRule> getNavigationRules();
 
 
 
     /** @return Iterator over all defined renderkit ids */
-    public Iterator getRenderKitIds();
+    public Collection<String> getRenderKitIds();
 
     /** @return renderkit class name for given renderkit id */
     public String getRenderKitClass(String renderKitId);
 
     /**
+     * @return Iterator over {@link org.apache.myfaces.config.element.ClientBehaviorRenderer ClientBehaviorRenderer}s for the given renderKitId
+     */
+    public Collection<ClientBehaviorRenderer> getClientBehaviorRenderers (String renderKitId);
+    
+    /**
      * @return Iterator over {@link org.apache.myfaces.config.element.Renderer Renderer}s for the given renderKitId
      */
-    public Iterator getRenderers(String renderKitId);
+    public Collection<Renderer> getRenderers(String renderKitId);
 
 
     /**
      * @return Iterator over {@link javax.faces.event.PhaseListener} implementation class names
      */
-    public Iterator getLifecyclePhaseListeners();
+    public Collection<String> getLifecyclePhaseListeners();
+
+    /**
+     * @return Iterator over {@link ResourceBundle}
+     */
+    public Collection<ResourceBundle> getResourceBundles();
+
+    /**
+     * @return Iterator over {@link ELResolver} implementation class names
+     */
+    public Collection<String> getElResolvers();
+    
+    /**
+     * @return Iterator over (@link SystemEventListener) implementation class names 
+     */
+    public Collection<SystemEventListener> getSystemEventListeners();
+    
+    /**
+     * @return Collection over behaviors
+     */
+    public Collection<Behavior> getBehaviors ();
+    
+    /**
+     * @return Collection over all defined default validator ids
+     */
+    public Collection<String> getDefaultValidatorIds ();
+    
+    /**
+     * @return the partial traversal class name
+     */
+    public String getPartialTraversal ();
 }

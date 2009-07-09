@@ -18,13 +18,13 @@
  */
 package org.apache.myfaces.application;
 
+import javax.el.ELException;
+import javax.el.MethodExpression;
 import javax.faces.FacesException;
 import javax.faces.application.Application;
 import javax.faces.application.NavigationHandler;
-import javax.faces.component.ActionSource;
+import javax.faces.component.ActionSource2;
 import javax.faces.context.FacesContext;
-import javax.faces.el.EvaluationException;
-import javax.faces.el.MethodBinding;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
@@ -35,42 +35,40 @@ import javax.faces.event.ActionListener;
  * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class ActionListenerImpl
-    implements ActionListener
+public class ActionListenerImpl implements ActionListener
 {
     public void processAction(ActionEvent actionEvent) throws AbortProcessingException
     {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         Application application = facesContext.getApplication();
 
-        ActionSource actionSource = (ActionSource)actionEvent.getComponent();
-        MethodBinding methodBinding = actionSource.getAction();
+        ActionSource2 actionSource = (ActionSource2)actionEvent.getComponent();
+        
+        MethodExpression methodExpression = actionSource.getActionExpression();
 
-        String fromAction;
-        String outcome;
-        if (methodBinding == null)
+        String fromAction = null;
+        String outcome = null;
+        if (methodExpression != null)
         {
-            fromAction = null;
-            outcome = null;
-        }
-        else
-        {
-            fromAction = methodBinding.getExpressionString();
+            fromAction = methodExpression.getExpressionString();
             try
             {
-                outcome = (String) methodBinding.invoke(facesContext, null);
+                Object objOutcome = methodExpression.invoke(facesContext.getELContext(), null);
+                if (objOutcome != null)
+                {
+                    outcome = objOutcome.toString();
+                }
             }
-            catch (EvaluationException e)
+            catch (ELException e)
             {
                 Throwable cause = e.getCause();
                 if (cause != null && cause instanceof AbortProcessingException)
                 {
                     throw (AbortProcessingException)cause;
                 }
-                else
-                {
-                    throw new FacesException("Error calling action method of component with id " + actionEvent.getComponent().getClientId(facesContext), e);
-                }
+   
+                throw new FacesException("Error calling action method of component with id " + actionEvent.getComponent().getClientId(facesContext), e);
+                
             }
             catch (RuntimeException e)
             {
@@ -79,9 +77,7 @@ public class ActionListenerImpl
         }
 
         NavigationHandler navigationHandler = application.getNavigationHandler();
-        navigationHandler.handleNavigation(facesContext,
-                                           fromAction,
-                                           outcome);
+        navigationHandler.handleNavigation(facesContext, fromAction, outcome);
         //Render Response if needed
         facesContext.renderResponse();
 

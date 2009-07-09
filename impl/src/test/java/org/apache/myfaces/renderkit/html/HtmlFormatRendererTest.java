@@ -45,7 +45,7 @@ public class HtmlFormatRendererTest extends AbstractJsfTestCase
         return new TestSuite(HtmlFormatRendererTest.class);
     }
     
-    public void setUp() {
+    public void setUp() throws Exception {
         super.setUp();
         outputFormat = new HtmlOutputFormat();
         writer = new MockResponseWriter(new StringWriter(), null, null);
@@ -58,7 +58,7 @@ public class HtmlFormatRendererTest extends AbstractJsfTestCase
                 new HtmlFormatRenderer());
     }
     
-    public void tearDown() {
+    public void tearDown() throws Exception {
         super.tearDown();
     }
     

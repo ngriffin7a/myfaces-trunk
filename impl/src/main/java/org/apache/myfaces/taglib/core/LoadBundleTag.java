@@ -31,113 +31,73 @@ import java.util.Set;
 
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
-import javax.faces.webapp.UIComponentTag;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.el.ValueExpression;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFJspAttribute;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFJspTag;
+import org.apache.myfaces.shared_impl.util.ClassUtils;
+
 /**
  * Loads a resource bundle and saves it as a variable in the request scope.
- * 
+ * <p>
  * Unless otherwise specified, all attributes accept static values or EL expressions.
+ * </p>
+ * <p>
+ * TODO: We should find a way to save loaded bundles in the state, because otherwise on the next request the bundle map
+ * will not be present before the render phase and value bindings that reference to the bundle will always log annoying
+ * "Variable 'xxx' could not be resolved" error messages.
+ * </p>
  * 
- * @JSFJspTag
- *   name="f:loadBundle"
- *   bodyContent="empty"
- *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class LoadBundleTag
-        extends TagSupport
+@JSFJspTag(name = "f:loadBundle", bodyContent = "empty")
+public class LoadBundleTag extends TagSupport
 {
- /*
- * TODO:
- * We should find a way to save loaded bundles in the state, because otherwise
- * on the next request the bundle map will not be present before the render phase
- * and value bindings that reference to the bundle will always log annoying
- * "Variable 'xxx' could not be resolved" error messages.
- */
-    
     private static final long serialVersionUID = -8892145684062838928L;
 
-    private static final Log log = LogFactory.getLog(LoadBundleTag.class);
-
-    private String _basename;
+    private ValueExpression _basename;
     private String _var;
 
     /**
      * The base name of the resource bundle.
-     * 
-     * @JSFJspAttribute
-     *   required="true"
      */
-    public void setBasename(String basename)
+    @JSFJspAttribute(required = true, rtexprvalue = true, className = "java.lang.String")
+    public void setBasename(ValueExpression basename)
     {
         _basename = basename;
     }
 
     /**
-     * The name of the variable in request scope that the resources
-     * are saved to.  This must be a static value.
-     *  
-     * @JSFJspAttribute
-     *   required="true"
+     * The name of the variable in request scope that the resources are saved to. This must be a static value.
      */
+    @JSFJspAttribute(required = true)
     public void setVar(String var)
     {
         _var = var;
     }
 
+    @Override
     public int doStartTag() throws JspException
     {
+        if (null == _var)
+        {
+            throw new NullPointerException("LoadBundle: 'var' must not be null");
+        }
+
         FacesContext facesContext = FacesContext.getCurrentInstance();
         if (facesContext == null)
         {
             throw new JspException("No faces context?!");
         }
 
-        try
-        {
-            resolveBundle(getBasename(facesContext));
-        }
-        catch(IllegalStateException ex)
-        {
-            throw new JspException(ex);
-        }
-
-        return Tag.SKIP_BODY;
-    }
-
-    private String getBasename(FacesContext facesContext) {
-        String basename = null;
-
-        if (_basename!=null) {
-            if (UIComponentTag.isValueReference(_basename)) {
-                basename = (String)facesContext.getApplication().createValueBinding(_basename).getValue(facesContext);
-            } else {
-                basename = _basename;
-            }
-        }
-        return basename;
-    }
-
-    /**
-     * This method is copied over to org.apache.myfaces.custom.loadbundle.LoadBundle.
-     * If you change anything here, think about changing it there as well.
-     *
-     * @param resolvedBasename
-     */
-    private void resolveBundle(String resolvedBasename) {
-        //ATTENTION: read comment above before changing this!
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-
         UIViewRoot viewRoot = facesContext.getViewRoot();
         if (viewRoot == null)
         {
-            throw new IllegalStateException("No view root! LoadBundle must be nested inside <f:view> action.");
+            throw new JspException("No view root! LoadBundle must be nested inside <f:view> action.");
         }
 
         Locale locale = viewRoot.getLocale();
@@ -146,49 +106,61 @@ public class LoadBundleTag
             locale = facesContext.getApplication().getDefaultLocale();
         }
 
+        String basename = null;
+        if (_basename != null)
+        {
+            if (_basename.isLiteralText())
+            {
+                basename = _basename.getExpressionString();
+            }
+            else
+            {
+                basename = (String)_basename.getValue(facesContext.getELContext());
+            }
+        }
+
+        if (null == basename)
+        {
+            throw new NullPointerException("LoadBundle: 'basename' must not be null");
+        }
+
         final ResourceBundle bundle;
         try
         {
-            bundle = ResourceBundle.getBundle(resolvedBasename,
+            bundle = ResourceBundle.getBundle(basename,
                                               locale,
-                                              Thread.currentThread().getContextClassLoader());
-
-            facesContext.getExternalContext().getRequestMap().put(_var,
-                                                                  new BundleMap(bundle));
-
+                                              ClassUtils.getContextClassLoader());
         }
         catch (MissingResourceException e)
         {
-            log.error("Resource bundle '" + resolvedBasename + "' could not be found.",e);
+            throw new JspException("Resource bundle '" + basename + "' could not be found.", e);
         }
-        //ATTENTION: read comment above before changing this!
+
+        facesContext.getExternalContext().getRequestMap().put(_var, new BundleMap(bundle));
+        return Tag.SKIP_BODY;
     }
 
-
-    /**
-     * This class is copied over to org.apache.myfaces.custom.loadbundle.LoadBundle.
-     * If you change anything here, think about changing it there as well.
-     *
-     */
-    private static class BundleMap implements Map
+    private static class BundleMap implements Map<String, String>
     {
-        //ATTENTION: read javadoc
         private ResourceBundle _bundle;
-        private List _values;
+        private List<String> _values;
 
         public BundleMap(ResourceBundle bundle)
         {
             _bundle = bundle;
         }
 
-        //Optimized methods
+        // Optimized methods
 
-        public Object get(Object key)
+        public String get(Object key)
         {
-            try {
-                return _bundle.getObject(key.toString());
-            } catch (Exception e) {
-                return "MISSING: " + key + " :MISSING";
+            try
+            {
+                return (String)_bundle.getObject(key.toString());
+            }
+            catch (Exception e)
+            {
+                return "???" + key + "???";
             }
         }
 
@@ -199,24 +171,26 @@ public class LoadBundleTag
 
         public boolean containsKey(Object key)
         {
-            try {
+            try
+            {
                 return _bundle.getObject(key.toString()) != null;
-            } catch (MissingResourceException e) {
+            }
+            catch (MissingResourceException e)
+            {
                 return false;
             }
         }
 
+        // Unoptimized methods
 
-        //Unoptimized methods
-
-        public Collection values()
+        public Collection<String> values()
         {
             if (_values == null)
             {
-                _values = new ArrayList();
-                for (Enumeration enumer = _bundle.getKeys(); enumer.hasMoreElements(); )
+                _values = new ArrayList<String>();
+                for (Enumeration<String> enumer = _bundle.getKeys(); enumer.hasMoreElements();)
                 {
-                    String v = _bundle.getString((String)enumer.nextElement());
+                    String v = _bundle.getString(enumer.nextElement());
                     _values.add(v);
                 }
             }
@@ -233,57 +207,57 @@ public class LoadBundleTag
             return values().contains(value);
         }
 
-        public Set entrySet()
+        public Set<Map.Entry<String, String>> entrySet()
         {
-            Set set = new HashSet();
-            for (Enumeration enumer = _bundle.getKeys(); enumer.hasMoreElements(); )
+            Set<Entry<String, String>> set = new HashSet<Entry<String, String>>();
+            for (Enumeration<String> enumer = _bundle.getKeys(); enumer.hasMoreElements();)
             {
-                final String k = (String)enumer.nextElement();
-                set.add(new Map.Entry() {
-                    public Object getKey()
+                final String k = enumer.nextElement();
+                set.add(new Map.Entry<String, String>()
+                {
+                    public String getKey()
                     {
                         return k;
                     }
 
-                    public Object getValue()
+                    public String getValue()
                     {
-                        return _bundle.getObject(k);
+                        return (String)_bundle.getObject(k);
                     }
 
-                    public Object setValue(Object value)
+                    public String setValue(String value)
                     {
-                        throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
+                        throw new UnsupportedOperationException(this.getClass().getName()
+                                + " UnsupportedOperationException");
                     }
                 });
             }
             return set;
         }
 
-        public Set keySet()
+        public Set<String> keySet()
         {
-            Set set = new HashSet();
-            for (Enumeration enumer = _bundle.getKeys(); enumer.hasMoreElements(); )
+            Set<String> set = new HashSet<String>();
+            for (Enumeration<String> enumer = _bundle.getKeys(); enumer.hasMoreElements();)
             {
                 set.add(enumer.nextElement());
             }
             return set;
         }
-        //ATTENTION: read javadoc
 
+        // Unsupported methods
 
-        //Unsupported methods
-
-        public Object remove(Object key)
+        public String remove(Object key)
         {
             throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
         }
 
-        public void putAll(Map t)
+        public void putAll(Map<? extends String, ? extends String> t)
         {
             throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
         }
 
-        public Object put(Object key, Object value)
+        public String put(String key, String value)
         {
             throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
         }
@@ -292,7 +266,7 @@ public class LoadBundleTag
         {
             throw new UnsupportedOperationException(this.getClass().getName() + " UnsupportedOperationException");
         }
-        //ATTENTION: read javadoc
+
     }
 
 }

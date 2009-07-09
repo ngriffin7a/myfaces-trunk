@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +39,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.myfaces.config.RuntimeConfig;
 import org.apache.myfaces.config.element.NavigationCase;
 import org.apache.myfaces.config.element.NavigationRule;
-import org.apache.myfaces.portlet.PortletUtil;
 import org.apache.myfaces.shared_impl.util.HashMapUtils;
 
 /**
@@ -52,48 +50,18 @@ public class NavigationHandlerImpl
     extends NavigationHandler
 {
     private static final Log log = LogFactory.getLog(NavigationHandlerImpl.class);
-    private static final String PARTIAL_STATE_SAVING_METHOD_PARAM_NAME = "javax.faces.PARTIAL_STATE_SAVING_METHOD";
-    private static final String PARTIAL_STATE_SAVING_METHOD_ON = "true";
-    private static final String PARTIAL_STATE_SAVING_METHOD_OFF = "false";
 
     private static final String ASTERISK = "*";
-    private Boolean _partialStateSaving = null;
 
-    private boolean isPartialStateSavingOn(javax.faces.context.FacesContext context)
-    {
-        if(context == null) throw new NullPointerException("context");
-        if (_partialStateSaving != null) return _partialStateSaving.booleanValue();
-        String stateSavingMethod = context.getExternalContext().getInitParameter(PARTIAL_STATE_SAVING_METHOD_PARAM_NAME);
-        if (stateSavingMethod == null)
-        {
-            _partialStateSaving = Boolean.FALSE; //Specs 10.1.3: default server saving
-            context.getExternalContext().log("No context init parameter '"+PARTIAL_STATE_SAVING_METHOD_PARAM_NAME+"' found; no partial state saving method defined, assuming default partial state saving method off.");
-        }
-        else if (stateSavingMethod.equals(PARTIAL_STATE_SAVING_METHOD_ON))
-        {
-            _partialStateSaving = Boolean.TRUE;
-        }
-        else if (stateSavingMethod.equals(PARTIAL_STATE_SAVING_METHOD_OFF))
-        {
-            _partialStateSaving = Boolean.FALSE;
-        }
-        else
-        {
-            _partialStateSaving = Boolean.FALSE; //Specs 10.1.3: default server saving
-            context.getExternalContext().log("Illegal partial state saving method '" + stateSavingMethod + "', default partial state saving will be used (partial state saving off).");
-        }
-        return _partialStateSaving.booleanValue();
-    }
-
-
-    private Map _navigationCases = null;
-    private List _wildcardKeys = new ArrayList();
+    private Map<String, List<NavigationCase>> _navigationCases = null;
+    private List<String> _wildcardKeys = new ArrayList<String>();
 
     public NavigationHandlerImpl()
     {
         if (log.isTraceEnabled()) log.trace("New NavigationHandler instance created");
     }
 
+    @Override
     public void handleNavigation(FacesContext facesContext, String fromAction, String outcome)
     {
         if (outcome == null)
@@ -112,13 +80,20 @@ public class NavigationHandlerImpl
                           " toViewId =" + navigationCase.getToViewId() +
                           " redirect=" + navigationCase.isRedirect());
             }
-            if (navigationCase.isRedirect() &&
-                (!PortletUtil.isPortletRequest(facesContext)))
-            { // Spec section 7.4.2 says "redirects not possible" in this case for portlets
+            if (navigationCase.isRedirect())
+            { 
+                //&& (!PortletUtil.isPortletRequest(facesContext)))
+                // Spec section 7.4.2 says "redirects not possible" in this case for portlets
+                //But since the introduction of portlet bridge and the 
+                //removal of portlet code in myfaces core 2.0, this condition
+                //no longer applies
+                
                 ExternalContext externalContext = facesContext.getExternalContext();
                 ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
                 String redirectPath = viewHandler.getActionURL(facesContext, navigationCase.getToViewId());
-
+                
+                // JSF 2.0 Spec call Flash.setRedirect(true) to notify Flash scope and take proper actions
+                externalContext.getFlash().setRedirect(true);
                 try
                 {
                     externalContext.redirect(externalContext.encodeActionURL(redirectPath));
@@ -133,12 +108,7 @@ public class NavigationHandlerImpl
                 ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
                 //create new view
                 String newViewId = navigationCase.getToViewId();
-                UIViewRoot viewRoot = null;
-                if (isPartialStateSavingOn(facesContext)) {
-                    viewRoot = viewHandler.restoreView(facesContext,newViewId);
-                } else {
-                    viewRoot = viewHandler.createView(facesContext, newViewId);
-                }
+                UIViewRoot viewRoot = viewHandler.createView(facesContext, newViewId);
                 facesContext.setViewRoot(viewRoot);
                 facesContext.renderResponse();
             }
@@ -154,16 +124,17 @@ public class NavigationHandlerImpl
         }
     }
 
+
     /**
-     * Returns the <code>NavigationCase</code>that applies for the given action and outcome
+     * Returns the navigation case that applies for the given action and outcome
      */
     public NavigationCase getNavigationCase(FacesContext facesContext, String fromAction, String outcome)
     {
         String viewId = facesContext.getViewRoot().getViewId();
-        Map casesMap = getNavigationCases(facesContext);
+        Map<String, List<NavigationCase>> casesMap = getNavigationCases(facesContext);
         NavigationCase navigationCase = null;
 
-        List casesList = (List)casesMap.get(viewId);
+        List<? extends NavigationCase> casesList = casesMap.get(viewId);
         if (casesList != null)
         {
             // Exact match?
@@ -173,16 +144,14 @@ public class NavigationHandlerImpl
         if (navigationCase == null)
         {
             // Wildcard match?
-            List keys = getSortedWildcardKeys();
-            for (int i = 0, size = keys.size(); i < size; i++)
+            for (String fromViewId : getSortedWildcardKeys())
             {
-                String fromViewId = (String)keys.get(i);
                 if (fromViewId.length() > 2)
                 {
                     String prefix = fromViewId.substring(0, fromViewId.length() - 1);
                     if (viewId != null && viewId.startsWith(prefix))
                     {
-                        casesList = (List)casesMap.get(fromViewId);
+                        casesList = casesMap.get(fromViewId);
                         if (casesList != null)
                         {
                             navigationCase = calcMatchingNavigationCase(casesList, fromAction, outcome);
@@ -192,7 +161,7 @@ public class NavigationHandlerImpl
                 }
                 else
                 {
-                    casesList = (List)casesMap.get(fromViewId);
+                    casesList = casesMap.get(fromViewId);
                     if (casesList != null)
                     {
                         navigationCase = calcMatchingNavigationCase(casesList, fromAction, outcome);
@@ -201,6 +170,7 @@ public class NavigationHandlerImpl
                 }
             }
         }
+        
         return navigationCase;
     }
 
@@ -213,25 +183,22 @@ public class NavigationHandlerImpl
     }
 
     /**
+     * TODO
      * Invoked by the navigation handler before the new view component is created.
      * @param viewId The view ID to be created
      * @return The view ID that should be used instead. If null, the view ID passed
      * in will be used without modification.
-     * 
-     * <p><b>returns NULL</b></p>
-     * 
-     * <p>not implemented/called by Apache MyFaces</p>
      */
     public String beforeNavigation(String viewId)
     {
         return null;
     }
 
-    private NavigationCase calcMatchingNavigationCase(List casesList, String actionRef, String outcome)
+    private NavigationCase calcMatchingNavigationCase(List<? extends NavigationCase> casesList, String actionRef, 
+                                                      String outcome)
     {
-        for (int i = 0, size = casesList.size(); i < size; i++)
+        for (NavigationCase caze : casesList)
         {
-            NavigationCase caze = (NavigationCase)casesList.get(i);
             String cazeOutcome = caze.getFromOutcome();
             String cazeActionRef = caze.getFromAction();
             if ((cazeOutcome == null || cazeOutcome.equals(outcome)) &&
@@ -240,15 +207,16 @@ public class NavigationHandlerImpl
                 return caze;
             }
         }
+        
         return null;
     }
 
-    private List getSortedWildcardKeys()
+    private List<String> getSortedWildcardKeys()
     {
         return _wildcardKeys;
     }
 
-    private Map getNavigationCases(FacesContext facesContext)
+    private Map<String, List<NavigationCase>> getNavigationCases(FacesContext facesContext)
     {
         ExternalContext externalContext = facesContext.getExternalContext();
         RuntimeConfig runtimeConfig = RuntimeConfig.getCurrentInstance(externalContext);
@@ -259,14 +227,16 @@ public class NavigationHandlerImpl
             {
                 if (_navigationCases == null || runtimeConfig.isNavigationRulesChanged())
                 {
-                    Collection rules = runtimeConfig.getNavigationRules();
+                    Collection<? extends NavigationRule> rules = runtimeConfig.getNavigationRules();
                     int rulesSize = rules.size();
-                    Map cases = new HashMap(HashMapUtils.calcCapacity(rulesSize));
-                    List wildcardKeys = new ArrayList();
+                    
+                    Map<String, List<NavigationCase>> cases = 
+                        new HashMap<String, List<NavigationCase>>(HashMapUtils.calcCapacity(rulesSize));
+                    
+                    List<String> wildcardKeys = new ArrayList<String>();
 
-                    for (Iterator iterator = rules.iterator(); iterator.hasNext();)
+                    for (NavigationRule rule : rules)
                     {
-                        NavigationRule rule = (NavigationRule) iterator.next();
                         String fromViewId = rule.getFromViewId();
 
                         //specification 7.4.2 footnote 4 - missing fromViewId is allowed:
@@ -279,20 +249,22 @@ public class NavigationHandlerImpl
                             fromViewId = fromViewId.trim();
                         }
 
-                        List list = (List) cases.get(fromViewId);
+                        List<NavigationCase> list = cases.get(fromViewId);
                         if (list == null)
                         {
-                            list = new ArrayList(rule.getNavigationCases());
+                            list = new ArrayList<NavigationCase>(rule.getNavigationCases());
                             cases.put(fromViewId, list);
                             if (fromViewId.endsWith(ASTERISK))
                             {
                                 wildcardKeys.add(fromViewId);
                             }
-                        } else {
+                        }
+                        else
+                        {
                             list.addAll(rule.getNavigationCases());
                         }
-
                     }
+                    
                     Collections.sort(wildcardKeys, new KeyComparator());
 
                     synchronized (cases)
@@ -312,12 +284,11 @@ public class NavigationHandlerImpl
         return _navigationCases;
     }
 
-    private static final class KeyComparator
-        implements Comparator
+    private static final class KeyComparator implements Comparator<String>
     {
-        public int compare(Object o1, Object o2)
+        public int compare(String s1, String s2)
         {
-            return -(((String)o1).compareTo((String)o2));
+            return -s1.compareTo(s2);
         }
     }
 }

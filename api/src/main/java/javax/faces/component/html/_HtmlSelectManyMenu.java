@@ -20,6 +20,8 @@ package javax.faces.component.html;
 
 import javax.faces.component.UISelectMany;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+
 /**
  * Allow the user to select zero or more items from a set of available
  * options. This is presented as a drop-down "combo-box" which allows
@@ -28,7 +30,7 @@ import javax.faces.component.UISelectMany;
  * The set of available options is defined by adding child
  * f:selectItem or f:selectItems components to this component.
  * <p>
- * Renders as an HTML select element, with the choices made up of 
+ * Renders as an HTML select element, with the choices made up of
  * child f:selectItem or f:selectItems elements. The multiple
  * attribute is set and the size attribute is set to 1.
  * <p>
@@ -40,29 +42,39 @@ import javax.faces.component.UISelectMany;
  * selected initially. During the update phase, the property is set
  * to contain a "collection" of values for those child SelectItem
  * objects that are currently selected.
- * <p>
- * Unless otherwise specified, all attributes accept static values
- * or EL expressions.
- * <p>
- * See Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
  *
- * @JSFComponent
- *   name = "h:selectManyMenu"
- *   class = "javax.faces.component.html.HtmlSelectManyMenu"
- *   tagClass = "org.apache.myfaces.taglib.html.HtmlSelectManyMenuTag"
- *   template = "true"
- *   desc = "h:selectManyMenu"
- *   
- * @author Thomas Spiegl (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * <h4>Events:</h4>
+ * <table border="1" width="100%" cellpadding="3" summary="">
+ * <tr bgcolor="#CCCCFF" class="TableHeadingColor">
+ * <th align="left">Type</th>
+ * <th align="left">Phases</th>
+ * <th align="left">Description</th>
+ * </tr>
+ * <tr class="TableRowColor">
+ * <td valign="top"><code>javax.faces.event.ValueChangeEvent</code></td>
+ * <td valign="top" nowrap></td>
+ * <td valign="top">The valueChange event is delivered when the value
+                attribute is changed.</td>
+ * </tr>
+ * </table>
  */
+@JSFComponent
+(name = "h:selectManyMenu",
+clazz = "javax.faces.component.html.HtmlSelectManyMenu",template=true,
+tagClass = "org.apache.myfaces.taglib.html.HtmlSelectManyMenuTag",
+defaultRendererType = "javax.faces.Menu",
+implementz = "javax.faces.component.behavior.ClientBehaviorHolder"
+)
 abstract class _HtmlSelectManyMenu extends UISelectMany implements
-    _AccesskeyProperty, _UniversalProperties, _DisabledReadonlyProperties,
-    _FocusBlurProperties, _ChangeSelectProperties, _EventProperties,
-    _StyleProperties, _TabindexProperty, _DisabledClassEnabledClassProperties
+_AccesskeyProperty, _UniversalProperties, _DisabledReadonlyProperties,
+_FocusBlurProperties, _ChangeSelectProperties, _EventProperties,
+_StyleProperties, _TabindexProperty, _DisabledClassEnabledClassProperties,
+_LabelProperty
 {
 
-    public static final String COMPONENT_TYPE = "javax.faces.HtmlSelectManyMenu";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Menu";
+  static public final String COMPONENT_FAMILY =
+    "javax.faces.SelectMany";
+  static public final String COMPONENT_TYPE =
+    "javax.faces.HtmlSelectManyMenu";
 
 }

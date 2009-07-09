@@ -26,67 +26,44 @@ import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagSupport;
 
 /**
- * This tag associates an attribute with the nearest parent
- * UIComponent. 
- * <p>
- * When the value is not an EL expression, this tag has the same effect
- * as calling component.getAttributes.put(name, value). When the attribute
- * name specified matches a standard property of the component, that
- * property is set. However it is also valid to assign attributes
- * to components using any arbitrary name; the component itself won't
- * make any use of these but other objects such as custom renderers,
- * validators or action listeners can later retrieve the attribute
- * from the component by name.
- * <p>
- * When the value is an EL expression, this tag has the same effect
- * as calling component.setValueBinding. A call to method
- * component.getAttributes().get(name) will then cause that
- * expression to be evaluated and the result of the expression is
- * returned, not the original EL expression string.
- * <p>
- * See the javadoc for UIComponent.getAttributes for more details.
- * <p>
- * Unless otherwise specified, all attributes accept static values
- * or EL expressions.
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
  * 
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
- * @JSFJspTag 
- *   name="f:attribute"
- *   bodyContent="empty"
- * 
+ * @deprecated the implementation of this clazz is now an implementation detail.
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class AttributeTag
-        extends TagSupport
+@Deprecated
+public class AttributeTag extends TagSupport
 {
     private static final long serialVersionUID = 3147657100171678632L;
     private String _name;
     private String _value;
 
     /**
-     * The name of the attribute.
-     * 
-     * @JSFJspAttribute
-     *   required="true"
+     * @deprecated
+     * @param name
      */
+    @Deprecated
     public void setName(String name)
     {
         _name = name;
     }
 
     /**
-     * The attribute's value.
-     * 
-     * @JSFJspAttribute
-     *   required="true"
+     * @deprecated
+     * @param value
      */
+    @Deprecated
     public void setValue(String value)
     {
         _value = value;
     }
 
+    /**
+     * @deprecated
+     */
+    @Override
+    @Deprecated
     public int doStartTag() throws JspException
     {
         UIComponentTag componentTag = UIComponentTag.getParentUIComponentTag(pageContext);
@@ -102,27 +79,25 @@ public class AttributeTag
         String name = getName();
         if (component.getAttributes().get(name) == null)
         {
-            if (UIComponentTag.isValueReference(_value))
-            {
-                FacesContext facesContext = FacesContext.getCurrentInstance();
-                ValueBinding vb = facesContext.getApplication().createValueBinding(_value);
-                component.setValueBinding(name, vb);
-            }
-            else
-            {
-            if(_value != null) component.getAttributes().put(name, _value);
-            }
+            Object value = getValue();
+
+            if (value != null)
+                component.getAttributes().put(name, value);
         }
         return Tag.SKIP_BODY;
     }
 
+    /**
+     * @deprecated
+     */
+    @Override
+    @Deprecated
     public void release()
     {
         super.release();
         _name = null;
         _value = null;
     }
-
 
     private String getName()
     {
@@ -132,10 +107,20 @@ public class AttributeTag
             ValueBinding vb = facesContext.getApplication().createValueBinding(_name);
             return (String)vb.getValue(facesContext);
         }
-        else
+
+        return _name;
+    }
+
+    private Object getValue()
+    {
+        if (UIComponentTag.isValueReference(_value))
         {
-            return _name;
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            ValueBinding vb = facesContext.getApplication().createValueBinding(_value);
+            return vb.getValue(facesContext);
         }
+
+        return _value;
     }
 
 }

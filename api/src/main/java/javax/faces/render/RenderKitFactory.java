@@ -18,16 +18,18 @@
  */
 package javax.faces.render;
 
+import javax.faces.FacesWrapper;
 import javax.faces.context.FacesContext;
 import java.util.Iterator;
 
 /**
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public abstract class RenderKitFactory
+public abstract class RenderKitFactory implements
+        FacesWrapper<RenderKitFactory>
 {
     public static final String HTML_BASIC_RENDER_KIT = "HTML_BASIC";
 
@@ -37,5 +39,20 @@ public abstract class RenderKitFactory
     public abstract RenderKit getRenderKit(FacesContext context,
                                            String renderKitId);
 
-    public abstract Iterator getRenderKitIds();
+    public abstract Iterator<String> getRenderKitIds();
+    
+    /**
+     * If this factory has been decorated, the implementation doing the decorating may override this method to 
+     * provide access to the implementation being wrapped. A default implementation is provided that returns 
+     * <code>null</code>.
+     * 
+     * @return the decorated <code>RenderKitFactory</code> if this factory decorates another, 
+     *         or <code>null</code> otherwise
+     * 
+     * @since 2.0
+     */
+    public RenderKitFactory getWrapped()
+    {
+        return null;
+    }
 }

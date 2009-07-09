@@ -18,75 +18,75 @@
  */
 package org.apache.myfaces.taglib.core;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFJspAttribute;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFJspTag;
 import org.apache.myfaces.shared_impl.renderkit.JSFAttr;
-import org.apache.myfaces.shared_impl.taglib.UIComponentBodyTagBase;
+import org.apache.myfaces.shared_impl.taglib.UIComponentELTagBase;
 
+import javax.el.ValueExpression;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyContent;
 
 /**
- * Outputs its body as verbatim text. No JSP tags within the verbatim
- * tag (including JSF tags) are evaluated; the content is treated
- * simply as literal text to be copied to the response.
- * <p>
- * Unless otherwise specified, all attributes accept static values
- * or EL expressions.
- * 
- * @JSFJspTag
- *   name="f:verbatim"
- *   bodyContent="JSP" 
- *   
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class VerbatimTag
-        extends UIComponentBodyTagBase
+@JSFJspTag(name = "f:verbatim", bodyContent = "JSP")
+public class VerbatimTag extends UIComponentELTagBase
 {
-    //private static final Log log = LogFactory.getLog(VerbatimTag.class);
+    // private static final Log log = LogFactory.getLog(VerbatimTag.class);
 
+    @Override
     public String getComponentType()
     {
         return "javax.faces.Output";
     }
 
+    @Override
     public String getRendererType()
     {
         return "javax.faces.Text";
     }
 
     // HtmlOutputText attributes
-    private String _escape;
+    private ValueExpression _escape;
+    private ValueExpression _rendered;
 
+    @Override
     protected void setProperties(UIComponent component)
     {
         super.setProperties(component);
-        if (_escape != null)
-        {
-            setBooleanProperty(component, JSFAttr.ESCAPE_ATTR, _escape);
-        }
-        else
-        {
-            //Default escape value for component is true, but for this tag it is false,
-            //so we must set it to false explicitly, if no attribute is given
-            component.getAttributes().put(JSFAttr.ESCAPE_ATTR, Boolean.FALSE);
-        }
 
-        //No need to save component state
+        setBooleanProperty(component, JSFAttr.ESCAPE_ATTR, _escape, Boolean.FALSE);
+        setBooleanProperty(component, JSFAttr.RENDERED, _rendered, Boolean.TRUE);
+
+        // No need to save component state
         component.setTransient(true);
     }
 
     /**
-     * If true, generated markup is escaped.  Default:  false.
-     * 
-     * @JSFJspAttribute
+     * If true, generated markup is escaped. Default: false.
      */
-    public void setEscape(String escape)
+    @JSFJspAttribute(rtexprvalue = true, className = "java.lang.Boolean")
+    public void setEscape(ValueExpression escape)
     {
         _escape = escape;
     }
-    
+
+    /**
+     * Flag indicating whether or not this component should be rendered (during Render Response Phase), or processed on
+     * any subsequent form submit. The default value for this property is true.
+     */
+    @Override
+    @JSFJspAttribute(rtexprvalue = true, className = "java.lang.Boolean")
+    public void setRendered(ValueExpression rendered)
+    {
+        _rendered = rendered;
+    }
+
+    @Override
     public int doAfterBody() throws JspException
     {
         BodyContent bodyContent = getBodyContent();
@@ -94,7 +94,8 @@ public class VerbatimTag
         {
             UIOutput component = (UIOutput)getComponentInstance();
             component.setValue(bodyContent.getString());
+            bodyContent.clearBody();
         }
-        return super.doAfterBody();
+        return super.getDoAfterBodyValue();
     }
 }

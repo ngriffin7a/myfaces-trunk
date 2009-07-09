@@ -20,6 +20,8 @@ package javax.faces.component.html;
 
 import javax.faces.component.UISelectOne;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+
 /**
  * Allow the user to choose one option from a set of options.
  * <p>
@@ -40,37 +42,47 @@ import javax.faces.component.UISelectOne;
  * On submit of the enclosing form, the value attribute's bound
  * property is updated to contain the "value" property from the
  * chosen SelectItem.
- * <p>
- * Unless otherwise specified, all attributes accept static values
- * or EL expressions.
- * <p> 
- * See Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
  *
- * @JSFComponent
- *   name = "h:selectOneListbox"
- *   class = "javax.faces.component.html.HtmlSelectOneListbox"
- *   tagClass = "org.apache.myfaces.taglib.html.HtmlSelectOneListboxTag"
- *   template = "true"
- *   desc = "h:selectOneListbox"
- *   
- * @author Thomas Spiegl (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * <h4>Events:</h4>
+ * <table border="1" width="100%" cellpadding="3" summary="">
+ * <tr bgcolor="#CCCCFF" class="TableHeadingColor">
+ * <th align="left">Type</th>
+ * <th align="left">Phases</th>
+ * <th align="left">Description</th>
+ * </tr>
+ * <tr class="TableRowColor">
+ * <td valign="top"><code>javax.faces.event.ValueChangeEvent</code></td>
+ * <td valign="top" nowrap></td>
+ * <td valign="top">The valueChange event is delivered when the value
+                attribute is changed.</td>
+ * </tr>
+ * </table>
  */
+@JSFComponent
+(name = "h:selectOneListbox",
+clazz = "javax.faces.component.html.HtmlSelectOneListbox",template=true,
+tagClass = "org.apache.myfaces.taglib.html.HtmlSelectOneListboxTag",
+defaultRendererType = "javax.faces.Listbox",
+implementz = "javax.faces.component.behavior.ClientBehaviorHolder"
+)
 abstract class _HtmlSelectOneListbox extends UISelectOne implements
-    _AccesskeyProperty, _UniversalProperties, _DisabledReadonlyProperties,
-    _FocusBlurProperties, _ChangeSelectProperties, _EventProperties,
-    _StyleProperties, _TabindexProperty, _DisabledClassEnabledClassProperties
+_AccesskeyProperty, _UniversalProperties, _DisabledReadonlyProperties,
+_FocusBlurProperties, _ChangeSelectProperties, _EventProperties,
+_StyleProperties, _TabindexProperty, _DisabledClassEnabledClassProperties,
+_LabelProperty
 {
 
-    public static final String COMPONENT_TYPE = "javax.faces.HtmlSelectOneListbox";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Listbox";
+  static public final String COMPONENT_FAMILY =
+    "javax.faces.SelectOne";
+  static public final String COMPONENT_TYPE =
+    "javax.faces.HtmlSelectOneListbox";
 
-    /**
-     * see JSF Spec.
-     * 
-     * @JSFProperty
-     *   defaultValue="0"
-     */
-    public abstract int getSize();
-    
+  /**
+   * see JSF Spec.
+   * 
+   * @JSFProperty
+   *   defaultValue="Integer.MIN_VALUE"
+   */
+  public abstract int getSize();
+
 }

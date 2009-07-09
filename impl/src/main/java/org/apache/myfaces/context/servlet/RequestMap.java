@@ -23,6 +23,8 @@ import java.util.Map;
 
 import javax.servlet.ServletRequest;
 
+import org.apache.myfaces.util.AbstractAttributeMap;
+
 
 /**
  * ServletRequest attributes Map.
@@ -30,41 +32,48 @@ import javax.servlet.ServletRequest;
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class RequestMap extends AbstractAttributeMap
+public final class RequestMap extends AbstractAttributeMap<Object>
 {
     final ServletRequest _servletRequest;
 
-    RequestMap(ServletRequest servletRequest)
+    RequestMap(final ServletRequest servletRequest)
     {
         _servletRequest = servletRequest;
     }
 
-    protected Object getAttribute(String key)
+    @Override
+    protected Object getAttribute(final String key)
     {
         return _servletRequest.getAttribute(key);
     }
 
-    protected void setAttribute(String key, Object value)
+    @Override
+    protected void setAttribute(final String key, final Object value)
     {
         _servletRequest.setAttribute(key, value);
     }
 
-    protected void removeAttribute(String key)
+    @Override
+    protected void removeAttribute(final String key)
     {
         _servletRequest.removeAttribute(key);
     }
 
-    protected Enumeration getAttributeNames()
+    @Override
+    @SuppressWarnings("unchecked")
+    protected Enumeration<String> getAttributeNames()
     {
         return _servletRequest.getAttributeNames();
     }
 
-    public void putAll(Map t)
+    @Override
+    public void putAll(final Map<? extends String, ? extends Object> t)
     {
         throw new UnsupportedOperationException();
     }
 
 
+    @Override
     public void clear()
     {
         throw new UnsupportedOperationException();

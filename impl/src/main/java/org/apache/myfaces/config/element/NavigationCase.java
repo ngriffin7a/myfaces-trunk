@@ -26,7 +26,7 @@ package org.apache.myfaces.config.element;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public interface NavigationCase extends ElementBase
+public interface NavigationCase
 {
     // <!ELEMENT navigation-case (description*, display-name*, icon*, from-action?, from-outcome?, to-view-id, redirect?)>
 

@@ -22,7 +22,7 @@ import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
 
 /**
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Thomas Spiegl
@@ -55,28 +55,20 @@ public class ValidatorException
 
     private static String facesMessageToString(FacesMessage message)
     {
-        if (message.getSummary() != null)
+        final String summary = message.getSummary();
+        final String detail = message.getDetail();
+        
+        if (summary != null)
         {
-            if (message.getDetail() != null)
+            if (detail != null)
             {
-                return message.getSummary() + ": " + message.getDetail();
+                return summary + ": " + detail;
             }
-            else
-            {
-                return message.getSummary();
-            }
+            
+            return summary;
         }
-        else
-        {
-            if (message.getDetail() != null)
-            {
-                return message.getDetail();
-            }
-            else
-            {
-                return "";
-            }
-        }
+        
+        return detail != null ? detail : "";
     }
 
 }

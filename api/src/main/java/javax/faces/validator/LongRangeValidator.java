@@ -18,9 +18,14 @@
  */
 package javax.faces.validator;
 
-import javax.faces.component.StateHolder;
+import javax.faces.component.PartialStateHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFJspProperty;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFValidator;
+
 /**
  * Creates a validator and associateds it with the nearest parent
  * UIComponent.  When invoked, the validator ensures that values
@@ -30,26 +35,30 @@ import javax.faces.context.FacesContext;
  * 
  * Unless otherwise specified, all attributes accept static values or EL expressions.
  * 
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
- * @JSFValidator
- *   name="f:validateLongRange"
- *   bodyContent="empty"
- *   tagClass="org.apache.myfaces.taglib.core.ValidateLongRangeTag" 
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
  *
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  */
+@JSFValidator(
+    name="f:validateLongRange",
+    bodyContent="empty",
+    tagClass="org.apache.myfaces.taglib.core.ValidateLongRangeTag")
+@JSFJspProperty(
+    name="binding", 
+    returnType = "javax.faces.validator.LongRangeValidator",
+    longDesc = "A ValueExpression that evaluates to a LongRangeValidator.")
 public class LongRangeValidator
-        implements Validator, StateHolder
+        implements Validator, PartialStateHolder
 {
     // FIELDS
     public static final String MAXIMUM_MESSAGE_ID = "javax.faces.validator.LongRangeValidator.MAXIMUM";
     public static final String MINIMUM_MESSAGE_ID =    "javax.faces.validator.LongRangeValidator.MINIMUM";
     public static final String TYPE_MESSAGE_ID       = "javax.faces.validator.LongRangeValidator.TYPE";
     public static final String VALIDATOR_ID       = "javax.faces.LongRange";
-
+    public static final String NOT_IN_RANGE_MESSAGE_ID = "javax.faces.validator.LongRangeValidator.NOT_IN_RANGE";
+    
     private Long _minimum = null;
     private Long _maximum = null;
     private boolean _transient = false;
@@ -91,7 +100,7 @@ public class LongRangeValidator
             if (dvalue < _minimum.longValue() ||
                 dvalue > _maximum.longValue())
             {
-                Object[] args = {_minimum, _maximum,uiComponent.getId()};
+                Object[] args = {_minimum, _maximum,_MessageUtils.getLabel(facesContext, uiComponent)};
                 throw new ValidatorException(_MessageUtils.getErrorMessage(facesContext, NOT_IN_RANGE_MESSAGE_ID, args));
             }
         }
@@ -99,7 +108,7 @@ public class LongRangeValidator
         {
             if (dvalue < _minimum.longValue())
             {
-                Object[] args = {_minimum,uiComponent.getId()};
+                Object[] args = {_minimum,_MessageUtils.getLabel(facesContext, uiComponent)};
                 throw new ValidatorException(_MessageUtils.getErrorMessage(facesContext, MINIMUM_MESSAGE_ID, args));
             }
         }
@@ -107,7 +116,7 @@ public class LongRangeValidator
         {
             if (dvalue > _maximum.longValue())
             {
-                Object[] args = {_maximum,uiComponent.getId()};
+                Object[] args = {_maximum,_MessageUtils.getLabel(facesContext, uiComponent)};
                 throw new ValidatorException(_MessageUtils.getErrorMessage(facesContext, MAXIMUM_MESSAGE_ID, args));
             }
         }
@@ -120,18 +129,17 @@ public class LongRangeValidator
         {
             return ((Number)value).longValue();
         }
-        else
+
+        try
         {
-            try
-            {
-                return Long.parseLong(value.toString());
-            }
-            catch (NumberFormatException e)
-            {
-                Object[] args = {uiComponent.getId()};
-                throw new ValidatorException(_MessageUtils.getErrorMessage(facesContext, TYPE_MESSAGE_ID, args));
-            }
+            return Long.parseLong(value.toString());
         }
+        catch (NumberFormatException e)
+        {
+            Object[] args = {_MessageUtils.getLabel(facesContext, uiComponent)};
+            throw new ValidatorException(_MessageUtils.getErrorMessage(facesContext, TYPE_MESSAGE_ID, args));
+        }
+        
     }
 
 
@@ -140,8 +148,8 @@ public class LongRangeValidator
     /** 
      * The largest value that should be considered valid.
      * 
-     * @JSFProperty
-     */    
+     */
+    @JSFProperty
     public long getMaximum()
     {
         return _maximum != null ? _maximum.longValue() : Long.MAX_VALUE;
@@ -150,13 +158,14 @@ public class LongRangeValidator
     public void setMaximum(long maximum)
     {
         _maximum = new Long(maximum);
+        clearInitialState();
     }
 
     /**
      * The smallest value that should be considered valid.
      *  
-     * @JSFProperty
      */
+    @JSFProperty
     public long getMinimum()
     {
         return _minimum != null ? _minimum.longValue() : Long.MIN_VALUE;
@@ -165,6 +174,7 @@ public class LongRangeValidator
     public void setMinimum(long minimum)
     {
         _minimum = new Long(minimum);
+        clearInitialState();
     }
 
     public boolean isTransient()
@@ -180,21 +190,29 @@ public class LongRangeValidator
     // RESTORE & SAVE STATE
     public Object saveState(FacesContext context)
     {
-        Object values[] = new Object[2];
-        values[0] = _maximum;
-        values[1] = _minimum;
-        return values;
+        if (!initialStateMarked())
+        {
+            Object values[] = new Object[2];
+            values[0] = _maximum;
+            values[1] = _minimum;
+            return values;
+        }
+        return null;
     }
 
     public void restoreState(FacesContext context,
                              Object state)
     {
-        Object values[] = (Object[])state;
-        _maximum = (Long)values[0];
-        _minimum = (Long)values[1];
+        if (state != null)
+        {
+            Object values[] = (Object[])state;
+            _maximum = (Long)values[0];
+            _minimum = (Long)values[1];
+        }
     }
 
     // MISC
+    @Override
     public boolean equals(Object o)
     {
         if (this == o) return true;
@@ -207,5 +225,24 @@ public class LongRangeValidator
 
         return true;
     }
+    
+    private boolean _initialStateMarked = false;
 
+    @Override
+    public void clearInitialState()
+    {
+        _initialStateMarked = false;
+    }
+
+    @Override
+    public boolean initialStateMarked()
+    {
+        return _initialStateMarked;
+    }
+
+    @Override
+    public void markInitialState()
+    {
+        _initialStateMarked = true;
+    }
 }

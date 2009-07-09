@@ -18,44 +18,30 @@
  */
 package javax.faces.component;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFacet;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
 /**
- * This tag is commonly used as a child of the dataTable tag, to
- * represent a column of data.
- * <p>
- * It can be decorated with "header" and "footer" facets to drive
- * the output of header and footer rows. Row values are specified
- * via its children.
- * <p>
- * Unless otherwise specified, all attributes accept static values
- * or EL expressions.
- * <p>
- * See Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
- * @JSFComponent
- *   name = "h:column"
- *   type = "javax.faces.Column"
- *   family = "javax.faces.Column"
- *   tagClass = "org.apache.myfaces.taglib.html.HtmlColumnTag"
- *   tagSuperclass = "javax.faces.webapp.UIComponentBodyTag"
- *   desc = "UIData"
- *
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
+ * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class UIColumn
-        extends UIComponentBase
+@JSFComponent
+public class UIColumn extends UIComponentBase
 {
     private static final String FOOTER_FACET_NAME = "footer";
     private static final String HEADER_FACET_NAME = "header";
-    
+
     public void setFooter(UIComponent footer)
     {
         getFacets().put(FOOTER_FACET_NAME, footer);
     }
 
+    @JSFFacet
     public UIComponent getFooter()
     {
-        return (UIComponent)getFacets().get(FOOTER_FACET_NAME);
+        return getFacet(FOOTER_FACET_NAME);
     }
 
     public void setHeader(UIComponent header)
@@ -63,27 +49,37 @@ public class UIColumn
         getFacets().put(HEADER_FACET_NAME, header);
     }
 
+    @JSFFacet
     public UIComponent getHeader()
     {
-        return (UIComponent)getFacets().get(HEADER_FACET_NAME);
+        return getFacet(HEADER_FACET_NAME);
     }
 
+    /**
+     * Get a string which uniquely identifies this UIComponent within the scope of the nearest ancestor NamingContainer
+     * component. The id is not necessarily unique across all components in the current view.
+     */
+    @JSFProperty(literalOnly=true, rtexprvalue=false)
+    @Override
+    public String getId()
+    {
+        return super.getId();
+    }
 
     //------------------ GENERATED CODE BEGIN (do not modify!) --------------------
 
     public static final String COMPONENT_TYPE = "javax.faces.Column";
     public static final String COMPONENT_FAMILY = "javax.faces.Column";
 
-
     public UIColumn()
     {
     }
 
+    @Override
     public String getFamily()
     {
         return COMPONENT_FAMILY;
     }
 
-
-    //------------------ GENERATED CODE END ---------------------------------------
+    // ------------------ GENERATED CODE END ---------------------------------------
 }

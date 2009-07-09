@@ -18,20 +18,22 @@
  */
 package javax.faces.component.html;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
+
 interface _StyleProperties
 {
     /**
      * HTML: CSS styling instructions.
      * 
-     * @JSFProperty
      */
+    @JSFProperty
     public abstract String getStyle();
 
     /**
      * The CSS class for this element.  Corresponds to the HTML 'class' attribute.
      * 
-     * @JSFProperty
      */
+    @JSFProperty
     public abstract String getStyleClass();
 
 }

@@ -21,32 +21,51 @@ package javax.faces.el;
 import javax.faces.FacesException;
 
 /**
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
+ * 
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
+ * @deprecated
  */
+@Deprecated
 public class EvaluationException extends FacesException
 {
-  private static final long serialVersionUID = 4668524591042216006L;
+    private static final long serialVersionUID = 4668524591042216006L;
+
     // FIELDS
 
-  // CONSTRUCTORS
+    // CONSTRUCTORS
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public EvaluationException()
     {
         super();
     }
 
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public EvaluationException(String message)
     {
         super(message);
     }
 
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public EvaluationException(String message, Throwable cause)
     {
         super(message, cause);
     }
-    
+
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public EvaluationException(Throwable cause)
     {
         super(cause);

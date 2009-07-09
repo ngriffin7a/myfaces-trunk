@@ -23,6 +23,8 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import org.apache.myfaces.util.AbstractAttributeMap;
+
 
 /**
  * ServletContext init parameters as Map.
@@ -30,43 +32,50 @@ import javax.servlet.ServletContext;
  * @author Anton Koinov (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class InitParameterMap extends AbstractAttributeMap
+public final class InitParameterMap extends AbstractAttributeMap<String>
 {
-    final ServletContext _servletContext;
+    private final ServletContext _servletContext;
 
-    InitParameterMap(ServletContext servletContext)
+    InitParameterMap(final ServletContext servletContext)
     {
         _servletContext = servletContext;
     }
 
-    protected Object getAttribute(String key)
+    @Override
+    protected String getAttribute(final String key)
     {
         return _servletContext.getInitParameter(key);
     }
 
-    protected void setAttribute(String key, Object value)
+    @Override
+    protected void setAttribute(final String key, final String value)
     {
         throw new UnsupportedOperationException(
             "Cannot set ServletContext InitParameter");
     }
 
-    protected void removeAttribute(String key)
+    @Override
+    protected void removeAttribute(final String key)
     {
         throw new UnsupportedOperationException(
             "Cannot remove ServletContext InitParameter");
     }
 
-    protected Enumeration getAttributeNames()
+    @Override
+    @SuppressWarnings("unchecked")
+    protected Enumeration<String> getAttributeNames()
     {
         return _servletContext.getInitParameterNames();
     }
     
-    public void putAll(Map t)
+    @Override
+    public void putAll(final Map<? extends String, ? extends String> t)
     {
         throw new UnsupportedOperationException();
     }
 
 
+    @Override
     public void clear()
     {
         throw new UnsupportedOperationException();

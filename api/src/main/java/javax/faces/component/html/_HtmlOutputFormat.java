@@ -20,30 +20,26 @@ package javax.faces.component.html;
 
 import javax.faces.component.UIOutput;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+
 /**
- * Renders as text, applying the child f:param values to the value
- * attribute as a MessageFormat string.  If this element has an ID
- * or CSS style properties, the text is wrapped in a span element.
- * <p>
- * Unless otherwise specified, all attributes accept static values
- * or EL expressions.
- * <p>
- * See Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
- * @JSFComponent
- *   name = "h:outputFormat"
- *   class = "javax.faces.component.html.HtmlOutputFormat"
- *   tagClass = "org.apache.myfaces.taglib.html.HtmlOutputFormatTag"
- *   template = "true"
- *   desc = "h:outputFormat"
- *   
- * @author Thomas Spiegl (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * Renders as text, applying the child f:param values to the value attribute as a MessageFormat string.
+ * 
+ * If this element has an ID or CSS style properties, the text is wrapped in a span element.
  */
+@JSFComponent
+(name = "h:outputFormat",
+clazz = "javax.faces.component.html.HtmlOutputFormat",template=true,
+tagClass = "org.apache.myfaces.taglib.html.HtmlOutputFormatTag",
+defaultRendererType = "javax.faces.Format"
+)
 abstract class _HtmlOutputFormat extends UIOutput implements _StyleProperties, 
-    _EscapeProperty, _TitleProperty
+    _EscapeProperty, _TitleProperty, _UniversalProperties
 {
-    public static final String COMPONENT_TYPE = "javax.faces.HtmlOutputFormat";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Format";
+
+  static public final String COMPONENT_FAMILY =
+    "javax.faces.Output";
+  static public final String COMPONENT_TYPE =
+    "javax.faces.HtmlOutputFormat";
 
 }

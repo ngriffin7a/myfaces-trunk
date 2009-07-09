@@ -18,60 +18,50 @@
  */
 package org.apache.myfaces.context;
 
-import org.apache.myfaces.context.servlet.ServletFacesContextImpl;
-
 import javax.faces.FacesException;
 import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextFactory;
 import javax.faces.lifecycle.Lifecycle;
-import javax.portlet.PortletContext;
-import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import org.apache.myfaces.context.servlet.FacesContextImpl;
+
 /**
  * DOCUMENT ME!
+ * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class FacesContextFactoryImpl
-        extends FacesContextFactory
+public class FacesContextFactoryImpl extends FacesContextFactory
 {
-    public FacesContext getFacesContext(Object context,
-                                        Object request,
-                                        Object response,
-                                        Lifecycle lifecycle)
-            throws FacesException
+    @Override
+    public FacesContext getFacesContext(Object context, Object request, Object response, Lifecycle lifecycle)
+        throws FacesException
     {
-        if (context == null) {
+        if (context == null)
+        {
             throw new NullPointerException("context");
         }
-        if (request == null) {
+        if (request == null)
+        {
             throw new NullPointerException("request");
         }
-        if (response == null) {
+        if (response == null)
+        {
             throw new NullPointerException("response");
         }
-        if (lifecycle == null) {
+        if (lifecycle == null)
+        {
             throw new NullPointerException("lifecycle");
         }
 
         if (context instanceof ServletContext)
         {
-            return new ServletFacesContextImpl((ServletContext)context,
-                                               (ServletRequest)request,
-                                               (ServletResponse)response);
+            return new FacesContextImpl((ServletContext)context, (ServletRequest)request, (ServletResponse)response);
         }
-        
-        if (context instanceof PortletContext)
-        {
-            return new ServletFacesContextImpl((PortletContext)context,
-                                               (PortletRequest)request,
-                                               (PortletResponse)response);
-        }
-        
+
         throw new FacesException("Unsupported context type " + context.getClass().getName());
     }
 }

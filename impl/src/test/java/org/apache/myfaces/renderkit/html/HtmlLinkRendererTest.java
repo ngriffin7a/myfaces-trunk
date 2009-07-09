@@ -38,7 +38,10 @@ import org.apache.shale.test.mock.MockRenderKitFactory;
 import org.apache.shale.test.mock.MockResponseWriter;
 import org.apache.shale.test.mock.MockServletContext;
 
-
+/**
+ * @author Bruno Aranda (latest modification by $Author$)
+ * @version $Revision$ $Date$
+ */
 public class HtmlLinkRendererTest extends AbstractJsfTestCase
 {
 
@@ -55,7 +58,7 @@ public class HtmlLinkRendererTest extends AbstractJsfTestCase
         return new TestSuite(HtmlLinkRendererTest.class);
     }
 
-    public void setUp()
+    public void setUp() throws Exception
     {
         super.setUp();
 
@@ -82,10 +85,10 @@ public class HtmlLinkRendererTest extends AbstractJsfTestCase
         facesContext.getRenderKit().addRenderer(
                 outputLink.getFamily(),
                 outputLink.getRendererType(),
-                new HtmlLinkRenderer());        
+                new HtmlLinkRenderer());
     }
 
-    public void tearDown()
+    public void tearDown() throws Exception
     {
         super.tearDown();
         writer = null;
@@ -105,7 +108,7 @@ public class HtmlLinkRendererTest extends AbstractJsfTestCase
             new HtmlRenderedAttr("onblur"),
             //_EventProperties
             new HtmlRenderedAttr("onclick", "onclick", 
-                    "onclick=\"onclick;return oamSubmitForm(&apos;_id1&apos;,&apos;_id1:_id0&apos;);\""), 
+                    "onclick=\"var cf = function(){onclick};var oamSF = function(){return oamSubmitForm(&apos;j_id1&apos;,&apos;j_id1:j_id0&apos;);};return (cf()==false)? false : oamSF();\""), 
             new HtmlRenderedAttr("ondblclick"), 
             new HtmlRenderedAttr("onkeydown"), 
             new HtmlRenderedAttr("onkeypress"),

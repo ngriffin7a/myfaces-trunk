@@ -18,88 +18,94 @@
  */
 package javax.faces.component;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.el.ValueExpression;
+import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import javax.faces.el.EvaluationException;
 import javax.faces.el.MethodBinding;
-import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.FacesEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.event.ValueChangeListener;
 import javax.faces.render.Renderer;
 import javax.faces.validator.Validator;
-import javax.faces.FacesException;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
 
 /**
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
- * @JSFComponent
- *   type = "javax.faces.Input"
- *   family = "javax.faces.Input"
- *   desc = "UIInput"
- *   
- * @author Manfred Geiler (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * UICommand is a base abstraction for components that implement ActionSource.
+ * <p>
+ * See the javadoc for this class in the <a href="http://java.sun.com/j2ee/javaserverfaces/1.2/docs/api/index.html">JSF
+ * Specification</a> for further details.
+ * <p>
+ * <h4>Events:</h4>
+ * <table border="1" width="100%" cellpadding="3" summary="">
+ * <tr bgcolor="#CCCCFF" class="TableHeadingColor">
+ * <th align="left">Type</th> <th align="left">Phases</th> <th align="left">Description</th>
+ * </tr>
+ * <tr class="TableRowColor">
+ * <td valign="top"><code>javax.faces.event.ValueChangeEvent</code></td>
+ * <td valign="top" nowrap></td>
+ * <td valign="top">The valueChange event is delivered when the value attribute is changed.</td>
+ * </tr>
+ * </table>
  */
+@JSFComponent(defaultRendererType = "javax.faces.Text")
 public class UIInput extends UIOutput implements EditableValueHolder
 {
     public static final String COMPONENT_TYPE = "javax.faces.Input";
     public static final String COMPONENT_FAMILY = "javax.faces.Input";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Text";
-    private static final boolean DEFAULT_IMMEDIATE = false;
-    private static final boolean DEFAULT_REQUIRED = false;
 
     public static final String CONVERSION_MESSAGE_ID = "javax.faces.component.UIInput.CONVERSION";
     public static final String REQUIRED_MESSAGE_ID = "javax.faces.component.UIInput.REQUIRED";
+    public static final String UPDATE_MESSAGE_ID = "javax.faces.component.UIInput.UPDATE";
+    public static final String VALIDATE_EMPTY_FIELDS_PARAM_NAME = "javax.faces.VALIDATE_EMPTY_FIELDS";
     private static final String ERROR_HANDLING_EXCEPTION_LIST = "org.apache.myfaces.errorHandling.exceptionList";
+
+    private static final String EMPTY_VALUES_AS_NULL_PARAM_NAME = "javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL";
 
     private static final Validator[] EMPTY_VALIDATOR_ARRAY = new Validator[0];
 
-    private Boolean _immediate = null;
-    private Boolean _required = null;
+    private MethodBinding _validator;
+    private _DeltaList<Validator> _validatorList;
 
-    private Object _submittedValue = null;
-    private boolean _localValueSet = false;
-    private boolean _valid = true;
-    private MethodBinding _validator = null;
-    private MethodBinding _valueChangeListener = null;
-    private List _validatorList = null;
+    private MethodBinding _valueChangeListener;
 
-    // use javadoc inherited from EditableValueHolder
     /**
-     * @JSFProperty
-     *   tagExcluded = "true"
+     * Construct an instance of the UIInput.
      */
-    public Object getSubmittedValue()
+    public UIInput()
     {
-        return _submittedValue;
+        setRendererType("javax.faces.Text");
     }
 
-    // use javadoc inherited from EditableValueHolder
-    public void setSubmittedValue(Object submittedValue)
+    @Override
+    public String getFamily()
     {
-        _submittedValue = submittedValue;
+        return COMPONENT_FAMILY;
     }
 
     /**
-     * Store the specified object as the "local value" of this component.
-     * The value-binding named "value" (if any) is ignored; the object is
-     * only stored locally on this component. During the "update model"
-     * phase, if there is a value-binding named "value" then this local
-     * value will be stored via that value-binding and the "local value"
+     * Store the specified object as the "local value" of this component. The value-binding named "value" (if any) is
+     * ignored; the object is only stored locally on this component. During the "update model" phase, if there is a
+     * value-binding named "value" then this local value will be stored via that value-binding and the "local value"
      * reset to null.
      */
+    @Override
     public void setValue(Object value)
     {
         setLocalValueSet(true);
         super.setValue(value);
     }
-
+    
     /**
      * Return the current value of this component.
      * <p>
@@ -114,104 +120,30 @@ public class UIInput extends UIOutput implements EditableValueHolder
         return super.getValue();
     }
 
-    // use javadoc inherited from EditableValueHolder
     /**
-     * @JSFProperty
-     *   tagExcluded = "true"
-     */
-    public boolean isLocalValueSet()
-    {
-        return _localValueSet;
-    }
-
-    // use javadoc inherited from EditableValueHolder
-    public void setLocalValueSet(boolean localValueSet)
-    {
-        _localValueSet = localValueSet;
-    }
-
-    // use javadoc inherited from EditableValueHolder
-    /**
-     * @JSFProperty
-     *   tagExcluded = "true"
-     */
-    public boolean isValid()
-    {
-        return _valid;
-    }
-
-    // use javadoc inherited from EditableValueHolder
-    public void setValid(boolean valid)
-    {
-        _valid = valid;
-    }
-
-    // use javadoc inherited from EditableValueHolder    
-    /**
-     * A method binding EL expression, accepting FacesContext, UIComponent,
-     * and Object parameters, and returning void, that validates the
-     * component's local value.
-     * 
-     * @JSFProperty
-     *   stateHolder="true"
-     *   returnSignature="void"
-     *   methodSignature="javax.faces.context.FacesContext,javax.faces.component.UIComponent,java.lang.Object"
-     */
-    public MethodBinding getValidator()
-    {
-        return _validator;
-    }
-
-    // use javadoc inherited from EditableValueHolder
-    public void setValidator(MethodBinding validator)
-    {
-        _validator = validator;
-    }
-
-    // use javadoc inherited from EditableValueHolder
-    /**
-     * A method binding EL expression, accepting a ValueChangeEvent parameter
-     * and returning void. The specified method is invoked if this component
-     * is modified. The phase that this handler is fired in can be controlled
-     * via the immediate attribute.
-     * 
-     * @JSFProperty
-     *   stateHolder="true"
-     *   returnSignature="void"
-     *   methodSignature="javax.faces.event.ValueChangeEvent"
-     */
-    public MethodBinding getValueChangeListener()
-    {
-        return _valueChangeListener;
-    }
-
-    // use javadoc inherited from EditableValueHolder
-    public void setValueChangeListener(MethodBinding valueChangeListener)
-    {
-        _valueChangeListener = valueChangeListener;
-    }
-
-    /**
-     * Set the "submitted value" of this component from the relevant data
-     * in the current servlet request object.
+     * Set the "submitted value" of this component from the relevant data in the current servlet request object.
      * <p>
-     * If this component is not rendered, then do nothing; no output would
-     * have been sent to the client so no input is expected.
+     * If this component is not rendered, then do nothing; no output would have been sent to the client so no input is
+     * expected.
      * <p>
-     * Invoke the inherited functionality, which typically invokes the
-     * renderer associated with this component to extract and set this
-     * component's "submitted value".
+     * Invoke the inherited functionality, which typically invokes the renderer associated with this component to
+     * extract and set this component's "submitted value".
      * <p>
-     * If this component is marked "immediate", then immediately apply
-     * validation to the submitted value found. On error, call context
-     * method "renderResponse" which will force processing to leap to
-     * the "render response" phase as soon as the "decode" step has
-     * completed for all other components.
+     * If this component is marked "immediate", then immediately apply validation to the submitted value found. On
+     * error, call context method "renderResponse" which will force processing to leap to the "render
+     * response" phase as soon as the "decode" step has completed for all other components.
      */
+    @Override
     public void processDecodes(FacesContext context)
     {
-        if (context == null) throw new NullPointerException("context");
-        if (!isRendered()) return;
+        if (context == null)
+        {
+            throw new NullPointerException("context");
+        }
+        if (!isRendered())
+        {
+            return;
+        }
         super.processDecodes(context);
         if (isImmediate())
         {
@@ -231,10 +163,17 @@ public class UIInput extends UIOutput implements EditableValueHolder
         }
     }
 
+    @Override
     public void processValidators(FacesContext context)
     {
-        if (context == null) throw new NullPointerException("context");
-        if (!isRendered()) return;
+        if (context == null)
+        {
+            throw new NullPointerException("context");
+        }
+        if (!isRendered())
+        {
+            return;
+        }
 
         super.processValidators(context);
 
@@ -256,10 +195,17 @@ public class UIInput extends UIOutput implements EditableValueHolder
         }
     }
 
+    @Override
     public void processUpdates(FacesContext context)
     {
-        if (context == null) throw new NullPointerException("context");
-        if (!isRendered()) return;
+        if (context == null)
+        {
+            throw new NullPointerException("context");
+        }
+        if (!isRendered())
+        {
+            return;
+        }
 
         super.processUpdates(context);
 
@@ -278,36 +224,37 @@ public class UIInput extends UIOutput implements EditableValueHolder
         }
     }
 
+    @Override
     public void decode(FacesContext context)
     {
-        //We (re)set to valid, so that component automatically gets (re)validated
+        // We (re)set to valid, so that component automatically gets (re)validated
         setValid(true);
         super.decode(context);
     }
 
-    public void broadcast(FacesEvent event)
-            throws AbortProcessingException
+    @Override
+    public void broadcast(FacesEvent event) throws AbortProcessingException
     {
         // invoke standard listeners attached to this component first
         super.broadcast(event);
 
-        //Check if the event is applicable for ValueChangeListener
-        if (event instanceof ValueChangeEvent){
+        // Check if the event is applicable for ValueChangeListener
+        if (event instanceof ValueChangeEvent)
+        {
             // invoke the single listener defined directly on the component
             MethodBinding valueChangeListenerBinding = getValueChangeListener();
             if (valueChangeListenerBinding != null)
             {
                 try
                 {
-                    valueChangeListenerBinding.invoke(getFacesContext(),
-                                                      new Object[]{event});
+                    valueChangeListenerBinding.invoke(getFacesContext(), new Object[] { event });
                 }
                 catch (EvaluationException e)
                 {
                     Throwable cause = e.getCause();
                     if (cause != null && cause instanceof AbortProcessingException)
                     {
-                        throw (AbortProcessingException)cause;
+                        throw (AbortProcessingException) cause;
                     }
                     else
                     {
@@ -320,55 +267,78 @@ public class UIInput extends UIOutput implements EditableValueHolder
 
     public void updateModel(FacesContext context)
     {
-        if (!isValid()) return;
-        if (!isLocalValueSet()) return;
-        ValueBinding vb = getValueBinding("value");
-        if (vb == null) return;
+        if (!isValid())
+        {
+            return;
+        }
+        if (!isLocalValueSet())
+        {
+            return;
+        }
+        ValueExpression expression = getValueExpression("value");
+        if (expression == null)
+        {
+            return;
+        }
+
         try
         {
-            vb.setValue(context, getLocalValue());
+            expression.setValue(context.getELContext(), getLocalValue());
             setValue(null);
             setLocalValueSet(false);
         }
-         catch (Exception e)
+        catch (Exception e)
         {
-            //Object[] args = {getId()};
             context.getExternalContext().log(e.getMessage(), e);
-            _MessageUtils.addErrorMessage(context, this,CONVERSION_MESSAGE_ID,new Object[]{getId()});
+            _MessageUtils.addErrorMessage(context, this, UPDATE_MESSAGE_ID, new Object[] { _MessageUtils.getLabel(
+                context, this) });
             setValid(false);
 
-            /* we are not allowed to throw exceptions here - we still need the full stack-trace later on
-             * to process it later in our error-handler
+            /*
+             * we are not allowed to throw exceptions here - we still need the full stack-trace later on to process it
+             * later in our error-handler
              */
-            queueExceptionInRequest(context, vb, e);
+            queueExceptionInRequest(context, expression, e);
         }
     }
 
     /**
-     * For development and production, we want to offer a single point
-     * to which error-handlers can attach. So we queue up all ocurring
-     * exceptions and later pass them to the configured error-handler.
+     * For development and production, we want to offer a single point to which error-handlers can attach. So we queue
+     * up all ocurring exceptions and later pass them to the configured error-handler.
      */
-    private void queueExceptionInRequest(FacesContext context, ValueBinding binding, Exception e) {
-        List li = (List) context.getExternalContext().getRequestMap().get(ERROR_HANDLING_EXCEPTION_LIST);
-        if(null==li) {
-            li = new ArrayList();
+    @SuppressWarnings("unchecked")
+    private void queueExceptionInRequest(FacesContext context, ValueExpression expression, Exception e)
+    {
+        Map<String, Object> requestScope = context.getExternalContext().getRequestMap();
+        List<FacesException> li = (List<FacesException>) requestScope.get(ERROR_HANDLING_EXCEPTION_LIST);
+        if (null == li)
+        {
+            li = new ArrayList<FacesException>();
             context.getExternalContext().getRequestMap().put(ERROR_HANDLING_EXCEPTION_LIST, li);
         }
-        li.add(new FacesException("Exception while setting value for expression : "+
-            binding.getExpressionString()+" of component with path : "
-            + _ComponentUtils.getPathToComponent(this),e));
+
+        li.add(new FacesException("Exception while setting value for expression : " + expression.getExpressionString()
+                + " of component with path : " + _ComponentUtils.getPathToComponent(this), e));
     }
 
-    protected void validateValue(FacesContext context,Object convertedValue)
+    protected void validateValue(FacesContext context, Object convertedValue)
     {
-        boolean empty = convertedValue == null ||
-                        (convertedValue instanceof String
-                         && ((String)convertedValue).length() == 0);
+        boolean empty = convertedValue == null
+                || (convertedValue instanceof String && ((String) convertedValue).length() == 0);
 
         if (isRequired() && empty)
         {
-            _MessageUtils.addErrorMessage(context, this, REQUIRED_MESSAGE_ID,new Object[]{getId()});
+            if (getRequiredMessage() != null)
+            {
+                String requiredMessage = getRequiredMessage();
+                context.addMessage(this.getClientId(context), new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    requiredMessage, requiredMessage));
+            }
+            else
+            {
+                _MessageUtils.addErrorMessage(context, this, REQUIRED_MESSAGE_ID,
+                    new Object[] { _MessageUtils.getLabel(context, this) });
+            }
             setValid(false);
             return;
         }
@@ -381,53 +351,61 @@ public class UIInput extends UIOutput implements EditableValueHolder
     }
 
     /**
-     * Determine whether the new value is valid, and queue a ValueChangeEvent
-     * if necessary.
+     * Determine whether the new value is valid, and queue a ValueChangeEvent if necessary.
      * <p>
-     * The "submitted value" is converted to the necessary type; conversion
-     * failure is reported as an error and validation processing terminates
-     * for this component. See documentation for method getConvertedValue
-     * for details on the conversion process.
+     * The "submitted value" is converted to the necessary type; conversion failure is reported as an error and
+     * validation processing terminates for this component. See documentation for method getConvertedValue for details
+     * on the conversion process.
      * <p>
-     * Any validators attached to this component are then run, passing
-     * the converted value.
+     * Any validators attached to this component are then run, passing the converted value.
      * <p>
-     * The old value of this component is then fetched (possibly involving
-     * the evaluation of a value-binding expression, ie invoking a method
-     * on a user object). The old value is compared to the new validated
-     * value, and if they are different then a ValueChangeEvent is queued
-     * for later processing.
+     * The old value of this component is then fetched (possibly involving the evaluation of a value-binding expression,
+     * ie invoking a method on a user object). The old value is compared to the new validated value, and if they are
+     * different then a ValueChangeEvent is queued for later processing.
      * <p>
      * On successful completion of this method:
      * <ul>
-     * <li> isValid() is true
-     * <li> isLocalValueSet() is true
-     * <li> getValue() will return the converted value, NOT evaluate the
-     * EL expression bound to the "value" attribute. Note that the getValue
-     * method will return to normal behaviour (evaluating its EL expression)
-     * after a successful update-model phase, ie after pushing this converted
-     * value into the model.
-     * <li> submittedValue is reset to null
-     * <li> a ValueChangeEvent is queued if the new value != old value
-     * </ul> 
-     * 
+     * <li>isValid() is true
+     * <li>isLocalValueSet() is true
+     * <li>submittedValue is reset to null
+     * <li>a ValueChangeEvent is queued if the new value != old value
+     * </ul>
      */
     public void validate(FacesContext context)
     {
-        if (context == null) throw new NullPointerException("context");
+        if (context == null)
+            throw new NullPointerException("context");
 
-        try {
+        try
+        {
 
             Object submittedValue = getSubmittedValue();
-            if (submittedValue == null) return;
+            if (submittedValue == null)
+            {
+                return;
+            }
+
+            // Begin new JSF 2.0 requirement (INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL)
+            String contextParam = context.getExternalContext().getInitParameter(EMPTY_VALUES_AS_NULL_PARAM_NAME);
+            if (contextParam != null && contextParam.toLowerCase().equals("true"))
+            {
+                if (submittedValue.toString().length() == 0)
+                {
+                    setSubmittedValue(null);
+                    submittedValue = null;
+                }
+            }
+            // End new JSF 2.0 requirement (INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL)
 
             Object convertedValue = getConvertedValue(context, submittedValue);
 
-            if (!isValid()) return;
+            if (!isValid())
+                return;
 
             validateValue(context, convertedValue);
 
-            if (!isValid()) return;
+            if (!isValid())
+                return;
 
             Object previousValue = getValue();
             setValue(convertedValue);
@@ -439,30 +417,26 @@ public class UIInput extends UIOutput implements EditableValueHolder
         }
         catch (Exception ex)
         {
-            throw new FacesException("Exception while validating component with path : "+_ComponentUtils.getPathToComponent(this),ex);
+            throw new FacesException("Exception while validating component with path : "
+                    + _ComponentUtils.getPathToComponent(this), ex);
         }
+
     }
 
     /**
      * Convert the provided object to the desired value.
      * <p>
-     * If there is a renderer for this component, then call the renderer's
-     * getConvertedValue method. While this can of course be implemented in
-     * any way the renderer desires, it typically performs exactly the same
-     * processing that this method would have done anyway (ie that described
-     * below for the no-renderer case).
+     * If there is a renderer for this component, then call the renderer's getConvertedValue method. While this can of
+     * course be implemented in any way the renderer desires, it typically performs exactly the same processing that
+     * this method would have done anyway (ie that described below for the no-renderer case).
      * <p>
      * Otherwise:
      * <ul>
-     * <li>If the submittedValue is not a String then just return the
-     *   submittedValue unconverted.
-     * <li>If there is no "value" value-binding then just return the
-     *   submittedValue unconverted.
-     * <li>Use introspection to determine the type of the target 
-     *   property specified by the value-binding, and then use
-     *   Application.createConverter to find a converter that can
-     *   map from String to the required type. Apply the converter
-     *   to the submittedValue and return the result. 
+     * <li>If the submittedValue is not a String then just return the submittedValue unconverted.
+     * <li>If there is no "value" value-binding then just return the submittedValue unconverted.
+     * <li>Use introspection to determine the type of the target property specified by the value-binding, and then use
+     * Application.createConverter to find a converter that can map from String to the required type. Apply the
+     * converter to the submittedValue and return the result.
      * </ul>
      */
     protected Object getConvertedValue(FacesContext context, Object submittedValue)
@@ -479,58 +453,321 @@ public class UIInput extends UIOutput implements EditableValueHolder
                 Converter converter = _SharedRendererUtils.findUIOutputConverter(context, this);
                 if (converter != null)
                 {
-                    return converter.getAsObject(context, this, (String)submittedValue);
+                    return converter.getAsObject(context, this, (String) submittedValue);
                 }
             }
         }
         catch (ConverterException e)
         {
-            FacesMessage facesMessage = e.getFacesMessage();
-            if (facesMessage != null)
+            String converterMessage = getConverterMessage();
+            if (converterMessage != null)
             {
-                context.addMessage(getClientId(context), facesMessage);
+                context.addMessage(getClientId(context), new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    converterMessage, converterMessage));
             }
             else
             {
-                _MessageUtils.addErrorMessage(context, this, CONVERSION_MESSAGE_ID,new Object[]{getId()});
+                FacesMessage facesMessage = e.getFacesMessage();
+                if (facesMessage != null)
+                {
+                    context.addMessage(getClientId(context), facesMessage);
+                }
+                else
+                {
+                    _MessageUtils.addErrorMessage(context, this, CONVERSION_MESSAGE_ID,
+                        new Object[] { _MessageUtils.getLabel(context, this) });
+                }
             }
             setValid(false);
         }
         return submittedValue;
     }
 
-
-
-    protected boolean compareValues(Object previous,
-                                      Object value)
+    protected boolean compareValues(Object previous, Object value)
     {
-        return previous==null?(value!=null):(!previous.equals(value));
+        return previous == null ? (value != null) : (!previous.equals(value));
     }
 
+    /**
+     * @since 1.2
+     */
+    public void resetValue()
+    {
+        setSubmittedValue(null);
+        setValue(null);
+        setLocalValueSet(false);
+        setValid(true);
+    }
+
+    /**
+     * A boolean value that identifies the phase during which action events should fire.
+     * <p>
+     * During normal event processing, action methods and action listener methods are fired during the
+     * "invoke application" phase of request processing. If this attribute is set to "true", these methods are fired
+     * instead at the end of the "apply request values" phase.
+     * </p>
+     */
+    @JSFProperty
+    public boolean isImmediate()
+    {
+        return (Boolean) getStateHelper().eval(PropertyKeys.immediate, Boolean.FALSE);
+    }
+
+    public void setImmediate(boolean immediate)
+    {
+        getStateHelper().put(PropertyKeys.immediate, immediate );
+    }
+
+    /**
+     * A boolean value that indicates whether an input value is required.
+     * <p>
+     * If this value is true and no input value is provided by a postback operation, then the "requiredMessage" text is
+     * registered as a FacesMessage for the request, and validation fails.
+     * </p>
+     * <p>
+     * Default value: false.
+     * </p>
+     */
+    @JSFProperty(defaultValue = "false")
+    public boolean isRequired()
+    {
+        return (Boolean) getStateHelper().eval(PropertyKeys.required, Boolean.FALSE);
+    }
+
+    public void setRequired(boolean required)
+    {
+        getStateHelper().put(PropertyKeys.required, required ); 
+    }
+
+    /**
+     * Text to be displayed to the user as an error message when conversion of a submitted value to the target type
+     * fails.
+     * <p>
+     * </p>
+     */
+    @JSFProperty
+    public String getConverterMessage()
+    {
+        return (String) getStateHelper().eval(PropertyKeys.converterMessage);
+    }
+
+    public void setConverterMessage(String converterMessage)
+    {
+        getStateHelper().put(PropertyKeys.converterMessage, converterMessage );
+    }
+
+    /**
+     * Text to be displayed to the user as an error message when this component is marked as "required" but no input
+     * data is present during a postback (ie the user left the required field blank).
+     */
+    @JSFProperty
+    public String getRequiredMessage()
+    {
+        return (String) getStateHelper().eval(PropertyKeys.requiredMessage);
+    }
+
+    public void setRequiredMessage(String requiredMessage)
+    {
+        getStateHelper().put(PropertyKeys.requiredMessage, requiredMessage );
+    }
+
+    private boolean _isSetValidator()
+    {
+        Boolean value = (Boolean) getStateHelper().get(PropertyKeys.validatorSet);
+        return value == null ? false : value;
+    }
+
+    /**
+     * A method-binding EL expression which is invoked during the validation phase for this component.
+     * <p>
+     * The invoked method is expected to check the submitted value for this component, and if not acceptable then report
+     * a validation error for the component.
+     * </p>
+     * <p>
+     * The method is expected to have the prototype
+     * </p>
+     * <code>public void aMethod(FacesContext, UIComponent,Object)</code>
+     * 
+     * @deprecated
+     */
+    @SuppressWarnings("dep-ann")
+    @JSFProperty(stateHolder = true, returnSignature = "void", methodSignature = "javax.faces.context.FacesContext,javax.faces.component.UIComponent,java.lang.Object")
+    public MethodBinding getValidator()
+    {
+        if (_validator != null)
+        {
+            return _validator;
+        }
+        ValueExpression expression = getValueExpression("validator");
+        if (expression != null)
+        {
+            return (MethodBinding) expression.getValue(getFacesContext().getELContext());
+        }
+        return null;
+    }
+
+    /** See getValidator.
+     *  
+     * @deprecated 
+     */
+    public void setValidator(MethodBinding validator)
+    {
+        this._validator = validator;
+        if (initialStateMarked())
+        {
+            getStateHelper().put(PropertyKeys.validatorSet,Boolean.TRUE);
+        }
+    }
+
+    /** See getValidator. */
     public void addValidator(Validator validator)
     {
-        if (validator == null) throw new NullPointerException("validator");
+        if (validator == null)
+        {
+            throw new NullPointerException("validator");
+        }
+        
         if (_validatorList == null)
         {
-            _validatorList = new ArrayList();
+            _validatorList = new _DeltaList<Validator>(new ArrayList<Validator>());
         }
+
         _validatorList.add(validator);
+        
+        // The argument validator must be inspected for the presence of the ResourceDependency annotation.
+        _handleAnnotations(FacesContext.getCurrentInstance(), validator);
     }
 
-    public Validator[] getValidators()
-    {
-        return _validatorList != null ?
-               (Validator[])_validatorList.toArray(new Validator[_validatorList.size()]) :
-               EMPTY_VALIDATOR_ARRAY;
-    }
-
+    /** See getValidator. */
     public void removeValidator(Validator validator)
     {
-        if (validator == null) throw new NullPointerException("validator");
-        if (_validatorList != null)
+        if (validator == null || _validatorList == null)
+            return;
+
+        _validatorList.remove(validator);
+    }
+
+    /** See getValidator. */
+    public Validator[] getValidators()
+    {
+        return _validatorList == null ? EMPTY_VALIDATOR_ARRAY
+                : _validatorList.toArray(new Validator[_validatorList.size()]);
+    }
+
+    /**
+     * Text which will be shown if validation fails.
+     */
+    @JSFProperty
+    public String getValidatorMessage()
+    {
+        return (String) getStateHelper().eval(PropertyKeys.validatorMessage);
+    }
+
+    public void setValidatorMessage(String validatorMessage)
+    {
+        getStateHelper().put(PropertyKeys.validatorMessage, validatorMessage );
+    }
+
+    private boolean _isSetValueChangeListener()
+    {
+        Boolean value = (Boolean) getStateHelper().get(PropertyKeys.valueChangeListenerSet);
+        return value == null ? false : value;
+    }
+
+    /**
+     * A method which is invoked during postback processing for the current view if the submitted value for this
+     * component is not equal to the value which the "value" expression for this component returns.
+     * <p>
+     * The phase in which this method is invoked can be controlled via the immediate attribute.
+     * </p>
+     * 
+     * @deprecated
+     */
+    @JSFProperty(stateHolder = true, returnSignature = "void", methodSignature = "javax.faces.event.ValueChangeEvent")
+    public MethodBinding getValueChangeListener()
+    {
+        if (_valueChangeListener != null)
         {
-            _validatorList.remove(validator);
+            return _valueChangeListener;
         }
+        ValueExpression expression = getValueExpression("valueChangeListener");
+        if (expression != null)
+        {
+            return (MethodBinding) expression.getValue(getFacesContext().getELContext());
+        }
+        return null;
+    }
+
+    /**
+     * See getValueChangeListener.
+     * 
+     * @deprecated
+     */
+    public void setValueChangeListener(MethodBinding valueChangeListener)
+    {
+        this._valueChangeListener = valueChangeListener;
+        if (initialStateMarked())
+        {
+            getStateHelper().put(PropertyKeys.valueChangeListenerSet,Boolean.TRUE);
+        }
+    }
+
+    /**
+     * Specifies whether the component's value is currently valid, ie whether the validators attached to this component
+     * have allowed it.
+     */
+    @JSFProperty(defaultValue = "true", tagExcluded = true)
+    public boolean isValid()
+    {
+        Object value = getStateHelper().get(PropertyKeys.valid);
+        if (value != null)
+        {
+            return (Boolean) value;        
+        }
+        return true; 
+    }
+
+    public void setValid(boolean valid)
+    {
+        getStateHelper().put(PropertyKeys.valid, valid );
+    }
+
+    /**
+     * Specifies whether a local value is currently set.
+     * <p>
+     * If false, values are being retrieved from any attached ValueBinding.
+     */
+    @JSFProperty(defaultValue = "false", tagExcluded = true)
+    public boolean isLocalValueSet()
+    {
+        Object value = getStateHelper().get(PropertyKeys.localValueSet);
+        if (value != null)
+        {
+            return (Boolean) value;        
+        }
+        return false;
+    }
+
+    public void setLocalValueSet(boolean localValueSet)
+    {
+        getStateHelper().put(PropertyKeys.localValueSet, localValueSet );
+    }
+
+    /**
+     * Gets the current submitted value. This value, if non-null, is set by the Renderer to store a possibly invalid
+     * value for later conversion or redisplay, and has not yet been converted into the proper type for this component
+     * instance. This method should only be used by the decode() and validate() method of this component, or its
+     * corresponding Renderer; however, user code may manually set it to null to erase any submitted value.
+     */
+    @JSFProperty(tagExcluded = true)
+    public Object getSubmittedValue()
+    {
+        return  getStateHelper().get(PropertyKeys.submittedValue);
+    }
+
+    public void setSubmittedValue(Object submittedValue)
+    {
+        getStateHelper().put(PropertyKeys.submittedValue, submittedValue );
     }
 
     public void addValueChangeListener(ValueChangeListener listener)
@@ -538,95 +775,218 @@ public class UIInput extends UIOutput implements EditableValueHolder
         addFacesListener(listener);
     }
 
-    public ValueChangeListener[] getValueChangeListeners()
-    {
-        return (ValueChangeListener[])getFacesListeners(ValueChangeListener.class);
-    }
-
     public void removeValueChangeListener(ValueChangeListener listener)
     {
         removeFacesListener(listener);
     }
 
-    public Object saveState(FacesContext context)
+    public ValueChangeListener[] getValueChangeListeners()
     {
-        Object values[] = new Object[9];
-        values[0] = super.saveState(context);
-        values[1] = _immediate;
-        values[2] = Boolean.valueOf(_localValueSet);
-        values[3] = _required;
-        values[4] = _submittedValue;
-        values[5] = Boolean.valueOf(_valid);
-        values[6] = saveAttachedState(context, _validator);
-        values[7] = saveAttachedState(context, _valueChangeListener);
-        values[8] = saveAttachedState(context, _validatorList);
-        return values;
+        return (ValueChangeListener[]) getFacesListeners(ValueChangeListener.class);
+    }
+    
+    enum PropertyKeys
+    {
+         immediate
+        , required
+        , converterMessage
+        , requiredMessage
+        , validatorSet
+        , validatorListSet
+        , validatorMessage
+        , valueChangeListenerSet
+        , valid
+        , localValueSet
+        , submittedValue
+    }
+    
+    public void markInitialState()
+    {
+        super.markInitialState();
+        if (_validator != null && 
+            _validator instanceof PartialStateHolder)
+        {
+            ((PartialStateHolder)_validator).markInitialState();
+        }
+        if (_validatorList != null && 
+            _validatorList instanceof PartialStateHolder)
+        {
+            ((PartialStateHolder)_validatorList).markInitialState();
+        }
+        if (_valueChangeListener != null && 
+            _valueChangeListener instanceof PartialStateHolder)
+        {
+            ((PartialStateHolder)_valueChangeListener).markInitialState();
+        }
+    }
+    
+    public void clearInitialState()
+    {
+        if (initialStateMarked())
+        {
+            super.clearInitialState();
+            if (_validator != null && 
+                _validator instanceof PartialStateHolder)
+            {
+                ((PartialStateHolder)_validator).clearInitialState();
+            }
+            if (_validatorList != null && 
+                _validatorList instanceof PartialStateHolder)
+            {
+                ((PartialStateHolder)_validatorList).clearInitialState();
+            }
+            if (_valueChangeListener != null && 
+                _valueChangeListener instanceof PartialStateHolder)
+            {
+                ((PartialStateHolder)_valueChangeListener).clearInitialState();
+            }
+        }
+    }    
+
+    @Override
+    public Object saveState(FacesContext facesContext)
+    {
+        if (initialStateMarked())
+        {
+            boolean nullDelta = true;
+            Object parentSaved = super.saveState(facesContext);
+            Object validatorSaved = null;
+            if (!_isSetValidator() &&
+                _validator != null && _validator instanceof PartialStateHolder)
+            {
+                //Delta
+                StateHolder holder = (StateHolder) _validator;
+                if (!holder.isTransient())
+                {
+                    Object attachedState = holder.saveState(facesContext);
+                    if (attachedState != null)
+                    {
+                        nullDelta = false;
+                    }
+                    validatorSaved = new _AttachedDeltaWrapper(_validator.getClass(),
+                        attachedState);
+                }
+            }
+            else
+            {
+                //Full
+                validatorSaved = saveAttachedState(facesContext,_validator);
+                nullDelta = false;
+            }        
+            Object valueChangeListenerSaved = null;
+            if (!_isSetValueChangeListener() &&
+                _valueChangeListener != null && _valueChangeListener instanceof PartialStateHolder)
+            {
+                //Delta
+                StateHolder holder = (StateHolder) _valueChangeListener;
+                if (!holder.isTransient())
+                {
+                    Object attachedState = holder.saveState(facesContext);
+                    if (attachedState != null)
+                    {
+                        nullDelta = false;
+                    }
+                    valueChangeListenerSaved = new _AttachedDeltaWrapper(_valueChangeListener.getClass(),
+                        attachedState);
+                }
+            }
+            else
+            {
+                //Full
+                valueChangeListenerSaved = saveAttachedState(facesContext,_valueChangeListener);
+                nullDelta = false;
+            }        
+            
+            Object validatorListSaved = saveValidatorList(facesContext);
+            if (parentSaved == null && validatorListSaved == null && nullDelta)
+            {
+                //No values
+                return null;
+            }
+            
+            Object[] values = new Object[4];
+            values[0] = parentSaved;
+            values[1] = validatorSaved;
+            values[2] = valueChangeListenerSaved;
+            values[3] = validatorListSaved;
+            return values;
+        }
+        else
+        {
+            Object[] values = new Object[4];
+            values[0] = super.saveState(facesContext);
+            values[1] = saveAttachedState(facesContext,_validator);
+            values[2] = saveAttachedState(facesContext,_valueChangeListener);
+            values[3] = saveValidatorList(facesContext);
+            return values;
+        }
     }
 
-    public void restoreState(FacesContext context, Object state)
+    @SuppressWarnings("unchecked")
+    @Override
+    public void restoreState(FacesContext facesContext, Object state)
     {
-        Object values[] = (Object[])state;
-        super.restoreState(context, values[0]);
-        _immediate = (Boolean)values[1];
-        _localValueSet = ((Boolean)values[2]).booleanValue();
-        _required = (Boolean)values[3];
-        _submittedValue = values[4];
-        _valid = ((Boolean)values[5]).booleanValue();
-        _validator = (MethodBinding)restoreAttachedState(context, values[6]);
-        _valueChangeListener = (MethodBinding)restoreAttachedState(context, values[7]);
-        _validatorList = (List)restoreAttachedState(context, values[8]);
-
+        if (state == null)
+        {
+            return;
+        }
+        
+        Object[] values = (Object[])state;
+        super.restoreState(facesContext,values[0]);
+        if (values[1] instanceof _AttachedDeltaWrapper)
+        {
+            //Delta
+            ((StateHolder)_validator).restoreState(facesContext, ((_AttachedDeltaWrapper) values[1]).getWrappedStateObject());
+        }
+        else
+        {
+            //Full
+            _validator = (javax.faces.el.MethodBinding) restoreAttachedState(facesContext,values[1]);
+        }         
+        if (values[2] instanceof _AttachedDeltaWrapper)
+        {
+            //Delta
+            ((StateHolder)_valueChangeListener).restoreState(facesContext, ((_AttachedDeltaWrapper) values[2]).getWrappedStateObject());
+        }
+        else
+        {
+            //Full
+            _valueChangeListener = (javax.faces.el.MethodBinding) restoreAttachedState(facesContext,values[2]);
+        }
+        if (values[3] instanceof _AttachedDeltaWrapper)
+        {
+            //Delta
+            if (_validatorList != null)
+            {
+                ((StateHolder)_validatorList).restoreState(facesContext,
+                        ((_AttachedDeltaWrapper) values[3]).getWrappedStateObject());
+            }
+        }
+        else if (values[3] != null || !initialStateMarked())
+        {
+            //Full
+            _validatorList = (_DeltaList<Validator>)
+                restoreAttachedState(facesContext,values[3]);
+        }
     }
-
-    public UIInput()
+    
+    private Object saveValidatorList(FacesContext facesContext)
     {
-        setRendererType(DEFAULT_RENDERER_TYPE);
-    }
-
-    public String getFamily()
-    {
-        return COMPONENT_FAMILY;
-    }
-
-    public void setImmediate(boolean immediate)
-    {
-        _immediate = Boolean.valueOf(immediate);
-    }
-
-    /**
-     * A boolean value that identifies the phase during which value change
-     * events should fire. During normal event processing, value change
-     * events are fired during the "process validations" phase of request
-     * processing. If this attribute is set to "true", these methods are
-     * fired instead at the end of the "apply request values" phase.
-     * 
-     * @JSFProperty
-     */
-    public boolean isImmediate()
-    {
-        if (_immediate != null) return _immediate.booleanValue();
-        ValueBinding vb = getValueBinding("immediate");
-        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
-        return v != null ? v.booleanValue() : DEFAULT_IMMEDIATE;
-    }
-
-    public void setRequired(boolean required)
-    {
-        _required = Boolean.valueOf(required);
-    }
-
-    /**
-     * A boolean value that indicates whether an input value is required.
-     * If this value is true, and no input value is provided, the error
-     * message javax.faces.component.UIInput.REQUIRED is posted.
-     * 
-     * @JSFProperty
-     */
-    public boolean isRequired()
-    {
-        if (_required != null) return _required.booleanValue();
-        ValueBinding vb = getValueBinding("required");
-        Boolean v = vb != null ? (Boolean)vb.getValue(getFacesContext()) : null;
-        return v != null ? v.booleanValue() : DEFAULT_REQUIRED;
-    }
+        PartialStateHolder holder = (PartialStateHolder) _validatorList;
+        if (initialStateMarked() && _validatorList != null && holder.initialStateMarked())
+        {                
+            Object attachedState = holder.saveState(facesContext);
+            if (attachedState != null)
+            {
+                return new _AttachedDeltaWrapper(_validatorList.getClass(),
+                        attachedState);
+            }
+            //_validatorList instances once is created never changes, we can return null
+            return null;
+        }
+        else
+        {
+            return saveAttachedState(facesContext,_validatorList);
+        }            
+    }    
 }

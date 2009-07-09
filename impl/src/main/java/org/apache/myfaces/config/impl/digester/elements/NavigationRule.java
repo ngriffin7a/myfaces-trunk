@@ -28,11 +28,11 @@ import org.apache.myfaces.config.impl.digester.elements.NavigationCase;
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  */
-public class NavigationRule extends ElementBaseImpl implements org.apache.myfaces.config.element.NavigationRule
+public class NavigationRule implements org.apache.myfaces.config.element.NavigationRule
 {
 
     private String fromViewId;
-    private List navigationCases = new ArrayList();
+    private List<NavigationCase> navigationCases = new ArrayList<NavigationCase>();
 
 
     public String getFromViewId()
@@ -53,7 +53,7 @@ public class NavigationRule extends ElementBaseImpl implements org.apache.myface
     }
 
 
-    public Collection getNavigationCases()
+    public Collection<NavigationCase> getNavigationCases()
     {
         return navigationCases;
     }

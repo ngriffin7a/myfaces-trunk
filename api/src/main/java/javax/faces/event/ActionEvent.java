@@ -21,31 +21,31 @@ package javax.faces.event;
 import javax.faces.component.UIComponent;
 
 /**
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
+ * 
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 public class ActionEvent extends FacesEvent
 {
-  private static final long serialVersionUID = 3693030212414392259L;
+    private static final long serialVersionUID = 3693030212414392259L;
 
-    // FIELDS
-
-
-  // CONSTRUCTORS
     public ActionEvent(UIComponent uiComponent)
     {
         super(uiComponent);
-        if (uiComponent == null) throw new IllegalArgumentException("uiComponent");
+        if (uiComponent == null)
+        {
+            throw new IllegalArgumentException("uiComponent");
+        }
     }
 
-    // METHODS
+    @Override
     public boolean isAppropriateListener(FacesListener facesListeners)
     {
         return facesListeners instanceof ActionListener;
     }
 
+    @Override
     public void processListener(FacesListener facesListeners)
     {
         ((ActionListener)facesListeners).processAction(this);

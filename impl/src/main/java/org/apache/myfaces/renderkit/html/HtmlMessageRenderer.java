@@ -18,46 +18,42 @@
  */
 package org.apache.myfaces.renderkit.html;
 
-import org.apache.myfaces.shared_impl.renderkit.html.HtmlMessageRendererBase;
+import java.io.IOException;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import java.io.IOException;
+
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFRenderer;
+import org.apache.myfaces.shared_impl.renderkit.html.HtmlMessageRendererBase;
 
 /**
- * @JSFRenderer
- *   renderKitId="HTML_BASIC"
- *   family="javax.faces.Message"
- *   type="javax.faces.Message"
  * 
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
  */
-public class HtmlMessageRenderer
-        extends HtmlMessageRendererBase
+@JSFRenderer(renderKitId = "HTML_BASIC", family = "javax.faces.Message", type = "javax.faces.Message")
+public class HtmlMessageRenderer extends HtmlMessageRendererBase
 {
-    //private static final Log log = LogFactory.getLog(HtmlMessageRenderer.class);
+    // private static final Log log = LogFactory.getLog(HtmlMessageRenderer.class);
 
-    public void encodeEnd(FacesContext facesContext, UIComponent component)
-            throws IOException
+    @Override
+    public void encodeEnd(FacesContext facesContext, UIComponent component) throws IOException
     {
-        super.encodeEnd(facesContext, component);   //check for NP
+        super.encodeEnd(facesContext, component); // check for NP
         renderMessage(facesContext, component);
     }
 
-    protected String getSummary(FacesContext facesContext,
-                                UIComponent message,
-                                FacesMessage facesMessage,
+    @Override
+    protected String getSummary(FacesContext facesContext, UIComponent message, FacesMessage facesMessage,
                                 String msgClientId)
     {
         return facesMessage.getSummary();
     }
 
-    protected String getDetail(FacesContext facesContext,
-                               UIComponent message,
-                               FacesMessage facesMessage,
+    @Override
+    protected String getDetail(FacesContext facesContext, UIComponent message, FacesMessage facesMessage,
                                String msgClientId)
     {
         return facesMessage.getDetail();

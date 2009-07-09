@@ -51,7 +51,7 @@ package javax.faces.component;
  * values generated would quickly grow excessively long.
  * <p>
  * See the javadoc for this class in the 
- * <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
+ * <a href="http://java.sun.com/j2ee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
  * for further details.
  *
  * @author Manfred Geiler (latest modification by $Author$)
@@ -59,5 +59,9 @@ package javax.faces.component;
  */
 public interface NamingContainer
 {
+    /**
+     * @deprecated Use {@link UINamingContainer#getSeparatorChar(javax.faces.context.FacesContext)
+     */
+    @Deprecated
     public static final char SEPARATOR_CHAR = ':';
 }

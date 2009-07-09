@@ -25,7 +25,7 @@ import java.util.Iterator;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public interface MapEntries extends ElementBase
+public interface MapEntries
 {
     // <!ELEMENT map-entries (key-class?, value-class?, map-entry*)>
 
@@ -36,6 +36,6 @@ public interface MapEntries extends ElementBase
     /**
      * @return Iterator over {@link MapEntry} entries
      */
-    public Iterator getMapEntries();
+    public Iterator<? extends MapEntry> getMapEntries();
 
 }

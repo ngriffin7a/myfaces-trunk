@@ -20,47 +20,47 @@ package javax.faces.event;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
- * see Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
+ * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
+ * 
  * @author Thomas Spiegl (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class PhaseId implements Comparable{
-
+public class PhaseId implements Comparable
+{
     // FIELDS
-    public static final javax.faces.event.PhaseId ANY_PHASE;
-    public static final javax.faces.event.PhaseId APPLY_REQUEST_VALUES;
-    public static final javax.faces.event.PhaseId INVOKE_APPLICATION;
-    public static final javax.faces.event.PhaseId PROCESS_VALIDATIONS;
-    public static final javax.faces.event.PhaseId RENDER_RESPONSE;
-    public static final javax.faces.event.PhaseId RESTORE_VIEW;
-    public static final javax.faces.event.PhaseId UPDATE_MODEL_VALUES;
-    public static final java.util.List VALUES;
+    public static final PhaseId ANY_PHASE;
+    public static final PhaseId APPLY_REQUEST_VALUES;
+    public static final PhaseId INVOKE_APPLICATION;
+    public static final PhaseId PROCESS_VALIDATIONS;
+    public static final PhaseId RENDER_RESPONSE;
+    public static final PhaseId RESTORE_VIEW;
+    public static final PhaseId UPDATE_MODEL_VALUES;
+    public static final List<PhaseId> VALUES;
 
     static
     {
         int i = 0;
-        ArrayList list = new ArrayList(6);
+        ArrayList<PhaseId> list = new ArrayList<PhaseId>(6);
 
-        ANY_PHASE = new PhaseId("ANY_PHASE",i++);
+        ANY_PHASE = new PhaseId("ANY_PHASE", i++);
         list.add(ANY_PHASE);
-        RESTORE_VIEW = new PhaseId("RESTORE_VIEW",i++);
+        RESTORE_VIEW = new PhaseId("RESTORE_VIEW", i++);
         list.add(RESTORE_VIEW);
-        APPLY_REQUEST_VALUES = new PhaseId("APPLY_REQUEST_VALUES",i++);
+        APPLY_REQUEST_VALUES = new PhaseId("APPLY_REQUEST_VALUES", i++);
         list.add(APPLY_REQUEST_VALUES);
-        PROCESS_VALIDATIONS = new PhaseId("PROCESS_VALIDATIONS",i++);
+        PROCESS_VALIDATIONS = new PhaseId("PROCESS_VALIDATIONS", i++);
         list.add(PROCESS_VALIDATIONS);
-        UPDATE_MODEL_VALUES = new PhaseId("UPDATE_MODEL_VALUES",i++);
+        UPDATE_MODEL_VALUES = new PhaseId("UPDATE_MODEL_VALUES", i++);
         list.add(UPDATE_MODEL_VALUES);
-        INVOKE_APPLICATION = new PhaseId("INVOKE_APPLICATION",i++);
+        INVOKE_APPLICATION = new PhaseId("INVOKE_APPLICATION", i++);
         list.add(INVOKE_APPLICATION);
-        RENDER_RESPONSE = new PhaseId("RENDER_RESPONSE",i++);
+        RENDER_RESPONSE = new PhaseId("RENDER_RESPONSE", i++);
         list.add(RENDER_RESPONSE);
         VALUES = Collections.unmodifiableList(list);
     }
-
 
     private final String _name;
     private final int _ordinal;
@@ -75,7 +75,7 @@ public class PhaseId implements Comparable{
     // METHODS
     public int compareTo(Object other)
     {
-        return _ordinal - ((PhaseId)other)._ordinal;
+        return _ordinal - ((PhaseId) other)._ordinal;
     }
 
     public int getOrdinal()
@@ -83,6 +83,7 @@ public class PhaseId implements Comparable{
         return _ordinal;
     }
 
+    @Override
     public String toString()
     {
         return _name + "(" + _ordinal + ")";

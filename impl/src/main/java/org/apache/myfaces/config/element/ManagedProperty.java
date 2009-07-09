@@ -30,7 +30,7 @@ import org.apache.myfaces.config.element.ListEntries;
 
  * @version $Revision$ $Date$
  */
-public interface ManagedProperty extends ElementBase
+public interface ManagedProperty
 {
     // <!ELEMENT managed-property (description*, display-name*, icon*, property-name, property-class?, (map-entries|null-value|value|list-entries))>
 

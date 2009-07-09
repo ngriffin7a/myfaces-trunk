@@ -18,13 +18,15 @@
  */
 package javax.faces.component.html;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
+
 interface _TabindexProperty
 {
     /**
      * HTML: Specifies the position of this element within the tab order of the document.
      * 
-     * @JSFProperty
      */
+    @JSFProperty
     public abstract String getTabindex();
 
 }

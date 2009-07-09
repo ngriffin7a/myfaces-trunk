@@ -27,7 +27,7 @@ import java.util.Collection;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public interface NavigationRule extends ElementBase
+public interface NavigationRule
 {
     // <!ELEMENT navigation-rule (description*, display-name*, icon*, from-view-id?, navigation-case*)>
 
@@ -36,5 +36,5 @@ public interface NavigationRule extends ElementBase
     /**
      * @return a Collection of {@link org.apache.myfaces.config.element.NavigationCase}s
      */
-    public Collection getNavigationCases();
+    public Collection<? extends NavigationCase> getNavigationCases();
 }

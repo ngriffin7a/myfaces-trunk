@@ -1,22 +1,3 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-
 package org.apache.myfaces.config;
 
 /**
@@ -26,39 +7,38 @@ package org.apache.myfaces.config;
  * @author Dennis C. Byrne
  */
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 
-import javax.faces.application.Application;
-
-import org.apache.myfaces.application.ApplicationImpl;
-import org.apache.myfaces.config.ManagedBeanBuilder;
 import org.apache.myfaces.config.impl.digester.elements.ListEntries;
 import org.apache.myfaces.config.impl.digester.elements.ManagedBean;
 import org.apache.myfaces.config.impl.digester.elements.ManagedProperty;
 import org.apache.myfaces.config.impl.digester.elements.MapEntries;
 import org.apache.myfaces.config.impl.digester.elements.ListEntries.Entry;
-import org.apache.myfaces.el.PropertyResolverImpl;
-import org.apache.shale.test.mock.MockFacesContext;
+import org.apache.shale.test.base.AbstractJsfTestCase;
 
-import junit.framework.TestCase;
+public abstract class AbstractManagedBeanBuilderTestCase extends AbstractJsfTestCase {
 
-public abstract class AbstractManagedBeanBuilderTestCase extends TestCase {
+    public AbstractManagedBeanBuilderTestCase(String name) {
+        super(name);
+    }
 
     protected MangedBeanExample example;
     
     // managed property values
-    protected static final List MANAGED_LIST = new ArrayList();
-    protected static final Map MANAGED_MAP = new HashMap();
+    protected static final List<String> MANAGED_LIST = new ArrayList<String>();
+    protected static final Map<String, String> MANAGED_MAP = new HashMap<String, String>();
     protected static final String INJECTED_VALUE = "tatiana";
     
     /**
      * Skips digester and manually builds and configures a managed bean.
      */
     
-    protected void setUp() throws Exception {
+    protected void setUp() throws Exception
+  {
+        super.setUp();
         ManagedBeanBuilder managedBeanBuilder = new ManagedBeanBuilder();
         ManagedBean managedBean = new ManagedBean();
         
@@ -105,19 +85,13 @@ public abstract class AbstractManagedBeanBuilderTestCase extends TestCase {
         managedBean.addProperty(managedMap);
         managedBean.addProperty(writeOnlyMap);
 
-        // provide the minimal environment 
-        Application application = null;
-        application = new ApplicationImpl();
-        application.setPropertyResolver(new PropertyResolverImpl());
-        MockFacesContext facesContext = new MockFacesContext();
-        facesContext.setApplication(application);
-        
         // simulate a managed bean creation
         example = (MangedBeanExample) managedBeanBuilder
             .buildManagedBean(facesContext, managedBean);
     }
     
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception{
+        super.tearDown();
         example = null;
         MANAGED_LIST.clear();
         MANAGED_MAP.clear();

@@ -19,51 +19,55 @@
 package javax.faces.component;
 
 import javax.faces.context.FacesContext;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
 
 /**
  * Component for choosing one option out of a set of possibilities.
  * <p>
- * This component is expected to have children of type UISelectItem or
- * UISelectItems; these define the set of possible options that the
- * user can choose from.
+ * This component is expected to have children of type UISelectItem or UISelectItems; these define the set of possible
+ * options that the user can choose from.
  * <p>
- * See the javadoc for this class in the
- * <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- * for further details.
- *
- * @JSFComponent
- *   type = "javax.faces.SelectOne"
- *   family = "javax.faces.SelectOne"
- *   desc = "UISelectOne"
- *
- * @author Manfred Geiler (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * <h4>Events:</h4>
+ * <table border="1" width="100%" cellpadding="3" summary="">
+ * <tr bgcolor="#CCCCFF" class="TableHeadingColor">
+ * <th align="left">Type</th> <th align="left">Phases</th> <th align="left">Description</th>
+ * </tr>
+ * <tr class="TableRowColor">
+ * <td valign="top"><code>javax.faces.event.ValueChangeEvent</code></td>
+ * <td valign="top" nowrap></td>
+ * <td valign="top">The valueChange event is delivered when the value attribute is changed.</td>
+ * </tr>
+ * </table>
+ * <p>
+ * See the javadoc for this class in the <a
+ * href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a> for further details.
  */
+@JSFComponent(defaultRendererType = "javax.faces.Menu")
 public class UISelectOne extends UIInput
 {
     public static final String COMPONENT_TYPE = "javax.faces.SelectOne";
     public static final String COMPONENT_FAMILY = "javax.faces.SelectOne";
-    public static final String INVALID_MESSAGE_ID = "javax.faces.component.UISelectOne.INVALID";
 
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Menu";
+    public static final String INVALID_MESSAGE_ID = "javax.faces.component.UISelectOne.INVALID";
 
     public UISelectOne()
     {
-        setRendererType(DEFAULT_RENDERER_TYPE);
+        setRendererType("javax.faces.Menu");
     }
 
+    @Override
     public String getFamily()
     {
         return COMPONENT_FAMILY;
     }
 
     /**
-     * Verify that the result of converting the newly submitted value is
-     * <i>equal</i> to the value property of one of the child SelectItem
-     * objects. If this is not true, a validation error is reported.
+     * Verify that the result of converting the newly submitted value is <i>equal</i> to the value property of one of
+     * the child SelectItem objects. If this is not true, a validation error is reported.
      * 
-     * @see javax.faces.component.UIInput#validateValue(javax.faces.context.FacesContext, java.lang.Object)
+     * @see javax.faces.component.UIInput#validateValue(javax.faces.context.FacesContext,java.lang.Object)
      */
+    @Override
     protected void validateValue(FacesContext context, Object value)
     {
         super.validateValue(context, value);
@@ -73,11 +77,19 @@ public class UISelectOne extends UIInput
             return;
         }
 
-        // selected value must match to one of the available options
-        if (!_SelectItemsUtil.matchValue(value, new _SelectItemsIterator(this)))
+        _SelectItemsUtil._ValueConverter converter = new _SelectItemsUtil._ValueConverter()
         {
-            _MessageUtils.addErrorMessage(context, this, INVALID_MESSAGE_ID,
-                            new Object[] {getId()});
+            public Object getConvertedValue(FacesContext context, String value)
+            {
+                return UISelectOne.this.getConvertedValue(context, value);
+            }
+        };
+
+        // selected value must match to one of the available options
+        if (!_SelectItemsUtil.matchValue(context, value, new _SelectItemsIterator(this), converter))
+        {
+            _MessageUtils.addErrorMessage(context, this, INVALID_MESSAGE_ID, new Object[] { _MessageUtils.getLabel(
+                context, this) });
             setValid(false);
         }
     }

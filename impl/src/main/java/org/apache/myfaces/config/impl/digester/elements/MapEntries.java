@@ -26,12 +26,12 @@ import java.util.Iterator;
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
  */
-public class MapEntries extends ElementBaseImpl implements org.apache.myfaces.config.element.MapEntries
+public class MapEntries implements org.apache.myfaces.config.element.MapEntries
 {
 
     private String keyClass;
     private String valueClass;
-    private List entries = new ArrayList();
+    private List<Entry> entries = new ArrayList<Entry>();
 
 
     public String getKeyClass()
@@ -62,13 +62,13 @@ public class MapEntries extends ElementBaseImpl implements org.apache.myfaces.co
     }
 
 
-    public Iterator getMapEntries()
+    public Iterator<Entry> getMapEntries()
     {
         return entries.iterator();
     }
 
 
-    public static class Entry extends ElementBaseImpl implements org.apache.myfaces.config.element.MapEntry {
+    public static class Entry implements org.apache.myfaces.config.element.MapEntry {
        String key;
         boolean nullValue = false;
         String value;

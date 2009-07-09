@@ -18,11 +18,7 @@
  */
 package org.apache.myfaces.renderkit.html;
 
-import org.apache.myfaces.shared_impl.renderkit.JSFAttr;
-import org.apache.myfaces.shared_impl.renderkit.RendererUtils;
-import org.apache.myfaces.shared_impl.renderkit.html.HTML;
-import org.apache.myfaces.shared_impl.renderkit.html.HtmlRenderer;
-import org.apache.myfaces.shared_impl.renderkit.html.HtmlRendererUtils;
+import java.io.IOException;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
@@ -30,24 +26,25 @@ import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.convert.ConverterException;
-import java.io.IOException;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFRenderer;
+import org.apache.myfaces.shared_impl.renderkit.JSFAttr;
+import org.apache.myfaces.shared_impl.renderkit.RendererUtils;
+import org.apache.myfaces.shared_impl.renderkit.html.HTML;
+import org.apache.myfaces.shared_impl.renderkit.html.HtmlRenderer;
+import org.apache.myfaces.shared_impl.renderkit.html.HtmlRendererUtils;
 
 /**
- * @JSFRenderer
- *   renderKitId="HTML_BASIC"
- *   family="javax.faces.Input"
- *   type="javax.faces.Hidden"
- *   
+ * 
  * @author Thomas Spiegl (latest modification by $Author$)
  * @author Anton Koinov
  * @version $Revision$ $Date$
  */
-public class HtmlHiddenRenderer
-extends HtmlRenderer
+@JSFRenderer(renderKitId = "HTML_BASIC", family = "javax.faces.Input", type = "javax.faces.Hidden")
+public class HtmlHiddenRenderer extends HtmlRenderer
 {
-    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent)
-        throws IOException
+    @Override
+    public void encodeEnd(FacesContext facesContext, UIComponent uiComponent) throws IOException
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, UIInput.class);
 
@@ -69,21 +66,27 @@ extends HtmlRenderer
         writer.endElement(HTML.INPUT_ELEM);
     }
 
-    public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue) throws ConverterException
+    @Override
+    public Object getConvertedValue(FacesContext facesContext, UIComponent uiComponent, Object submittedValue)
+        throws ConverterException
     {
         RendererUtils.checkParamValidity(facesContext, uiComponent, UIOutput.class);
-        return RendererUtils.getConvertedUIOutputValue(facesContext,
-                                                       (UIOutput)uiComponent,
-                                                       submittedValue);
+        return RendererUtils.getConvertedUIOutputValue(facesContext, (UIOutput)uiComponent, submittedValue);
     }
 
-
+    @Override
     public void decode(FacesContext facesContext, UIComponent component)
-     {
-         RendererUtils.checkParamValidity(facesContext,component,UIInput.class);
+    {
+        RendererUtils.checkParamValidity(facesContext, component, null);
 
-         HtmlRendererUtils.decodeUIInput(facesContext, component);
-
-     }
+        if (component instanceof UIInput)
+        {
+            HtmlRendererUtils.decodeUIInput(facesContext, component);
+        }
+        else
+        {
+            throw new IllegalArgumentException("Unsupported component class " + component.getClass().getName());
+        }
+    }
 
 }

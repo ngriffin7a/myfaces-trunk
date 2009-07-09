@@ -20,6 +20,8 @@ package javax.faces.component.html;
 
 import javax.faces.component.UISelectMany;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+
 /**
  * Allow the user to select zero or more items from a set of
  * available options. This is presented as a listbox which allows
@@ -43,37 +45,47 @@ import javax.faces.component.UISelectMany;
  * selected initially. During the update phase, the property is set
  * to contain a "collection" of values for those child SelectItem
  * objects that are currently selected.
- * <p>
- * Unless otherwise specified, all attributes accept static values
- * or EL expressions.
- * <p>
- * See Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
  *
- * @JSFComponent
- *   name = "h:selectManyListbox"
- *   class = "javax.faces.component.html.HtmlSelectManyListbox"
- *   tagClass = "org.apache.myfaces.taglib.html.HtmlSelectManyListboxTag"
- *   template = "true"
- *   desc = "h:selectManyListbox"
- *
- * @author Thomas Spiegl (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * <h4>Events:</h4>
+ * <table border="1" width="100%" cellpadding="3" summary="">
+ * <tr bgcolor="#CCCCFF" class="TableHeadingColor">
+ * <th align="left">Type</th>
+ * <th align="left">Phases</th>
+ * <th align="left">Description</th>
+ * </tr>
+ * <tr class="TableRowColor">
+ * <td valign="top"><code>javax.faces.event.ValueChangeEvent</code></td>
+ * <td valign="top" nowrap></td>
+ * <td valign="top">The valueChange event is delivered when the value
+                attribute is changed.</td>
+ * </tr>
+ * </table>
  */
+@JSFComponent
+(name = "h:selectManyListbox",
+clazz = "javax.faces.component.html.HtmlSelectManyListbox",template=true,
+tagClass = "org.apache.myfaces.taglib.html.HtmlSelectManyListboxTag",
+defaultRendererType = "javax.faces.Listbox",
+implementz = "javax.faces.component.behavior.ClientBehaviorHolder"
+)
 abstract class _HtmlSelectManyListbox extends UISelectMany implements 
-    _AccesskeyProperty, _UniversalProperties, _DisabledReadonlyProperties,
-    _FocusBlurProperties, _ChangeSelectProperties, _EventProperties,
-    _StyleProperties, _TabindexProperty, _DisabledClassEnabledClassProperties
+_AccesskeyProperty, _UniversalProperties, _DisabledReadonlyProperties,
+_FocusBlurProperties, _ChangeSelectProperties, _EventProperties,
+_StyleProperties, _TabindexProperty, _DisabledClassEnabledClassProperties,
+_LabelProperty
 {
 
-    public static final String COMPONENT_TYPE = "javax.faces.HtmlSelectManyListbox";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Listbox";
+  static public final String COMPONENT_FAMILY =
+    "javax.faces.SelectMany";
+  static public final String COMPONENT_TYPE =
+    "javax.faces.HtmlSelectManyListbox";
 
-    /**
-     * see JSF Spec.
-     * 
-     * @JSFProperty
-     *   defaultValue="Integer.MIN_VALUE"
-     */
-    public abstract int getSize();
-        
+  /**
+   * see JSF Spec.
+   * 
+   * @JSFProperty
+   *   defaultValue="Integer.MIN_VALUE"
+   */
+  public abstract int getSize();
+
 }

@@ -20,31 +20,35 @@ package javax.faces.component.html;
 
 import javax.faces.component.UIPanel;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
+
 /**
- * This element is used to group other components where the
- * specification requires one child element. If any of the HTML or
- * CSS attributes are set, its content is rendered within a span element.
- * <p>
- * Unless otherwise specified, all attributes accept static values
- * or EL expressions.
- * <p>
- * See Javadoc of <a href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a>
- *
- * @JSFComponent
- *   name = "h:panelGroup"
- *   class = "javax.faces.component.html.HtmlPanelGroup"
- *   tagClass = "org.apache.myfaces.taglib.html.HtmlPanelGroupTag"
- *   tagSuperclass = "javax.faces.webapp.UIComponentBodyTag"
- *   template = "true"
- *   desc = "h:panelGroup
- *
- * @author Thomas Spiegl (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * This element is used to group other components where the specification requires one child element.
+ * 
+ * If any of the HTML or CSS attributes are set, its content is rendered within a span element.
  */
+@JSFComponent
+(name = "h:panelGroup",
+clazz = "javax.faces.component.html.HtmlPanelGroup",template=true,
+tagClass = "org.apache.myfaces.taglib.html.HtmlPanelGroupTag",
+defaultRendererType = "javax.faces.Group"
+)
 abstract class _HtmlPanelGroup extends UIPanel implements _StyleProperties
 {
 
-    public static final String COMPONENT_TYPE = "javax.faces.HtmlPanelGroup";
-    private static final String DEFAULT_RENDERER_TYPE = "javax.faces.Group";
+  static public final String COMPONENT_FAMILY =
+    "javax.faces.Panel";
+  static public final String COMPONENT_TYPE =
+    "javax.faces.HtmlPanelGroup";
+
+  /**
+   * The type of layout markup to use when rendering this group. If the value is "block"
+   * the renderer must produce an HTML "div" element. Otherwise HTML "span" element must be produced.
+   *
+   * @return  the new layout value
+   */
+  @JSFProperty
+  public abstract String getLayout();
 
 }
