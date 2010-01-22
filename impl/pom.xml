@@ -957,7 +957,7 @@
   </repositories>
 
   <properties>
-    <myfaces-shared.version>4.0.1-SNAPSHOT</myfaces-shared.version>
+    <myfaces-shared.version>4.0.1-beta</myfaces-shared.version>
     <myfaces-builder-plugin.version>1.0.5</myfaces-builder-plugin.version>
   </properties>
 </project>
