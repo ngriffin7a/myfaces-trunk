@@ -22,7 +22,9 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.component.UISelectItem;
 import javax.faces.component.UISelectItems;
+import javax.faces.component.behavior.AjaxBehavior;
 import javax.faces.component.html.HtmlSelectManyListbox;
 import javax.faces.component.html.HtmlSelectOneListbox;
 import javax.faces.model.SelectItem;
@@ -32,9 +34,9 @@ import junit.framework.TestSuite;
 
 import org.apache.myfaces.test.utils.HtmlCheckAttributesUtil;
 import org.apache.myfaces.test.utils.HtmlRenderedAttr;
-import org.apache.shale.test.base.AbstractJsfTestCase;
-import org.apache.shale.test.mock.MockRenderKitFactory;
-import org.apache.shale.test.mock.MockResponseWriter;
+import org.apache.myfaces.test.base.AbstractJsfTestCase;
+import org.apache.myfaces.test.mock.MockRenderKitFactory;
+import org.apache.myfaces.test.mock.MockResponseWriter;
 
 /**
  * @author Bruno Aranda (latest modification by $Author$)
@@ -119,5 +121,65 @@ public class HtmlListboxRendererTest extends AbstractJsfTestCase
         if(HtmlCheckAttributesUtil.hasFailedAttrRender(attrs)) {
             fail(HtmlCheckAttributesUtil.constructErrorMessage(attrs, writer.getWriter().toString()));
         }
+    }
+    
+    /**
+     * Components that render client behaviors should always render "id" and "name" attribute
+     */
+    public void testClientBehaviorHolderRendersIdAndNameSelectOneListbox() 
+    {
+        UISelectItem item1 = new UISelectItem();
+        item1.setItemLabel("#1");
+        item1.setItemValue("#1");
+        
+        UISelectItem item2 = new UISelectItem();
+        item2.setItemLabel("#2");
+        item2.setItemValue("#2");
+        
+        selectOneListbox.addClientBehavior("keypress", new AjaxBehavior());
+        try 
+        {
+            selectOneListbox.getChildren().add(item1);
+            selectOneListbox.getChildren().add(item2);
+            selectOneListbox.encodeAll(facesContext);
+            String output = ((StringWriter) writer.getWriter()).getBuffer().toString();
+            assertTrue(output.matches(".+id=\".+\".+"));
+            assertTrue(output.matches(".+name=\".+\".+"));
+        }
+        catch (Exception e)
+        {
+            fail(e.getMessage());
+        }
+        
+    }
+    
+    /**
+     * Components that render client behaviors should always render "id" and "name" attribute
+     */
+    public void testClientBehaviorHolderRendersIdAndNameSelectManyListbox() 
+    {
+        UISelectItem item1 = new UISelectItem();
+        item1.setItemLabel("#1");
+        item1.setItemValue("#1");
+        
+        UISelectItem item2 = new UISelectItem();
+        item2.setItemLabel("#2");
+        item2.setItemValue("#2");
+        
+        selectManyListbox.addClientBehavior("keypress", new AjaxBehavior());
+        try 
+        {
+            selectManyListbox.getChildren().add(item1);
+            selectManyListbox.getChildren().add(item2);
+            selectManyListbox.encodeAll(facesContext);
+            String output = ((StringWriter) writer.getWriter()).getBuffer().toString();
+            assertTrue(output.matches(".+id=\".+\".+"));
+            assertTrue(output.matches(".+name=\".+\".+"));
+        }
+        catch (Exception e)
+        {
+            fail(e.getMessage());
+        }
+        
     }
 }

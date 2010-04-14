@@ -149,7 +149,7 @@ public class DoubleRangeValidator
      * The largest value that should be considered valid.
      * 
      */
-    @JSFProperty
+    @JSFProperty(deferredValueType="java.lang.Double")
     public double getMaximum()
     {
         return _maximum != null ? _maximum.doubleValue() : Double.MAX_VALUE;
@@ -165,7 +165,7 @@ public class DoubleRangeValidator
      * The smallest value that should be considered valid.
      *  
      */
-    @JSFProperty
+    @JSFProperty(deferredValueType="java.lang.Double")
     public double getMinimum()
     {
         return _minimum != null ? _minimum.doubleValue() : Double.MIN_VALUE;
@@ -229,19 +229,16 @@ public class DoubleRangeValidator
 
     private boolean _initialStateMarked = false;
 
-    @Override
     public void clearInitialState()
     {
         _initialStateMarked = false;
     }
 
-    @Override
     public boolean initialStateMarked()
     {
         return _initialStateMarked;
     }
 
-    @Override
     public void markInitialState()
     {
         _initialStateMarked = true;

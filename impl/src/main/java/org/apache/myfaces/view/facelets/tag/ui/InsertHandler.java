@@ -30,15 +30,30 @@ import javax.faces.view.facelets.TagAttributeException;
 import javax.faces.view.facelets.TagConfig;
 import javax.faces.view.facelets.TagHandler;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletAttribute;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTag;
+import org.apache.myfaces.view.facelets.AbstractFaceletContext;
 import org.apache.myfaces.view.facelets.TemplateClient;
 
 /**
+ * The insert tag is used within your templates to declare spots of replicable data.
+ * 
  * @author Jacob Hookom
  * @version $Id: InsertHandler.java,v 1.7 2008/07/13 19:01:42 rlubke Exp $
  */
+@JSFFaceletTag(name="ui:insert")
 public final class InsertHandler extends TagHandler implements TemplateClient
 {
 
+    /**
+     * The optional name attribute matches the associated &lt;ui:define/&gt; 
+     * tag in this template's client. If no name is specified, it's expected 
+     * that the whole template client will be inserted.
+     */
+    @JSFFaceletAttribute(
+            className="javax.el.ValueExpression",
+            deferredValueType="java.lang.String",
+            required=true)
     private final String name;
 
     /**
@@ -70,7 +85,21 @@ public final class InsertHandler extends TagHandler implements TemplateClient
     public void apply(FaceletContext ctx, UIComponent parent) throws IOException, FacesException, FaceletException,
             ELException
     {
-        this.nextHandler.apply(ctx, parent);
+        AbstractFaceletContext actx = (AbstractFaceletContext) ctx;
+        actx.extendClient(this);
+        boolean found = false;
+        try
+        {
+            found = actx.includeDefinition(parent, this.name);
+        }
+        finally
+        {
+            actx.popClient(this);
+        }
+        if (!found)
+        {
+            this.nextHandler.apply(ctx, parent);
+        }
     }
 
     public boolean apply(FaceletContext ctx, UIComponent parent, String name) throws IOException, FacesException,

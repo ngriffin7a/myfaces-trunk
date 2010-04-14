@@ -51,7 +51,8 @@ import org.apache.myfaces.view.facelets.util.ReflectionUtil;
 public abstract class Compiler
 {
 
-    protected final static Logger log = Logger.getLogger("facelets.compiler");
+    //protected final static Logger log = Logger.getLogger("facelets.compiler");
+    protected final static Logger log = Logger.getLogger(Compiler.class.getName());
 
     public final static String EXPRESSION_FACTORY = "compiler.ExpressionFactory";
 
@@ -116,10 +117,21 @@ public abstract class Compiler
             this.initialize();
         return this.doCompile(src, alias);
     }
+    
+    public final FaceletHandler compileViewMetadata(URL src, String alias) throws IOException, FaceletException, ELException,
+            FacesException
+    {
+        if (!this.initialized)
+            this.initialize();
+        return this.doCompileViewMetadata(src, alias);
+    }
 
     protected abstract FaceletHandler doCompile(URL src, String alias) throws IOException, FaceletException,
             ELException, FacesException;
 
+    protected abstract FaceletHandler doCompileViewMetadata(URL src, String alias) throws IOException, FaceletException,
+            ELException, FacesException;
+    
     public final TagDecorator createTagDecorator()
     {
         if (this.decorators.size() > 0)

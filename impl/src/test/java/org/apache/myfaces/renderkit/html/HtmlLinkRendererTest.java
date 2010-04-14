@@ -21,22 +21,27 @@ package org.apache.myfaces.renderkit.html;
 import java.io.StringWriter;
 
 import javax.faces.component.UIForm;
+import javax.faces.component.UIParameter;
+import javax.faces.component.behavior.AjaxBehavior;
 import javax.faces.component.html.HtmlCommandLink;
+import javax.faces.component.html.HtmlOutcomeTargetLink;
 import javax.faces.component.html.HtmlOutputLink;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.apache.myfaces.application.NavigationHandlerImpl;
 import org.apache.myfaces.shared_impl.config.MyfacesConfig;
 import org.apache.myfaces.test.utils.HtmlCheckAttributesUtil;
 import org.apache.myfaces.test.utils.HtmlRenderedAttr;
-import org.apache.shale.test.base.AbstractJsfTestCase;
-import org.apache.shale.test.mock.MockExternalContext;
-import org.apache.shale.test.mock.MockHttpServletRequest;
-import org.apache.shale.test.mock.MockHttpServletResponse;
-import org.apache.shale.test.mock.MockRenderKitFactory;
-import org.apache.shale.test.mock.MockResponseWriter;
-import org.apache.shale.test.mock.MockServletContext;
+import org.apache.myfaces.test.base.AbstractJsfTestCase;
+import org.apache.myfaces.test.mock.MockExternalContext;
+import org.apache.myfaces.test.mock.MockHttpServletRequest;
+import org.apache.myfaces.test.mock.MockHttpServletResponse;
+import org.apache.myfaces.test.mock.MockRenderKitFactory;
+import org.apache.myfaces.test.mock.MockResponseWriter;
+import org.apache.myfaces.test.mock.MockServletContext;
+import org.easymock.EasyMock;
 
 /**
  * @author Bruno Aranda (latest modification by $Author$)
@@ -48,6 +53,7 @@ public class HtmlLinkRendererTest extends AbstractJsfTestCase
     private MockResponseWriter writer;
     private HtmlCommandLink commandLink;
     private HtmlOutputLink outputLink;
+    private HtmlOutcomeTargetLink outcomeTargetLink;
 
     public HtmlLinkRendererTest(String name)
     {
@@ -67,11 +73,13 @@ public class HtmlLinkRendererTest extends AbstractJsfTestCase
         commandLink = new HtmlCommandLink();
         outputLink = new HtmlOutputLink();
         outputLink.setValue("http://someurl");
+        outcomeTargetLink = new HtmlOutcomeTargetLink();
 
         form.getChildren().add(commandLink);
 
-        writer = new MockResponseWriter(new StringWriter(), null, null);
+        writer = new MockResponseWriter(new StringWriter(), null, "UTF-8");
         facesContext.setResponseWriter(writer);
+        facesContext.getApplication().setNavigationHandler(new NavigationHandlerImpl());
 
         facesContext.getViewRoot().setRenderKitId(MockRenderKitFactory.HTML_BASIC_RENDER_KIT);
         facesContext.getRenderKit().addRenderer(
@@ -85,6 +93,10 @@ public class HtmlLinkRendererTest extends AbstractJsfTestCase
         facesContext.getRenderKit().addRenderer(
                 outputLink.getFamily(),
                 outputLink.getRendererType(),
+                new HtmlLinkRenderer());
+        facesContext.getRenderKit().addRenderer(
+                outcomeTargetLink.getFamily(),
+                outcomeTargetLink.getRendererType(),
                 new HtmlLinkRenderer());
     }
 
@@ -107,8 +119,9 @@ public class HtmlLinkRendererTest extends AbstractJsfTestCase
             new HtmlRenderedAttr("onfocus"), 
             new HtmlRenderedAttr("onblur"),
             //_EventProperties
-            new HtmlRenderedAttr("onclick", "onclick", 
-                    "onclick=\"var cf = function(){onclick};var oamSF = function(){return oamSubmitForm(&apos;j_id1&apos;,&apos;j_id1:j_id0&apos;);};return (cf()==false)? false : oamSF();\""), 
+            //new HtmlRenderedAttr("onclick",1) "onclick", 
+            //        "onclick=\"var cf = function(){onclick};var oamSF = function(){return oamSubmitForm(&apos;j_id1&apos;,&apos;j_id1:j_id0&apos;);};return (cf()==false)? false : oamSF();\"")
+            //, 
             new HtmlRenderedAttr("ondblclick"), 
             new HtmlRenderedAttr("onkeydown"), 
             new HtmlRenderedAttr("onkeypress"),
@@ -216,5 +229,129 @@ public class HtmlLinkRendererTest extends AbstractJsfTestCase
         if(HtmlCheckAttributesUtil.hasFailedAttrRender(attrs)) {
             fail(HtmlCheckAttributesUtil.constructErrorMessage(attrs, writer.getWriter().toString()));
         }
+    }
+    
+    /**
+     * Components that render client behaviors should always render "id" and "name" attribute
+     */
+    public void testClientBehaviorHolderRendersIdAndNameOutputLink() 
+    {
+        outputLink.addClientBehavior("keypress", new AjaxBehavior());
+        try 
+        {
+            outputLink.encodeAll(facesContext);
+            String output = ((StringWriter) writer.getWriter()).getBuffer().toString();
+            assertTrue(output.matches(".+id=\".+\".+"));
+            assertTrue(output.matches(".+name=\".+\".+"));
+        }
+        catch (Exception e)
+        {
+            fail(e.getMessage());
+        }
+        
+    }
+    
+    /**
+     * Components that render client behaviors should always render "id" and "name" attribute
+     */
+    public void testClientBehaviorHolderRendersIdAndNameCommandLink() 
+    {
+        commandLink.addClientBehavior("keypress", new AjaxBehavior());
+        try 
+        {
+            commandLink.encodeAll(facesContext);
+            String output = ((StringWriter) writer.getWriter()).getBuffer().toString();
+            assertTrue(output.matches("(?s).+id=\".+\".+"));
+            assertTrue(output.matches("(?s).+name=\".+\".+"));
+        }
+        catch (Exception e)
+        {
+            fail(e.getMessage());
+        }
+        
+    }
+    
+    /**
+     * Components that render client behaviors should always render "id" and "name" attribute
+     */
+    public void testClientBehaviorHolderRendersIdAndNameOutcomeTargetLink() 
+    {
+        outcomeTargetLink.addClientBehavior("keypress", new AjaxBehavior());
+        try 
+        {
+            outcomeTargetLink.encodeAll(facesContext);
+            String output = ((StringWriter) writer.getWriter()).getBuffer().toString();
+            assertTrue(output.matches(".+id=\".+\".+"));
+            assertTrue(output.matches(".+name=\".+\".+"));
+        }
+        catch (Exception e)
+        {
+            fail(e.getMessage());
+        }
+        
+    }
+    
+    /**
+     * Test for the right use of the fragment attribute.
+     * The value of the fragment attribute is appended to the end of target URL following a hash (#) mark.
+     * @throws Exception
+     */
+    public void testOutputLinkFragment() throws Exception
+    {
+        outputLink.setFragment("fragment");
+        outputLink.setValue("http://www.irian.at");
+        outputLink.encodeAll(facesContext);
+        String output = writer.getWriter().toString();
+        assertEquals("<a href=\"http://www.irian.at#fragment\"></a>", output);
+    }
+    
+    /**
+     * If the disable attribute of a child UIParameter is true,
+     * he should be ignored.
+     * @throws Exception
+     */
+    public void testDisabledUIParameterNotRenderedCommandLink() throws Exception
+    {
+        UIParameter param1 = new UIParameter();
+        param1.setName("param1");
+        param1.setValue("value1");
+        param1.setDisable(true);
+        UIParameter param2 = new UIParameter();
+        param2.setName("param2");
+        param2.setValue("value2");
+        commandLink.getChildren().add(param1);
+        commandLink.getChildren().add(param2);
+        
+        commandLink.encodeAll(facesContext);
+        String output = writer.getWriter().toString();
+        assertFalse(output.contains("param1"));
+        assertFalse(output.contains("value1"));
+        assertTrue(output.contains("param2"));
+        assertTrue(output.contains("value2"));
+    }
+    
+    /**
+     * If the disable attribute of a child UIParameter is true,
+     * he should be ignored.
+     * @throws Exception
+     */
+    public void testDisabledUIParameterNotRenderedOutputLink() throws Exception
+    {
+        UIParameter param1 = new UIParameter();
+        param1.setName("param1");
+        param1.setValue("value1");
+        param1.setDisable(true);
+        UIParameter param2 = new UIParameter();
+        param2.setName("param2");
+        param2.setValue("value2");
+        outputLink.getChildren().add(param1);
+        outputLink.getChildren().add(param2);
+        
+        outputLink.encodeAll(facesContext);
+        String output = writer.getWriter().toString();
+        assertFalse(output.contains("param1"));
+        assertFalse(output.contains("value1"));
+        assertTrue(output.contains("param2"));
+        assertTrue(output.contains("value2"));
     }
 }

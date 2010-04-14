@@ -19,67 +19,98 @@
 package org.apache.myfaces.view.facelets.tag.jsf.core;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 
 import javax.el.ELContext;
 import javax.el.ELException;
 import javax.el.MethodExpression;
-import javax.el.ValueExpression;
+import javax.el.MethodNotFoundException;
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIViewRoot;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import javax.faces.event.ComponentSystemEventListener;
+import javax.faces.event.PreRenderViewEvent;
+import javax.faces.view.facelets.ComponentHandler;
 import javax.faces.view.facelets.FaceletContext;
 import javax.faces.view.facelets.FaceletException;
 import javax.faces.view.facelets.TagAttribute;
 import javax.faces.view.facelets.TagAttributeException;
 import javax.faces.view.facelets.TagConfig;
-import javax.faces.view.facelets.TagException;
 import javax.faces.view.facelets.TagHandler;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletAttribute;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTag;
 import org.apache.myfaces.config.NamedEventManager;
+import org.apache.myfaces.view.facelets.AbstractFaceletContext;
+import org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport;
 import org.apache.myfaces.view.facelets.util.ReflectionUtil;
 
 /**
  * Registers a listener for a given system event class on the UIComponent associated with this tag.
  */
-
+@JSFFaceletTag(
+        name = "f:event",
+        bodyContent = "empty")
 public final class EventHandler extends TagHandler {
+    
+    private static final Class<?>[] COMPONENT_SYSTEM_EVENT_PARAMETER = new Class<?>[] { ComponentSystemEvent.class };
+    private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
+    
+    @JSFFaceletAttribute(name="listener",
+            className="javax.el.MethodExpression",
+            deferredMethodSignature=
+            "public void listener(javax.faces.event.ComponentSystemEvent evt) throws javax.faces.event.AbortProcessingException")
     private TagAttribute listener;
-    private TagAttribute name;
+    
+    @JSFFaceletAttribute(name="type",
+            className="javax.el.ValueExpression",
+            deferredValueType="java.lang.String")
     private TagAttribute type;
     
     public EventHandler (TagConfig tagConfig)
     {
         super (tagConfig);
         
-        listener = getRequiredAttribute ("listener");
-        name = getAttribute ("name");
-        type = getAttribute ("type");
-        
-        // TODO: is this right?  The spec isn't entirely clear, but it seems to me that one or the other
-        // attribute must be defined, despite the fact that the docs say "name" is required.
-        
-        if ((name == null) && (type == null)) {
-            throw new TagException (this.tag, "One of the 'name' or 'type' attributes must be defined");
-        }
-        
-        else if ((name != null) && (type != null)) {
-            throw new TagException (this.tag, "Both the 'name' and 'type' attributes cannot be defined");
-        }
+        listener = getRequiredAttribute("listener");
+        type = getRequiredAttribute("type");
     }
     
-    @Override
     public void apply (FaceletContext ctx, UIComponent parent) throws ELException, FacesException, FaceletException, IOException
     {
-        Class<? extends ComponentSystemEvent> eventClass = getEventClass (ctx);
-        MethodExpression methodExp = listener.getMethodExpression(ctx, void.class, new Class<?>[] {
-            ComponentSystemEvent.class });
+        //Apply only if we are creating a new component
+        if (!ComponentHandler.isNew(parent))
+        {
+            return;
+        }
+        if (parent instanceof UIViewRoot && ((AbstractFaceletContext)ctx).isRefreshingTransientBuild())
+        {
+            return;
+        }
         
-        // Simply register the event on the component.
+        Class<? extends ComponentSystemEvent> eventClass = getEventClass(ctx);
         
-        parent.subscribeToEvent (eventClass, new Listener (ctx.getFacesContext().getELContext(), methodExp));
+        // Note: The listener attribute can now also take a zero-argument MethodExpression,
+        // thus we need two different MethodExpressions (see MYFACES-2503 for details).
+        MethodExpression methodExpOneArg 
+                = listener.getMethodExpression(ctx, void.class, COMPONENT_SYSTEM_EVENT_PARAMETER);
+        MethodExpression methodExpZeroArg
+                = listener.getMethodExpression(ctx, void.class, EMPTY_CLASS_ARRAY);
+        
+        if (eventClass == PreRenderViewEvent.class)
+        {
+            // ensure ViewRoot for PreRenderViewEvent
+            UIViewRoot viewRoot = ComponentSupport.getViewRoot(ctx, parent);
+            viewRoot.subscribeToEvent(eventClass, new Listener(methodExpOneArg, methodExpZeroArg));
+        }
+        else
+        {
+            // Simply register the event on the component.
+            parent.subscribeToEvent(eventClass, new Listener(methodExpOneArg, methodExpZeroArg));
+        }
     }
     
     /**
@@ -93,84 +124,124 @@ public final class EventHandler extends TagHandler {
     private Class<? extends ComponentSystemEvent> getEventClass (FaceletContext context)
     {
         Class<?> eventClass = null;
-        ValueExpression valueExp = ((name != null) ? name.getValueExpression (context, String.class) :
-            type.getValueExpression (context, String.class));
-        String value = (String) valueExp.getValue (context.getFacesContext().getELContext());
-        
-        if (name != null) {
-            Collection<Class<? extends ComponentSystemEvent>> events;
-            
-            // We can look up the event class by name in the NamedEventManager.
-            
-            events = NamedEventManager.getInstance().getNamedEvent (value);
-            
-            if (events.size() > 1) {
-                StringBuilder classNames = new StringBuilder ("[");
-                Iterator<Class<? extends ComponentSystemEvent>> eventIterator = events.iterator();
-                
-                // TODO: The spec is somewhat vague, but I think we're supposed to throw an exception
-                // here.  The @NamedEvent javadocs say that if a short name is registered to more than one
-                // event class that we must throw an exception listing the short name and the classes in
-                // the list _when the application makes reference to it_.  I believe processing this tag
-                // qualifies as the application "making reference" to the short name.  Why the exception
-                // isn't thrown when processing the @NamedEvent annotation, I don't know.  Perhaps follow
-                // up with the EG to see if this is correct.
-                
-                while (eventIterator.hasNext()) {
-                    classNames.append (eventIterator.next().getName());
-                    
-                    if (eventIterator.hasNext()) {
-                        classNames.append (", ");
-                    }
-                    
-                    else {
-                        classNames.append ("]");
-                    }
-                }
-                
-                throw new FacesException ("The event name '" + value + "' is mapped to more than one " +
-                    " event class: " + classNames.toString());
-            }
-            
-            else {
-                eventClass = events.iterator().next();
-            }
+        String value = null;
+        if (type.isLiteral())
+        {
+            value = type.getValue();
+        }
+        else
+        {
+            value = (String) type.getValueExpression (context, String.class).
+                getValue (context.getFacesContext().getELContext());
         }
         
-        else {
-            // Must have been defined via the "type" attribute, so instantiate the class.
-            
-            try {
+        Collection<Class<? extends ComponentSystemEvent>> events;
+        
+        // We can look up the event class by name in the NamedEventManager.
+        
+        events = NamedEventManager.getInstance().getNamedEvent (value);
+        
+        if (events == null)
+        {
+            try
+            {
                 eventClass = ReflectionUtil.forName (value);
             }
-        
-            catch (Throwable e) {
-                throw new TagAttributeException ((name != null) ? name : type, "Couldn't create event class", e);
+            catch (Throwable e)
+            {
+                throw new TagAttributeException (type, "Couldn't create event class", e);
             }
         }
+        else if (events.size() > 1)
+        {
+            StringBuilder classNames = new StringBuilder ("[");
+            Iterator<Class<? extends ComponentSystemEvent>> eventIterator = events.iterator();
+            
+            // TODO: The spec is somewhat vague, but I think we're supposed to throw an exception
+            // here.  The @NamedEvent javadocs say that if a short name is registered to more than one
+            // event class that we must throw an exception listing the short name and the classes in
+            // the list _when the application makes reference to it_.  I believe processing this tag
+            // qualifies as the application "making reference" to the short name.  Why the exception
+            // isn't thrown when processing the @NamedEvent annotation, I don't know.  Perhaps follow
+            // up with the EG to see if this is correct.
+            
+            while (eventIterator.hasNext())
+            {
+                classNames.append (eventIterator.next().getName());
+                
+                if (eventIterator.hasNext())
+                {
+                    classNames.append (", ");
+                }
+                else
+                {
+                    classNames.append ("]");
+                }
+            }
+            
+            throw new FacesException ("The event name '" + value + "' is mapped to more than one " +
+                " event class: " + classNames.toString());
+        }
+        else
+        {
+            eventClass = events.iterator().next();
+        }
         
-        if (!ComponentSystemEvent.class.isAssignableFrom (eventClass)) {
-            throw new TagAttributeException ((name != null) ? name : type, "Event class " + eventClass.getName() +
+        if (!ComponentSystemEvent.class.isAssignableFrom (eventClass))
+        {
+            throw new TagAttributeException (type, "Event class " + eventClass.getName() +
                 " is not of type javax.faces.event.ComponentSystemEvent");
         }
         
         return (Class<? extends ComponentSystemEvent>) eventClass;
     }
     
-    private class Listener implements ComponentSystemEventListener {
-        private ELContext elContext;
-        private MethodExpression methodExp;
+    public static class Listener implements ComponentSystemEventListener, Serializable 
+    {
+
+        private static final long serialVersionUID = 7318240026355007052L;
         
-        private Listener (ELContext elContext, MethodExpression methodExp)
+        private MethodExpression methodExpOneArg;
+        private MethodExpression methodExpZeroArg;
+        
+        public Listener()
         {
-            this.elContext = elContext;
-            this.methodExp = methodExp;
+            super();
+        }
+
+        /**
+         * Note: The listener attribute can now also take a zero-argument MethodExpression,
+         * thus we need two different MethodExpressions (see MYFACES-2503 for details).
+         * @param methodExpOneArg
+         * @param methodExpZeroArg
+         */
+        private Listener(MethodExpression methodExpOneArg, MethodExpression methodExpZeroArg)
+        {
+            this.methodExpOneArg = methodExpOneArg;
+            this.methodExpZeroArg = methodExpZeroArg;
         }
         
-        @Override
-        public void processEvent (ComponentSystemEvent event)
+        public void processEvent(ComponentSystemEvent event)
         {
-            this.methodExp.invoke(elContext, new Object[] { event });
+            ELContext elContext = FacesContext.getCurrentInstance().getELContext();
+            try
+            {
+                // first try to invoke the MethodExpression with one argument
+                this.methodExpOneArg.invoke(elContext, new Object[] { event });
+            }
+            catch (MethodNotFoundException mnfeOneArg)
+            {
+                try
+                {
+                    // if that fails try to invoke the MethodExpression with zero arguments
+                    this.methodExpZeroArg.invoke(elContext, new Object[0]);
+                }
+                catch (MethodNotFoundException mnfeZeroArg)
+                {
+                    // if that fails too rethrow the original MethodNotFoundException
+                    throw mnfeOneArg;
+                }
+            }
         }
     }
 }

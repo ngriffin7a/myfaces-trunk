@@ -22,14 +22,21 @@ import javax.el.ELException;
 import javax.el.ExpressionFactory;
 import javax.el.MethodExpression;
 import javax.el.ValueExpression;
+import javax.faces.view.Location;
 import javax.faces.view.facelets.FaceletContext;
-import javax.faces.view.facelets.Location;
 import javax.faces.view.facelets.TagAttribute;
 import javax.faces.view.facelets.TagAttributeException;
 
+import org.apache.myfaces.util.ExternalSpecifications;
+import org.apache.myfaces.view.facelets.el.CompositeComponentELUtils;
 import org.apache.myfaces.view.facelets.el.ELText;
+import org.apache.myfaces.view.facelets.el.LocationMethodExpression;
+import org.apache.myfaces.view.facelets.el.LocationValueExpression;
+import org.apache.myfaces.view.facelets.el.LocationValueExpressionUEL;
 import org.apache.myfaces.view.facelets.el.TagMethodExpression;
 import org.apache.myfaces.view.facelets.el.TagValueExpression;
+import org.apache.myfaces.view.facelets.el.TagValueExpressionUEL;
+import org.apache.myfaces.view.facelets.el.ValueExpressionMethodExpression;
 
 /**
  * Representation of a Tag's attribute in a Facelet File
@@ -149,19 +156,68 @@ public final class TagAttributeImpl extends TagAttribute
      *            parameter type
      * @return a MethodExpression instance
      */
-    public MethodExpression getMethodExpression(FaceletContext ctx, Class<?> type, Class<?>[] paramTypes)
+    public MethodExpression getMethodExpression(FaceletContext ctx, Class type, Class[] paramTypes)
     {
         try
         {
-            ExpressionFactory f = ctx.getExpressionFactory();
-            return new TagMethodExpression(this, f.createMethodExpression(ctx, this.value, type, paramTypes));
+            MethodExpression methodExpression = null;
+            
+            // From this point we can suppose this attribute contains a ELExpression
+            // Now we have to check if the expression points to a composite component attribute map
+            // and if so deal with it as an indirection.
+            if (isCompositeComponentAttributeMapExpression())
+            {
+                // The MethodExpression is on parent composite component attribute map.
+                // create a pointer that are referred to the real one that is created in other side
+                // (see VDL.retargetMethodExpressions for details)
+                ValueExpression valueExpr = this.getValueExpression(ctx, MethodExpression.class);
+                methodExpression = new ValueExpressionMethodExpression(valueExpr);
+            }
+            else
+            {
+                ExpressionFactory f = ctx.getExpressionFactory();
+                methodExpression = f.createMethodExpression(ctx, this.value, type, paramTypes);
+                    
+                // if the MethodExpression contains a reference to the current composite
+                // component, the Location also has to be stored in the MethodExpression 
+                // to be able to resolve the right composite component (the one that was
+                // created from the file the Location is pointing to) later.
+                // (see MYFACES-2561 for details)
+                if (CompositeComponentELUtils.isCompositeComponentExpression(this.value))
+                {
+                    methodExpression = new LocationMethodExpression(getLocation(), methodExpression);
+                }
+            }
+            
+            return new TagMethodExpression(this, methodExpression);
         }
         catch (Exception e)
         {
             throw new TagAttributeException(this, e);
         }
     }
-
+    
+    private boolean isCompositeComponentAttributeMapExpression()
+    {
+        // Check if the ELExpression inside this.value has as target the composite component attribute map
+        // and if so, return true, otherwise return false. 
+        int i = this.value.indexOf("cc.");
+        if (i >= 0)
+        {
+            i = this.value.indexOf("attrs.",i+3); 
+            if (i >= 0)
+            {
+                // If the last target is a value inside the composite attribute map
+                // we are in case.
+                if (this.value.indexOf('.',i+6) < 0)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
     /**
      * The resolved Namespace for this attribute
      * 
@@ -238,7 +294,7 @@ public final class TagAttributeImpl extends TagAttribute
      *            expected return type
      * @return Object value of this attribute
      */
-    public Object getObject(FaceletContext ctx, Class<?> type)
+    public Object getObject(FaceletContext ctx, Class type)
     {
         if (this.literal)
         {
@@ -283,12 +339,38 @@ public final class TagAttributeImpl extends TagAttribute
      *            expected return type
      * @return ValueExpression instance
      */
-    public ValueExpression getValueExpression(FaceletContext ctx, Class<?> type)
+    public ValueExpression getValueExpression(FaceletContext ctx, Class type)
     {
         try
         {
             ExpressionFactory f = ctx.getExpressionFactory();
-            return new TagValueExpression(this, f.createValueExpression(ctx, this.value, type));
+            ValueExpression valueExpression = f.createValueExpression(ctx, this.value, type);
+            
+            // if the ValueExpression contains a reference to the current composite
+            // component, the Location also has to be stored in the ValueExpression 
+            // to be able to resolve the right composite component (the one that was
+            // created from the file the Location is pointing to) later.
+            // (see MYFACES-2561 for details)
+            if (CompositeComponentELUtils.isCompositeComponentExpression(this.value))
+            {
+                if (ExternalSpecifications.isUnifiedELAvailable())
+                {
+                    valueExpression = new LocationValueExpressionUEL(getLocation(), valueExpression);
+                }
+                else
+                {
+                    valueExpression = new LocationValueExpression(getLocation(), valueExpression);
+                }
+            }
+            
+            if (ExternalSpecifications.isUnifiedELAvailable())
+            {
+                return new TagValueExpressionUEL(this, valueExpression);
+            }
+            else
+            {
+                return new TagValueExpression(this, valueExpression);
+            }
         }
         catch (Exception e)
         {

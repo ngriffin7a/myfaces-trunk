@@ -19,30 +19,24 @@
 package javax.faces.component;
 
 import javax.faces.context.FacesContext;
+
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFJspProperty;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
 
 /**
  * Component for choosing one option out of a set of possibilities.
  * <p>
  * This component is expected to have children of type UISelectItem or UISelectItems; these define the set of possible
  * options that the user can choose from.
- * <p>
- * <h4>Events:</h4>
- * <table border="1" width="100%" cellpadding="3" summary="">
- * <tr bgcolor="#CCCCFF" class="TableHeadingColor">
- * <th align="left">Type</th> <th align="left">Phases</th> <th align="left">Description</th>
- * </tr>
- * <tr class="TableRowColor">
- * <td valign="top"><code>javax.faces.event.ValueChangeEvent</code></td>
- * <td valign="top" nowrap></td>
- * <td valign="top">The valueChange event is delivered when the value attribute is changed.</td>
- * </tr>
- * </table>
+ * </p>
  * <p>
  * See the javadoc for this class in the <a
  * href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/api/index.html">JSF Specification</a> for further details.
+ * </p>
  */
 @JSFComponent(defaultRendererType = "javax.faces.Menu")
+@JSFJspProperty(name="hideNoSelectionOption", returnType="boolean")
 public class UISelectOne extends UIInput
 {
     public static final String COMPONENT_TYPE = "javax.faces.SelectOne";
@@ -60,7 +54,7 @@ public class UISelectOne extends UIInput
     {
         return COMPONENT_FAMILY;
     }
-
+    
     /**
      * Verify that the result of converting the newly submitted value is <i>equal</i> to the value property of one of
      * the child SelectItem objects. If this is not true, a validation error is reported.
@@ -86,7 +80,11 @@ public class UISelectOne extends UIInput
         };
 
         // selected value must match to one of the available options
-        if (!_SelectItemsUtil.matchValue(context, value, new _SelectItemsIterator(this), converter))
+        // and if required is true it must not match an option with noSelectionOption set to true (since 2.0)
+        if (!(_SelectItemsUtil.matchValue(context, value, new _SelectItemsIterator(this, context), converter)
+              && (!this.isRequired() 
+                  || (this.isRequired() 
+                      && !_SelectItemsUtil.isNoSelectionOption(context, value, new _SelectItemsIterator(this, context), converter)))))
         {
             _MessageUtils.addErrorMessage(context, this, INVALID_MESSAGE_ID, new Object[] { _MessageUtils.getLabel(
                 context, this) });

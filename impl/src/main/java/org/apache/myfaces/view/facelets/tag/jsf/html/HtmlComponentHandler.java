@@ -19,14 +19,24 @@
 package org.apache.myfaces.view.facelets.tag.jsf.html;
 
 import javax.faces.view.facelets.ComponentConfig;
+import javax.faces.view.facelets.ComponentHandler;
 import javax.faces.view.facelets.MetaRuleset;
 
-import org.apache.myfaces.view.facelets.tag.jsf.ComponentHandler;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTag;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTags;
 
 /**
  * @author Jacob Hookom
  * @version $Id: HtmlComponentHandler.java,v 1.3 2008/07/13 19:01:50 rlubke Exp $
  */
+@JSFFaceletTags(tags={
+    @JSFFaceletTag(
+        name = "h:outputScript",
+        componentClass = "org.apache.myfaces.view.facelets.tag.jsf.html._HtmlOutputScript"),
+    @JSFFaceletTag(
+        name = "h:outputStylesheet",
+        componentClass = "org.apache.myfaces.view.facelets.tag.jsf.html._HtmlOutputStylesheet")
+})
 public class HtmlComponentHandler extends ComponentHandler
 {
 
@@ -38,7 +48,7 @@ public class HtmlComponentHandler extends ComponentHandler
         super(config);
     }
 
-    protected MetaRuleset createMetaRuleset(Class<?> type)
+    protected MetaRuleset createMetaRuleset(Class type)
     {
         return super.createMetaRuleset(type).alias("class", "styleClass");
     }

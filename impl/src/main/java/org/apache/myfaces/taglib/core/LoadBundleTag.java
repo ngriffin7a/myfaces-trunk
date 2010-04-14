@@ -65,7 +65,8 @@ public class LoadBundleTag extends TagSupport
     /**
      * The base name of the resource bundle.
      */
-    @JSFJspAttribute(required = true, rtexprvalue = true, className = "java.lang.String")
+    @JSFJspAttribute(className="javax.el.ValueExpression",
+            deferredValueType="java.lang.String")
     public void setBasename(ValueExpression basename)
     {
         _basename = basename;
@@ -124,7 +125,7 @@ public class LoadBundleTag extends TagSupport
             throw new NullPointerException("LoadBundle: 'basename' must not be null");
         }
 
-        final ResourceBundle bundle;
+        ResourceBundle bundle;
         try
         {
             bundle = ResourceBundle.getBundle(basename,
@@ -133,7 +134,16 @@ public class LoadBundleTag extends TagSupport
         }
         catch (MissingResourceException e)
         {
-            throw new JspException("Resource bundle '" + basename + "' could not be found.", e);
+            try
+            {
+                bundle = ResourceBundle.getBundle(basename,
+                        locale,
+                        this.getClass().getClassLoader());
+            }
+            catch (MissingResourceException e1)
+            {
+                throw new JspException("Resource bundle '" + basename + "' could not be found.", e1);
+            }
         }
 
         facesContext.getExternalContext().getRequestMap().put(_var, new BundleMap(bundle));

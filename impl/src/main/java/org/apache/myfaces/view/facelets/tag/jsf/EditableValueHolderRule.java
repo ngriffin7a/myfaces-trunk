@@ -18,6 +18,7 @@
  */
 package org.apache.myfaces.view.facelets.tag.jsf;
 
+import javax.el.MethodExpression;
 import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -29,6 +30,8 @@ import javax.faces.view.facelets.MetaRule;
 import javax.faces.view.facelets.Metadata;
 import javax.faces.view.facelets.MetadataTarget;
 import javax.faces.view.facelets.TagAttribute;
+
+import org.apache.myfaces.view.facelets.AbstractFaceletContext;
 
 /**
  * 
@@ -66,8 +69,24 @@ public final class EditableValueHolderRule extends MetaRule
 
         public void applyMetadata(FaceletContext ctx, Object instance)
         {
-            ((EditableValueHolder) instance).addValueChangeListener(new MethodExpressionValueChangeListener(this.attr
-                    .getMethodExpression(ctx, null, VALUECHANGE_SIG)));
+            // From JSF 2.0 it is possible to have valueChangeListener method without ValueChangeEvent parameter. 
+            // It seems that MethodExpressionValueChangeListener from API contains support for it but there is one big
+            // problem - one-arg constructor will not preserve the current VariableMapper.
+            // This is a problem when using facelets and <ui:decorate/> with EL params (see MYFACES-2541 for details).
+            // So we must create two MethodExpressions here - both are created from the current 
+            // facelets context and thus variable mapping will work.
+            final MethodExpression methodExpressionOneArg = attr.getMethodExpression(ctx, null, VALUECHANGE_SIG);
+            final MethodExpression methodExpressionZeroArg = attr.getMethodExpression(ctx, null, EMPTY_CLASS_ARRAY);
+            if (((AbstractFaceletContext)ctx).isUsingPSSOnThisView())
+            {
+                ((EditableValueHolder) instance).addValueChangeListener(
+                        new PartialMethodExpressionValueChangeListener(methodExpressionOneArg, methodExpressionZeroArg));
+            }
+            else
+            {
+                ((EditableValueHolder) instance).addValueChangeListener(
+                        new MethodExpressionValueChangeListener(methodExpressionOneArg, methodExpressionZeroArg));
+            }
         }
     }
 
@@ -82,14 +101,24 @@ public final class EditableValueHolderRule extends MetaRule
 
         public void applyMetadata(FaceletContext ctx, Object instance)
         {
-            ((EditableValueHolder) instance).addValidator(new MethodExpressionValidator(this.attr
-                    .getMethodExpression(ctx, null, VALIDATOR_SIG)));
+            if (((AbstractFaceletContext)ctx).isUsingPSSOnThisView())
+            {
+                ((EditableValueHolder) instance).addValidator(new PartialMethodExpressionValidator(this.attr
+                        .getMethodExpression(ctx, null, VALIDATOR_SIG)));
+            }
+            else
+            {
+                ((EditableValueHolder) instance).addValidator(new MethodExpressionValidator(this.attr
+                        .getMethodExpression(ctx, null, VALIDATOR_SIG)));
+            }
         }
     }
 
     private final static Class<?>[] VALIDATOR_SIG = new Class[] { FacesContext.class, UIComponent.class, Object.class };
 
     private final static Class<?>[] VALUECHANGE_SIG = new Class[] { ValueChangeEvent.class };
+    
+    private final static Class<?>[] EMPTY_CLASS_ARRAY = new Class[0];
 
     public final static EditableValueHolderRule Instance = new EditableValueHolderRule();
 

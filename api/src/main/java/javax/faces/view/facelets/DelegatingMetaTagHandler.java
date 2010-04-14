@@ -20,6 +20,7 @@ package javax.faces.view.facelets;
 
 import java.io.IOException;
 
+import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
 import javax.faces.view.facelets.FaceletContext;
 
@@ -31,71 +32,76 @@ import javax.faces.view.facelets.FaceletContext;
  */
 public abstract class DelegatingMetaTagHandler extends MetaTagHandler
 {
-    protected TagHandlerDelegateFactory helperFactory;
-
+    protected TagHandlerDelegateFactory delegateFactory;
+    private TagAttribute binding;
+    private TagAttribute disabled;
+    
     public DelegatingMetaTagHandler(TagConfig config)
     {
         super(config);
+        
+        delegateFactory = (TagHandlerDelegateFactory)
+            FactoryFinder.getFactory (FactoryFinder.TAG_HANDLER_DELEGATE_FACTORY);
+        binding = getAttribute ("binding");
+        disabled = getAttribute ("disabled");
     }
 
     /**
      * {@inheritDoc}
      */
-    @Override
     public void apply(FaceletContext ctx, UIComponent parent) throws IOException
     {
-        getTagHandlerHelper().apply(ctx, parent);
+        getTagHandlerDelegate().apply(ctx, parent);
     }
 
     public void applyNextHandler(FaceletContext ctx, UIComponent c) throws IOException
     {
-        // TODO: IMPLEMENT HERE
+        nextHandler.apply (ctx, c);
     }
 
     public TagAttribute getBinding()
     {
-        // TODO: IMPLEMENT HERE
-        return null;
+        return binding;
     }
 
     public Tag getTag()
     {
-        // TODO: IMPLEMENT HERE
-        return null;
+        return tag;
     }
 
     public TagAttribute getTagAttribute(String localName)
     {
-        // TODO: IMPLEMENT HERE
-        return null;
+        return super.getAttribute (localName);
     }
 
     public String getTagId()
     {
-        // TODO: IMPLEMENT HERE
-        return null;
+        return tagId;
     }
 
     public boolean isDisabled(FaceletContext ctx)
     {
-        // TODO: IMPLEMENT HERE
-        return false;
+        if (disabled == null) {
+            return false;
+        }
+        
+        return disabled.getBoolean (ctx);
     }
 
     public void setAttributes(FaceletContext ctx, Object instance)
     {
-        // TODO: IMPLEMENT HERE
+        super.setAttributes (ctx, instance);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected MetaRuleset createMetaRuleset(Class<?> type)
+    protected MetaRuleset createMetaRuleset(Class type)
     {
-        return getTagHandlerHelper().createMetaRuleset(type);
+        return getTagHandlerDelegate().createMetaRuleset(type);
     }
 
-    protected abstract TagHandlerDelegate getTagHandlerHelper();
+    protected abstract TagHandlerDelegate getTagHandlerDelegate();
 
 }

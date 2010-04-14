@@ -26,6 +26,7 @@ import org.apache.myfaces.config.FacesConfigUnmarshaller;
 import org.apache.myfaces.config.impl.digester.elements.*;
 import org.apache.myfaces.config.impl.FacesConfigEntityResolver;
 import org.apache.commons.digester.Digester;
+import org.apache.myfaces.shared_impl.util.ClassUtils;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -43,11 +44,13 @@ public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshal
         digester.setValidating(false);
         digester.setNamespaceAware(true);
         digester.setEntityResolver(new FacesConfigEntityResolver(externalContext));
-        digester.setUseContextClassLoader(true);
+        //digester.setUseContextClassLoader(true);
+        digester.setClassLoader(ClassUtils.getContextClassLoader());
 
         digester.addObjectCreate("faces-config", FacesConfig.class);
         // 2.0 specific start
         digester.addSetProperties("faces-config", "metadata-complete", "metadataComplete");
+        digester.addSetProperties("faces-config", "version", "version");
         // 2.0 specific end
         // 2.0 config ordering name start
         digester.addCallMethod("faces-config/name", "setName", 0);
@@ -78,6 +81,7 @@ public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshal
         digester.addSetNext("faces-config/application", "addApplication");
         digester.addCallMethod("faces-config/application/action-listener", "addActionListener", 0);
         digester.addCallMethod("faces-config/application/default-render-kit-id", "addDefaultRenderkitId", 0);
+        digester.addCallMethod("faces-config/application/default-validators", "setDefaultValidatorsPresent");
         digester.addCallMethod("faces-config/application/default-validators/validator-id", "addDefaultValidatorId", 0);
         digester.addCallMethod("faces-config/application/message-bundle", "addMessageBundle", 0);
         digester.addCallMethod("faces-config/application/navigation-handler", "addNavigationHandler", 0);
@@ -216,13 +220,22 @@ public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshal
         digester.addSetNext("faces-config/navigation-rule/navigation-case", "addNavigationCase");
         digester.addCallMethod("faces-config/navigation-rule/navigation-case/from-action", "setFromAction", 0);
         digester.addCallMethod("faces-config/navigation-rule/navigation-case/from-outcome", "setFromOutcome", 0);
+        digester.addCallMethod("faces-config/navigation-rule/navigation-case/if", "setIf", 0);
         digester.addCallMethod("faces-config/navigation-rule/navigation-case/to-view-id", "setToViewId", 0);
-        digester.addCallMethod("faces-config/navigation-rule/navigation-case/redirect", "setRedirect");
+        digester.addObjectCreate("faces-config/navigation-rule/navigation-case/redirect", Redirect.class);
+        digester.addSetNext("faces-config/navigation-rule/navigation-case/redirect", "setRedirect");
+        digester.addCallMethod("faces-config/navigation-rule/navigation-case/redirect/include-view-params", "setIncludeViewParams", 0);
+        digester.addObjectCreate("faces-config/navigation-rule/navigation-case/redirect/view-param", ViewParam.class);
+        digester.addSetNext("faces-config/navigation-rule/navigation-case/redirect/view-param", "addViewParam");
+        digester.addCallMethod("faces-config/navigation-rule/navigation-case/redirect/view-param/name", "setName",0);
+        digester.addCallMethod("faces-config/navigation-rule/navigation-case/redirect/view-param/value", "setValue",0);
+        
 
         digester.addObjectCreate("faces-config/render-kit", RenderKit.class);
         digester.addSetNext("faces-config/render-kit", "addRenderKit");
         digester.addCallMethod("faces-config/render-kit/render-kit-id", "setId", 0);
-        digester.addCallMethod("faces-config/render-kit/render-kit-class", "setRenderKitClass", 0);
+        //digester.addCallMethod("faces-config/render-kit/render-kit-class", "setRenderKitClass", 0);
+        digester.addCallMethod("faces-config/render-kit/render-kit-class", "addRenderKitClass", 0);
         digester.addObjectCreate("faces-config/render-kit/renderer", Renderer.class);
         digester.addSetNext("faces-config/render-kit/renderer", "addRenderer");
         digester.addCallMethod("faces-config/render-kit/renderer/component-family", "setComponentFamily", 0);
@@ -230,8 +243,8 @@ public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshal
         digester.addCallMethod("faces-config/render-kit/renderer/renderer-class", "setRendererClass", 0);
         digester.addObjectCreate("faces-config/render-kit/client-behavior-renderer", ClientBehaviorRenderer.class);
         digester.addSetNext("faces-config/render-kit/client-behavior-renderer", "addClientBehaviorRenderer");
-        digester.addCallMethod("faces-config/render-kit/renderer/client-behavior-renderer-type", "setRendererType", 0);
-        digester.addCallMethod("faces-config/render-kit/renderer/client-behavior-renderer-class", "setRendererClass", 0);
+        digester.addCallMethod("faces-config/render-kit/client-behavior-renderer/client-behavior-renderer-type", "setRendererType", 0);
+        digester.addCallMethod("faces-config/render-kit/client-behavior-renderer/client-behavior-renderer-class", "setRendererClass", 0);
         
         // 2.0 behavior start
         digester.addObjectCreate("faces-config/behavior", Behavior.class);

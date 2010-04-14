@@ -23,8 +23,10 @@ import javax.faces.view.facelets.FaceletContext;
 import javax.faces.view.facelets.MetaRuleset;
 import javax.faces.view.facelets.TagAttribute;
 import javax.faces.view.facelets.ValidatorConfig;
+import javax.faces.view.facelets.ValidatorHandler;
 
-import org.apache.myfaces.view.facelets.tag.jsf.ValidateHandler;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTag;
+
 
 /**
  * Register a named Validator instance on the UIComponent associated with the closest parent UIComponent custom
@@ -34,7 +36,11 @@ import org.apache.myfaces.view.facelets.tag.jsf.ValidateHandler;
  * @author Jacob Hookom
  * @version $Id: ValidateDelegateHandler.java,v 1.4 2008/07/13 19:01:44 rlubke Exp $
  */
-public final class ValidateDelegateHandler extends ValidateHandler
+@JSFFaceletTag(
+        name = "f:validator",
+        bodyContent = "empty", 
+        tagClass="org.apache.myfaces.taglib.core.ValidatorImplTag")
+public final class ValidateDelegateHandler extends ValidatorHandler
 {
 
     private final TagAttribute validatorId;
@@ -42,23 +48,33 @@ public final class ValidateDelegateHandler extends ValidateHandler
     public ValidateDelegateHandler(ValidatorConfig config)
     {
         super(config);
-        this.validatorId = this.getRequiredAttribute("validatorId");
+        this.validatorId = this.getAttribute("validatorId");
     }
 
     /**
      * Uses the specified "validatorId" to get a new Validator instance from the Application.
      * 
      * @see javax.faces.application.Application#createValidator(java.lang.String)
-     * @see org.apache.myfaces.view.facelets.tag.jsf.ValidateHandler#createValidator(javax.faces.view.facelets.FaceletContext)
+     * @see javax.faces.view.facelets.ValidatorHandler#createValidator(javax.faces.view.facelets.FaceletContext)
      */
     protected Validator createValidator(FaceletContext ctx)
     {
-        return ctx.getFacesContext().getApplication().createValidator(this.validatorId.getValue(ctx));
+        return ctx.getFacesContext().getApplication().createValidator(this.getValidatorId(ctx));
     }
 
-    protected MetaRuleset createMetaRuleset(Class<?> type)
+    protected MetaRuleset createMetaRuleset(Class type)
     {
         return super.createMetaRuleset(type).ignoreAll();
+    }
+
+    @Override
+    public String getValidatorId(FaceletContext ctx)
+    {
+        if (validatorId == null)
+        {
+            return null;
+        }
+        return validatorId.getValue(ctx);
     }
 
 }

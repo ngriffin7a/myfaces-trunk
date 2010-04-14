@@ -20,6 +20,7 @@ package javax.faces.component;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,6 +41,8 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.PartialViewContext;
 import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ExceptionQueuedEvent;
+import javax.faces.event.ExceptionQueuedEventContext;
 import javax.faces.event.FacesEvent;
 import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
@@ -47,6 +50,8 @@ import javax.faces.event.PhaseListener;
 import javax.faces.event.PostConstructViewMapEvent;
 import javax.faces.event.PostRestoreStateEvent;
 import javax.faces.event.PreDestroyViewMapEvent;
+import javax.faces.event.SystemEvent;
+import javax.faces.event.SystemEventListener;
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.lifecycle.LifecycleFactory;
 import javax.faces.view.ViewDeclarationLanguage;
@@ -92,19 +97,31 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
     // todo: is it right to save the state of _events and _phaseListeners?
     private List<FacesEvent> _events;
 
-    private MethodExpression _beforePhaseListener;
-    private MethodExpression _afterPhaseListener;
-
+    /**
+     * Map containing view scope objects. 
+     * 
+     * It is not expected this map hold PartialStateHolder instances,
+     * so we can use saveAttachedState and restoreAttachedState methods.
+     */
     private Map<String, Object> _viewScope;
 
     private transient Lifecycle _lifecycle = null;
-
+    
+    private HashMap<Class<? extends SystemEvent>, List<SystemEventListener>> _systemEventListeners;
+    
+    // Tracks success in the beforePhase. Listeners that threw an exception
+    // in beforePhase or were never called, because a previous listener threw
+    // an exception, should not have their afterPhase method called
+    private transient Map<PhaseId, boolean[]> listenerSuccessMap = new HashMap<PhaseId, boolean[]>();
+    
     /**
      * Construct an instance of the UIViewRoot.
      */
     public UIViewRoot()
     {
         setRendererType(null);
+        
+        _systemEventListeners = new HashMap<Class<? extends SystemEvent>, List<SystemEventListener>>();
     }
 
     /**
@@ -136,22 +153,40 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
         // Call getComponentResources to obtain the child list for the given target
         List<UIComponent> componentResources = _getComponentResources(context, target);
 
-        // If the component ID of componentResource matches the the ID of a resource that has already been added, remove the old resource.
+        // If the component ID of componentResource matches the ID of a resource that has already been added, remove the old resource.
         String componentId = componentResource.getId();
+        
+        // This var helps to handle the case when we try to add a component that already is
+        // on the resource list, because PostAddToViewEvent also is sent to components 
+        // backing resources. The problem start when a component is already inside
+        // componentResources list and we try to relocate it again. This leads to a StackOverflowException
+        // so we need to check if a component is and prevent remove and add it again. Note
+        // that remove and then add a component trigger another PostAddToViewEvent. The right
+        // point to prevent this StackOverflowException is here, because this method is 
+        // responsible to traverse the componentResources list and add when necessary.
+        boolean alreadyAdded = false;
         
         if (componentId != null)
         {
-            for(UIComponent component : componentResources)
+            for(Iterator<UIComponent> it = componentResources.iterator(); it.hasNext();)
             {
-                if(componentId.equals(component.getId()))
+                UIComponent component = it.next();
+                if(componentId.equals(component.getId()) && componentResource != component)
                 {
-                    componentResources.remove(component);
+                    it.remove();
+                }
+                else if (componentResource == component)
+                {
+                    alreadyAdded = true;
                 }
             }
         }
         
         // Add the component resource to the list
-        componentResources.add(componentResource);
+        if (!alreadyAdded)
+        {
+            componentResources.add(componentResource);
+        }
     }
 
     /**
@@ -214,7 +249,6 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
      * 
      * @since 2.0
      */
-    @Override
     public String createUniqueId(FacesContext context, String seed)
     {
         ExternalContext extCtx = context.getExternalContext();
@@ -254,6 +288,11 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
 
         if (!skipPhase)
         {
+            //prerendering happens, we now publish the prerender view event
+            //the specs states that the viewroot as source is about to be rendered
+            //hence we issue the event immediately before publish, if the phase is not skipped
+            //context.getApplication().publishEvent(context, PreRenderViewEvent.class, this);
+            //then the view rendering is about to begin
             super.encodeBegin(context);
         }
         else
@@ -268,6 +307,10 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
     @Override
     public void encodeChildren(FacesContext context) throws IOException
     {
+        if (context.getResponseComplete())
+        {
+            return;
+        }
         PartialViewContext pContext = context.getPartialViewContext();
         
         // If PartialViewContext.isAjaxRequest() returns true
@@ -290,43 +333,53 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
     {
         checkNull(context, "context");
 
-        super.encodeEnd(context);
-        
-        ViewDeclarationLanguage vdl = context.getApplication().getViewHandler().getViewDeclarationLanguage(context, getViewId());
-        if (vdl != null)
+        if (!context.getResponseComplete())
         {
-            // If the current view has view parameters, as indicated by a non-empty and non-UnsupportedOperationException throwing 
-            // return from ViewDeclarationLanguage.getViewMetadata(javax.faces.context.FacesContext, String)
-            ViewMetadata metadata = null;
-            try
-            {
-                metadata = vdl.getViewMetadata(context, getViewId());    
-            }
-            catch(UnsupportedOperationException e)
-            {
-                logger.log(Level.SEVERE, "Exception while obtaining the view metadata: " + e.getMessage(), e);
-            }
+            super.encodeEnd(context);
             
-            if (metadata != null)
+            // the call to encodeAll() on every UIViewParameter here is only necessary
+            // if the current request is _not_ an AJAX request, because if it was an
+            // AJAX request, the call would already have happened in PartialViewContextImpl and
+            // would anyway be too late here, because the state would already have been generated
+            PartialViewContext partialContext = context.getPartialViewContext();
+            if (!partialContext.isAjaxRequest())
             {
-                try
+                ViewDeclarationLanguage vdl = context.getApplication().getViewHandler().getViewDeclarationLanguage(context, getViewId());
+                if (vdl != null)
                 {
-                    Collection<UIViewParameter> viewParams = ViewMetadata.getViewParameters(this);    
-                    if(!viewParams.isEmpty())
+                    // If the current view has view parameters, as indicated by a non-empty and non-UnsupportedOperationException throwing 
+                    // return from ViewDeclarationLanguage.getViewMetadata(javax.faces.context.FacesContext, String)
+                    ViewMetadata metadata = null;
+                    try
                     {
-                        // call UIViewParameter.encodeAll(javax.faces.context.FacesContext) on each parameter.
-                        for(UIViewParameter param : viewParams)
+                        metadata = vdl.getViewMetadata(context, getViewId());    
+                    }
+                    catch(UnsupportedOperationException e)
+                    {
+                        logger.log(Level.SEVERE, "Exception while obtaining the view metadata: " + e.getMessage(), e);
+                    }
+                    
+                    if (metadata != null)
+                    {
+                        try
                         {
-                            param.encodeAll(context);
+                            Collection<UIViewParameter> viewParams = ViewMetadata.getViewParameters(this);    
+                            if(!viewParams.isEmpty())
+                            {
+                                // call UIViewParameter.encodeAll(javax.faces.context.FacesContext) on each parameter.
+                                for(UIViewParameter param : viewParams)
+                                {
+                                    param.encodeAll(context);
+                                }
+                            }
+                        }
+                        catch(UnsupportedOperationException e)
+                        {
+                            // If calling getViewParameters() causes UnsupportedOperationException to be thrown, the exception must be silently swallowed.
                         }
                     }
                 }
-                catch(UnsupportedOperationException e)
-                {
-                    // If calling getViewParameters() causes UnsupportedOperationException to be thrown, the exception must be silently swallowed.
-                }
             }
-
         }
         
         try
@@ -340,37 +393,16 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
         }
     }
 
-    private boolean _isSetAfterPhaseListener()
-    {
-        Boolean value = (Boolean) getStateHelper().get(PropertyKeys.afterPhaseListenerSet);
-        return value == null ? false : value;
-    }
-
     /**
      * MethodBinding pointing to a method that takes a javax.faces.event.PhaseEvent and returns void, called after every
      * phase except for restore view.
      *
      * @return the new afterPhaseListener value
      */
-    @JSFProperty(stateHolder = true, returnSignature = "void", methodSignature = "javax.faces.event.PhaseEvent", jspName = "afterPhase")
+    @JSFProperty(returnSignature = "void", methodSignature = "javax.faces.event.PhaseEvent", jspName = "afterPhase")
     public MethodExpression getAfterPhaseListener()
     {
-        if (_afterPhaseListener != null)
-        {
-            return _afterPhaseListener;
-        }
-        ValueExpression expression = getValueExpression("afterPhaseListener");
-        if (expression != null)
-        {
-            return (MethodExpression)expression.getValue(getFacesContext().getELContext());
-        }
-        return null;
-    }
-
-    private boolean _isSetBeforePhaseListener()
-    {
-        Boolean value = (Boolean) getStateHelper().get(PropertyKeys.beforePhaseListenerSet);
-        return value == null ? false : value;
+        return (MethodExpression) getStateHelper().eval(PropertyKeys.afterPhaseListener);
     }
 
     /**
@@ -379,19 +411,10 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
      *
      * @return the new beforePhaseListener value
      */
-    @JSFProperty(stateHolder = true, returnSignature = "void", methodSignature = "javax.faces.event.PhaseEvent", jspName = "beforePhase")
+    @JSFProperty(returnSignature = "void", methodSignature = "javax.faces.event.PhaseEvent", jspName = "beforePhase")
     public MethodExpression getBeforePhaseListener()
     {
-        if (_beforePhaseListener != null)
-        {
-            return _beforePhaseListener;
-        }
-        ValueExpression expression = getValueExpression("beforePhaseListener");
-        if (expression != null)
-        {
-            return (MethodExpression)expression.getValue(getFacesContext().getELContext());
-        }
-        return null;
+        return (MethodExpression) getStateHelper().eval(PropertyKeys.beforePhaseListener);
     }
 
     /**
@@ -456,6 +479,11 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
 
             // Set the id of the facet to be target
             facet.setId(target);
+            
+            // From jsr-314-open list it was made clear this facet is transient,
+            // because all component resources does not change its inner state between
+            // requests
+            facet.setTransient(true);
 
             // Add the facet to the facets Map using target as the key
             getFacets().put(target, facet);
@@ -619,12 +647,10 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
             // The try block must have a finally block that ensures that no FacesEvents remain in the event queue
             broadcastEvents(context, PhaseId.RESTORE_VIEW);
 
-            // that any PhaseListeners in getPhaseListeners() are invoked as appropriate
-            PhaseEvent event = createEvent(context, PhaseId.RESTORE_VIEW);
-            for (PhaseListener listener: getPhaseListeners())
-            {
-                listener.afterPhase(event);
-            }
+            // invoke afterPhase MethodExpression
+            // Note: In this phase it is not possible to invoke the beforePhase method, because we
+            // first have to restore the view to get its attributes.
+            //notifyListeners(context, PhaseId.RESTORE_VIEW, getAfterPhaseListener(), false);
             
             visitTree(VisitContext.createVisitContext(context), new RestoreStateCallback());
         }
@@ -672,66 +698,151 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
      * invoked.
      * <p>
      * Note that the global PhaseListeners are invoked via the Lifecycle implementation, not from this method here.
+     * <p>
+     * These PhaseListeners are processed with the same rules as the globally defined PhaseListeners, except
+     * that any Exceptions, which may occur during the execution of the PhaseListeners, will only be logged
+     * and not published to the ExceptionHandler.
      */
     private boolean notifyListeners(FacesContext context, PhaseId phaseId, MethodExpression listener,
                                     boolean beforePhase)
     {
-        /*
-         * Initialize a state flag to false.
-         *
-         * If getBeforePhaseListener() returns non-null, invoke the listener, passing in the correct corresponding
-         * PhaseId for this phase.
-         *
-         * Upon return from the listener, call FacesContext.getResponseComplete() and FacesContext.getRenderResponse().
-         * If either return true set the internal state flag to true.
-         *
-         * If or one or more listeners have been added by a call to addPhaseListener(javax.faces.event.PhaseListener),
-         * invoke the beforePhase method on each one whose PhaseListener.getPhaseId() matches the current phaseId,
-         * passing in the same PhaseId as in the previous step.
-         *
-         * Upon return from each listener, call FacesContext.getResponseComplete() and FacesContext.getRenderResponse().
-         * If either return true set the internal state flag to true.
-         *
-         * Execute any processing for this phase if the internal state flag was not set.
-         *
-         * If getAfterPhaseListener() returns non-null, invoke the listener, passing in the correct corresponding
-         * PhaseId for this phase.
-         *
-         * If or one or more listeners have been added by a call to addPhaseListener(javax.faces.event.PhaseListener),
-         * invoke the afterPhase method on each one whose PhaseListener.getPhaseId() matches the current phaseId,
-         * passing in the same PhaseId as in the previous step.
-         */
         List<PhaseListener> phaseListeners = (List<PhaseListener>) getStateHelper().get(PropertyKeys.phaseListeners);
         if (listener != null || (phaseListeners != null && !phaseListeners.isEmpty()))
         {
+            // how many listeners do we have? (the MethodExpression listener is counted in either way)
+            // NOTE: beforePhaseSuccess[0] always refers to the MethodExpression listener
+            int listenerCount = (phaseListeners != null ? phaseListeners.size() + 1 : 1);
+            
+            boolean[] beforePhaseSuccess;
+            if (beforePhase)
+            {
+                beforePhaseSuccess = new boolean[listenerCount];
+                listenerSuccessMap.put(phaseId, beforePhaseSuccess);
+            }
+            else {
+                // afterPhase - get beforePhaseSuccess from the Map
+                beforePhaseSuccess = listenerSuccessMap.get(phaseId);
+                if (beforePhaseSuccess == null)
+                {
+                    // no Map available - assume that everything went well
+                    beforePhaseSuccess = new boolean[listenerCount];
+                    Arrays.fill(beforePhaseSuccess, true);
+                }
+            }
+            
             PhaseEvent event = createEvent(context, phaseId);
 
-            if (listener != null)
+            // only invoke the listener if we are in beforePhase
+            // or if the related before PhaseListener finished without an Exception
+            if (listener != null && (beforePhase || beforePhaseSuccess[0]))
             {
-                listener.invoke(context.getELContext(), new Object[] { event });
+                try
+                {
+                    listener.invoke(context.getELContext(), new Object[] { event });
+                    beforePhaseSuccess[0] = true;
+                }
+                catch (Throwable t) 
+                {
+                    beforePhaseSuccess[0] = false; // redundant - for clarity
+                    logger.log(Level.SEVERE, "An Exception occured while processing " +
+                                             listener.getExpressionString() + 
+                                             " in Phase " + phaseId, t);
+                    if (beforePhase)
+                    {
+                        return context.getResponseComplete() || (context.getRenderResponse() && !PhaseId.RENDER_RESPONSE.equals(phaseId));
+                    }
+                }
+            }
+            else if (beforePhase)
+            {
+                // there is no beforePhase MethodExpression listener
+                beforePhaseSuccess[0] = true;
             }
 
             if (phaseListeners != null && !phaseListeners.isEmpty())
             {
-                for (PhaseListener phaseListener : phaseListeners)
+                if (beforePhase)
                 {
-                    PhaseId listenerPhaseId = phaseListener.getPhaseId();
-                    if (phaseId.equals(listenerPhaseId) || PhaseId.ANY_PHASE.equals(listenerPhaseId))
+                    // process listeners in ascending order
+                    for (int i = 0; i < beforePhaseSuccess.length - 1; i++)
                     {
-                        if (beforePhase)
+                        PhaseListener phaseListener;
+                        try 
                         {
-                            phaseListener.beforePhase(event);
+                            phaseListener = phaseListeners.get(i);
                         }
-                        else
+                        catch (IndexOutOfBoundsException e)
                         {
-                            phaseListener.afterPhase(event);
+                            // happens when a PhaseListener removes another PhaseListener 
+                            // from UIViewRoot in its beforePhase method
+                            throw new IllegalStateException("A PhaseListener must not remove " +
+                                    "PhaseListeners from UIViewRoot.");
+                        }
+                        PhaseId listenerPhaseId = phaseListener.getPhaseId();
+                        if (phaseId.equals(listenerPhaseId) || PhaseId.ANY_PHASE.equals(listenerPhaseId))
+                        {
+                            try
+                            {
+                                phaseListener.beforePhase(event);
+                                beforePhaseSuccess[i + 1] = true;
+                            }
+                            catch (Throwable t) 
+                            {
+                                beforePhaseSuccess[i + 1] = false; // redundant - for clarity
+                                logger.log(Level.SEVERE, "An Exception occured while processing the " +
+                                                         "beforePhase method of PhaseListener " + phaseListener +
+                                                         " in Phase " + phaseId, t);
+                                return context.getResponseComplete() || (context.getRenderResponse() && !PhaseId.RENDER_RESPONSE.equals(phaseId));
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    // afterPhase
+                    // process listeners in descending order
+                    for (int i = beforePhaseSuccess.length - 1; i > 0; i--)
+                    {
+                        PhaseListener phaseListener;
+                        try 
+                        {
+                            phaseListener = phaseListeners.get(i - 1);
+                        }
+                        catch (IndexOutOfBoundsException e)
+                        {
+                            // happens when a PhaseListener removes another PhaseListener 
+                            // from UIViewRoot in its beforePhase or afterPhase method
+                            throw new IllegalStateException("A PhaseListener must not remove " +
+                                    "PhaseListeners from UIViewRoot.");
+                        }
+                        PhaseId listenerPhaseId = phaseListener.getPhaseId();
+                        if ((phaseId.equals(listenerPhaseId) || PhaseId.ANY_PHASE.equals(listenerPhaseId))
+                                && beforePhaseSuccess[i])
+                        {
+                            try
+                            {
+                                phaseListener.afterPhase(event);
+                            }
+                            catch (Throwable t) 
+                            {
+                                logger.log(Level.SEVERE, "An Exception occured while processing the " +
+                                                         "afterPhase method of PhaseListener " + phaseListener +
+                                                         " in Phase " + phaseId, t);
+                            }
                         }
                     }
                 }
             }
         }
 
-        return context.getResponseComplete() || context.getRenderResponse();
+        if (beforePhase)
+        {
+            return context.getResponseComplete() || (context.getRenderResponse() && !PhaseId.RENDER_RESPONSE.equals(phaseId));
+        }
+        else
+        {
+            return context.getResponseComplete() || context.getRenderResponse();
+        }
     }
 
     private PhaseEvent createEvent(FacesContext context, PhaseId phaseId)
@@ -765,7 +876,11 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
         for (FacesEvent event : events)
         {
             UIComponent source = event.getComponent();
-
+            UIComponent compositeParent = UIComponent.getCompositeComponentParent(source);
+            if (compositeParent != null)
+            {
+                pushComponentToEL(context, compositeParent);
+            }
             // Push the source as the current component
             pushComponentToEL(context, source);
 
@@ -776,6 +891,11 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
             }
             catch (AbortProcessingException e)
             {
+                // publish the Exception to be handled by the ExceptionHandler
+                ExceptionQueuedEventContext exceptionContext 
+                        = new ExceptionQueuedEventContext(context, e, source, context.getCurrentPhaseId());
+                context.getApplication().publishEvent(context, ExceptionQueuedEvent.class, exceptionContext);
+                
                 // Abortion
                 return false;
             }
@@ -783,6 +903,10 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
             {
                 // Restore the current component
                 popComponentFromEL(context);
+                if (compositeParent != null)
+                {
+                    popComponentFromEL(context);
+                }
             }
         }
 
@@ -943,11 +1067,7 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
      */
     public void setBeforePhaseListener(MethodExpression beforePhaseListener)
     {
-        this._beforePhaseListener = beforePhaseListener;
-        if (initialStateMarked())
-        {
-            getStateHelper().put(PropertyKeys.beforePhaseListenerSet,Boolean.TRUE);
-        }
+        getStateHelper().put(PropertyKeys.beforePhaseListener, beforePhaseListener);
     }
 
     /**
@@ -958,17 +1078,13 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
      */
     public void setAfterPhaseListener(MethodExpression afterPhaseListener)
     {
-        this._afterPhaseListener = afterPhaseListener;
-        if (initialStateMarked())
-        {
-            getStateHelper().put(PropertyKeys.afterPhaseListenerSet,Boolean.TRUE);
-        }
+        getStateHelper().put(PropertyKeys.afterPhaseListener, afterPhaseListener);
     }
     
     enum PropertyKeys
     {
-         afterPhaseListenerSet
-        , beforePhaseListenerSet
+         afterPhaseListener
+        , beforePhaseListener
         , phaseListeners
         , locale
         , renderKitId
@@ -976,110 +1092,28 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
         , uniqueIdCounter
     }
     
-    public void markInitialState()
-    {
-        super.markInitialState();
-        if (_afterPhaseListener != null && 
-            _afterPhaseListener instanceof PartialStateHolder)
-        {
-            ((PartialStateHolder)_afterPhaseListener).markInitialState();
-        }
-        if (_beforePhaseListener != null && 
-            _beforePhaseListener instanceof PartialStateHolder)
-        {
-            ((PartialStateHolder)_beforePhaseListener).markInitialState();
-        }
-    }
-    
-    public void clearInitialState()
-    {
-        if (initialStateMarked())
-        {
-            super.clearInitialState();
-            if (_afterPhaseListener != null && 
-                _afterPhaseListener instanceof PartialStateHolder)
-            {
-                ((PartialStateHolder)_afterPhaseListener).clearInitialState();
-            }
-            if (_beforePhaseListener != null && 
-                _beforePhaseListener instanceof PartialStateHolder)
-            {
-                ((PartialStateHolder)_beforePhaseListener).clearInitialState();
-            }
-        }
-    }
-
     @Override
     public Object saveState(FacesContext facesContext)
     {
         if (initialStateMarked())
         {
-            boolean nullDelta = true;
             Object parentSaved = super.saveState(facesContext);
-            Object afterPhaseListenerSaved = null;
-            if (!_isSetAfterPhaseListener() &&
-                _afterPhaseListener != null && _afterPhaseListener instanceof PartialStateHolder)
-            {
-                //Delta
-                StateHolder holder = (StateHolder) _afterPhaseListener;
-                if (!holder.isTransient())
-                {
-                    Object attachedState = holder.saveState(facesContext);
-                    if (attachedState != null)
-                    {
-                        nullDelta = false;
-                    }
-                    afterPhaseListenerSaved = new _AttachedDeltaWrapper(_afterPhaseListener.getClass(),
-                        attachedState);
-                }
-            }
-            else
-            {
-                //Full
-                afterPhaseListenerSaved = saveAttachedState(facesContext,_afterPhaseListener);
-                nullDelta = false;
-            }        
-            Object beforePhaseListenerSaved = null;
-            if (!_isSetBeforePhaseListener() &&
-                _beforePhaseListener != null && _beforePhaseListener instanceof PartialStateHolder)
-            {
-                //Delta
-                StateHolder holder = (StateHolder) _beforePhaseListener;
-                if (!holder.isTransient())
-                {
-                    Object attachedState = holder.saveState(facesContext);
-                    if (attachedState != null)
-                    {
-                        nullDelta = false;
-                    }
-                    beforePhaseListenerSaved = new _AttachedDeltaWrapper(_beforePhaseListener.getClass(),
-                        attachedState);
-                }
-            }
-            else
-            {
-                //Full
-                beforePhaseListenerSaved = saveAttachedState(facesContext,_beforePhaseListener);
-                nullDelta = false;
-            }        
-            if (parentSaved == null && nullDelta)
+            if (parentSaved == null && _viewScope == null)
             {
                 //No values
                 return null;
             }
             
-            Object[] values = new Object[3];
+            Object[] values = new Object[2];
             values[0] = parentSaved;
-            values[1] = afterPhaseListenerSaved;
-            values[2] = beforePhaseListenerSaved;
+            values[1] = saveAttachedState(facesContext,_viewScope);
             return values;
         }
         else
         {
-            Object[] values = new Object[3];
+            Object[] values = new Object[2];
             values[0] = super.saveState(facesContext);
-            values[1] = saveAttachedState(facesContext,_afterPhaseListener);
-            values[2] = saveAttachedState(facesContext,_beforePhaseListener);
+            values[1] = saveAttachedState(facesContext,_viewScope);
             return values;
         }
     }
@@ -1095,25 +1129,47 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
         
         Object[] values = (Object[])state;
         super.restoreState(facesContext,values[0]);
-        if (values[1] instanceof _AttachedDeltaWrapper)
-        {
-            //Delta
-            ((StateHolder)_afterPhaseListener).restoreState(facesContext, ((_AttachedDeltaWrapper) values[1]).getWrappedStateObject());
+        _viewScope = (Map<String, Object>) restoreAttachedState(facesContext, values[1]);
+    }
+    
+    public List<SystemEventListener> getViewListenersForEventClass(Class<? extends SystemEvent> systemEvent)
+    {
+        checkNull (systemEvent, "systemEvent");
+        
+        return _systemEventListeners.get (systemEvent);
+    }
+    
+    public void subscribeToViewEvent(Class<? extends SystemEvent> systemEvent,
+            SystemEventListener listener)
+    {
+        List<SystemEventListener> listeners;
+        
+        checkNull (systemEvent, "systemEvent");
+        checkNull (listener, "listener");
+        
+        listeners = _systemEventListeners.get (systemEvent);
+        
+        if (listeners == null) {
+            listeners = new ArrayList<SystemEventListener>();
+            
+            _systemEventListeners.put (systemEvent, listeners);
         }
-        else
-        {
-            //Full
-            _afterPhaseListener = (javax.el.MethodExpression) restoreAttachedState(facesContext,values[1]);
-        }         
-        if (values[2] instanceof _AttachedDeltaWrapper)
-        {
-            //Delta
-            ((StateHolder)_beforePhaseListener).restoreState(facesContext, ((_AttachedDeltaWrapper) values[2]).getWrappedStateObject());
-        }
-        else
-        {
-            //Full
-            _beforePhaseListener = (javax.el.MethodExpression) restoreAttachedState(facesContext,values[2]);
+        
+        listeners.add (listener);
+    }
+    
+    public void unsubscribeFromViewEvent(Class<? extends SystemEvent> systemEvent,
+            SystemEventListener listener)
+    {
+        List<SystemEventListener> listeners;
+        
+        checkNull (systemEvent, "systemEvent");
+        checkNull (listener, "listener");
+        
+        listeners = _systemEventListeners.get (systemEvent);
+        
+        if (listeners != null) {
+            listeners.remove (listener);
         }
     }
 
@@ -1131,22 +1187,45 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
      */
     private boolean _process(FacesContext context, PhaseId phaseId, PhaseProcessor processor)
     {
-        if (!notifyListeners(context, phaseId, getBeforePhaseListener(), true))
+        RuntimeException processingException = null;
+        try
         {
-            if (processor != null)
+            if (!notifyListeners(context, phaseId, getBeforePhaseListener(), true))
             {
-                processor.process(context, this);
+                try
+                {
+                    if (processor != null)
+                    {
+                        processor.process(context, this);
+                    }
+        
+                    broadcastEvents(context, phaseId);
+                }
+                catch (RuntimeException re)
+                {
+                    // catch any Exception that occures while processing the phase
+                    // to ensure invocation of the afterPhase methods
+                    processingException = re;
+                }
             }
-
-            broadcastEvents(context, phaseId);
         }
-
-        if (context.getRenderResponse() || context.getResponseComplete())
+        finally
         {
-            clearEvents();
+            if (context.getRenderResponse() || context.getResponseComplete())
+            {
+                clearEvents();
+            }            
         }
 
-        return notifyListeners(context, phaseId, getAfterPhaseListener(), false);
+        boolean retVal = notifyListeners(context, phaseId, getAfterPhaseListener(), false);
+        if (processingException == null) 
+        {
+            return retVal;   
+        }
+        else
+        {
+            throw processingException;
+        }
     }
 
     private void _processDecodesDefault(FacesContext context)
@@ -1235,11 +1314,10 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
         }
     }
 
-    private class RestoreStateCallback implements VisitCallback
+    private static class RestoreStateCallback implements VisitCallback
     {
         private PostRestoreStateEvent event;
 
-        @Override
         public VisitResult visit(VisitContext context, UIComponent target)
         {
             if (event == null)
@@ -1254,14 +1332,19 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
             // call the processEvent method of the current component.
             // The argument event must be an instance of AfterRestoreStateEvent whose component
             // property is the current component in the traversal.
-            processEvent(event);
+            target.processEvent(event);
             
             return VisitResult.ACCEPT;
         }
     }
 
-    private class ViewScope extends HashMap<String, Object>
+    // we cannot make this class a inner class, because the 
+    // enclosing class (UIViewRoot) would also have to be serialized.
+    private static class ViewScope extends HashMap<String, Object>
     {
+        
+        private static final long serialVersionUID = -1088893802269478164L;
+        
         @Override
         public void clear()
         {
@@ -1270,10 +1353,12 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
              * Application.publishEvent(java.lang.Class, java.lang.Object) to be called, passing
              * ViewMapDestroyedEvent.class as the first argument and this UIViewRoot instance as the second argument.
              */
-            FacesContext facesContext = getFacesContext(); 
-            facesContext.getApplication().publishEvent(facesContext, PreDestroyViewMapEvent.class, UIViewRoot.this);
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            facesContext.getApplication().publishEvent(facesContext, 
+                    PreDestroyViewMapEvent.class, facesContext.getViewRoot());
             
             super.clear();
         }
+        
     }
 }

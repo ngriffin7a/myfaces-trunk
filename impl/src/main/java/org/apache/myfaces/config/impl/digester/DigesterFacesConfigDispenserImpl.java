@@ -63,6 +63,9 @@ public class DigesterFacesConfigDispenserImpl implements FacesConfigDispenser<Fa
     private String defaultRenderKitId;
     private String messageBundle;
     private String partialTraversal;
+    private String facesVersion;
+    
+    private boolean emptyDefaultValidator = false;
     
     private LocaleConfig localeConfig;
 
@@ -196,6 +199,7 @@ public class DigesterFacesConfigDispenserImpl implements FacesConfigDispenser<Fa
         lifecyclePhaseListeners.addAll(config.getLifecyclePhaseListener());
         managedBeans.addAll(config.getManagedBeans());
         navigationRules.addAll(config.getNavigationRules());
+        facesVersion = config.getVersion();
     }
 
     /**
@@ -512,6 +516,22 @@ public class DigesterFacesConfigDispenserImpl implements FacesConfigDispenser<Fa
     }
     
     /**
+     * @return true if an empty <default-validators> exists in the config file with the highest precendence
+     */
+    public boolean isEmptyDefaultValidators()
+    {
+        return emptyDefaultValidator;
+    }
+    
+    /**
+     * true if an empty <default-validators> exists in the config file with the highest precendence
+     */
+    public void setEmptyDefaultValidators(boolean disableDefaultValidator)
+    {
+        this.emptyDefaultValidator = disableDefaultValidator;
+    }
+    
+    /**
      * @return Collection over all defined validator ids
      */
     public Collection<String> getValidatorIds()
@@ -554,9 +574,9 @@ public class DigesterFacesConfigDispenserImpl implements FacesConfigDispenser<Fa
     /**
      * @return renderkit class name for given renderkit id
      */
-    public String getRenderKitClass(String renderKitId)
+    public Collection<String> getRenderKitClasses(String renderKitId)
     {
-        return renderKits.get(renderKitId).getRenderKitClass();
+        return renderKits.get(renderKitId).getRenderKitClasses();
     }
 
     /**
@@ -593,7 +613,6 @@ public class DigesterFacesConfigDispenserImpl implements FacesConfigDispenser<Fa
         return elResolvers;
     }
 
-    @Override
     public Collection<SystemEventListener> getSystemEventListeners()
     {        
         return systemEventListeners;
@@ -602,5 +621,10 @@ public class DigesterFacesConfigDispenserImpl implements FacesConfigDispenser<Fa
     public Collection<Behavior> getBehaviors ()
     {
         return behaviors;
+    }
+    
+    public String getFacesVersion ()
+    {
+        return facesVersion;
     }
 }

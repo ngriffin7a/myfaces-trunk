@@ -20,6 +20,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+
+import javax.faces.FactoryFinder;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.servlet.ServletOutputStream;
@@ -27,8 +29,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.ServletResponseWrapper;
 
 import org.apache.myfaces.context.servlet.FacesContextImpl;
-import org.apache.shale.test.base.AbstractJsfTestCase;
-import org.apache.shale.test.mock.MockResponseWriter;
+import org.apache.myfaces.test.base.AbstractJsfTestCase;
+import org.apache.myfaces.test.mock.MockResponseWriter;
 
 /**
  * Testcase for the response switching
@@ -45,6 +47,8 @@ public class ResponseWrapperSwitchTest extends AbstractJsfTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        FactoryFinder.setFactory (FactoryFinder.EXCEPTION_HANDLER_FACTORY,
+        "org.apache.myfaces.context.ExceptionHandlerFactoryImpl");
     }
 
     @Override

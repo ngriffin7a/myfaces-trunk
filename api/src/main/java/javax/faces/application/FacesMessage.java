@@ -80,12 +80,12 @@ public class FacesMessage implements Serializable
      * Immutable <code>Lis</code> of valid {@link FacesMessage.Severity}instances, in ascending order of their ordinal
      * value.
      */
-    public static final List<FacesMessage.Severity> VALUES;
+    public static final List VALUES;
 
     /**
      * Immutable <code>Map</code> of valid {@link FacesMessage.Severity}instances, keyed by name.
      */
-    public static final Map<String, FacesMessage.Severity> VALUES_MAP;
+    public static final Map VALUES_MAP;
 
     static
     {
@@ -223,7 +223,7 @@ public class FacesMessage implements Serializable
         _detail = detail;
     }
 
-    public static class Severity implements Comparable<Severity>
+    public static class Severity implements Comparable
     {
         private String _name;
         private int _ordinal;
@@ -245,9 +245,9 @@ public class FacesMessage implements Serializable
             return _name;
         }
 
-        public int compareTo(Severity o)
+        public int compareTo(Object o)
         {
-            return getOrdinal() - o.getOrdinal();
+            return getOrdinal() - ((Severity)o).getOrdinal();
         }
     }
 

@@ -32,15 +32,19 @@ import javax.faces.view.facelets.MetaRuleset;
 import javax.faces.view.facelets.Metadata;
 import javax.faces.view.facelets.TagAttribute;
 
+/**
+ * Facelet alternative to c:forEach or h:dataTable
+ *
+ */
 public class RepeatHandler extends ComponentHandler
 {
-
+    
     public RepeatHandler(ComponentConfig config)
     {
         super(config);
     }
 
-    protected MetaRuleset createMetaRuleset(Class<?> type)
+    protected MetaRuleset createMetaRuleset(Class type)
     {
         MetaRuleset meta = super.createMetaRuleset(type);
 

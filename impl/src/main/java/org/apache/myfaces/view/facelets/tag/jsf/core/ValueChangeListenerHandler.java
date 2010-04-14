@@ -30,6 +30,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.event.ValueChangeListener;
+import javax.faces.view.EditableValueHolderAttachedObjectHandler;
+import javax.faces.view.facelets.ComponentHandler;
 import javax.faces.view.facelets.FaceletContext;
 import javax.faces.view.facelets.FaceletException;
 import javax.faces.view.facelets.TagAttribute;
@@ -38,7 +40,8 @@ import javax.faces.view.facelets.TagConfig;
 import javax.faces.view.facelets.TagException;
 import javax.faces.view.facelets.TagHandler;
 
-import org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTag;
+import org.apache.myfaces.view.facelets.tag.composite.CompositeComponentResourceTagHandler;
 import org.apache.myfaces.view.facelets.util.ReflectionUtil;
 
 /**
@@ -49,7 +52,12 @@ import org.apache.myfaces.view.facelets.util.ReflectionUtil;
  * @author Jacob Hookom
  * @version $Id: ValueChangeListenerHandler.java,v 1.2 2005/08/24 04:38:50 jhook Exp $
  */
+@JSFFaceletTag(
+        name = "f:valueChangeListener",
+        bodyContent = "empty", 
+        tagClass="org.apache.myfaces.taglib.core.ValueChangeListenerTag")
 public final class ValueChangeListenerHandler extends TagHandler
+    implements EditableValueHolderAttachedObjectHandler
 {
 
     private static class LazyValueChangeListener implements ValueChangeListener, Serializable
@@ -144,23 +152,51 @@ public final class ValueChangeListenerHandler extends TagHandler
     public void apply(FaceletContext ctx, UIComponent parent) throws IOException, FacesException, FaceletException,
             ELException
     {
+        if (!ComponentHandler.isNew(parent))
+        {
+            return;
+        }
         if (parent instanceof EditableValueHolder)
         {
-            if (ComponentSupport.isNew(parent))
-            {
-                EditableValueHolder evh = (EditableValueHolder) parent;
-                ValueExpression b = null;
-                if (this.binding != null)
-                {
-                    b = this.binding.getValueExpression(ctx, ValueChangeListener.class);
-                }
-                ValueChangeListener listener = new LazyValueChangeListener(this.listenerType, b);
-                evh.addValueChangeListener(listener);
-            }
+            applyAttachedObject(ctx.getFacesContext(), parent);
+        }
+        else if (UIComponent.isCompositeComponent(parent))
+        {
+            CompositeComponentResourceTagHandler.addAttachedObjectHandler(parent, this);
         }
         else
         {
-            throw new TagException(this.tag, "Parent is not of type EditableValueHolder, type is: " + parent);
+            throw new TagException(this.tag, "Parent not composite component or an instance of EditableValueHolder: " + parent);
+        }
+    }
+
+    public void applyAttachedObject(FacesContext context, UIComponent parent)
+    {
+        // Retrieve the current FaceletContext from FacesContext object
+        FaceletContext faceletContext = (FaceletContext) context.getAttributes().get(
+                FaceletContext.FACELET_CONTEXT_KEY);
+
+        EditableValueHolder evh = (EditableValueHolder) parent;
+        ValueExpression b = null;
+        if (this.binding != null)
+        {
+            b = this.binding.getValueExpression(faceletContext, ValueChangeListener.class);
+        }
+        ValueChangeListener listener = new LazyValueChangeListener(this.listenerType, b);
+        evh.addValueChangeListener(listener);
+    }
+
+    public String getFor()
+    {
+        TagAttribute forAttribute = getAttribute("for");
+        
+        if (forAttribute == null)
+        {
+            return null;
+        }
+        else
+        {
+            return forAttribute.getValue();
         }
     }
 

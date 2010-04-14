@@ -18,19 +18,23 @@
  */
 package org.apache.myfaces.application;
 
-import java.beans.BeanDescriptor;
-import java.beans.BeanInfo;
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.myfaces.application.jsp.JspStateManagerImpl;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
+import org.apache.myfaces.config.RuntimeConfig;
+import org.apache.myfaces.config.impl.digester.elements.Property;
+import org.apache.myfaces.config.impl.digester.elements.ResourceBundle;
+import org.apache.myfaces.el.PropertyResolverImpl;
+import org.apache.myfaces.el.VariableResolverToApplicationELResolverAdapter;
+import org.apache.myfaces.el.convert.MethodExpressionToMethodBinding;
+import org.apache.myfaces.el.convert.ValueBindingToValueExpression;
+import org.apache.myfaces.el.convert.ValueExpressionToValueBinding;
+import org.apache.myfaces.el.unified.ELResolverBuilder;
+import org.apache.myfaces.el.unified.ResolverBuilderForFaces;
+import org.apache.myfaces.el.unified.resolver.FacesCompositeELResolver;
+import org.apache.myfaces.el.unified.resolver.FacesCompositeELResolver.Scope;
+import org.apache.myfaces.shared_impl.util.ClassUtils;
+import org.apache.myfaces.view.facelets.el.ELText;
 
 import javax.el.CompositeELResolver;
 import javax.el.ELContext;
@@ -55,8 +59,10 @@ import javax.faces.component.UINamingContainer;
 import javax.faces.component.UIOutput;
 import javax.faces.component.UIViewRoot;
 import javax.faces.component.behavior.Behavior;
+import javax.faces.component.behavior.ClientBehaviorBase;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
+import javax.faces.convert.DateTimeConverter;
 import javax.faces.el.MethodBinding;
 import javax.faces.el.PropertyResolver;
 import javax.faces.el.ReferenceSyntaxException;
@@ -70,31 +76,29 @@ import javax.faces.event.ListenersFor;
 import javax.faces.event.SystemEvent;
 import javax.faces.event.SystemEventListener;
 import javax.faces.event.SystemEventListenerHolder;
+import javax.faces.render.ClientBehaviorRenderer;
 import javax.faces.render.Renderer;
 import javax.faces.validator.Validator;
 import javax.faces.view.ViewDeclarationLanguage;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.myfaces.application.jsp.JspStateManagerImpl;
-import org.apache.myfaces.application.jsp.JspViewHandlerImpl;
-import org.apache.myfaces.config.RuntimeConfig;
-import org.apache.myfaces.config.impl.digester.elements.Property;
-import org.apache.myfaces.config.impl.digester.elements.ResourceBundle;
-import org.apache.myfaces.el.PropertyResolverImpl;
-import org.apache.myfaces.el.VariableResolverToApplicationELResolverAdapter;
-import org.apache.myfaces.el.convert.MethodExpressionToMethodBinding;
-import org.apache.myfaces.el.convert.ValueBindingToValueExpression;
-import org.apache.myfaces.el.convert.ValueExpressionToValueBinding;
-import org.apache.myfaces.el.unified.ELResolverBuilder;
-import org.apache.myfaces.el.unified.ResolverBuilderForFaces;
-import org.apache.myfaces.el.unified.resolver.FacesCompositeELResolver;
-import org.apache.myfaces.el.unified.resolver.FacesCompositeELResolver.Scope;
-import org.apache.myfaces.shared_impl.util.ClassUtils;
+import java.beans.BeanDescriptor;
+import java.beans.BeanInfo;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.TimeZone;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * DOCUMENT ME!
@@ -108,7 +112,8 @@ import org.apache.myfaces.shared_impl.util.ClassUtils;
 @SuppressWarnings("deprecation")
 public class ApplicationImpl extends Application
 {
-    private static final Log log = LogFactory.getLog(ApplicationImpl.class);
+    //private static final Log log = LogFactory.getLog(ApplicationImpl.class);
+    private static final Logger log = Logger.getLogger(ApplicationImpl.class.getName());
 
     private final static VariableResolver VARIABLERESOLVER = new VariableResolverToApplicationELResolverAdapter();
 
@@ -117,8 +122,23 @@ public class ApplicationImpl extends Application
     // recives the runtime config instance during initializing
     private final static ThreadLocal<RuntimeConfig> initializingRuntimeConfig = new ThreadLocal<RuntimeConfig>();
 
+    // the name for the system property which specifies the current ProjectStage (see MYFACES-2545 for details)
+    public final static String PROJECT_STAGE_SYSTEM_PROPERTY_NAME = "faces.PROJECT_STAGE";
+    
     // MyFaces specific System Property to set the ProjectStage, if not present via the standard way
+    @Deprecated
     public final static String MYFACES_PROJECT_STAGE_SYSTEM_PROPERTY_NAME = "org.apache.myfaces.PROJECT_STAGE";
+    
+    @JSFWebConfigParam(defaultValue="false", expectedValues="true, false", since="2.0")
+    public final static String DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE_PARAM_NAME 
+        = "javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE";
+    
+    @JSFWebConfigParam(defaultValue="Production",
+            expectedValues="Development, Production, SystemTest, UnitTest",
+            since="2.0")
+    private static final String PROJECT_STAGE_PARAM_NAME = "javax.faces.PROJECT_STAGE";
+
+    private static final String FIRST_REQUEST_EXECUTED_PARAM = "org.apache.myfaces.lifecycle.first.request.processed";
 
     // ~ Instance fields
     // --------------------------------------------------------------------------
@@ -163,6 +183,8 @@ public class ApplicationImpl extends Application
 
     private ProjectStage _projectStage;
 
+    private boolean _firstRequestProcessed = false;
+    
     // ~ Constructors
     // --------------------------------------------------------------------------
     // -----
@@ -211,7 +233,7 @@ public class ApplicationImpl extends Application
         }
         // set default implementation in constructor
         // pragmatic approach, no syncronizing will be needed in get methods
-        _viewHandler = new JspViewHandlerImpl(); //TODO: replace with new ViewHandlerImpl class when VDL methods are fully implemented
+        _viewHandler = new ViewHandlerImpl();
         _navigationHandler = new NavigationHandlerImpl();
         _actionListener = new ActionListenerImpl();
         _defaultRenderKitId = "HTML_BASIC";
@@ -220,8 +242,8 @@ public class ApplicationImpl extends Application
         _resourceHandler = new ResourceHandlerImpl();
         _runtimeConfig = runtimeConfig;
 
-        if (log.isTraceEnabled())
-            log.trace("New Application instance created");
+        if (log.isLoggable(Level.FINEST))
+            log.finest("New Application instance created");
     }
 
     public static void setInitializingRuntimeConfig(RuntimeConfig config)
@@ -323,7 +345,14 @@ public class ApplicationImpl extends Application
         }
         catch (MissingResourceException e)
         {
-            throw new FacesException("Could not load resource bundle for name '" + name + "': " + e.getMessage(), e);
+            try
+            {
+                return getResourceBundle(bundleName, locale, this.getClass().getClassLoader());
+            }
+            catch (MissingResourceException e1)
+            {            
+                throw new FacesException("Could not load resource bundle for name '" + name + "': " + e.getMessage(), e1);
+            }
         }
     }
 
@@ -447,7 +476,13 @@ public class ApplicationImpl extends Application
     {
         checkNull(systemEventClass, "systemEventClass");
         checkNull(source, "source");
-
+        
+        //Call events only if event processing is enabled.
+        if (!facesContext.isProcessingEvents())
+        {
+            return;
+        }
+        
         try
         {
             SystemEvent event = null;
@@ -462,6 +497,14 @@ public class ApplicationImpl extends Application
                 event = _traverseListenerList(holder.getListenersForEventClass(systemEventClass), systemEventClass,
                                               source, event);
             }
+            
+            UIViewRoot uiViewRoot = facesContext.getViewRoot();
+            if (uiViewRoot != null)
+            {
+                //Call listeners on view level
+                event = _traverseListenerList(uiViewRoot.getViewListenersForEventClass(systemEventClass), 
+                        systemEventClass, source, event);
+            }
 
             SystemListenerEntry systemListenerEntry = _systemEventListenerClassMap.get(systemEventClass);
             if (systemListenerEntry != null)
@@ -474,7 +517,7 @@ public class ApplicationImpl extends Application
             // If the act of invoking the processListener method causes an AbortProcessingException to be thrown,
             // processing of the listeners must be aborted, no further processing of the listeners for this event must
             // take place, and the exception must be logged with Level.SEVERE.
-            log.error("Event processing was aborted", e);
+            log.log(Level.SEVERE, "Event processing was aborted", e);
         }
     }
 
@@ -508,8 +551,8 @@ public class ApplicationImpl extends Application
         checkNull(actionListener, "actionListener");
 
         _actionListener = actionListener;
-        if (log.isTraceEnabled())
-            log.trace("set actionListener = " + actionListener.getClass().getName());
+        if (log.isLoggable(Level.FINEST))
+            log.finest("set actionListener = " + actionListener.getClass().getName());
     }
 
     @Override
@@ -548,8 +591,8 @@ public class ApplicationImpl extends Application
         checkNull(locale, "locale");
 
         _defaultLocale = locale;
-        if (log.isTraceEnabled())
-            log.trace("set defaultLocale = " + locale.getCountry() + " " + locale.getLanguage());
+        if (log.isLoggable(Level.FINEST))
+            log.finest("set defaultLocale = " + locale.getCountry() + " " + locale.getLanguage());
     }
 
     @Override
@@ -564,8 +607,8 @@ public class ApplicationImpl extends Application
         checkNull(messageBundle, "messageBundle");
 
         _messageBundle = messageBundle;
-        if (log.isTraceEnabled())
-            log.trace("set MessageBundle = " + messageBundle);
+        if (log.isLoggable(Level.FINEST))
+            log.finest("set MessageBundle = " + messageBundle);
     }
 
     @Override
@@ -580,8 +623,8 @@ public class ApplicationImpl extends Application
         checkNull(navigationHandler, "navigationHandler");
 
         _navigationHandler = navigationHandler;
-        if (log.isTraceEnabled())
-            log.trace("set NavigationHandler = " + navigationHandler.getClass().getName());
+        if (log.isLoggable(Level.FINEST))
+            log.finest("set NavigationHandler = " + navigationHandler.getClass().getName());
     }
 
     @Override
@@ -606,8 +649,8 @@ public class ApplicationImpl extends Application
 
         _runtimeConfig.setPropertyResolver(propertyResolver);
 
-        if (log.isTraceEnabled())
-            log.trace("set PropertyResolver = " + propertyResolver.getClass().getName());
+        if (log.isLoggable(Level.FINEST))
+            log.finest("set PropertyResolver = " + propertyResolver.getClass().getName());
     }
 
     @Override
@@ -618,30 +661,60 @@ public class ApplicationImpl extends Application
         if (_projectStage == null)
         {
             String stageName = null;
-            // Look for a JNDI environment entry under the key given by the
-            // value of
-            // ProjectStage.PROJECT_STAGE_JNDI_NAME (return type of
-            // java.lang.String).
-            try
+            
+            // try to obtain the ProjectStage from the system property
+            // faces.PROJECT_STAGE as proposed by Ed Burns
+            stageName = System.getProperty(PROJECT_STAGE_SYSTEM_PROPERTY_NAME);
+            
+            if (stageName == null)
             {
-                Context ctx = new InitialContext();
-                Object temp = ctx.lookup(ProjectStage.PROJECT_STAGE_JNDI_NAME);
-                if (temp != null)
+                // if not found check for the "old" System Property
+                // and print a warning message to the log (just to be 
+                // sure that everyone recognizes the change in the name).
+                stageName = System.getProperty(MYFACES_PROJECT_STAGE_SYSTEM_PROPERTY_NAME);
+                if (stageName != null)
                 {
-                    if (temp instanceof String)
-                    {
-                        stageName = (String) temp;
-                    }
-                    else
-                    {
-                        log.error("JNDI lookup for key " + ProjectStage.PROJECT_STAGE_JNDI_NAME
-                                + " should return a java.lang.String value");
-                    }
+                    log.log(Level.WARNING, "The system property " + MYFACES_PROJECT_STAGE_SYSTEM_PROPERTY_NAME
+                            + " has been replaced by " + PROJECT_STAGE_SYSTEM_PROPERTY_NAME + "!"
+                            + " Please change your settings.");
                 }
             }
-            catch (NamingException e)
+            
+            if (stageName == null)
             {
-                // no-op
+                // Look for a JNDI environment entry under the key given by the
+                // value of ProjectStage.PROJECT_STAGE_JNDI_NAME (return type of
+                // java.lang.String).
+                try
+                {
+                    Context ctx = new InitialContext();
+                    Object temp = ctx.lookup(ProjectStage.PROJECT_STAGE_JNDI_NAME);
+                    if (temp != null)
+                    {
+                        if (temp instanceof String)
+                        {
+                            stageName = (String) temp;
+                        }
+                        else
+                        {
+                            log.severe("JNDI lookup for key " + ProjectStage.PROJECT_STAGE_JNDI_NAME
+                                    + " should return a java.lang.String value");
+                        }
+                    }
+                }
+                catch (NamingException e)
+                {
+                    // no-op
+                }
+                catch (NoClassDefFoundError er)
+                {
+                    //On Google App Engine, javax.naming.Context is a restricted class.
+                    //In that case, NoClassDefFoundError is thrown. stageName needs to be configured
+                    //below by context parameter.
+                    //It can be done with changing the order to look first at context param, but it is defined in the spec.
+                    //http://java.sun.com/javaee/6/docs/api/javax/faces/application/Application.html#getProjectStage()
+                    //no-op
+                }
             }
 
             /*
@@ -654,15 +727,7 @@ public class ApplicationImpl extends Application
                 stageName = context.getExternalContext().getInitParameter(ProjectStage.PROJECT_STAGE_PARAM_NAME);
             }
 
-            /*
-             * If not found so far, let's try the Apache MyFaces extension (see MYFACES-2235)
-             */
-            if (stageName == null)
-            {
-                stageName = System.getProperty(MYFACES_PROJECT_STAGE_SYSTEM_PROPERTY_NAME);
-            }
-
-            // If a value is found found
+            // If a value is found
             if (stageName != null)
             {
                 /*
@@ -676,12 +741,12 @@ public class ApplicationImpl extends Application
                 }
                 catch (IllegalArgumentException e)
                 {
-                    log.error("Couldn't discover the current project stage", e);
+                    log.log(Level.SEVERE, "Couldn't discover the current project stage", e);
                 }
             }
             else
             {
-                if (log.isInfoEnabled())
+                if (log.isLoggable(Level.INFO))
                 {
                     log.info("Couldn't discover the current project stage, using " + ProjectStage.Production);
                 }
@@ -691,7 +756,7 @@ public class ApplicationImpl extends Application
              * If not found, or any of the previous attempts to discover the enum constant value have failed, log a
              * descriptive error message, assign the value as ProjectStage.Production and return it.
              */
-
+            
             _projectStage = ProjectStage.Production;
         }
 
@@ -713,6 +778,10 @@ public class ApplicationImpl extends Application
     {
         checkNull(resourceHandler, "resourceHandler");
 
+        if(isFirstRequestProcessed())
+        {
+            throw new IllegalStateException("setResourceHandler may not be executed after a lifecycle request has been completed");
+        }
         _resourceHandler = resourceHandler;
     }
 
@@ -728,8 +797,8 @@ public class ApplicationImpl extends Application
         checkNull(locales, "locales");
 
         _supportedLocales = locales;
-        if (log.isTraceEnabled())
-            log.trace("set SupportedLocales");
+        if (log.isLoggable(Level.FINEST))
+            log.finest("set SupportedLocales");
     }
 
     @Override
@@ -760,8 +829,8 @@ public class ApplicationImpl extends Application
 
         _runtimeConfig.setVariableResolver(variableResolver);
 
-        if (log.isTraceEnabled())
-            log.trace("set VariableResolver = " + variableResolver.getClass().getName());
+        if (log.isLoggable(Level.FINEST))
+            log.finest("set VariableResolver = " + variableResolver.getClass().getName());
     }
 
     /**
@@ -779,9 +848,19 @@ public class ApplicationImpl extends Application
     {
         checkNull(viewHandler, "viewHandler");
 
+        if(isFirstRequestProcessed())
+        {
+            throw new IllegalStateException("setViewHandler may not be executed after a lifecycle request has been completed");
+        }
         _viewHandler = viewHandler;
-        if (log.isTraceEnabled())
-            log.trace("set ViewHandler = " + viewHandler.getClass().getName());
+        if (log.isLoggable(Level.FINEST))
+            log.finest("set ViewHandler = " + viewHandler.getClass().getName());
+    }
+    
+    @Override
+    public void subscribeToEvent(Class<? extends SystemEvent> systemEventClass, SystemEventListener listener)
+    {
+        subscribeToEvent(systemEventClass, null, listener);
     }
 
     @Override
@@ -803,6 +882,12 @@ public class ApplicationImpl extends Application
         }
 
         systemListenerEntry.addListener(listener, sourceClass);
+    }
+    
+    @Override
+    public void unsubscribeFromEvent(Class<? extends SystemEvent> systemEventClass, SystemEventListener listener)
+    {
+        unsubscribeFromEvent(systemEventClass, null, listener);
     }
 
     @Override
@@ -837,12 +922,12 @@ public class ApplicationImpl extends Application
         try
         {
             _behaviorClassMap.put(behaviorId, ClassUtils.simpleClassForName(behaviorClass));
-            if (log.isTraceEnabled())
-                log.trace("add Behavior class = " + behaviorClass + " for id = " + behaviorId);
+            if (log.isLoggable(Level.FINEST))
+                log.finest("add Behavior class = " + behaviorClass + " for id = " + behaviorId);
         }
         catch (Exception e)
         {
-            log.error("Behavior class " + behaviorClass + " not found", e);
+            log.log(Level.SEVERE, "Behavior class " + behaviorClass + " not found", e);
         }
 
     }
@@ -859,12 +944,12 @@ public class ApplicationImpl extends Application
         try
         {
             _componentClassMap.put(componentType, ClassUtils.simpleClassForName(componentClassName));
-            if (log.isTraceEnabled())
-                log.trace("add Component class = " + componentClassName + " for type = " + componentType);
+            if (log.isLoggable(Level.FINEST))
+                log.finest("add Component class = " + componentClassName + " for type = " + componentType);
         }
         catch (Exception e)
         {
-            log.error("Component class " + componentClassName + " not found", e);
+            log.log(Level.SEVERE, "Component class " + componentClassName + " not found", e);
         }
     }
 
@@ -880,12 +965,12 @@ public class ApplicationImpl extends Application
         try
         {
             _converterIdToClassMap.put(converterId, ClassUtils.simpleClassForName(converterClass));
-            if (log.isTraceEnabled())
-                log.trace("add Converter id = " + converterId + " converterClass = " + converterClass);
+            if (log.isLoggable(Level.FINEST))
+                log.finest("add Converter id = " + converterId + " converterClass = " + converterClass);
         }
         catch (Exception e)
         {
-            log.error("Converter class " + converterClass + " not found", e);
+            log.log(Level.SEVERE, "Converter class " + converterClass + " not found", e);
         }
     }
 
@@ -899,12 +984,12 @@ public class ApplicationImpl extends Application
         try
         {
             _converterClassNameToClassMap.put(targetClass, converterClass);
-            if (log.isTraceEnabled())
-                log.trace("add Converter for class = " + targetClass + " converterClass = " + converterClass);
+            if (log.isLoggable(Level.FINEST))
+                log.finest("add Converter for class = " + targetClass + " converterClass = " + converterClass);
         }
         catch (Exception e)
         {
-            log.error("Converter class " + converterClass + " not found", e);
+            log.log(Level.SEVERE, "Converter class " + converterClass + " not found", e);
         }
     }
 
@@ -931,12 +1016,12 @@ public class ApplicationImpl extends Application
         try
         {
             _validatorClassMap.put(validatorId, ClassUtils.simpleClassForName(validatorClass));
-            if (log.isTraceEnabled())
-                log.trace("add Validator id = " + validatorId + " class = " + validatorClass);
+            if (log.isLoggable(Level.FINEST))
+                log.finest("add Validator id = " + validatorId + " class = " + validatorClass);
         }
         catch (Exception e)
         {
-            log.error("Validator class " + validatorClass + " not found", e);
+            log.log(Level.SEVERE, "Validator class " + validatorClass + " not found", e);
         }
     }
 
@@ -954,12 +1039,27 @@ public class ApplicationImpl extends Application
 
         try
         {
-            final Behavior behavior = behaviorClass.newInstance();
+            Behavior behavior = behaviorClass.newInstance();
+
+            _handleAttachedResourceDependencyAnnotations(FacesContext.getCurrentInstance(), behavior);
+
+            if (behavior instanceof ClientBehaviorBase)
+            {
+              ClientBehaviorBase clientBehavior = (ClientBehaviorBase) behavior;
+              String renderType = clientBehavior.getRendererType();
+              if (renderType != null)
+              {
+                FacesContext ctx = FacesContext.getCurrentInstance();
+                ClientBehaviorRenderer cbr = ctx.getRenderKit().getClientBehaviorRenderer(renderType);
+                _handleAttachedResourceDependencyAnnotations(FacesContext.getCurrentInstance(), cbr);
+              }
+            }
+
             return behavior;
         }
         catch (Exception e)
         {
-            log.error("Could not instantiate behavior " + behaviorClass, e);
+            log.log(Level.SEVERE, "Could not instantiate behavior " + behaviorClass, e);
             throw new FacesException("Could not instantiate behavior: " + behaviorClass, e);
         }
     }
@@ -967,6 +1067,9 @@ public class ApplicationImpl extends Application
     @Override
     public UIComponent createComponent(FacesContext context, Resource componentResource)
     {
+        checkNull(context, "context");
+        checkNull(componentResource, "componentResource");
+        
         UIComponent component = null;
         Resource resource;
         String fqcn;
@@ -1018,7 +1121,6 @@ public class ApplicationImpl extends Application
                 String className = name.substring(0, name.lastIndexOf('.'));
 
                 component = (UIComponent)ClassUtils.newInstance(className);
-                component.getAttributes().put(Resource.COMPONENT_RESOURCE_KEY, componentResource);
             }
             else
             {
@@ -1032,7 +1134,9 @@ public class ApplicationImpl extends Application
                  * re-throw it. If any other exception is thrown, log the exception and continue to the next step.
                  */
 
-                fqcn = componentResource.getLibraryName() + "." + componentResource.getResourceName();
+                String name = componentResource.getResourceName();
+                String className = name.substring(0, name.lastIndexOf('.'));
+                fqcn = componentResource.getLibraryName() + "." + className;
 
                 try
                 {
@@ -1050,17 +1154,17 @@ public class ApplicationImpl extends Application
                     }
                     catch (InstantiationException e)
                     {
-                        log.error("Could not instantiate component class name = " + fqcn, e);
+                        log.log(Level.SEVERE, "Could not instantiate component class name = " + fqcn, e);
                         throw new FacesException("Could not instantiate component class name = " + fqcn, e);
                     }
                     catch (IllegalAccessException e)
                     {
-                        log.error("Could not instantiate component class name = " + fqcn, e);
+                        log.log(Level.SEVERE, "Could not instantiate component class name = " + fqcn, e);
                         throw new FacesException("Could not instantiate component class name = " + fqcn, e);
                     }
                     catch (Exception e)
                     {
-                        log.error("Could not instantiate component class name = " + fqcn, e);
+                        log.log(Level.SEVERE, "Could not instantiate component class name = " + fqcn, e);
                     }
                 }
 
@@ -1070,7 +1174,7 @@ public class ApplicationImpl extends Application
                  */
                 if (component == null)
                 {
-                    createComponent(UINamingContainer.COMPONENT_TYPE);
+                    component = createComponent(UINamingContainer.COMPONENT_TYPE);
                 }
             }
         }
@@ -1126,7 +1230,7 @@ public class ApplicationImpl extends Application
         final Class<? extends UIComponent> componentClass = _componentClassMap.get(componentType);
         if (componentClass == null)
         {
-            log.error("Undefined component type " + componentType);
+            log.log(Level.SEVERE, "Undefined component type " + componentType);
             throw new FacesException("Undefined component type " + componentType);
         }
 
@@ -1138,7 +1242,7 @@ public class ApplicationImpl extends Application
         }
         catch (Exception e)
         {
-            log.error("Could not instantiate component componentType = " + componentType, e);
+            log.log(Level.SEVERE, "Could not instantiate component componentType = " + componentType, e);
             throw new FacesException("Could not instantiate component componentType = " + componentType, e);
         }
     }
@@ -1203,12 +1307,14 @@ public class ApplicationImpl extends Application
             final Converter converter = converterClass.newInstance();
 
             setConverterProperties(converterClass, converter);
+            
+            _handleAttachedResourceDependencyAnnotations(FacesContext.getCurrentInstance(), converter);
 
             return converter;
         }
         catch (Exception e)
         {
-            log.error("Could not instantiate converter " + converterClass, e);
+            log.log(Level.SEVERE, "Could not instantiate converter " + converterClass, e);
             throw new FacesException("Could not instantiate converter: " + converterClass, e);
         }
     }
@@ -1281,7 +1387,7 @@ public class ApplicationImpl extends Application
             }
             catch (Exception e)
             {
-                log.error("Could not instantiate converter " + converterClassName, e);
+                log.log(Level.SEVERE, "Could not instantiate converter " + converterClassName, e);
                 throw new FacesException("Could not instantiate converter: " + converterClassName, e);
             }
         }
@@ -1333,6 +1439,17 @@ public class ApplicationImpl extends Application
     {
         final org.apache.myfaces.config.impl.digester.elements.Converter converterConfig = _converterClassNameToConfigurationMap
                 .get(converterClass.getName());
+        
+        // if the converter is a DataTimeConverter, check the init param for the default timezone (since 2.0)
+        if (converter instanceof DateTimeConverter)
+        {    
+            String configParam = getFaceContext().getExternalContext()
+                    .getInitParameter(DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE_PARAM_NAME);
+            if (configParam != null && configParam.toLowerCase().equals("true"))
+            {
+                ((DateTimeConverter) converter).setTimeZone(TimeZone.getDefault());
+            }
+        }
 
         if (converterConfig != null)
         {
@@ -1344,9 +1461,99 @@ public class ApplicationImpl extends Application
                 }
                 catch (Throwable th)
                 {
-                    log.error("Initializing converter : " + converterClass.getName() + " with property : "
+                    log.log(Level.SEVERE, "Initializing converter : " + converterClass.getName() + " with property : "
                             + property.getPropertyName() + " and value : " + property.getDefaultValue() + " failed.");
                 }
+            }
+        }
+    }
+    
+    private void _handleAttachedResourceDependencyAnnotations(FacesContext context, Object inspected)
+    {
+        if (inspected == null) {
+            return;
+        }
+        
+        ResourceDependency annotation = inspected.getClass().getAnnotation(ResourceDependency.class);
+        
+        if (annotation == null)
+        {
+            // If the ResourceDependency annotation is not present, the argument must be inspected for the presence 
+            // of the ResourceDependencies annotation. 
+            ResourceDependencies dependencies = inspected.getClass().getAnnotation(ResourceDependencies.class);
+            if (dependencies != null)
+            {
+                // If the ResourceDependencies annotation is present, the action described in ResourceDependencies 
+                // must be taken.
+                for (ResourceDependency dependency : dependencies.value())
+                {
+                    _handleAttachedResourceDependency(context, dependency);
+                }
+            }
+        }
+        else
+        {
+            // If the ResourceDependency annotation is present, the action described in ResourceDependency must be 
+            // taken. 
+            _handleAttachedResourceDependency(context, annotation);
+        }
+    }
+    
+    private void _handleAttachedResourceDependency(FacesContext context, ResourceDependency annotation)
+    {
+        // If this annotation is not present on the class in question, no action must be taken. 
+        if (annotation != null)
+        {
+            Application application = context.getApplication();
+            
+            // Create a UIOutput instance by passing javax.faces.Output. to 
+            // Application.createComponent(java.lang.String).
+            UIOutput output = (UIOutput) application.createComponent(UIOutput.COMPONENT_TYPE);
+            
+            // Get the annotation instance from the class and obtain the values of the name, library, and 
+            // target attributes.
+            String name = annotation.name();
+            if (name != null && name.length() > 0)
+            {
+                name = ELText.parse(getExpressionFactory(), context.getELContext(), name).toString(context.getELContext());
+            }
+            
+            // Obtain the renderer-type for the resource name by passing name to 
+            // ResourceHandler.getRendererTypeForResourceName(java.lang.String).
+            String rendererType = application.getResourceHandler().getRendererTypeForResourceName(name);
+            
+            // Call setRendererType on the UIOutput instance, passing the renderer-type.
+            output.setRendererType(rendererType);
+            
+            // Obtain the Map of attributes from the UIOutput component by calling UIComponent.getAttributes().
+            Map<String, Object> attributes = output.getAttributes();
+            
+            // Store the name into the attributes Map under the key "name".
+            attributes.put("name", name);
+            
+            // If library is the empty string, let library be null.
+            String library = annotation.library();
+            if (library != null && library.length() > 0)
+            {
+                library = ELText.parse(getExpressionFactory(), context.getELContext(), library).toString(context.getELContext());
+                // If library is non-null, store it under the key "library".
+                attributes.put("library", library);
+            }
+            
+            // If target is the empty string, let target be null.
+            String target = annotation.target();
+            if (target != null && target.length() > 0)
+            {
+                target = ELText.parse(getExpressionFactory(), context.getELContext(), target).toString(context.getELContext());
+                // If target is non-null, store it under the key "target".
+                attributes.put("target", target);
+                context.getViewRoot().addComponentResource(context, output, target);
+            }
+            else
+            {
+                // Otherwise, if target is null, call UIViewRoot.addComponentResource(javax.faces.context.FacesContext, 
+                // javax.faces.component.UIComponent), passing the UIOutput instance as the second argument.
+                context.getViewRoot().addComponentResource(context, output);
             }
         }
     }
@@ -1398,17 +1605,21 @@ public class ApplicationImpl extends Application
         if (validatorClass == null)
         {
             String message = "Unknown validator id '" + validatorId + "'.";
-            log.error(message);
+            log.severe(message);
             throw new FacesException(message);
         }
 
         try
         {
-            return (Validator) validatorClass.newInstance();
+            Validator validator = (Validator) validatorClass.newInstance();
+            
+            _handleAttachedResourceDependencyAnnotations(FacesContext.getCurrentInstance(), validator);
+            
+            return validator;
         }
         catch (Exception e)
         {
-            log.error("Could not instantiate validator " + validatorClass, e);
+            log.log(Level.SEVERE, "Could not instantiate validator " + validatorClass, e);
             throw new FacesException("Could not instantiate validator: " + validatorClass, e);
         }
     }
@@ -1465,6 +1676,11 @@ public class ApplicationImpl extends Application
     {
         checkNull(stateManager, "stateManager");
 
+        if(isFirstRequestProcessed())
+        {
+            throw new IllegalStateException("setStateManager may not be executed after a lifecycle request has been completed");
+        }
+        
         _stateManager = stateManager;
     }
 
@@ -1522,7 +1738,7 @@ public class ApplicationImpl extends Application
     {
         _handleListenerFor(context, inspected, component, inspected.getClass().getAnnotation(ListenerFor.class));
 
-        ListenersFor listeners = component.getClass().getAnnotation(ListenersFor.class);
+        ListenersFor listeners = inspected.getClass().getAnnotation(ListenersFor.class);
         if (listeners != null)
         {
             for (ListenerFor listenerFor : listeners.value())
@@ -1615,6 +1831,10 @@ public class ApplicationImpl extends Application
             // Get the annotation instance from the class and obtain the values of the name, library, and
             // target attributes.
             String name = annotation.name();
+            if (name != null && name.length() > 0)
+            {
+                name = ELText.parse(getExpressionFactory(), context.getELContext(), name).toString(context.getELContext());
+            }
 
             // Obtain the renderer-type for the resource name by passing name to
             // ResourceHandler.getRendererTypeForResourceName(java.lang.String).
@@ -1633,6 +1853,7 @@ public class ApplicationImpl extends Application
             String library = annotation.library();
             if (library != null && library.length() > 0)
             {
+                library = ELText.parse(getExpressionFactory(), context.getELContext(), library).toString(context.getELContext());
                 // If library is non-null, store it under the key "library".
                 if ("this".equals(library))
                 {
@@ -1653,8 +1874,10 @@ public class ApplicationImpl extends Application
             String target = annotation.target();
             if (target != null && target.length() > 0)
             {
+                target = ELText.parse(getExpressionFactory(), context.getELContext(), target).toString(context.getELContext());
                 // If target is non-null, store it under the key "target".
                 attributes.put("target", target);
+                context.getViewRoot().addComponentResource(context, output, target);
             }
             else
             {
@@ -1676,7 +1899,7 @@ public class ApplicationImpl extends Application
         if (renderer == null)
         {
             // If no such Renderer can be found, a message must be logged with a helpful error message.
-            log.error("renderer cannot be found for component type " + componentType + " and renderer type "
+            log.severe("renderer cannot be found for component type " + componentType + " and renderer type "
                     + rendererType);
         }
         else
@@ -1725,6 +1948,24 @@ public class ApplicationImpl extends Application
         return event;
     }
 
+    /**
+     * Method to handle determining if the first request has been handled by the associated lifecycleImpl
+     * @return true if the first request has already been processed, false otherwise
+     */
+    private boolean isFirstRequestProcessed()
+    {
+        FacesContext context = FacesContext.getCurrentInstance();
+        
+        //if firstRequestProcessed is not set, check the application map
+        if(!_firstRequestProcessed && context != null && context.getExternalContext().getApplicationMap().containsKey(FIRST_REQUEST_EXECUTED_PARAM))
+        {
+            _firstRequestProcessed = true;
+        }
+        return _firstRequestProcessed;
+
+        
+    }
+    
     private static class SystemListenerEntry
     {
         private List<SystemEventListener> _lstSystemEventListener;

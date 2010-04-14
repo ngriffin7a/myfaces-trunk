@@ -18,61 +18,48 @@
  */
 package org.apache.myfaces.application;
 
-import java.beans.BeanDescriptor;
-import java.beans.BeanInfo;
-import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import javax.el.ExpressionFactory;
-import javax.el.MethodExpression;
-import javax.el.ValueExpression;
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
 import javax.faces.application.StateManager;
 import javax.faces.application.ViewHandler;
-import javax.faces.component.ActionSource2;
-import javax.faces.component.EditableValueHolder;
-import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewParameter;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.MethodExpressionActionListener;
-import javax.faces.event.MethodExpressionValueChangeListener;
-import javax.faces.event.ValueChangeEvent;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.ResponseStateManager;
-import javax.faces.validator.MethodExpressionValidator;
-import javax.faces.view.ActionSource2AttachedObjectHandler;
-import javax.faces.view.ActionSource2AttachedObjectTarget;
-import javax.faces.view.AttachedObjectHandler;
-import javax.faces.view.AttachedObjectTarget;
-import javax.faces.view.EditableValueHolderAttachedObjectHandler;
-import javax.faces.view.EditableValueHolderAttachedObjectTarget;
-import javax.faces.view.ValueHolderAttachedObjectHandler;
-import javax.faces.view.ValueHolderAttachedObjectTarget;
 import javax.faces.view.ViewDeclarationLanguage;
 import javax.faces.view.ViewDeclarationLanguageFactory;
 import javax.faces.view.ViewMetadata;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.myfaces.shared_impl.application.DefaultViewHandlerSupport;
+import org.apache.myfaces.shared_impl.application.InvalidViewIdException;
+import org.apache.myfaces.shared_impl.application.ViewHandlerSupport;
 import org.apache.myfaces.shared_impl.config.MyfacesConfig;
 import org.apache.myfaces.shared_impl.renderkit.html.util.JavascriptUtils;
+import org.apache.myfaces.view.facelets.StateWriter;
 
+/**
+ * JSF 2.0 ViewHandler implementation 
+ *
+ * @since 2.0
+ */
 public class ViewHandlerImpl extends ViewHandler
 {
-    private static final Log log = LogFactory.getLog(ViewHandlerImpl.class);
+    //private static final Log log = LogFactory.getLog(ViewHandlerImpl.class);
+    private static final Logger log = Logger.getLogger(ViewHandlerImpl.class.getName());
     public static final String FORM_STATE_MARKER = "<!--@@JSF_FORM_STATE_MARKER@@-->";
     private ViewHandlerSupport _viewHandlerSupport;
     private ViewDeclarationLanguageFactory _vdlFactory;
@@ -80,24 +67,25 @@ public class ViewHandlerImpl extends ViewHandler
     public ViewHandlerImpl()
     {
         _vdlFactory = (ViewDeclarationLanguageFactory)FactoryFinder.getFactory(FactoryFinder.VIEW_DECLARATION_LANGUAGE_FACTORY);
-        if (log.isTraceEnabled())
-            log.trace("New ViewHandler instance created");
+        if (log.isLoggable(Level.FINEST))
+            log.finest("New ViewHandler instance created");
     }
 
     @Override
     public String deriveViewId(FacesContext context, String input)
     {
-        String calculatedViewId = input;
-        try
-        {
-            //TODO: JSF 2.0 - need to make sure calculateViewId follows the new algorithm from 7.5.2 
-            calculatedViewId = getViewHandlerSupport().calculateViewId(context, input);
+        if(input != null){
+            try
+            {
+                //TODO: JSF 2.0 - need to make sure calculateViewId follows the new algorithm from 7.5.2 
+                return getViewHandlerSupport().calculateAndCheckViewId(context, input);
+            }
+            catch (InvalidViewIdException e)
+            {
+                sendSourceNotFound(context, e.getMessage());
+            }
         }
-        catch (InvalidViewIdException e)
-        {
-            sendSourceNotFound(context, e.getMessage());
-        }
-        return calculatedViewId;
+        return input;   // If the argument input is null, return null.
     }
 
     @Override
@@ -144,6 +132,7 @@ public class ViewHandlerImpl extends ViewHandler
     public ViewDeclarationLanguage getViewDeclarationLanguage(
             FacesContext context, String viewId)
     {
+        // return a suitable ViewDeclarationLanguage implementation for the given viewId
         return _vdlFactory.getViewDeclarationLanguage(viewId);
     }
 
@@ -248,7 +237,7 @@ public class ViewHandlerImpl extends ViewHandler
         checkNull(context, "context");
     
         String calculatedViewId = getViewHandlerSupport().calculateViewId(context, viewId);
-        return getViewDeclarationLanguage(context,calculatedViewId).restoreView(context, viewId); 
+        return getViewDeclarationLanguage(context,calculatedViewId).restoreView(context, calculatedViewId); 
     }
     
     @Override
@@ -258,6 +247,18 @@ public class ViewHandlerImpl extends ViewHandler
 
         if(context.getPartialViewContext().isAjaxRequest())
             return;
+
+        // Facelets specific hack:
+        // Tell the StateWriter that we're about to write state
+        StateWriter stateWriter = StateWriter.getCurrentInstance();
+        if (stateWriter != null)
+        {
+            // Write the STATE_KEY out. Unfortunately, this will
+            // be wasteful for pure server-side state managers where nothing
+            // is actually written into the output, but this cannot
+            // programatically be discovered
+            stateWriter.writingState();
+        }
 
         StateManager stateManager = context.getApplication().getStateManager();
         if (stateManager.isSavingStateInClient(context))
@@ -281,7 +282,7 @@ public class ViewHandlerImpl extends ViewHandler
         Map<String, List<String>> viewParameters;
         UIViewRoot viewRoot = context.getViewRoot();
         String currentViewId = viewRoot.getViewId();
-        Collection<UIViewParameter> toViewParams;
+        Collection<UIViewParameter> toViewParams = null;
         Collection<UIViewParameter> currentViewParams = ViewMetadata.getViewParameters(viewRoot);
 
         if (currentViewId.equals(viewId))
@@ -293,11 +294,15 @@ public class ViewHandlerImpl extends ViewHandler
             String calculatedViewId = getViewHandlerSupport().calculateViewId(context, viewId);            
             ViewDeclarationLanguage vdl = getViewDeclarationLanguage(context,calculatedViewId);
             ViewMetadata viewMetadata = vdl.getViewMetadata(context, viewId);
-            UIViewRoot viewFromMetaData = viewMetadata.createMetadataView(context);
-            toViewParams = ViewMetadata.getViewParameters(viewFromMetaData);
+            // getViewMetadata() returns null on JSP
+            if (viewMetadata != null)
+            {
+                UIViewRoot viewFromMetaData = viewMetadata.createMetadataView(context);
+                toViewParams = ViewMetadata.getViewParameters(viewFromMetaData);
+            }
         }
 
-        if (toViewParams.isEmpty())
+        if (toViewParams == null || toViewParams.isEmpty())
         {
             return parametersFromArg;
         }
@@ -364,6 +369,11 @@ public class ViewHandlerImpl extends ViewHandler
             throw new FacesException(ioe);
         }
     }
+    
+    public void setViewHandlerSupport(ViewHandlerSupport viewHandlerSupport)
+    {
+        _viewHandlerSupport = viewHandlerSupport;
+    }    
     
     protected ViewHandlerSupport getViewHandlerSupport()
     {

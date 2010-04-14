@@ -39,17 +39,22 @@ import javax.faces.view.facelets.MetaTagHandler;
 import javax.faces.view.facelets.TagAttribute;
 import javax.faces.view.facelets.TagException;
 
+import org.apache.myfaces.view.facelets.tag.MetaRulesetImpl;
+
 /**
  * Implementation of the tag logic used in the JSF specification. This is your golden hammer for wiring UIComponents to
  * Facelets.
  * 
+ * @deprecated Use javax.faces.view.facelets.ComponentHandler instead
  * @author Jacob Hookom
  * @version $Id: ComponentHandler.java,v 1.19 2008/07/13 19:01:47 rlubke Exp $
  */
+@Deprecated
 public class ComponentHandler extends MetaTagHandler
 {
 
-    private final static Logger log = Logger.getLogger("facelets.tag.component");
+    //private final static Logger log = Logger.getLogger("facelets.tag.component");
+    private final static Logger log = Logger.getLogger(ComponentHandler.class.getName());
 
     private final TagAttribute binding;
 
@@ -248,7 +253,7 @@ public class ComponentHandler extends MetaTagHandler
     }
 
     @Override
-    protected MetaRuleset createMetaRuleset(Class<?> type)
+    protected MetaRuleset createMetaRuleset(Class type)
     {
         /*MetaRuleset m = super.createMetaRuleset(type);
 
@@ -281,7 +286,35 @@ public class ComponentHandler extends MetaTagHandler
         return m;*/
         
         // FIXME: Implement correctly
-        return null;
+        // temporally restore code
+        MetaRuleset m = new MetaRulesetImpl(this.tag, type);
+        // ignore standard component attributes
+        m.ignore("binding").ignore("id");
+
+        // add auto wiring for attributes
+        m.addRule(ComponentRule.Instance);
+
+        // if it's an ActionSource
+        if (ActionSource.class.isAssignableFrom(type))
+        {
+            m.addRule(ActionSourceRule.Instance);
+        }
+
+        // if it's a ValueHolder
+        if (ValueHolder.class.isAssignableFrom(type))
+        {
+            m.addRule(ValueHolderRule.Instance);
+
+            // if it's an EditableValueHolder
+            if (EditableValueHolder.class.isAssignableFrom(type))
+            {
+                m.ignore("submittedValue");
+                m.ignore("valid");
+                m.addRule(EditableValueHolderRule.Instance);
+            }
+        }
+        
+        return m;
     }
 
     /**

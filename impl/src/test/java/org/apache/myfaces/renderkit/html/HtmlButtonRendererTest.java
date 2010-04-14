@@ -20,6 +20,8 @@ package org.apache.myfaces.renderkit.html;
 
 import java.io.StringWriter;
 
+import javax.faces.component.UIParameter;
+import javax.faces.component.behavior.AjaxBehavior;
 import javax.faces.component.html.HtmlCommandButton;
 import javax.faces.component.html.HtmlForm;
 
@@ -29,13 +31,13 @@ import junit.framework.TestSuite;
 import org.apache.myfaces.shared_impl.config.MyfacesConfig;
 import org.apache.myfaces.test.utils.HtmlCheckAttributesUtil;
 import org.apache.myfaces.test.utils.HtmlRenderedAttr;
-import org.apache.shale.test.base.AbstractJsfTestCase;
-import org.apache.shale.test.mock.MockExternalContext;
-import org.apache.shale.test.mock.MockHttpServletRequest;
-import org.apache.shale.test.mock.MockHttpServletResponse;
-import org.apache.shale.test.mock.MockRenderKitFactory;
-import org.apache.shale.test.mock.MockResponseWriter;
-import org.apache.shale.test.mock.MockServletContext;
+import org.apache.myfaces.test.base.AbstractJsfTestCase;
+import org.apache.myfaces.test.mock.MockExternalContext;
+import org.apache.myfaces.test.mock.MockHttpServletRequest;
+import org.apache.myfaces.test.mock.MockHttpServletResponse;
+import org.apache.myfaces.test.mock.MockRenderKitFactory;
+import org.apache.myfaces.test.mock.MockResponseWriter;
+import org.apache.myfaces.test.mock.MockServletContext;
 
 public class HtmlButtonRendererTest extends AbstractJsfTestCase {
 
@@ -68,6 +70,10 @@ public class HtmlButtonRendererTest extends AbstractJsfTestCase {
                 form.getFamily(),
                 form.getRendererType(),
                 new HtmlFormRenderer());
+        facesContext.getRenderKit().addRenderer(
+                "javax.faces.Input",
+                "javax.faces.Hidden",
+                new HtmlHiddenRenderer());
     }
     
     public void tearDown() throws Exception {
@@ -161,4 +167,55 @@ public class HtmlButtonRendererTest extends AbstractJsfTestCase {
         }
 
     }
+    
+    /**
+     * Components that render client behaviors should always render "id" and "name" attribute
+     */
+    public void testClientBehaviorHolderRendersIdAndName() 
+    {
+        commandButton.addClientBehavior("focus", new AjaxBehavior());
+        try 
+        {
+            commandButton.encodeAll(facesContext);
+            String output = ((StringWriter) writer.getWriter()).getBuffer().toString();
+            assertTrue(output.matches(".+id=\".+\".+"));
+            assertTrue(output.matches(".+name=\".+\".+"));
+        }
+        catch (Exception e)
+        {
+            fail(e.getMessage());
+        }
+        
+    }
+    
+    /**
+     * If a h:commandButton has any UIParameter children, he should
+     * render them with a renderer of family javax.faces.Input and
+     * renderer type javax.faces.Hidden.
+     * If the disable attribute of a child UIParameter is true,
+     * he should be ignored.
+     * @throws Exception
+     */
+    public void testCommandButtonRendersNotDisabledUIParameters() throws Exception
+    {
+        UIParameter param1 = new UIParameter();
+        param1.setName("param1");
+        param1.setValue("value1");
+        param1.setDisable(true);
+        UIParameter param2 = new UIParameter();
+        param2.setName("param2");
+        param2.setValue("value2");
+        commandButton.getChildren().add(param1);
+        commandButton.getChildren().add(param2);
+        
+        commandButton.setValue("commandButton");
+        
+        commandButton.encodeAll(facesContext);
+        String output = writer.getWriter().toString();
+        assertFalse(output.contains("param1"));
+        assertFalse(output.contains("value1"));
+        assertTrue(output.contains("param2"));
+        assertTrue(output.contains("value2"));
+    }
+    
 }

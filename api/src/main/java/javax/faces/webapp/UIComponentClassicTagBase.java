@@ -18,6 +18,17 @@
  */
 package javax.faces.webapp;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+
 import javax.faces.component.NamingContainer;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
@@ -32,9 +43,6 @@ import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTag;
 import javax.servlet.jsp.tagext.JspIdConsumer;
 import javax.servlet.jsp.tagext.Tag;
-import java.io.IOException;
-import java.util.*;
-import java.util.logging.Level;
 
 /**
  * @author Bruno Aranda (latest modification by $Author: baranda $)
@@ -61,6 +69,10 @@ public abstract class UIComponentClassicTagBase extends UIComponentTagBase imple
     private static final String PREVIOUS_JSP_IDS_SET = "org.apache.myfaces.PREVIOUS_JSP_IDS_SET";
 
     private static final String BOUND_VIEW_ROOT = "org.apache.myfaces.BOUND_VIEW_ROOT";
+    
+    private static final String LOGICAL_PAGE_ID = "org.apache.myfaces.LOGICAL_PAGE_ID";
+    
+    private static final String LOGICAL_PAGE_COUNTER = "org.apache.myfaces.LOGICAL_PAGE_COUNTER";
 
     protected static final String UNIQUE_ID_PREFIX = UIViewRoot.UNIQUE_ID_PREFIX + "_";
 
@@ -161,9 +173,77 @@ public abstract class UIComponentClassicTagBase extends UIComponentTagBase imple
 
     public void setJspId(String jspId)
     {
-        _jspId = jspId;
+        // -= Leonardo Uribe =- The javadoc says the following about this method:
+        //
+        // 1. This method is called by the container before doStartTag(). 
+        // 2. The argument is guaranteed to be unique within the page.
+        //
+        // Doing some tests it was found that the jspId generated in a
+        // jsp:include are "reset", so if before call it it was id10
+        // the tags inside jsp:include starts from id1 (really I suppose a
+        // different counter is used), so if we assign this one
+        // directly it is possible to cause duplicate id exceptions later.
+        //
+        // One problem is caused by f:view tag. This one is not included when
+        // we check for duplicate id, so it is possible to assign to a component
+        // in a jsp:include the id of the UIViewRoot instance and cause a 
+        // duplicate id exception when the view is saved.
+        //
+        // Checking the javadoc it was found the following note:
+        //
+        // "... IMPLEMENTATION NOTE: This method will detect where we are in an 
+        // include and assign a unique ID for each include in a particular 'logical page'. 
+        // This allows us to avoid possible duplicate ID situations for included pages 
+        // that have components without explicit IDs..."
+        //
+        // So we need to keep a counter per logical page or page context found. 
+        // It is assumed the first one should not be suffixed. The others needs to be
+        // suffixed, so all generated ids of those pages are different. The final result
+        // is that jsp:include works correctly.
+        //
+        // Note this implementation detail takes precedence over c:forEach tag. If a
+        // jsp:include is inside a c:forEach, jsp:include takes precedence and the 
+        // iteration prefix is ignored. If a custom id is provided for a component, 
+        // it will throw duplicate id exception, because this code is "override" 
+        // by the custom id, and the iteration suffix only applies on generated ids.
+        Integer logicalPageId = (Integer) pageContext.getAttribute(LOGICAL_PAGE_ID);
+        
+        if (logicalPageId != null)
+        {
+            if (logicalPageId.intValue() == 1)
+            {
+                //Base case, just pass it unchanged
+                _jspId = jspId;
+            }
+            else
+            {
+                // We are on a different page context, suffix it with the logicalPageId
+                _jspId = jspId + "pc" + logicalPageId;
+            }
+        }
+        else
+        {
+            Map<Object, Object> attributeMap = getFacesContext().getAttributes();
+            AtomicInteger logicalPageCounter = (AtomicInteger) attributeMap.get(LOGICAL_PAGE_COUNTER);
+            
+            if (logicalPageCounter == null)
+            {
+                //We are processing the first component tag. 
+                logicalPageCounter = new AtomicInteger(1);
+                logicalPageId = 1;
+                attributeMap.put(LOGICAL_PAGE_COUNTER, logicalPageCounter);
+                pageContext.setAttribute(LOGICAL_PAGE_ID, logicalPageId);
+            }
+            else
+            {
+                //We are on a different page context, so we need to assign and set.
+                logicalPageId = logicalPageCounter.incrementAndGet();
+                pageContext.setAttribute(LOGICAL_PAGE_ID, logicalPageId);
+                _jspId = jspId + "pc" + logicalPageId;
+            }
+        }
         _facesJspId = null;
-        checkIfItIsInAnIterator(jspId);
+        checkIfItIsInAnIterator(_jspId);
     }
 
     /**
@@ -717,7 +797,6 @@ public abstract class UIComponentClassicTagBase extends UIComponentTagBase imple
     /**
      * @deprecated the ResponseWriter is now set by {@link javax.faces.application.ViewHandler#renderView}
      */
-    @Deprecated
     protected void setupResponseWriter()
     {
     }
@@ -782,25 +861,25 @@ public abstract class UIComponentClassicTagBase extends UIComponentTagBase imple
     @SuppressWarnings("unchecked")
     private Map<String, Object> getViewComponentIds()
     {
-        Map<String, Object> requestMap = _facesContext.getExternalContext().getRequestMap();
+        Map<Object, Object> attributes = _facesContext.getAttributes();
         Map<String, Object> viewComponentIds;
 
         if (_parent == null)
         {
             // top level _componentInstance
             viewComponentIds = new HashMap<String, Object>();
-            requestMap.put(VIEW_IDS, viewComponentIds);
+            attributes.put(VIEW_IDS, viewComponentIds);
         }
         else
         {
-            viewComponentIds = (Map<String, Object>)requestMap.get(VIEW_IDS);
+            viewComponentIds = (Map<String, Object>) attributes.get(VIEW_IDS);
             
             // Check if null, this can happen if someone programatically tries to do an include of a 
             // JSP fragment. This code will prevent NullPointerException from happening in such cases.
             if (viewComponentIds == null)
             {
                 viewComponentIds = new HashMap<String, Object>();
-                requestMap.put(VIEW_IDS, viewComponentIds);
+                attributes.put(VIEW_IDS, viewComponentIds);
             }
         }
 
@@ -844,10 +923,10 @@ public abstract class UIComponentClassicTagBase extends UIComponentTagBase imple
         getStack(pageContext).add(this);
     }
 
-    private boolean isIncludedOrForwarded()
-    {
-        return getFacesContext().getExternalContext().getRequestMap().containsKey("javax.servlet.include.request_uri");
-    }
+    //private boolean isIncludedOrForwarded() {
+    //    return getFacesContext().getExternalContext().getRequestMap().
+    //            containsKey("javax.servlet.include.request_uri");
+    //}
 
     /** Generate diagnostic output. */
     private String getPathToComponent(UIComponent component)
@@ -1102,6 +1181,8 @@ public abstract class UIComponentClassicTagBase extends UIComponentTagBase imple
         if (_componentInstance == null)
         {
             _componentInstance = createComponent(context, id);
+            if (id.equals(_componentInstance.getId()) )
+            {
             _created = true;
             int index = parentTag.getIndexOfNextChildTag();
             if (index > parent.getChildCount())
@@ -1111,6 +1192,24 @@ public abstract class UIComponentClassicTagBase extends UIComponentTagBase imple
 
             List<UIComponent> children = parent.getChildren();
             children.add(index, _componentInstance);
+        }
+            // On weblogic portal using faces-adapter, the id set and the retrieved 
+            // one for <netuix:namingContainer> is different. The reason is 
+            // this custom solution for integrate jsf changes the id of the parent
+            // component to allow the same native portlet to be allocated multiple
+            // times in the same page
+            else if (null == findComponent(parent,_componentInstance.getId()))
+            {
+                _created = true;
+                int index = parentTag.getIndexOfNextChildTag();
+                if (index > parent.getChildCount())
+                {
+                    index = parent.getChildCount();
+                }
+
+                List<UIComponent> children = parent.getChildren();
+                children.add(index, _componentInstance);
+            }
         }
 
         return _componentInstance;
@@ -1180,26 +1279,26 @@ public abstract class UIComponentClassicTagBase extends UIComponentTagBase imple
 
     private String createNextId(String componentId)
     {
-        Integer currentCounter = (Integer)getFacesContext().getExternalContext().getRequestMap().get(componentId);
+        Integer currentCounter = (Integer) getFacesContext().getAttributes().get(componentId);
 
         int iCurrentCounter = 1;
 
         if (currentCounter != null)
         {
-            iCurrentCounter = currentCounter.intValue();
+            iCurrentCounter = currentCounter;
             iCurrentCounter++;
         }
 
-        getFacesContext().getExternalContext().getRequestMap().put(componentId, new Integer(iCurrentCounter));
+        getFacesContext().getAttributes().put(componentId, iCurrentCounter);
 
-        if (isIncludedOrForwarded())
-        {
-            componentId = componentId + "pc" + iCurrentCounter;
-        }
-        else
-        {
-            componentId = componentId + UNIQUE_ID_PREFIX + iCurrentCounter;
-        }
+        //if (isIncludedOrForwarded())
+        //{
+        //    componentId = componentId + "pc" + iCurrentCounter;
+        //}
+        //else
+        //{
+        componentId = componentId + UNIQUE_ID_PREFIX + iCurrentCounter;            
+        //}
 
         return componentId;
     }
@@ -1223,14 +1322,14 @@ public abstract class UIComponentClassicTagBase extends UIComponentTagBase imple
     private Set<String> getPreviousJspIdsSet()
     {
         Set<String> previousJspIdsSet =
-                (Set<String>)getFacesContext().getExternalContext().getRequestMap().get(PREVIOUS_JSP_IDS_SET);
+                (Set<String>)getFacesContext().getAttributes().get(PREVIOUS_JSP_IDS_SET);
 
         if (previousJspIdsSet == null)
         {
             previousJspIdsSet = new HashSet<String>();
             // Add it to the context! The next time is called
             // this method it takes the ref from the RequestContext
-            getFacesContext().getExternalContext().getRequestMap().put(PREVIOUS_JSP_IDS_SET, previousJspIdsSet);
+            getFacesContext().getAttributes().put(PREVIOUS_JSP_IDS_SET, previousJspIdsSet);
         }
 
         return previousJspIdsSet;

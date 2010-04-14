@@ -19,9 +19,22 @@
 package org.apache.myfaces.view.facelets.tag.ui;
 
 import javax.faces.view.facelets.ComponentConfig;
+import javax.faces.view.facelets.ComponentHandler;
 
-import org.apache.myfaces.view.facelets.tag.jsf.ComponentHandler;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTag;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTags;
 
+/**
+ * 
+ */
+@JSFFaceletTags(tags={
+        @JSFFaceletTag(
+                name="ui:component",
+                componentClass="org.apache.myfaces.view.facelets.tag.ui._Component"),
+        @JSFFaceletTag(
+                name="ui:fragment",
+                componentClass="org.apache.myfaces.view.facelets.tag.ui._Fragment")
+})
 public final class ComponentRefHandler extends ComponentHandler
 {
 

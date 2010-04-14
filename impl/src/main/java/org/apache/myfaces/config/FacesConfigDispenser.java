@@ -222,7 +222,7 @@ public interface FacesConfigDispenser<C>
     public Collection<String> getRenderKitIds();
 
     /** @return renderkit class name for given renderkit id */
-    public String getRenderKitClass(String renderKitId);
+    public Collection<String> getRenderKitClasses(String renderKitId);
 
     /**
      * @return Iterator over {@link org.apache.myfaces.config.element.ClientBehaviorRenderer ClientBehaviorRenderer}s for the given renderKitId
@@ -266,7 +266,22 @@ public interface FacesConfigDispenser<C>
     public Collection<String> getDefaultValidatorIds ();
     
     /**
+     * @return true if an empty <default-validators> exists in the config file with the highest precendence
+     */
+    public boolean isEmptyDefaultValidators();
+    
+    /**
+     * @param disable true if an empty <default-validators> exists in the config file with the highest precendence
+     */
+    public void setEmptyDefaultValidators(boolean disable);
+    
+    /**
      * @return the partial traversal class name
      */
     public String getPartialTraversal ();
+    
+    /**
+     * @return Faces application version.
+     */
+    public String getFacesVersion ();
 }

@@ -21,7 +21,7 @@ import java.util.Map;
 import javax.faces.FactoryFinder;
 import javax.faces.context.FacesContext;
 import org.apache.myfaces.context.servlet.FacesContextImpl;
-import org.apache.shale.test.base.AbstractJsfTestCase;
+import org.apache.myfaces.test.base.AbstractJsfTestCase;
 
 /**
  * Tests the facesContext isAjaxRequest
@@ -44,7 +44,9 @@ public class TestIsAjaxRequest extends AbstractJsfTestCase {
         //requestParameterMap = new HashMap<String, String>();
         //ContextTestRequestWrapper wrapper = new ContextTestRequestWrapper(request, requestParameterMap);
         FactoryFinder.setFactory(FactoryFinder.PARTIAL_VIEW_CONTEXT_FACTORY,
-            "org.apache.myfaces.context.PartialViewContextFactoryImpl");        
+            "org.apache.myfaces.context.PartialViewContextFactoryImpl");     
+        FactoryFinder.setFactory (FactoryFinder.EXCEPTION_HANDLER_FACTORY,
+        "org.apache.myfaces.context.ExceptionHandlerFactoryImpl");
         context = new FacesContextImpl(servletContext, request, response);
     }
 

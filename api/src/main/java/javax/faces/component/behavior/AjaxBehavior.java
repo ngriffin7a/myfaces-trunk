@@ -18,8 +18,10 @@
  */
 package javax.faces.component.behavior;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -31,196 +33,267 @@ import javax.faces.event.AjaxBehaviorListener;
 /**
  * @author Simon Lessard (latest modification by $Author: slessard $)
  * @version $Revision: 696523 $ $Date: 2009-03-14 16:04:27 -0400 (mer., 17 sept. 2008) $
- * 
  * @since 2.0
  */
-public abstract class AjaxBehavior extends ClientBehaviorBase
+public class AjaxBehavior extends ClientBehaviorBase 
 {
-    public static final String BEHAVIOR_ID = "javax.faces.behavior.Ajax";
-    
-    private static final Set<ClientBehaviorHint> HINTS = Collections.singleton(ClientBehaviorHint.SUBMITTING);
-
-    private static final String ATTR_DISABLED = "disabled";
-    private static final String ATTR_EXECUTE = "execute";
-    private static final String ATTR_IMMEDIATE = "immediate";
-    private static final String ATTR_ON_ERROR = "onError";
-    private static final String ATTR_ON_EVENT = "onEvent";
-    private static final String ATTR_RENDER = "render";
-    
-    private Boolean _disabled;
-    private Collection<String> _execute;
-    private Boolean _immediate;
-    private String _onError;
-    private String _onEvent;
-    private Set<String> _render;
-    
-    private Map<String, ValueExpression> _expressions;
-    
 
     /**
-     * 
+     * not needed anymore but enforced by the spec
+     * theoretically a
+     * @FacesBehavior(value = "javax.faces.behavior.Ajax")
+     * could do it
      */
-    public AjaxBehavior()
-    {
-        // Default capacity (10) should be decent with the default load factor (0.75)
-        // So there's a total of 7 slots in the map with 7 default attributes
-        _expressions = new HashMap<String, ValueExpression>();
-    }
+    public static final String BEHAVIOR_ID = "javax.faces.behavior.Ajax";
+
+    private static final String ATTR_EXECUTE = "execute";
+    private static final String ATTR_ON_ERROR = "onerror";
+    private static final String ATTR_ON_EVENT = "onevent";
+    private static final String ATTR_RENDER = "render";
+    private static final String ATTR_DISABLED = "disabled";
+    private static final String ATTR_IMMEDIATE = "immediate";
+
+    /**
+     * special render and execute targets
+     */
+    private static final String VAL_FORM = "@form";
+    private static final String VAL_ALL = "@all";
+    private static final String VAL_THIS = "@this";
+    private static final String VAL_NONE = "@none";
+
+    private static final Collection<String> VAL_FORM_LIST = Collections.singletonList(VAL_FORM);
+    private static final Collection<String> VAL_ALL_LIST = Collections.singletonList(VAL_ALL);
+    private static final Collection<String> VAL_THIS_LIST = Collections.singletonList(VAL_THIS);
+    private static final Collection<String> VAL_NONE_LIST = Collections.singletonList(VAL_NONE);
+
+    //To enable delta state saving we need this one
+    private _AjaxBehaviorDeltaStateHelper<AjaxBehavior> deltaStateHelper 
+            = new _AjaxBehaviorDeltaStateHelper<AjaxBehavior>(this);
     
-    public void addAjaxBehaviorListener(AjaxBehaviorListener listener)
+    private Map<String, ValueExpression> _valueExpressions 
+            = new HashMap<String, ValueExpression>();
+
+    public AjaxBehavior() 
     {
-        addBehaviorListener(listener);
-    }
-    
-    public Collection<String> getExecute(FacesContext context)
-    {
-        return _getIds(ATTR_EXECUTE, _execute);
-    }
-    
-    public Set<ClientBehaviorHint> getHints()
-    {
-        // FIXME: Useless, notify the EG... Mojarra returns a static Set containing SUBMITTING...
-        // Copying Mojarra behavior for now by assuming they simply forgot to add JavaDoc in the class
-        return HINTS;
-    }
-    
-    public String getOnError(FacesContext context)
-    {
-        return _resolve(ATTR_ON_ERROR, _onError);
-    }
-    
-    public String getOnEvent(FacesContext context)
-    {
-        return _resolve(ATTR_ON_EVENT, _onEvent);
-    }
-    
-    public Collection<String> getRender(FacesContext context)
-    {
-        return _getIds(ATTR_RENDER, _render);
+        super();
     }
 
-    public String getRendererType()
+    public void addAjaxBehaviorListener(AjaxBehaviorListener listener) 
     {
-        return BEHAVIOR_ID;
+        super.addBehaviorListener(listener);
     }
     
-    public ValueExpression getValueExpression(String name)
-    {
-        _checkNull(name);
-        
-        return _expressions.get(name);
-    }
-    
-    public boolean isDisabled(FacesContext context)
-    {
-        return Boolean.TRUE.equals(_resolve(ATTR_DISABLED, _disabled));
-    }
-    
-    public boolean isImmediate(FacesContext context)
-    {
-        return Boolean.TRUE.equals(_resolve(ATTR_IMMEDIATE, _immediate));
-    }
-    
-    public boolean isImmediateSet(FacesContext context)
-    {
-        return _immediate != null || _expressions.containsKey(ATTR_IMMEDIATE);
-    }
-    
-    public void removeAjaxBehaviorListener(AjaxBehaviorListener listener)
+    public void removeAjaxBehaviorListener(AjaxBehaviorListener listener) 
     {
         removeBehaviorListener(listener);
     }
-    
-    @Override
-    public void restoreState(FacesContext context, Object state)
+
+    public Collection<String> getExecute() 
     {
-        // TODO: IMPLEMENT HERE - Full + delta support
-        super.restoreState(context, state);
+        // we have to evaluate the real value in this method,
+        // because the value of the ValueExpression might
+        // change (almost sure it does!)
+        return evalForCollection(ATTR_EXECUTE);
     }
 
-    @Override
-    public Object saveState(FacesContext context)
+    public void setExecute(Collection<String> execute) 
     {
-        // TODO: IMPLEMENT HERE - Full + delta support
-        return super.saveState(context);
-    }
-    
-    public void setDisabled(Boolean disabled)
-    {
-        this._disabled = disabled;
+        deltaStateHelper.put(ATTR_EXECUTE, execute);
     }
 
-    public void setExecute(Collection<String> execute)
+    public String getOnerror() 
     {
-        this._execute = execute;
+        return (String) deltaStateHelper.eval(ATTR_ON_ERROR);
     }
 
-    public void setImmediate(Boolean immediate)
+    public void setOnerror(String onError) 
     {
-        this._immediate = immediate;
+        deltaStateHelper.put(ATTR_ON_ERROR, onError);
     }
 
-    public void setOnError(String error)
+    public String getOnevent() 
     {
-        _onError = error;
+        return (String) deltaStateHelper.eval(ATTR_ON_EVENT);
     }
 
-    public void setOnEvent(String event)
+    public void setOnevent(String onEvent) 
     {
-        _onEvent = event;
+        deltaStateHelper.put(ATTR_ON_EVENT, onEvent);
     }
 
-    public void setRender(Set<String> render)
+    public Collection<String> getRender() 
     {
-        this._render = render;
+        // we have to evaluate the real value in this method,
+        // because the value of the ValueExpression might
+        // change (almost sure it does!)
+        return evalForCollection(ATTR_RENDER);
     }
-    
-    public void setValueExpression(String name, ValueExpression expression)
+
+    public void setRender(Collection<String> render) 
     {
-        _checkNull(name);
-        
-        if (expression == null)
+        deltaStateHelper.put(ATTR_RENDER, render);
+    }
+
+    public ValueExpression getValueExpression(String name) 
+    {
+        return getValueExpressionMap().get(name);
+    }
+
+    public void setValueExpression(String name, ValueExpression item) 
+    {
+        if (item == null) 
         {
-            _expressions.remove(name);
+            getValueExpressionMap().remove(name);
+            deltaStateHelper.remove(name);
+        } 
+        else 
+        {
+            getValueExpressionMap().put(name, item);
+        }
+    }
+
+    public boolean isDisabled() 
+    {
+        Boolean retVal = (Boolean) deltaStateHelper.eval(ATTR_DISABLED);
+        retVal = (retVal == null) ? false : retVal;
+        return retVal;
+    }
+
+    public void setDisabled(boolean disabled) 
+    {
+        deltaStateHelper.put(ATTR_DISABLED, disabled);
+    }
+
+    public boolean isImmediate() 
+    {
+        Boolean retVal = (Boolean) deltaStateHelper.eval(ATTR_IMMEDIATE);
+        retVal = (retVal == null) ? false : retVal;
+        return retVal;
+    }
+
+    public void setImmediate(boolean immediate) 
+    {
+        deltaStateHelper.put(ATTR_IMMEDIATE, immediate);
+    }
+
+    public boolean isImmediateSet() 
+    {
+        return deltaStateHelper.eval(ATTR_IMMEDIATE) != null;
+    }
+
+    @Override
+    public Set<ClientBehaviorHint> getHints() 
+    {
+        return EnumSet.of(ClientBehaviorHint.SUBMITTING);
+    }
+
+    @Override
+    public String getRendererType() 
+    {
+        return BEHAVIOR_ID;
+    }
+
+    @Override
+    public void restoreState(FacesContext facesContext, Object o)
+    {
+        if (o == null)
+        {
+            return;
+        }
+        Object[] values = (Object[]) o;
+        if (values[0] != null) 
+        {
+            super.restoreState(facesContext, values[0]);
+        }
+        deltaStateHelper.restoreState(facesContext, values[1]);
+    }
+
+    @Override
+    public Object saveState(FacesContext facesContext)
+    {
+        if (initialStateMarked())
+        {
+            Object parentSaved = super.saveState(facesContext);
+            Object deltaStateHelperSaved = deltaStateHelper.saveState(facesContext);
+            
+            if (parentSaved == null && deltaStateHelperSaved == null)
+            {
+                //No values
+                return null;
+            }   
+            return new Object[]{parentSaved, deltaStateHelperSaved};
         }
         else
         {
-            _expressions.put(name, expression);
+            Object[] values = new Object[2];
+            values[0] = super.saveState(facesContext);
+            values[1] = deltaStateHelper.saveState(facesContext);
+            return values;
         }
     }
 
-    private void _checkNull(String name)
+    private Map<String, ValueExpression> getValueExpressionMap() 
     {
-        if (name == null)
-        {
-            throw new NullPointerException();
-        }
-    }
-
-    private Collection<String> _getIds(String name, Collection<String> explicitValue)
-    {
-        // FIXME: I don't see how I can make it non empty when there's nothing that I can put in it
-        //        by default
-        Collection<String> ids = _resolve(name, explicitValue);
-        
-        return ids == null ? Collections.<String>emptyList() : ids;
+        return _valueExpressions;
     }
     
+    /**
+     * Invokes eval on the deltaStateHelper and tries to get a
+     * Collection out of the result.
+     * @param attributeName
+     * @return
+     */
     @SuppressWarnings("unchecked")
-    private <T> T _resolve(String name, T explicitValue)
+    private Collection<String> evalForCollection(String attributeName)
     {
-        assert name != null;
-        assert name.length() > 0;
-        
-        if (explicitValue == null)
+        Object value = deltaStateHelper.eval(attributeName);
+        if (value == null)
         {
-            ValueExpression expression = _expressions.get(name);
-            if (expression != null)
-            {
-                explicitValue = (T)expression.getValue(FacesContext.getCurrentInstance().getELContext());
-            }
+            return Collections.<String>emptyList();
         }
-        
-        return explicitValue;
+        else if (value instanceof Collection)
+        {
+            return (Collection<String>) value;
+        }
+        else if (value instanceof String)
+        {
+            return getCollectionFromSpaceSplitString((String) value);
+        }
+        else
+        {
+            throw new IllegalArgumentException("Type " + value.getClass()
+                    + " not supported for attribute " + attributeName);
+        }
     }
+    
+    /**
+     * Splits the String based on spaces and returns the 
+     * resulting Strings as Collection.
+     * @param stringValue
+     * @return
+     */
+    private Collection<String> getCollectionFromSpaceSplitString(String stringValue) {
+        //@special handling for @all, @none, @form and @this
+        if (stringValue.equals(VAL_FORM)) 
+        {
+            return VAL_FORM_LIST;
+        } 
+        else if (stringValue.equals(VAL_ALL)) 
+        {
+            return VAL_ALL_LIST;
+        } 
+        else if (stringValue.equals(VAL_NONE)) 
+        {
+            return VAL_NONE_LIST;
+        } 
+        else if (stringValue.equals(VAL_THIS)) 
+        {
+            return VAL_THIS_LIST; 
+        }
+
+        // not one of the "normal" values - split it and return the Collection
+        String[] arrValue = stringValue.split(" ");
+        return Arrays.asList(arrValue);
+    }
+    
 }

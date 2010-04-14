@@ -22,24 +22,30 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.application.ProjectStage;
 import javax.faces.application.Resource;
+import javax.faces.component.PartialStateHolder;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIViewRoot;
+import javax.faces.component.UniqueIdVendor;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.event.ComponentSystemEvent;
 import javax.faces.event.ComponentSystemEventListener;
 import javax.faces.event.ListenerFor;
+import javax.faces.event.ListenersFor;
 import javax.faces.event.PostAddToViewEvent;
 import javax.faces.render.Renderer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFRenderer;
+import org.apache.myfaces.shared_impl.renderkit.JSFAttr;
 import org.apache.myfaces.shared_impl.renderkit.RendererUtils;
 import org.apache.myfaces.shared_impl.renderkit.html.HTML;
+import org.apache.myfaces.shared_impl.renderkit.html.util.ResourceUtils;
+import org.apache.myfaces.view.facelets.PostBuildComponentTreeOnRestoreViewEvent;
 
 /**
  * Renderer used by h:outputStylesheet component
@@ -51,20 +57,47 @@ import org.apache.myfaces.shared_impl.renderkit.html.HTML;
 @JSFRenderer(renderKitId = "HTML_BASIC", family = "javax.faces.Output", type = "javax.faces.resource.Stylesheet")
 @ListenerFor(systemEventClass = PostAddToViewEvent.class)
 public class HtmlStylesheetRenderer extends Renderer implements
-    ComponentSystemEventListener
+    ComponentSystemEventListener, PartialStateHolder
 {
-    private static final Log log = LogFactory.getLog(HtmlStylesheetRenderer.class);
+    //private static final Log log = LogFactory.getLog(HtmlStylesheetRenderer.class);
+    private static final Logger log = Logger.getLogger(HtmlStylesheetRenderer.class.getName());
     
-    private final static String RENDERED_RESOURCES_SET = HtmlStylesheetRenderer.class+".RENDERED_RESOURCES_SET"; 
-
-    @Override
     public void processEvent(ComponentSystemEvent event)
     {
         UIComponent component = event.getComponent();
         FacesContext facesContext = FacesContext.getCurrentInstance();
+        
+        //if (component.getId() != null)
+        //{
+        //    UniqueIdVendor uiv = findParentUniqueIdVendor(component);
+        //
+        //    if ( (!(uiv instanceof UIViewRoot)) && component.getId().startsWith(UIViewRoot.UNIQUE_ID_PREFIX))
+        //    {
+        //        // The id was set using the closest UniqueIdVendor, but since this one
+        //        // will be relocated, we need to assign an id from the current root.
+        //        // otherwise a duplicate id exception could happen.
+        //        component.setId(facesContext.getViewRoot().createUniqueId(facesContext, null));
+        //    }
+        //}
+        
         facesContext.getViewRoot().addComponentResource(facesContext,
                     component, "head");
     }
+    
+    //private static UniqueIdVendor findParentUniqueIdVendor(UIComponent component)
+    //{
+    //    UIComponent parent = component.getParent();
+    //
+    //    while (parent != null)
+    //    {
+    //        if (parent instanceof UniqueIdVendor)
+    //        {
+    //            return (UniqueIdVendor) parent;
+    //        }
+    //        parent = parent.getParent();
+    //    }
+    //    return null;
+    //}
 
     @Override
     public boolean getRendersChildren()
@@ -72,24 +105,6 @@ public class HtmlStylesheetRenderer extends Renderer implements
         return true;
     }
 
-    /**
-     * Return a set of already rendered resources by this renderer on the current
-     * request. 
-     * 
-     * @param facesContext
-     * @return
-     */
-    protected Set<String> getRenderedResources(FacesContext facesContext)
-    {
-        Set<String> map = (Set<String>) facesContext.getAttributes().get(RENDERED_RESOURCES_SET);
-        if (map == null)
-        {
-            map = new HashSet<String>();
-            facesContext.getAttributes().put(RENDERED_RESOURCES_SET,map);
-        }
-        return map;
-    }
-    
     @Override
     public void encodeChildren(FacesContext facesContext, UIComponent component)
             throws IOException
@@ -100,7 +115,7 @@ public class HtmlStylesheetRenderer extends Renderer implements
             throw new NullPointerException("component");
 
         Map<String, Object> componentAttributesMap = component.getAttributes();
-        String resourceName = (String) componentAttributesMap.get("name");
+        String resourceName = (String) componentAttributesMap.get(JSFAttr.NAME_ATTR);
         boolean hasChildren = component.getChildCount() > 0;
         
         if (resourceName != null && (!"".equals(resourceName)) )
@@ -123,8 +138,7 @@ public class HtmlStylesheetRenderer extends Renderer implements
             }
             else
             {
-                if (!facesContext.getApplication().getProjectStage().equals(
-                        ProjectStage.Production))
+                if (!facesContext.isProjectStage(ProjectStage.Production))
                 {
                     facesContext.addMessage(component.getClientId(), 
                             new FacesMessage("Component with no name and no body content, so nothing rendered."));
@@ -140,8 +154,8 @@ public class HtmlStylesheetRenderer extends Renderer implements
         super.encodeEnd(facesContext, component); //check for NP
         
         Map<String, Object> componentAttributesMap = component.getAttributes();
-        String resourceName = (String) componentAttributesMap.get("name");
-        String libraryName = (String) componentAttributesMap.get("library");
+        String resourceName = (String) componentAttributesMap.get(JSFAttr.NAME_ATTR);
+        String libraryName = (String) componentAttributesMap.get(JSFAttr.LIBRARY_ATTR);
 
         if (resourceName == null)
         {
@@ -155,14 +169,10 @@ public class HtmlStylesheetRenderer extends Renderer implements
             return;
         }
         
-        Set<String> renderedResources = getRenderedResources(facesContext);
-                
-        String resourceKey;
         Resource resource;
         if (libraryName == null)
         {
-            resourceKey = resourceName;
-            if (renderedResources.contains(resourceKey))
+            if (ResourceUtils.isRenderedStylesheet(facesContext, libraryName, resourceName))
             {
                 //Resource already founded
                 return;
@@ -172,8 +182,7 @@ public class HtmlStylesheetRenderer extends Renderer implements
         }
         else
         {
-            resourceKey = libraryName+'/'+resourceName;
-            if (renderedResources.contains(resourceKey))
+            if (ResourceUtils.isRenderedStylesheet(facesContext, libraryName, resourceName))
             {
                 //Resource already founded
                 return;
@@ -186,7 +195,7 @@ public class HtmlStylesheetRenderer extends Renderer implements
         if (resource == null)
         {
             //no resource found
-            log.warn("Resource referenced by resourceName "+ resourceName +
+            log.warning("Resource referenced by resourceName "+ resourceName +
                     (libraryName == null ? "" : " and libraryName " + libraryName) +
                     " not found in call to ResourceHandler.createResource."+
                     " It will be silenty ignored.");
@@ -195,7 +204,7 @@ public class HtmlStylesheetRenderer extends Renderer implements
         else
         {
             // Rendering resource
-            renderedResources.add(resourceKey);
+            ResourceUtils.markStylesheetAsRendered(facesContext, libraryName, resourceName);
             ResponseWriter writer = facesContext.getResponseWriter();
             writer.startElement(HTML.LINK_ELEM, component);
             writer.writeAttribute(HTML.REL_ATTR, HTML.STYLESHEET_VALUE,null );
@@ -206,5 +215,40 @@ public class HtmlStylesheetRenderer extends Renderer implements
             writer.writeURIAttribute(HTML.HREF_ATTR, resource.getRequestPath(), null);
             writer.endElement(HTML.LINK_ELEM);
         }
+    }
+    
+    private boolean _initialStateMarked;
+    
+    public void clearInitialState()
+    {
+        _initialStateMarked = false;
+    }
+
+    public boolean initialStateMarked()
+    {
+        return _initialStateMarked;
+    }
+
+    public void markInitialState()
+    {
+        _initialStateMarked = true;
+    }
+
+    public boolean isTransient()
+    {
+        return false;
+    }
+
+    public void restoreState(FacesContext context, Object state)
+    {
+    }
+
+    public Object saveState(FacesContext context)
+    {
+        return null;
+    }
+
+    public void setTransient(boolean newTransientValue)
+    {
     }
 }

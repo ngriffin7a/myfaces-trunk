@@ -32,7 +32,11 @@ public final class HtmlLibrary extends AbstractHtmlLibrary
     public HtmlLibrary()
     {
         super(Namespace);
-
+        
+        this.addHtmlComponent ("body", "javax.faces.OutputBody", "javax.faces.Body");
+        
+        this.addHtmlComponent ("button", "javax.faces.HtmlOutcomeTargetButton", "javax.faces.Button");
+        
         this.addHtmlComponent("column", "javax.faces.Column", null);
 
         this.addHtmlComponent("commandButton", "javax.faces.HtmlCommandButton", "javax.faces.Button");
@@ -44,7 +48,9 @@ public final class HtmlLibrary extends AbstractHtmlLibrary
         this.addHtmlComponent("form", "javax.faces.HtmlForm", "javax.faces.Form");
 
         this.addHtmlComponent("graphicImage", "javax.faces.HtmlGraphicImage", "javax.faces.Image");
-
+        
+        this.addHtmlComponent ("head", "javax.faces.OutputHead", "javax.faces.Head");
+        
         this.addHtmlComponent("inputHidden", "javax.faces.HtmlInputHidden", "javax.faces.Hidden");
 
         this.addHtmlComponent("inputSecret", "javax.faces.HtmlInputSecret", "javax.faces.Secret");
@@ -52,7 +58,9 @@ public final class HtmlLibrary extends AbstractHtmlLibrary
         this.addHtmlComponent("inputText", "javax.faces.HtmlInputText", "javax.faces.Text");
 
         this.addHtmlComponent("inputTextarea", "javax.faces.HtmlInputTextarea", "javax.faces.Textarea");
-
+        
+        this.addHtmlComponent ("link", "javax.faces.HtmlOutcomeTargetLink", "javax.faces.Link");
+        
         this.addHtmlComponent("message", "javax.faces.HtmlMessage", "javax.faces.Message");
 
         this.addHtmlComponent("messages", "javax.faces.HtmlMessages", "javax.faces.Messages");
@@ -62,7 +70,11 @@ public final class HtmlLibrary extends AbstractHtmlLibrary
         this.addHtmlComponent("outputLabel", "javax.faces.HtmlOutputLabel", "javax.faces.Label");
 
         this.addHtmlComponent("outputLink", "javax.faces.HtmlOutputLink", "javax.faces.Link");
-
+        
+        this.addHtmlComponent ("outputScript", "javax.faces.Output", "javax.faces.resource.Script");
+        
+        this.addHtmlComponent ("outputStylesheet", "javax.faces.Output", "javax.faces.resource.Stylesheet");
+        
         this.addHtmlComponent("outputText", "javax.faces.HtmlOutputText", "javax.faces.Text");
 
         this.addHtmlComponent("panelGrid", "javax.faces.HtmlPanelGrid", "javax.faces.Grid");

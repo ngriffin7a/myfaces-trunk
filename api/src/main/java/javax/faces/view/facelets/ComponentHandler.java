@@ -30,38 +30,90 @@ import javax.faces.view.facelets.FaceletContext;
  */
 public class ComponentHandler extends DelegatingMetaTagHandler
 {
+    private ComponentConfig config;
+    private TagHandlerDelegate helper;
+    
     public ComponentHandler(ComponentConfig config)
     {
         super(config);
-
-        // TODO IMPLEMENT API
+        
+        this.config = config;
+        
+        // Spec seems to indicate that the helper is created here, as opposed to other Handler
+        // instances, where it's presumably a new instance for every getter call.
+        
+        this.helper = delegateFactory.createComponentHandlerDelegate (this);
     }
 
     public ComponentConfig getComponentConfig()
     {
-        // TODO IMPLEMENT API
-        return null;
+        return config;
     }
 
-    public static final boolean isNew(UIComponent component)
+    public static boolean isNew(UIComponent component)
     {
-        // TODO IMPLEMENT API
-        return true;
+        // -= Leonardo Uribe =- It seems org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport.isNew(UIComponent)
+        // has been moved to this location.
+        // Originally this method was called from all tags that generate any kind of listeners
+        // (f:actionListener, f:phaseListener, f:setPropertyActionListener, f:valueChangeListener).
+        // This method prevent add listener when a facelet is applied twice. 
+        // On MYFACES-2502 there is an explanation about where this is useful (partial state saving disabled).
+        // return component != null && component.getParent() == null; 
+        if (component != null)
+        {
+            UIComponent parent = component.getParent();
+            if (parent == null)
+            {
+                return true;
+            }
+            else
+            {
+                // When a composite component is used, we could have tags attaching
+                // objects or doing some operation on composite:implementation body 
+                // like this:
+                // <composite:implementation>
+                //   <f:event ...../>
+                // </composite:implementation>
+                // This case is valid, but the parent is the UIPanel inside 
+                // UIComponent.COMPOSITE_FACET_NAME facet key of the composite component.
+                // So in this case we have to check if the component is a composite component
+                // or not and if so, try to get the parent again.
+                if (UIComponent.isCompositeComponent(parent))
+                {
+                    parent = parent.getParent();
+                    if (parent == null)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public void onComponentCreated(FaceletContext ctx, UIComponent c, UIComponent parent)
     {
-        // TODO IMPLEMENT API
+        // no-op.
     }
 
     public void onComponentPopulated(FaceletContext ctx, UIComponent c, UIComponent parent)
     {
-        // TODO IMPLEMENT API
+        // no-op.
     }
 
-    protected TagHandlerDelegate getTagHandlerHelper()
+    protected TagHandlerDelegate getTagHandlerDelegate()
     {
-        // TODO IMPLEMENT API
-        return null;
+        return helper;
     }
 }

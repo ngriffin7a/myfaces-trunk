@@ -30,6 +30,8 @@ import javax.faces.view.facelets.TagConfig;
 import javax.faces.view.facelets.TagException;
 import javax.faces.view.facelets.TagHandler;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTag;
+
 /**
  * Register a named facet on the UIComponent associated with the closest parent UIComponent custom action. <p/> See <a
  * target="_new" href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/tlddocs/f/facet.html">tag documentation</a>.
@@ -37,7 +39,12 @@ import javax.faces.view.facelets.TagHandler;
  * @author Jacob Hookom
  * @version $Id: FacetHandler.java,v 1.8 2008/07/13 19:01:44 rlubke Exp $
  */
-public final class FacetHandler extends TagHandler
+@JSFFaceletTag(
+        name = "f:facet",
+        bodyContent = "JSP", 
+        tagClass="javax.faces.webapp.FacetTag")
+public final class FacetHandler extends TagHandler 
+    implements javax.faces.view.facelets.FacetHandler
 {
 
     public static final String KEY = "facelets.FACET_NAME";
@@ -71,5 +78,10 @@ public final class FacetHandler extends TagHandler
         {
             parent.getAttributes().remove(KEY);
         }
+    }
+
+    public String getFacetName(FaceletContext ctx)
+    {
+        return this.name.getValue(ctx);
     }
 }

@@ -22,12 +22,13 @@ import javax.el.ELException;
 import javax.faces.FacesException;
 import javax.faces.convert.Converter;
 import javax.faces.view.facelets.ConverterConfig;
+import javax.faces.view.facelets.ConverterHandler;
 import javax.faces.view.facelets.FaceletContext;
 import javax.faces.view.facelets.FaceletException;
 import javax.faces.view.facelets.MetaRuleset;
 import javax.faces.view.facelets.TagAttribute;
 
-import org.apache.myfaces.view.facelets.tag.jsf.ConvertHandler;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTag;
 
 /**
  * Register a named Converter instance on the UIComponent associated with the closest parent UIComponent custom action.
@@ -37,7 +38,11 @@ import org.apache.myfaces.view.facelets.tag.jsf.ConvertHandler;
  * @author Jacob Hookom
  * @version $Id: ConvertDelegateHandler.java,v 1.4 2008/07/13 19:01:44 rlubke Exp $
  */
-public final class ConvertDelegateHandler extends ConvertHandler
+@JSFFaceletTag(
+        name = "f:converter",
+        bodyContent = "empty", 
+        tagClass="org.apache.myfaces.taglib.core.ConverterImplTag")
+public final class ConvertDelegateHandler extends ConverterHandler
 {
 
     private final TagAttribute converterId;
@@ -48,7 +53,7 @@ public final class ConvertDelegateHandler extends ConvertHandler
     public ConvertDelegateHandler(ConverterConfig config)
     {
         super(config);
-        this.converterId = this.getRequiredAttribute("converterId");
+        this.converterId = this.getAttribute("converterId");
     }
 
     /**
@@ -59,11 +64,21 @@ public final class ConvertDelegateHandler extends ConvertHandler
      */
     protected Converter createConverter(FaceletContext ctx) throws FacesException, ELException, FaceletException
     {
-        return ctx.getFacesContext().getApplication().createConverter(this.converterId.getValue(ctx));
+        return ctx.getFacesContext().getApplication().createConverter(this.getConverterId(ctx));
     }
 
-    protected MetaRuleset createMetaRuleset(Class<?> type)
+    protected MetaRuleset createMetaRuleset(Class type)
     {
         return super.createMetaRuleset(type).ignoreAll();
+    }
+
+    @Override
+    public String getConverterId(FaceletContext ctx)
+    {
+        if (converterId == null)
+        {
+            return null;
+        }
+        return converterId.getValue(ctx);
     }
 }

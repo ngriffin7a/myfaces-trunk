@@ -21,12 +21,15 @@ package org.apache.myfaces.view.facelets.tag.jsf.core;
 import javax.faces.component.UIParameter;
 import javax.faces.component.UISelectItem;
 import javax.faces.component.UISelectItems;
+import javax.faces.component.UIViewParameter;
 import javax.faces.convert.DateTimeConverter;
 import javax.faces.convert.NumberConverter;
+import javax.faces.validator.BeanValidator;
 import javax.faces.validator.DoubleRangeValidator;
 import javax.faces.validator.LengthValidator;
 import javax.faces.validator.LongRangeValidator;
 import javax.faces.validator.RegexValidator;
+import javax.faces.validator.RequiredValidator;
 
 import org.apache.myfaces.view.facelets.tag.AbstractTagLibrary;
 
@@ -50,6 +53,8 @@ public final class CoreLibrary extends AbstractTagLibrary
 
         this.addTagHandler("actionListener", ActionListenerHandler.class);
 
+        this.addTagHandler("ajax", AjaxHandler.class);
+        
         this.addTagHandler("attribute", AttributeHandler.class);
 
         this.addConverter("convertDateTime", DateTimeConverter.CONVERTER_ID, ConvertDateTimeHandler.class);
@@ -64,11 +69,13 @@ public final class CoreLibrary extends AbstractTagLibrary
 
         this.addTagHandler("loadBundle", LoadBundleHandler.class);
 
+        this.addTagHandler("metadata", ViewMetadataHandler.class);
+        
         this.addComponent("param", UIParameter.COMPONENT_TYPE, null);
 
         this.addTagHandler("phaseListener", PhaseListenerHandler.class);
 
-        this.addComponent("selectItem", UISelectItem.COMPONENT_TYPE, null);
+        this.addComponent("selectItem", UISelectItem.COMPONENT_TYPE, null, SelectItemHandler.class);
 
         this.addComponent("selectItems", UISelectItems.COMPONENT_TYPE, null);
 
@@ -76,6 +83,8 @@ public final class CoreLibrary extends AbstractTagLibrary
 
         this.addComponent("subview", "javax.faces.NamingContainer", null);
 
+        this.addValidator("validateBean", BeanValidator.VALIDATOR_ID);
+        
         this.addValidator("validateLength", LengthValidator.VALIDATOR_ID);
 
         this.addValidator("validateLongRange", LongRangeValidator.VALIDATOR_ID);
@@ -83,12 +92,16 @@ public final class CoreLibrary extends AbstractTagLibrary
         this.addValidator("validateDoubleRange", DoubleRangeValidator.VALIDATOR_ID);
 
         this.addValidator("validateRegex", RegexValidator.VALIDATOR_ID);
+        
+        this.addValidator("validateRequired", RequiredValidator.VALIDATOR_ID);
 
         this.addValidator("validator", null, ValidateDelegateHandler.class);
 
         this.addTagHandler("valueChangeListener", ValueChangeListenerHandler.class);
 
         this.addTagHandler("view", ViewHandler.class);
+        
+        this.addComponent("viewParam", UIViewParameter.COMPONENT_TYPE, null);
 
         this.addComponent("verbatim", "javax.faces.HtmlOutputText", "javax.faces.Text", VerbatimHandler.class);
     }

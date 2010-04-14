@@ -49,6 +49,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 import org.apache.myfaces.context.ReleaseableExternalContext;
+import org.apache.myfaces.context.ReleaseableFacesContextFactory;
 import org.apache.myfaces.el.unified.FacesELContext;
 import org.apache.myfaces.shared_impl.util.NullIterator;
 
@@ -65,9 +66,11 @@ public class FacesContextImpl extends FacesContext
     // ~ Instance fields ----------------------------------------------------------------------------
 
     private Map<String, List<FacesMessage>> _messages = null;
+    private List<FacesMessage> _orderedMessages = null;
     private Application _application;
     private PhaseId _currentPhaseId;
-    private ReleaseableExternalContext _externalContext;
+    private ExternalContext _externalContext;
+    private ReleaseableExternalContext _defaultExternalContext;
     private ResponseStream _responseStream = null;
     private ResponseWriter _responseWriter = null;
     private FacesMessage.Severity _maximumSeverity = null;
@@ -78,33 +81,34 @@ public class FacesContextImpl extends FacesContext
     private boolean _released = false;
     private ELContext _elContext;
     private Map<Object, Object> _attributes = null;
-    //private ResponseSwitch _responseWrapper = null;
     private boolean _validationFailed = false;
     private boolean _processingEvents = true;
     private ExceptionHandler _exceptionHandler = null;
     private PartialViewContext _partialViewContext = null;
+    private ReleaseableFacesContextFactory _facesContextFactory = null;
 
     // ~ Constructors -------------------------------------------------------------------------------
     public FacesContextImpl(final ServletContext servletContext, final ServletRequest servletRequest,
                             final ServletResponse servletResponse)
     {
         init(new ServletExternalContextImpl(servletContext, servletRequest, servletResponse));
-        /*
-        try
-        {
-            // we wrap the servlet response to get our switching behavior!
-            _responseWrapper = new ResponseSwitch(servletResponse);
-            init(new ServletExternalContextImpl(servletContext, servletRequest, _responseWrapper));
-        }
-        catch (IOException ex)
-        {
-            Log log = LogFactory.getLog(this.getClass());
-            log.fatal("Could not obtain the response writers! Detail:" + ex.toString());
-        }*/
+    }
+    
+    public FacesContextImpl(final ExternalContext externalContext,
+            final ReleaseableExternalContext defaultExternalContext , 
+            final ReleaseableFacesContextFactory facesContextFactory)
+    {
+        _facesContextFactory = facesContextFactory;
+        init(externalContext, defaultExternalContext);
     }
 
     private void init(final ReleaseableExternalContext externalContext)
     {
+        init((ExternalContext) externalContext, externalContext);
+    }
+
+    private void init(final ExternalContext externalContext, final ReleaseableExternalContext defaultExternalContext)
+    {       
         _externalContext = externalContext;
         FacesContext.setCurrentInstance(this);  //protected method, therefore must be called from here
         _application = ((ApplicationFactory)FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY))
@@ -146,13 +150,7 @@ public class FacesContextImpl extends FacesContext
             return Collections.unmodifiableList(Collections.<FacesMessage>emptyList());
         }
         
-        List<FacesMessage> lst = new ArrayList<FacesMessage>();
-        for(List<FacesMessage> curLst : _messages.values())
-        {
-            lst.addAll(curLst);       
-        }
-        
-        return Collections.unmodifiableList(lst);
+        return Collections.unmodifiableList(_orderedMessages);
     }
 
     @Override
@@ -177,13 +175,8 @@ public class FacesContextImpl extends FacesContext
         {
             return NullIterator.instance();
         }
-
-        List<FacesMessage> lst = new ArrayList<FacesMessage>();
-        for(List<FacesMessage> curLst : _messages.values())
-        {
-            lst.addAll(curLst);       
-        }
-        return lst.iterator();
+        
+        return _orderedMessages.iterator();
     }
 
     @Override
@@ -333,7 +326,12 @@ public class FacesContextImpl extends FacesContext
         // the clear method must be called on the Map returned from UIViewRoot.getViewMap().
         if (_viewRoot != null && !_viewRoot.equals(viewRoot))
         {
-            _viewRoot.getViewMap().clear();
+            //call getViewMap(false) to prevent unnecessary map creation
+            Map<String, Object> viewMap = _viewRoot.getViewMap(false);
+            if (viewMap != null)
+            {
+                viewMap.clear();
+            }
         }
         _viewRoot = viewRoot;
     }
@@ -359,6 +357,7 @@ public class FacesContextImpl extends FacesContext
         if (_messages == null)
         {
             _messages = new HashMap<String, List<FacesMessage>>();
+            _orderedMessages = new ArrayList<FacesMessage>();
         }
         
         List<FacesMessage> lst = _messages.get(clientId); 
@@ -369,6 +368,7 @@ public class FacesContextImpl extends FacesContext
         }
         
         lst.add(message);
+        _orderedMessages.add (message);
         
         FacesMessage.Severity serSeverity = message.getSeverity();
         if (serSeverity != null)
@@ -389,11 +389,17 @@ public class FacesContextImpl extends FacesContext
     {
         assertNotReleased();
 
-        if (_externalContext != null)
+        if (_facesContextFactory != null)
         {
-            _externalContext.release();
-            _externalContext = null;
+            _facesContextFactory.release();
+            _facesContextFactory = null;
         }
+        if (_defaultExternalContext != null)
+        {
+            _defaultExternalContext.release();
+            _defaultExternalContext = null;
+        }
+        _externalContext = null;
 
         /*
          * Spec JSF 2 section getAttributes when release is called the attributes map must!!! be cleared!
@@ -481,13 +487,14 @@ public class FacesContextImpl extends FacesContext
 
     // Portlet need to do this to change from ActionRequest/Response to
     // RenderRequest/Response
+    /* This code comes from jsf 1.1 and is not valid anymore
     public final void setExternalContext(ReleaseableExternalContext extContext)
     {
         assertNotReleased();
 
         _externalContext = extContext;
         FacesContext.setCurrentInstance(this); // TODO: figure out if I really need to do this
-    }
+    }*/
 
     @Override
     public final ELContext getELContext()
@@ -548,7 +555,7 @@ public class FacesContextImpl extends FacesContext
     }
 
     @Override
-    public boolean getValidationFailed()
+    public boolean isValidationFailed()
     {
         assertNotReleased();
         

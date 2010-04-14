@@ -23,10 +23,11 @@ import java.util.Map;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
-import org.apache.myfaces.application.DefaultViewHandlerSupport.FacesServletMapping;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
 import org.apache.myfaces.resource.ClassLoaderResourceLoader;
 import org.apache.myfaces.resource.ExternalContextResourceLoader;
 import org.apache.myfaces.resource.ResourceLoader;
+import org.apache.myfaces.shared_impl.application.FacesServletMapping;
 
 /**
  * A ResourceHandlerSupport implementation for use with standard Java Servlet engines,
@@ -37,7 +38,14 @@ import org.apache.myfaces.resource.ResourceLoader;
  */
 public class DefaultResourceHandlerSupport implements ResourceHandlerSupport
 {
-    
+
+    /**
+     * Set the max time in miliseconds set on the "Expires" header for a resource.
+     * (default to one week in miliseconds or 604800000) 
+     */
+    @JSFWebConfigParam(since="2.0", defaultValue="604800000")
+    public static final String RESOURCE_MAX_TIME_EXPIRES = "org.apache.myfaces.RESOURCE_MAX_TIME_EXPIRES";
+
     /**
      * Identifies the FacesServlet mapping in the current request map.
      */
@@ -45,7 +53,16 @@ public class DefaultResourceHandlerSupport implements ResourceHandlerSupport
         DefaultResourceHandlerSupport.class.getName() + ".CACHED_SERVLET_MAPPING";
     
     private ResourceLoader[] _resourceLoaders;
+    
+    private Long _startupTime;
+    
+    private Long _maxTimeExpires;
         
+    public DefaultResourceHandlerSupport()
+    {
+        _startupTime = System.currentTimeMillis();
+    }
+
     public String calculateResourceBasePath(FacesContext facesContext)
     {        
         FacesServletMapping mapping = getFacesServletMapping(facesContext);
@@ -147,21 +164,19 @@ public class DefaultResourceHandlerSupport implements ResourceHandlerSupport
      */
     protected FacesServletMapping getFacesServletMapping(FacesContext context)
     {
-        Map<String, Object> requestMap = context.getExternalContext().getRequestMap();
+        Map<Object, Object> attributes = context.getAttributes();
 
         // Has the mapping already been determined during this request?
-        if (!requestMap.containsKey(CACHED_SERVLET_MAPPING))
+        FacesServletMapping mapping = (FacesServletMapping) attributes.get(CACHED_SERVLET_MAPPING);
+        if (mapping == null)
         {
             ExternalContext externalContext = context.getExternalContext();
-            FacesServletMapping mapping =
-                calculateFacesServletMapping(
-                    externalContext.getRequestServletPath(),
+            mapping = calculateFacesServletMapping(externalContext.getRequestServletPath(),
                     externalContext.getRequestPathInfo());
 
-            requestMap.put(CACHED_SERVLET_MAPPING, mapping);
+            attributes.put(CACHED_SERVLET_MAPPING, mapping);
         }
-
-        return (FacesServletMapping) requestMap.get(CACHED_SERVLET_MAPPING);
+        return mapping;
     }
 
     /**
@@ -207,5 +222,34 @@ public class DefaultResourceHandlerSupport implements ResourceHandlerSupport
                 return FacesServletMapping.createPrefixMapping(servletPath);
             }
         }
+    }
+
+    public long getStartupTime()
+    {
+        return _startupTime;
+    }
+    
+    public long getMaxTimeExpires()
+    {
+        if (_maxTimeExpires == null)
+        {
+            String time = FacesContext.getCurrentInstance().getExternalContext().getInitParameter(RESOURCE_MAX_TIME_EXPIRES);
+            if (time != null && time.length() > 0)
+            {
+                try
+                {
+                    _maxTimeExpires = Long.parseLong(time);
+                }
+                catch (NumberFormatException e)
+                {
+                    _maxTimeExpires = 604800000L;
+                }
+            }
+            else
+            {
+                _maxTimeExpires = 604800000L;
+            }
+        }
+        return _maxTimeExpires;
     }
 }

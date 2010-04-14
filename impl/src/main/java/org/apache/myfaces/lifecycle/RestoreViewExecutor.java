@@ -18,17 +18,24 @@
  */
 package org.apache.myfaces.lifecycle;
 
+import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.faces.FacesException;
 import javax.faces.application.Application;
+import javax.faces.application.ProjectStage;
 import javax.faces.application.ViewExpiredException;
 import javax.faces.application.ViewHandler;
+import javax.faces.component.UIViewParameter;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PostAddToViewEvent;
+import javax.faces.view.ViewDeclarationLanguage;
+import javax.faces.view.ViewMetadata;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.myfaces.renderkit.ErrorPageWriter;
 
 /**
  * Implements the Restore View Phase (JSF Spec 2.2.1)
@@ -41,7 +48,9 @@ import org.apache.commons.logging.LogFactory;
 class RestoreViewExecutor implements PhaseExecutor
 {
 
-    private static final Log log = LogFactory.getLog(RestoreViewExecutor.class);
+    //private static final Log log = LogFactory.getLog(RestoreViewExecutor.class);
+    private static final Logger log = Logger.getLogger(RestoreViewExecutor.class.getName());
+    
     private RestoreViewSupport _restoreViewSupport;
 
     public boolean execute(FacesContext facesContext)
@@ -65,67 +74,133 @@ class RestoreViewExecutor implements PhaseExecutor
         // Examine the FacesContext instance for the current request. If it already contains a UIViewRoot
         if (viewRoot != null)
         {
-            if (log.isTraceEnabled())
-                log.trace("View already exists in the FacesContext");
+            if (log.isLoggable(Level.FINEST))
+                log.finest("View already exists in the FacesContext");
             
             // Set the locale on this UIViewRoot to the value returned by the getRequestLocale() method on the
             // ExternalContext for this request
             viewRoot.setLocale(facesContext.getExternalContext().getRequestLocale());
+            
             restoreViewSupport.processComponentBinding(facesContext, viewRoot);
             return false;
         }
-
+        
         String viewId = restoreViewSupport.calculateViewId(facesContext);
 
-        // Determine if this request is a postback or initial request
-        if (restoreViewSupport.isPostback(facesContext))
+        // Determine if the current request is an attempt by the 
+        // servlet container to display an error page.
+        // If the request is an error page request, the servlet container
+        // is required to set the request parameter "javax.servlet.error.message".
+        final boolean errorPageRequest = facesContext.getExternalContext().getRequestMap()
+                                                 .get("javax.servlet.error.message") != null;
+        
+        // Determine if this request is a postback or an initial request.
+        // But if it is an error page request, do not treat it as a postback (since 2.0)
+        if (!errorPageRequest && restoreViewSupport.isPostback(facesContext))
         { // If the request is a postback
-            if (log.isTraceEnabled())
-                log.trace("Request is a postback");
+            if (log.isLoggable(Level.FINEST))
+                log.finest("Request is a postback");
 
-            // call ViewHandler.restoreView(), passing the FacesContext instance for the current request and the 
-            // view identifier, and returning a UIViewRoot for the restored view.
-            viewRoot = viewHandler.restoreView(facesContext, viewId);
-            if (viewRoot == null)
+            try
             {
-                // If the return from ViewHandler.restoreView() is null, throw a ViewExpiredException with an 
-                // appropriate error message.
-                throw new ViewExpiredException("No saved view state could be found for the view identifier: " + viewId,
-                    viewId);
+                facesContext.setProcessingEvents(false);
+                // call ViewHandler.restoreView(), passing the FacesContext instance for the current request and the 
+                // view identifier, and returning a UIViewRoot for the restored view.
+                viewRoot = viewHandler.restoreView(facesContext, viewId);
+                if (viewRoot == null)
+                {
+                    // If the return from ViewHandler.restoreView() is null, throw a ViewExpiredException with an 
+                    // appropriate error message.
+                    throw new ViewExpiredException("No saved view state could be found for the view identifier: " + viewId,
+                        viewId);
+                }
+                
+                // Restore binding
+                // This code was already called on UIViewRoot.processRestoreState, or if a StateManagementStrategy
+                // is used, it is called from there.
+                //restoreViewSupport.processComponentBinding(facesContext, viewRoot);
+                
+                // Store the restored UIViewRoot in the FacesContext.
+                facesContext.setViewRoot(viewRoot);
             }
-            
-            // Restore binding
-            restoreViewSupport.processComponentBinding(facesContext, viewRoot);
-            
-            // Store the restored UIViewRoot in the FacesContext.
-            facesContext.setViewRoot(viewRoot);
+            finally
+            {
+                facesContext.setProcessingEvents(true);
+            }
         }
         else
         { // If the request is a non-postback
-            if (log.isTraceEnabled())
-                log.trace("Request is not a postback. New UIViewRoot will be created");
-
-            // call ViewHandler.createView(), passing the FacesContext instance for the current request and 
-            // the view identifier
-            viewRoot = viewHandler.createView(facesContext, viewId);
+            if (log.isLoggable(Level.FINEST))
+                log.finest("Request is not a postback. New UIViewRoot will be created");
+            
+            //viewHandler.deriveViewId(facesContext, viewId)
+            ViewDeclarationLanguage vdl = viewHandler.getViewDeclarationLanguage(facesContext, 
+                    restoreViewSupport.deriveViewId(facesContext, viewId));
+            
+            if (vdl != null)
+            {
+                ViewMetadata metadata = vdl.getViewMetadata(facesContext, viewId);
+                
+                Collection<UIViewParameter> viewParameters = null;
+                
+                if (metadata != null)
+                {
+                    viewRoot = metadata.createMetadataView(facesContext);
+                    
+                    if (viewRoot != null)
+                    {
+                        viewParameters = metadata.getViewParameters(viewRoot);
+                    }
+                }
+    
+                // If viewParameters is not an empty collection DO NOT call renderResponse
+                if ( !(viewParameters != null && !viewParameters.isEmpty()) )
+                {
+                    // Call renderResponse() on the FacesContext.
+                    facesContext.renderResponse();
+                }
+            }
+            else
+            {
+                // Call renderResponse
+                facesContext.renderResponse();
+            }
+            
+            // viewRoot can be null here, if ...
+            //   - we don't have a ViewDeclarationLanguage (e.g. when using facelets-1.x)
+            //   - there is no view metadata or metadata.createMetadataView() returned null
+            if (viewRoot == null)
+            {
+                // call ViewHandler.createView(), passing the FacesContext instance for the current request and 
+                // the view identifier
+                viewRoot = viewHandler.createView(facesContext, viewId);
+            }
             
             // Subscribe the newly created UIViewRoot instance to the AfterAddToParent event, passing the 
             // UIViewRoot instance itself as the listener.
-            viewRoot.subscribeToEvent(PostAddToViewEvent.class, viewRoot);
+            // -= Leonardo Uribe =- This line it is not necessary because it was
+            // removed from jsf 2.0 section 2.2.1 when pass from EDR2 to Public Review 
+            // viewRoot.subscribeToEvent(PostAddToViewEvent.class, viewRoot);
             
             // Store the new UIViewRoot instance in the FacesContext.
             facesContext.setViewRoot(viewRoot);
-            
-            // Call renderResponse() on the FacesContext.
-            facesContext.renderResponse();
             
             // Publish an AfterAddToParent event with the created UIViewRoot as the event source.
             application.publishEvent(facesContext, PostAddToViewEvent.class, viewRoot);
         }
 
+        // add the ErrorPageBean to the view map to fully support 
+        // facelet error pages, if we are in ProjectStage Development
+        // and currently generating an error page
+        if (errorPageRequest && facesContext.isProjectStage(ProjectStage.Development))
+        {
+            facesContext.getViewRoot().getViewMap()
+                    .put(ErrorPageWriter.ERROR_PAGE_BEAN_KEY, new ErrorPageWriter.ErrorPageBean());
+        }
+        
         return false;
     }
-
+    
     protected RestoreViewSupport getRestoreViewSupport()
     {
         if (_restoreViewSupport == null)

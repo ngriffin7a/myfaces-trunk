@@ -32,12 +32,20 @@ import javax.faces.view.facelets.TagConfig;
 import javax.faces.view.facelets.TagException;
 import javax.faces.view.facelets.TagHandler;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTag;
+import org.apache.myfaces.view.facelets.AbstractFaceletContext;
 import org.apache.myfaces.view.facelets.tag.TagHandlerUtils;
+import org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport;
 
 /**
+ * Simple conditional tag that establishes a context for
+ * mutually exclusive conditional operations, marked by
+ * &lt;when&gt; and &lt;otherwise&gt;
+ * 
  * @author Jacob Hookom
  * @version $Id: ChooseHandler.java,v 1.3 2008/07/13 19:01:43 rlubke Exp $
  */
+@JSFFaceletTag(name="c:choose")
 public final class ChooseHandler extends TagHandler
 {
 
@@ -86,6 +94,12 @@ public final class ChooseHandler extends TagHandler
         if (this.otherwise != null)
         {
             this.otherwise.apply(ctx, parent);
+        }
+        AbstractFaceletContext actx = (AbstractFaceletContext) ctx;
+        if (actx.isMarkInitialState() && actx.isRefreshTransientBuildOnPSS())
+        {
+            //Mark the parent component to be saved and restored fully.
+            ComponentSupport.markComponentToRestoreFully(ctx.getFacesContext(), parent);
         }
     }
 }

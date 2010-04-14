@@ -37,7 +37,9 @@ import java.util.logging.Logger;
 import javax.el.ELException;
 import javax.el.ExpressionFactory;
 import javax.faces.FacesException;
+import javax.faces.application.Resource;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UniqueIdVendor;
 import javax.faces.context.FacesContext;
 import javax.faces.view.facelets.FaceletContext;
 import javax.faces.view.facelets.FaceletException;
@@ -45,6 +47,7 @@ import javax.faces.view.facelets.FaceletHandler;
 
 import org.apache.myfaces.view.facelets.Facelet;
 import org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport;
+
 
 /**
  * Default Facelet implementation.
@@ -55,7 +58,8 @@ import org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport;
 final class DefaultFacelet extends Facelet
 {
 
-    private static final Logger log = Logger.getLogger("facelets.facelet");
+    //private static final Logger log = Logger.getLogger("facelets.facelet");
+    private static final Logger log = Logger.getLogger(DefaultFacelet.class.getName());
 
     private final static String APPLIED_KEY = "org.apache.myfaces.view.facelets.APPLIED";
 
@@ -95,11 +99,28 @@ final class DefaultFacelet extends Facelet
             FaceletException, ELException
     {
         DefaultFaceletContext ctx = new DefaultFaceletContext(facesContext, this);
+        
+        // push the parent as a UniqueIdVendor to the stack here,
+        // if there is no UniqueIdVendor on the stack yet
+        boolean pushedUniqueIdVendor = false;
+        if (parent instanceof UniqueIdVendor && ctx.getUniqueIdVendorFromStack() == null)
+        {
+            ctx.pushUniqueIdVendorToStack((UniqueIdVendor) parent);
+            pushedUniqueIdVendor = true;
+        }
+        
         this.refresh(parent);
         ComponentSupport.markForDeletion(parent);
         _root.apply(ctx, parent);
         ComponentSupport.finalizeForDeletion(parent);
         this.markApplied(parent);
+        
+        // remove the UniqueIdVendor from the stack again
+        if (pushedUniqueIdVendor)
+        {
+            ctx.popUniqueIdVendorToStack();
+        }
+
     }
 
     private final void refresh(UIComponent c)
@@ -310,6 +331,17 @@ final class DefaultFacelet extends Facelet
     {
         DefaultFacelet f = (DefaultFacelet) _factory.getFacelet(url);
         f.include(ctx, parent);
+    }
+    
+    public void applyCompositeComponent(DefaultFaceletContext ctx, UIComponent parent, Resource resource) throws IOException, FacesException,
+            FaceletException, ELException
+    {
+        // Here we are creating a facelet using the url provided by the resource.
+        // It works, but the Resource API provides getInputStream() for that. But the default
+        // implementation wraps everything that could contain ValueExpression and decode so
+        // we can't use it here.
+        DefaultFacelet f = (DefaultFacelet) _factory.getFacelet(resource.getURL());
+        f.apply(ctx.getFacesContext(), parent);
     }
 
     private static class ApplyToken implements Externalizable

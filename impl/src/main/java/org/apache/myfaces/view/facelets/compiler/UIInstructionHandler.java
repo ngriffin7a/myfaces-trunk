@@ -20,14 +20,20 @@ package org.apache.myfaces.view.facelets.compiler;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.el.ELException;
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UniqueIdVendor;
 import javax.faces.view.facelets.FaceletContext;
 import javax.faces.view.facelets.FaceletException;
 
+import org.apache.myfaces.view.facelets.AbstractFaceletContext;
 import org.apache.myfaces.view.facelets.el.ELText;
+import org.apache.myfaces.view.facelets.tag.composite.InsertChildrenHandler;
+import org.apache.myfaces.view.facelets.tag.composite.InsertFacetHandler;
 import org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport;
 import org.apache.myfaces.view.facelets.util.FastWriter;
 
@@ -84,6 +90,46 @@ final class UIInstructionHandler extends AbstractUIHandler
 
             // grab our component
             UIComponent c = ComponentSupport.findChildByTagId(parent, id);
+            boolean componentFoundInserted = false;
+            if (c == null && ((AbstractFaceletContext)ctx).isRefreshTransientBuildOnPSS() && 
+                ((AbstractFaceletContext)ctx).isRefreshingTransientBuild() && UIComponent.isCompositeComponent(parent))
+            {
+                String facetName = this.getFacetName(ctx, parent);
+                if (facetName == null)
+                {
+                    String targetClientId = (String) parent.getAttributes().get(InsertChildrenHandler.INSERT_CHILDREN_TARGET_ID);
+                    if (targetClientId != null)
+                    {
+                        UIComponent targetComponent = parent.findComponent(targetClientId.substring(parent.getClientId().length()+1));
+                        if (targetComponent != null)
+                        {
+                            c = ComponentSupport.findChildByTagId(targetComponent, id);
+                        }
+                    }
+                    if (c != null)
+                    {
+                        c.getAttributes().put(InsertChildrenHandler.USES_INSERT_CHILDREN, Boolean.TRUE);
+                        componentFoundInserted = true;
+                    }
+                }
+                else
+                {
+                    String targetClientId = (String) parent.getAttributes().get(InsertFacetHandler.INSERT_FACET_TARGET_ID+facetName);
+                    if (targetClientId != null)
+                    {
+                        UIComponent targetComponent = parent.findComponent(targetClientId.substring(parent.getClientId().length()+1));
+                        if (targetComponent != null)
+                        {
+                            c = ComponentSupport.findChildByTagId(targetComponent, id);
+                            if (c != null)
+                            {
+                                c.getAttributes().put(InsertFacetHandler.USES_INSERT_FACET, Boolean.TRUE);
+                                componentFoundInserted = true;
+                            }
+                        }
+                    }
+                }
+            }
             boolean componentFound = false;
             if (c != null)
             {
@@ -114,16 +160,74 @@ final class UIInstructionHandler extends AbstractUIHandler
 
                 c = new UIInstructions(txt, applied);
                 // mark it owned by a facelet instance
-                c.setId(ComponentSupport.getViewRoot(ctx, parent).createUniqueId());
+                //c.setId(ComponentSupport.getViewRoot(ctx, parent).createUniqueId());
+                AbstractFaceletContext actx = (AbstractFaceletContext) ctx;
+                UniqueIdVendor uniqueIdVendor = actx.getUniqueIdVendorFromStack();
+                if (uniqueIdVendor == null)
+                {
+                    uniqueIdVendor = ComponentSupport.getViewRoot(ctx, parent);
+                }
+                if (uniqueIdVendor != null)
+                {
+                    // UIViewRoot implements UniqueIdVendor, so there is no need to cast to UIViewRoot
+                    // and call createUniqueId(). Also, note that UIViewRoot.createUniqueId() javadoc
+                    // says we could send as seed the facelet generated id.
+                    String uid = uniqueIdVendor.createUniqueId(ctx.getFacesContext(), id);
+                    c.setId(uid);
+                }                
                 c.getAttributes().put(ComponentSupport.MARK_CREATED, id);
             }
             // finish cleaning up orphaned children
             if (componentFound)
             {
                 ComponentSupport.finalizeForDeletion(c);
-                parent.getChildren().remove(c);
+                if (!componentFoundInserted)
+                {
+                    parent.getChildren().remove(c);
+                }
             }
-            this.addComponent(ctx, parent, c);
+            if ( ((AbstractFaceletContext)ctx).isRefreshingTransientBuild() 
+                    && UIComponent.isCompositeComponent(parent))
+            {
+                // Save the child structure behind this component, so it can be
+                // used later by InsertChildrenHandler and InsertFacetHandler
+                // to update components correctly.
+                String facetName = this.getFacetName(ctx, parent);
+                if (facetName != null)
+                {
+                    if (parent.getAttributes().containsKey(InsertFacetHandler.INSERT_FACET_TARGET_ID+facetName))
+                    {
+                        List<String> ordering = (List<String>) parent.getAttributes().get(
+                                InsertFacetHandler.INSERT_FACET_ORDERING+facetName);
+                        if (ordering == null)
+                        {
+                            ordering = new ArrayList<String>();
+                            parent.getAttributes().put(InsertFacetHandler.INSERT_FACET_ORDERING+facetName, ordering);
+                        }
+                        ordering.remove(id);
+                        ordering.add(id);
+                    }
+                }
+                else
+                {
+                    if (parent.getAttributes().containsKey(InsertChildrenHandler.INSERT_CHILDREN_TARGET_ID))
+                    {
+                        List<String> ordering = (List<String>) parent.getAttributes().get(
+                                InsertChildrenHandler.INSERT_CHILDREN_ORDERING);
+                        if (ordering == null)
+                        {
+                            ordering = new ArrayList<String>();
+                            parent.getAttributes().put(InsertChildrenHandler.INSERT_CHILDREN_ORDERING, ordering);
+                        }
+                        ordering.remove(id);
+                        ordering.add(id);
+                    }
+                }
+            }
+            if (!componentFoundInserted)
+            {
+                this.addComponent(ctx, parent, c);
+            }
         }
     }
 

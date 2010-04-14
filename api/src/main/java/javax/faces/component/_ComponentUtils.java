@@ -18,8 +18,6 @@
  */
 package javax.faces.component;
 
-import java.util.Iterator;
-
 import javax.el.ValueExpression;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -28,6 +26,8 @@ import javax.faces.el.MethodBinding;
 import javax.faces.el.ValueBinding;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * A collection of static helper methods for locating UIComponents.
@@ -69,6 +69,21 @@ class _ComponentUtils
         return null;
     }
 
+    static UniqueIdVendor findParentUniqueIdVendor(UIComponent component)
+    {
+        UIComponent parent = component.getParent();
+
+        while (parent != null)
+        {
+            if (parent instanceof UniqueIdVendor)
+            {
+                return (UniqueIdVendor) parent;
+            }
+            parent = parent.getParent();
+        }
+        return null;
+    }
+    
     static UIComponent getRootComponent(UIComponent component)
     {
         UIComponent parent;
@@ -93,9 +108,9 @@ class _ComponentUtils
      * 
      * @return findBase, a descendant of findBase, or null.
      */
-    static UIComponent findComponent(UIComponent findBase, String id)
+    static UIComponent findComponent(UIComponent findBase, String id, final char separatorChar)
     {
-        if (idsAreEqual(id, findBase))
+        if (idsAreEqual(id, findBase, separatorChar))
         {
             return findBase;
         }
@@ -105,11 +120,11 @@ class _ComponentUtils
             UIComponent childOrFacet = it.next();
             if (!(childOrFacet instanceof NamingContainer))
             {
-                UIComponent find = findComponent(childOrFacet, id);
+                UIComponent find = findComponent(childOrFacet, id, separatorChar);
                 if (find != null)
                     return find;
             }
-            else if (idsAreEqual(id, childOrFacet))
+            else if (idsAreEqual(id, childOrFacet, separatorChar))
             {
                 return childOrFacet;
             }
@@ -122,7 +137,7 @@ class _ComponentUtils
      * Return true if the specified component matches the provided id. This needs some quirks to handle components whose
      * id value gets dynamically "tweaked", eg a UIData component whose id gets the current row index appended to it.
      */
-    private static boolean idsAreEqual(String id, UIComponent cmp)
+    private static boolean idsAreEqual(String id, UIComponent cmp, final char separatorChar)
     {
         if (id.equals(cmp.getId()))
             return true;
@@ -135,7 +150,7 @@ class _ComponentUtils
             {
                 return dynamicIdIsEqual(id, cmp.getId());
             }
-            return id.equals(cmp.getId() + NamingContainer.SEPARATOR_CHAR + uiData.getRowIndex());
+            return id.equals(cmp.getId() + separatorChar + uiData.getRowIndex());
         }
 
         return false;
@@ -175,6 +190,15 @@ class _ComponentUtils
                         facesMessage.setSeverity(FacesMessage.SEVERITY_ERROR);
                         context.addMessage(input.getClientId(context), facesMessage);
                     }
+                    Collection<FacesMessage> facesMessages = e.getFacesMessages();
+                    if (facesMessages != null)
+                    {
+                        for (FacesMessage message : facesMessages)
+                        {
+                            message.setSeverity(FacesMessage.SEVERITY_ERROR);
+                            context.addMessage(input.getClientId(context), message);
+                        }
+                    }
                 }
             }
         }
@@ -207,6 +231,15 @@ class _ComponentUtils
                         {
                             facesMessage.setSeverity(FacesMessage.SEVERITY_ERROR);
                             context.addMessage(input.getClientId(context), facesMessage);
+                        }
+                        Collection<FacesMessage> facesMessages = ((ValidatorException)cause).getFacesMessages();
+                        if (facesMessages != null)
+                        {
+                            for (FacesMessage message : facesMessages)
+                            {
+                                message.setSeverity(FacesMessage.SEVERITY_ERROR);
+                                context.addMessage(input.getClientId(context), message);
+                            }
                         }
                     }
                 }

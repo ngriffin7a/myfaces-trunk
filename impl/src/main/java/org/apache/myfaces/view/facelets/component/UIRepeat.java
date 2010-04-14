@@ -35,6 +35,7 @@ import javax.faces.component.NamingContainer;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIComponentBase;
 import javax.faces.component.UIData;
+import javax.faces.component.UINamingContainer;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.FacesEvent;
@@ -47,6 +48,13 @@ import javax.faces.model.ResultSetDataModel;
 import javax.faces.model.ScalarDataModel;
 import javax.faces.render.Renderer;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
+
+/**
+ * TODO: PartialStateSaving and pluginize this component! 
+ */
+@JSFComponent(name="ui:repeat", defaultRendererType="facelets.ui.Repeat")
 public class UIRepeat extends UIComponentBase implements NamingContainer
 {
     public static final String COMPONENT_TYPE = "facelets.ui.Repeat";
@@ -64,16 +72,22 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
 
     // variables
     private String _var;
-
-    //FIXME: varStatus isn't used, should support be added? private String _varStatus;
-
+    
+    private int _end = -1;
+    
+    private int _count;
+    
     private int _index = -1;
 
     // scoping
     private int _offset = -1;
 
     private int _size = -1;
-
+    
+    private int _step = -1;
+    
+    private String _varStatus;
+    
     private transient StringBuffer _buffer;
     private transient DataModel<?> _model;
     private transient Object _origValue;
@@ -87,7 +101,8 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
     {
         return COMPONENT_FAMILY;
     }
-
+    
+    @JSFProperty
     public int getOffset()
     {
         if (_offset != -1)
@@ -108,7 +123,14 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
     {
         _offset = offset;
     }
-
+    
+    protected RepeatStatus getStatus ()
+    {
+        return new RepeatStatus (_count == 0, _index + getStep() >= getDataModel().getRowCount(),
+            _count, _index, getOffset(), _end, getStep());
+    }
+    
+    @JSFProperty
     public int getSize()
     {
         if (_size != -1)
@@ -129,7 +151,30 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
     {
         _size = size;
     }
+    
+    @JSFProperty
+    public int getStep()
+    {
+        if (_step != -1)
+        {
+            return _step;
+        }
+        
+        ValueExpression ve = getValueExpression("step");
+        if (ve != null)
+        {
+            return ((Integer)ve.getValue(getFacesContext().getELContext())).intValue();
+        }
+        
+        return -1;
+    }
 
+    public void setStep(int step)
+    {
+        _step = step;
+    }
+    
+    @JSFProperty
     public String getVar()
     {
         return _var;
@@ -139,7 +184,18 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
     {
         _var = var;
     }
-
+    
+    @JSFProperty
+    public String getVarStatus ()
+    {
+        return _varStatus;
+    }
+    
+    public void setVarStatus (String varStatus)
+    {
+        _varStatus = varStatus;
+    }
+    
     private synchronized void setDataModel(DataModel<?> model)
     {
         _model = model;
@@ -178,7 +234,8 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
         }
         return _model;
     }
-
+    
+    @JSFProperty
     public Object getValue()
     {
         if (_value == null)
@@ -204,7 +261,7 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
         String id = super.getClientId(faces);
         if (_index >= 0)
         {
-            id = _getBuffer().append(id).append(NamingContainer.SEPARATOR_CHAR).append(_index).toString();
+            id = _getBuffer().append(id).append(UINamingContainer.getSeparatorChar(faces)).append(_index).toString();
         }
         return id;
     }
@@ -393,13 +450,62 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
         // restore child state
         _restoreChildState();
     }
-
+    
+    private void _validateAttributes () throws FacesException {
+        int begin = getOffset();
+        int end = getDataModel().getRowCount();
+        int size = getSize();
+        int step = getStep();
+        
+        if (size == -1) {
+            size = end;
+        }
+        
+        if (end >= 0) {
+            if (size < 0) {
+                throw new FacesException ("iteration size cannot be less " +
+                    "than zero");
+            }
+            
+            else if (size > end) {
+                throw new FacesException ("iteration size cannot be greater " +
+                    "than collection size");
+            }
+        }
+        
+        if ((size > -1) && (begin > size)) {
+            throw new FacesException ("iteration offset cannot be greater " +
+                "than collection size");
+        }
+        
+        if (step == -1) {
+            step = 1;
+        }
+        
+        if (step < 0) {
+            throw new FacesException ("iteration step size cannot be less " +
+                "than zero");
+        }
+        
+        else if (step == 0) {
+            throw new FacesException ("iteration step size cannot be equal " +
+                "to zero");
+        }
+        
+        _end = size;
+        _step = step;
+    }
+    
     public void process(FacesContext faces, PhaseId phase)
     {
         // stop if not rendered
         if (!isRendered())
             return;
-
+        
+        // validate attributes
+        
+        _validateAttributes();
+        
         // clear datamodel
         _resetDataModel();
 
@@ -414,8 +520,9 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
             {
                 int i = getOffset();
                 int end = getSize();
+                int step = getStep();
                 end = (end >= 0) ? i + end : Integer.MAX_VALUE - 1;
-
+                
                 // grab renderer
                 String rendererType = getRendererType();
                 Renderer renderer = null;
@@ -423,7 +530,9 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
                 {
                     renderer = getRenderer(faces);
                 }
-
+                
+                _count = 0;
+                
                 _setIndex(i);
                 while (i <= end && _isIndexAvailable())
                 {
@@ -455,7 +564,9 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
                         }
                     }
                     
-                    i++;
+                    ++_count;
+                    
+                    i += step;
                     
                     _setIndex(i);
                 }
@@ -610,7 +721,7 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
 
         public void populate(EditableValueHolder evh)
         {
-            _value = evh.getValue();
+            _value = evh.getLocalValue();
             _valid = evh.isValid();
             _submittedValue = evh.getSubmittedValue();
             _localValueSet = evh.isLocalValueSet();

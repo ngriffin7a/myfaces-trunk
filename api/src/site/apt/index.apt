@@ -1,9 +1,12 @@
  ------
- MyFaces Core 1.2: API
+ MyFaces Core 2.0: API
  ------
 
-MyFaces Core 1.2: API Project
+MyFaces Core 2.0: API Project
 
   The API submodule implements all of the classes that are defined in the specification.
   If you are looking for API documentation about the classes that your JSF application
   needs to use, then see the javadoc for this module.
+  
+  Check the download page or you can check the nightly builds {{{http://people.apache.org/repo/m2-snapshot-repository/org/apache/myfaces/core}here}}.
+  

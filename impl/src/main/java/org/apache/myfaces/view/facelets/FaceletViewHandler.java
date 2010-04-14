@@ -38,6 +38,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.RenderKit;
+import javax.faces.view.facelets.ResourceResolver;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -48,23 +49,24 @@ import org.apache.myfaces.view.facelets.compiler.SAXCompiler;
 import org.apache.myfaces.view.facelets.compiler.TagLibraryConfig;
 import org.apache.myfaces.view.facelets.impl.DefaultFaceletFactory;
 import org.apache.myfaces.view.facelets.impl.DefaultResourceResolver;
-import org.apache.myfaces.view.facelets.impl.ResourceResolver;
 import org.apache.myfaces.view.facelets.tag.TagDecorator;
 import org.apache.myfaces.view.facelets.tag.TagLibrary;
 import org.apache.myfaces.view.facelets.tag.ui.UIDebug;
-import org.apache.myfaces.view.facelets.util.DevTools;
 import org.apache.myfaces.view.facelets.util.ReflectionUtil;
 
 /**
  * ViewHandler implementation for Facelets
  * 
+ * @deprecated code refactored to FaceletViewDeclarationLanguage
  * @author Jacob Hookom
  * @version $Id: FaceletViewHandler.java,v 1.49.2.6 2006/03/20 07:22:00 jhook Exp $
  */
+@Deprecated
 public class FaceletViewHandler extends ViewHandler
 {
 
-    protected final static Logger log = Logger.getLogger("facelets.viewhandler");
+    //protected final static Logger log = Logger.getLogger("facelets.viewhandler");
+    protected final static Logger log = Logger.getLogger(FaceletViewHandler.class.getName());
 
     public final static long DEFAULT_REFRESH_PERIOD = 2;
 
@@ -610,10 +612,14 @@ public class FaceletViewHandler extends ViewHandler
 
             // setup writer and assign it to the context
             ResponseWriter origWriter = this.createResponseWriter(context);
+
+            ExternalContext extContext = context.getExternalContext();
+            Writer outputWriter = extContext.getResponseOutputWriter();
+
             // QUESTION: should we use bufferSize? Or, since the
             // StateWriter usually only needs a small bit at the end,
             // should we always use a much smaller size?
-            stateWriter = new StateWriter(origWriter, this.bufferSize != -1 ? this.bufferSize : 1024);
+            stateWriter = new StateWriter(outputWriter, this.bufferSize != -1 ? this.bufferSize : 1024);
 
             ResponseWriter writer = origWriter.cloneWithWriter(stateWriter);
             context.setResponseWriter(writer);
@@ -622,7 +628,7 @@ public class FaceletViewHandler extends ViewHandler
             StateManager stateMgr = context.getApplication().getStateManager();
             if (!stateMgr.isSavingStateInClient(context))
             {
-                context.getExternalContext().getSession(true);
+                extContext.getSession(true);
             }
 
             long time = System.currentTimeMillis();
@@ -702,41 +708,23 @@ public class FaceletViewHandler extends ViewHandler
         }
     }
 
-    protected void handleRenderException(FacesContext context, Exception e) throws IOException, ELException,
-            FacesException
+    protected void handleRenderException(FacesContext context, Exception e) 
+            throws IOException, ELException, FacesException
     {
-        Object resp = context.getExternalContext().getResponse();
-
-        // always log
-        if (log.isLoggable(Level.SEVERE))
+        UIViewRoot root = context.getViewRoot();
+        StringBuffer sb = new StringBuffer(64);
+        sb.append("Error Rendering View");
+        if (root != null)
         {
-            UIViewRoot root = context.getViewRoot();
-            StringBuffer sb = new StringBuffer(64);
-            sb.append("Error Rendering View");
-            if (root != null)
-            {
-                sb.append('[');
-                sb.append(root.getViewId());
-                sb.append(']');
-            }
-            log.log(Level.SEVERE, sb.toString(), e);
+            sb.append('[');
+            sb.append(root.getViewId());
+            sb.append(']');
         }
-
-        // handle dev response
-        if (this.developmentMode && !context.getResponseComplete() && resp instanceof HttpServletResponse)
-        {
-            HttpServletResponse httpResp = (HttpServletResponse) resp;
-            if (!httpResp.isCommitted())
-            {
-                httpResp.reset();
-                httpResp.setContentType("text/html; charset=UTF-8");
-                Writer w = httpResp.getWriter();
-                DevTools.debugHtml(w, context, e);
-                w.flush();
-                context.responseComplete();
-            }
-        }
-        else if (e instanceof RuntimeException)
+        
+        log.log(Level.SEVERE, sb.toString(), e);
+        
+        // rethrow the Exception to be handled by the ExceptionHandler
+        if (e instanceof RuntimeException)
         {
             throw (RuntimeException) e;
         }

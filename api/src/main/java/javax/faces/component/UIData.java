@@ -30,6 +30,10 @@ import java.util.Map;
 import javax.el.ValueExpression;
 import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
+import javax.faces.component.visit.VisitCallback;
+import javax.faces.component.visit.VisitContext;
+import javax.faces.component.visit.VisitResult;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.FacesEvent;
@@ -324,42 +328,69 @@ public class UIData extends UIComponentBase implements NamingContainer, UniqueId
         {
             return returnValue;
         }
-
+        
         // Now we have to check if it is searching an inner component
         String baseClientId = super.getClientId(context);
-
-        // First check if the clientId starts with the baseClientId of
-        // this component, to check if continue trying to find the component
-        // inside the children of this component.
-        if (clientId.matches(baseClientId + ":[0-9]+:.*"))
+        
+        // is the component an inner component?
+        if (clientId.startsWith(baseClientId))
         {
-
-            String subId = clientId.substring(baseClientId.length() + 1);
-            String clientRow = subId.substring(0, subId.indexOf(':'));
-
-            // Now we save the current position
-            int oldRow = this.getRowIndex();
-
-            // The conversion is safe, because its already checked on the
-            // regular expresion
-            this.setRowIndex(Integer.parseInt(clientRow));
-
-            for (Iterator<UIComponent> it1 = getChildren().iterator(); !returnValue && it1.hasNext();)
+            // Check if the clientId for the component, which we 
+            // are looking for, has a rowIndex attached
+            if (clientId.matches(baseClientId + ":[0-9]+:.*"))
             {
-                // recursive call to find the component
-                UIComponent child = it1.next();
-                returnValue = child.invokeOnComponent(context, clientId, callback);
+                String subId = clientId.substring(baseClientId.length() + 1);
+                String clientRow = subId.substring(0, subId.indexOf(':'));
+    
+                //Now we save the current position
+                int oldRow = this.getRowIndex();
+                
+                // try-finally --> make sure, that the old row index is restored
+                try
+                {
+                    //The conversion is safe, because its already checked on the
+                    //regular expresion
+                    this.setRowIndex(Integer.parseInt(clientRow));
+                    
+                    // check, if the row is available
+                    if (!isRowAvailable())
+                    {
+                        return false;
+                    }
+        
+                    for (Iterator<UIComponent> it1 = getChildren().iterator(); 
+                            !returnValue && it1.hasNext();)
+                    {
+                        //recursive call to find the component
+                        returnValue = it1.next().invokeOnComponent(context, clientId, callback);
+                    }
+                }
+                finally
+                {
+                    //Restore the old position. Doing this prevent
+                    //side effects.
+                    this.setRowIndex(oldRow);
+                }
             }
-
-            // Restore the old position. Doing this prevent
-            // side effects.
-            this.setRowIndex(oldRow);
-        }
-        else
-        {
-            // The component that matches this clientId must be outside
-            // of this component
-            return false;
+            else
+            {
+                // MYFACES-2370: search the component in the childrens' facets too.
+                // We have to check the childrens' facets here, because in MyFaces
+                // the rowIndex is not attached to the clientId for the children of
+                // facets of the UIColumns. However, in RI the rowIndex is 
+                // attached to the clientId of UIColumns' Facets' children.
+                for (Iterator<UIComponent> itChildren = this.getChildren().iterator();
+                        !returnValue && itChildren.hasNext();)
+                {
+                    // process the child's facets
+                    for (Iterator<UIComponent> itChildFacets = itChildren.next().getFacets().values().iterator(); 
+                            !returnValue && itChildFacets.hasNext();)
+                    {
+                        //recursive call to find the component
+                        returnValue = itChildFacets.next().invokeOnComponent(context, clientId, callback);
+                    }
+                }
+            }
         }
 
         return returnValue;
@@ -635,7 +666,7 @@ public class UIData extends UIComponentBase implements NamingContainer, UniqueId
         }
 
         StringBuilder bld = __getSharedStringBuilder();
-        return bld.append(clientId).append(NamingContainer.SEPARATOR_CHAR).append(rowIndex).toString();
+        return bld.append(clientId).append(UINamingContainer.getSeparatorChar(context)).append(rowIndex).toString();
     }
 
     /**
@@ -693,11 +724,24 @@ public class UIData extends UIComponentBase implements NamingContainer, UniqueId
      * 
      * @since 2.0
      */
-    @Override
     public String createUniqueId(FacesContext context, String seed)
     {
-        // TODO: IMPLEMENT HERE
-        return null;
+        ExternalContext extCtx = context.getExternalContext();
+        StringBuilder bld = __getSharedStringBuilder();
+
+        Long uniqueIdCounter = (Long) getStateHelper().get(PropertyKeys.uniqueIdCounter);
+        uniqueIdCounter = (uniqueIdCounter == null) ? 0 : uniqueIdCounter;
+        getStateHelper().put(PropertyKeys.uniqueIdCounter, (uniqueIdCounter+1L));
+        // Generate an identifier for a component. The identifier will be prefixed with UNIQUE_ID_PREFIX, and will be unique within this UIViewRoot. 
+        if(seed==null)
+        {
+            return extCtx.encodeNamespace(bld.append(UIViewRoot.UNIQUE_ID_PREFIX).append(uniqueIdCounter).toString());    
+        }
+        // Optionally, a unique seed value can be supplied by component creators which should be included in the generated unique id.
+        else
+        {
+            return extCtx.encodeNamespace(bld.append(UIViewRoot.UNIQUE_ID_PREFIX).append(seed).toString());
+        }
     }
 
     /**
@@ -1093,6 +1137,128 @@ public class UIData extends UIComponentBase implements NamingContainer, UniqueId
         return (String) getStateHelper().get(PropertyKeys.var);
     }
 
+    /**
+     * Overrides the behavior in 
+     * UIComponent.visitTree(javax.faces.component.visit.VisitContext, javax.faces.component.visit.VisitCallback)
+     * to handle iteration correctly.
+     * 
+     * @param context the visit context which handles the processing details
+     * @param callback the callback to be performed
+     * @return false if the processing is not done true if we can shortcut
+     * the visiting because we are done with everything
+     * 
+     * @since 2.0
+     */
+    @Override
+    public boolean visitTree(VisitContext context, VisitCallback callback)
+    {
+        if (!isVisitable(context))
+        {
+            return false;
+        }
+
+        // save the current row index
+        int oldRowIndex = getRowIndex();
+        // set row index to -1 to process the facets and to get the rowless clientId
+        setRowIndex(-1);
+        // push the Component to EL
+        pushComponentToEL(context.getFacesContext(), this);
+        try
+        {
+            VisitResult visitResult = context.invokeVisitCallback(this,
+                    callback);
+            switch (visitResult)
+            {
+            //we are done nothing has to be processed anymore
+            case COMPLETE:
+                return true;
+
+            case REJECT:
+                return false;
+
+                //accept
+            default:
+                // determine if we need to visit our children 
+                Collection<String> subtreeIdsToVisit = context
+                        .getSubtreeIdsToVisit(this);
+                boolean doVisitChildren = subtreeIdsToVisit != null
+                        && !subtreeIdsToVisit.isEmpty();
+                if (doVisitChildren)
+                {
+                    // visit the facets of the component
+                    for (UIComponent facet : getFacets().values())
+                    {
+                        if (facet.visitTree(context, callback))
+                        {
+                            return true;
+                        }
+                    }
+                    // visit every column directly without visiting its children 
+                    // (the children of every UIColumn will be visited later for 
+                    // every row) and also visit the column's facets
+                    for (UIComponent child : getChildren())
+                    {
+                        if (child instanceof UIColumn)
+                        {
+                            VisitResult columnResult = context.invokeVisitCallback(child, callback);
+                            if (columnResult == VisitResult.COMPLETE)
+                            {
+                                return true;
+                            }
+                            for (UIComponent facet : child.getFacets().values())
+                            {
+                                if (facet.visitTree(context, callback))
+                                {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                    // iterate over the rows
+                    int rowsToProcess = getRows();
+                    // if getRows() returns 0, all rows have to be processed
+                    if (rowsToProcess == 0)
+                    {
+                        rowsToProcess = getRowCount();
+                    }
+                    int rowIndex = getFirst();
+                    for (int rowsProcessed = 0; rowsProcessed < rowsToProcess; rowsProcessed++, rowIndex++)
+                    {
+                        setRowIndex(rowIndex);
+                        if (!isRowAvailable())
+                        {
+                            return false;
+                        }
+                        // visit the children of every child of the UIData that is an instance of UIColumn
+                        for (UIComponent child : getChildren())
+                        {
+                            if (child instanceof UIColumn)
+                            {
+                                for (UIComponent grandchild : child
+                                        .getChildren())
+                                {
+                                    if (grandchild.visitTree(context, callback))
+                                    {
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        finally
+        {
+            // pop the component from EL and restore the old row index
+            popComponentFromEL(context.getFacesContext());
+            setRowIndex(oldRowIndex);
+        }
+
+        // Return false to allow the visiting to continue
+        return false;
+    }
+
     public void setVar(String var)
     {
         getStateHelper().put(PropertyKeys.var, var ); 
@@ -1104,6 +1270,7 @@ public class UIData extends UIComponentBase implements NamingContainer, UniqueId
         , first
         , rows
         , var
+        , uniqueIdCounter
     }
 
     @Override

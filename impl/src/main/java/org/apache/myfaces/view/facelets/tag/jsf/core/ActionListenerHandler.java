@@ -30,6 +30,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
+import javax.faces.view.ActionSource2AttachedObjectHandler;
+import javax.faces.view.facelets.ComponentHandler;
 import javax.faces.view.facelets.FaceletContext;
 import javax.faces.view.facelets.FaceletException;
 import javax.faces.view.facelets.TagAttribute;
@@ -38,7 +40,10 @@ import javax.faces.view.facelets.TagConfig;
 import javax.faces.view.facelets.TagException;
 import javax.faces.view.facelets.TagHandler;
 
-import org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletAttribute;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTag;
+import org.apache.myfaces.shared_impl.renderkit.JSFAttr;
+import org.apache.myfaces.view.facelets.tag.composite.CompositeComponentResourceTagHandler;
 import org.apache.myfaces.view.facelets.util.ReflectionUtil;
 
 /**
@@ -51,7 +56,12 @@ import org.apache.myfaces.view.facelets.util.ReflectionUtil;
  * @author Jacob Hookom
  * @version $Id: ActionListenerHandler.java,v 1.7 2008/07/13 19:01:44 rlubke Exp $
  */
+@JSFFaceletTag(
+            name = "f:actionListener",
+            bodyContent = "empty", 
+            tagClass="org.apache.myfaces.taglib.core.ActionListenerTag")
 public final class ActionListenerHandler extends TagHandler
+    implements ActionSource2AttachedObjectHandler 
 {
 
     private final static class LazyActionListener implements ActionListener, Serializable
@@ -148,23 +158,61 @@ public final class ActionListenerHandler extends TagHandler
     public void apply(FaceletContext ctx, UIComponent parent) throws IOException, FacesException, FaceletException,
             ELException
     {
+        //Apply only if we are creating a new component
+        if (!ComponentHandler.isNew(parent))
+        {
+            return;
+        }
         if (parent instanceof ActionSource)
         {
-            if (ComponentSupport.isNew(parent))
+            applyAttachedObject(ctx.getFacesContext(), parent);
+        }
+        else if (UIComponent.isCompositeComponent(parent))
+        {
+            if (getAttribute(JSFAttr.FOR_ATTR) == null)
             {
-                ActionSource as = (ActionSource) parent;
-                ValueExpression b = null;
-                if (this.binding != null)
-                {
-                    b = this.binding.getValueExpression(ctx, ActionListener.class);
-                }
-                ActionListener listener = new LazyActionListener(this.listenerType, b);
-                as.addActionListener(listener);
+                throw new TagException(tag, "is nested inside a composite component"
+                        + " but does not have a for attribute.");
             }
+            CompositeComponentResourceTagHandler.addAttachedObjectHandler(parent, this);
         }
         else
         {
-            throw new TagException(this.tag, "Parent is not of type ActionSource, type is: " + parent);
+            throw new TagException(this.tag, "Parent is not composite component or of type ActionSource, type is: " + parent);
+        }
+    }
+
+    public void applyAttachedObject(FacesContext context, UIComponent parent)
+    {
+        // Retrieve the current FaceletContext from FacesContext object
+        FaceletContext faceletContext = (FaceletContext) context.getAttributes().get(
+                FaceletContext.FACELET_CONTEXT_KEY);
+
+        ActionSource as = (ActionSource) parent;
+        ValueExpression b = null;
+        if (this.binding != null)
+        {
+            b = this.binding.getValueExpression(faceletContext, ActionListener.class);
+        }
+        ActionListener listener = new LazyActionListener(this.listenerType, b);
+        as.addActionListener(listener);
+    }
+
+    /**
+     * TODO: Document me!
+     */
+    @JSFFaceletAttribute
+    public String getFor()
+    {
+        TagAttribute forAttribute = getAttribute("for");
+        
+        if (forAttribute == null)
+        {
+            return null;
+        }
+        else
+        {
+            return forAttribute.getValue();
         }
     }
 }

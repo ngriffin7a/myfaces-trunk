@@ -22,21 +22,36 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.faces.FacesException;
+import javax.faces.application.Resource;
+import javax.faces.application.ResourceHandler;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.faces.view.facelets.ComponentConfig;
+import javax.faces.view.facelets.FaceletHandler;
+import javax.faces.view.facelets.Tag;
+import javax.faces.view.facelets.TagConfig;
 import javax.faces.view.facelets.TagHandler;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.myfaces.config.ConfigFilesXmlValidationUtils;
+import org.apache.myfaces.shared_impl.config.MyfacesConfig;
 import org.apache.myfaces.shared_impl.util.ClassUtils;
 import org.apache.myfaces.view.facelets.tag.AbstractTagLibrary;
 import org.apache.myfaces.view.facelets.tag.TagLibrary;
+import org.apache.myfaces.view.facelets.tag.composite.CompositeComponentResourceTagHandler;
+import org.apache.myfaces.view.facelets.tag.composite.CompositeResouceWrapper;
 import org.apache.myfaces.view.facelets.util.Classpath;
 import org.apache.myfaces.view.facelets.util.ParameterCheck;
 import org.apache.myfaces.view.facelets.util.ReflectionUtil;
 import org.xml.sax.Attributes;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -55,13 +70,70 @@ public final class TagLibraryConfig
 
     private final static String SUFFIX = ".taglib.xml";
 
-    protected final static Logger log = Logger.getLogger("facelets.compiler");
+    //protected final static Logger log = Logger.getLogger("facelets.compiler");
+    protected final static Logger log = Logger.getLogger(TagLibraryConfig.class.getName());
 
     private static class TagLibraryImpl extends AbstractTagLibrary
     {
+        private String _compositeLibraryName;
+        
         public TagLibraryImpl(String namespace)
         {
             super(namespace);
+            _compositeLibraryName = null;
+        }
+        
+        @Override
+        public boolean containsTagHandler(String ns, String localName)
+        {
+            boolean result = super.containsTagHandler(ns, localName);
+            
+            if (!result && _compositeLibraryName != null)
+            {
+                ResourceHandler resourceHandler = 
+                    FacesContext.getCurrentInstance().getApplication().getResourceHandler();
+
+                Resource compositeComponentResource = resourceHandler.createResource(
+                        localName +".xhtml", _compositeLibraryName);
+                
+                if (compositeComponentResource != null)
+                {
+                    URL url = compositeComponentResource.getURL();
+                    return (url != null);
+                }
+            }
+            return result;
+        }
+        
+        @Override
+        public TagHandler createTagHandler(String ns, String localName,
+                TagConfig tag) throws FacesException
+        {
+            TagHandler tagHandler = super.createTagHandler(ns, localName, tag);
+            
+            if (tagHandler == null && containsNamespace(ns) && _compositeLibraryName != null)
+            {
+                ResourceHandler resourceHandler = 
+                    FacesContext.getCurrentInstance().getApplication().getResourceHandler();
+
+                String resourceName = localName + ".xhtml";
+                Resource compositeComponentResource = new CompositeResouceWrapper(
+                    resourceHandler.createResource(resourceName, _compositeLibraryName));
+                
+                if (compositeComponentResource != null)
+                {
+                    ComponentConfig componentConfig = new ComponentConfigWrapper(tag,
+                            "javax.faces.NamingContainer", null);
+                    
+                    return new CompositeComponentResourceTagHandler(componentConfig, compositeComponentResource);
+                }
+            }
+            return tagHandler;
+        }
+
+        public void setCompositeLibrary(String compositeLibraryName)
+        {
+            _compositeLibraryName = compositeLibraryName;
         }
 
         public void putConverter(String name, String id)
@@ -130,8 +202,59 @@ public final class TagLibraryConfig
             ParameterCheck.notNull("method", method);
             this.addFunction(name, method);
         }
+        
+        public void putBehavior(String name, String id)
+        {
+            ParameterCheck.notNull("name", name);
+            ParameterCheck.notNull("id", id);
+            this.addBehavior(name, id);
+        }
+        
+        public void putBehavior(String name, String id, Class<? extends TagHandler> handlerClass)
+        {
+            ParameterCheck.notNull("name", name);
+            ParameterCheck.notNull("id", id);
+            ParameterCheck.notNull("handlerClass", handlerClass);
+            this.addBehavior(name, id, handlerClass);
+        }
     }
+    
+    private static class ComponentConfigWrapper implements ComponentConfig {
 
+        protected final TagConfig parent;
+
+        protected final String componentType;
+
+        protected final String rendererType;
+
+        public ComponentConfigWrapper(TagConfig parent, String componentType,
+                String rendererType) {
+            this.parent = parent;
+            this.componentType = componentType;
+            this.rendererType = rendererType;
+        }
+
+        public String getComponentType() {
+            return this.componentType;
+        }
+
+        public String getRendererType() {
+            return this.rendererType;
+        }
+
+        public FaceletHandler getNextHandler() {
+            return this.parent.getNextHandler();
+        }
+
+        public Tag getTag() {
+            return this.parent.getTag();
+        }
+
+        public String getTagId() {
+            return this.parent.getTagId();
+        }
+    }    
+    
     private static class LibraryHandler extends DefaultHandler
     {
         private final URL source;
@@ -147,6 +270,8 @@ public final class TagLibraryConfig
         private String converterId;
 
         private String validatorId;
+        
+        private String behaviorId;
 
         private String componentType;
 
@@ -159,7 +284,9 @@ public final class TagLibraryConfig
         private Class<?> functionClass;
 
         private String functionSignature;
-
+        
+        private String compositeLibraryName;
+        
         public LibraryHandler(URL source)
         {
             this.source = source;
@@ -178,7 +305,7 @@ public final class TagLibraryConfig
                 if ("facelet-taglib".equals(qName))
                 {
                     ; // Nothing to do
-                }
+                }                
                 else if ("library-class".equals(qName))
                 {
                     this.processLibraryClass();
@@ -186,6 +313,18 @@ public final class TagLibraryConfig
                 else if ("namespace".equals(qName))
                 {
                     this.library = new TagLibraryImpl(this.captureBuffer());
+                    if (this.compositeLibraryName != null)
+                    {
+                        ((TagLibraryImpl)this.library).setCompositeLibrary(compositeLibraryName);
+                    }
+                }
+                else if ("composite-library-name".equals(qName))
+                {
+                    this.compositeLibraryName = this.captureBuffer();
+                    if (this.library != null)
+                    {
+                        ((TagLibraryImpl)this.library).setCompositeLibrary(compositeLibraryName);
+                    }
                 }
                 else if ("component-type".equals(qName))
                 {
@@ -277,6 +416,23 @@ public final class TagLibraryConfig
                             impl.putValidator(this.tagName, this.validatorId);
                         }
                         this.validatorId = null;
+                    }
+                    else if ("behavior-id".equals(qName))
+                    {
+                        this.behaviorId = this.captureBuffer();
+                    }
+                    else if ("behavior".equals(qName))
+                    {
+                        if (this.handlerClass != null)
+                        {
+                            impl.putBehavior(this.tagName, this.behaviorId, handlerClass);
+                            this.handlerClass = null;
+                        }
+                        else
+                        {
+                            impl.putBehavior(this.tagName, this.behaviorId);
+                        }
+                        this.behaviorId = null;
                     }
                     else if ("source".equals(qName))
                     {
@@ -388,7 +544,7 @@ public final class TagLibraryConfig
         {
             if ("-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN".equals(publicId))
             {
-                URL url = ClassUtils.getContextClassLoader().getResource("facelet-taglib_1_0.dtd");
+                URL url = ClassUtils.getContextClassLoader().getResource("org/apache/myfaces/resource/facelet-taglib_1_0.dtd");
                 return new InputSource(url.toExternalForm());
             }
             return null;
@@ -450,11 +606,28 @@ public final class TagLibraryConfig
     {
         InputStream is = null;
         TagLibrary t = null;
+        URLConnection conn = null;
         try
         {
-            is = url.openStream();
+            ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+            boolean schemaValidating = false;
+
+            // validate XML
+            if (MyfacesConfig.getCurrentInstance(externalContext).isValidateXML())
+            {
+                String version = ConfigFilesXmlValidationUtils.getFaceletTagLibVersion(url);
+                if (schemaValidating = "2.0".equals(version))
+                {
+                    ConfigFilesXmlValidationUtils.validateFaceletTagLibFile(url, externalContext, version);
+                }
+            }
+            
+            // parse file
             LibraryHandler handler = new LibraryHandler(url);
-            SAXParser parser = createSAXParser(handler);
+            SAXParser parser = createSAXParser(handler, externalContext, schemaValidating);
+            conn = url.openConnection();
+            conn.setUseCaches(false);
+            is = conn.getInputStream();
             parser.parse(is, handler);
             t = handler.getLibrary();
         }
@@ -486,7 +659,11 @@ public final class TagLibraryConfig
         {
             try
             {
-                compiler.addTagLibrary(create(urls[i]));
+                TagLibrary tl = create(urls[i]);
+                if (tl != null)
+                {
+                    compiler.addTagLibrary(tl);
+                }
                 if (log.isLoggable(Level.FINE))
                 {
                     log.fine("Added Library from: " + urls[i]);
@@ -499,13 +676,25 @@ public final class TagLibraryConfig
         }
     }
 
-    private static final SAXParser createSAXParser(LibraryHandler handler) throws SAXException,
+    private static final SAXParser createSAXParser(LibraryHandler handler, ExternalContext externalContext, boolean schemaValidating) throws SAXException,
             ParserConfigurationException
     {
         SAXParserFactory factory = SAXParserFactory.newInstance();
-        factory.setNamespaceAware(false);
-        factory.setFeature("http://xml.org/sax/features/validation", true);
-        factory.setValidating(true);
+
+        if (MyfacesConfig.getCurrentInstance(externalContext).isValidateXML() && !schemaValidating)
+        {
+            // DTD validating
+            factory.setNamespaceAware(false);
+            factory.setFeature("http://xml.org/sax/features/validation", true);
+            factory.setValidating(true);
+        }
+        else {
+            //Just parse it and do not validate, because it is not necessary.
+            factory.setNamespaceAware(true);
+            factory.setFeature("http://xml.org/sax/features/validation", false);
+            factory.setValidating(false);
+        }
+
         SAXParser parser = factory.newSAXParser();
         XMLReader reader = parser.getXMLReader();
         reader.setErrorHandler(handler);

@@ -31,6 +31,47 @@ if ('undefined' != typeof OpenAjax && ('undefined' == typeof jsf || null == type
 //under normal circumstances this should not happen
 if ('undefined' == typeof jsf || null == jsf) {
     jsf = new Object();
+
+    /*
+     * specified by the spec symbols/jsf.html#.specversion
+     * as specified left two digits major release number
+     * middle two digits minor spec release number
+     * right two digits bug release number
+     */
+    jsf.specversion = 200000;
+    /**
+     * specified by the spec symbols/jsf.html#.implversion
+     * a number increased with every implementation version
+     * and reset by moving to a new spec release number
+     *
+     * Due to the constraints that we cannot put
+     * non jsf.&lt;namespace&gt; references outside of functions in the api
+     * we have to set the version here instead of the impl.
+     */
+    jsf.implversion = 0;
+    
+    /**
+     * @return the current project state emitted by the server side method:
+     * javax.faces.application.Application.getProjectStage()
+     */
+    jsf.getProjectStage = function() {
+        var impl = myfaces._impl._util._Utils.getGlobalConfig("jsfAjaxImpl", myfaces.ajax);
+        return impl.getProjectStage();
+    };
+
+    /**
+     * collect and encode data for a given form element (must be of type form)
+     * find the javax.faces.ViewState element and encode its value as well!
+     * return a concatenated string of the encoded values!
+     *
+     * @throws an exception in case of the given element not being of type form!
+     * https://issues.apache.org/jira/browse/MYFACES-2110
+     */
+    jsf.getViewState = function(formElement) {
+        /*we are not allowed to add the impl on a global scope so we have to inline the code*/
+        var impl = myfaces._impl._util._Utils.getGlobalConfig("jsfAjaxImpl", myfaces.ajax);
+        return impl.getViewState(formElement);
+    };
 }
 
 /**
@@ -42,19 +83,6 @@ if ('undefined' == typeof jsf || null == jsf) {
 if ('undefined' == typeof jsf.ajax || null == jsf.ajax) {
     jsf.ajax = new Object();
 
-     jsf.ajax._impl = myfaces._impl._util._Utils.getGlobalConfig("jsfAjaxImpl", myfaces.ajax);
-
-    /**
-     * collect and encode data for a given form element (must be of type form)
-     * find the javax.faces.ViewState element and encode its value as well!
-     * return a concatenated string of the encoded values!
-     *
-     * @throws an exception in case of the given element not being of type form!
-     * https://issues.apache.org/jira/browse/MYFACES-2110
-     */
-    jsf.getViewState = function(formElement) {
-        return jsf.ajax._impl.getViewState(formElement);
-    };
 
     /**
      * this function has to send the ajax requests
@@ -71,16 +99,23 @@ if ('undefined' == typeof jsf.ajax || null == jsf.ajax) {
      * @param {|EVENT|} event: any javascript event supported by that object
      * @param {Map||} options : map of options being pushed into the ajax cycle
      */
-    jsf.ajax.request = function( element,  event,  options) {
-        return jsf.ajax._impl.request(element, event, options);
+    jsf.ajax.request = function(element, event, options) {
+	if (!options) {
+		options = {};
+	}
+        /*we are not allowed to add the impl on a global scope so we have to inline the code*/
+        var impl = myfaces._impl._util._Utils.getGlobalConfig("jsfAjaxImpl", myfaces.ajax);
+        return impl.request(element, event, options);
     };
 
     jsf.ajax.addOnError = function(/*function*/errorListener) {
-        return jsf.ajax._impl.addOnError(errorListener);
+        var impl = myfaces._impl._util._Utils.getGlobalConfig("jsfAjaxImpl", myfaces.ajax);
+        return impl.addOnError(errorListener);
     }
 
     jsf.ajax.addOnEvent = function(/*function*/eventListener) {
-        return jsf.ajax._impl.addOnEvent(eventListener);
+        var impl = myfaces._impl._util._Utils.getGlobalConfig("jsfAjaxImpl", myfaces.ajax);
+        return impl.addOnEvent(eventListener);
     }
 
     /**
@@ -89,14 +124,8 @@ if ('undefined' == typeof jsf.ajax || null == jsf.ajax) {
      * @param context the ajax context!
      */
     jsf.ajax.response = function(/*xhr request object*/request, context) {
-        jsf.ajax._impl.response(request, context);
-    };
-    /**
-     * @return the current project state emitted by the server side method:
-     * javax.faces.application.Application.getProjectStage()
-     */
-    jsf.getProjectStage = function() {
-        return jsf.ajax._impl.getProjectStage();
+        var impl = myfaces._impl._util._Utils.getGlobalConfig("jsfAjaxImpl", myfaces.ajax);
+        return impl.response(request, context);
     };
 }
 
@@ -111,12 +140,12 @@ if ('undefined' == typeof jsf.util || null == jsf.util) {
      *
      * @param {DomNode} source, the callee object
      * @param {Event} event, the event object of the callee event triggering this function
-     * 
+     *
      */
     jsf.util.chain = function(source, event) {
-        jsf.ajax._impl.chain.apply(jsf.ajax._impl, arguments);
+        var impl = myfaces._impl._util._Utils.getGlobalConfig("jsfAjaxImpl", myfaces.ajax);
+        return impl.chain.apply(jsf.ajax._impl, arguments);
     }
-
 }
 
 

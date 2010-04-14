@@ -18,7 +18,11 @@
  */
 package javax.faces.application;
 
+import java.io.IOException;
+
 import javax.faces.context.FacesContext;
+
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
 
 /**
  * @author Simon Lessard (latest modification by $Author: slessard $)
@@ -30,6 +34,8 @@ public abstract class ResourceHandler
 {
     public static final String LOCALE_PREFIX = "javax.faces.resource.localePrefix";
     public static final String RESOURCE_EXCLUDES_DEFAULT_VALUE = ".class .jsp .jspx .properties .xhtml";
+    
+    @JSFWebConfigParam(defaultValue=".class .jsp .jspx .properties .xhtml",since="2.0")
     public static final String RESOURCE_EXCLUDES_PARAM_NAME = "javax.faces.RESOURCE_EXCLUDES";
     public static final String RESOURCE_IDENTIFIER = "/javax.faces.resource";
     
@@ -41,7 +47,7 @@ public abstract class ResourceHandler
     
     public abstract String getRendererTypeForResourceName(String resourceName);
     
-    public abstract void handleResourceRequest(FacesContext context);
+    public abstract void handleResourceRequest(FacesContext context) throws IOException;
     
     public abstract boolean isResourceRequest(FacesContext context);
     

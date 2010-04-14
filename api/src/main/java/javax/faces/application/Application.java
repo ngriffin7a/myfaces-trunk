@@ -19,6 +19,7 @@
 package javax.faces.application;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
@@ -91,6 +92,10 @@ public abstract class Application
      * original Application impl, and redirect the call to that
      * method instead throwing it, allowing application implementations
      * created before jsf 1.2 continue working.   
+     * 
+     * Note: every method, which uses getMyfacesApplicationInstance() to
+     *       delegate itself to the current ApplicationImpl MUST be
+     *       overriden by the current ApplicationImpl to prevent infinite loops. 
      */
     private Application getMyfacesApplicationInstance()
     {
@@ -127,7 +132,15 @@ public abstract class Application
      * 
      * FIXME: Notify EG, this should not be abstract and throw UnsupportedOperationException
      */
-    public abstract void addBehavior(String behaviorId, String behaviorClass);
+    public void addBehavior(String behaviorId, String behaviorClass)
+    {
+        Application application = getMyfacesApplicationInstance();
+        if (application != null)
+        {
+            application.addBehavior(behaviorId, behaviorClass);
+        }
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Define a new mapping from a logical "component type" to an actual java class name. This controls what type is
@@ -274,7 +287,15 @@ public abstract class Application
      * 
      * FIXME: Notify EG, this should not be abstract and throw UnsupportedOperationException
      */
-    public abstract Behavior createBehavior(String behaviorId) throws FacesException;
+    public Behavior createBehavior(String behaviorId) throws FacesException
+    {
+        Application application = getMyfacesApplicationInstance();
+        if (application != null)
+        {
+            return application.createBehavior(behaviorId);
+        }
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * ???
@@ -287,7 +308,6 @@ public abstract class Application
      */
     public UIComponent createComponent(FacesContext context, Resource componentResource)
     {
-        // TODO: IMPLEMENT IMPL JSF 2.0 #60
         Application application = getMyfacesApplicationInstance(context);
         if (application != null)
         {
@@ -344,7 +364,6 @@ public abstract class Application
      * 
      * @deprecated
      */
-    @Deprecated
     public abstract UIComponent createComponent(ValueBinding componentBinding, FacesContext context,
                                                 String componentType) throws FacesException;
 
@@ -463,7 +482,6 @@ public abstract class Application
      * 
      * @deprecated
      */
-    @Deprecated
     public abstract MethodBinding createMethodBinding(String ref, Class<?>[] params) throws ReferenceSyntaxException;
 
     /**
@@ -490,7 +508,6 @@ public abstract class Application
      * 
      * @deprecated
      */
-    @Deprecated
     public abstract ValueBinding createValueBinding(String ref) throws ReferenceSyntaxException;
 
     /**
@@ -570,7 +587,18 @@ public abstract class Application
      * 
      * FIXME: Notify EG, this should not be abstract and throw UnsupportedOperationException
      */
-    public abstract Iterator<String> getBehaviorIds();
+    public Iterator<String> getBehaviorIds()
+    {
+        Application application = getMyfacesApplicationInstance();
+        if (application != null)
+        {
+            return application.getBehaviorIds();
+        }
+        // It is better to return an empty iterator,
+        // to keep compatiblity with previous jsf 2.0 Application
+        // instances
+        return Collections.EMPTY_LIST.iterator();
+    }
 
     /**
      * Return an <code>Iterator</code> over the set of currently defined component types for this
@@ -773,7 +801,6 @@ public abstract class Application
      * 
      * @deprecated
      */
-    @Deprecated
     public abstract PropertyResolver getPropertyResolver();
 
     /**
@@ -860,7 +887,6 @@ public abstract class Application
      * 
      * @deprecated
      */
-    @Deprecated
     public abstract VariableResolver getVariableResolver();
 
     /**
@@ -1050,7 +1076,6 @@ public abstract class Application
      * 
      * @deprecated
      */
-    @Deprecated
     public abstract void setPropertyResolver(PropertyResolver resolver);
 
     /**
@@ -1103,7 +1128,6 @@ public abstract class Application
      * 
      * @deprecated
      */
-    @Deprecated
     public abstract void setVariableResolver(VariableResolver resolver);
 
     /**

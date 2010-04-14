@@ -28,30 +28,33 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.el.ValueExpression;
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
+import javax.faces.component.behavior.Behavior;
 import javax.faces.component.behavior.ClientBehavior;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
+import javax.faces.event.BehaviorEvent;
 import javax.faces.event.FacesEvent;
 import javax.faces.event.FacesListener;
-import javax.faces.event.PhaseId;
 import javax.faces.event.PostAddToViewEvent;
 import javax.faces.event.PreRemoveFromViewEvent;
 import javax.faces.event.PreRenderComponentEvent;
+import javax.faces.event.SystemEvent;
+import javax.faces.event.SystemEventListener;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFJspProperty;
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
+
 
 /**
  * TODO: IMPLEMENT HERE - Delta state saving support
@@ -72,7 +75,8 @@ import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFPropert
 @JSFJspProperty(name = "binding", returnType = "javax.faces.component.UIComponent", longDesc = "Identifies a backing bean property (of type UIComponent or appropriate subclass) to bind to this component instance. This value must be an EL expression.", desc = "backing bean property to bind to this component instance")
 public abstract class UIComponentBase extends UIComponent
 {
-    private static Log log = LogFactory.getLog(UIComponentBase.class);
+    //private static Log log = LogFactory.getLog(UIComponentBase.class);
+    private static Logger log = Logger.getLogger(UIComponentBase.class.getName());
 
     private static final ThreadLocal<StringBuilder> _STRING_BUILDER = new ThreadLocal<StringBuilder>();
 
@@ -87,6 +91,21 @@ public abstract class UIComponentBase extends UIComponent
     private UIComponent _parent = null;
     private boolean _transient = false;
 
+    /**
+     * This map holds ClientBehavior instances.
+     * 
+     *  Note that BehaviorBase implements PartialStateHolder, so this class 
+     *  should deal with that fact on clearInitialState() and 
+     *  markInitialState() methods.
+     * 
+     *  Also, the map used by this instance is not set from outside this class.
+     *  
+     *  Note it is possible (but maybe not expected/valid) to manipulate 
+     *  the values of the map(the list) but not put instances on the map 
+     *  directly, because ClientBehaviorHolder.getClientBehaviors says that 
+     *  this method should return a non null unmodificable map.
+     *  
+     */
     private Map<String, List<ClientBehavior>> _behaviorsMap = null;
     
     public UIComponentBase()
@@ -98,7 +117,6 @@ public abstract class UIComponentBase extends UIComponent
      * 
      * @deprecated Replaced by setValueExpression
      */
-    @Deprecated
     @Override
     public void setValueBinding(String name, ValueBinding binding)
     {
@@ -130,93 +148,42 @@ public abstract class UIComponentBase extends UIComponent
         _clientId = null;
     }
 
+    /**
+     * <p>Set the parent <code>UIComponent</code> of this
+     * <code>UIComponent</code>.</p>
+     * 
+     * @param parent The new parent, or <code>null</code> for the root node
+     *  of a component tree
+     */
     @Override
     public void setParent(UIComponent parent)
     {
-        boolean postAddToViewEvent = false;
-        boolean preRemoveFromViewEvent = false;
-        if (_parent != null && _parent.isInView())
+        // removing kids OR this is UIViewRoot
+        if (parent == null)
         {
-            if (!(parent != null && parent.isInView()))
+            // not UIViewRoot...
+            if (_parent != null && _parent.isInView())
             {
-                //Component / Facet removed, set to false
-                //isInView to all parent and children
-                preRemoveFromViewEvent = true;
-                this.setInView(false);
-                if (this.getChildCount() > 0)
-                {
-                    for (Iterator<UIComponent> it = this.getFacetsAndChildren();
-                        it.hasNext();)
-                    {
-                        UIComponent comp = it.next();
-                        if (comp.isInView())
-                        {
-                            //Change to false all descendants
-                            _updateChild(comp,false);
-                        }
-                    }
-                }
+                // trigger the "remove event" lifecycle
+                // and call setInView(false) for all children/facets
+                // doing this => recursive
+                _publishPreRemoveFromViewEvent(getFacesContext(), this);
             }
-            //else
-            //{
-                // Component moved inside the same view
-                // There is no reason to call PostAddToViewEvent
-                // because there is already on the view
-            //}
-        }
-        else
-        {
-            if (parent != null && parent.isInView())
+        } else {
+            if (parent.isInView())
             {
-                //Component / Facet added, set to true
-                //isInView to all parent and children
-                this.setInView(true);
-                postAddToViewEvent = true;
-                if (this.getChildCount() > 0)
-                {
-                    for (Iterator<UIComponent> it = this.getFacetsAndChildren();
-                        it.hasNext();)
-                    {
-                        UIComponent comp = it.next();
-                        if (!comp.isInView())
-                        {
-                            //Change to false all descendants
-                            _updateChild(comp,true);
-                        }
-                    }
-                }
-            }
-            //else
-            //{
-                //Component manipulated but it is not on the
-                //view yet. No event is published.
-            //}
-        }
-        
-        _parent = parent;
-        
-        if (postAddToViewEvent)
-        {
-            FacesContext context = FacesContext.getCurrentInstance();
-            
-            // After the child component has been added to the view, if the following condition is not met
-            // FacesContext.isPostback() returns true and FacesContext.getCurrentPhaseId() returns PhaseId.RESTORE_VIEW
-            if (!(context.isPostback() && PhaseId.RESTORE_VIEW.equals(context.getCurrentPhaseId())))
-            {
+                // trigger the ADD_EVENT and call setInView(true)
+                // recursive for all kids/facets...
                 // Application.publishEvent(java.lang.Class, java.lang.Object)  must be called, passing 
                 // PostAddToViewEvent.class as the first argument and the newly added component as the second 
                 // argument.
-                _publishPostAddToViewEvent(context, this);
+                _publishPostAddToViewEvent(getFacesContext(), this);
             }
         }
-        
-        if (preRemoveFromViewEvent)
-        {
-            FacesContext context = FacesContext.getCurrentInstance();
-            _publishPreRemoveFromViewEvent(context, this);
-        }
+        _parent = parent;
     }
 
+    
     /**
      * Publish PostAddToViewEvent to the component and all facets and children.
      * 
@@ -225,13 +192,33 @@ public abstract class UIComponentBase extends UIComponent
      */
     private static void _publishPostAddToViewEvent(FacesContext context, UIComponent component)
     {
-        context.getApplication().publishEvent(context, PostAddToViewEvent.class, component);
+        component.setInView(true);
+        context.getApplication().publishEvent(context, PostAddToViewEvent.class, UIComponent.class, component);
         
         if (component.getChildCount() > 0)
         {
-            for (UIComponent child : component.getChildren())
+            // PostAddToViewEvent could cause component relocation
+            // (h:outputScript, h:outputStylesheet, composite:insertChildren, composite:insertFacet)
+            // so we need to check if the component was relocated or not
+          
+            // is this all really needed ?
+            List<UIComponent> children = component.getChildren();
+            UIComponent child = null;
+            UIComponent currentChild = null;
+            int i = 0;
+            while (i < children.size())
             {
-                _publishPostAddToViewEvent(context, child);
+                child = children.get(i);
+                // Iterate over the same index if the component was removed
+                // This prevents skip components when processing
+                do 
+                {
+                    _publishPostAddToViewEvent(context, child);
+                    currentChild = child;
+                }
+                while ((i < children.size()) &&
+                       ((child = children.get(i)) != currentChild) );
+                i++;
             }
         }
         if (component.getFacetCount() > 0)
@@ -244,14 +231,15 @@ public abstract class UIComponentBase extends UIComponent
     }
     
     /**
-     * Publish PostAddToViewEvent to the component and all facets and children.
+     * Publish PreRemoveFromViewEvent to the component and all facets and children.
      * 
      * @param context
      * @param component
      */
     private static void _publishPreRemoveFromViewEvent(FacesContext context, UIComponent component)
     {
-        context.getApplication().publishEvent(context, PreRemoveFromViewEvent.class, component);
+        component.setInView(false);
+        context.getApplication().publishEvent(context, PreRemoveFromViewEvent.class, UIComponent.class, component);
         
         if (component.getChildCount() > 0)
         {
@@ -269,28 +257,6 @@ public abstract class UIComponentBase extends UIComponent
         }        
     }    
     
-    private static void _updateChild(UIComponent component, boolean isInView)
-    {
-        if (component.getChildCount() > 0)
-        {
-            for (UIComponent child : component.getChildren())
-            {
-                child.setInView(isInView);
-                //recursive call to set to all descendants
-                _updateChild(child, isInView);
-            }
-        }
-        if (component.getFacetCount() > 0)
-        {
-            for (UIComponent child : component.getFacets().values())
-            {
-                child.setInView(isInView);
-                //recursive call to set to all descendants
-                _updateChild(child, isInView);
-            }
-        }         
-    }
-
     /**
      * 
      * @param eventName
@@ -306,32 +272,15 @@ public abstract class UIComponentBase extends UIComponent
         {
             //component didn't implement getEventNames properly
             //log an error and return
-            if(log.isErrorEnabled())
+            if(log.isLoggable(Level.SEVERE))
             {
-                log.error("attempted to add a behavior to a component which did not properly implement getEventNames.  getEventNames must not return null");
+                log.severe("attempted to add a behavior to a component which did not properly implement getEventNames.  getEventNames must not return null");
                 return;
             }
         }
         
         if(eventNames.contains(eventName))
         {
-            if (initialStateMarked()) 
-            {
-                if (_behaviorsMap != null) 
-                {
-                    for (String key : _behaviorsMap.keySet()) 
-                    {
-                        for (ClientBehavior curBehavior : _behaviorsMap.get(key)) 
-                        {
-                            if (curBehavior instanceof PartialStateHolder) 
-                            {
-                                ((PartialStateHolder)behavior).clearInitialState();
-                            }
-                        }
-                    }
-                }
-            }
-            
             if(_behaviorsMap == null)
             {
                 _behaviorsMap = new HashMap<String,List<ClientBehavior>>();
@@ -340,12 +289,11 @@ public abstract class UIComponentBase extends UIComponent
             List<ClientBehavior> behaviorsForEvent = _behaviorsMap.get(eventName);
             if(behaviorsForEvent == null)
             {
-                behaviorsForEvent = new ArrayList<ClientBehavior>();
+                behaviorsForEvent = new _DeltaList<ClientBehavior>(new ArrayList<ClientBehavior>());
                 _behaviorsMap.put(eventName, behaviorsForEvent);
             }
             
             behaviorsForEvent.add(behavior);
-            
         }
     }
 
@@ -374,7 +322,15 @@ public abstract class UIComponentBase extends UIComponent
             throw new NullPointerException("event");
         try
         {
-
+            if (event instanceof BehaviorEvent && event.getComponent() == this)
+            {
+                Behavior behavior = ((BehaviorEvent) event).getBehavior();
+                if (behavior instanceof ClientBehavior)
+                {
+                    behavior.broadcast((BehaviorEvent) event);
+                }
+            }
+            
             if (_facesListeners == null)
                 return;
             for (Iterator<FacesListener> it = _facesListeners.iterator(); it.hasNext();)
@@ -402,6 +358,21 @@ public abstract class UIComponentBase extends UIComponent
         if (_facesListeners != null)
         {
             _facesListeners.clearInitialState();
+        }
+        if (_behaviorsMap != null)
+        {
+            for (Map.Entry<String, List<ClientBehavior> > entry : _behaviorsMap.entrySet())
+            {
+                ((PartialStateHolder) entry.getValue()).clearInitialState();
+            }
+        }
+        if (_systemEventListenerClassMap != null)
+        {
+            for (Map.Entry<Class<? extends SystemEvent>, List<SystemEventListener>> entry : 
+                _systemEventListenerClassMap.entrySet())
+            {
+                ((PartialStateHolder) entry.getValue()).clearInitialState();
+            }
         }
     }
 
@@ -446,7 +417,10 @@ public abstract class UIComponentBase extends UIComponent
 
             // Call Application.publishEvent(java.lang.Class, java.lang.Object), passing BeforeRenderEvent.class as
             // the first argument and the component instance to be rendered as the second argument.
-            context.getApplication().publishEvent(context, PreRenderComponentEvent.class, this);
+
+            //The main issue we have here is that the listeners are normally just registered to UIComponent, how do we deal with inherited ones?
+            //We have to ask the EG
+            context.getApplication().publishEvent(context,  PreRenderComponentEvent.class, UIComponent.class, this);
 
             Renderer renderer = getRenderer(context);
             if (renderer != null)
@@ -552,8 +526,9 @@ public abstract class UIComponentBase extends UIComponent
         if (expr.length() == 0)
             return null;
 
+        final char separatorChar = UINamingContainer.getSeparatorChar(FacesContext.getCurrentInstance());
         UIComponent findBase;
-        if (expr.charAt(0) == NamingContainer.SEPARATOR_CHAR)
+        if (expr.charAt(0) == separatorChar)
         {
             findBase = _ComponentUtils.getRootComponent(this);
             expr = expr.substring(1);
@@ -570,14 +545,14 @@ public abstract class UIComponentBase extends UIComponent
             }
         }
 
-        int separator = expr.indexOf(NamingContainer.SEPARATOR_CHAR);
+        int separator = expr.indexOf(separatorChar);
         if (separator == -1)
         {
-            return _ComponentUtils.findComponent(findBase, expr);
+            return _ComponentUtils.findComponent(findBase, expr, separatorChar);
         }
 
         String id = expr.substring(0, separator);
-        findBase = _ComponentUtils.findComponent(findBase, id);
+        findBase = _ComponentUtils.findComponent(findBase, id, separatorChar);
         if (findBase == null)
         {
             return null;
@@ -716,27 +691,41 @@ public abstract class UIComponentBase extends UIComponent
         if (_clientId != null)
             return _clientId;
 
-        boolean idWasNull = false;
+        //boolean idWasNull = false;
         String id = getId();
         if (id == null)
         {
             // Although this is an error prone side effect, we automatically create a new id
             // just to be compatible to the RI
-            UIViewRoot viewRoot = context.getViewRoot();
-            if (viewRoot != null)
+            
+            // The documentation of UniqueIdVendor says that this interface should be implemented by
+            // components that also implements NamingContainer. The only component that does not implement
+            // NamingContainer but UniqueIdVendor is UIViewRoot. Anyway we just can't be 100% sure about this
+            // fact, so it is better to scan for the closest UniqueIdVendor. If it is not found use 
+            // viewRoot.createUniqueId, otherwise use UniqueIdVendor.createUniqueId(context,seed).
+            UniqueIdVendor parentUniqueIdVendor = _ComponentUtils.findParentUniqueIdVendor(this);
+            if (parentUniqueIdVendor == null)
             {
-                id = viewRoot.createUniqueId();
+                UIViewRoot viewRoot = context.getViewRoot();
+                if (viewRoot != null)
+                {
+                    id = viewRoot.createUniqueId();
+                }
+                else
+                {
+                    // The RI throws a NPE
+                    throw new FacesException(
+                                             "Cannot create clientId. No id is assigned for component to create an id and UIViewRoot is not defined: "
+                                                     + getPathToComponent(this));
+                }
             }
             else
             {
-                // The RI throws a NPE
-                throw new FacesException(
-                                         "Cannot create clientId. No id is assigned for component to create an id and UIViewRoot is not defined: "
-                                                 + getPathToComponent(this));
+                id = parentUniqueIdVendor.createUniqueId(context, null);
             }
             setId(id);
             // We remember that the id was null and log a warning down below
-            idWasNull = true;
+            // idWasNull = true;
         }
 
         UIComponent namingContainer = _ComponentUtils.findParentNamingContainer(this, false);
@@ -746,7 +735,7 @@ public abstract class UIComponentBase extends UIComponent
             if (containerClientId != null)
             {
                 StringBuilder bld = __getSharedStringBuilder();
-                _clientId = bld.append(containerClientId).append(NamingContainer.SEPARATOR_CHAR).append(id).toString();
+                _clientId = bld.append(containerClientId).append(UINamingContainer.getSeparatorChar(context)).append(id).toString();
             }
             else
             {
@@ -764,15 +753,18 @@ public abstract class UIComponentBase extends UIComponent
             _clientId = renderer.convertClientId(context, _clientId);
         }
 
-        if (idWasNull && log.isWarnEnabled())
-        {
-            log.warn("WARNING: Component " + _clientId
-                    + " just got an automatic id, because there was no id assigned yet. "
-                    + "If this component was created dynamically (i.e. not by a JSP tag) you should assign it an "
-                    + "explicit static id or assign it the id you get from "
-                    + "the createUniqueId from the current UIViewRoot "
-                    + "component right after creation! Path to Component: " + getPathToComponent(this));
-        }
+        // -=Leonardo Uribe=- In jsf 1.1 and 1.2 this warning has sense, but in jsf 2.0 it is common to have
+        // components without any explicit id (UIViewParameter components and UIOuput resource components) instances.
+        // So, this warning is becoming obsolete in this new context and should be removed.
+        //if (idWasNull && log.isLoggable(Level.WARNING))
+        //{
+        //    log.warning("WARNING: Component " + _clientId
+        //            + " just got an automatic id, because there was no id assigned yet. "
+        //            + "If this component was created dynamically (i.e. not by a JSP tag) you should assign it an "
+        //            + "explicit static id or assign it the id you get from "
+        //            + "the createUniqueId from the current UIViewRoot "
+        //            + "component right after creation! Path to Component: " + getPathToComponent(this));
+        //}
 
         return _clientId;
     }
@@ -829,38 +821,24 @@ public abstract class UIComponentBase extends UIComponent
     @Override
     public Iterator<UIComponent> getFacetsAndChildren()
     {
-        if (_facetMap == null)
+        // we can't use _facetMap and _childrenList here directly,
+        // because some component implementation could keep their 
+        // own properties for facets and children and just override
+        // getFacets() and getChildren() (e.g. seen in PrimeFaces).
+        // See MYFACES-2611 for details.
+        if (getFacetCount() == 0)
         {
-            if (_childrenList == null)
+            if (getChildCount() == 0)
                 return _EMPTY_UICOMPONENT_ITERATOR;
 
-            if (_childrenList.isEmpty())
-                return _EMPTY_UICOMPONENT_ITERATOR;
-
-            return _childrenList.iterator();
+            return getChildren().iterator();
         }
         else
         {
-            if (_facetMap.isEmpty())
-            {
-                if (_childrenList == null)
-                    return _EMPTY_UICOMPONENT_ITERATOR;
+            if (getChildCount() == 0)
+                return getFacets().values().iterator();
 
-                if (_childrenList.isEmpty())
-                    return _EMPTY_UICOMPONENT_ITERATOR;
-
-                return _childrenList.iterator();
-            }
-            else
-            {
-                if (_childrenList == null)
-                    return _facetMap.values().iterator();
-
-                if (_childrenList.isEmpty())
-                    return _facetMap.values().iterator();
-
-                return new _FacetsAndChildrenIterator(_facetMap, _childrenList);
-            }
+            return new _FacetsAndChildrenIterator(getFacets(), getChildren());
         }
     }
 
@@ -913,7 +891,6 @@ public abstract class UIComponentBase extends UIComponent
      * 
      * @deprecated Replaced by getValueExpression
      */
-    @Deprecated
     @Override
     public ValueBinding getValueBinding(String name)
     {
@@ -968,6 +945,21 @@ public abstract class UIComponentBase extends UIComponent
         if (_facesListeners != null)
         {
             _facesListeners.markInitialState();
+        }
+        if (_behaviorsMap != null)
+        {
+            for (Map.Entry<String, List<ClientBehavior> > entry : _behaviorsMap.entrySet())
+            {
+                ((PartialStateHolder) entry.getValue()).markInitialState();
+            }
+        }
+        if (_systemEventListenerClassMap != null)
+        {
+            for (Map.Entry<Class<? extends SystemEvent>, List<SystemEventListener>> entry : 
+                _systemEventListenerClassMap.entrySet())
+            {
+                ((PartialStateHolder) entry.getValue()).markInitialState();
+            }
         }
     }
 
@@ -1043,7 +1035,7 @@ public abstract class UIComponentBase extends UIComponent
                                                        "No Renderer found for component " + getPathToComponent(this)
                                                                + " (component-family=" + getFamily()
                                                                + ", renderer-type=" + rendererType + ")");
-            log.warn("No Renderer found for component " + getPathToComponent(this) + " (component-family="
+            log.warning("No Renderer found for component " + getPathToComponent(this) + " (component-family="
                     + getFamily() + ", renderer-type=" + rendererType + ")");
         }
         return renderer;
@@ -1124,11 +1116,18 @@ public abstract class UIComponentBase extends UIComponent
             // Call UIComponent.pushComponentToEL(javax.faces.context.FacesContext, javax.faces.component.UIComponent)
             pushComponentToEL(context, this);
 
-            // Call the processValidators() method of all facets and children of this UIComponent, in the order
-            // determined by a call to getFacetsAndChildren().
-            for (Iterator<UIComponent> it = getFacetsAndChildren(); it.hasNext();)
+            try
             {
-                it.next().processValidators(context);
+                // Call the processValidators() method of all facets and children of this UIComponent, in the order
+                // determined by a call to getFacetsAndChildren().
+                for (Iterator<UIComponent> it = getFacetsAndChildren(); it.hasNext();)
+                {
+                    it.next().processValidators(context);
+                }
+            }
+            finally
+            {
+                popComponentFromEL(context);
             }
         }
     }
@@ -1407,6 +1406,11 @@ public abstract class UIComponentBase extends UIComponent
      */
     public static Object saveAttachedState(FacesContext context, Object attachedObject)
     {
+        if (context == null)
+        {
+            throw new NullPointerException ("context");
+        }
+        
         if (attachedObject == null)
             return null;
         // StateHolder interface should take precedence over
@@ -1497,12 +1501,19 @@ public abstract class UIComponentBase extends UIComponent
      */
     public Object saveState(FacesContext context)
     {
+        if (context == null)
+        {
+            throw new NullPointerException ("context");
+        }
+        
         if (initialStateMarked())
         {
             //Delta
             //_id and _clientId was already restored from template
             //and never changes during component life.
             Object facesListenersSaved = saveFacesListenersList(context);
+            Object behaviorsMapSaved = saveBehaviorsMap(context);
+            Object systemEventListenerClassMapSaved = saveSystemEventListenerClassMap(context);
             Object stateHelperSaved = null;
             StateHelper stateHelper = getStateHelper(false);
             if (stateHelper != null)
@@ -1510,25 +1521,28 @@ public abstract class UIComponentBase extends UIComponent
                 stateHelperSaved = stateHelper.saveState(context);
             }
             
-            if (facesListenersSaved == null && stateHelperSaved == null)
+            if (facesListenersSaved == null && stateHelperSaved == null && 
+                behaviorsMapSaved == null && systemEventListenerClassMapSaved == null)
             {
                 return null;
             }
             
-            return new Object[] {facesListenersSaved, stateHelperSaved};
+            return new Object[] {facesListenersSaved, stateHelperSaved, behaviorsMapSaved, systemEventListenerClassMapSaved};
         }
         else
         {
             //Full
-            Object values[] = new Object[4];
+            Object values[] = new Object[6];
             values[0] = saveFacesListenersList(context);
             StateHelper stateHelper = getStateHelper(false);
             if (stateHelper != null)
             {
                 values[1] = stateHelper.saveState(context);
             }
-            values[2] = _id;
-            values[3] = _clientId;
+            values[2] = saveBehaviorsMap(context);
+            values[3] = saveSystemEventListenerClassMap(context);
+            values[4] = _id;
+            values[5] = _clientId;
 
             return values;
         }
@@ -1545,15 +1559,25 @@ public abstract class UIComponentBase extends UIComponent
     @SuppressWarnings("unchecked")
     public void restoreState(FacesContext context, Object state)
     {
+        if (context == null)
+        {
+            throw new NullPointerException ("context");
+        }
+        
         if (state == null)
         {
             //Only happens if initialStateMarked return true
-            return;
+            
+            if (initialStateMarked()) {
+                return;
+            }
+            
+            throw new NullPointerException ("state");
         }
         
         Object values[] = (Object[]) state;
         
-        if ( values.length == 4 && initialStateMarked())
+        if ( values.length == 6 && initialStateMarked())
         {
             //Delta mode is active, but we are restoring a full state.
             //we need to clear the initial state, to restore state without
@@ -1563,14 +1587,15 @@ public abstract class UIComponentBase extends UIComponent
         
         if (values[0] instanceof _AttachedDeltaWrapper)
         {
-            //Delta
-            if (_facesListeners != null)
-            {
+            //Delta: check for null is not necessary since _facesListener field
+            //is only set once and never reset
+            //if (_facesListeners != null)
+            //{
                 ((StateHolder)_facesListeners).restoreState(context,
                         ((_AttachedDeltaWrapper) values[0]).getWrappedStateObject());
-            }
+            //}
         }
-        else if (values[0] != null || (values.length == 4))
+        else if (values[0] != null || (values.length == 6))
         {
             //Full
             _facesListeners = (_DeltaList<FacesListener>)
@@ -1583,10 +1608,23 @@ public abstract class UIComponentBase extends UIComponent
         
         getStateHelper().restoreState(context, values[1]);
         
-        if (values.length == 4)
+        if (values.length == 6)
         {
-            _id = (String) values[2];
-            _clientId = (String) values[3];
+            //Full restore
+            restoreFullBehaviorsMap(context, values[2]);
+            restoreFullSystemEventListenerClassMap(context, values[3]);
+        }
+        else
+        {
+            //Delta restore
+            restoreDeltaBehaviorsMap(context, values[2]);
+            restoreDeltaSystemEventListenerClassMap(context, values[3]);
+        }
+        
+        if (values.length == 6)
+        {
+            _id = (String) values[4];
+            _clientId = (String) values[5];
         }
     }
     
@@ -1608,8 +1646,206 @@ public abstract class UIComponentBase extends UIComponent
         {
             return saveAttachedState(facesContext,_facesListeners);
         }            
-    }    
+    }
 
+    @SuppressWarnings("unchecked")
+    private void restoreFullBehaviorsMap(FacesContext facesContext, Object stateObj)
+    {
+        if (stateObj != null)
+        {
+            Map<String, Object> stateMap = (Map<String, Object>) stateObj;
+            int initCapacity = (stateMap.size() * 4 + 3) / 3;
+            _behaviorsMap = new HashMap<String,  List<ClientBehavior> >(initCapacity);
+            for (Map.Entry<String, Object> entry : stateMap.entrySet())
+            {
+                _behaviorsMap.put(entry.getKey(), (List<ClientBehavior>) restoreAttachedState(facesContext, entry.getValue()));
+            }
+        }
+        else
+        {
+            _behaviorsMap = null;
+        }        
+    }
+    
+    @SuppressWarnings("unchecked")
+    private void restoreDeltaBehaviorsMap(FacesContext facesContext, Object stateObj)
+    {
+        if (stateObj != null)
+        {
+            Map<String, Object> stateMap = (Map<String, Object>) stateObj;
+            int initCapacity = (stateMap.size() * 4 + 3) / 3;
+            if (_behaviorsMap == null)
+            {
+                _behaviorsMap = new HashMap<String,  List<ClientBehavior> >(initCapacity);
+            }
+            for (Map.Entry<String, Object> entry : stateMap.entrySet())
+            {
+                Object savedObject = entry.getValue(); 
+                if (savedObject instanceof _AttachedDeltaWrapper)
+                {
+                    StateHolder holderList = (StateHolder) _behaviorsMap.get(entry.getKey());
+                    holderList.restoreState(facesContext, ((_AttachedDeltaWrapper) savedObject).getWrappedStateObject());
+                }
+                else
+                {
+                    _behaviorsMap.put(entry.getKey(), (List<ClientBehavior>) restoreAttachedState(facesContext, savedObject));
+                }
+            }
+        }
+    }
+    
+    private Object saveBehaviorsMap(FacesContext facesContext)
+    {
+        if (_behaviorsMap != null)
+        {
+            if (initialStateMarked())
+            {
+                HashMap<String, Object> stateMap = new HashMap<String, Object>(_behaviorsMap.size(), 1);
+                boolean nullDelta = true;
+                for (Map.Entry<String, List<ClientBehavior> > entry : _behaviorsMap.entrySet())
+                {
+                    // The list is always an instance of _DeltaList so we can cast to
+                    // PartialStateHolder 
+                    PartialStateHolder holder = (PartialStateHolder) entry.getValue();
+                    if (holder.initialStateMarked())
+                    {
+                        Object attachedState = holder.saveState(facesContext);
+                        if (attachedState != null)
+                        {
+                            stateMap.put(entry.getKey(), new _AttachedDeltaWrapper(_behaviorsMap.getClass(),
+                                    attachedState));
+                            nullDelta = false;
+                        }
+                    }
+                    else
+                    {
+                        stateMap.put(entry.getKey(), saveAttachedState(facesContext, holder));
+                        nullDelta = false;
+                    }
+                }
+                if (nullDelta)
+                {
+                    return null;
+                }
+                return stateMap;
+            }
+            else
+            {
+                //Save it in the traditional way
+                HashMap<String, Object> stateMap = 
+                    new HashMap<String, Object>(_behaviorsMap.size(), 1);
+                for (Map.Entry<String, List<ClientBehavior> > entry : _behaviorsMap.entrySet())
+                {
+                    stateMap.put(entry.getKey(), saveAttachedState(facesContext, entry.getValue()));
+                }
+                return stateMap;
+            }
+        }
+        else
+        {
+            return null;
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    private void restoreFullSystemEventListenerClassMap(FacesContext facesContext, Object stateObj)
+    {
+        if (stateObj != null)
+        {
+            Map<Class<? extends SystemEvent>, Object> stateMap = (Map<Class<? extends SystemEvent>, Object>) stateObj;
+            int initCapacity = (stateMap.size() * 4 + 3) / 3;
+            _systemEventListenerClassMap = new HashMap<Class<? extends SystemEvent>, List<SystemEventListener>>(initCapacity);
+            for (Map.Entry<Class<? extends SystemEvent>, Object> entry : stateMap.entrySet())
+            {
+                _systemEventListenerClassMap.put(entry.getKey(), (List<SystemEventListener>) restoreAttachedState(facesContext, entry.getValue()));
+            }
+        }
+        else
+        {
+            _systemEventListenerClassMap = null;
+        }        
+    }
+    
+    @SuppressWarnings("unchecked")
+    private void restoreDeltaSystemEventListenerClassMap(FacesContext facesContext, Object stateObj)
+    {
+        if (stateObj != null)
+        {
+            Map<Class<? extends SystemEvent>, Object> stateMap = (Map<Class<? extends SystemEvent>, Object>) stateObj;
+            int initCapacity = (stateMap.size() * 4 + 3) / 3;
+            if (_systemEventListenerClassMap == null)
+            {
+                _systemEventListenerClassMap = new HashMap<Class<? extends SystemEvent>, List<SystemEventListener>>(initCapacity);
+            }
+            for (Map.Entry<Class<? extends SystemEvent>, Object> entry : stateMap.entrySet())
+            {
+                Object savedObject = entry.getValue(); 
+                if (savedObject instanceof _AttachedDeltaWrapper)
+                {
+                    StateHolder holderList = (StateHolder) _systemEventListenerClassMap.get(entry.getKey());
+                    holderList.restoreState(facesContext, ((_AttachedDeltaWrapper) savedObject).getWrappedStateObject());
+                }
+                else
+                {
+                    _systemEventListenerClassMap.put(entry.getKey(), (List<SystemEventListener>) restoreAttachedState(facesContext, savedObject));
+                }
+            }
+        }
+    }
+    
+    private Object saveSystemEventListenerClassMap(FacesContext facesContext)
+    {
+        if (_systemEventListenerClassMap != null)
+        {
+            if (initialStateMarked())
+            {
+                HashMap<Class<? extends SystemEvent>, Object> stateMap = new HashMap<Class<? extends SystemEvent>, Object>(_systemEventListenerClassMap.size(), 1);
+                boolean nullDelta = true;
+                for (Map.Entry<Class<? extends SystemEvent>, List<SystemEventListener> > entry : _systemEventListenerClassMap.entrySet())
+                {
+                    // The list is always an instance of _DeltaList so we can cast to
+                    // PartialStateHolder 
+                    PartialStateHolder holder = (PartialStateHolder) entry.getValue();
+                    if (holder.initialStateMarked())
+                    {
+                        Object attachedState = holder.saveState(facesContext);
+                        if (attachedState != null)
+                        {
+                            stateMap.put(entry.getKey(), new _AttachedDeltaWrapper(_systemEventListenerClassMap.getClass(),
+                                    attachedState));
+                            nullDelta = false;
+                        }
+                    }
+                    else
+                    {
+                        stateMap.put(entry.getKey(), saveAttachedState(facesContext, holder));
+                        nullDelta = false;
+                    }
+                }
+                if (nullDelta)
+                {
+                    return null;
+                }
+                return stateMap;
+            }
+            else
+            {
+                //Save it in the traditional way
+                HashMap<Class<? extends SystemEvent>, Object> stateMap = 
+                    new HashMap<Class<? extends SystemEvent>, Object>(_systemEventListenerClassMap.size(), 1);
+                for (Map.Entry<Class<? extends SystemEvent>, List<SystemEventListener> > entry : _systemEventListenerClassMap.entrySet())
+                {
+                    stateMap.put(entry.getKey(), saveAttachedState(facesContext, entry.getValue()));
+                }
+                return stateMap;
+            }
+        }
+        else
+        {
+            return null;
+        }
+    }
+    
     /*
     private Object saveBindings(FacesContext context)
     {

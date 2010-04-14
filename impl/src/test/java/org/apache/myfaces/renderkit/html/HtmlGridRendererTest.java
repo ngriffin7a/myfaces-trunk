@@ -21,6 +21,7 @@ package org.apache.myfaces.renderkit.html;
 import java.io.StringWriter;
 
 import javax.faces.component.UIColumn;
+import javax.faces.component.behavior.AjaxBehavior;
 import javax.faces.component.html.HtmlOutputText;
 import javax.faces.component.html.HtmlPanelGrid;
 
@@ -29,9 +30,9 @@ import junit.framework.TestSuite;
 
 import org.apache.myfaces.test.utils.HtmlCheckAttributesUtil;
 import org.apache.myfaces.test.utils.HtmlRenderedAttr;
-import org.apache.shale.test.base.AbstractJsfTestCase;
-import org.apache.shale.test.mock.MockRenderKitFactory;
-import org.apache.shale.test.mock.MockResponseWriter;
+import org.apache.myfaces.test.base.AbstractJsfTestCase;
+import org.apache.myfaces.test.mock.MockRenderKitFactory;
+import org.apache.myfaces.test.mock.MockResponseWriter;
 
 /**
  * @author Bruno Aranda (latest modification by $Author: baranda $)
@@ -105,9 +106,10 @@ public class HtmlGridRendererTest extends AbstractJsfTestCase
         facesContext.renderResponse();
 
         String output = writer.getWriter().toString();
-        assertEquals("<table><tbody><tr><td>col1Text</td></tr>" + LINE_SEPARATOR +
+        assertEquals("<table><tbody>"+LINE_SEPARATOR+
+                "<tr><td>col1Text</td></tr>" + LINE_SEPARATOR +
                 "<tr><td>col2Text</td></tr>" + LINE_SEPARATOR +
-                "</tbody></table>", output);
+                "</tbody>"+LINE_SEPARATOR+"</table>", output);
     }
 
     public void testHtmlPropertyPassTru() throws Exception 
@@ -130,5 +132,25 @@ public class HtmlGridRendererTest extends AbstractJsfTestCase
         if(HtmlCheckAttributesUtil.hasFailedAttrRender(attrs)) {
             fail(HtmlCheckAttributesUtil.constructErrorMessage(attrs, writer.getWriter().toString()));
         }
+    }
+    
+    /**
+     * Components that render client behaviors should always render "id" and "name" attribute
+     */
+    public void testClientBehaviorHolderRendersIdAndName() 
+    {
+        panelGrid.addClientBehavior("click", new AjaxBehavior());
+        try 
+        {
+            panelGrid.encodeAll(facesContext);
+            String output = ((StringWriter) writer.getWriter()).getBuffer().toString();
+            assertTrue(output.matches(".+id=\".+\".+"));
+            assertTrue(output.matches(".+name=\".+\".+"));
+        }
+        catch (Exception e)
+        {
+            fail(e.getMessage());
+        }
+        
     }
 }

@@ -23,10 +23,6 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.context.FacesContext;
-import javax.faces.event.PhaseId;
-import javax.faces.event.PostAddToViewEvent;
-
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
@@ -58,11 +54,11 @@ class _ComponentChildrenList extends AbstractList<UIComponent> implements Serial
     public UIComponent set(int index, UIComponent value)
     {
         checkValue(value);
-        
+        removeChildrenFromParent(value);
         UIComponent child = _list.set(index, value);
         if (child != value)
         {
-            childAdded(value);
+            updateParent(value);
             if (child != null)
             {
                 child.setParent(null);
@@ -76,10 +72,11 @@ class _ComponentChildrenList extends AbstractList<UIComponent> implements Serial
     public boolean add(UIComponent value)
     {
         checkValue(value);
-        
+
+        removeChildrenFromParent(value);
         boolean res = _list.add(value);
         
-        childAdded(value);
+        updateParent(value);
         
         return res;
     }
@@ -89,9 +86,11 @@ class _ComponentChildrenList extends AbstractList<UIComponent> implements Serial
     {
         checkValue(value);
         
+        removeChildrenFromParent(value);
+        
         _list.add(index, value);
         
-        childAdded(value);
+        updateParent(value);
     }
 
     @Override
@@ -119,25 +118,6 @@ class _ComponentChildrenList extends AbstractList<UIComponent> implements Serial
         }
     }
 
-    private void childAdded(UIComponent child)
-    {
-        updateParent(child);
-        
-        /*
-        FacesContext context = FacesContext.getCurrentInstance();
-        
-        // After the child component has been added to the view, if the following condition is not met
-        // FacesContext.isPostback() returns true and FacesContext.getCurrentPhaseId() returns PhaseId.RESTORE_VIEW
-        if (!(context.isPostback() && PhaseId.RESTORE_VIEW.equals(context.getCurrentPhaseId())))
-        {
-            // Application.publishEvent(java.lang.Class, java.lang.Object)  must be called, passing 
-            // PostAddToViewEvent.class as the first argument and the newly added component as the second 
-            // argument. TODO: Deal with isInView
-            context.getApplication().publishEvent(PostAddToViewEvent.class, child);
-        }
-        */
-    }
-
     private void childRemoved(UIComponent child)
     {
         child.setParent(null);
@@ -145,18 +125,28 @@ class _ComponentChildrenList extends AbstractList<UIComponent> implements Serial
 
     private void updateParent(UIComponent child)
     {
+        child.setParent(_component);
+    }
+    
+    private void removeChildrenFromParent(UIComponent child)
+    {
         UIComponent oldParent = child.getParent();
         if (oldParent != null)
         {
             oldParent.getChildren().remove(child);
         }
-        
-        child.setParent(_component);
     }
 
     @Override
-    public boolean remove(Object o)
+    public boolean remove(Object value)
     {
-        return _list.remove(o);
+        checkValue(value);
+        
+        if (_list.remove(value))
+        {
+            childRemoved((UIComponent)value);
+            return true;
+        }
+        return false;
     }
 }

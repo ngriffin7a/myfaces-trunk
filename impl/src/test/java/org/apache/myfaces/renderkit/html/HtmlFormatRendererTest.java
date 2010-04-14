@@ -20,6 +20,7 @@ package org.apache.myfaces.renderkit.html;
 
 import java.io.StringWriter;
 
+import javax.faces.component.UIParameter;
 import javax.faces.component.html.HtmlOutputFormat;
 
 import junit.framework.Test;
@@ -27,9 +28,9 @@ import junit.framework.TestSuite;
 
 import org.apache.myfaces.test.utils.HtmlCheckAttributesUtil;
 import org.apache.myfaces.test.utils.HtmlRenderedAttr;
-import org.apache.shale.test.base.AbstractJsfTestCase;
-import org.apache.shale.test.mock.MockRenderKitFactory;
-import org.apache.shale.test.mock.MockResponseWriter;
+import org.apache.myfaces.test.base.AbstractJsfTestCase;
+import org.apache.myfaces.test.mock.MockRenderKitFactory;
+import org.apache.myfaces.test.mock.MockResponseWriter;
 
 public class HtmlFormatRendererTest extends AbstractJsfTestCase
 {
@@ -84,5 +85,27 @@ public class HtmlFormatRendererTest extends AbstractJsfTestCase
         if(HtmlCheckAttributesUtil.hasFailedAttrRender(attrs)) {
             fail(HtmlCheckAttributesUtil.constructErrorMessage(attrs, writer.getWriter().toString()));
         }
+    }
+    
+    /**
+     * If the disable attribute of a child UIParameter is true,
+     * he should be ignored.
+     * @throws Exception
+     */
+    public void testDisabledUIParameterNotRendered() throws Exception
+    {
+        UIParameter param1 = new UIParameter();
+        param1.setValue("value1");
+        param1.setDisable(true);
+        UIParameter param2 = new UIParameter();
+        param2.setValue("value2");
+        outputFormat.getChildren().add(param1);
+        outputFormat.getChildren().add(param2);
+        
+        outputFormat.setValue("prefix{0}-{1}suffix");
+        
+        outputFormat.encodeAll(facesContext);
+        String output = writer.getWriter().toString();
+        assertEquals("prefixvalue2-{1}suffix", output);
     }
 }

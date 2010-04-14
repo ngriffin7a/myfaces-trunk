@@ -18,17 +18,41 @@
  */
 package org.apache.myfaces.application.jsp;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 import org.apache.commons.collections.map.AbstractReferenceMap;
 import org.apache.commons.collections.map.ReferenceMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.myfaces.application.MyfacesStateManager;
 import org.apache.myfaces.application.TreeStructureManager;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
 import org.apache.myfaces.renderkit.MyfacesResponseStateManager;
 import org.apache.myfaces.shared_impl.renderkit.RendererUtils;
 import org.apache.myfaces.shared_impl.util.MyFacesObjectInputStream;
 
-import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.component.NamingContainer;
 import javax.faces.component.UIComponent;
@@ -38,14 +62,16 @@ import javax.faces.context.FacesContext;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.ResponseStateManager;
-import java.io.*;
-import java.lang.reflect.Method;
-import java.security.AccessController;
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
-import java.util.*;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
+import javax.faces.view.StateManagementStrategy;
+import javax.faces.view.ViewDeclarationLanguage;
+
+import org.apache.commons.collections.map.AbstractReferenceMap;
+import org.apache.commons.collections.map.ReferenceMap;
+import org.apache.myfaces.application.MyfacesStateManager;
+import org.apache.myfaces.application.TreeStructureManager;
+import org.apache.myfaces.renderkit.MyfacesResponseStateManager;
+import org.apache.myfaces.shared_impl.renderkit.RendererUtils;
+import org.apache.myfaces.shared_impl.util.MyFacesObjectInputStream;
 
 /**
  * Default StateManager implementation for use when views are defined
@@ -57,7 +83,8 @@ import java.util.zip.GZIPOutputStream;
  */
 public class JspStateManagerImpl extends MyfacesStateManager
 {
-    private static final Log log = LogFactory.getLog(JspStateManagerImpl.class);
+    //private static final Log log = LogFactory.getLog(JspStateManagerImpl.class);
+    private static final Logger log = Logger.getLogger(JspStateManagerImpl.class.getName());
     
     private static final String SERIALIZED_VIEW_SESSION_ATTR= 
         JspStateManagerImpl.class.getName() + ".SERIALIZED_VIEW";
@@ -72,6 +99,7 @@ public class JspStateManagerImpl extends MyfacesStateManager
      * Only applicable if state saving method is "server" (= default).
      * Defines the amount (default = 20) of the latest views are stored in session.
      */
+    @JSFWebConfigParam(defaultValue="20",since="1.1")
     private static final String NUMBER_OF_VIEWS_IN_SESSION_PARAM = "org.apache.myfaces.NUMBER_OF_VIEWS_IN_SESSION";
 
     /**
@@ -84,6 +112,7 @@ public class JspStateManagerImpl extends MyfacesStateManager
      * If <code>true</code> (default) the state will be serialized to a byte stream before it is written to the session.
      * If <code>false</code> the state will not be serialized to a byte stream.
      */
+    @JSFWebConfigParam(defaultValue="true",since="1.1")
     private static final String SERIALIZE_STATE_IN_SESSION_PARAM = "org.apache.myfaces.SERIALIZE_STATE_IN_SESSION";
 
     /**
@@ -91,6 +120,7 @@ public class JspStateManagerImpl extends MyfacesStateManager
      * If <code>true</code> (default) the serialized state will be compressed before it is written to the session.
      * If <code>false</code> the state will not be compressed.
      */
+    @JSFWebConfigParam(defaultValue="true",since="1.1")
     private static final String COMPRESS_SERVER_STATE_PARAM = "org.apache.myfaces.COMPRESS_STATE_IN_SESSION";
 
     /**
@@ -126,6 +156,7 @@ public class JspStateManagerImpl extends MyfacesStateManager
      * </ul>
      * 
      */
+    @JSFWebConfigParam(defaultValue="off", expectedValues="off, no, hard-soft, soft, soft-weak, weak", since="1.2.5")
     private static final String CACHE_OLD_VIEWS_IN_SESSION_MODE = "org.apache.myfaces.CACHE_OLD_VIEWS_IN_SESSION_MODE";
     
     /**
@@ -152,13 +183,13 @@ public class JspStateManagerImpl extends MyfacesStateManager
 
     public JspStateManagerImpl()
     {
-        if (log.isTraceEnabled()) log.trace("New JspStateManagerImpl instance created");
+        if (log.isLoggable(Level.FINEST)) log.finest("New JspStateManagerImpl instance created");
     }
 
     @Override
     protected Object getComponentStateToSave(FacesContext facesContext)
     {
-        if (log.isTraceEnabled()) log.trace("Entering getComponentStateToSave");
+        if (log.isLoggable(Level.FINEST)) log.finest("Entering getComponentStateToSave");
 
         UIViewRoot viewRoot = facesContext.getViewRoot();
         if (viewRoot.isTransient())
@@ -168,7 +199,7 @@ public class JspStateManagerImpl extends MyfacesStateManager
 
         Object serializedComponentStates = viewRoot.processSaveState(facesContext);
         //Locale is a state attribute of UIViewRoot and need not be saved explicitly
-        if (log.isTraceEnabled()) log.trace("Exiting getComponentStateToSave");
+        if (log.isLoggable(Level.FINEST)) log.finest("Exiting getComponentStateToSave");
         return serializedComponentStates;
     }
 
@@ -181,7 +212,7 @@ public class JspStateManagerImpl extends MyfacesStateManager
     @Override
     protected Object getTreeStructureToSave(FacesContext facesContext)
     {
-        if (log.isTraceEnabled()) log.trace("Entering getTreeStructureToSave");
+        if (log.isLoggable(Level.FINEST)) log.finest("Entering getTreeStructureToSave");
         UIViewRoot viewRoot = facesContext.getViewRoot();
         if (viewRoot.isTransient())
         {
@@ -189,7 +220,7 @@ public class JspStateManagerImpl extends MyfacesStateManager
         }
         TreeStructureManager tsm = new TreeStructureManager();
         Object retVal = tsm.buildTreeStructureToSave(viewRoot);
-        if (log.isTraceEnabled()) log.trace("Exiting getTreeStructureToSave");
+        if (log.isLoggable(Level.FINEST)) log.finest("Exiting getTreeStructureToSave");
         return retVal;
     }
 
@@ -204,7 +235,7 @@ public class JspStateManagerImpl extends MyfacesStateManager
                                          UIViewRoot uiViewRoot,
                                          String renderKitId)
     {
-        if (log.isTraceEnabled()) log.trace("Entering restoreComponentState");
+        if (log.isLoggable(Level.FINEST)) log.finest("Entering restoreComponentState");
 
         //===========================================
         // first, locate the saved state information
@@ -226,7 +257,7 @@ public class JspStateManagerImpl extends MyfacesStateManager
             }
             if (serializedComponentStates == null)
             {
-                log.error("No serialized component state found in client request!");
+                log.severe("No serialized component state found in client request!");
                 // mark UIViewRoot invalid by resetting view id
                 uiViewRoot.setViewId(null);
                 return;
@@ -239,7 +270,7 @@ public class JspStateManagerImpl extends MyfacesStateManager
             Object[] stateObj = (Object[]) getSerializedViewFromServletSession(facesContext, uiViewRoot.getViewId(), serverStateId);
             if (stateObj == null)
             {
-                 log.error("No serialized view found in server session!");
+                 log.severe("No serialized view found in server session!");
                 // mark UIViewRoot invalid by resetting view id
                 uiViewRoot.setViewId(null);
                 return;
@@ -248,7 +279,7 @@ public class JspStateManagerImpl extends MyfacesStateManager
             serializedComponentStates = serializedView.getState();
             if (serializedComponentStates == null)
             {
-                log.error("No serialized component state found in server session!");
+                log.severe("No serialized component state found in server session!");
                 return;
             }
         }
@@ -262,7 +293,7 @@ public class JspStateManagerImpl extends MyfacesStateManager
         // now ask the view root component to restore its state
         uiViewRoot.processRestoreState(facesContext, serializedComponentStates);
 
-        if (log.isTraceEnabled()) log.trace("Exiting restoreComponentState");
+        if (log.isLoggable(Level.FINEST)) log.finest("Exiting restoreComponentState");
     }
 
       protected Integer getServerStateId(Object[] state)
@@ -286,7 +317,7 @@ public class JspStateManagerImpl extends MyfacesStateManager
                                               String viewId,
                                               String renderKitId)
     {
-        if (log.isTraceEnabled()) log.trace("Entering restoreTreeStructure");
+        if (log.isLoggable(Level.FINEST)) log.finest("Entering restoreTreeStructure");
 
         RenderKit rk = getRenderKitFactory().getRenderKit(facesContext, renderKitId);
         ResponseStateManager responseStateManager = rk.getResponseStateManager();
@@ -298,13 +329,13 @@ public class JspStateManagerImpl extends MyfacesStateManager
             Object treeStructure = responseStateManager.getTreeStructureToRestore(facesContext, viewId);
             if (treeStructure == null)
             {
-                if (log.isDebugEnabled()) log.debug("Exiting restoreTreeStructure - No tree structure state found in client request");
+                if (log.isLoggable(Level.FINE)) log.fine("Exiting restoreTreeStructure - No tree structure state found in client request");
                 return null;
             }
 
             TreeStructureManager tsm = new TreeStructureManager();
             uiViewRoot = tsm.restoreTreeStructure(treeStructure);
-            if (log.isTraceEnabled()) log.trace("Tree structure restored from client request");
+            if (log.isLoggable(Level.FINEST)) log.finest("Tree structure restored from client request");
         }
         else
         {
@@ -314,7 +345,7 @@ public class JspStateManagerImpl extends MyfacesStateManager
             Object[] stateObj = (Object[]) getSerializedViewFromServletSession(facesContext, viewId, serverStateId);
             if (stateObj == null)
             {
-                if (log.isDebugEnabled()) log.debug("Exiting restoreTreeStructure - No serialized view found in server session!");
+                if (log.isLoggable(Level.FINE)) log.fine("Exiting restoreTreeStructure - No serialized view found in server session!");
                 return null;
             }
 
@@ -322,68 +353,121 @@ public class JspStateManagerImpl extends MyfacesStateManager
             Object treeStructure = serializedView.getStructure();
             if (treeStructure == null)
             {
-                if (log.isDebugEnabled()) log.debug("Exiting restoreTreeStructure - No tree structure state found in server session, former UIViewRoot must have been transient");
+                if (log.isLoggable(Level.FINE)) log.fine("Exiting restoreTreeStructure - No tree structure state found in server session, former UIViewRoot must have been transient");
                 return null;
             }
 
             TreeStructureManager tsm = new TreeStructureManager();
             uiViewRoot = tsm.restoreTreeStructure(serializedView.getStructure());
-            if (log.isTraceEnabled()) log.trace("Tree structure restored from server session");
+            if (log.isLoggable(Level.FINEST)) log.finest("Tree structure restored from server session");
         }
 
-        if (log.isTraceEnabled()) log.trace("Exiting restoreTreeStructure");
+        if (log.isLoggable(Level.FINEST)) log.finest("Exiting restoreTreeStructure");
         return uiViewRoot;
     }
 
     @Override
     public UIViewRoot restoreView(FacesContext facesContext, String viewId, String renderKitId)
     {
-        if (log.isTraceEnabled()) log.trace("Entering restoreView - viewId: "+viewId+" ; renderKitId: "+renderKitId);
+        if (log.isLoggable(Level.FINEST)) log.finest("Entering restoreView - viewId: "+viewId+" ; renderKitId: "+renderKitId);
 
-        RenderKit renderKit = getRenderKitFactory().getRenderKit(facesContext, renderKitId);
-        ResponseStateManager responseStateManager = renderKit.getResponseStateManager();
-
-        Object state;
-        if (isSavingStateInClient(facesContext))
+        UIViewRoot uiViewRoot = null;
+        
+        ViewDeclarationLanguage vdl = facesContext.getApplication().
+            getViewHandler().getViewDeclarationLanguage(facesContext,viewId);
+        StateManagementStrategy sms = null; 
+        if (vdl != null)
         {
-            if (log.isTraceEnabled()) log.trace("Restoring view from client");
-
-            state = responseStateManager.getState(facesContext, viewId);
+            sms = vdl.getStateManagementStrategy(facesContext, viewId);
+        }
+        
+        if (sms != null)
+        {
+            if (log.isLoggable(Level.FINEST)) log.finest("Redirect to StateManagementStrategy: "+sms.getClass().getName());
+            
+            uiViewRoot = sms.restoreView(facesContext, viewId, renderKitId);
         }
         else
         {
-            if (log.isTraceEnabled()) log.trace("Restoring view from session");
+            RenderKit renderKit = getRenderKitFactory().getRenderKit(facesContext, renderKitId);
+            ResponseStateManager responseStateManager = renderKit.getResponseStateManager();
 
-            Integer serverStateId = getServerStateId((Object[]) responseStateManager.getState(facesContext, viewId));
+            Object state;
+            if (isSavingStateInClient(facesContext))
+            {
+                if (log.isLoggable(Level.FINEST)) log.finest("Restoring view from client");
 
-            state = getSerializedViewFromServletSession(facesContext, viewId, serverStateId);
-        }
-
-        UIViewRoot uiViewRoot = null;
-
-        if (state != null) {
-            Object[] stateArray = (Object[])state;
-            TreeStructureManager tsm = new TreeStructureManager();
-            uiViewRoot = tsm.restoreTreeStructure(stateArray[0]);
-
-            if (uiViewRoot != null) {
-                uiViewRoot.processRestoreState(facesContext, stateArray[1]);
+                state = responseStateManager.getState(facesContext, viewId);
             }
-        }
+            else
+            {
+                if (log.isLoggable(Level.FINEST)) log.finest("Restoring view from session");
 
-        if (log.isTraceEnabled()) log.trace("Exiting restoreView - "+viewId);
+                Integer serverStateId = getServerStateId((Object[]) responseStateManager.getState(facesContext, viewId));
+
+                state = getSerializedViewFromServletSession(facesContext, viewId, serverStateId);
+            }
+
+            if (state != null) {
+                Object[] stateArray = (Object[])state;
+                TreeStructureManager tsm = new TreeStructureManager();
+                uiViewRoot = tsm.restoreTreeStructure(stateArray[0]);
+
+                if (uiViewRoot != null) {
+                    facesContext.setViewRoot (uiViewRoot);
+                    uiViewRoot.processRestoreState(facesContext, stateArray[1]);
+                }
+            }            
+        }
+        if (log.isLoggable(Level.FINEST)) log.finest("Exiting restoreView - "+viewId);
 
         return uiViewRoot;
     }
 
+    /**
+     * Wrap the original method and redirect to VDL StateManagementStrategy when
+     * necessary
+     */
+    @Override
+    public Object saveView(FacesContext facesContext)
+    {
+        UIViewRoot uiViewRoot = facesContext.getViewRoot();
+        
+        String viewId = uiViewRoot.getViewId();
+        ViewDeclarationLanguage vdl = facesContext.getApplication().
+            getViewHandler().getViewDeclarationLanguage(facesContext,viewId);
+        if (vdl != null)
+        {
+            StateManagementStrategy sms = vdl.getStateManagementStrategy(facesContext, viewId);
+            
+            if (sms != null)
+            {
+                if (log.isLoggable(Level.FINEST)) log.finest("Calling saveView of StateManagementStrategy: "+sms.getClass().getName());
+                
+                return sms.saveView(facesContext);
+            }
+        }
+
+        // In StateManagementStrategy.saveView there is a check for transient at
+        // start, but the same applies for VDL without StateManagementStrategy,
+        // so this should be checked before call parent (note that parent method
+        // does not do this check).
+        if (uiViewRoot.isTransient())
+        {
+            return null;
+        }
+
+        return super.saveView(facesContext);
+    }
+    
     @Override
     public SerializedView saveSerializedView(FacesContext facesContext) throws IllegalStateException
     {
-        if (log.isTraceEnabled()) log.trace("Entering saveSerializedView");
+        if (log.isLoggable(Level.FINEST)) log.finest("Entering saveSerializedView");
 
         checkForDuplicateIds(facesContext, facesContext.getViewRoot(), new HashSet<String>());
 
-        if (log.isTraceEnabled()) log.trace("Processing saveSerializedView - Checked for duplicate Ids");
+        if (log.isLoggable(Level.FINEST)) log.finest("Processing saveSerializedView - Checked for duplicate Ids");
 
         ExternalContext externalContext = facesContext.getExternalContext();
 
@@ -392,7 +476,7 @@ public class JspStateManagerImpl extends MyfacesStateManager
                                                             .get(SERIALIZED_VIEW_REQUEST_ATTR);
         if (serializedView == null)
         {
-            if (log.isTraceEnabled()) log.trace("Processing saveSerializedView - create new serialized view");
+            if (log.isLoggable(Level.FINEST)) log.finest("Processing saveSerializedView - create new serialized view");
 
             // first call to saveSerializedView --> create SerializedView
             Object treeStruct = getTreeStructureToSave(facesContext);
@@ -401,22 +485,22 @@ public class JspStateManagerImpl extends MyfacesStateManager
             externalContext.getRequestMap().put(SERIALIZED_VIEW_REQUEST_ATTR,
                                                 serializedView);
 
-            if (log.isTraceEnabled()) log.trace("Processing saveSerializedView - new serialized view created");
+            if (log.isLoggable(Level.FINEST)) log.finest("Processing saveSerializedView - new serialized view created");
         }
 
         Object[] serializedViewArray = (Object[]) serializedView;
 
         if (!isSavingStateInClient(facesContext))
         {
-            if (log.isTraceEnabled()) log.trace("Processing saveSerializedView - server-side state saving - save state");
+            if (log.isLoggable(Level.FINEST)) log.finest("Processing saveSerializedView - server-side state saving - save state");
             //save state in server session
             saveSerializedViewInServletSession(facesContext, serializedView);
 
-            if (log.isTraceEnabled()) log.trace("Exiting saveSerializedView - server-side state saving - saved state");
+            if (log.isLoggable(Level.FINEST)) log.finest("Exiting saveSerializedView - server-side state saving - saved state");
             return new SerializedView(serializedViewArray[0], new Object[0]);
         }
 
-        if (log.isTraceEnabled()) log.trace("Exiting saveSerializedView - client-side state saving");
+        if (log.isLoggable(Level.FINEST)) log.finest("Exiting saveSerializedView - client-side state saving");
 
         return new SerializedView(serializedViewArray[0], serializedViewArray[1]);
     }
@@ -496,7 +580,7 @@ public class JspStateManagerImpl extends MyfacesStateManager
     public void writeState(FacesContext facesContext,
                            SerializedView serializedView) throws IOException
     {
-        if (log.isTraceEnabled()) log.trace("Entering writeState");
+        if (log.isLoggable(Level.FINEST)) log.finest("Entering writeState");
 
         UIViewRoot uiViewRoot = facesContext.getViewRoot();
         //save state in response (client)
@@ -521,8 +605,39 @@ public class JspStateManagerImpl extends MyfacesStateManager
             responseStateManager.writeState(facesContext, state);
         }
 
-        if (log.isTraceEnabled()) log.trace("Exiting writeState");
+        if (log.isLoggable(Level.FINEST)) log.finest("Exiting writeState");
 
+    }
+
+    @Override
+    public String getViewState(FacesContext facesContext)
+    {
+        UIViewRoot uiViewRoot = facesContext.getViewRoot();
+        String viewId = uiViewRoot.getViewId();
+        ViewDeclarationLanguage vdl = facesContext.getApplication().getViewHandler().getViewDeclarationLanguage(facesContext,viewId);
+        if (vdl != null)
+        {
+            StateManagementStrategy sms = vdl.getStateManagementStrategy(facesContext, viewId);
+            
+            if (sms != null)
+            {
+                if (log.isLoggable(Level.FINEST)) log.finest("Calling saveView of StateManagementStrategy from getViewState: "+sms.getClass().getName());
+                
+                return facesContext.getRenderKit().getResponseStateManager().getViewState(facesContext, saveView(facesContext));
+            }
+        }
+        Object[] savedState = (Object[]) saveView(facesContext);
+        
+        if (!isSavingStateInClient(facesContext))
+        {
+            Object[] state = new Object[2];
+            state[JSF_SEQUENCE_INDEX] = Integer.toString(getNextViewSequence(facesContext), Character.MAX_RADIX);
+            return facesContext.getRenderKit().getResponseStateManager().getViewState(facesContext, state);
+        }
+        else
+        {
+            return facesContext.getRenderKit().getResponseStateManager().getViewState(facesContext, savedState);
+        }
     }
 
     /**
@@ -535,11 +650,11 @@ public class JspStateManagerImpl extends MyfacesStateManager
     public void writeStateAsUrlParams(FacesContext facesContext,
                                       SerializedView serializedView) throws IOException
     {
-        if (log.isTraceEnabled()) log.trace("Entering writeStateAsUrlParams");
+        if (log.isLoggable(Level.FINEST)) log.finest("Entering writeStateAsUrlParams");
 
         if (isSavingStateInClient(facesContext))
         {
-            if (log.isTraceEnabled()) log.trace("Processing writeStateAsUrlParams - client-side state saving writing state");
+            if (log.isLoggable(Level.FINEST)) log.finest("Processing writeStateAsUrlParams - client-side state saving writing state");
 
             UIViewRoot uiViewRoot = facesContext.getViewRoot();
             //save state in response (client)
@@ -552,11 +667,11 @@ public class JspStateManagerImpl extends MyfacesStateManager
             }
             else
             {
-                log.error("ResponseStateManager of render kit " + uiViewRoot.getRenderKitId() + " is no MyfacesResponseStateManager and does not support saving state in url parameters.");
+                log.severe("ResponseStateManager of render kit " + uiViewRoot.getRenderKitId() + " is no MyfacesResponseStateManager and does not support saving state in url parameters.");
             }
         }
 
-        if (log.isTraceEnabled()) log.trace("Exiting writeStateAsUrlParams");
+        if (log.isLoggable(Level.FINEST)) log.finest("Exiting writeStateAsUrlParams");
     }
 
     //helpers
@@ -668,11 +783,11 @@ public class JspStateManagerImpl extends MyfacesStateManager
 
     protected Object serializeView(FacesContext context, Object serializedView)
     {
-        if (log.isTraceEnabled()) log.trace("Entering serializeView");
+        if (log.isLoggable(Level.FINEST)) log.finest("Entering serializeView");
 
         if(isSerializeStateInSession(context))
         {
-            if (log.isTraceEnabled()) log.trace("Processing serializeView - serialize state in session");
+            if (log.isLoggable(Level.FINEST)) log.finest("Processing serializeView - serialize state in session");
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
             try
@@ -680,14 +795,14 @@ public class JspStateManagerImpl extends MyfacesStateManager
                 OutputStream os = baos;
                 if(isCompressStateInSession(context))
                 {
-                    if (log.isTraceEnabled()) log.trace("Processing serializeView - serialize compressed");
+                    if (log.isLoggable(Level.FINEST)) log.finest("Processing serializeView - serialize compressed");
 
                     os.write(COMPRESSED_FLAG);
                     os = new GZIPOutputStream(os, 1024);
                 }
                 else
                 {
-                    if (log.isTraceEnabled()) log.trace("Processing serializeView - serialize uncompressed");
+                    if (log.isLoggable(Level.FINEST)) log.finest("Processing serializeView - serialize uncompressed");
 
                     os.write(UNCOMPRESSED_FLAG);
                 }
@@ -700,19 +815,19 @@ public class JspStateManagerImpl extends MyfacesStateManager
                 out.close();
                 baos.close();
 
-                if (log.isTraceEnabled()) log.trace("Exiting serializeView - serialized. Bytes : "+baos.size());
+                if (log.isLoggable(Level.FINEST)) log.finest("Exiting serializeView - serialized. Bytes : "+baos.size());
                 return baos.toByteArray();
             }
             catch (IOException e)
             {
-                log.error("Exiting serializeView - Could not serialize state: " + e.getMessage(), e);
+                log.log(Level.SEVERE, "Exiting serializeView - Could not serialize state: " + e.getMessage(), e);
                 return null;
             }
         }
 
 
-        if (log.isTraceEnabled())
-            log.trace("Exiting serializeView - do not serialize state in session.");
+        if (log.isLoggable(Level.FINEST))
+            log.finest("Exiting serializeView - do not serialize state in session.");
 
         return serializedView;
 
@@ -756,11 +871,11 @@ public class JspStateManagerImpl extends MyfacesStateManager
 
     protected Object deserializeView(Object state)
     {
-        if (log.isTraceEnabled()) log.trace("Entering deserializeView");
+        if (log.isLoggable(Level.FINEST)) log.finest("Entering deserializeView");
 
         if(state instanceof byte[])
         {
-            if (log.isTraceEnabled()) log.trace("Processing deserializeView - deserializing serialized state. Bytes : "+((byte[]) state).length);
+            if (log.isLoggable(Level.FINEST)) log.finest("Processing deserializeView - deserializing serialized state. Bytes : "+((byte[]) state).length);
 
             try
             {
@@ -803,34 +918,34 @@ public class JspStateManagerImpl extends MyfacesStateManager
             }
             catch (PrivilegedActionException e) 
             {
-                log.error("Exiting deserializeView - Could not deserialize state: " + e.getMessage(), e);
+                log.log(Level.SEVERE, "Exiting deserializeView - Could not deserialize state: " + e.getMessage(), e);
                 return null;
             }
             catch (IOException e)
             {
-                log.error("Exiting deserializeView - Could not deserialize state: " + e.getMessage(), e);
+                log.log(Level.SEVERE, "Exiting deserializeView - Could not deserialize state: " + e.getMessage(), e);
                 return null;
             }
             catch (ClassNotFoundException e)
             {
-                log.error("Exiting deserializeView - Could not deserialize state: " + e.getMessage(), e);
+                log.log(Level.SEVERE, "Exiting deserializeView - Could not deserialize state: " + e.getMessage(), e);
                 return null;
             }
         }
         else if (state instanceof Object[])
         {
-            if (log.isTraceEnabled()) log.trace("Exiting deserializeView - state not serialized.");
+            if (log.isLoggable(Level.FINEST)) log.finest("Exiting deserializeView - state not serialized.");
 
             return state;
         }
         else if(state == null)
         {
-            log.error("Exiting deserializeView - this method should not be called with a null-state.");
+            log.severe("Exiting deserializeView - this method should not be called with a null-state.");
             return null;
         }
         else
         {
-            log.error("Exiting deserializeView - this method should not be called with a state of type : "+state.getClass());
+            log.severe("Exiting deserializeView - this method should not be called with a state of type : "+state.getClass());
             return null;
         }
     }
@@ -900,7 +1015,7 @@ public class JspStateManagerImpl extends MyfacesStateManager
                     views = Integer.parseInt(value);
                     if (views <= 0)
                     {
-                        log.error("Configured value for " + NUMBER_OF_VIEWS_IN_SESSION_PARAM
+                        log.severe("Configured value for " + NUMBER_OF_VIEWS_IN_SESSION_PARAM
                                   + " is not valid, must be an value > 0, using default value ("
                                   + DEFAULT_NUMBER_OF_VIEWS_IN_SESSION);
                         views = DEFAULT_NUMBER_OF_VIEWS_IN_SESSION;
@@ -908,7 +1023,7 @@ public class JspStateManagerImpl extends MyfacesStateManager
                 }
                 catch (Throwable e)
                 {
-                    log.error("Error determining the value for " + NUMBER_OF_VIEWS_IN_SESSION_PARAM
+                    log.log(Level.SEVERE, "Error determining the value for " + NUMBER_OF_VIEWS_IN_SESSION_PARAM
                               + ", expected an integer value > 0, using default value ("
                               + DEFAULT_NUMBER_OF_VIEWS_IN_SESSION + "): " + e.getMessage(), e);
                 }

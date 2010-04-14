@@ -32,7 +32,7 @@ import javax.faces.view.facelets.MetadataTarget;
  * @author Jacob Hookom
  * @version $Id: MetadataTargetImpl.java,v 1.3 2008/07/13 19:01:35 rlubke Exp $
  */
-final class MetadataTargetImpl extends MetadataTarget
+public final class MetadataTargetImpl extends MetadataTarget
 {
     private final Map<String, PropertyDescriptor> _pd;
     
@@ -92,7 +92,7 @@ final class MetadataTargetImpl extends MetadataTarget
         return null;
     }
 
-    public boolean isTargetInstanceOf(Class<?> type)
+    public boolean isTargetInstanceOf(Class type)
     {
         return type.isAssignableFrom(_type);
     }

@@ -42,9 +42,11 @@ import org.apache.myfaces.view.facelets.tag.MetaTagHandlerImpl;
  * set/create Validator is the passed UIComponent's parent is null, signifying that it wasn't restored from an existing
  * tree.
  * 
+ * @deprecated use javax.faces.view.facelets.ValidatorHandler instead
  * @author Jacob Hookom
  * @version $Id: ValidateHandler.java,v 1.4 2008/07/13 19:01:46 rlubke Exp $
  */
+@Deprecated
 public class ValidateHandler extends MetaTagHandlerImpl
 {
 
@@ -70,7 +72,6 @@ public class ValidateHandler extends MetaTagHandlerImpl
     }
 
     /**
-     * TODO
      * 
      * @see javax.faces.view.facelets.FaceletHandler#apply(javax.faces.view.facelets.FaceletContext, javax.faces.component.UIComponent)
      */
@@ -130,7 +131,7 @@ public class ValidateHandler extends MetaTagHandlerImpl
         return ctx.getFacesContext().getApplication().createValidator(this.validatorId);
     }
 
-    protected MetaRuleset createMetaRuleset(Class<?> type)
+    protected MetaRuleset createMetaRuleset(Class type)
     {
         return super.createMetaRuleset(type).ignore("binding");
     }

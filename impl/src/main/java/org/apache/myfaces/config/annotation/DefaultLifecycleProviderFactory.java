@@ -18,27 +18,36 @@
  */
 package org.apache.myfaces.config.annotation;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.discovery.resource.ClassLoaders;
 import org.apache.commons.discovery.resource.names.DiscoverServiceNames;
 import org.apache.commons.discovery.ResourceNameIterator;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
 import org.apache.myfaces.shared_impl.util.ClassUtils;
 
 import javax.faces.context.ExternalContext;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Constructor;
+
+import org.apache.commons.discovery.ResourceNameIterator;
+import org.apache.commons.discovery.resource.ClassLoaders;
+import org.apache.commons.discovery.resource.names.DiscoverServiceNames;
+import org.apache.myfaces.shared_impl.util.ClassUtils;
 
 /*
  * Date: Mar 12, 2007
  * Time: 9:53:40 PM
  */
 public class DefaultLifecycleProviderFactory extends LifecycleProviderFactory {
-    private static Log log = LogFactory.getLog(DefaultLifecycleProviderFactory.class);
+    //private static Log log = LogFactory.getLog(DefaultLifecycleProviderFactory.class);
+    private static Logger log = Logger.getLogger(DefaultLifecycleProviderFactory.class.getName());
     private static LifecycleProvider LIFECYCLE_PROVIDER_INSTANCE;
+    
+    @JSFWebConfigParam(name="org.apache.myfaces.config.annotation.LifecycleProvider", since="1.1")
     public static final String LIFECYCLE_PROVIDER = LifecycleProvider.class.getName();
 
 
@@ -96,19 +105,19 @@ public class DefaultLifecycleProviderFactory extends LifecycleProviderFactory {
         }
         catch (ClassNotFoundException e)
         {
-            log.error("", e);
+            log.log(Level.SEVERE, "", e);
         }
         catch (InstantiationException e)
         {
-            log.error("", e);
+            log.log(Level.SEVERE, "", e);
         }
         catch (IllegalAccessException e)
         {
-            log.error("", e);
+            log.log(Level.SEVERE, "", e);
         }
         catch (InvocationTargetException e)
         {
-            log.error("", e);
+            log.log(Level.SEVERE, "", e);
         }
         return false;
     }
@@ -118,6 +127,7 @@ public class DefaultLifecycleProviderFactory extends LifecycleProviderFactory {
         ClassLoader classLoader = ClassUtils.getContextClassLoader();
         ClassLoaders loaders = new ClassLoaders();
         loaders.put(classLoader);
+        loaders.put(this.getClass().getClassLoader());
         DiscoverServiceNames dsn = new DiscoverServiceNames(loaders);
         ResourceNameIterator iter = dsn.findResourceNames(LIFECYCLE_PROVIDER);
         while (iter.hasNext()) {
@@ -144,15 +154,15 @@ public class DefaultLifecycleProviderFactory extends LifecycleProviderFactory {
             }
             catch (InstantiationException e)
             {
-                log.error("", e);
+                log.log(Level.SEVERE, "", e);
             }
             catch (IllegalAccessException e)
             {
-                log.error("", e);
+                log.log(Level.SEVERE, "", e);
             }
             catch (InvocationTargetException e)
             {
-                log.error("", e);
+                log.log(Level.SEVERE, "", e);
             }
         }
         return false;
@@ -209,7 +219,7 @@ public class DefaultLifecycleProviderFactory extends LifecycleProviderFactory {
         {
             // no initial context available no injection
             LIFECYCLE_PROVIDER_INSTANCE = new NoInjectionAnnotationLifecycleProvider();
-            log.error("No InitialContext found. Using NoInjectionAnnotationProcessor.", e);
+            log.log(Level.SEVERE, "No InitialContext found. Using NoInjectionAnnotationProcessor.", e);
 
         }
     }

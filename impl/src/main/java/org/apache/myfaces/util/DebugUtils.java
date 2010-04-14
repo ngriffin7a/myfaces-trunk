@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.el.MethodExpression;
 import javax.el.ValueExpression;
@@ -41,7 +43,6 @@ import javax.faces.event.FacesListener;
 import javax.faces.validator.Validator;
 
 import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Utilities for logging.
@@ -51,7 +52,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public class DebugUtils
 {
-    private static final Log log = LogFactory.getLog(DebugUtils.class);
+    //private static final Log log = LogFactory.getLog(DebugUtils.class);
+    private static final Logger log = Logger.getLogger(DebugUtils.class.getName());
 
     // Attributes that should not be printed
     private static final HashSet<String> IGNORE_ATTRIBUTES;
@@ -102,18 +104,18 @@ public class DebugUtils
 
     public static void traceView(String additionalMsg)
     {
-        if (log.isTraceEnabled())
+        if (log.isLoggable(Level.FINEST))
         {
             FacesContext facesContext = FacesContext.getCurrentInstance();
             if (facesContext == null)
             {
-                log.error("Cannot not print view to console (no FacesContext).");
+                log.severe("Cannot not print view to console (no FacesContext).");
                 return;
             }
             UIViewRoot viewRoot = facesContext.getViewRoot();
             if (viewRoot == null)
             {
-                log.error("Cannot not print view to console (no ViewRoot in FacesContext).");
+                log.severe("Cannot not print view to console (no ViewRoot in FacesContext).");
                 return;
             }
 
@@ -140,7 +142,7 @@ public class DebugUtils
         printView(viewRoot, ps);
         ps.println("========================================");
         ps.close();
-        log.trace(baos.toString());
+        log.finest(baos.toString());
     }
 
     public static void printView(UIViewRoot uiViewRoot, PrintStream stream)
@@ -169,14 +171,14 @@ public class DebugUtils
             compType = compType.substring(MYFACES_COMPONENT_PACKAGE.length());
         }
         stream.print(compType);
-
+        
         printAttribute(stream, "id", comp.getId());
 
         if (facetName != null)
         {
             printAttribute(stream, "facetName", facetName);
         }
-
+        
         for (Map.Entry<String, Object> entry : comp.getAttributes().entrySet())
         {
             if (!"id".equals(entry.getKey()))
@@ -184,7 +186,7 @@ public class DebugUtils
                 printAttribute(stream, entry.getKey(), entry.getValue());
             }
         }
-
+        
         // HACK: comp.getAttributes() only returns attributes, that are NOT backed
         // by a corresponding component property. So, we must explicitly get the
         // available properties by Introspection:
@@ -198,36 +200,39 @@ public class DebugUtils
             throw new RuntimeException(e);
         }
 
-        PropertyDescriptor propDescriptors[] = beanInfo.getPropertyDescriptors();
-        for (int i = 0; i < propDescriptors.length; i++)
+        if (!compType.startsWith("org.apache.myfaces.view.facelets.compiler"))
         {
-            if (propDescriptors[i].getReadMethod() != null)
+            PropertyDescriptor propDescriptors[] = beanInfo.getPropertyDescriptors();
+            for (int i = 0; i < propDescriptors.length; i++)
             {
-                String name = propDescriptors[i].getName();
-                if (!"id".equals(name))
+                if (propDescriptors[i].getReadMethod() != null)
                 {
-                    ValueExpression ve = comp.getValueExpression(name);
-                    if (ve != null)
+                    String name = propDescriptors[i].getName();
+                    if (!"id".equals(name))
                     {
-                        printAttribute(stream, name, ve.getExpressionString());
-                    }
-                    else
-                    {
-                        if (name.equals("value") && comp instanceof ValueHolder)
+                        ValueExpression ve = comp.getValueExpression(name);
+                        if (ve != null)
                         {
-                            // -> localValue
+                            printAttribute(stream, name, ve.getExpressionString());
                         }
-                        else if (!IGNORE_ATTRIBUTES.contains(name))
+                        else
                         {
-                            try
+                            if (name.equals("value") && comp instanceof ValueHolder)
                             {
-                                Object value = comp.getAttributes().get(name);
-                                printAttribute(stream, name, value);
+                                // -> localValue
                             }
-                            catch (Exception e)
+                            else if (!IGNORE_ATTRIBUTES.contains(name))
                             {
-                                log.error(e);
-                                printAttribute(stream, name, null);
+                                try
+                                {
+                                    Object value = comp.getAttributes().get(name);
+                                    printAttribute(stream, name, value);
+                                }
+                                catch (Exception e)
+                                {
+                                    log.log(Level.SEVERE, e.getMessage() , e);
+                                    printAttribute(stream, name, null);
+                                }
                             }
                         }
                     }

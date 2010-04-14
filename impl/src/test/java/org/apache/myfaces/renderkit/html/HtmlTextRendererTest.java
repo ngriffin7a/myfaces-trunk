@@ -25,6 +25,7 @@ import javax.el.ValueExpression;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIForm;
 import javax.faces.component.UIViewRoot;
+import javax.faces.component.behavior.AjaxBehavior;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.component.html.HtmlOutputText;
 import javax.faces.context.FacesContext;
@@ -36,14 +37,14 @@ import junit.framework.TestSuite;
 
 import org.apache.myfaces.test.utils.HtmlCheckAttributesUtil;
 import org.apache.myfaces.test.utils.HtmlRenderedAttr;
-import org.apache.shale.test.base.AbstractJsfTestCase;
-import org.apache.shale.test.el.MockValueExpression;
-import org.apache.shale.test.mock.MockRenderKitFactory;
-import org.apache.shale.test.mock.MockResponseWriter;
+import org.apache.myfaces.test.base.AbstractJsfTestCase;
+import org.apache.myfaces.test.el.MockValueExpression;
+import org.apache.myfaces.test.mock.MockRenderKitFactory;
+import org.apache.myfaces.test.mock.MockResponseWriter;
 
 /**
- * @author Bruno Aranda (latest modification by $Author: grantsmith $)
- * @version $Revision: 472618 $ $Date: 2006-11-09 04:06:54 +0800 (Thu, 09 Nov 2006) $
+ * @author Bruno Aranda (latest modification by $Author$)
+ * @version $Revision$ $Date$
  */
 public class HtmlTextRendererTest extends AbstractJsfTestCase
 {
@@ -71,7 +72,7 @@ public class HtmlTextRendererTest extends AbstractJsfTestCase
 
         writer = new MockResponseWriter(new StringWriter(), null, null);
         facesContext.setResponseWriter(writer);
-        // TODO remove these two lines once shale-test goes alpha, see MYFACES-1155
+        // TODO remove these two lines once myfaces-test goes alpha, see MYFACES-1155
         facesContext.getViewRoot().setRenderKitId(MockRenderKitFactory.HTML_BASIC_RENDER_KIT);
         facesContext.getRenderKit().addRenderer(
                 outputText.getFamily(),
@@ -176,5 +177,69 @@ public class HtmlTextRendererTest extends AbstractJsfTestCase
         assertNotSame(expression.getValue(facesContext.getELContext()), inputText.getValue());
         assertNull(inputText.getValue());
     }
-
+    
+    /**
+     * Components that render client behaviors should always render "id" and "name" attribute
+     */
+    public void testClientBehaviorHolderRendersIdAndName() 
+    {
+        inputText.addClientBehavior("keypress", new AjaxBehavior());
+        try 
+        {
+            inputText.encodeAll(facesContext);
+            String output = ((StringWriter) writer.getWriter()).getBuffer().toString();
+            assertTrue(output.matches("(?s).+id=\".+\".+"));
+            assertTrue(output.matches("(?s).+name=\".+\".+"));
+        }
+        catch (Exception e)
+        {
+            fail(e.getMessage());
+        }
+        
+    }
+    
+    /**
+     * Tests if a JavaScript user code is correctly escaped.
+     * e.g. alert('test') has to become alert(\'test\')
+     */
+    public void testClientBehaviorUserCodeJavaScriptEscaping()
+    {
+        inputText.getAttributes().put("onchange", "alert('test')");
+        inputText.addClientBehavior("change", new AjaxBehavior());
+        try 
+        {
+            inputText.encodeAll(facesContext);
+            String output = ((StringWriter) writer.getWriter()).getBuffer().toString();
+            // onchange="jsf.util.chain(document.getElementById(&apos;j_id0&apos;), event,
+            //                          &apos;alert(\&apos;test\&apos;)&apos;);"
+            assertTrue(output.contains("&apos;alert(\\&apos;test\\&apos;)&apos;"));
+        }
+        catch (Exception e)
+        {
+            fail(e.getMessage());
+        }
+    }
+    
+    /**
+     * Tests if a JavaScript user code that already contains ' is correctly escaped.
+     * e.g. test = 'a\'b'; has to become test = \'a\\\'b\';
+     */
+    public void testClientBehaviorUserCodeJavaScriptDoubleEscaping()
+    {
+        inputText.getAttributes().put("onchange", "var test = \'a\\\'b\'; alert(test);");
+        inputText.addClientBehavior("change", new AjaxBehavior());
+        try 
+        {
+            inputText.encodeAll(facesContext);
+            String output = ((StringWriter) writer.getWriter()).getBuffer().toString();
+            // onchange="jsf.util.chain(document.getElementById(&apos;j_id0&apos;), event,
+            //               &apos;var test = \&apos;a\\\&apos;b\&apos;; alert(test);&apos;);"
+            assertTrue(output.contains("&apos;var test = \\&apos;a\\\\\\&apos;b\\&apos;; alert(test);&apos;"));
+        }
+        catch (Exception e)
+        {
+            fail(e.getMessage());
+        }
+    }
+    
 }

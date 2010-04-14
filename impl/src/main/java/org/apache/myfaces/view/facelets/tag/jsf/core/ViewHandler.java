@@ -32,6 +32,7 @@ import javax.faces.view.facelets.TagAttribute;
 import javax.faces.view.facelets.TagConfig;
 import javax.faces.view.facelets.TagHandler;
 
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTag;
 import org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport;
 
 /**
@@ -41,6 +42,10 @@ import org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport;
  * @author Jacob Hookom
  * @version $Id: ViewHandler.java,v 1.5 2008/07/13 19:01:44 rlubke Exp $
  */
+@JSFFaceletTag(
+        name = "f:view",
+        bodyContent = "empty", 
+        componentClass="javax.faces.component.UIViewRoot")
 public final class ViewHandler extends TagHandler
 {
 
@@ -54,9 +59,9 @@ public final class ViewHandler extends TagHandler
 
     private final TagAttribute encoding;
 
-    private final TagAttribute beforePhaseListener;
+    private final TagAttribute beforePhase;
 
-    private final TagAttribute afterPhaseListener;
+    private final TagAttribute afterPhase;
 
     /**
      * @param config
@@ -68,8 +73,8 @@ public final class ViewHandler extends TagHandler
         this.renderKitId = this.getAttribute("renderKitId");
         this.contentType = this.getAttribute("contentType");
         this.encoding = this.getAttribute("encoding");
-        this.beforePhaseListener = this.getAttribute("beforePhaseListener");
-        this.afterPhaseListener = this.getAttribute("afterPhaseListener");
+        this.beforePhase = this.getAttribute("beforePhase");
+        this.afterPhase = this.getAttribute("afterPhase");
     }
 
     /**
@@ -92,9 +97,33 @@ public final class ViewHandler extends TagHandler
                 String v = this.renderKitId.getValue(ctx);
                 root.setRenderKitId(v);
             }
+            String encodingValue = null;
             if (this.contentType != null)
             {
+                // This value is read as rfc2616 section 3.7 Media Types.
+                // We should check and extract the param "charset" and assing
+                // it as encoding for this page.
                 String v = this.contentType.getValue(ctx);
+                if (v != null)
+                {
+                    int j = v.indexOf(';');
+                    if (j >= 0)
+                    {
+                        int i = v.indexOf("charset",j);
+                        if (i >= 0)
+                        {
+                            i = v.indexOf('=',i)+1;
+                            if (v.length() > i)
+                            {
+                                encodingValue = v.substring(i);
+                            }
+                            // Substract charset from encoding, it will be added 
+                            // later on FaceletViewDeclarationLanguage.createResponseWriter
+                            // by calling response.setContentType
+                            v = v.substring(0 , j);
+                        }
+                    }
+                }
                 ctx.getFacesContext().getExternalContext().getRequestMap().put("facelets.ContentType", v);
             }
             if (this.encoding != null)
@@ -102,14 +131,18 @@ public final class ViewHandler extends TagHandler
                 String v = this.encoding.getValue(ctx);
                 ctx.getFacesContext().getExternalContext().getRequestMap().put("facelets.Encoding", v);
             }
-            if (this.beforePhaseListener != null)
+            else if (encodingValue != null)
             {
-                MethodExpression m = this.beforePhaseListener.getMethodExpression(ctx, null, LISTENER_SIG);
+                ctx.getFacesContext().getExternalContext().getRequestMap().put("facelets.Encoding", encodingValue);
+            }
+            if (this.beforePhase != null)
+            {
+                MethodExpression m = this.beforePhase.getMethodExpression(ctx, null, LISTENER_SIG);
                 root.setBeforePhaseListener(m);
             }
-            if (this.afterPhaseListener != null)
+            if (this.afterPhase != null)
             {
-                MethodExpression m = this.afterPhaseListener.getMethodExpression(ctx, null, LISTENER_SIG);
+                MethodExpression m = this.afterPhase.getMethodExpression(ctx, null, LISTENER_SIG);
                 root.setAfterPhaseListener(m);
             }
         }

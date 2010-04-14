@@ -29,6 +29,7 @@ import javax.el.ELException;
 import javax.el.ELResolver;
 import javax.el.PropertyNotFoundException;
 import javax.el.PropertyNotWritableException;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
@@ -61,7 +62,7 @@ public final class ScopedAttributeResolver extends ELResolver
             throw new PropertyNotFoundException();
         }
 
-        final Map<String, Object> scopedMap = findScopedMap(externalContext(context), property);
+        final Map<String, Object> scopedMap = findScopedMap(facesContext(context), property);
         if (scopedMap != null)
         {
             scopedMap.put((String)property, value);
@@ -102,7 +103,7 @@ public final class ScopedAttributeResolver extends ELResolver
 
         context.setPropertyResolved(true);
 
-        final Map<String, Object> scopedMap = findScopedMap(externalContext(context), property);
+        final Map<String, Object> scopedMap = findScopedMap(facesContext(context), property);
         if (scopedMap != null)
         {
             return scopedMap.get(property);
@@ -178,14 +179,27 @@ public final class ScopedAttributeResolver extends ELResolver
     }
 
     // returns null if not found
-    private static Map<String, Object> findScopedMap(final ExternalContext extContext, final Object property)
+    private static Map<String, Object> findScopedMap(final FacesContext facesContext, final Object property)
     {
+        if (facesContext == null)
+            return null;
+        
+        final ExternalContext extContext = facesContext.getExternalContext();
         if (extContext == null)
             return null;
 
         Map<String, Object> scopedMap = extContext.getRequestMap();
         if (scopedMap.containsKey(property))
             return scopedMap;
+        
+        // jsf 2.0 view scope
+        UIViewRoot root = facesContext.getViewRoot();
+        if (root != null)
+        {
+            scopedMap = root.getViewMap(false);
+            if (scopedMap != null && scopedMap.containsKey(property))
+                return scopedMap;
+        }
 
         scopedMap = extContext.getSessionMap();
         if (scopedMap.containsKey(property))

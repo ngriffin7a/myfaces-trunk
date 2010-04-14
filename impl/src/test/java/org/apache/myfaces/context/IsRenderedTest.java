@@ -20,7 +20,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.PartialViewContext;
 
 import org.apache.myfaces.context.servlet.FacesContextImpl;
-import org.apache.shale.test.base.AbstractJsfTestCase;
+import org.apache.myfaces.test.base.AbstractJsfTestCase;
 
 /**
  * Various tests for the faces context is rendered
@@ -39,7 +39,9 @@ public class IsRenderedTest extends AbstractJsfTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         FactoryFinder.setFactory(FactoryFinder.PARTIAL_VIEW_CONTEXT_FACTORY,
-        "org.apache.myfaces.context.PartialViewContextFactoryImpl");        
+        "org.apache.myfaces.context.PartialViewContextFactoryImpl");       
+        FactoryFinder.setFactory (FactoryFinder.EXCEPTION_HANDLER_FACTORY,
+        "org.apache.myfaces.context.ExceptionHandlerFactoryImpl");
     }
 
     /**

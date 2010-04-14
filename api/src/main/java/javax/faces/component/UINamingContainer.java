@@ -23,12 +23,14 @@ import javax.faces.context.FacesContext;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFJspProperty;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
 
 /**
  * Base class for components that provide a new "namespace" for the ids of their
  * child components.
  * <p>
  * See the javadocs for interface NamingContainer for further details.
+ * </p>
  */
 @JSFComponent(
         name="f:subview",
@@ -61,11 +63,24 @@ public class UINamingContainer extends UIComponentBase implements NamingContaine
      * 
      * @since 2.0
      */
-    @Override
     public String createUniqueId(FacesContext context, String seed)
     {
-        // TODO: IMPLEMENT HERE
-        return null;
+        ExternalContext extCtx = context.getExternalContext();
+        StringBuilder bld = __getSharedStringBuilder();
+
+        Long uniqueIdCounter = (Long) getStateHelper().get(PropertyKeys.uniqueIdCounter);
+        uniqueIdCounter = (uniqueIdCounter == null) ? 0 : uniqueIdCounter;
+        getStateHelper().put(PropertyKeys.uniqueIdCounter, (uniqueIdCounter+1L));
+        // Generate an identifier for a component. The identifier will be prefixed with UNIQUE_ID_PREFIX, and will be unique within this UIViewRoot. 
+        if(seed==null)
+        {
+            return extCtx.encodeNamespace(bld.append(UIViewRoot.UNIQUE_ID_PREFIX).append(uniqueIdCounter).toString());    
+        }
+        // Optionally, a unique seed value can be supplied by component creators which should be included in the generated unique id.
+        else
+        {
+            return extCtx.encodeNamespace(bld.append(UIViewRoot.UNIQUE_ID_PREFIX).append(seed).toString());
+        }
     }
     
     /**
@@ -94,5 +109,17 @@ public class UINamingContainer extends UIComponentBase implements NamingContaine
             // this method
             return param.charAt(0);
         }
+    }
+    
+    @JSFProperty(deferredValueType="java.lang.Boolean")
+    @Override
+    public boolean isRendered()
+    {
+        return super.isRendered();
+    }
+
+    enum PropertyKeys
+    {
+        uniqueIdCounter
     }
 }

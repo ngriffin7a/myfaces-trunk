@@ -35,7 +35,7 @@ $baseContent
 #set ($componentList = ${model.getComponents()})
 #foreach( $component in $componentList )
 #if ($modelIds.contains($component.modelId) 
-    && ($component.name))
+    && ($component.name) && ($component.tagClass))
 #if ($utils.getTagPrefix($component.name) == $shortname) 
    <tag>
       <description><![CDATA[$component.longDescription]]></description>
@@ -79,8 +79,14 @@ $baseContent
 #else
 #if ( "$!property.isRtexprvalue()" == "")
 #set ($type = $utils.getClassFromFullClass($property.className))
-#if ($type == "String")
-         <deferred-value></deferred-value>
+#if($property.deferredValueType)
+         <deferred-value>
+             <type>$property.deferredValueType</type>
+         </deferred-value>
+#elseif ($type == "String")
+         <deferred-value>
+            <type>java.lang.String</type>
+         </deferred-value>
 #else
          <deferred-value>
              <type>$property.className</type>
@@ -101,7 +107,7 @@ $baseContent
 #set ($componentList = ${model.getConverters()})
 #foreach( $component in $componentList )
 #if ($modelIds.contains($component.modelId) 
-    && ($component.name))
+    && ($component.name)  && ($component.tagClass))
 #if ($utils.getTagPrefix($component.name) == $shortname) 
    <tag>
       <description><![CDATA[$component.longDescription]]></description>
@@ -130,8 +136,16 @@ $baseContent
          <rtexprvalue>false</rtexprvalue>
 #else
 #set ($type = $utils.getClassFromFullClass($property.className))
-#if ($type == "String")
-         <deferred-value></deferred-value>
+#if($property.deferredValueType)
+         <deferred-value>
+             <type>$property.deferredValueType</type>
+         </deferred-value>             
+#elseif ($type == "String")
+         <deferred-value>
+            <type>java.lang.String</type>
+         </deferred-value>
+
+
 #else
          <deferred-value>
              <type>$property.className</type>
@@ -149,7 +163,7 @@ $baseContent
 #set ($componentList = ${model.getValidators()})
 #foreach( $component in $componentList )
 #if ($modelIds.contains($component.modelId) 
-    && ($component.name))
+    && ($component.name) && ($component.tagClass))
 #if ($utils.getTagPrefix($component.name) == $shortname) 
    <tag>
       <description><![CDATA[$component.longDescription]]></description>
@@ -178,8 +192,14 @@ $baseContent
          <rtexprvalue>false</rtexprvalue>
 #else
 #set ($type = $utils.getClassFromFullClass($property.className))
-#if ($type == "String")
-         <deferred-value></deferred-value>
+#if($property.deferredValueType)
+         <deferred-value>
+             <type>$property.deferredValueType</type>
+         </deferred-value>             
+#elseif ($type == "String")
+         <deferred-value>
+             <type>java.lang.String</type>
+         </deferred-value>
 #else
          <deferred-value>
              <type>$property.className</type>
@@ -214,12 +234,15 @@ $baseContent
          <name>$attribute.name</name>
          <required>$attribute.isRequired()</required>
 #set ($type = $utils.getClassFromFullClass($attribute.className))
-#if ($type == "ValueExpression")
-         <deferred-value></deferred-value>
-#else
-#if($attribute.isRtexprvalue())
+#if ($type == "MethodExpression")
+        <deferred-method>
+          <method-signature>${attribute.deferredMethodSignature}</method-signature>
+        </deferred-method>
+#elseif ($type == "ValueExpression")
          <deferred-value>
-             <type>$attribute.className</type>
+#if($attribute.deferredValueType)
+             <type>$attribute.deferredValueType</type>
+#end
          </deferred-value>
 #else
          <rtexprvalue>$attribute.isRtexprvalue()</rtexprvalue>
@@ -227,7 +250,6 @@ $baseContent
          <type>$attribute.className</type>
 #else
          <type>java.lang.String</type>
-#end
 #end
 #end
       </attribute>

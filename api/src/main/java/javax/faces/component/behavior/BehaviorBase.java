@@ -22,14 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.component.PartialStateHolder;
+import javax.faces.component.StateHolder;
 import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
 import javax.faces.event.BehaviorEvent;
 import javax.faces.event.BehaviorListener;
 
 /**
- * 
- * TODO: IMPLEMENT HERE - Delta state saving support
  * 
  * @author Simon Lessard (latest modification by $Author: slessard $)
  * @version $Revision: 696523 $ $Date: 2009-03-14 15:29:14 -0400 (mer., 17 sept. 2008) $
@@ -38,7 +37,7 @@ import javax.faces.event.BehaviorListener;
  */
 public class BehaviorBase implements Behavior, PartialStateHolder
 {
-    private List<BehaviorListener> _behaviorListeners;
+    private _DeltaList<BehaviorListener> _behaviorListeners;
     
     private boolean _initialState;
     
@@ -55,7 +54,6 @@ public class BehaviorBase implements Behavior, PartialStateHolder
     /**
      * {@inheritDoc}
      */
-    @Override
     public void broadcast(BehaviorEvent event)
     {
         if (event == null)
@@ -78,43 +76,83 @@ public class BehaviorBase implements Behavior, PartialStateHolder
         }
     }
 
-    @Override
     public void clearInitialState()
     {
         _initialState = false;
+        if (_behaviorListeners != null)
+        {
+            _behaviorListeners.clearInitialState();
+        }
     }
 
-    @Override
     public boolean initialStateMarked()
     {
         return _initialState;
     }
 
-    @Override
     public boolean isTransient()
     {
         return _transient;
     }
 
-    @Override
     public void markInitialState()
     {
         _initialState = true;
+        if (_behaviorListeners != null)
+        {
+            _behaviorListeners.markInitialState();
+        }
     }
 
-    @Override
     public void restoreState(FacesContext context, Object state)
     {
-        _behaviorListeners = (List<BehaviorListener>) UIComponentBase.restoreAttachedState(context, state);
+        if (state == null)
+        {
+            return;
+        }
+        else if (state instanceof _AttachedDeltaWrapper)
+        {
+            //Delta: check for null is not necessary since _behaviorListener field
+            //is only set once and never reset
+            //if (_behaviorListeners != null)
+            //{
+                ((StateHolder)_behaviorListeners).restoreState(context,
+                        ((_AttachedDeltaWrapper) state).getWrappedStateObject());
+            //}
+        }
+        else
+        {
+            //Full
+            _behaviorListeners = (_DeltaList<BehaviorListener>)
+                UIComponentBase.restoreAttachedState(context, state);
+        }
     }
 
-    @Override
     public Object saveState(FacesContext context)
     {
-        return UIComponentBase.saveAttachedState(context, _behaviorListeners);
+        return saveBehaviorListenersList(context);
+    }
+    
+    private Object saveBehaviorListenersList(FacesContext facesContext)
+    {
+        PartialStateHolder holder = (PartialStateHolder) _behaviorListeners;
+        if (initialStateMarked() && _behaviorListeners != null && holder.initialStateMarked())
+        {                
+            Object attachedState = holder.saveState(facesContext);
+            if (attachedState != null)
+            {
+                return new _AttachedDeltaWrapper(_behaviorListeners.getClass(),
+                        attachedState);
+            }
+            //_behaviorListeners instances once is created never changes, we can return null
+            return null;
+        }
+        else
+        {
+            return UIComponentBase.saveAttachedState(facesContext,_behaviorListeners);
+        }
     }
 
-    @Override
     public void setTransient(boolean newTransientValue)
     {
         _transient = newTransientValue;
@@ -130,7 +168,7 @@ public class BehaviorBase implements Behavior, PartialStateHolder
         if (_behaviorListeners == null)
         {
             // Lazy instanciation
-            _behaviorListeners = new ArrayList<BehaviorListener>();
+            _behaviorListeners = new _DeltaList<BehaviorListener>(new ArrayList<BehaviorListener>());
         }
         
         _behaviorListeners.add(listener);

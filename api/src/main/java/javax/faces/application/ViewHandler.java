@@ -25,14 +25,12 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.FacesException;
-import javax.faces.FactoryFinder;
-import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.view.AttachedObjectHandler;
 import javax.faces.view.ViewDeclarationLanguage;
-import javax.faces.view.ViewDeclarationLanguageFactory;
+
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
 
 /**
  * A ViewHandler manages the component-tree-creation and component-tree-rendering parts of a request lifecycle (ie
@@ -74,8 +72,17 @@ public abstract class ViewHandler
     public static final String CHARACTER_ENCODING_KEY = "javax.faces.request.charset";
     public static final String DEFAULT_FACELETS_SUFFIX = ".xhtml";
     public static final String DEFAULT_SUFFIX = ".xhtml .jsp";
+    
+    /**
+     * Indicate the default suffix to derive the file URI if extension mapping is used. 
+     */
+    @JSFWebConfigParam(defaultValue=".xhtml .jsp", since="1.1")
     public static final String DEFAULT_SUFFIX_PARAM_NAME = "javax.faces.DEFAULT_SUFFIX";
+    
+    @JSFWebConfigParam(defaultValue=".xhtml", since="2.0")
     public static final String FACELETS_SUFFIX_PARAM_NAME = "javax.faces.FACELETS_SUFFIX";
+    
+    @JSFWebConfigParam(since="2.0")
     public static final String FACELETS_VIEW_MAPPINGS_PARAM_NAME = "javax.faces.FACELETS_VIEW_MAPPINGS";
     // TODO: Notify EG on that last constant. Using the Facelets' param as well for backward compatiblity is 
     //       silly. If an application uses Facelets then they'll be using facelets.jar. Once they chose to 
@@ -95,8 +102,12 @@ public abstract class ViewHandler
         {
             String _tempEnc = _contentType.substring(_indexOf); // charset=UTF-8
             _encoding = _tempEnc.substring(_tempEnc.indexOf("=") + 1); // UTF-8
+            if (_encoding.length() == 0)
+            {
+                _encoding = null;
+            }
         }
-        else
+        if (_encoding == null) 
         {
             boolean _sessionAvailable = externalContext.getSession(false) != null;
             if (_sessionAvailable)
@@ -189,18 +200,23 @@ public abstract class ViewHandler
     /**
      * Return the ViewDeclarationLanguage instance used for this ViewHandler  instance.
      * <P>
-     * The default implementation must use ViewDeclarationLanguageFactory.getViewDeclarationLanguage(java.lang.String) to obtain the appropriate ViewDeclarationLanguage implementation for the argument viewId. Any exceptions thrown as a result of invoking that method must not be swallowed.
-     * <P>
      * The default implementation of this method returns null.
      * 
      * @param context
      * @param viewId
      * @return
+     * 
+     * @since 2.0
      */
     public ViewDeclarationLanguage getViewDeclarationLanguage(FacesContext context, String viewId)
     {
-        // FIXME: Notify EG - The JavaDoc mention 2 default implementation, how lovely, using the most useful one.
-        return _getViewDeclarationLanguageFactory().getViewDeclarationLanguage(viewId);
+        // TODO: In some places like RestoreViewExecutor, we are calling deriveViewId after call restoreViewSupport.calculateViewId
+        // Maybe this method should be called from here, because it is supposed that calculateViewId "calculates the view id!"
+        
+        // here we return null to support pre jsf 2.0 ViewHandlers (e.g. com.sun.facelets.FaceletViewHandler),
+        // because they don't provide any ViewDeclarationLanguage,
+        // but in the default implementation (ViewHandlerImpl) we return vdlFactory.getViewDeclarationLanguage(viewId)
+        return null;
     }
 
     /**
@@ -211,6 +227,8 @@ public abstract class ViewHandler
      * @param parameters
      * @param includeViewParams
      * @return
+     * 
+     * @since 2.0
      */
     public String getRedirectURL(FacesContext context, String viewId, Map<String, List<String>> parameters,
                                  boolean includeViewParams)
@@ -269,8 +287,4 @@ public abstract class ViewHandler
      */
     public abstract void writeState(FacesContext context) throws IOException;
 
-    private ViewDeclarationLanguageFactory _getViewDeclarationLanguageFactory()
-    {
-        return (ViewDeclarationLanguageFactory)FactoryFinder.getFactory(FactoryFinder.VIEW_DECLARATION_LANGUAGE_FACTORY);
-    }
 }

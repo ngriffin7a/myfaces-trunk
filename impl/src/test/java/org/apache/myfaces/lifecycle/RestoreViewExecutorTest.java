@@ -19,8 +19,11 @@
 package org.apache.myfaces.lifecycle;
 
 import static org.apache.myfaces.Assert.assertException;
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.same;
 
+import java.util.HashMap;
 import java.util.Locale;
 
 import javax.faces.application.ViewExpiredException;
@@ -28,6 +31,7 @@ import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PostAddToViewEvent;
+import javax.faces.view.ViewDeclarationLanguage;
 
 import org.apache.myfaces.FacesTestCase;
 import org.apache.myfaces.TestRunner;
@@ -81,12 +85,20 @@ public class RestoreViewExecutorTest extends FacesTestCase
     public void testExecuteWOExistingViewRootNoPostBack()
     {
         setupWOExistingViewRoot();
+        expect(_facesContext.getExternalContext()).andReturn(_externalContext).anyTimes();
+        expect(_externalContext.getRequestMap()).andReturn(new HashMap());
         expect(_restoreViewSupport.isPostback(same(_facesContext))).andReturn(false);
         _facesContext.renderResponse();
 
         UIViewRoot viewRoot = _mocksControl.createMock(UIViewRoot.class);
-        viewRoot.subscribeToEvent(same(PostAddToViewEvent.class), same(viewRoot));
+        //viewRoot.subscribeToEvent(same(PostAddToViewEvent.class), same(viewRoot));
 
+        ViewDeclarationLanguage vdl = _mocksControl.createMock(ViewDeclarationLanguage.class);
+        expect(_restoreViewSupport.deriveViewId(same(_facesContext), eq("calculatedViewId"))).andReturn("calculatedViewId");
+        expect(_viewHandler.getViewDeclarationLanguage(same(_facesContext), eq("calculatedViewId")))
+            .andReturn(vdl);
+        expect(vdl.getViewMetadata(same(_facesContext), eq("calculatedViewId")))
+            .andReturn(null);
         expect(_viewHandler.createView(same(_facesContext), eq("calculatedViewId"))).andReturn(viewRoot);
 
         _application.publishEvent(same(_facesContext), same(PostAddToViewEvent.class), same(viewRoot));
@@ -104,11 +116,15 @@ public class RestoreViewExecutorTest extends FacesTestCase
     public void testExecuteWOExistingViewRootPostBack()
     {
         setupWOExistingViewRoot();
+        expect(_facesContext.getExternalContext()).andReturn(_externalContext).anyTimes();
+        expect(_externalContext.getRequestMap()).andReturn(new HashMap());
         expect(_restoreViewSupport.isPostback(same(_facesContext))).andReturn(true);
+        _facesContext.setProcessingEvents(eq(true));
         UIViewRoot viewRoot = _mocksControl.createMock(UIViewRoot.class);
         expect(_viewHandler.restoreView(same(_facesContext), eq("calculatedViewId"))).andReturn(viewRoot);
-        _restoreViewSupport.processComponentBinding(same(_facesContext), same(viewRoot));
+        //_restoreViewSupport.processComponentBinding(same(_facesContext), same(viewRoot));
         _facesContext.setViewRoot(same(viewRoot));
+        _facesContext.setProcessingEvents(eq(false));
 
         _mocksControl.replay();
         _testimpl.execute(_facesContext);
@@ -122,8 +138,12 @@ public class RestoreViewExecutorTest extends FacesTestCase
     public void testExecuteWOExistingViewRootPostBackAndViewExpired()
     {
         setupWOExistingViewRoot();
+        expect(_facesContext.getExternalContext()).andReturn(_externalContext).anyTimes();
+        expect(_externalContext.getRequestMap()).andReturn(new HashMap());
         expect(_restoreViewSupport.isPostback(same(_facesContext))).andReturn(true);
+        _facesContext.setProcessingEvents(eq(true));
         expect(_viewHandler.restoreView(same(_facesContext), eq("calculatedViewId"))).andReturn(null);
+        _facesContext.setProcessingEvents(eq(false));
 
         _mocksControl.replay();
         assertException(ViewExpiredException.class, new TestRunner()

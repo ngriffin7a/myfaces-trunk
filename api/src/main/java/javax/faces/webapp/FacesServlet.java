@@ -19,10 +19,8 @@
 package javax.faces.webapp;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -39,9 +37,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
 /**
  * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
  * 
@@ -50,15 +46,25 @@ import org.apache.commons.logging.LogFactory;
  */
 public final class FacesServlet implements Servlet
 {
-    private static final Log log = LogFactory.getLog(FacesServlet.class);
+    //private static final Log log = LogFactory.getLog(FacesServlet.class);
+    private static final Logger log = Logger.getLogger(FacesServlet.class.getName());
+    
+    /**
+     * Comma separated list of URIs of (additional) faces config files.
+     * (e.g. /WEB-INF/my-config.xml)See JSF 1.0 PRD2, 10.3.2
+     * Attention: You do not need to put /WEB-INF/faces-config.xml in here.
+     */
+    @JSFWebConfigParam(since="1.1")
     public static final String CONFIG_FILES_ATTR = "javax.faces.CONFIG_FILES";
+
+    /**
+     * Identify the Lifecycle instance to be used.
+     */
+    @JSFWebConfigParam(since="1.1")
     public static final String LIFECYCLE_ID_ATTR = "javax.faces.LIFECYCLE_ID";
 
     private static final String SERVLET_INFO = "FacesServlet of the MyFaces API implementation";
-    private static final String ERROR_HANDLING_PARAMETER = "org.apache.myfaces.ERROR_HANDLING";
-    private static final String ERROR_HANDLER_PARAMETER = "org.apache.myfaces.ERROR_HANDLER";
-    private static final String ERROR_HANDLING_EXCEPTION_LIST = "org.apache.myfaces.errorHandling.exceptionList";
-
+    
     private ServletConfig _servletConfig;
     private FacesContextFactory _facesContextFactory;
     private Lifecycle _lifecycle;
@@ -73,8 +79,8 @@ public final class FacesServlet implements Servlet
         _servletConfig = null;
         _facesContextFactory = null;
         _lifecycle = null;
-        if (log.isTraceEnabled())
-            log.trace("destroy");
+        if (log.isLoggable(Level.FINEST))
+            log.finest("destroy");
     }
 
     public ServletConfig getServletConfig()
@@ -100,8 +106,8 @@ public final class FacesServlet implements Servlet
 
     public void init(ServletConfig servletConfig) throws ServletException
     {
-        if (log.isTraceEnabled())
-            log.trace("init begin");
+        if (log.isLoggable(Level.FINEST))
+            log.finest("init begin");
         _servletConfig = servletConfig;
         _facesContextFactory = (FacesContextFactory)FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
         // TODO: null-check for Weblogic, that tries to initialize Servlet before ContextListener
@@ -111,8 +117,8 @@ public final class FacesServlet implements Servlet
         // So we can acquire it here once:
         LifecycleFactory lifecycleFactory = (LifecycleFactory)FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
         _lifecycle = lifecycleFactory.getLifecycle(getLifecycleId());
-        if (log.isTraceEnabled())
-            log.trace("init end");
+        if (log.isLoggable(Level.FINEST))
+            log.finest("init end");
     }
 
     public void service(ServletRequest request, ServletResponse response) throws IOException, ServletException
@@ -145,7 +151,7 @@ public final class FacesServlet implements Servlet
             buffer.append("\n remote user is ").append(httpRequest.getRemoteUser());
             buffer.append("\n request URI is ").append(httpRequest.getRequestURI());
 
-            log.warn(buffer.toString());
+            log.warning(buffer.toString());
 
             // Why does RI return a 404 and not a 403, SC_FORBIDDEN ?
 
@@ -155,8 +161,8 @@ public final class FacesServlet implements Servlet
         
         // If none of the cases described above in the specification for this method apply to the servicing of this 
         // request, the following action must be taken to service the request.
-        if (log.isTraceEnabled())
-            log.trace("service begin");
+        if (log.isLoggable(Level.FINEST))
+            log.finest("service begin");
 
         // Acquire a FacesContext instance for this request.
         FacesContext facesContext = prepareFacesContext(request, response);
@@ -179,251 +185,10 @@ public final class FacesServlet implements Servlet
             else
             {
                 // If this returns false, handle as follow
-                _handleStandardRequest(facesContext);
-            }
-        }
-        catch (Exception e)
-        {
-            handleLifecycleException(facesContext, e);
-        }
-        catch (Throwable e)
-        {
-            handleLifecycleThrowable(facesContext, e);
-        }
-        finally
-        {
-            // In a finally block, FacesContext.release() must be called. 
-            facesContext.release();
-        }
-        if (log.isTraceEnabled())
-            log.trace("service end");
-    }
-
-    /**
-     * This method makes sure we see an exception page also if an exception has been thrown in UIInput.updateModel(); In
-     * this method, according to the spec, we may not rethrow the exception, so we add it to a list and process it here.
-     * 
-     * Attention: if you use redirects, the exceptions will get lost - exactly like in the case of FacesMessages. If you
-     * want them to be taken over to the next request, you should try the redirect-tracker of MyFaces.
-     * 
-     * @param facesContext
-     * @throws FacesException
-     */
-    @SuppressWarnings("unchecked")
-    private boolean handleQueuedExceptions(FacesContext facesContext) throws IOException, ServletException
-    {
-        Map<String, Object> requestScope = facesContext.getExternalContext().getRequestMap();
-        List<Exception> li = (List<Exception>)requestScope.get(ERROR_HANDLING_EXCEPTION_LIST);
-
-        if (li != null && li.size() >= 1)
-        {
-            // todo: for now, we only handle the first exception out of the list - we just rethrow this
-            // first exception.
-            // in the end, we should enable the error handler to show all the exceptions at once
-            boolean errorHandling =
-                    getBooleanValue(facesContext.getExternalContext().getInitParameter(ERROR_HANDLING_PARAMETER), true);
-
-            if (errorHandling)
-            {
-                String errorHandlerClass = facesContext.getExternalContext().getInitParameter(ERROR_HANDLER_PARAMETER);
-                if (errorHandlerClass != null)
-                {
-                    try
-                    {
-                        Class<?> clazz = Class.forName(errorHandlerClass);
-
-                        Object errorHandler = clazz.newInstance();
-
-                        Method m = clazz.getMethod("handleExceptionList", new Class[]{FacesContext.class,List.class});
-                        m.invoke(errorHandler, new Object[]{facesContext, li});
-                    }
-                    catch (ClassNotFoundException ex)
-                    {
-                        throw new ServletException("Error-Handler : " + errorHandlerClass
-                                + " was not found. Fix your web.xml-parameter : " + ERROR_HANDLER_PARAMETER, ex);
-                    }
-                    catch (IllegalAccessException ex)
-                    {
-                        throw new ServletException("Constructor of error-Handler : " + errorHandlerClass
-                                + " is not accessible. Error-Handler is specified in web.xml-parameter : "
-                                + ERROR_HANDLER_PARAMETER, ex);
-                    }
-                    catch (InstantiationException ex)
-                    {
-                        throw new ServletException("Error-Handler : " + errorHandlerClass
-                                + " could not be instantiated. Error-Handler is specified in web.xml-parameter : "
-                                + ERROR_HANDLER_PARAMETER, ex);
-                    }
-                    catch (NoSuchMethodException ex)
-                    {
-                        // Handle in the old way, since no custom method handleExceptionList found,
-                        // throwing the first FacesException on the list.
-                        throw (FacesException)li.get(0);
-                    }
-                    catch (InvocationTargetException ex)
-                    {
-                        throw new ServletException("Excecution of method handleException in Error-Handler : "
-                                + errorHandlerClass
-                                + " threw an exception. Error-Handler is specified in web.xml-parameter : "
-                                + ERROR_HANDLER_PARAMETER, ex);
-                    }
-                }
-                else
-                {
-                    _ErrorPageWriter.handleExceptionList(facesContext, li);
-                }
-            }
-            else
-            {
-                _ErrorPageWriter.throwException(li.get(0));
-            }
-            return true;
-        }
-        return false;
-    }
-
-    private void handleLifecycleException(FacesContext facesContext, Exception e) throws IOException, ServletException
-    {
-
-        boolean errorHandling =
-                getBooleanValue(facesContext.getExternalContext().getInitParameter(ERROR_HANDLING_PARAMETER), true);
-
-        if (errorHandling)
-        {
-            String errorHandlerClass = facesContext.getExternalContext().getInitParameter(ERROR_HANDLER_PARAMETER);
-            if (errorHandlerClass != null)
-            {
-                try
-                {
-                    Class<?> clazz = Class.forName(errorHandlerClass);
-
-                    Object errorHandler = clazz.newInstance();
-
-                    Method m = clazz.getMethod("handleException", new Class[] { FacesContext.class, Exception.class });
-                    m.invoke(errorHandler, new Object[] { facesContext, e });
-                }
-                catch (ClassNotFoundException ex)
-                {
-                    throw new ServletException("Error-Handler : " + errorHandlerClass
-                            + " was not found. Fix your web.xml-parameter : " + ERROR_HANDLER_PARAMETER, ex);
-                }
-                catch (IllegalAccessException ex)
-                {
-                    throw new ServletException("Constructor of error-Handler : " + errorHandlerClass
-                            + " is not accessible. Error-Handler is specified in web.xml-parameter : "
-                            + ERROR_HANDLER_PARAMETER, ex);
-                }
-                catch (InstantiationException ex)
-                {
-                    throw new ServletException("Error-Handler : " + errorHandlerClass
-                            + " could not be instantiated. Error-Handler is specified in web.xml-parameter : "
-                            + ERROR_HANDLER_PARAMETER, ex);
-                }
-                catch (NoSuchMethodException ex)
-                {
-                    log
-                       .error(
-                           "Error-Handler : "
-                                   + errorHandlerClass
-                                   + " did not have a method with name : handleException and parameters : javax.faces.context.FacesContext, java.lang.Exception. Error-Handler is specified in web.xml-parameter : "
-                                   + ERROR_HANDLER_PARAMETER, ex);
-                    // Try to look if it is implemented more general method handleThrowable
-                    handleLifecycleThrowable(facesContext, e);
-                }
-                catch (InvocationTargetException ex)
-                {
-                    throw new ServletException("Excecution of method handleException in Error-Handler : "
-                            + errorHandlerClass
-                            + " caused an exception. Error-Handler is specified in web.xml-parameter : "
-                            + ERROR_HANDLER_PARAMETER, ex);
-                }
-            }
-            else
-            {
-                _ErrorPageWriter.handleException(facesContext, e);
-            }
-        }
-        else
-        {
-            _ErrorPageWriter.throwException(e);
-        }
-    }
-
-    private void handleLifecycleThrowable(FacesContext facesContext, Throwable e) throws IOException, ServletException
-    {
-
-        boolean errorHandling =
-                getBooleanValue(facesContext.getExternalContext().getInitParameter(ERROR_HANDLING_PARAMETER), true);
-
-        if (errorHandling)
-        {
-            String errorHandlerClass = facesContext.getExternalContext().getInitParameter(ERROR_HANDLER_PARAMETER);
-            if (errorHandlerClass != null)
-            {
-                try
-                {
-                    Class<?> clazz = Class.forName(errorHandlerClass);
-
-                    Object errorHandler = clazz.newInstance();
-
-                    Method m = clazz.getMethod("handleThrowable", new Class[] { FacesContext.class, Throwable.class });
-                    m.invoke(errorHandler, new Object[] { facesContext, e });
-                }
-                catch (ClassNotFoundException ex)
-                {
-                    throw new ServletException("Error-Handler : " + errorHandlerClass
-                            + " was not found. Fix your web.xml-parameter : " + ERROR_HANDLER_PARAMETER, ex);
-                }
-                catch (IllegalAccessException ex)
-                {
-                    throw new ServletException("Constructor of error-Handler : " + errorHandlerClass
-                            + " is not accessible. Error-Handler is specified in web.xml-parameter : "
-                            + ERROR_HANDLER_PARAMETER, ex);
-                }
-                catch (InstantiationException ex)
-                {
-                    throw new ServletException("Error-Handler : " + errorHandlerClass
-                            + " could not be instantiated. Error-Handler is specified in web.xml-parameter : "
-                            + ERROR_HANDLER_PARAMETER, ex);
-                }
-                catch (NoSuchMethodException ex)
-                {
-                    throw new ServletException(
-                        "Error-Handler : "
-                                + errorHandlerClass
-                                + " did not have a method with name : handleException and parameters : javax.faces.context.FacesContext, java.lang.Exception. Error-Handler is specified in web.xml-parameter : "
-                                + ERROR_HANDLER_PARAMETER, ex);
-                }
-                catch (InvocationTargetException ex)
-                {
-                    throw new ServletException("Excecution of method handleException in Error-Handler : "
-                            + errorHandlerClass
-                            + " threw an exception. Error-Handler is specified in web.xml-parameter : "
-                            + ERROR_HANDLER_PARAMETER, ex);
-                }
-            }
-            else
-            {
-                _ErrorPageWriter.handleThrowable(facesContext, e);
-            }
-        }
-        else
-        {
-            _ErrorPageWriter.throwException(e);
-        }
-    }
-    
-    private void _handleStandardRequest(FacesContext context) throws IOException, ServletException
-    {
-        try
-        {
-            // call Lifecycle.execute(javax.faces.context.FacesContext)
-            _lifecycle.execute(context);
-
-            if (!handleQueuedExceptions(context))
-            {
+                // call Lifecycle.execute(javax.faces.context.FacesContext)
+                _lifecycle.execute(facesContext);
                 // followed by Lifecycle.render(javax.faces.context.FacesContext).
-                _lifecycle.render(context);
+                _lifecycle.render(facesContext);
             }
         }
         catch (FacesException e)
@@ -456,16 +221,13 @@ public final class FacesServlet implements Servlet
                 throw new ServletException(cause.getLocalizedMessage(), cause);
             }
         }
-    }
-
-    private static boolean getBooleanValue(String initParameter, boolean defaultVal)
-    {
-
-        if (initParameter == null || initParameter.trim().length() == 0)
-            return defaultVal;
-
-        return (initParameter.equalsIgnoreCase("on") || initParameter.equals("1") || initParameter
-                                                                                                  .equalsIgnoreCase("true"));
+        finally
+        {
+            // In a finally block, FacesContext.release() must be called. 
+            facesContext.release();
+        }
+        if (log.isLoggable(Level.FINEST))
+            log.finest("service end");
     }
 
     private FacesContext prepareFacesContext(ServletRequest request, ServletResponse response)

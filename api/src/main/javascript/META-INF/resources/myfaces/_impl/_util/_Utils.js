@@ -230,6 +230,7 @@ if (!myfaces._impl._util._LangUtils.exists(myfaces._impl._util, "_Utils")) {
         try {
             //for webkit we have to trim otherwise he does not add the adjancent elements correctly
             newTag = myfaces._impl._util._LangUtils.trim(newTag);
+
             // (itemIdToReplace instanceof Node) is NOT compatible with IE8
             var item = (typeof itemIdToReplace == "object") ? itemIdToReplace :
                        myfaces._impl._util._Utils.getElementFromForm(request, context, itemIdToReplace, form);
@@ -241,25 +242,77 @@ if (!myfaces._impl._util._LangUtils.exists(myfaces._impl._util, "_Utils")) {
             }
 
             if (newTag != "") {
+                var evalNode = null;
                 if (typeof window.Range != 'undefined'
                         && typeof Range.prototype.createContextualFragment == 'function') {
                     var range = document.createRange();
                     range.setStartBefore(item);
                     var fragment = range.createContextualFragment(newTag);
-                    item.parentNode.insertBefore(fragment, item);
+                    //special case update body, we have to replace the placeholder
+                    //with the first element (the place holder is the the only child)
+                    //and then append additional elements as additional childs
+                    //the body itself then is the root for the eval part!
+                    if(item.id == 'myfaces_bodyplaceholder') {
+                        var parentNode = item.parentNode;
+                        parentNode.appendChild(fragment);
+                        evalNode = parentNode;
+                    } else {
+                        //normal dom node case we replace only the client id fragment!
+                        var replaceItem = myfaces._impl._util._Utils.findHtmlItemFromFragment(fragment, item.id);
+                        if(replaceItem == null)replaceItem = fragment;
+                        evalNode = item.parentNode.replaceChild(replaceItem, item);
+                    }
                 } else {
                     item.insertAdjacentHTML('beforeBegin', newTag);
+                    evalNode = item.previousSibling;
+                    item.parentNode.removeChild(item);
+                    if(item.id != 'myfaces_bodyplaceholder' && ('undefined' == typeof evalNode.id  || null == evalNode.id || evalNode.id != item.id)) {
+                        //to get the same behavior (as in other browsers we have to cherry pick the element differently here)
+                        //black box testing on Mojarra reveals, it does nothing here, and breaks the page this way
+                        var subNode = document.getElementById(item.id);
+                        subNode.parentNode.removeChild(subNode);
+                        evalNode.parentNode.replaceChild(subNode, evalNode);
+                    }
                 }
+
+                // and remove the old item
+                //first we have to save the node newly insert for easier access in our eval part
                 if (myfaces._impl._util._Utils.isManualScriptEval()) {
-                    myfaces._impl._util._Utils.runScripts(request, context, item.previousSibling);
+                    myfaces._impl._util._Utils.runScripts(request, context, evalNode);
                 }
+                return;
             }
-            // and remove the old item
+            // and remove the old item, in case of an empty newtag and do nothing else
             item.parentNode.removeChild(item);
 
         } catch (e) {
             myfaces._impl.xhrCore._Exception.throwNewError(request, context, "Utils", "replaceHTMLItem", e);
         }
+    };
+
+    myfaces._impl._util._Utils.findHtmlItemFromFragment = function(fragment, itemId) {
+        if (fragment.childNodes == null)
+            return null;
+        //normal usecase, some browsers behave saner in complex situations if we work directly
+        //on the fragment, since the recommended path from the eg is to use an outer element
+        //having the id, this is the normal usecase
+        if(fragment.childNodes.length == 1 && fragment.childNodes[0].id == itemId) {
+            return fragment;
+        }
+
+        //subfragment usecases
+        for (var i = 0; i < fragment.childNodes.length; i++) {
+            var c = fragment.childNodes[i];
+            if (c.id == itemId)
+                return c;
+        }
+        for (var i = 0; i < fragment.childNodes.length; i++) {
+            var c = fragment.childNodes[i];
+            var item = myfaces._impl._util._Utils.findHtmlItemFromFragment(c, itemId);
+            if (item != null)
+                return item;
+        }
+        return null;
     };
 
     myfaces._impl._util._Utils.ieQuircksEvents = {
@@ -297,26 +350,26 @@ if (!myfaces._impl._util._LangUtils.exists(myfaces._impl._util, "_Utils")) {
         }
 
         /*
-            Now to the broken browsers IE6+.... ie7 and ie8 quirks mode
+         Now to the broken browsers IE6+.... ie7 and ie8 quirks mode
 
-            we deal mainly with three problems here
-            class and for are not handled correctly
-            styles are arrays and cannot be set directly
-            and javascript events cannot be set via setAttribute as well!
+         we deal mainly with three problems here
+         class and for are not handled correctly
+         styles are arrays and cannot be set directly
+         and javascript events cannot be set via setAttribute as well!
 
-            or in original words of quirksmode.org ... this is a mess!
+         or in original words of quirksmode.org ... this is a mess!
 
-            Btw. thank you Microsoft for providing all necessary tools for free
-            for being able to debug this entire mess in the ie rendering engine out
-            (which is the Microsoft ie vms, developers toolbar, Visual Web Developer 2008 express
-            and the ie8 8 developers toolset!)
+         Btw. thank you Microsoft for providing all necessary tools for free
+         for being able to debug this entire mess in the ie rendering engine out
+         (which is the Microsoft ie vms, developers toolbar, Visual Web Developer 2008 express
+         and the ie8 8 developers toolset!)
 
-            also thank you http://www.quirksmode.org/
-            dojotoolkit.org and   //http://delete.me.uk/2004/09/ieproto.html
-            for additional information on this mess!
+         also thank you http://www.quirksmode.org/
+         dojotoolkit.org and   //http://delete.me.uk/2004/09/ieproto.html
+         for additional information on this mess!
 
-            The lowest common denominator tested within this code
-            is IE6, older browsers for now are legacy!
+         The lowest common denominator tested within this code
+         is IE6, older browsers for now are legacy!
          */
         attribute = attribute.toLowerCase();
 
@@ -330,7 +383,14 @@ if (!myfaces._impl._util._LangUtils.exists(myfaces._impl._util, "_Utils")) {
             var styleEntries = value.split(";");
             for (var loop = 0; loop < styleEntries.length; loop++) {
                 var keyVal = styleEntries[loop].split(":");
-                if (keyVal[0] != "") {
+                if (keyVal[0] != "" && keyVal[0] == "opacity") {
+                    //special ie quirks handling for opacity
+
+                    var opacityVal = Math.max(100, Math.round(parseFloat(keyVal[1]) * 10));
+                    domNode.style.setAttribute("filter", "alpha(opacity=" + opacityVal + ")");
+                    //if you need more hacks I would recommend
+                    //to use the class attribute and conditional ie includes!
+                } else if (keyVal[0] != "") {
                     domNode.style.setAttribute(keyVal[0], keyVal[1]);
                 }
             }
@@ -445,26 +505,127 @@ if (!myfaces._impl._util._LangUtils.exists(myfaces._impl._util, "_Utils")) {
     };
 
     /**
+     * fuzzy form detection which tries to determine the form
+     * an item has been detached.
+     *
+     * The problem is some Javascript libraries simply try to
+     * detach controls and controls others by reusing the names
+     * of the detached input controls. The thing is most of the times,
+     * the name is unique in a jsf scenario due to the inherent form mappig
+     * one way or the other, we will try to fix that by
+     * identifying the proper form over the name
+     *
+     * We do it in several ways, in case of no form null is returned
+     * in case of multiple forms we check all elements with a given name (which we determine
+     * out of a name or id of the detached element) and then iterate over them
+     * to find whether they are in a form or not.
+     *
+     * If only one element within a form and a given identifier found then we can pull out
+     * and move on
+     *
+     * We cannot do much further because in case of two identical named elements
+     * all checks must fail and the first elements form is served.
+     *
+     * Note, this method is only triggered in case of the issuer or an ajax request
+     * is a detached element, otherwise already existing code has served the correct form.
+     *
+     * This method was added because of
+     * https://issues.apache.org/jira/browse/MYFACES-2599
+     * to support the integration of existing ajax libraries which do heavy dom manipulation on the
+     * controls side (Dojos Dijit library for instance).
+     *
+     * @param {XMLHTTPRequest} request
+     * @param {Map} context
+     * @param {Node} element - element as source, can be detached, undefined or null
+     *
+     * @return either null or a form node if it could be determined
+     */
+    myfaces._impl._util._Utils.fuzzyFormDetection = function(request, context, element) {
+        if (0 == document.forms.length) {
+            return null;
+        } else if (1 == document.forms.length) {
+            return document.forms[0];
+        }
+        if ('undefined' == typeof element || null == element) {
+            return null;
+        }
+
+        var submitIdentifier = ('undefined' != element.id) ? element.id : null;
+        var submitName = ('undefined' != element.name) ? element.name : null;
+        //a framework in a detachment case also can replace an existing identifier element
+        // with a name element
+        submitName = (null == submitName) ? submitIdentifier: submitName;
+
+
+        if ('undefined' != typeof submitIdentifier && null != submitIdentifier && '' != submitIdentifier) {
+            //we have to assert that the element passed down is detached
+            var domElement = myfaces._impl._util._LangUtils.byId(submitIdentifier);
+            if ('undefined' != typeof domElement && null != domElement) {
+                var foundForm = myfaces._impl._util._Utils.getParent(null, context, domElement, "form");
+                if (null != foundForm) return foundForm;
+            }
+        }
+
+        /**
+         * name check
+         */
+        var foundElements = new Array();
+
+        /**
+         * the lesser chance is the elements which have the same name
+         * (which is the more likely case in case of a brute dom replacement)
+         */
+        var namedFoundElements = document.getElementsByName(submitName);
+        if (null != namedFoundElements) {
+            for (var cnt = 0; cnt < namedFoundElements.length; cnt++) {
+                // we already have covered the identifier case hence we only can deal with names,
+                var foundForm = myfaces._impl._util._Utils.getParent(null, context, namedFoundElements[cnt], "form");
+                if (null != foundForm) {
+                    foundElements.push(foundForm);
+                }
+            }
+        }
+
+        if (null == foundElements || 0 == foundElements.length || foundElements.length > 1) {
+            return null;
+        }
+
+
+        return foundElements[0];
+    };
+
+    /**
      * [STATIC]
      * gets a parent of an item with a given tagname
      * @param {XMLHTTPRequest} request
      * @param {Map} context
      * @param {HtmlElement} item - child element
-     * @param {String} parentName - TagName of parent element
+     * @param {String} tagNameToSearchFor - TagName of parent element
      */
-    myfaces._impl._util._Utils.getParent = function(request, context, item, parentName) {
+    myfaces._impl._util._Utils.getParent = function(request, context, item, tagNameToSearchFor) {
+
         try {
-            // parent tag parentName suchen
-            var parentItem = item.parentNode;
+            if ('undefined' == typeof item || null == item) {
+                throw Error("myfaces._impl._util._Utils.getParen: item is null or undefined,this not allowed");
+            }
+
+            //search parent tag parentName
+            var parentItem = ('undefined' != typeof item.parentNode) ? item.parentNode : null;
+
+            if ('undefined' != typeof item.tagName && null != item.tagName && item.tagName.toLowerCase() == tagNameToSearchFor) {
+                return item;
+            }
+
             while (parentItem != null
-                    && parentItem.tagName.toLowerCase() != parentName) {
+                    && parentItem.tagName.toLowerCase() != tagNameToSearchFor) {
                 parentItem = parentItem.parentNode;
             }
             if (parentItem != null) {
                 return parentItem;
             } else {
+                //we issue a warning but proceed with a fuzzy search in case of a form later
                 myfaces._impl.xhrCore._Exception.throwNewWarning
-                        (request, context, "Utils", "getParent", "The item has no parent with type <" + parentName + ">");
+                        (request, context, "Utils", "getParent", "The item has no parent with type <" + tagNameToSearchFor + "> it might be outside of the parent or generally detached. ");
                 return null;
             }
         } catch (e) {
@@ -474,7 +635,7 @@ if (!myfaces._impl._util._LangUtils.exists(myfaces._impl._util, "_Utils")) {
 
     /**
      * [STATIC]
-     * gets the child of an item with a given tagname
+     * gets the child of an item with a given tag name
      * @param {HtmlElement} item - parent element
      * @param {String} childName - TagName of child element
      * @param {String} itemName - name-Attribut the child can have (can be null)
@@ -514,14 +675,31 @@ if (!myfaces._impl._util._LangUtils.exists(myfaces._impl._util, "_Utils")) {
      *
      */
     myfaces._impl._util._Utils.globalEval = function(code) {
-
-        if (window.execScript) {
+        //chrome as a diferent global eval, thanks for pointing this out
+        //TODO add a config param which allows to evaluate global scripts even if the call
+        //is embedded in an iframe
+        if (myfaces._impl._util._Utils.browser.isIE && window.execScript) {
+            //execScript definitely only for IE otherwise we might have a custom
+            //window extension with undefined behavior on our necks
             window.execScript(code);
             return;
-        }
+        } else if (undefined != typeof (window.eval) && null != window.eval) {
 
-        eval.call(null, code);
-    }
+            //fix for a Mozilla bug, a bug, Mozilla prevents, that the window is properly applied
+            //the former approach was to scope an outer anonymouse function but the scoping is not necessary
+            //Mozilla behaves correctly if you just add an outer function, then the window scope is again
+            //accepted as the real scope
+            var func = function () {
+                window.eval.call(window, code);
+            };
+            func();
+
+            return;
+        }
+        //we probably have covered all browsers, but this is a safety net which might be triggered
+        //by some foreign browser which is not covered by the above cases
+        eval.call(window, code);
+    };
 
     /**
      * gets the local or global options with local ones having higher priority
@@ -543,6 +721,20 @@ if (!myfaces._impl._util._LangUtils.exists(myfaces._impl._util, "_Utils")) {
             return globalOption;
         }
         return localOptions.myfaces[configName];
+    };
+
+    /**
+     * concatenation routine which concats all childnodes of a node which
+     * contains a set of CDATA blocks to one big string
+     * @param {Node} node the node to concat its blocks for
+     */
+    myfaces._impl._util._Utils.concatCDATABlocks = function(/*Node*/ node) {
+        var cDataBlock = [];
+        // response may contain several blocks
+        for (var i = 0; i < node.childNodes.length; i++) {
+            cDataBlock.push(node.childNodes[i].data);
+        }
+        return cDataBlock.join('');
     };
 
     myfaces._impl._util._Utils.browserDetection();

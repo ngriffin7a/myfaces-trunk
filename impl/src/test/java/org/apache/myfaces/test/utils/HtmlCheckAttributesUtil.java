@@ -5,7 +5,7 @@ import java.util.Map;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
-import org.apache.shale.test.mock.MockResponseWriter;
+import org.apache.myfaces.test.mock.MockResponseWriter;
 
 /**
  * This is a utility class used in unit test cases to check if
@@ -34,7 +34,7 @@ public class HtmlCheckAttributesUtil
      * @param output     The html output of the component's renderer.
      * @throws Exception
      */
-    private static void checkRenderedAttributes(HtmlRenderedAttr[] attrs, String output) throws Exception 
+    public static void checkRenderedAttributes(HtmlRenderedAttr[] attrs, String output) throws Exception 
     {
         for(int i = 0; i < attrs.length; i++) 
         {
@@ -61,9 +61,7 @@ public class HtmlCheckAttributesUtil
     {
         
         addBaseAttributes(component, attrs);
-        component.encodeBegin(context);
-        component.encodeChildren(context);
-        component.encodeEnd(context);
+        component.encodeAll(context);
         context.renderResponse();
         checkRenderedAttributes(attrs, writer.getWriter().toString());
     }

@@ -32,6 +32,7 @@ public interface NavigationCase
 
     public String getFromAction();
     public String getFromOutcome();
-    public boolean isRedirect();
+    public String getIf();
+    public Redirect getRedirect();
     public String getToViewId();
 }

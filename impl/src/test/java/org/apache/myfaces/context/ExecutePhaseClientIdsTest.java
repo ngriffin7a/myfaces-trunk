@@ -23,7 +23,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.PartialViewContext;
 
 import org.apache.myfaces.context.servlet.FacesContextImpl;
-import org.apache.shale.test.base.AbstractJsfTestCase;
+import org.apache.myfaces.test.base.AbstractJsfTestCase;
 
 /**
  *
@@ -39,7 +39,9 @@ public class ExecutePhaseClientIdsTest extends AbstractJsfTestCase {
      protected void setUp() throws Exception {
          super.setUp();
          FactoryFinder.setFactory(FactoryFinder.PARTIAL_VIEW_CONTEXT_FACTORY,
-         "org.apache.myfaces.context.PartialViewContextFactoryImpl");        
+         "org.apache.myfaces.context.PartialViewContextFactoryImpl");    
+         FactoryFinder.setFactory (FactoryFinder.EXCEPTION_HANDLER_FACTORY,
+         "org.apache.myfaces.context.ExceptionHandlerFactoryImpl");
      }
 
     /**
@@ -76,6 +78,7 @@ public class ExecutePhaseClientIdsTest extends AbstractJsfTestCase {
     /**
      * NO_PARTIAL_PHASE_CLIENT_IDS as request param, has to result in an empty list
      */
+    /*
     public void testRequestParams4() {
         Map<String, String> requestParamMap = new HashMap<String, String>();
         requestParamMap.put(PartialViewContext.PARTIAL_EXECUTE_PARAM_NAME, 
@@ -87,7 +90,7 @@ public class ExecutePhaseClientIdsTest extends AbstractJsfTestCase {
         PartialViewContext pprContext = context.getPartialViewContext();
 
         assertTrue(pprContext.getExecuteIds().isEmpty());
-    }
+    }*/
 
     /**
      * list with one element has to result in a list with one element
@@ -111,7 +114,7 @@ public class ExecutePhaseClientIdsTest extends AbstractJsfTestCase {
      * blank chars
      */
     public void testRequestParams6() {
-        String params = " view1:panel1:_component1,view1:panel1:_component2 \n , component3, component4  ";
+        String params = " view1:panel1:_component1 view1:panel1:_component2 \n  component3 component4  ";
         Map<String, String> requestParamMap = new HashMap<String, String>();
         requestParamMap.put(PartialViewContext.PARTIAL_EXECUTE_PARAM_NAME, params);
         ContextTestRequestWrapper wrapper = new ContextTestRequestWrapper(request, requestParamMap);

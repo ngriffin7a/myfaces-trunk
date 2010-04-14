@@ -30,9 +30,9 @@ import junit.framework.TestSuite;
 
 import org.apache.myfaces.test.utils.HtmlCheckAttributesUtil;
 import org.apache.myfaces.test.utils.HtmlRenderedAttr;
-import org.apache.shale.test.base.AbstractJsfTestCase;
-import org.apache.shale.test.mock.MockRenderKitFactory;
-import org.apache.shale.test.mock.MockResponseWriter;
+import org.apache.myfaces.test.base.AbstractJsfTestCase;
+import org.apache.myfaces.test.mock.MockRenderKitFactory;
+import org.apache.myfaces.test.mock.MockResponseWriter;
 
 public class HtmlMessageRendererTest extends AbstractJsfTestCase
 {
@@ -79,13 +79,13 @@ public class HtmlMessageRendererTest extends AbstractJsfTestCase
                 form.getRendererType(),
                 new HtmlFormRenderer());        
         
-        inputText.setParent(form);
+        //inputText.setParent(form);
         inputText.setId("myInputId");
         
         message.setErrorClass(ERROR_CLASS);
         message.setWarnClass(WARN_CLASS);
         message.setInfoClass(INFO_CLASS);
-        message.setParent(form);
+        //message.setParent(form);
         
         form.getChildren().add(inputText);
         form.getChildren().add(message);

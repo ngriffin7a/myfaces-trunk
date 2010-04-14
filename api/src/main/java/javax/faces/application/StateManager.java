@@ -18,6 +18,9 @@
  */
 package javax.faces.application;
 
+
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
+
 import java.io.IOException;
 
 import javax.faces.component.UIViewRoot;
@@ -58,10 +61,30 @@ import javax.faces.context.FacesContext;
  */
 public abstract class StateManager
 {
+    /**
+     * Define the state method to be used. There are two different options defined by the 
+     * specification: "client" and "server" state.
+     * <p>
+     * When "client" state is configured, all state information required to create the tree is embedded within
+     * the data rendered to the client. Note that because data received from a remote client must always be
+     * treated as "tainted", care must be taken when using such data. Some StateManager implementations may
+     * use encryption to ensure that clients cannot modify the data, and that the data received on postback
+     * is therefore trustworthy.
+     * </p>
+     * <p>
+     * When "server" state is configured, the data is saved somewhere "on the back end", and (at most) a
+     * token is embedded in the data rendered to the user.
+     * </p>
+     */
+    @JSFWebConfigParam(defaultValue="server", expectedValues="server,client", since="1.1")
     public static final String STATE_SAVING_METHOD_PARAM_NAME = "javax.faces.STATE_SAVING_METHOD";
     public static final String STATE_SAVING_METHOD_CLIENT = "client";
     public static final String STATE_SAVING_METHOD_SERVER = "server";
+    
+    @JSFWebConfigParam(since="2.0")
     public static final String FULL_STATE_SAVING_VIEW_IDS_PARAM_NAME = "javax.faces.FULL_STATE_SAVING_VIEW_IDS";
+    
+    @JSFWebConfigParam(expectedValues="true,false", since="2.0")
     public static final String PARTIAL_STATE_SAVING_PARAM_NAME = "javax.faces.PARTIAL_STATE_SAVING";
     private Boolean _savingStateInClient = null;
 
@@ -73,7 +96,6 @@ public abstract class StateManager
      * 
      * @deprecated
      */
-    @Deprecated
     public StateManager.SerializedView saveSerializedView(FacesContext context)
     {
         return null;
@@ -112,7 +134,6 @@ public abstract class StateManager
      * 
      * @deprecated
      */
-    @Deprecated
     protected Object getTreeStructureToSave(FacesContext context)
     {
         return null;
@@ -125,7 +146,6 @@ public abstract class StateManager
      * 
      * @deprecated
      */
-    @Deprecated
     protected Object getComponentStateToSave(FacesContext context)
     {
         return null;
@@ -148,7 +168,6 @@ public abstract class StateManager
      * 
      * @deprecated
      */
-    @Deprecated
     public void writeState(FacesContext context, StateManager.SerializedView state)
         throws IOException
     {
@@ -182,16 +201,13 @@ public abstract class StateManager
     }
     
     /**
-     * Convenience method to return the view state as a String with no RenderKit specific markup. This default 
-     * implementation of this method will call {@link #saveView(javax.faces.context.FacesContext)} and passing the 
-     * result to and returning the resulting value from 
-     * ResponseStateManager.getViewState(javax.faces.context.FacesContext, Object). 
-     * 
-     * @param context {@link FacesContext} for the current request
-     * 
-     * @return the view state as a String with no RenderKit specific markup.
+     * TODO: This method should be called from somewhere when ajax response is created to update the state saving param
+     * on client. The place where this method is called is an implementation detail, so there is no references about
+     * from where in the spec javadoc. 
      * 
      * @since 2.0
+     * @param context
+     * @return
      */
     public String getViewState(FacesContext context)
     {
@@ -203,7 +219,6 @@ public abstract class StateManager
     /**
      * @deprecated
      */
-    @Deprecated
     protected UIViewRoot restoreTreeStructure(FacesContext context, String viewId, String renderKitId)
     {
         return null;
@@ -212,7 +227,6 @@ public abstract class StateManager
     /**
      * @deprecated
      */
-    @Deprecated
     protected void restoreComponentState(FacesContext context, UIViewRoot viewRoot, String renderKitId)
     {
         // default impl does nothing as per JSF 1.2 javadoc
@@ -250,7 +264,6 @@ public abstract class StateManager
     /**
      * @deprecated
      */
-    @Deprecated
     public class SerializedView
     {
         private Object _structure;
@@ -259,7 +272,6 @@ public abstract class StateManager
         /**
          * @deprecated
          */
-        @Deprecated
         public SerializedView(Object structure, Object state)
         {
             _structure = structure;
@@ -269,7 +281,6 @@ public abstract class StateManager
         /**
          * @deprecated
          */
-        @Deprecated
         public Object getStructure()
         {
             return _structure;
@@ -278,7 +289,6 @@ public abstract class StateManager
         /**
          * @deprecated
          */
-        @Deprecated
         public Object getState()
         {
             return _state;

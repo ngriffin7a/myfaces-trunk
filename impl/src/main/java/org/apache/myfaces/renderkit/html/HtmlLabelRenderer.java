@@ -19,21 +19,28 @@
 package org.apache.myfaces.renderkit.html;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.ValueHolder;
+import javax.faces.component.behavior.ClientBehavior;
+import javax.faces.component.behavior.ClientBehaviorHolder;
 import javax.faces.component.html.HtmlOutputLabel;
+import javax.faces.component.html.HtmlOutputText;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFRenderer;
+import org.apache.myfaces.shared_impl.component.EscapeCapable;
 import org.apache.myfaces.shared_impl.renderkit.JSFAttr;
 import org.apache.myfaces.shared_impl.renderkit.RendererUtils;
 import org.apache.myfaces.shared_impl.renderkit.html.HTML;
 import org.apache.myfaces.shared_impl.renderkit.html.HtmlRenderer;
 import org.apache.myfaces.shared_impl.renderkit.html.HtmlRendererUtils;
+import org.apache.myfaces.shared_impl.renderkit.html.util.JavascriptUtils;
 
 /**
  * 
@@ -45,7 +52,8 @@ import org.apache.myfaces.shared_impl.renderkit.html.HtmlRendererUtils;
 @JSFRenderer(renderKitId = "HTML_BASIC", family = "javax.faces.Output", type = "javax.faces.Label")
 public class HtmlLabelRenderer extends HtmlRenderer
 {
-    private static final Log log = LogFactory.getLog(HtmlLabelRenderer.class);
+    //private static final Log log = LogFactory.getLog(HtmlLabelRenderer.class);
+    private static final Logger log = Logger.getLogger(HtmlLabelRenderer.class.getName());
 
     @Override
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException
@@ -57,8 +65,27 @@ public class HtmlLabelRenderer extends HtmlRenderer
         encodeBefore(facesContext, writer, uiComponent);
 
         writer.startElement(HTML.LABEL_ELEM, uiComponent);
-        HtmlRendererUtils.writeIdIfNecessary(writer, uiComponent, facesContext);
-        HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.LABEL_PASSTHROUGH_ATTRIBUTES);
+        Map<String, List<ClientBehavior>> behaviors = null;
+        if (uiComponent instanceof ClientBehaviorHolder && JavascriptUtils.isJavascriptAllowed(facesContext.getExternalContext()))
+        {
+            behaviors = ((ClientBehaviorHolder) uiComponent).getClientBehaviors();
+            if (!behaviors.isEmpty())
+            {
+                HtmlRendererUtils.writeIdAndName(writer, uiComponent, facesContext);
+            }
+            else
+            {
+                HtmlRendererUtils.writeIdIfNecessary(writer, uiComponent, facesContext);
+            }
+            HtmlRendererUtils.renderBehaviorizedEventHandlers(facesContext, writer, uiComponent, behaviors);
+            HtmlRendererUtils.renderBehaviorizedFieldEventHandlersWithoutOnchangeAndOnselect(facesContext, writer, uiComponent, behaviors);
+            HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.LABEL_PASSTHROUGH_ATTRIBUTES_WITHOUT_EVENTS);
+        }
+        else
+        {
+            HtmlRendererUtils.writeIdIfNecessary(writer, uiComponent, facesContext);
+            HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.LABEL_PASSTHROUGH_ATTRIBUTES);
+        }
 
         String forAttr = getFor(uiComponent);
 
@@ -68,9 +95,9 @@ public class HtmlLabelRenderer extends HtmlRenderer
         }
         else
         {
-            if (log.isWarnEnabled())
+            if (log.isLoggable(Level.WARNING))
             {
-                log.warn("Attribute 'for' of label component with id " + uiComponent.getClientId(facesContext)
+                log.warning("Attribute 'for' of label component with id " + uiComponent.getClientId(facesContext)
                         + " is not defined");
             }
         }
@@ -82,7 +109,24 @@ public class HtmlLabelRenderer extends HtmlRenderer
             String text = RendererUtils.getStringValue(facesContext, uiComponent);
             if (text != null)
             {
-                writer.writeText(text, "value");
+                boolean escape;
+                if (uiComponent instanceof HtmlOutputLabel || uiComponent instanceof EscapeCapable)
+                {
+                    escape = ((HtmlOutputLabel)uiComponent).isEscape();
+                }
+                else
+                {
+                    escape = RendererUtils.getBooleanAttribute(uiComponent, org.apache.myfaces.shared_impl.renderkit.JSFAttr.ESCAPE_ATTR,
+                                                               true); //default is to escape
+                }                
+                if (escape)
+                {
+                    writer.writeText(text, org.apache.myfaces.shared_impl.renderkit.JSFAttr.VALUE_ATTR);
+                }
+                else
+                {
+                    writer.write(text);
+                }
             }
         }
 

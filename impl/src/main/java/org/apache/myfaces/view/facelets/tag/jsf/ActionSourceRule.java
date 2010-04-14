@@ -29,17 +29,35 @@ import javax.faces.view.facelets.Metadata;
 import javax.faces.view.facelets.MetadataTarget;
 import javax.faces.view.facelets.TagAttribute;
 
+import org.apache.myfaces.view.facelets.AbstractFaceletContext;
+import org.apache.myfaces.view.facelets.el.LegacyMethodBinding;
+
 /**
  * 
  * @author Jacob Hookom
  * @version $Id: ActionSourceRule.java,v 1.5 2008/07/13 19:01:46 rlubke Exp $
  */
-final class ActionSourceRule extends MetaRule
+public final class ActionSourceRule extends MetaRule
 {
     public final static Class<?>[] ACTION_SIG = new Class[0];
 
     public final static Class<?>[] ACTION_LISTENER_SIG = new Class<?>[] { ActionEvent.class };
 
+    final static class ActionMapper extends Metadata {
+
+        private final TagAttribute attr;
+
+        public ActionMapper(TagAttribute attr) {
+            this.attr = attr;
+        }
+
+        public void applyMetadata(FaceletContext ctx, Object instance) {
+            ((ActionSource) instance).setAction(new LegacyMethodBinding(
+                    this.attr.getMethodExpression(ctx, String.class,
+                            ActionSourceRule.ACTION_SIG)));
+        }
+    }
+    
     final static class ActionMapper2 extends Metadata
     {
         private final TagAttribute _attr;
@@ -56,6 +74,23 @@ final class ActionSourceRule extends MetaRule
         }
     }
 
+    final static class ActionListenerMapper extends Metadata {
+
+        private final TagAttribute attr;
+
+        public ActionListenerMapper(TagAttribute attr) {
+            this.attr = attr;
+        }
+
+        public void applyMetadata(FaceletContext ctx, Object instance) {
+            ((ActionSource) instance)
+                    .setActionListener(new LegacyMethodBinding(this.attr
+                            .getMethodExpression(ctx, null,
+                                    ActionSourceRule.ACTION_LISTENER_SIG)));
+        }
+
+    }
+
     final static class ActionListenerMapper2 extends Metadata
     {
         private final TagAttribute _attr;
@@ -67,8 +102,24 @@ final class ActionSourceRule extends MetaRule
 
         public void applyMetadata(FaceletContext ctx, Object instance)
         {
-            MethodExpression expr = _attr.getMethodExpression(ctx, null, ActionSourceRule.ACTION_LISTENER_SIG);
-            ((ActionSource2) instance).addActionListener(new MethodExpressionActionListener(expr));
+            // From JSF 2.0 it is possible to have actionListener method without ActionEvent parameter. 
+            // It seems that MethodExpressionActionListener from API contains support for it but there is one big
+            // problem - one-arg constructor will not preserve the current VariableMapper.
+            // This is a problem when using facelets and <ui:decorate/> with EL params (see MYFACES-2541 for details).
+            // So we must create two MethodExpressions here - both are created from the current 
+            // facelets context and thus varibale mapping will work.
+            final MethodExpression methodExpressionOneArg = _attr.getMethodExpression(ctx, null, ActionSourceRule.ACTION_LISTENER_SIG);
+            final MethodExpression methodExpressionZeroArg = _attr.getMethodExpression(ctx, null, ActionSourceRule.ACTION_SIG);
+            if (((AbstractFaceletContext)ctx).isUsingPSSOnThisView())
+            {
+                ((ActionSource2) instance).addActionListener(
+                        new PartialMethodExpressionActionListener(methodExpressionOneArg, methodExpressionZeroArg));
+            }
+            else
+            {
+                ((ActionSource2) instance).addActionListener(
+                        new MethodExpressionActionListener(methodExpressionOneArg, methodExpressionZeroArg));
+            }
         }
     }
 
@@ -85,12 +136,26 @@ final class ActionSourceRule extends MetaRule
         {
             if ("action".equals(name))
             {
-                return new ActionMapper2(attribute);
+                if (meta.isTargetInstanceOf(ActionSource2.class))
+                {
+                    return new ActionMapper2(attribute);
+                }
+                else
+                {
+                    return new ActionMapper(attribute);
+                }
             }
 
             if ("actionListener".equals(name))
             {
-                return new ActionListenerMapper2(attribute);
+                if (meta.isTargetInstanceOf(ActionSource2.class))
+                {
+                    return new ActionListenerMapper2(attribute);
+                }
+                else
+                {
+                    return new ActionListenerMapper(attribute);
+                }
             }
         }
         

@@ -22,7 +22,7 @@ package javax.faces.convert;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 
-import org.apache.shale.test.base.AbstractJsfTestCase;
+import org.apache.myfaces.test.base.AbstractJsfTestCase;
 
 /**
  * This testcase test <code>javax.faces.convert.EnumConverter</code>.
@@ -34,7 +34,16 @@ public class EnumConverterTest extends AbstractJsfTestCase
 {
     private enum testEnum
     {
-        ITEM1, ITEM2
+        ITEM1, ITEM2;
+        
+        @Override
+        public String toString()
+        {
+            // overriding toString() to check if converter uses
+            // name() instead of toString() to create the String value.
+            return "enum value";
+        }
+        
     };
 
     private EnumConverter converter;
@@ -125,7 +134,7 @@ public class EnumConverterTest extends AbstractJsfTestCase
     {
         UIInput input = new UIInput();
         String convertedStr = converter.getAsString(FacesContext.getCurrentInstance(), input, testEnum.ITEM1);
-        assertEquals(convertedStr, testEnum.ITEM1.toString());
+        assertEquals(convertedStr, testEnum.ITEM1.name());
     }
 
     /**
@@ -136,7 +145,7 @@ public class EnumConverterTest extends AbstractJsfTestCase
     {
         UIInput input = new UIInput();
         String convertedStr = converter.getAsString(FacesContext.getCurrentInstance(), input, null);
-        assertEquals(convertedStr, "");
+        assertNull(convertedStr);
     }
 
     /**
@@ -146,8 +155,15 @@ public class EnumConverterTest extends AbstractJsfTestCase
     public void testGetAsStringNoEnum()
     {
         UIInput input = new UIInput();
-        String convertedStr = converter.getAsString(FacesContext.getCurrentInstance(), input, "HALLO");
-        assertEquals(convertedStr, "HALLO");
+        try
+        {
+            String convertedStr = converter.getAsString(FacesContext.getCurrentInstance(), input, "HALLO");
+            fail("Converter exception should be thrown");
+        }
+        catch (ConverterException e)
+        {
+            // should be thrown
+        }
     }
 
     /**

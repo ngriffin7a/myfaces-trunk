@@ -23,7 +23,6 @@ import java.io.IOException;
 import javax.el.ValueExpression;
 import javax.faces.FactoryFinder;
 import javax.faces.application.FacesMessage;
-import javax.faces.component.UIForm.PropertyKeys;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
@@ -32,6 +31,8 @@ import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFJspProperty;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
 
 /**
  * 
@@ -40,12 +41,14 @@ import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFCompone
  * If maxlength is used, we can put something like this: 
  * JSFJspProperty(name = "maxlength", returnType = "java.lang.String")
  * 
- * @author Simon Lessard (latest modification by $Author: slessard $)
- * @version $Revision: 696523 $ $Date: 2009-03-14 14:43:57 -0400 (mer., 17 sept. 2008) $
+ * @author Simon Lessard (latest modification by $Author$)
+ * @version $Revision$ $Date$
  * 
  * @since 2.0
  */
-@JSFComponent(name = "f:viewParam", bodyContent = "JSP", tagClass = "org.apache.myfaces.taglib.core.ViewParamTag")
+@JSFComponent(name = "f:viewParam", bodyContent = "JSP", 
+        tagClass = "org.apache.myfaces.taglib.core.ParamTag")
+@JSFJspProperty(name = "maxlength", returnType = "int", longDesc = "The max number or characters allowed for this param")
 public class UIViewParameter extends UIInput
 {
     public static final String COMPONENT_FAMILY = "javax.faces.ViewParameter";
@@ -55,6 +58,11 @@ public class UIViewParameter extends UIInput
     private static final String DELEGATE_RENDERER_TYPE = "javax.faces.Text";
     
     private static Renderer _delegateRenderer;
+
+    public UIViewParameter()
+    {
+        setRendererType(null);
+    }
 
     @Override
     public String getFamily()
@@ -67,12 +75,23 @@ public class UIViewParameter extends UIInput
     {
         // Override behavior from superclass to pull a value from the incoming request parameter map under the 
         // name given by getName() and store it with a call to UIInput.setSubmittedValue(java.lang.Object).
-        setSubmittedValue(context.getExternalContext().getRequestParameterMap().get(getName()));
+        String value = context.getExternalContext().getRequestParameterMap().get(getName());
+        
+        // only apply the value if it is non-null (otherwise postbacks 
+        // to a view with view parameters would not work correctly)
+        if (value != null)
+        {
+            setSubmittedValue(value);
+        }
     }
 
     @Override
     public void encodeAll(FacesContext context) throws IOException
     {
+        if (context == null) 
+        {
+            throw new NullPointerException();
+        }
         setSubmittedValue(getStringValue(context));
     }
 
@@ -83,7 +102,8 @@ public class UIViewParameter extends UIInput
 
     public String getStringValue(FacesContext context)
     {
-        if (getValueExpression ("value") != null) {
+        if (getValueExpression ("value") != null) 
+        {
             // Value specified as an expression, so do the conversion.
             
             return getStringValueFromModel (context);
@@ -100,26 +120,27 @@ public class UIViewParameter extends UIInput
         Converter converter;
         Object value;
         
-        if (ve == null) {
+        if (ve == null) 
+        {
             // No value expression, return null.
-            
             return null;
         }
         
         value = ve.getValue (context.getELContext());
         
-        if (value instanceof String) {
+        if (value instanceof String) 
+        {
             // No need to convert.
-            
             return ((String) value);
         }
         
         converter = getConverter();
         
-        if (converter == null) {
-            if (value == null) {
+        if (converter == null) 
+        {
+            if (value == null) 
+            {
                 // No converter, no value, return null.
-                
                 return null;
             }
             
@@ -127,7 +148,8 @@ public class UIViewParameter extends UIInput
             
             converter = context.getApplication().createConverter (value.getClass());
             
-            if (converter == null) {
+            if (converter == null) 
+            {
                 // Only option is to call toString().
                 
                 return value.toString();
@@ -143,30 +165,41 @@ public class UIViewParameter extends UIInput
         return (String)super.getSubmittedValue();
     }
 
+    @JSFProperty(tagExcluded=true)
     @Override
     public boolean isImmediate()
     {
         return false;
     }
-
+    
+    @JSFProperty(tagExcluded=true)
+    @Override
+    public boolean isRendered()
+    {
+        return super.isRendered();
+    }
+    
     @Override
     public void processValidators(FacesContext context)
     {
-        if (context == null) {
+        if (context == null) 
+        {
             throw new NullPointerException ("context");
         }
         
         // If value is null and required is set, validation fails.
         
-        if ((getSubmittedValue() == null) && isRequired()) {
+        if ((getSubmittedValue() == null) && isRequired()) 
+        {
             FacesMessage message;
             String required = getRequiredMessage();
             
-            if (required != null) {
+            if (required != null) 
+            {
                 message = new FacesMessage (FacesMessage.SEVERITY_ERROR, required, required);
             }
-            
-            else {
+            else 
+            {
                 String label = _MessageUtils.getLabel (context, this);
                 
                 message = _MessageUtils.getMessage (context, context.getViewRoot().getLocale(),
@@ -203,7 +236,8 @@ public class UIViewParameter extends UIInput
         // Put name in request map if value is not a value expression, is valid, and local
         // value was set.
         
-        if ((getValueExpression ("value") == null) && isValid() && isLocalValueSet()) {
+        if ((getValueExpression ("value") == null) && isValid() && isLocalValueSet()) 
+        {
             context.getExternalContext().getRequestMap().put (getName(), getLocalValue());
         }
     }
@@ -228,8 +262,8 @@ public class UIViewParameter extends UIInput
     }
 
     /**
-     * @author Simon Lessard (latest modification by $Author: slessard $)
-     * @version $Revision: 696523 $ $Date: 2009-03-14 14:43:57 -0400 (mer., 17 sept. 2008) $
+     * @author Simon Lessard (latest modification by $Author$)
+     * @version $Revision$ $Date$
      * 
      * @since 2.0
      */

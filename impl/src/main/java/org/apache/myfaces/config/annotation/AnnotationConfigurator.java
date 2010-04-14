@@ -35,6 +35,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
@@ -50,16 +52,16 @@ import javax.faces.component.behavior.Behavior;
 import javax.faces.component.behavior.FacesBehavior;
 import javax.faces.context.ExternalContext;
 import javax.faces.convert.FacesConverter;
-import javax.faces.event.ComponentSystemEvent;
-import javax.faces.event.NamedEvent;
+import javax.faces.event.*;
+import javax.faces.render.ClientBehaviorRenderer;
+import javax.faces.render.FacesBehaviorRenderer;
 import javax.faces.render.FacesRenderer;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
 import javax.faces.validator.FacesValidator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
 import org.apache.myfaces.config.FacesConfigDispenser;
 import org.apache.myfaces.config.NamedEventManager;
 import org.apache.myfaces.config.RuntimeConfig;
@@ -77,7 +79,6 @@ import org.apache.myfaces.view.facelets.util.Classpath;
  * <li>{@link javax.faces.render.FacesRenderer}</li>
  * <li>{@link javax.faces.bean.ManagedBean}</li>
  * <li>{@link javax.faces.bean.ManagedProperty}</li>
- * <li>PENDING:</li>
  * <li>{@link javax.faces.render.FacesBehaviorRenderer}</li>
  * </ul>
  * <p>
@@ -90,8 +91,8 @@ import org.apache.myfaces.view.facelets.util.Classpath;
  */
 public class AnnotationConfigurator
 {
-    private static final Log log = LogFactory
-            .getLog(AnnotationConfigurator.class);
+    //private static final Log log = LogFactory.getLog(AnnotationConfigurator.class);
+    private static final Logger log = Logger.getLogger(AnnotationConfigurator.class.getName());
 
     private static final String META_INF_PREFIX = "META-INF/";
 
@@ -103,6 +104,7 @@ public class AnnotationConfigurator
      * <p> Servlet context init parameter which defines which packages to scan
      * for beans, separated by commas.</p>
      */
+    @JSFWebConfigParam(since="2.0")
     public static final String SCAN_PACKAGES = "org.apache.myfaces.annotation.SCAN_PACKAGES";
 
     /**
@@ -133,16 +135,25 @@ public class AnnotationConfigurator
     
     private final _ClassByteCodeAnnotationFilter _filter;    
 
+    /**
+     * This set contains the annotation names that this AnnotationConfigurator is able to scan
+     * in the format that is read from .class file.
+     */
     private static Set<String> byteCodeAnnotationsNames;
 
     static
     {
         Set<String> bcan = new HashSet<String>(10, 1f);
-        bcan.add("Lorg/apache/myfaces/test/annotations/component/FacesComponent;");
-        bcan.add("Lorg/apache/myfaces/test/annotations/converter/FacesConverter;");
-        bcan.add("Lorg/apache/myfaces/test/annotations/validator/FacesValidator;");
-        bcan.add("Lorg/apache/myfaces/test/annotations/render/FacesRenderer;");
-        bcan.add("Lorg/apache/myfaces/test/annotations/bean/ManagedBean;");
+        bcan.add("Ljavax/faces/component/FacesComponent;");
+        bcan.add("Ljavax/faces/component/behavior/FacesBehavior;");
+        bcan.add("Ljavax/faces/convert/FacesConverter;");
+        bcan.add("Ljavax/faces/validator/FacesValidator;");
+        bcan.add("Ljavax/faces/render/FacesRenderer;");
+        bcan.add("Ljavax/faces/bean/ManagedBean;");
+        bcan.add("Ljavax/faces/event/NamedEvent;");
+        //bcan.add("Ljavax/faces/event/ListenerFor;");
+        //bcan.add("Ljavax/faces/event/ListenersFor;");
+        bcan.add("Ljavax/faces/render/FacesBehaviorRenderer;");
 
         byteCodeAnnotationsNames = Collections.unmodifiableSet(bcan);
     }
@@ -158,19 +169,68 @@ public class AnnotationConfigurator
             boolean metadataComplete) throws FacesException
     {
         List<Class> classes;
+        List<JarFile> archives = null;
         
-        if (metadataComplete)
+        // Here we have two cases, if metadataComplete we have only to scan
+        // annotations on myfaces impl jar file, otherwise, scan as usual.
+        if (!metadataComplete)
         {
-            //Read only annotations available myfaces-impl
-            List<JarFile> archives = null;
-            try
-            {                
-                //Also scan jar including META-INF/standard-faces-config.xml
-                //(myfaces-impl jar file)
-                JarFile jarFile = getMyfacesImplJarFile();
-                if (jarFile != null)
+            // Scan annotation available in org.apache.myfaces.annotation.SCAN_PACKAGES 
+            // init param
+            String scanPackages = _externalContext.getInitParameter(SCAN_PACKAGES);
+            if (scanPackages != null)
+            {
+                // Scan the classes configured by the scan_packages context parameter
+                try
                 {
-                    classes = archiveClasses(_externalContext, jarFile);
+                    classes = packageClasses(_externalContext, scanPackages);
+                }
+                catch (ClassNotFoundException e)
+                {
+                    throw new FacesException(e);
+                }
+                catch (IOException e)
+                {
+                    throw new FacesException(e);
+                }
+            }
+            else
+            {
+                // Scan the classes in /WEB-INF/classes for interesting annotations
+                try
+                {
+                    classes = webClasses(_externalContext);
+                }
+                catch (ClassNotFoundException e)
+                {
+                    throw new FacesException(e);
+                }
+            }
+    
+            try
+            {
+                for (Class clazz : classes)
+                {
+                    configureClass(application, dispenser, clazz);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new FacesException(e);
+            }
+    
+            // Scan the classes in /WEB-INF/lib for interesting annotations
+            try
+            {
+                archives = webArchives(_externalContext);
+    
+                if (log.isLoggable(Level.FINEST))
+                {
+                    log.finest("Receiving " + archives.size() + " jar files to check");
+                }
+                for (JarFile archive : archives)
+                {
+                    classes = archiveClasses(_externalContext, archive);
                     for (Class clazz : classes)
                     {
                         configureClass(application, dispenser, clazz);
@@ -181,76 +241,8 @@ public class AnnotationConfigurator
             {
                 throw new FacesException(e);
             }
-            return;
         }
-
-        // Scan annotation available in org.apache.myfaces.annotation.SCAN_PACKAGES 
-        // init param
-        String scanPackages = _externalContext.getInitParameter(SCAN_PACKAGES);
-        if (scanPackages != null)
-        {
-            // Scan the classes configured by the scan_packages context parameter
-            try
-            {
-                classes = packageClasses(_externalContext, scanPackages);
-            }
-            catch (ClassNotFoundException e)
-            {
-                throw new FacesException(e);
-            }
-            catch (IOException e)
-            {
-                throw new FacesException(e);
-            }
-        }
-        else
-        {
-            // Scan the classes in /WEB-INF/classes for interesting annotations
-            try
-            {
-                classes = webClasses(_externalContext);
-            }
-            catch (ClassNotFoundException e)
-            {
-                throw new FacesException(e);
-            }
-        }
-
-        try
-        {
-            for (Class clazz : classes)
-            {
-                configureClass(application, dispenser, clazz);
-            }
-        }
-        catch (Exception e)
-        {
-            throw new FacesException(e);
-        }
-
-        // Scan the classes in /WEB-INF/lib for interesting annotations
-        List<JarFile> archives = null;
-        try
-        {
-            archives = webArchives(_externalContext);
-
-            System.out.println("Receiving " + archives.size()
-                    + " jar files to check");
-            for (JarFile archive : archives)
-            {
-                classes = archiveClasses(_externalContext, archive);
-                for (Class clazz : classes)
-                {
-                    configureClass(application, dispenser, clazz);
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            throw new FacesException(e);
-        }
-        
-        // Scan annotations available myfaces-impl
+        //Read only annotations available myfaces-impl
         try
         {                
             //Also scan jar including META-INF/standard-faces-config.xml
@@ -271,9 +263,20 @@ public class AnnotationConfigurator
         }
     }
 
+    /**
+     * Return the JarFile related to myfaces-impl, based on standard-faces-config.xml is
+     * inside it.
+     * 
+     * @return myfaces JarFile instance
+     * @throws IOException
+     */
     private JarFile getMyfacesImplJarFile() throws IOException
     {
         URL url = getClassLoader().getResource(STANDARD_FACES_CONFIG_RESOURCE);
+        if (url == null)
+        {
+            url = getClass().getClassLoader().getResource(STANDARD_FACES_CONFIG_RESOURCE);
+        }
         return getJarFile(url);
     }
     
@@ -351,7 +354,7 @@ public class AnnotationConfigurator
         List<JarFile> list = new ArrayList<JarFile>();
         Set<String> paths = externalContext.getResourcePaths(WEB_LIB_PREFIX);
 
-        if (paths.isEmpty())
+        if (paths == null || paths.isEmpty())
         {
             //This usually happens when maven-jetty-plugin is used
             //Scan jars looking for paths including META-INF/faces-config.xml
@@ -413,10 +416,10 @@ public class AnnotationConfigurator
                 }
                 if (signal == null)
                 {
-                    if (log.isTraceEnabled())
+                    if (log.isLoggable(Level.FINEST))
                     {
                         log
-                                .trace("Skip JAR file "
+                                .finest("Skip JAR file "
                                         + path
                                         + " because it has no META-INF/faces-config.xml resource");
                     }
@@ -483,9 +486,9 @@ public class AnnotationConfigurator
                 // load it using the classLoader. Anyway, log a debug
                 // message.
                 couldContainAnnotation = true;
-                if (log.isDebugEnabled())
+                if (log.isLoggable(Level.FINE))
                 {
-                    log.debug("IOException when filtering class " + name
+                    log.fine("IOException when filtering class " + name
                             + " for annotations");
                 }
             }
@@ -565,22 +568,24 @@ public class AnnotationConfigurator
         ClassLoader loader = getClassLoader();
 
         Set<String> paths = externalContext.getResourcePaths(prefix);
-        if (log.isTraceEnabled())
+        if(paths == null)
         {
-            log.trace("webClasses(" + prefix + ") - Received " + paths.size()
+            return; //need this in case there is no WEB-INF/classes directory
+        }
+        if (log.isLoggable(Level.FINEST))
+        {
+            log.finest("webClasses(" + prefix + ") - Received " + paths.size()
                     + " paths to check");
         }
-        System.out.println("webClasses(" + prefix + ") - Received "
-                + paths.size() + " paths to check");
 
         String path = null;
 
         if (paths.isEmpty())
         {
-            if (log.isWarnEnabled())
+            if (log.isLoggable(Level.WARNING))
             {
                 log
-                        .warn("AnnotationConfigurator does not found classes "
+                        .warning("AnnotationConfigurator does not found classes "
                                 + "for annotations in "
                                 + prefix
                                 + " ."
@@ -618,9 +623,9 @@ public class AnnotationConfigurator
                         // load it using the classLoader. Anyway, log a debug
                         // message.
                         couldContainAnnotation = true;
-                        if (log.isDebugEnabled())
+                        if (log.isLoggable(Level.FINE))
                         {
-                            log.debug("IOException when filtering class " + path
+                            log.fine("IOException when filtering class " + path
                                     + " for annotations");
                         }
                     }
@@ -676,18 +681,18 @@ public class AnnotationConfigurator
      */
     protected void configureClass( Application application, FacesConfigDispenser<FacesConfig> dispenser, Class clazz)
     {
-        if (log.isTraceEnabled())
+        if (log.isLoggable(Level.FINEST))
         {
-            log.trace("registerClass(" + clazz.getName() + ")");
+            log.finest("registerClass(" + clazz.getName() + ")");
         }
 
         FacesComponent comp = (FacesComponent) clazz
                 .getAnnotation(FacesComponent.class);
         if (comp != null)
         {
-            if (log.isTraceEnabled())
+            if (log.isLoggable(Level.FINEST))
             {
-                log.trace("addComponent(" + comp.value() + ","
+                log.finest("addComponent(" + comp.value() + ","
                         + clazz.getName() + ")");
             }
             
@@ -703,9 +708,9 @@ public class AnnotationConfigurator
                 .getAnnotation(FacesConverter.class);
         if (conv != null)
         {
-            if (log.isTraceEnabled())
+            if (log.isLoggable(Level.FINEST))
             {
-                log.trace("addConverter(" + conv.value() + ","
+                log.finest("addConverter(" + conv.value() + ","
                         + clazz.getName() + ")");
             }
             //If there is a previous entry on Application Configuration Resources,
@@ -725,9 +730,9 @@ public class AnnotationConfigurator
         .getAnnotation(FacesValidator.class);
         if (val != null)
         {
-            if (log.isTraceEnabled())
+            if (log.isLoggable(Level.FINEST))
             {
-                log.trace("addValidator(" + val.value() + "," + clazz.getName()
+                log.finest("addValidator(" + val.value() + "," + clazz.getName()
                         + ")");
             }
             //If there is a previous entry on Application Configuration Resources,
@@ -751,9 +756,9 @@ public class AnnotationConfigurator
             {
                 renderKitId = RenderKitFactory.HTML_BASIC_RENDER_KIT;
             }
-            if (log.isTraceEnabled())
+            if (log.isLoggable(Level.FINEST))
             {
-                log.trace("addRenderer(" + renderKitId + ", "
+                log.finest("addRenderer(" + renderKitId + ", "
                         + rend.componentFamily() + ", " + rend.rendererType()
                         + ", " + clazz.getName() + ")");
             }
@@ -763,9 +768,9 @@ public class AnnotationConfigurator
                         renderKitId);
                 if (rk == null)
                 {
-                    if (log.isErrorEnabled())
+                    if (log.isLoggable(Level.SEVERE))
                     {
-                        log.error("RenderKit "+renderKitId+" not found when adding @FacesRenderer annotation");
+                        log.severe("RenderKit "+renderKitId+" not found when adding @FacesRenderer annotation");
                     }
                     throw new FacesException("RenderKit "+renderKitId+" not found when adding @FacesRenderer annotation");
                 }
@@ -783,60 +788,106 @@ public class AnnotationConfigurator
         
         if (bean != null)
         {
-            if (log.isDebugEnabled())
+            if (log.isLoggable(Level.FINE))
             {
-                log.debug("Class '" + clazz.getName() + "' has an @ManagedBean annotation");
+                log.fine("Class '" + clazz.getName() + "' has an @ManagedBean annotation");
             }
             RuntimeConfig runtimeConfig = RuntimeConfig.getCurrentInstance(_externalContext);
             org.apache.myfaces.config.impl.digester.elements.ManagedBean mbc =
                 new org.apache.myfaces.config.impl.digester.elements.ManagedBean();
-            mbc.setName(bean.name());
+            String beanName = bean.name();
+            
+            if ((beanName == null) || beanName.equals ("")) {
+                int index;
+                
+                // Missing name attribute algorithm: take the unqualified name and make the
+                // first character lowercase.
+                
+                beanName = clazz.getName();
+                index = beanName.lastIndexOf (".");
+                
+                if (index != -1) {
+                    beanName = beanName.substring (index + 1);
+                }
+                
+                beanName = Character.toLowerCase (beanName.charAt (0)) +
+                    beanName.substring (1);
+            }
+            
+            mbc.setName(beanName);
             mbc.setBeanClass(clazz.getName());
             
             ApplicationScoped appScoped = (ApplicationScoped) clazz.getAnnotation(ApplicationScoped.class);
             if (appScoped != null)
             {
                 mbc.setScope("application");
-            }            
-            NoneScoped noneScoped = (NoneScoped) clazz.getAnnotation(NoneScoped.class);
-            if (noneScoped != null)
-            {
-                mbc.setScope("none");
-            }            
-            RequestScoped requestScoped = (RequestScoped) clazz.getAnnotation(RequestScoped.class);
-            if (requestScoped != null)
-            {
-                mbc.setScope("request");
-            }            
-            SessionScoped sessionScoped = (SessionScoped) clazz.getAnnotation(SessionScoped.class);
-            if (sessionScoped != null)
-            {
-                mbc.setScope("session");
-            }            
-            ViewScoped viewScoped = (ViewScoped) clazz.getAnnotation(ViewScoped.class);
-            if (viewScoped != null)
-            {
-                mbc.setScope("view");
-            }            
-            CustomScoped customScoped = (CustomScoped) clazz.getAnnotation(CustomScoped.class);
-            if (customScoped != null)
-            {
-                mbc.setScope(customScoped.value());
             }
+            
+            else
+            {
+                NoneScoped noneScoped = (NoneScoped) clazz.getAnnotation(NoneScoped.class);
+                if (noneScoped != null)
+                {
+                    mbc.setScope("none");
+                }
+                
+                else
+                {
+                    RequestScoped requestScoped = (RequestScoped) clazz.getAnnotation(RequestScoped.class);
+                    if (requestScoped != null)
+                    {
+                        mbc.setScope("request");
+                    }
+                    
+                    else
+                    {
+                        SessionScoped sessionScoped = (SessionScoped) clazz.getAnnotation(SessionScoped.class);
+                        if (sessionScoped != null)
+                        {
+                            mbc.setScope("session");
+                        }
+                        
+                        else
+                        {
+                            ViewScoped viewScoped = (ViewScoped) clazz.getAnnotation(ViewScoped.class);
+                            if (viewScoped != null)
+                            {
+                                mbc.setScope("view");
+                            }
+                            
+                            else {
+                                CustomScoped customScoped = (CustomScoped) clazz.getAnnotation(CustomScoped.class);
+                                if (customScoped != null)
+                                {
+                                    mbc.setScope(customScoped.value());
+                                }
+                                
+                                else
+                                {
+                                    // No scope annotation means default of "request".
+                                    
+                                    mbc.setScope ("request");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
             Field[] fields = fields(clazz);
             for (Field field : fields)
             {
-                if (log.isTraceEnabled())
+                if (log.isLoggable(Level.FINEST))
                 {
-                    log.trace("  Scanning field '" + field.getName() + "'");
+                    log.finest("  Scanning field '" + field.getName() + "'");
                 }
                 javax.faces.bean.ManagedProperty property = (javax.faces.bean.ManagedProperty) field
                         .getAnnotation(javax.faces.bean.ManagedProperty.class);
                 if (property != null)
                 {
-                    if (log.isDebugEnabled())
+                    if (log.isLoggable(Level.FINE))
                     {
-                        log.debug("  Field '" + field.getName()
+                        log.fine("  Field '" + field.getName()
                                 + "' has a @ManagedProperty annotation");
                     }
                     org.apache.myfaces.config.impl.digester.elements.ManagedProperty mpc = 
@@ -864,8 +915,8 @@ public class AnnotationConfigurator
             if (!ComponentSystemEvent.class.isAssignableFrom (clazz)) {
                 // Just log this.  We'll catch it later in the runtime.
                 
-                if (log.isWarnEnabled()) {
-                    log.warn (clazz.getName() + " is annotated with @javax.faces.event.NamedEvent, but does " +
+                if (log.isLoggable(Level.WARNING)) {
+                    log.warning (clazz.getName() + " is annotated with @javax.faces.event.NamedEvent, but does " +
                         "not extend javax.faces.event.ComponentSystemEvent");
                 }
                 
@@ -888,23 +939,93 @@ public class AnnotationConfigurator
             if (!Behavior.class.isAssignableFrom (clazz)) {
                 // Just log this.  We'll catch it later in the runtime.
                 
-                if (log.isWarnEnabled()) {
-                    log.warn (clazz.getName() + " is annotated with @javax.faces.component.behavior.FacesBehavior, " +
+                if (log.isLoggable(Level.WARNING)) {
+                    log.warning (clazz.getName() + " is annotated with @javax.faces.component.behavior.FacesBehavior, " +
                             "but does not implement javax.faces.component.behavior.Behavior");
                 }
             }
             
-            if (log.isTraceEnabled()) {
-                log.trace ("addBehavior(" + facesBehavior.value() + ", " + clazz.getName() + ")");
+            if (log.isLoggable(Level.FINEST)) {
+                log.finest ("addBehavior(" + facesBehavior.value() + ", " + clazz.getName() + ")");
             }
             
             application.addBehavior (facesBehavior.value(), clazz.getName());
         }
         
+        FacesBehaviorRenderer facesBehaviorRenderer = (FacesBehaviorRenderer) clazz.getAnnotation (FacesBehaviorRenderer.class);
+        
+        if (facesBehaviorRenderer != null) {
+            String renderKitId = facesBehaviorRenderer.renderKitId();
+            RenderKit renderKit;
+            
+            if (log.isLoggable(Level.FINEST)) {
+                log.finest ("addClientBehaviorRenderer(" + renderKitId + ", " + facesBehaviorRenderer.rendererType() + ", " +
+                     clazz.getName() + ")");
+            }
+            
+            try {
+                ClientBehaviorRenderer clientBehaviorRenderer;
+                
+                renderKit = renderKitFactory().getRenderKit (null, renderKitId);
+                
+                clientBehaviorRenderer = (ClientBehaviorRenderer) clazz.newInstance();
+                
+                renderKit.addClientBehaviorRenderer(facesBehaviorRenderer.rendererType(), clientBehaviorRenderer);
+            }
+            
+            catch (Throwable e) {
+                throw new FacesException (e);
+            }
+        }
+
+        /*
+        ListenerFor listenerFor = (ListenerFor) clazz.getAnnotation(ListenerFor.class);
+        if (listenerFor != null)
+        {
+            processListenerFor(application, clazz, listenerFor);
+        }
+
+        ListenersFor listenersFor = (ListenersFor) clazz.getAnnotation(ListenersFor.class);
+        if (listenersFor != null)
+        {
+            for (ListenerFor item : listenersFor.value())
+            {
+                processListenerFor(application, clazz, item);
+            }
+        }*/
+
         // TODO: All annotations scanned at startup must be configured here!
-        //FacesBehaviorRenderer
     }
-    
+
+    /*
+    private void processListenerFor(Application application, Class clazz, ListenerFor listenerFor)
+    {
+        try
+        {
+            if (SystemEventListener.class.isAssignableFrom(clazz))
+            {
+                Class sourceClass = listenerFor.sourceClass();
+                Class<? extends SystemEvent> systemEventClass = listenerFor.systemEventClass();
+                if (Void.class.equals(sourceClass))
+                {
+                    application.subscribeToEvent(systemEventClass, (SystemEventListener) clazz.newInstance());
+                }
+                else
+                {
+                    application.subscribeToEvent(systemEventClass, sourceClass, (SystemEventListener) clazz.newInstance());
+                }
+            }
+        }
+        catch (InstantiationException e)
+        {
+            throw new FacesException(e);
+        }
+        catch (IllegalAccessException e)
+        {
+            throw new FacesException(e);
+        }
+    }*/
+
     /**
      * <p>Return an array of all <code>Field</code>s reflecting declared
      * fields in this class, or in any superclass other than

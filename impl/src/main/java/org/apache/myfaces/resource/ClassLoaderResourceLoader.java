@@ -28,6 +28,8 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import org.apache.myfaces.shared_impl.util.ClassUtils;
@@ -43,15 +45,16 @@ public class ClassLoaderResourceLoader extends ResourceLoader
      * 
      * Used on getLibraryVersion to filter resource directories
      **/
-    protected static Pattern VERSION_CHECKER = Pattern.compile("\\p{Digit}+(_\\p{Digit}*)*");
+    //protected static Pattern VERSION_CHECKER = Pattern.compile("\\p{Digit}+(_\\p{Digit}*)*");
 
     /**
      * It checks version like this: /1.js, /1_0.js, /1_0_0.js, /100_100.js
      * 
      * Used on getResourceVersion to filter resources
      **/
-    protected static Pattern RESOURCE_VERSION_CHECKER = Pattern.compile("/\\p{Digit}+(_\\p{Digit}*)*\\..*");
+    //protected static Pattern RESOURCE_VERSION_CHECKER = Pattern.compile("/\\p{Digit}+(_\\p{Digit}*)*\\..*");
 
+    /*
     private FileFilter _libraryFileFilter = new FileFilter()
     {
         public boolean accept(File pathname)
@@ -62,8 +65,9 @@ public class ClassLoaderResourceLoader extends ResourceLoader
             }
             return false;
         }
-    };
+    };*/
 
+    /*
     private FileFilter _resourceFileFilter = new FileFilter()
     {
         public boolean accept(File pathname)
@@ -74,7 +78,7 @@ public class ClassLoaderResourceLoader extends ResourceLoader
             }
             return false;
         }
-    };
+    };*/
 
     public ClassLoaderResourceLoader(String prefix)
     {
@@ -84,6 +88,8 @@ public class ClassLoaderResourceLoader extends ResourceLoader
     @Override
     public String getLibraryVersion(String path)
     {
+        return null;
+        /*
         String libraryVersion = null;
         if (getPrefix() != null)
             path = getPrefix() + '/' + path;
@@ -118,13 +124,16 @@ public class ClassLoaderResourceLoader extends ResourceLoader
                     for (int i = 0; i < versions.length; i++)
                     {
                         String version = versions[i].getName();
-                        if (libraryVersion == null)
+                        if (VERSION_CHECKER.matcher(version).matches())
                         {
-                            libraryVersion = version;
-                        }
-                        else if (getVersionComparator().compare(libraryVersion, version) < 0)
-                        {
-                            libraryVersion = version;
+                            if (libraryVersion == null)
+                            {
+                                libraryVersion = version;
+                            }
+                            else if (getVersionComparator().compare(libraryVersion, version) < 0)
+                            {
+                                libraryVersion = version;
+                            }
                         }
                     }
                 }
@@ -133,9 +142,14 @@ public class ClassLoaderResourceLoader extends ResourceLoader
             {
                 // Just return null, because library version cannot be
                 // resolved.
+                Logger log = Logger.getLogger(ClassLoaderResourceLoader.class.getName()); 
+                if (log.isLoggable(Level.WARNING))
+                {
+                    log.log(Level.WARNING, "url "+url.toString()+" cannot be translated to uri: "+e.getMessage(), e);
+                }
             }
         }
-        else if (url.getProtocol().equals("jar"))
+        else if (isJarResourceProtocol(url.getProtocol()))
         {
             try
             {
@@ -183,13 +197,16 @@ public class ClassLoaderResourceLoader extends ResourceLoader
                                     }
     
                                     String version = entryName;
-                                    if (libraryVersion == null)
+                                    if (VERSION_CHECKER.matcher(version).matches())
                                     {
-                                        libraryVersion = version;
-                                    }
-                                    else if (getVersionComparator().compare(libraryVersion, version) < 0)
-                                    {
-                                        libraryVersion = version;
+                                        if (libraryVersion == null)
+                                        {
+                                            libraryVersion = version;
+                                        }
+                                        else if (getVersionComparator().compare(libraryVersion, version) < 0)
+                                        {
+                                            libraryVersion = version;
+                                        }
                                     }
                                 }
                             }
@@ -216,9 +233,15 @@ public class ClassLoaderResourceLoader extends ResourceLoader
             {
                 // Just return null, because library version cannot be
                 // resolved.
+                Logger log = Logger.getLogger(ClassLoaderResourceLoader.class.getName()); 
+                if (log.isLoggable(Level.WARNING))
+                {
+                    log.log(Level.WARNING, "IOException when scanning for resource in jar file:", e);
+                }
             }
         }
         return libraryVersion;
+        */
     }
 
     @Override
@@ -250,6 +273,8 @@ public class ClassLoaderResourceLoader extends ResourceLoader
     @Override
     public String getResourceVersion(String path)
     {
+        return null;
+        /*
         String resourceVersion = null;
 
         if (getPrefix() != null)
@@ -284,14 +309,23 @@ public class ClassLoaderResourceLoader extends ResourceLoader
                             resourceVersion = version;
                         }
                     }
+                    //Since it is a directory and no version found set resourceVersion as invalid
+                    if (resourceVersion == null)
+                    {
+                        resourceVersion = VERSION_INVALID;
+                    }
                 }
             }
             catch (URISyntaxException e)
             {
-                e.printStackTrace();
+                Logger log = Logger.getLogger(ClassLoaderResourceLoader.class.getName()); 
+                if (log.isLoggable(Level.WARNING))
+                {
+                    log.log(Level.WARNING, "url "+url.toString()+" cannot be translated to uri: "+e.getMessage(), e);
+                }
             }
         }
-        else if (url.getProtocol().equals("jar"))
+        else if (isJarResourceProtocol(url.getProtocol()))
         {
             try
             {
@@ -321,31 +355,25 @@ public class ClassLoaderResourceLoader extends ResourceLoader
                                         // the same string, just skip it
                                         continue;
                                     }
-    
-                                    if (entryName.charAt(entryName.length() - 1) != '/')
+        
+                                    entryName = entryName.substring(path.length());
+                                    if (RESOURCE_VERSION_CHECKER.matcher(entryName).matches())
                                     {
-                                        // Skip files
-                                        continue;
-                                    }
-    
-                                    entryName = entryName.substring(path.length() + 1, entryName.length() - 1);
-    
-                                    if (entryName.indexOf('/') >= 0)
-                                    {
-                                        // Inner Directory
-                                        continue;
-                                    }
-    
-                                    String version = entryName;
-                                    if (resourceVersion == null)
-                                    {
-                                        resourceVersion = version;
-                                    }
-                                    else if (getVersionComparator().compare(resourceVersion, version) < 0)
-                                    {
-                                        resourceVersion = version;
+                                        String version = entryName.substring(1, entryName.lastIndexOf('.'));
+                                        if (resourceVersion == null)
+                                        {
+                                            resourceVersion = version;
+                                        }
+                                        else if (getVersionComparator().compare(resourceVersion, version) < 0)
+                                        {
+                                            resourceVersion = version;
+                                        }
                                     }
                                 }
+                            }
+                            if (resourceVersion == null)
+                            {
+                                resourceVersion = VERSION_INVALID;
                             }
                         }
                     }
@@ -371,9 +399,15 @@ public class ClassLoaderResourceLoader extends ResourceLoader
             {
                 // Just return null, because library version cannot be
                 // resolved.
+                Logger log = Logger.getLogger(ClassLoaderResourceLoader.class.getName()); 
+                if (log.isLoggable(Level.WARNING))
+                {
+                    log.log(Level.WARNING, "IOException when scanning for resource in jar file:", e);
+                }
             }
         }
         return resourceVersion;
+        */
     }
 
     @Override
@@ -399,7 +433,7 @@ public class ClassLoaderResourceLoader extends ResourceLoader
     {
         if (getPrefix() != null && !"".equals(getPrefix()))
         {
-            URL url = getClassLoader().getResource(libraryName);
+            URL url = getClassLoader().getResource(getPrefix() + '/' + libraryName);
             if (url != null)
             {
                 return true;
@@ -407,7 +441,7 @@ public class ClassLoaderResourceLoader extends ResourceLoader
         }
         else
         {
-            URL url = getClassLoader().getResource(getPrefix() + '/' + libraryName);
+            URL url = getClassLoader().getResource(libraryName);
             if (url != null)
             {
                 return true;
@@ -415,4 +449,23 @@ public class ClassLoaderResourceLoader extends ResourceLoader
         }
         return false;
     }
+
+    /**
+     * <p>Determines whether the given URL resource protocol refers to a JAR file. Note that
+     * BEA WebLogic and IBM WebSphere don't use the "jar://" protocol for some reason even
+     * though you can treat these resources just like normal JAR files, i.e. you can ignore
+     * the difference between these protocols after this method has returned.</p>
+     *
+     * @param protocol the URL resource protocol you want to check
+     *
+     * @return <code>true</code> if the given URL resource protocol refers to a JAR file,
+     *          <code>false</code> otherwise
+     */
+    /*
+    private static boolean isJarResourceProtocol(String protocol)
+    {
+        // Websphere uses the protocol "wsjar://" and Weblogic uses the protocol "zip://".
+        return "jar".equals(protocol) || "wsjar".equals(protocol) || "zip".equals(protocol); 
+    }*/
+
 }

@@ -21,8 +21,8 @@ package org.apache.myfaces.context.servlet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.Writer;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -34,11 +34,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import javax.faces.FacesException;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
+import javax.faces.context.PartialResponseWriter;
+import javax.faces.context.PartialViewContext;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -50,10 +53,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.myfaces.context.ReleaseableExternalContext;
-import org.apache.myfaces.context.flash.FlashImpl;
+import org.apache.myfaces.shared_impl.context.flash.FlashImpl;
 import org.apache.myfaces.util.EnumerationIterator;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Implements the external context for servlet request. JSF 1.2, 6.1.3
@@ -64,7 +65,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public final class ServletExternalContextImpl extends ExternalContext implements ReleaseableExternalContext
 {
-    private static final Log log = LogFactory.getLog(ServletExternalContextImpl.class);
+    //private static final Log log = LogFactory.getLog(ServletExternalContextImpl.class);
+    private static final Logger log = Logger.getLogger(ServletExternalContextImpl.class.getName());
 
     private static final String INIT_PARAMETER_MAP_ATTRIBUTE = InitParameterMap.class.getName();
     private static final String URL_PARAM_SEPERATOR="&";
@@ -536,10 +538,23 @@ public final class ServletExternalContextImpl extends ExternalContext implements
     @Override
     public void redirect(final String url) throws IOException
     {
-        if (_servletResponse instanceof HttpServletResponse)
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        PartialViewContext partialViewContext = facesContext.getPartialViewContext(); 
+        if (partialViewContext.isPartialRequest())
+        {
+            PartialResponseWriter writer = partialViewContext.getPartialResponseWriter();
+            this.setResponseContentType("text/xml");
+            this.setResponseCharacterEncoding("UTF-8");
+            this.addResponseHeader("Cache-control", "no-cache");
+            writer.startDocument();
+            writer.redirect(url);
+            writer.endDocument();
+            facesContext.responseComplete();
+        }
+        else if (_servletResponse instanceof HttpServletResponse)
         {
             ((HttpServletResponse) _servletResponse).sendRedirect(url);
-            FacesContext.getCurrentInstance().responseComplete();
+            facesContext.responseComplete();
         }
         else
         {
@@ -694,7 +709,7 @@ public final class ServletExternalContextImpl extends ExternalContext implements
         else
         {
             // I did not throw an exception just to be sure nothing breaks.
-            log.error("Cannot set content type. Response already committed");
+            log.severe("Cannot set content type. Response already committed");
         }
     }
 
@@ -854,7 +869,7 @@ public final class ServletExternalContextImpl extends ExternalContext implements
         }
 
         // start building the new URL
-        StringBuilder newUrl = new StringBuilder();
+        StringBuilder newUrl = new StringBuilder(baseUrl);
 
         //now add the updated param list onto the url
         if (paramMap.size()>0)
