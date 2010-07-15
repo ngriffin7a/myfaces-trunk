@@ -101,7 +101,7 @@ public class InsertFacetHandler extends TagHandler
             {
                 if (log.isLoggable(Level.SEVERE))
                 {
-                    log.severe("Cannot found composite bean descriptor UIComponent.BEANINFO_KEY ");
+                    log.severe("Cannot find composite bean descriptor UIComponent.BEANINFO_KEY ");
                 }
                 return;
             }
@@ -131,7 +131,7 @@ public class InsertFacetHandler extends TagHandler
             
             actx.includeCompositeComponentDefinition(parent, facetName);
             
-            parentCompositeComponent.getAttributes().put(INSERT_FACET_USED+facetName, Boolean.TRUE);
+            //parentCompositeComponent.getAttributes().put(INSERT_FACET_USED+facetName, Boolean.TRUE);
         }
         
     }
@@ -146,7 +146,7 @@ public class InsertFacetHandler extends TagHandler
         
         if (_required != null && _required.getBoolean(ctx) && parentCompositeComponent.getFacet(facetName) == null)
         {
-            throw new TagException(this.tag, "Cannot found facet with name "+facetName+" in composite component "
+            throw new TagException(this.tag, "Cannot find facet with name "+facetName+" in composite component "
                     +parentCompositeComponent.getClientId(ctx.getFacesContext()));
         }
         

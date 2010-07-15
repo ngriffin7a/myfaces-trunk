@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 
 
 /**
@@ -25,6 +25,7 @@
  * d) utils methods to fetch the implementation
  * e) ajaxed script loading
  * f) global eval (because it is used internally)
+ * g) Structural base patterns as singleton, delegate and inheritance
  *
  * Note this class is self contained and must!!! be loaded
  * as absolute first class before going into anything else
@@ -47,11 +48,21 @@ if (!myfaces._impl.core._Runtime) {
         //the rest of the namespaces can be handled by our namespace feature
         //helper to avoid unneeded hitches
         var _this = this;
+
+        //namespace idx to speed things up by hitting eval way less
+        _this._reservedNMS = {};
         /**
          * global eval on scripts
          *
          * usage return this.globalEval('myvar.myvar2;');
          *
+         *
+         * Note some libraries like jquery use html head attachments
+         * to run the global eval, at least for loaded scripts
+         * this methid was flaky and failed on chrome under certain conditions,
+         * since our method works reliably in modern browsers currently in use
+         * we do it via eval, we still can switch to the head method
+         * if there are arguments why that one works better than ours
          */
         this.globalEval = function(code) {
             //chrome as a diferent global eval, thanks for pointing this out
@@ -111,13 +122,16 @@ if (!myfaces._impl.core._Runtime) {
          * @return the object the namespace points to or null if nothing is found
          */
         this.fetchNamespace = function(nms) {
-            if ('undefined' == typeof nms || null == nms) {
+            if ('undefined' == typeof nms || null == nms || !_this._reservedNMS[nms]) {
                 return null;
             }
 
             var ret = null;
             try {
-                ret = _this.globalEval("window." + nms);
+                if(!this.browser.isIE) {
+                    //in ie 6 and 7 we get an error entry despite the suppression
+                    ret = _this.globalEval("window." + nms);
+                }
                 //namespace could point to numeric or boolean hence full
                 //save check
 
@@ -174,6 +188,12 @@ if (!myfaces._impl.core._Runtime) {
          *
          * reserves a namespace and if not already registered directly applies the function the namespace
          *
+         * note for now the reserved namespaces reside as global maps justl like jsf.js but
+         * we also use a speedup index which is kept internally to reduce the number of evals or loops to walk through those
+         * namespaces (eval is a heavy operation and loops even only for namespace resolution introduce (O)2 runtime
+         * complexity while a simple map lookup is (O)log n with additional speedup from the engine.
+         *
+         *
          * @param {|String|} nms
          * @returns true if it was not provided
          * false otherwise for further action
@@ -183,21 +203,28 @@ if (!myfaces._impl.core._Runtime) {
             if (!_this.isString(nms)) {
                 throw Error("Namespace must be a string with . as delimiter");
             }
-            if (null != _this.fetchNamespace(nms)) {
+            if (_this._reservedNMS[nms] || null != _this.fetchNamespace(nms)) {
                 return false;
             }
+
             var entries = nms.split(/\./);
             var currNms = window;
+            var tmpNmsName = [];
             for (var cnt = 0; cnt < entries.length; cnt++) {
                 var subNamespace = entries[cnt];
+                tmpNmsName.push(subNamespace)
                 if ('undefined' == typeof currNms[subNamespace]) {
                     currNms[subNamespace] = {};
                 }
-                if (cnt == entries.length - 1 && obj) {
+                if (cnt == entries.length - 1 && 'undefined' != typeof obj) {
                     currNms[subNamespace] = obj;
+                } else {
+                    currNms = currNms[subNamespace];
                 }
-                currNms = currNms[subNamespace];
+                _this._reservedNMS[tmpNmsName.join(".")] = true;
+
             }
+            
 
             return true;
         };
@@ -214,35 +241,44 @@ if (!myfaces._impl.core._Runtime) {
             if (!root) {
                 return false;
             }
+            //special case locally reserved namespace
+            if(root == window &&  _this._reservedNMS[subNms]) {
+                return true;
+            }
 
             //initial condition root set element not set or null
             //equals to element exists
             if (!subNms) {
                 return true;
             }
+            try {
+                //special condition subnamespace exists as full blown key with . instead of function map
+                if ('undefined' != typeof root[subNms]) {
+                    return true;
+                }
 
-            //special condition subnamespace exists as full blown key with . instead of function map
-            if ('undefined' != typeof root[subNms]) {
-                return true;
+                //crossported from the dojo toolkit
+                // summary: determine if an object supports a given method
+                // description: useful for longer api chains where you have to test each object in the chain
+                var p = subNms.split(".");
+                var len = p.length;
+                for (var i = 0; i < len; i++) {
+                    //the original dojo code here was false because
+                    //they were testing against ! which bombs out on exists
+                    //which has a value set to false
+                    // (TODO send in a bugreport to the Dojo people)
+
+                    if ('undefined' == typeof root[p[i]]) {
+                        return false;
+                    } // Boolean
+                    root = root[p[i]];
+                }
+                return true; // Boolean
+
+            } catch (e) {
+                //ie (again) has a special handling for some object attributes here which automatically throw an unspecified error if not existent
+                return false;
             }
-
-            //crossported from the dojo toolkit
-            // summary: determine if an object supports a given method
-            // description: useful for longer api chains where you have to test each object in the chain
-            var p = subNms.split(".");
-            var len = p.length;
-            for (var i = 0; i < len; i++) {
-                //the original dojo code here was false because
-                //they were testing against ! which bombs out on exists
-                //which has a value set to false
-                // (TODO send in a bugreport to the Dojo people)
-
-                if ('undefined' == typeof root[p[i]]) {
-                    return false;
-                } // Boolean
-                root = root[p[i]];
-            }
-            return true; // Boolean
         };
 
         /**
@@ -254,11 +290,10 @@ if (!myfaces._impl.core._Runtime) {
          */
         this.getGlobalConfig = function(configName, defaultValue) {
             /*use(myfaces._impl._util)*/
-
-            if (_this.exists(myfaces, "config") && _this.exists(myfaces.config, configName)) {
-                return myfaces.config[configName];
-            }
-            return defaultValue;
+            return (_this.exists(myfaces, "config") && _this.exists(myfaces.config, configName)) ?
+                    myfaces.config[configName]
+                    :
+                    defaultValue;
         };
 
         /**
@@ -328,6 +363,8 @@ if (!myfaces._impl.core._Runtime) {
                     if (!defer) {
                         _this.globalEval(xhr.responseText.replace("\n", "\r\n") + "\r\n//@ sourceURL=" + src);
                     } else {
+                        //TODO not ideal we maybe ought to move to something else here
+                        //but since it is not in use yet, it is ok
                         setTimeout(function() {
                             _this.globalEval(xhr.responseText + "\r\n//@ sourceURL=" + src);
                         }, 1);
@@ -358,9 +395,9 @@ if (!myfaces._impl.core._Runtime) {
             //the rest can be finely served with body
             var d = this.browser;
             var position = "head"
-            if(!d.isIE || d.isIE >= 8) {
-                position = document.getElementsByTagName("body").length ? "body" : "head";
-            }
+            //if(!d.isIE || d.isIE >= 8) {
+            //    position = document.getElementsByTagName("body").length ? "body" : "head";
+            //}
 
             try {
                 var holder = document.getElementsByTagName(position)[0];
@@ -379,9 +416,17 @@ if (!myfaces._impl.core._Runtime) {
                 if (defer) {
                     script.defer = defer;
                 }
-                holder.appendChild(script);
-            } catch (e) {
 
+                //fix for the white page issue
+                // if(this.browser.isIE && this.browser.isIE < 7) {
+                //   holder.insertBefore( script, holder.firstChild );
+                //   holder.removeChild( script );
+                // } else {
+                holder.appendChild(script);
+                // }
+
+            } catch (e) {
+                //in case of a loading error we retry via eval    
                 return false;
             }
 
@@ -389,8 +434,15 @@ if (!myfaces._impl.core._Runtime) {
         };
 
         this.loadScript = function(src, type, defer, charSet) {
-            if (!_this.loadScriptByBrowser(src, type, defer, charSet)) {
+            //the chrome engine has a nasty javascript bug which prevents
+            //a correct order of scripts being loaded
+            //if you use script source on the head, we  have to revert
+            //to xhr+ globalEval for those
+            if (!_this.browser.isFF) {
                 _this.loadScriptEval(src, type, defer, charSet);
+            } else {
+                //only firefox keeps the order, sorry ie...
+                _this.loadScriptByBrowser(src, type, defer, charSet)
             }
         };
 
@@ -446,8 +498,7 @@ if (!myfaces._impl.core._Runtime) {
                 //up internally
                 if (key && typeof delFn == "function") {
                     proto[key] = function(/*arguments*/) {
-                        var ret = delFn.apply(delegateObj, arguments);
-                        if ('undefined' != ret) return ret;
+                        return delFn.apply(delegateObj, arguments);
                     };
                 }
             })(key, delegateObj[key]);
@@ -507,6 +558,9 @@ if (!myfaces._impl.core._Runtime) {
             if (!_this.isString(newCls)) {
                 throw Error("new class namespace must be of type String");
             }
+            if(_this._reservedNMS[newCls]) {
+                return;
+            }
 
             if ('function' != typeof newCls) {
                 newCls = _reserveClsNms(newCls, protoFuncs);
@@ -558,6 +612,9 @@ if (!myfaces._impl.core._Runtime) {
          * @param nmsFuncs the functions which are attached on the classes namespace level
          */
         this.singletonDelegateObj = function(newCls, delegateObj, protoFuncs, nmsFuncs) {
+            if(_this._reservedNMS[newCls]) {
+                return;
+            }
             return _makeSingleton(this.delegateObj, newCls, delegateObj, protoFuncs, nmsFuncs);
         };
 
@@ -566,9 +623,10 @@ if (!myfaces._impl.core._Runtime) {
         //functions here, the other parts of the
         //system have to emulate them via _ prefixes
         var _makeSingleton = function(ooFunc, newCls, delegateObj, protoFuncs, nmsFuncs) {
-            if (_this.fetchNamespace(newCls)) {
-                return null;
+            if(_this._reservedNMS[newCls]) {
+                return;
             }
+            
             var clazz = ooFunc(newCls + "._mfProto", delegateObj, protoFuncs, nmsFuncs);
             if (clazz != null) {
                 _this.applyToGlobalNamespace(newCls, new clazz());
@@ -608,34 +666,28 @@ if (!myfaces._impl.core._Runtime) {
                 }
             }
         };
-        
+
         /**
-         * determines if the embedded scripts have to be evaled manually
-         * @return true if a browser combination is given which has to
-         * do a manual eval
-         * which is currently ie > 5.5, chrome, khtml, webkit safari
+         * general type assertion routine
          *
+         * @param probe the probe to be checked for the correct type
+         * @param theType the type to be checked for
          */
-        this.isManualScriptEval = function() {
+        this.assertType = function(probe, theType) {
+            return this.isString(theType) ? probe == typeof theType : probe instanceof theType;
+        };
 
-            var d = _this.browser;
-
-            return (_this.exists(d, "isIE") &&
-                    ( d.isIE > 5.5)) ||
-                    (_this.exists(d, "isKhtml") &&
-                            (d.isKhtml > 0)) ||
-                    (_this.exists(d, "isWebKit") &&
-                            (d.isWebKit > 0)) ||
-                    (_this.exists(d, "isSafari") &&
-                            (d.isSafari > 0));
-
-            //another way to determine this without direct user agent parsing probably could
-            //be to add an embedded script tag programmatically and check for the script variable
-            //set by the script if existing, the add went through an eval if not then we
-            //have to deal with it ourselves, this might be dangerous in case of the ie however
-            //so in case of ie we have to parse for all other browsers we can make a dynamic
-            //check if the browser does auto eval
-
+        /**
+         * onload wrapper for chaining the onload cleanly
+         * @param func the function which should be added to the load
+         * chain (note we cannot rely on return values here, hence jsf.util.chain will fail)
+         */
+        this.addOnLoad = function(target, func) {
+            var oldonload = target.onload;
+            target.onload = (!this.assertType(window.onload, "function")) ? func : function() {
+                oldonload();
+                func();
+            };
         };
 
         //initial browser detection, we encapsule it in a closure

@@ -23,12 +23,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.faces.component.UIViewRoot;
-import javax.faces.context.FacesContext;
 
-import org.apache.myfaces.view.facelets.Facelet;
-import org.apache.myfaces.view.facelets.FaceletFactory;
-import org.apache.myfaces.view.facelets.FaceletTestCase;
 import org.apache.myfaces.test.mock.MockResponseWriter;
+import org.apache.myfaces.view.facelets.FaceletTestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class UITestCase extends FaceletTestCase
 {
@@ -52,6 +51,7 @@ public class UITestCase extends FaceletTestCase
     {
     }
 
+    @Test
     public void testRelativePaths() throws Exception
     {
         UIViewRoot root = facesContext.getViewRoot();
@@ -62,23 +62,50 @@ public class UITestCase extends FaceletTestCase
         facesContext.setResponseWriter(mrw);
         root.encodeAll(facesContext);
         sw.flush();
+        
+        Assert.assertTrue(sw.toString().equals("Hello World!"));
+        
         //System.out.println("************************");
         //System.out.println(sw.toString());
         //System.out.println("************************");
     }
 
+    @Test
     public void testCompositionTemplate() throws Exception
     {
         UIViewRoot root = facesContext.getViewRoot();
         vdl.buildView(facesContext, root, "composition-template.xml");
+        
+        StringWriter sw = new StringWriter();
+        MockResponseWriter mrw = new MockResponseWriter(sw);
+        facesContext.setResponseWriter(mrw);
+        root.encodeAll(facesContext);
+        sw.flush();
+
+        String response = sw.toString();
+        
+        Assert.assertTrue(response.contains("New Title"));
+        Assert.assertTrue(response.contains("New Body"));
     }
 
+    @Test
     public void testCompositionTemplateSimple() throws Exception
     {
         UIViewRoot root = facesContext.getViewRoot();
         vdl.buildView(facesContext, root, "composition-template-simple.xml");
+        
+        StringWriter sw = new StringWriter();
+        MockResponseWriter mrw = new MockResponseWriter(sw);
+        facesContext.setResponseWriter(mrw);
+        root.encodeAll(facesContext);
+        sw.flush();
+
+        String response = sw.toString();
+        
+        Assert.assertTrue(response.contains("New Body"));
     }
 
+    @Test
     public void testComponent() throws Exception
     {
         Map map = new HashMap();
@@ -87,8 +114,8 @@ public class UITestCase extends FaceletTestCase
         UIViewRoot root = facesContext.getViewRoot();
         vdl.buildView(facesContext, root, "component.xml");
 
-        assertEquals("only one child, the component", 1, root.getChildCount());
-        assertNotNull("bound to map", map.get("c"));
+        Assert.assertEquals("only one child, the component", 1, root.getChildCount());
+        Assert.assertNotNull("bound to map", map.get("c"));
     }
 
     /*

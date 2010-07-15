@@ -19,16 +19,15 @@
 
 package org.apache.myfaces.context;
 
-import org.apache.myfaces.shared_impl.renderkit.html.HtmlResponseWriterImpl;
-
-import javax.faces.component.UIComponent;
-import javax.faces.context.PartialResponseWriter;
-import javax.faces.context.ResponseWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.faces.component.UIComponent;
+import javax.faces.context.PartialResponseWriter;
+import javax.faces.context.ResponseWriter;
 
 /**
  * <p/>
@@ -71,19 +70,19 @@ import java.util.List;
 public class PartialResponseWriterImpl extends PartialResponseWriter {
 
     class StackEntry {
-        HtmlResponseWriterImpl writer;
+        ResponseWriter writer;
         StringWriter _doubleBuffer;
 
-        StackEntry(HtmlResponseWriterImpl writer, StringWriter doubleBuffer) {
+        StackEntry(ResponseWriter writer, StringWriter doubleBuffer) {
             this.writer = writer;
             _doubleBuffer = doubleBuffer;
         }
 
-        public HtmlResponseWriterImpl getWriter() {
+        public ResponseWriter getWriter() {
             return writer;
         }
 
-        public void setWriter(HtmlResponseWriterImpl writer) {
+        public void setWriter(ResponseWriter writer) {
             this.writer = writer;
         }
 
@@ -96,7 +95,7 @@ public class PartialResponseWriterImpl extends PartialResponseWriter {
         }
     }
 
-    HtmlResponseWriterImpl _cdataDoubleBufferWriter = null;
+    ResponseWriter _cdataDoubleBufferWriter = null;
     StringWriter _doubleBuffer = null;
     List<StackEntry> _nestingStack = new LinkedList<StackEntry>();
 
@@ -116,7 +115,8 @@ public class PartialResponseWriterImpl extends PartialResponseWriter {
 
     private void openDoubleBuffer() {
         _doubleBuffer = new StringWriter();
-        _cdataDoubleBufferWriter = new HtmlResponseWriterImpl(_doubleBuffer, super.getContentType(), super.getCharacterEncoding());
+        //_cdataDoubleBufferWriter = new HtmlResponseWriterImpl(_doubleBuffer, super.getContentType(), super.getCharacterEncoding());
+        _cdataDoubleBufferWriter = getWrapped().cloneWithWriter(_doubleBuffer);
 
         StackEntry entry = new StackEntry(_cdataDoubleBufferWriter, _doubleBuffer);
 
@@ -323,7 +323,7 @@ public class PartialResponseWriterImpl extends PartialResponseWriter {
     @Override
     public void write(char[] cbuf, int off, int len) throws IOException {
         if (isDoubleBufferEnabled()) {
-            _cdataDoubleBufferWriter.writeText(cbuf, off, len);
+            _cdataDoubleBufferWriter.write(cbuf, off, len);
         } else {
             super.write(cbuf, off, len);
         }

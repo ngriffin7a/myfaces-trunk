@@ -80,10 +80,11 @@
                             <excludes>
                                 <exclude>**/myfaces/_impl/core/jsf-uncompressed.js</exclude>
                                 <exclude>**/myfaces/_impl/_util/_UnitTest.js</exclude>
+                                <exclude>**/myfaces/_impl/_util/_ExtLang.js</exclude>
                             </excludes>
                         </configuration>
                     </execution>
-                     <execution>
+                    <execution>
                         <id>compile-uncompressed</id>
                         <goals>
                             <goal>compile</goal>
@@ -93,10 +94,25 @@
                             <descriptor>${basedir}/src/assembler/jsfscripts-uncompressed-compiler.xml</descriptor>
                             <outputDirectory>${basedir}/target/classes/META-INF/internal-resources/javax.faces/</outputDirectory>
                             <excludes>
-                                <exclude>**/myfaces/_impl/core/jsf_impl.js</exclude>
+                                <exclude>**/myfaces/_impl/core/Impl.js</exclude>
                                 <exclude>**/myfaces/_impl/_util/*</exclude>
                                 <exclude>**/myfaces/_impl/xhrCore/*</exclude>
                                 <exclude>**/myfaces/api/*</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>compile-uncompressed-full</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <descriptor>${basedir}/src/assembler/jsfscripts-uncompressed-full-compiler.xml</descriptor>
+                            <outputDirectory>${basedir}/target/classes/META-INF/internal-resources/javax.faces/</outputDirectory>
+                            <excludes>
+                                <exclude>**/myfaces/_impl/core/jsf-uncompressed.js</exclude>
+                                <exclude>**/myfaces/_impl/_util/_UnitTest.js</exclude>
                             </excludes>
                         </configuration>
                     </execution>
@@ -109,7 +125,10 @@
 
                         <configuration>
                             <scripts>target/classes/META-INF/resources/javax.faces/</scripts>
-                            <excludes><exclude>jsf-uncompressed.js</exclude></excludes>
+                            <excludes>
+                                <exclude>jsf-uncompressed.js</exclude>
+                                <exclude>jsf-uncompressed-full.js</exclude>
+                            </excludes>
                             <compressor>yahooUI</compressor>
                         </configuration>
                     </execution>
@@ -295,6 +314,46 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.5</version>
+        <executions>
+            <execution>
+                <phase>test</phase>
+                <goals>
+                    <goal>test</goal>
+                </goals>
+                <configuration> 
+                    <testNGArtifactName>none:none</testNGArtifactName>
+                    <!-- Exclude all TestNG tests -->
+                    <excludes>
+                      <exclude>**/UIViewRootTest*</exclude>
+                      <exclude>**/_MessageUtilsTest*</exclude>
+                      <exclude>**/UIGraphicTest*</exclude>
+                      <exclude>**/UIComponentValueExpressionTest*</exclude>
+                      <exclude>**/UIComponentTest*</exclude>
+                      <exclude>**/UIComponentInvokeOnComponentTest*</exclude>
+                      <exclude>**/UIComponentEncodeAllTest*</exclude>
+                      <exclude>**/UIComponentBaseValueBindingTest*</exclude>
+                      <exclude>**/UIComponentBaseTest*</exclude>
+                      <exclude>**/UIComponentBaseProcessSaveRestoreStateTest*</exclude>
+                      <exclude>**/UIComponentBaseFacesListenerTest*</exclude>
+                      <exclude>**/HtmlOutputLinkTest*</exclude>
+                    </excludes>
+                </configuration>
+            </execution>
+            <execution>
+                <id>test-testng</id>
+                <phase>test</phase>
+                <goals>
+                    <goal>test</goal>
+                </goals>
+                <configuration> 
+                    <junitArtifactName>none:none</junitArtifactName>
+                </configuration>
+            </execution>
+        </executions>
+      </plugin>      
         </plugins>
     </build>
     <profiles>
@@ -452,6 +511,14 @@
             <version>1.0.5</version>
             <scope>provided</scope>
         </dependency>
+        
+        <!-- TEST DEPENDENCIES -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.1</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
@@ -542,7 +609,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.4.3</version>
+                <version>2.5</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

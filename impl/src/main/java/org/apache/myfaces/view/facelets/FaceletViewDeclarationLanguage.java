@@ -105,7 +105,6 @@ import org.apache.myfaces.view.facelets.tag.TagLibrary;
 import org.apache.myfaces.view.facelets.tag.composite.ClientBehaviorAttachedObjectTarget;
 import org.apache.myfaces.view.facelets.tag.composite.ClientBehaviorRedirectBehaviorAttachedObjectHandlerWrapper;
 import org.apache.myfaces.view.facelets.tag.composite.ClientBehaviorRedirectEventComponentWrapper;
-import org.apache.myfaces.view.facelets.tag.composite.CompositeComponentResourceTagHandler;
 import org.apache.myfaces.view.facelets.tag.composite.CompositeLibrary;
 import org.apache.myfaces.view.facelets.tag.composite.CompositeResourceLibrary;
 import org.apache.myfaces.view.facelets.tag.jsf.core.AjaxHandler;
@@ -141,6 +140,7 @@ public class FaceletViewDeclarationLanguage extends ViewDeclarationLanguageBase
     public static final String CHARACTER_ENCODING_KEY = "javax.faces.request.charset";
 
     public final static long DEFAULT_REFRESH_PERIOD = 2;
+    public final static long DEFAULT_REFRESH_PERIOD_PRODUCTION = -1;
 
     public final static String DEFAULT_CHARACTER_ENCODING = "UTF-8";
     
@@ -642,6 +642,8 @@ public class FaceletViewDeclarationLanguage extends ViewDeclarationLanguageBase
             
             for (AttachedObjectTarget currentTarget : targetList)
             {
+                FaceletCompositionContext mctx = FaceletCompositionContext.getCurrentInstance();
+                
                 if (  ( forValue != null && forValue.equals(currentTarget.getName()) ) &&
                       ((currentTarget  instanceof ActionSource2AttachedObjectTarget &&
                        currentHandler instanceof ActionSource2AttachedObjectHandler) ||
@@ -670,10 +672,9 @@ public class FaceletViewDeclarationLanguage extends ViewDeclarationLanguageBase
                             // The current handler should be added to the list, to be chained.
                             // Note that the inner component should have a target with the same name
                             // as "for" attribute
-                            CompositeComponentResourceTagHandler.addAttachedObjectHandler(component, currentHandler);
+                            mctx.addAttachedObjectHandler(component, currentHandler);
                             
-                            List<AttachedObjectHandler> handlers = (List<AttachedObjectHandler>) 
-                                component.getAttributes().get(CompositeComponentResourceTagHandler.ATTACHED_OBJECT_HANDLERS_KEY);
+                            List<AttachedObjectHandler> handlers = mctx.getAttachedObjectHandlers(component);
                             
                             retargetAttachedObjects(context, component, handlers);
                         }
@@ -702,18 +703,17 @@ public class FaceletViewDeclarationLanguage extends ViewDeclarationLanguageBase
                             {
                                 if (currentTarget instanceof ClientBehaviorAttachedObjectTarget)
                                 {
-                                    CompositeComponentResourceTagHandler.addAttachedObjectHandler(component, 
+                                    mctx.addAttachedObjectHandler(component,
                                             new ClientBehaviorRedirectBehaviorAttachedObjectHandlerWrapper(
                                                     (BehaviorHolderAttachedObjectHandler) currentHandler,
                                                     ((ClientBehaviorAttachedObjectTarget) currentTarget).getEvent()));
                                 }
                                 else
                                 {
-                                    CompositeComponentResourceTagHandler.addAttachedObjectHandler(component, currentHandler);
+                                    mctx.addAttachedObjectHandler(component, currentHandler);
                                 }
                                 
-                                List<AttachedObjectHandler> handlers = (List<AttachedObjectHandler>) 
-                                    component.getAttributes().get(CompositeComponentResourceTagHandler.ATTACHED_OBJECT_HANDLERS_KEY);
+                                List<AttachedObjectHandler> handlers = mctx.getAttachedObjectHandlers(component);
                                 
                                 retargetAttachedObjects(context, component, handlers);
                             }
@@ -1352,8 +1352,12 @@ public class FaceletViewDeclarationLanguage extends ViewDeclarationLanguageBase
         ExternalContext eContext = context.getExternalContext();
 
         // refresh period
-        long refreshPeriod = _getLongParameter(eContext, PARAM_REFRESH_PERIOD, PARAM_REFRESH_PERIOD_DEPRECATED, DEFAULT_REFRESH_PERIOD);
-
+        long refreshPeriod;
+        if(context.isProjectStage(ProjectStage.Production))
+            refreshPeriod = _getLongParameter(eContext, PARAM_REFRESH_PERIOD, PARAM_REFRESH_PERIOD_DEPRECATED, DEFAULT_REFRESH_PERIOD_PRODUCTION);
+        else
+            refreshPeriod = _getLongParameter(eContext, PARAM_REFRESH_PERIOD, PARAM_REFRESH_PERIOD_DEPRECATED, DEFAULT_REFRESH_PERIOD);
+        
         // resource resolver
         ResourceResolver resolver = new DefaultResourceResolver();
         String faceletsResourceResolverClassName = _getStringParameter(eContext, PARAM_RESOURCE_RESOLVER, PARAM_RESOURCE_RESOLVER_DEPRECATED);
@@ -1451,27 +1455,31 @@ public class FaceletViewDeclarationLanguage extends ViewDeclarationLanguageBase
         // get the encoding
         String encoding = (String) extContext.getRequestMap().get("facelets.Encoding");
 
-        ResponseWriter writer;
+        // -= Leonardo Uribe =- Add */* to the contentType is a fix done from FaceletViewHandler
+        // to make old RI versions work, but since this is for JSF 2.0 it is not necessary that code.
+        ResponseWriter writer = renderKit.createResponseWriter(NullWriter.Instance, contentType, encoding);
+        
+        //ResponseWriter writer;
         // append */* to the contentType so createResponseWriter will succeed no matter
         // the requested contentType.
-        if (contentType != null && !contentType.equals("*/*"))
-        {
-            contentType += ",*/*";
-        }
+        //if (contentType != null && !contentType.equals("*/*"))
+        //{
+        //    contentType += ",*/*";
+        //}
         // Create a dummy ResponseWriter with a bogus writer,
         // so we can figure out what content type the ReponseWriter
         // is really going to ask for
-        try
-        {
-            writer = renderKit.createResponseWriter(NullWriter.Instance, contentType, encoding);
-        }
-        catch (IllegalArgumentException e)
-        {
+        //try
+        //{
+        //    writer = renderKit.createResponseWriter(NullWriter.Instance, contentType, encoding);
+        //}
+        // catch (IllegalArgumentException e)
+        //{
             // Added because of an RI bug prior to 1.2_05-b3. Might as well leave it in case other
             // impls have the same problem. https://javaserverfaces.dev.java.net/issues/show_bug.cgi?id=613
-            log.finest("The impl didn't correctly handled '*/*' in the content type list.  Trying '*/*' directly.");
-            writer = renderKit.createResponseWriter(NullWriter.Instance, "*/*", encoding);
-        }
+            //log.finest("The impl didn't correctly handled '*/*' in the content type list.  Trying '*/*' directly.");
+            //writer = renderKit.createResponseWriter(NullWriter.Instance, "*/*", encoding);
+        //}
 
         // Override the JSF provided content type if necessary
         contentType = getResponseContentType(context, writer.getContentType());

@@ -34,9 +34,6 @@ import java.util.logging.Logger;
 import javax.el.MethodExpression;
 import javax.el.ValueExpression;
 import javax.faces.FactoryFinder;
-import javax.faces.component.visit.VisitCallback;
-import javax.faces.component.visit.VisitContext;
-import javax.faces.component.visit.VisitResult;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.PartialViewContext;
@@ -48,7 +45,6 @@ import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
 import javax.faces.event.PostConstructViewMapEvent;
-import javax.faces.event.PostRestoreStateEvent;
 import javax.faces.event.PreDestroyViewMapEvent;
 import javax.faces.event.SystemEvent;
 import javax.faces.event.SystemEventListener;
@@ -155,6 +151,14 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
 
         // If the component ID of componentResource matches the ID of a resource that has already been added, remove the old resource.
         String componentId = componentResource.getId();
+        
+        if (componentId == null)
+        {
+            // componentResource can have no id - calling createUniqueId makes us sure that component will have one
+            // https://issues.apache.org/jira/browse/MYFACES-2775
+            componentId = createUniqueId(context, null);
+            componentResource.setId(componentId);
+        }
         
         // This var helps to handle the case when we try to add a component that already is
         // on the resource list, because PostAddToViewEvent also is sent to components 
@@ -647,11 +651,6 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
             // The try block must have a finally block that ensures that no FacesEvents remain in the event queue
             broadcastEvents(context, PhaseId.RESTORE_VIEW);
 
-            // invoke afterPhase MethodExpression
-            // Note: In this phase it is not possible to invoke the beforePhase method, because we
-            // first have to restore the view to get its attributes.
-            //notifyListeners(context, PhaseId.RESTORE_VIEW, getAfterPhaseListener(), false);
-            
             //visitTree(VisitContext.createVisitContext(context), new RestoreStateCallback());
         }
     }

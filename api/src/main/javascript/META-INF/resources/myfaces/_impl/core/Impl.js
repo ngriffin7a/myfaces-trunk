@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 
 /** @namespace myfaces._impl.core.Impl*/
 /** @namespace myfaces._impl._util._ListenerQueue */
@@ -65,6 +65,7 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
     MALFORMEDXML : "malformedXML",
     SERVER_ERROR : "serverError",
     CLIENT_ERROR : "clientError",
+    TIMEOUT_EVENT: "timeout",
 
 
 
@@ -124,7 +125,7 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
          * the entire mapping between the functions is stateless
          */
         //null definitely means no event passed down so we skip the ie specific checks
-        if('undefined' == typeof event) {
+        if ('undefined' == typeof event) {
             event = window.event || null;
         }
 
@@ -249,8 +250,23 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
             delete passThrgh.myfaces;
         }
 
-        this._transport.xhrQueuedPost(elem, form, context, passThrgh);
-
+        /**
+         * multiple transports upcoming jsf 2.1 feature currently allowed
+         * default (no value) xhrQueuedPost
+         *
+         * xhrQueuedPost
+         * xhrPost
+         * xhrGet
+         * xhrQueuedGet
+         * iframePost
+         * iframeQueuedPost
+         *
+         */
+        var transportType = myfaces._impl.core._Runtime.getLocalOrGlobalConfig(context, "transportType", "xhrQueuedPost");
+        if (!this._transport[transportType]) {
+            throw new Error("Transport type " + transportType + " does not exist");
+        }
+        this._transport[transportType](elem, form, context, passThrgh);
     },
 
     addOnError : function(/*function*/errorListener) {
@@ -331,6 +347,7 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
      * sends an event
      */
     sendEvent : function sendEvent(/*Object*/request, /*Object*/ context, /*event name*/ name) {
+        var _Lang = myfaces._impl._util._Lang;
         var eventData = {};
         eventData.type = this.EVENT;
 
@@ -340,9 +357,18 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
         if (name !== this.BEGIN) {
 
             try {
-                eventData.responseCode = request.status;
-                eventData.responseText = request.responseText;
-                eventData.responseXML = request.responseXML;
+                //we bypass a problem with ie here, ie throws an exception if no status is given on the xhr object instead of just passing a value
+                var getValue = function(value, key) {
+                    try {
+                        return value[key]
+                    } catch (e) {
+                        return "unkown";
+                    }
+                };
+
+                eventData.responseCode = getValue(request, "status");
+                eventData.responseText = getValue(request, "responseText");
+                eventData.responseXML = getValue(request, "responseXML");
 
             } catch (e) {
                 var impl = myfaces._impl.core._Runtime.getGlobalConfig("jsfAjaxImpl", myfaces._impl.core.Impl);
@@ -382,6 +408,7 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
     getProjectStage : function() {
         /* run through all script tags and try to find the one that includes jsf.js */
         var scriptTags = document.getElementsByTagName("script");
+        var getConfig = myfaces._impl.core._Runtime.getGlobalConfig;
         for (var i = 0; i < scriptTags.length; i++)
         {
             if (scriptTags[i].src.search(/\/javax\.faces\.resource\/jsf\.js.*ln=javax\.faces/) != -1)
@@ -401,13 +428,15 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
                 }
                 else
                 {
-                    //we found the script, but there was no stage parameter --> Production
-                    return "Production";
+                    //we found the script, but there was no stage parameter -- Production
+                    //(we also add an override here for testing purposes, the default, however is Production)
+                    return getConfig("projectStage", "Production");
+                    //return "Production";
                 }
             }
         }
         /* we could not find anything valid --> return the default value */
-        return "Production";
+        return getConfig("projectStage", "Production");
     },
 
     /**

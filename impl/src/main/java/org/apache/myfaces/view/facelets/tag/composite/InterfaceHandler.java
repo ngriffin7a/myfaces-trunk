@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.faces.application.Resource;
 import javax.faces.component.UIComponent;
 import javax.faces.view.Location;
 import javax.faces.view.facelets.FaceletContext;
@@ -98,6 +97,15 @@ public class InterfaceHandler extends TagHandler implements InterfaceDescriptorC
     private final TagAttribute _shortDescription;
     
     /**
+     * The "hidden" flag is used to identify features that are intended only 
+     * for tool use, and which should not be exposed to humans.
+     */
+    @JSFFaceletAttribute(name="hidden",
+            className="javax.el.ValueExpression",
+            deferredValueType="boolean")
+    protected final TagAttribute _hidden;
+    
+    /**
      * Check if the BeanInfo instance created by this handler
      * can be cacheable or not. 
      */
@@ -115,13 +123,15 @@ public class InterfaceHandler extends TagHandler implements InterfaceDescriptorC
         _preferred = getAttribute("preferred");
         _expert = getAttribute("expert");
         _shortDescription = getAttribute("shortDescription");
+        _hidden = getAttribute("hidden");
         
         if (    (_name == null             || _name.isLiteral()             ) &&
                 (_componentType == null    || _componentType.isLiteral()    ) &&   
                 (_displayName == null      || _displayName.isLiteral()      ) &&
                 (_preferred == null        || _preferred.isLiteral()        ) &&
                 (_expert == null           || _expert.isLiteral()           ) &&
-                (_shortDescription == null || _shortDescription.isLiteral() ) )
+                (_shortDescription == null || _shortDescription.isLiteral() ) &&
+                (_hidden == null           || _hidden.isLiteral()           ) )
         {
             _cacheable = true;
             // Check if all attributes are cacheable. If that so, we can cache this
@@ -168,7 +178,7 @@ public class InterfaceHandler extends TagHandler implements InterfaceDescriptorC
             {
                 if (log.isLoggable(Level.SEVERE))
                 {
-                    log.severe("Cannot found composite bean descriptor UIComponent.BEANINFO_KEY ");
+                    log.severe("Cannot find composite bean descriptor UIComponent.BEANINFO_KEY ");
                 }
                 return;
             }            
@@ -202,6 +212,10 @@ public class InterfaceHandler extends TagHandler implements InterfaceDescriptorC
             if (_shortDescription != null)
             {
                 descriptor.setShortDescription(_shortDescription.getValue(ctx));
+            }
+            if (_hidden != null)
+            {
+                descriptor.setHidden(_hidden.getBoolean(ctx));
             }
             
             nextHandler.apply(ctx, parent);

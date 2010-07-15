@@ -22,12 +22,11 @@ package org.apache.myfaces.view.facelets.tag.ui;
 import java.io.StringWriter;
 
 import javax.faces.component.UIViewRoot;
-import javax.faces.context.FacesContext;
 
-import org.apache.myfaces.view.facelets.Facelet;
-import org.apache.myfaces.view.facelets.FaceletFactory;
-import org.apache.myfaces.view.facelets.FaceletTestCase;
 import org.apache.myfaces.test.mock.MockResponseWriter;
+import org.apache.myfaces.view.facelets.FaceletTestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class DefineIncludeTestCase extends FaceletTestCase {
 
@@ -47,7 +46,8 @@ public class DefineIncludeTestCase extends FaceletTestCase {
     protected void setupRenderers() throws Exception
     {
     }
-    
+
+    @Test
     public void testDefineInclude() throws Exception {
         UIViewRoot root = facesContext.getViewRoot();
         vdl.buildView(facesContext, root, "defineInclude.xml");
@@ -57,6 +57,13 @@ public class DefineIncludeTestCase extends FaceletTestCase {
         facesContext.setResponseWriter(mrw);
         root.encodeAll(facesContext);
         sw.flush();
+        
+        String response = sw.toString();
+        //Two Hello World, the first one by a ui:include on defineInclude.xml,
+        //the second one injected on subdir/template.xml
+        Assert.assertEquals("Hello World!Hello World!", response);
+        //the content of subdir/template.xml ui:insert is ignored
+        Assert.assertFalse(response.contains("Not Found"));
         
         //System.out.println("************************");
         //System.out.println(sw.toString());

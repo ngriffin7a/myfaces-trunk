@@ -284,15 +284,52 @@
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.3.1</version>
+        <version>2.5</version>
         <configuration>
+          <!-- Only run JUnit tests -->
+          <testNGArtifactName>none:none</testNGArtifactName>
           <excludes>
             <exclude>**/JspStateManagerImplTest*</exclude>
             <exclude>**/DefaultViewHandlerSupportTest*</exclude>
             <exclude>**/ApplicationImplTest*</exclude>
-            <exclude>**/ApplicationImplAnnotationTest*</exclude>
           </excludes>
         </configuration>
+        <!-- 
+        <executions>
+            <execution>
+                <phase>test</phase>
+                <goals>
+                    <goal>test</goal>
+                </goals>
+                <configuration> 
+                    <testNGArtifactName>none:none</testNGArtifactName>
+                    <excludes>
+                      <exclude>**/CompositeELResolverTest*</exclude>
+                      <exclude>**/TestResourceComponent*</exclude>
+                      <exclude>**/ResolverBuilderBaseTest*</exclude>
+                      <exclude>**/TestLifecycleProvider*</exclude>
+                      <exclude>**/TestBean*</exclude>
+                      <exclude>**/TestLifecycleProvider2*</exclude>
+                      <exclude>**/TestAttributeBean*</exclude>
+                      <exclude>**/TestDiscoverableLifecycleProvider*</exclude>
+                      <exclude>**/JspStateManagerImplTest*</exclude>
+                      <exclude>**/DefaultViewHandlerSupportTest*</exclude>
+                      <exclude>**/ApplicationImplTest*</exclude>
+                    </excludes>
+                </configuration>
+            </execution>
+            <execution>
+                <id>test-testng</id>
+                <phase>test</phase>
+                <goals>
+                    <goal>test</goal>
+                </goals>
+                <configuration> 
+                    <junitArtifactName>none:none</junitArtifactName>
+                </configuration>
+            </execution>
+        </executions>
+         -->
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
@@ -940,6 +977,14 @@
       <version>1.0.CR3</version>
       <optional>true</optional>
     </dependency>
+    
+    <!-- TEST DEPENDENCIES -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.8.1</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
@@ -960,6 +1005,23 @@
       <version>1.0.0-beta-4</version>
       <scope>test</scope>
     </dependency>
+    
+    <!-- We need a real EL implementation for test ui:param tag, 
+    because myfaces-test MockExpressionFactory is not designed to 
+    handle VariableMapper stuff (see IncludeParamTestCase) -->
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>el-api</artifactId>
+      <version>6.0.28</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>jasper-el</artifactId>
+      <version>6.0.28</version>
+      <scope>test</scope>
+    </dependency>
+        
     <dependency>
       <groupId>cactus</groupId>
       <artifactId>cactus</artifactId>
@@ -1020,9 +1082,8 @@
         <version>2.0-beta-1</version>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>surefire-report-maven-plugin</artifactId>
-        <version>2.0-beta-1</version>
+          <artifactId>maven-surefire-report-plugin</artifactId>
+          <version>2.5</version>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -1072,7 +1133,6 @@
   </repositories>
 
   <properties>
-    <myfaces-shared.version>4.0.2</myfaces-shared.version>
     <myfaces-builder-plugin.version>1.0.6</myfaces-builder-plugin.version>
   </properties>
 </project>

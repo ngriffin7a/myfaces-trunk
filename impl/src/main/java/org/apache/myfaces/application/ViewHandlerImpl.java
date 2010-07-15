@@ -21,6 +21,7 @@ package org.apache.myfaces.application;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -44,6 +45,7 @@ import javax.faces.view.ViewDeclarationLanguageFactory;
 import javax.faces.view.ViewMetadata;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.myfaces.application.jsp.JspStateManagerImpl;
 import org.apache.myfaces.shared_impl.application.DefaultViewHandlerSupport;
 import org.apache.myfaces.shared_impl.application.InvalidViewIdException;
 import org.apache.myfaces.shared_impl.application.ViewHandlerSupport;
@@ -63,6 +65,19 @@ public class ViewHandlerImpl extends ViewHandler
     public static final String FORM_STATE_MARKER = "<!--@@JSF_FORM_STATE_MARKER@@-->";
     private ViewHandlerSupport _viewHandlerSupport;
     private ViewDeclarationLanguageFactory _vdlFactory;
+    
+    /**
+     * Gets the current ViewHandler via FacesContext.getApplication().getViewHandler().
+     * We have to use this method to invoke any other specified ViewHandler-method
+     * in the code, because direct access (this.method()) will cause problems if
+     * the ViewHandler is wrapped.
+     * @param facesContext
+     * @return
+     */
+    public static ViewHandler getViewHandler(FacesContext facesContext)
+    {
+        return facesContext.getApplication().getViewHandler();
+    }
 
     public ViewHandlerImpl()
     {
@@ -93,7 +108,6 @@ public class ViewHandlerImpl extends ViewHandler
             Map<String, List<String>> parameters, boolean includeViewParams)
     {
         Map<String, List<String>> viewParameters;
-        ExternalContext externalContext = context.getExternalContext();
         if (includeViewParams)
         {
             viewParameters = getViewParameterList(context, viewId, parameters);
@@ -103,7 +117,11 @@ public class ViewHandlerImpl extends ViewHandler
             viewParameters = parameters;
         }
         
-        String actionEncodedViewId = getActionURL(context, viewId);
+        // note that we cannot use this.getActionURL(), because this will
+        // cause problems if the ViewHandler is wrapped
+        String actionEncodedViewId = getViewHandler(context).getActionURL(context, viewId);
+        
+        ExternalContext externalContext = context.getExternalContext();
         String bookmarkEncodedURL = externalContext.encodeBookmarkableURL(actionEncodedViewId, viewParameters);
         return externalContext.encodeActionURL(bookmarkEncodedURL);
     }
@@ -113,7 +131,6 @@ public class ViewHandlerImpl extends ViewHandler
             Map<String, List<String>> parameters, boolean includeViewParams)
     {
         Map<String, List<String>> viewParameters;
-        ExternalContext externalContext = context.getExternalContext();
         if (includeViewParams)
         {
             viewParameters = getViewParameterList(context, viewId, parameters);
@@ -123,7 +140,11 @@ public class ViewHandlerImpl extends ViewHandler
             viewParameters = parameters;
         }
         
-        String actionEncodedViewId = getActionURL(context, viewId);
+        // note that we cannot use this.getActionURL(), because this will
+        // cause problems if the ViewHandler is wrapped
+        String actionEncodedViewId = getViewHandler(context).getActionURL(context, viewId);
+        
+        ExternalContext externalContext = context.getExternalContext();
         String redirectEncodedURL = externalContext.encodeRedirectURL(actionEncodedViewId, viewParameters);
         return externalContext.encodeActionURL(redirectEncodedURL);
     }
@@ -142,7 +163,8 @@ public class ViewHandlerImpl extends ViewHandler
         if(context.getExternalContext().getRequestCharacterEncoding() == null)
         {
             super.initView(context);    
-        }        
+        }
+        context.getAttributes().put(JspStateManagerImpl.JSP_VIEWHANDLER_IS_WRITING_STATE_ATTR, true);
     }
 
     /**
@@ -199,6 +221,12 @@ public class ViewHandlerImpl extends ViewHandler
     {
        checkNull(context, "facesContext");
        String calculatedViewId = getViewHandlerSupport().calculateViewId(context, viewId);
+       
+       // we cannot use this.getVDL() directly (see getViewHandler())
+       //return getViewHandler(context)
+       //        .getViewDeclarationLanguage(context, calculatedViewId)
+       //            .createView(context, calculatedViewId);
+       // -= Leonardo Uribe =- Temporally reverted by TCK issues.
        return getViewDeclarationLanguage(context,calculatedViewId).createView(context,calculatedViewId);
     }
 
@@ -228,6 +256,11 @@ public class ViewHandlerImpl extends ViewHandler
         checkNull(context, "context");
         checkNull(viewToRender, "viewToRender");
 
+        // we cannot use this.getVDL() directly (see getViewHandler())
+        //String viewId = viewToRender.getViewId();
+        //getViewHandler(context).getViewDeclarationLanguage(context, viewId)
+        //        .renderView(context, viewToRender);
+        // -= Leonardo Uribe =- Temporally reverted by TCK issues.
         getViewDeclarationLanguage(context,viewToRender.getViewId()).renderView(context, viewToRender);
     }
 
@@ -237,6 +270,12 @@ public class ViewHandlerImpl extends ViewHandler
         checkNull(context, "context");
     
         String calculatedViewId = getViewHandlerSupport().calculateViewId(context, viewId);
+        
+        // we cannot use this.getVDL() directly (see getViewHandler())
+        //return getViewHandler(context)
+        //        .getViewDeclarationLanguage(context,calculatedViewId)
+        //            .restoreView(context, calculatedViewId);
+        // -= Leonardo Uribe =- Temporally reverted by TCK issues.
         return getViewDeclarationLanguage(context,calculatedViewId).restoreView(context, calculatedViewId); 
     }
     
@@ -248,17 +287,7 @@ public class ViewHandlerImpl extends ViewHandler
         if(context.getPartialViewContext().isAjaxRequest())
             return;
 
-        // Facelets specific hack:
-        // Tell the StateWriter that we're about to write state
-        StateWriter stateWriter = StateWriter.getCurrentInstance();
-        if (stateWriter != null)
-        {
-            // Write the STATE_KEY out. Unfortunately, this will
-            // be wasteful for pure server-side state managers where nothing
-            // is actually written into the output, but this cannot
-            // programatically be discovered
-            stateWriter.writingState();
-        }
+        setWritingState(context);
 
         StateManager stateManager = context.getApplication().getStateManager();
         if (stateManager.isSavingStateInClient(context))
@@ -275,11 +304,27 @@ public class ViewHandlerImpl extends ViewHandler
         }
     }
     
+    private void setWritingState(FacesContext context){
+        // Facelets specific hack:
+        // Tell the StateWriter that we're about to write state
+        StateWriter stateWriter = StateWriter.getCurrentInstance();
+        if (stateWriter != null)
+        {
+            // Write the STATE_KEY out. Unfortunately, this will
+            // be wasteful for pure server-side state managers where nothing
+            // is actually written into the output, but this cannot
+            // programatically be discovered
+            stateWriter.writingState();
+        }else
+        {
+            //we're in a JSP, let the JSPStatemanager know that we need to actually write the state
+            context.getAttributes().put(JspStateManagerImpl.JSP_IS_WRITING_STATE_ATTR, true);
+        }        
+    }
+    
     private Map<String, List<String>> getViewParameterList(FacesContext context,
             String viewId, Map<String, List<String>> parametersFromArg)
     {
-
-        Map<String, List<String>> viewParameters;
         UIViewRoot viewRoot = context.getViewRoot();
         String currentViewId = viewRoot.getViewId();
         Collection<UIViewParameter> toViewParams = null;
@@ -291,7 +336,11 @@ public class ViewHandlerImpl extends ViewHandler
         }
         else
         {
-            String calculatedViewId = getViewHandlerSupport().calculateViewId(context, viewId);            
+            String calculatedViewId = getViewHandlerSupport().calculateViewId(context, viewId);  
+            // we cannot use this.getVDL() directly (see getViewHandler())
+            //ViewDeclarationLanguage vdl = getViewHandler(context).
+            //        getViewDeclarationLanguage(context, calculatedViewId);
+            // -= Leonardo Uribe =- Temporally reverted by TCK issues.
             ViewDeclarationLanguage vdl = getViewDeclarationLanguage(context,calculatedViewId);
             ViewMetadata viewMetadata = vdl.getViewMetadata(context, viewId);
             // getViewMetadata() returns null on JSP
@@ -306,10 +355,19 @@ public class ViewHandlerImpl extends ViewHandler
         {
             return parametersFromArg;
         }
+        
+        // we need to use a custom Map to add the view parameters,
+        // otherwise the current value of the view parameter will be added to
+        // the navigation case as a static (!!!) parameter, thus the value
+        // won't be updated on any following request
+        // (Note that parametersFromArg is the Map from the NavigationCase)
+        // Also note that we don't have to copy the Lists, because they won't be changed
+        Map<String, List<String>> parameters = new HashMap<String, List<String>>();
+        parameters.putAll(parametersFromArg);
 
         for (UIViewParameter viewParameter : toViewParams)
         {
-            if (!parametersFromArg.containsKey(viewParameter.getName()))
+            if (!parameters.containsKey(viewParameter.getName()))
             {
                 String parameterValue = viewParameter.getStringValueFromModel(context);
                 if (parameterValue == null)
@@ -320,32 +378,31 @@ public class ViewHandlerImpl extends ViewHandler
                     }
                     else
                     {
-                        boolean found = false;
-                        for (UIViewParameter curParam : currentViewParams) {
-                            if (curParam.getName() != null && viewParameter.getName() != null &&
-                                    curParam.getName().equals(viewParameter.getName())) 
+                        if (viewParameter.getName() != null)
+                        {
+                            for (UIViewParameter curParam : currentViewParams)
                             {
-                                parameterValue = curParam.getStringValue(context);
-                                found = true;
+                                if (viewParameter.getName().equals(curParam.getName())) 
+                                {
+                                    parameterValue = curParam.getStringValue(context);
+                                    break;
+                                }
                             }
-                            if (found)
-                                break;
                         }
                     }
                 }
                 if (parameterValue != null)
                 {
-                    List<String> parameterValueList = parametersFromArg.get(viewParameter.getName());
-                    if (parameterValueList == null)
-                    {
-                        parameterValueList = new ArrayList<String>();
-                    }
+                    // since we have checked !parameters.containsKey(viewParameter.getName())
+                    // here already, the parameters Map will never contain a List under the
+                    // key viewParameter.getName(), thus we do not have to check it here (again).
+                    List<String> parameterValueList = new ArrayList<String>();
                     parameterValueList.add(parameterValue);
-                    parametersFromArg.put(viewParameter.getName(),parameterValueList);
+                    parameters.put(viewParameter.getName(), parameterValueList);
                 }
             }
         }        
-        return parametersFromArg;
+        return parameters;
     }
     
     private void checkNull(final Object o, final String param)

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.myfaces.renderkits;
 
 import org.apache.myfaces.renderkit.html.HtmlRenderKitImpl;

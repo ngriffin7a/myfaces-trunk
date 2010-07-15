@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
+ */
 
 /** @namespace myfaces._impl._util._Queue */
 myfaces._impl.core._Runtime.extendClass("myfaces._impl._util._Queue", Object, {
@@ -26,7 +26,7 @@ myfaces._impl.core._Runtime.extendClass("myfaces._impl._util._Queue", Object, {
 
     constructor_: function() {
         this._q = [];
-       
+        this._Lang = myfaces._impl._util._Lang;
     },
 
     length: function() {
@@ -54,11 +54,13 @@ myfaces._impl.core._Runtime.extendClass("myfaces._impl._util._Queue", Object, {
         this._q.push(element);
         //qeuesize is bigger than the limit we drop one element so that we are
         //back in line
+
         this._readjust();
     },
 
     _readjust: function() {
-        while (this._size > -1 && this.length() > this._size) {
+        while (null != this._size && 'undefined' != typeof this._size &&
+                this._size > -1 && this.length() > this._size) {
             this.dequeue();
         }
     },
@@ -111,16 +113,7 @@ myfaces._impl.core._Runtime.extendClass("myfaces._impl._util._Queue", Object, {
      * @param closure a closure which processes the element
      */
     each: function(closure) {
-        //we have a browser optimized ecmascript version present
-        //which again is all newer browsers except ie
-        if(Array.prototype.forEach) {
-           return (this._space)? this._q.slice(this._space).forEach( closure ): this._q.forEach( closure ) ;
-        }
-
-        var len = this._q.length;
-        for (var cnt = this._space; cnt < len; cnt++) {
-            closure(this._q[cnt]);
-        }
+        this._Lang.arrForEach(this._q, closure, this._space);
     },
 
     /**
@@ -131,33 +124,12 @@ myfaces._impl.core._Runtime.extendClass("myfaces._impl._util._Queue", Object, {
      *
      * @return an array of filtered queue entries
      */
-    filter: function(closure) {
-        var ret = [];
-        var len = this._q.length;
-
-        //we have a browser optimized ecmascript version present
-        //which again is all newer browsers except ie        
-        if(Array.prototype.filter) {
-           return (this._space)? this._q.slice(this._space).filter( closure ): this._q.filter( closure );
-        }
-        
-        for (var cnt = this._space; cnt < len; cnt++) {
-            if (closure(this._q[cnt])) {
-                ret.push(this._q[cnt]);
-            }
-        }
-        return ret;
+    arrFilter: function(closure) {
+        return this._Lang.arrFilter(this._q, closure, this._space);
     },
 
     indexOf: function(element) {
-        var cnt = this._space;
-        var len = this._q.length;
-        while (cnt < len && this._q[cnt] !== element) {
-            cnt += 1;
-        }
-        /*found*/
-        cnt = (cnt < len) ? cnt : -1;
-        return cnt;
+        return this._Lang.indexOf(this._q, element);
     },
 
     cleanup: function() {

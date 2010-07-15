@@ -255,10 +255,22 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
         _value = value;
     }
 
+    /*
     @Override
     public String getClientId(FacesContext faces)
     {
         String id = super.getClientId(faces);
+        if (_index >= 0)
+        {
+            id = _getBuffer().append(id).append(UINamingContainer.getSeparatorChar(faces)).append(_index).toString();
+        }
+        return id;
+    }*/
+    
+    @Override
+    public String getContainerClientId(FacesContext faces)
+    {
+        String id = super.getContainerClientId(faces);
         if (_index >= 0)
         {
             id = _getBuffer().append(id).append(UINamingContainer.getSeparatorChar(faces)).append(_index).toString();
@@ -647,7 +659,7 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
             ContextCallback callback) throws FacesException
     {
         // get the index-less clientId
-        String indexLessId = super.getClientId(faces);
+        String indexLessId = getClientId(faces);
         if (clientId.startsWith(indexLessId))
         {
             // the index for which the component should be invoked
@@ -655,7 +667,7 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
             
             // try to get the invokeIndex out of the given clientId.
             // Note that the clientId of UIRepeat contains the current index,
-            // if the index is >= 0 (see getClientId()).
+            // if the index is >= 0 (see getContainerClientId()).
             int idxStart = clientId.indexOf(UINamingContainer.getSeparatorChar(faces),
                     indexLessId.length());
             if (idxStart != -1 && Character.isDigit(clientId.charAt(idxStart + 1)))

@@ -42,6 +42,7 @@ import org.apache.myfaces.test.el.MockExpressionFactory;
 import org.apache.myfaces.test.el.MockVariableMapper;
 import org.apache.myfaces.test.mock.MockServletContext;
 import org.apache.myfaces.test.mock.resource.MockResource;
+import org.apache.myfaces.test.mock.resource.MockSimpleResource;
 import org.apache.myfaces.view.facelets.MockFaceletViewDeclarationLanguage;
 import org.apache.myfaces.view.facelets.mock.MockViewDeclarationLanguageFactory;
 import org.easymock.classextension.EasyMock;
@@ -176,7 +177,7 @@ public class ApplicationImplJsfTest extends AbstractJsfTestCase
         // ---- first component test - without any special settings ----------------------------
         
         // configure the Resource needed for this test
-        MockResource resource = new MockResource(null, "testlib", null, "composite.xhtml", 
+        MockSimpleResource resource = new MockSimpleResource(null, "testlib", null, "composite.xhtml", 
                 null, new File("src/test/resources/org/apache/myfaces/application"));
         
         // get the BeanInfo metadata
@@ -191,8 +192,8 @@ public class ApplicationImplJsfTest extends AbstractJsfTestCase
         
         // ---- second component test - from a script ------------------------------------------
         
-        MockResource scriptResource = new MockResource(null, "testlib", null, 
-                "org.apache.myfaces.application.TestResourceComponent.groovy", 
+        MockSimpleResource scriptResource = new MockSimpleResource(null, "testlib", null, 
+                "org.apache.myfaces.application.MockResourceComponent.groovy", 
                 null, new File("src/test/resources/org/apache/myfaces/application"));
         
         // install the script resource to the VDL-mock
@@ -202,7 +203,7 @@ public class ApplicationImplJsfTest extends AbstractJsfTestCase
         component = _testApplication.createComponent(facesContext, resource);
         
         // asserts for the second component
-        assertTrue("The component has to be a TestResourceComponent", component instanceof TestResourceComponent);
+        assertTrue("The component has to be a MockResourceComponent", component instanceof MockResourceComponent);
         assertRendererTypeResourceBeanInfo(component, resource, metadata);
         
         // remove the script resource again
@@ -210,8 +211,8 @@ public class ApplicationImplJsfTest extends AbstractJsfTestCase
         
         // ---- third component test - from libaryName.resourceName.class -----------------------
         
-        MockResource componentResource = new MockResource(null, "org.apache.myfaces.application",
-                null, "TestResourceComponent.xhtml", null,
+        MockSimpleResource componentResource = new MockSimpleResource(null, "org.apache.myfaces.application",
+                null, "MockResourceComponent.xhtml", null,
                 new File("src/test/resources/org/apache/myfaces/application"))
         {
 
@@ -246,13 +247,13 @@ public class ApplicationImplJsfTest extends AbstractJsfTestCase
         component = _testApplication.createComponent(facesContext, componentResource);
         
         // asserts for the third component
-        assertTrue("The component has to be a TestResourceComponent", component instanceof TestResourceComponent);
+        assertTrue("The component has to be a MockResourceComponent", component instanceof MockResourceComponent);
         assertRendererTypeResourceBeanInfo(component, componentResource, metadataComponentResource);
         
         // ---- fourth component test - with a custom componentType ------------------------------
         
         // change the resource
-        resource = new MockResource(null, "testlib", null, "compositeWithComponentType.xhtml", 
+        resource = new MockSimpleResource(null, "testlib", null, "compositeWithComponentType.xhtml", 
                 null, new File("src/test/resources/org/apache/myfaces/application"));
         // FIXME resource.setResourceName(resourceName) did not work
         // this can be changed in the next release of MyFaces test (1.0.0-beta.NEXT)
