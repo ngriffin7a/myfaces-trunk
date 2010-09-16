@@ -119,12 +119,14 @@
                   <groupId>org.apache.myfaces.core</groupId>
                   <artifactId>myfaces-core-project</artifactId>
                   <version>${project.version}</version>
+                  <type>zip</type>
                   <classifier>source-release</classifier>
                 </artifactItem>                
                 <artifactItem>
                   <groupId>org.apache.myfaces.shared</groupId>
                   <artifactId>myfaces-shared-project</artifactId>
                   <version>${myfaces-shared.version}</version>
+                  <type>zip</type>
                   <classifier>source-release</classifier>
                 </artifactItem>
                </artifactItems>
