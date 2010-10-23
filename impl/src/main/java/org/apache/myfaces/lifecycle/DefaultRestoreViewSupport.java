@@ -38,10 +38,10 @@ import javax.faces.event.PostRestoreStateEvent;
 import javax.faces.render.ResponseStateManager;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
-import org.apache.myfaces.shared_impl.application.FacesServletMapping;
-import org.apache.myfaces.shared_impl.application.InvalidViewIdException;
-import org.apache.myfaces.shared_impl.renderkit.RendererUtils;
-import org.apache.myfaces.shared_impl.util.Assert;
+import org.apache.myfaces.shared.application.FacesServletMapping;
+import org.apache.myfaces.shared.application.InvalidViewIdException;
+import org.apache.myfaces.shared.renderkit.RendererUtils;
+import org.apache.myfaces.shared.util.Assert;
 
 /**
  * @author Mathias Broekelmann (latest modification by $Author$)

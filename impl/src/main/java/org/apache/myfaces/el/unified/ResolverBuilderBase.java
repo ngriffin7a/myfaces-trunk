@@ -35,7 +35,7 @@ import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConf
 import org.apache.myfaces.config.RuntimeConfig;
 import org.apache.myfaces.el.convert.PropertyResolverToELResolver;
 import org.apache.myfaces.el.convert.VariableResolverToELResolver;
-import org.apache.myfaces.shared_impl.util.ClassUtils;
+import org.apache.myfaces.shared.util.ClassUtils;
 
 /**
  * @author Mathias Broekelmann (latest modification by $Author$)

@@ -44,8 +44,8 @@ import javax.faces.context.PartialViewContext;
 
 import org.apache.myfaces.config.RuntimeConfig;
 import org.apache.myfaces.config.element.NavigationRule;
-import org.apache.myfaces.shared_impl.util.HashMapUtils;
-import org.apache.myfaces.shared_impl.util.StringUtils;
+import org.apache.myfaces.shared.util.HashMapUtils;
+import org.apache.myfaces.shared.util.StringUtils;
 
 /**
  * @author Thomas Spiegl (latest modification by $Author$)

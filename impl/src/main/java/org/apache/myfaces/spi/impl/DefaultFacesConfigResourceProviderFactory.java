@@ -22,7 +22,7 @@ import org.apache.commons.discovery.ResourceNameIterator;
 import org.apache.commons.discovery.resource.ClassLoaders;
 import org.apache.commons.discovery.resource.names.DiscoverServiceNames;
 import org.apache.myfaces.config.DefaultFacesConfigResourceProvider;
-import org.apache.myfaces.shared_impl.spi.impl.SpiUtils;
+import org.apache.myfaces.shared.spi.impl.SpiUtils;
 import org.apache.myfaces.spi.FacesConfigResourceProvider;
 import org.apache.myfaces.spi.FacesConfigResourceProviderFactory;
 

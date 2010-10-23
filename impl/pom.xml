@@ -419,203 +419,43 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+          <!-- The shade plugin includes myfaces-shared-core and myfaces-impl-ee6 directly in the build -->
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>1.4</version>
+          <executions>
+              <execution>
+                  <phase>package</phase>
+                  <goals>
+                      <goal>shade</goal>
+                  </goals>
+              </execution>
+          </executions>
+          <configuration>
+              <createDependencyReducedPom>true</createDependencyReducedPom>
+              <createSourcesJar>true</createSourcesJar>
+              <artifactSet>
+                  <includes>
+                      <include>org.apache.myfaces.shared:myfaces-shared-core</include>
+                      <include>org.apache.myfaces.core:myfaces-impl-ee6</include>
+                  </includes>
+              </artifactSet>
+              <relocations>
+                  <relocation>
+                      <pattern>org.apache.myfaces.shared</pattern>
+                      <shadedPattern>org.apache.myfaces</shadedPattern>  <!-- this used to be o.a.m.shared_impl -->
+                  </relocation>
+              </relocations>
+              <transformers>
+                  <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+              </transformers>
+          </configuration>
+      </plugin>
     </plugins>
   </build>
   <profiles>
-    <profile>
-        <!-- This profile use a shared dependency rather than unpack the
-        code directly. The ideal is that this profile is active when the
-        version of this library is snapshot, but unfortunately there is
-        no way to activate it (see http://jira.codehaus.org/browse/MNG-3826).
-        Existing problems on maven 2.0.x architecture makes impossible do it.
-        For now the solution is trigger it manually using the property
-        -Ddev=true -->
-        <id>add-shared-dependency</id>
-        <activation>
-            <property>
-                <name>dev</name>
-                <value>true</value>
-            </property>
-        </activation>
-        <dependencies>
-            <dependency>
-                <groupId>org.apache.myfaces.shared</groupId>
-                <artifactId>myfaces-shared-impl</artifactId>
-                <version>${myfaces-shared.version}</version>
-                <scope>compile</scope>
-            </dependency>
-        </dependencies>
-    </profile>
-    <profile>
-        <id>unpack-shared-implee6</id>
-        <activation>
-            <property>
-                <name>!dev</name>
-            </property>
-        </activation>
-        <build>
-            <plugins>
-              <plugin>
-                <!--
-                  - The shared-impl project generates a modified version of the "shared" module
-                  - source and classes. The result is a jar full of files in the "shared_impl"
-                  - package that we can merge into the jar for this project.
-                  -->
-                <!--
-                  - The implee6 project contains classes which need Java EE 6 dependencies. 
-                  - The result is a jar that we can merge into the jar for this project.
-                  -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.0</version>
-                <executions>
-                  <execution>
-                    <id>unpack-shared-impl</id>
-                    <phase>process-classes</phase>
-                    <goals>
-                      <goal>unpack</goal>
-                    </goals>
-                    <configuration>
-                      <artifactItems>
-                        <artifactItem>
-                          <groupId>org.apache.myfaces.shared</groupId>
-                          <artifactId>myfaces-shared-impl</artifactId>
-                          <version>${myfaces-shared.version}</version>
-                          <!-- we need to include META-INF/resources and META-INF/internal-resources -->
-                          <excludes>META-INF/DEPENDENCIES,META-INF/LICENSE,META-INF/NOTICE,META-INF/MANIFEST.MF</excludes>
-                        </artifactItem>
-                      </artifactItems>
-                      <outputDirectory>${project.build.directory}/classes</outputDirectory>
-                    </configuration>
-                  </execution>
-                  <execution>
-                    <id>unpack-shared-impl-sources</id>
-                    <phase>process-sources</phase>
-                    <goals>
-                        <goal>unpack</goal>
-                    </goals>
-                    <configuration>
-                        <artifactItems>
-                            <artifactItem>
-                                <groupId>org.apache.myfaces.shared</groupId>
-                                <artifactId>myfaces-shared-impl</artifactId>
-                                <version>${myfaces-shared.version}</version>
-                                <classifier>sources</classifier>
-                                <excludes>META-INF/**</excludes>
-                            </artifactItem>
-                        </artifactItems>
-                        <outputDirectory>${project.build.directory}/shared_sources</outputDirectory>
-                    </configuration>
-                  </execution>
-                  <execution>
-                    <id>unpack-impl-ee6</id>
-                    <phase>process-resources</phase>
-                    <goals>
-                      <goal>unpack</goal>
-                    </goals>
-                    <configuration>
-                      <artifactItems>
-                        <artifactItem>
-                          <groupId>org.apache.myfaces.core</groupId>
-                          <artifactId>myfaces-impl-ee6</artifactId>
-                          <version>${project.version}</version>
-                        </artifactItem>
-                      </artifactItems>
-                      <!-- Just include the .class files in org/** and the META-INF/services directory -->
-                      <includes>org/**,META-INF/services/**</includes>
-                      <outputDirectory>${project.build.directory}/classes</outputDirectory>
-                    </configuration>
-                  </execution>
-                  <execution>
-                    <id>unpack-impl-ee6-sources</id>
-                    <phase>process-resources</phase>
-                    <goals>
-                        <goal>unpack</goal>
-                    </goals>
-                    <configuration>
-                        <artifactItems>
-                            <artifactItem>
-                                <groupId>org.apache.myfaces.core</groupId>
-                                <artifactId>myfaces-impl-ee6</artifactId>
-                                <version>${project.version}</version>
-                                <classifier>sources</classifier>
-                            </artifactItem>
-                        </artifactItems>
-                        <!-- Just include the .java files in org/** and the META-INF/services directory -->
-                        <includes>org/**,META-INF/services/**</includes> 
-                        <outputDirectory>${project.build.directory}/implee6_sources</outputDirectory>
-                    </configuration>
-                  </execution>
-                </executions>
-              </plugin>
-              <plugin>
-                <!--
-                  - Add the unpacked shared sources directory as source directory into the pom datastructure,
-                  - so that the -source jar includes them too; every .class file in the jar should have its
-                  - source in the -source jar.
-                  -->
-                <!--  
-                  - Add the unpacked implee6 sources directory as source directory into the pom datastructure,
-                  - so that the -source jar includes them too; every .class file in the jar should have its
-                  - source in the -source jar.
-                  - This has to happen after the "real" sources have been compiled, otherwise the compilation
-                  - would fail because of wrong dependencies.
-                -->  
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.0</version>
-                <executions>
-                  <execution>
-                    <id>add-source-shared</id>
-                    <phase>process-sources</phase>
-                    <goals>
-                      <goal>add-source</goal>
-                    </goals>
-                    <configuration>
-                      <sources>
-                        <source>${project.build.directory}/shared_sources</source>
-                        <source>${project.build.directory}/implee6_sources</source>
-                      </sources>
-                    </configuration>
-                  </execution>
-                </executions>
-              </plugin>
-            </plugins>
-        </build>
-    </profile>
-    <profile>
-        <!-- USAGE: mvn eclipse:eclipse -Ddev=eclipse -->
-        <id>eclipse-with-unpacked-shared</id>
-        <activation>
-            <property>
-                <name>dev</name>
-                <value>eclipse</value>
-            </property>
-        </activation>
-        <build>
-          <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.0</version>
-                <executions>
-                  <execution>
-                    <id>add-source-shared</id>
-                    <phase>process-sources</phase>
-                    <goals>
-                      <goal>add-source</goal>
-                    </goals>
-                    <configuration>
-                      <sources>
-                        <source>${project.build.directory}/shared_sources</source>
-                      </sources>
-                    </configuration>
-                  </execution>
-                </executions>
-            </plugin>
-          </plugins>
-        </build>
-    </profile>
     <profile>
       <!--
         - Whenever the full website is generated, the command
@@ -882,18 +722,33 @@
     </profile>
   </profiles>
   <dependencies>
+
+    <!-- API dependency -->
+
     <dependency>
       <groupId>org.apache.myfaces.core</groupId>
       <artifactId>myfaces-api</artifactId>
       <version>${project.version}</version>
     </dependency>
+
+    <!-- SHADED IMPL DEPENDENCIES -->
+
     <dependency>
-      <!-- this dependency will be packed together with the main artifact of this pom -->
       <groupId>org.apache.myfaces.shared</groupId>
-      <artifactId>myfaces-shared-impl</artifactId>
+      <artifactId>myfaces-shared-core</artifactId>
       <version>${myfaces-shared.version}</version>
-      <scope>provided</scope>
+      <scope>compile</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.apache.myfaces.core</groupId>
+      <artifactId>myfaces-impl-ee6</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <!-- NORMAL DEPENDENCIES -->
+
     <dependency>
       <!-- el-api 2.1 is included in jsp-api, so this one has to be on top of it -->
       <groupId>javax.el</groupId>

@@ -27,10 +27,10 @@ import org.apache.myfaces.config.element.ManagedBean;
 import org.apache.myfaces.context.ReleaseableExternalContext;
 import org.apache.myfaces.context.servlet.StartupFacesContextImpl;
 import org.apache.myfaces.context.servlet.StartupServletExternalContextImpl;
-import org.apache.myfaces.shared_impl.context.ExceptionHandlerImpl;
-import org.apache.myfaces.shared_impl.util.StateUtils;
-import org.apache.myfaces.shared_impl.util.WebConfigParamUtils;
-import org.apache.myfaces.shared_impl.webapp.webxml.WebXml;
+import org.apache.myfaces.shared.context.ExceptionHandlerImpl;
+import org.apache.myfaces.shared.util.StateUtils;
+import org.apache.myfaces.shared.util.WebConfigParamUtils;
+import org.apache.myfaces.shared.webapp.webxml.WebXml;
 
 import javax.el.ExpressionFactory;
 import javax.faces.application.Application;

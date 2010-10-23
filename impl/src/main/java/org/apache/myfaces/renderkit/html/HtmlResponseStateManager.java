@@ -32,11 +32,11 @@ import javax.faces.render.RenderKitFactory;
 import javax.faces.render.ResponseStateManager;
 
 import org.apache.myfaces.renderkit.MyfacesResponseStateManager;
-import org.apache.myfaces.shared_impl.config.MyfacesConfig;
-import org.apache.myfaces.shared_impl.renderkit.html.HTML;
-import org.apache.myfaces.shared_impl.renderkit.html.HtmlRendererUtils;
-import org.apache.myfaces.shared_impl.renderkit.html.util.JavascriptUtils;
-import org.apache.myfaces.shared_impl.util.StateUtils;
+import org.apache.myfaces.shared.config.MyfacesConfig;
+import org.apache.myfaces.shared.renderkit.html.HTML;
+import org.apache.myfaces.shared.renderkit.html.HtmlRendererUtils;
+import org.apache.myfaces.shared.renderkit.html.util.JavascriptUtils;
+import org.apache.myfaces.shared.util.StateUtils;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)

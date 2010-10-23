@@ -18,7 +18,7 @@
  */
 package org.apache.myfaces.config.annotation;
 
-import org.apache.myfaces.shared_impl.util.ClassUtils;
+import org.apache.myfaces.shared.util.ClassUtils;
 import org.apache.tomcat.InstanceManager;
 
 import javax.faces.context.ExternalContext;

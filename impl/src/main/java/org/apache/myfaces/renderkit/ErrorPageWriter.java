@@ -69,10 +69,10 @@ import javax.faces.view.Location;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
-import org.apache.myfaces.shared_impl.renderkit.html.HtmlResponseWriterImpl;
-import org.apache.myfaces.shared_impl.util.ClassUtils;
-import org.apache.myfaces.shared_impl.util.StateUtils;
-import org.apache.myfaces.shared_impl.webapp.webxml.WebXml;
+import org.apache.myfaces.shared.renderkit.html.HtmlResponseWriterImpl;
+import org.apache.myfaces.shared.util.ClassUtils;
+import org.apache.myfaces.shared.util.StateUtils;
+import org.apache.myfaces.shared.webapp.webxml.WebXml;
 import org.apache.myfaces.view.facelets.component.UIRepeat;
 
 /**

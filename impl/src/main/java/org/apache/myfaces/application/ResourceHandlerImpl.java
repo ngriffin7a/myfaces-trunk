@@ -35,15 +35,15 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.myfaces.renderkit.ErrorPageWriter;
-import org.apache.myfaces.shared_impl.resource.ResourceHandlerCache;
-import org.apache.myfaces.shared_impl.resource.ResourceHandlerSupport;
-import org.apache.myfaces.shared_impl.resource.ResourceImpl;
-import org.apache.myfaces.shared_impl.resource.ResourceLoader;
-import org.apache.myfaces.shared_impl.resource.ResourceMeta;
-import org.apache.myfaces.shared_impl.resource.ResourceHandlerCache.ResourceValue;
-import org.apache.myfaces.shared_impl.util.ClassUtils;
-import org.apache.myfaces.shared_impl.util.ExternalContextUtils;
-import org.apache.myfaces.shared_impl.util.StringUtils;
+import org.apache.myfaces.shared.resource.ResourceHandlerCache;
+import org.apache.myfaces.shared.resource.ResourceHandlerSupport;
+import org.apache.myfaces.shared.resource.ResourceImpl;
+import org.apache.myfaces.shared.resource.ResourceLoader;
+import org.apache.myfaces.shared.resource.ResourceMeta;
+import org.apache.myfaces.shared.resource.ResourceHandlerCache.ResourceValue;
+import org.apache.myfaces.shared.util.ClassUtils;
+import org.apache.myfaces.shared.util.ExternalContextUtils;
+import org.apache.myfaces.shared.util.StringUtils;
 
 /**
  * DOCUMENT ME!

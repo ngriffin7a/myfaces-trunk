@@ -21,7 +21,7 @@ package org.apache.myfaces.context;
 import javax.faces.context.ExceptionHandler;
 import javax.faces.context.ExceptionHandlerFactory;
 
-import org.apache.myfaces.shared_impl.context.ExceptionHandlerImpl;
+import org.apache.myfaces.shared.context.ExceptionHandlerImpl;
 
 /**
  * DOCUMENT ME!
