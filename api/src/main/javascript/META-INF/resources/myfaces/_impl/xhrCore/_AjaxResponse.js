@@ -204,7 +204,7 @@ myfaces._impl.core._Runtime.extendClass("myfaces._impl.xhrCore._AjaxResponse", m
     },
 
     _setVSTInnerForms: function(elem) {
-        elem = this._Dom.byIdOrName(elem);
+        elem = this._Lang.byId(elem);
         var replacedForms = this._Dom.findByTagName(elem, "form", false);
         var applyVST = this._Lang.hitch(this, function(elem) {
             this._setVSTForm(elem);
@@ -316,8 +316,9 @@ myfaces._impl.core._Runtime.extendClass("myfaces._impl.xhrCore._AjaxResponse", m
             // may refer to an invalid document if an update of the entire body has occurred before this point.
             var viewStateValue = node.firstChild.nodeValue;
 
-            var elementId = (context._mfInternal)? context._mfInternal["_mfSourceControlId"] : context.source.id;
-            var sourceForm = (context._mfInternal)? (document.forms[context._mfInternal["_mfSourceFormId"]] || this._Dom.fuzzyFormDetection(elementId)) : this._Dom.fuzzyFormDetection(elementId);
+            //TODO save the issuing form id in the context element
+            var elementId = context._mfInternal["_mfSourceControlId"];
+            var sourceForm = document.forms[context._mfInternal["_mfSourceFormId"]] || this._Dom.fuzzyFormDetection(elementId);
             this.appliedViewState = viewStateValue;
             //source form could not be determined either over the form identifer or the element
             //we now skip this phase and just add everything we need for the fixup code
@@ -539,14 +540,9 @@ myfaces._impl.core._Runtime.extendClass("myfaces._impl.xhrCore._AjaxResponse", m
      */
     replaceHtmlItem : function(request, context, itemIdToReplace, markup) {
         try {
-            //TODO make a detachement fixup which tries to replace the item
-            //with the correct name upon its parent form if given
-
-
-            var origIdentifier = itemIdToReplace;
+            // (itemIdToReplace instanceof Node) is NOT compatible with IE8
             var item = (!this._Lang.isString(itemIdToReplace)) ? itemIdToReplace :
-                    this._Dom.byIdOrName(itemIdToReplace);
-
+                    this._Dom.byId(itemIdToReplace) /*used to call getElementFromForm*/;
             if (!item) {
                 throw Error(this._Lang.getMessage("ERR_ITEM_ID_NOTFOUND", null,"_AjaxResponse.replaceHtmlItem",(itemIdToReplace)? itemIdToReplace.toString():"undefined"));
             }
@@ -600,7 +596,7 @@ myfaces._impl.core._Runtime.extendClass("myfaces._impl.xhrCore._AjaxResponse", m
         var replacementFragment;
         if (isBefore) {
             beforeId = this._Lang.trim(beforeId);
-            var beforeNode = this._Dom.byIdOrName(beforeId);
+            var beforeNode = document.getElementById(beforeId);
             if (!beforeNode) {
                 _Impl.sendError(request, context, _Impl.MALFORMEDXML, _Impl.MALFORMEDXML,this._Lang.getMessage("ERR_PPR_INSERTBEFID_1", null,"_AjaxResponse.processInsert",beforeId));
                 return false;
@@ -622,7 +618,7 @@ myfaces._impl.core._Runtime.extendClass("myfaces._impl.xhrCore._AjaxResponse", m
 
         } else {
             afterId = this._Lang.trim(afterId);
-            var afterNode = this._Dom.byIdOrName(afterId);
+            var afterNode = document.getElementById(afterId);
             if (!afterNode) {
                 _Impl.sendError(request, context, _Impl.MALFORMEDXML, _Impl.MALFORMEDXML, this._Lang.getMessage("ERR_PPR_INSERTBEFID_2", null,"_AjaxResponse.processInsert", afterId));
                 return false;
@@ -657,7 +653,7 @@ myfaces._impl.core._Runtime.extendClass("myfaces._impl.xhrCore._AjaxResponse", m
             return false;
         }
 
-        var item = this._Dom.byIdOrName(deleteId);
+        var item = this._Dom.byId(deleteId);
         if (!item) {
             throw Error(this._Lang.getMessage("ERR_PPR_UNKNOWNCID", null,"_AjaxResponse.processDelete",deleteId));
         }

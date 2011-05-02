@@ -52,6 +52,14 @@ abstract class _HtmlBody extends UIOutput
    */
   @JSFProperty(clientEvent="unload")
   public abstract String getOnunload();
+  
+  /**
+   * 
+   * @since 2.1.0
+   * @return
+   */
+  @JSFProperty
+  public abstract String getXmlns();
 
   @JSFExclude
   @JSFProperty(tagExcluded=true)

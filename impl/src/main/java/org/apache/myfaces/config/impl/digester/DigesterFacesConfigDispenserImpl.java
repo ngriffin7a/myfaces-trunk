@@ -31,6 +31,8 @@ import javax.faces.render.RenderKitFactory;
 import org.apache.myfaces.config.FacesConfigDispenser;
 import org.apache.myfaces.config.element.Behavior;
 import org.apache.myfaces.config.element.ClientBehaviorRenderer;
+import org.apache.myfaces.config.element.FaceletsProcessing;
+import org.apache.myfaces.config.element.FacesConfigExtension;
 import org.apache.myfaces.config.element.ManagedBean;
 import org.apache.myfaces.config.element.NavigationRule;
 import org.apache.myfaces.config.element.Renderer;
@@ -64,6 +66,7 @@ public class DigesterFacesConfigDispenserImpl extends FacesConfigDispenser
     private List<String> renderKitFactories = new ArrayList<String>();
     private List<String> tagHandlerDelegateFactories = new ArrayList<String>();
     private List<String> visitContextFactories = new ArrayList<String>();
+    private List<String> faceletCacheFactories = new ArrayList<String>();
     
     private String defaultRenderKitId;
     private String messageBundle;
@@ -102,6 +105,8 @@ public class DigesterFacesConfigDispenserImpl extends FacesConfigDispenser
     
     private List<NamedEvent> namedEvents = new ArrayList<NamedEvent>();
     
+    private Map<String, FaceletsProcessing> faceletsProcessingByFileExtension = new HashMap<String, FaceletsProcessing>();
+    
     /**
      * Add another unmarshalled faces config object.
      * 
@@ -122,6 +127,7 @@ public class DigesterFacesConfigDispenserImpl extends FacesConfigDispenser
             renderKitFactories.addAll(factory.getRenderkitFactory());
             tagHandlerDelegateFactories.addAll(factory.getTagHandlerDelegateFactory());
             visitContextFactories.addAll(factory.getVisitContextFactory());
+            faceletCacheFactories.addAll(factory.getFaceletCacheFactory());
         }
 
         components.putAll(config.getComponents());
@@ -217,6 +223,17 @@ public class DigesterFacesConfigDispenserImpl extends FacesConfigDispenser
             else
             {
                 existing.merge(renderKit);
+            }
+        }
+
+        for (FacesConfigExtension extension : config.getFacesConfigExtensions())
+        {
+            for (FaceletsProcessing faceletsProcessing : extension.getFaceletsProcessingList())
+            {
+                if (faceletsProcessing.getFileExtension() != null && faceletsProcessing.getFileExtension().length() > 0)
+                {
+                    faceletsProcessingByFileExtension.put(faceletsProcessing.getFileExtension(), faceletsProcessing);
+                }
             }
         }
 
@@ -641,4 +658,27 @@ public class DigesterFacesConfigDispenserImpl extends FacesConfigDispenser
     {
         return namedEvents;
     }
+    
+    public Collection<FaceletsProcessing> getFaceletsProcessing()
+    {
+        return faceletsProcessingByFileExtension.values();
+    }
+
+    public FaceletsProcessing getFaceletsProcessingConfiguration(String fileExtension)
+    {
+        return faceletsProcessingByFileExtension.get(fileExtension);
+    }
+
+    @Override
+    public void feedFaceletCacheFactory(String factoryClassName)
+    {
+        faceletCacheFactories.add(factoryClassName);
+    }
+
+    @Override
+    public Collection<String> getFaceletCacheFactoryIterator()
+    {
+        return faceletCacheFactories;
+    }
+
 }

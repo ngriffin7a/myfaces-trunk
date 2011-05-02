@@ -88,6 +88,10 @@ public abstract class StateManager
     public static final String PARTIAL_STATE_SAVING_PARAM_NAME = "javax.faces.PARTIAL_STATE_SAVING";
     private Boolean _savingStateInClient = null;
 
+    public static final String IS_BUILDING_INITIAL_STATE = "javax.faces.IS_BUILDING_INITIAL_STATE";
+    
+    public static final String IS_SAVING_STATE = "javax.faces.IS_SAVING_STATE";
+    
     /**
      * Invokes getTreeStructureToSave and getComponentStateToSave, then return an object that wraps the two resulting
      * objects. This object can then be passed to method writeState.

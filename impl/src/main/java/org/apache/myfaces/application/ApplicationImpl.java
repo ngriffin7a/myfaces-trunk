@@ -507,12 +507,6 @@ public class ApplicationImpl extends Application
         {
             return;
         }
-
-        // spec: If this argument is null the return from source.getClass() must be used as the sourceBaseType. 
-        if (sourceBaseType == null)
-        {
-            sourceBaseType = source.getClass();
-        }
         
         try
         {

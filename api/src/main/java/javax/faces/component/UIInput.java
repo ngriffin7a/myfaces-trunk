@@ -18,10 +18,13 @@
  */
 package javax.faces.component;
 
-import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
-import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFListener;
-import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
-import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import javax.el.ValueExpression;
 import javax.faces.FacesException;
@@ -45,13 +48,11 @@ import javax.faces.event.ValueChangeListener;
 import javax.faces.render.Renderer;
 import javax.faces.validator.Validator;
 import javax.faces.webapp.FacesServlet;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFListener;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
 
 /**
  * UICommand is a base abstraction for components that implement ActionSource.
@@ -184,7 +185,7 @@ public class UIInput extends UIOutput implements EditableValueHolder
                 {
                     pushComponentToEL(context, this);
                     //Pre validation event dispatch for component
-                    context.getApplication().publishEvent(context,  PreValidateEvent.class, getClass(), this);
+                    context.getApplication().publishEvent(context,  PreValidateEvent.class, UIComponent.class, this);
     
                     validate(context);
                 }
@@ -195,7 +196,7 @@ public class UIInput extends UIOutput implements EditableValueHolder
                 }
                 finally
                 {
-                    context.getApplication().publishEvent(context,  PostValidateEvent.class, getClass(), this);
+                    context.getApplication().publishEvent(context,  PostValidateEvent.class, UIComponent.class, this);
                     popComponentFromEL(context);
                 }
                 if (!isValid())
@@ -241,7 +242,7 @@ public class UIInput extends UIOutput implements EditableValueHolder
                 {
                     pushComponentToEL(context, this);
                     //Pre validation event dispatch for component
-                    context.getApplication().publishEvent(context,  PreValidateEvent.class, getClass(), this);
+                    context.getApplication().publishEvent(context,  PreValidateEvent.class, UIComponent.class, this);
     
                     validate(context);
                 }
@@ -252,7 +253,7 @@ public class UIInput extends UIOutput implements EditableValueHolder
                 }
                 finally
                 {
-                    context.getApplication().publishEvent(context,  PostValidateEvent.class, getClass(), this);
+                    context.getApplication().publishEvent(context,  PostValidateEvent.class, UIComponent.class, this);
                     popComponentFromEL(context);
                 }
                 if (!isValid())

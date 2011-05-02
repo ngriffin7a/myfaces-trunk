@@ -28,13 +28,13 @@
     <groupId>org.apache.myfaces.core</groupId>
     <artifactId>myfaces-core-project</artifactId>
     <packaging>pom</packaging>
-    <name>Apache MyFaces JSF-2.0 Core Project</name>
+    <name>Apache MyFaces JSF-2.1 Core Project</name>
     <description>
-        This project is the home of the MyFaces implementation of the JavaServer Faces 2.0 specification, and
+        This project is the home of the MyFaces implementation of the JavaServer Faces 2.1 specification, and
         consists of an API module (javax.faces.* classes) and an implementation module (org.apache.myfaces.* classes).
     </description>
-    <version>2.0.6-SNAPSHOT</version>
-    <url>http://myfaces.apache.org/core20</url>
+    <version>2.1.0-SNAPSHOT</version>
+    <url>http://myfaces.apache.org/core21</url>
     
     <issueManagement>
         <system>jira</system>
@@ -42,13 +42,14 @@
     </issueManagement>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/myfaces/core/trunk</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/myfaces/core/trunk</developerConnection>
-        <url>http://svn.apache.org/repos/asf/myfaces/core/trunk</url>
+        <connection>scm:svn:https://svn.apache.org/repos/asf/myfaces/core/branches/2.1.x</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/myfaces/core/branches/2.1.x</developerConnection>
+        <url>https://svn.apache.org/repos/asf/myfaces/core/branches/2.1.x</url>
     </scm>
 
     <modules>
         <module>api</module>
+        <module>shaded-impl</module>
         <module>implee6</module>
         <module>impl</module>
         <module>bundle</module>
@@ -56,7 +57,7 @@
 
     <properties>
         <!-- MyFaces shared-impl version to use -->
-        <myfaces-shared.version>4.0.7-SNAPSHOT</myfaces-shared.version>
+        <myfaces-shared.version>4.1.0-SNAPSHOT</myfaces-shared.version>
     </properties>
 
     <build>

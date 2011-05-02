@@ -119,6 +119,10 @@ public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshal
         digester.addCallMethod("faces-config/factory/tag-handler-delegate-factory", "addTagHandlerDelegateFactory", 0);
         digester.addCallMethod("faces-config/factory/visit-context-factory", "addVisitContextFactory", 0);
         // 2.0 specific end
+        
+        // 2.1 specific start
+        digester.addCallMethod("faces-config/factory/facelet-cache-factory", "addFaceletCacheFactory", 0);
+        // 2.1 specific end
 
         digester.addObjectCreate("faces-config/factory", Factory.class);
         digester.addSetNext("faces-config/factory", "addFactory");
@@ -278,6 +282,16 @@ public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshal
         digester.addCallMethod("faces-config/validator", "addValidator", 2);
         digester.addCallParam("faces-config/validator/validator-id", 0);
         digester.addCallParam("faces-config/validator/validator-class", 1);
+        
+        // 2.1 facelets-processing start
+        digester.addObjectCreate("faces-config/faces-config-extension", FacesConfigExtension.class);
+        digester.addSetNext("faces-config/faces-config-extension", "addFacesConfigExtension");
+        digester.addObjectCreate("faces-config/faces-config-extension/facelets-processing", FaceletsProcessing.class);
+        digester.addSetNext("faces-config/faces-config-extension/facelets-processing", "addFaceletsProcessing");
+        digester.addCallMethod("faces-config/faces-config-extension/facelets-processing/file-extension", "setFileExtension", 0);
+        digester.addCallMethod("faces-config/faces-config-extension/facelets-processing/process-as", "setProcessAs", 0);
+
+        // 2.1 facelets-processing end
     }
 
     public FacesConfig getFacesConfig(InputStream in, String systemId) throws IOException, SAXException

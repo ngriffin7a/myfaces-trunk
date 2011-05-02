@@ -18,8 +18,19 @@
  */
 package org.apache.myfaces.context.servlet;
 
-import org.apache.myfaces.shared_impl.context.flash.FlashImpl;
-import org.apache.myfaces.util.EnumerationIterator;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+import java.net.URLEncoder;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.faces.FacesException;
 import javax.faces.context.FacesContext;
@@ -35,19 +46,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
-import java.net.URLEncoder;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.logging.Logger;
+
+import org.apache.myfaces.shared_impl.context.flash.FlashImpl;
+import org.apache.myfaces.util.EnumerationIterator;
 
 /**
  * Implements the external context for servlet request. JSF 1.2, 6.1.3
@@ -842,5 +843,25 @@ public final class ServletExternalContextImpl extends ServletExternalContextImpl
     public Flash getFlash()
     {
         return FlashImpl.getCurrentInstance(this);
+    }
+
+    @Override
+    public boolean isSecure()
+    {
+        return _servletRequest.isSecure();
+    }
+
+    @Override
+    public int getSessionMaxInactiveInterval()
+    {
+        HttpSession session = _httpServletRequest.getSession();
+        return session.getMaxInactiveInterval();
+    }
+    
+    @Override
+    public void setSessionMaxInactiveInterval(int interval)
+    {
+        HttpSession session = _httpServletRequest.getSession();
+        session.setMaxInactiveInterval(interval);
     }
 }

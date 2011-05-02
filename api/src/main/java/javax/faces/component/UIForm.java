@@ -18,17 +18,19 @@
  */
 package javax.faces.component;
 
-import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
-import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
+import java.util.Collection;
+import java.util.Iterator;
 
 import javax.faces.component.visit.VisitCallback;
 import javax.faces.component.visit.VisitContext;
 import javax.faces.component.visit.VisitResult;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PostValidateEvent;
 import javax.faces.event.PreValidateEvent;
-import java.util.Collection;
-import java.util.Iterator;
+
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
 
 /**
  * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
@@ -41,7 +43,7 @@ public class UIForm extends UIComponentBase implements NamingContainer, UniqueId
 {
     // private static final Log log = LogFactory.getLog(UIForm.class);
 
-    private boolean _submitted;
+    //private boolean _submitted;
 
     /**
      * 
@@ -70,12 +72,14 @@ public class UIForm extends UIComponentBase implements NamingContainer, UniqueId
 
     public boolean isSubmitted()
     {
-        return _submitted;
+        //return _submitted;
+        return (Boolean) getTransientStateHelper().getTransient(PropertyKeys.submitted, false);
     }
 
     public void setSubmitted(boolean submitted)
     {
-        _submitted = submitted;
+        getTransientStateHelper().putTransient(PropertyKeys.submitted, submitted);
+        //_submitted = submitted;
     }
 
     @Override
@@ -137,7 +141,7 @@ public class UIForm extends UIComponentBase implements NamingContainer, UniqueId
                     return;
 
                 //Pre validation event dispatch for component
-                context.getApplication().publishEvent(context,  PreValidateEvent.class, getClass(), this);
+                context.getApplication().publishEvent(context,  PreValidateEvent.class, UIComponent.class, this);
                 
                 for (Iterator<UIComponent> it = getFacetsAndChildren(); it.hasNext();)
                 {
@@ -146,7 +150,7 @@ public class UIForm extends UIComponentBase implements NamingContainer, UniqueId
             }
             finally
             {
-                context.getApplication().publishEvent(context,  PostValidateEvent.class, getClass(), this);
+                context.getApplication().publishEvent(context,  PostValidateEvent.class, UIComponent.class, this);
                 popComponentFromEL(context);
             }
         }
@@ -198,7 +202,8 @@ public class UIForm extends UIComponentBase implements NamingContainer, UniqueId
     enum PropertyKeys
     {
          prependId,
-         uniqueIdCounter
+         uniqueIdCounter,
+         submitted,
     }
     
     @Override

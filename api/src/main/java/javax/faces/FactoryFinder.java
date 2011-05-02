@@ -38,6 +38,7 @@ import javax.faces.context.PartialViewContextFactory;
 import javax.faces.lifecycle.LifecycleFactory;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.view.ViewDeclarationLanguageFactory;
+import javax.faces.view.facelets.FaceletCacheFactory;
 import javax.faces.view.facelets.TagHandlerDelegateFactory;
 
 /**
@@ -58,6 +59,7 @@ public final class FactoryFinder
     public static final String TAG_HANDLER_DELEGATE_FACTORY = "javax.faces.view.facelets.TagHandlerDelegateFactory";
     public static final String VIEW_DECLARATION_LANGUAGE_FACTORY = "javax.faces.view.ViewDeclarationLanguageFactory";
     public static final String VISIT_CONTEXT_FACTORY = "javax.faces.component.visit.VisitContextFactory";
+    public static final String FACELET_CACHE_FACTORY = "javax.faces.view.facelets.FaceletCacheFactory";
 
     /**
      * used as a monitor for itself and _factories. Maps in this map are used as monitors for themselves and the
@@ -91,6 +93,7 @@ public final class FactoryFinder
         VALID_FACTORY_NAMES.add(TAG_HANDLER_DELEGATE_FACTORY);
         VALID_FACTORY_NAMES.add(VIEW_DECLARATION_LANGUAGE_FACTORY);
         VALID_FACTORY_NAMES.add(VISIT_CONTEXT_FACTORY);
+        VALID_FACTORY_NAMES.add(FACELET_CACHE_FACTORY);
         
         ABSTRACT_FACTORY_CLASSES.put(APPLICATION_FACTORY, ApplicationFactory.class);
         ABSTRACT_FACTORY_CLASSES.put(EXCEPTION_HANDLER_FACTORY, ExceptionHandlerFactory.class);
@@ -102,6 +105,7 @@ public final class FactoryFinder
         ABSTRACT_FACTORY_CLASSES.put(TAG_HANDLER_DELEGATE_FACTORY, TagHandlerDelegateFactory.class);
         ABSTRACT_FACTORY_CLASSES.put(VIEW_DECLARATION_LANGUAGE_FACTORY, ViewDeclarationLanguageFactory.class);
         ABSTRACT_FACTORY_CLASSES.put(VISIT_CONTEXT_FACTORY, VisitContextFactory.class);
+        ABSTRACT_FACTORY_CLASSES.put(FACELET_CACHE_FACTORY, FaceletCacheFactory.class);
         try
         {
             ClassLoader classLoader;
@@ -183,6 +187,11 @@ public final class FactoryFinder
      */
     public static Object getFactory(String factoryName) throws FacesException
     {
+        if (factoryName == null)
+        {
+            throw new NullPointerException("factoryName may not be null");
+        }
+        
         initializeFactoryFinderProviderFactory();
         
         if (_factoryFinderProviderFactoryInstance == null)
@@ -211,11 +220,6 @@ public final class FactoryFinder
 
     private static Object _getFactory(String factoryName) throws FacesException
     {
-        if (factoryName == null)
-        {
-            throw new NullPointerException("factoryName may not be null");
-        }
-
         ClassLoader classLoader = getClassLoader();
 
         // This code must be synchronized because this could cause a problem when
@@ -363,6 +367,11 @@ public final class FactoryFinder
 
     public static void setFactory(String factoryName, String implName)
     {
+        if (factoryName == null)
+        {
+            throw new NullPointerException("factoryName may not be null");
+        }
+        
         initializeFactoryFinderProviderFactory();
         
         if (_factoryFinderProviderFactoryInstance == null)
