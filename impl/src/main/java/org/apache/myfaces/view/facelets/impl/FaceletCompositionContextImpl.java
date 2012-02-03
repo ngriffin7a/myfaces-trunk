@@ -32,6 +32,7 @@ import javax.faces.view.AttachedObjectHandler;
 import javax.faces.view.EditableValueHolderAttachedObjectHandler;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
+import org.apache.myfaces.shared.config.MyfacesConfig;
 import org.apache.myfaces.shared.util.WebConfigParamUtils;
 import org.apache.myfaces.view.facelets.ELExpressionCacheMode;
 import org.apache.myfaces.view.facelets.FaceletCompositionContext;
@@ -99,6 +100,8 @@ public class FaceletCompositionContextImpl extends FaceletCompositionContext
     private Boolean _isMarkInitialState;
     
     private Boolean _refreshTransientBuildOnPSS;
+    
+    private Boolean _refreshTransientBuildOnPSSPreserveState;
     
     private Boolean _usingPSSOnThisView;
     
@@ -405,6 +408,12 @@ public class FaceletCompositionContextImpl extends FaceletCompositionContext
     }
 
     @Override
+    public void setMarkInitialState(boolean value)
+    {
+        _isMarkInitialState = value;
+    }
+
+    @Override
     public boolean isRefreshTransientBuildOnPSS()
     {
         if (_refreshTransientBuildOnPSS == null)
@@ -413,6 +422,16 @@ public class FaceletCompositionContextImpl extends FaceletCompositionContext
                 isRefreshTransientBuildOnPSS(_facesContext);
         }
         return _refreshTransientBuildOnPSS;
+    }
+    
+    public boolean isRefreshTransientBuildOnPSSPreserveState()
+    {
+        if (_refreshTransientBuildOnPSSPreserveState == null)
+        {
+            _refreshTransientBuildOnPSSPreserveState = MyfacesConfig.getCurrentInstance(
+                    _facesContext.getExternalContext()).isRefreshTransientBuildOnPSSPreserveState();
+        }
+        return _refreshTransientBuildOnPSSPreserveState;
     }
 
     @Override
@@ -621,11 +640,12 @@ public class FaceletCompositionContextImpl extends FaceletCompositionContext
                 else if (Boolean.TRUE.equals(fc.getAttributes().get(ComponentSupport.FACET_CREATED_UIPANEL_MARKER)))
                 {
                     //Mark its children, but do not mark itself.
-                    if (fc.getChildCount() > 0)
+                    int childCount = fc.getChildCount();
+                    if (childCount > 0)
                     {
-                        for (Iterator<UIComponent> fciter = fc.getChildren().iterator(); fciter.hasNext();)
+                        for (int i = 0; i < childCount; i++)
                         {
-                            UIComponent child = fciter.next();
+                            UIComponent child = fc.getChildren().get(i);
                             id = (String) child.getAttributes().get(ComponentSupport.MARK_CREATED);
                             if (id != null)
                             {
@@ -637,11 +657,12 @@ public class FaceletCompositionContextImpl extends FaceletCompositionContext
             }
         }
                 
-        if (component.getChildCount() > 0)
+        int childCount = component.getChildCount();
+        if (childCount > 0)
         {
-            for (Iterator<UIComponent> iter = component.getChildren().iterator(); iter.hasNext();)
+            for (int i = 0; i < childCount; i++)
             {
-                UIComponent child = iter.next();
+                UIComponent child = component.getChildren().get(i);
                 id = (String) child.getAttributes().get(ComponentSupport.MARK_CREATED);
                 if (id != null)
                 {
@@ -659,15 +680,18 @@ public class FaceletCompositionContextImpl extends FaceletCompositionContext
         removeComponentForDeletion(id);
         
         // finally remove any children marked as deleted
-        if (component.getChildCount() > 0)
+        int childCount = component.getChildCount();
+        if (childCount > 0)
         {
-            for (Iterator<UIComponent> iter = component.getChildren().iterator(); iter.hasNext();)
+            for (int i = 0; i < childCount; i ++)
             {
-                UIComponent child = iter.next();
+                UIComponent child = component.getChildren().get(i);
                 id = (String) child.getAttributes().get(ComponentSupport.MARK_CREATED); 
                 if (id != null && removeComponentForDeletion(id) != null)
                 {
-                    iter.remove();
+                    component.getChildren().remove(i);
+                    i--;
+                    childCount--;
                 }
             }
         }
@@ -689,13 +713,15 @@ public class FaceletCompositionContextImpl extends FaceletCompositionContext
                 {
                     if (fc.getChildCount() > 0)
                     {
-                        for (Iterator<UIComponent> fciter = fc.getChildren().iterator(); fciter.hasNext();)
+                        for (int i = 0, size = fc.getChildCount(); i < size; i++)
                         {
-                            UIComponent child = fciter.next();
+                            UIComponent child = fc.getChildren().get(i);
                             id = (String) child.getAttributes().get(ComponentSupport.MARK_CREATED);
                             if (id != null && removeComponentForDeletion(id) != null)
                             {
-                                fciter.remove();
+                                fc.getChildren().remove(i);
+                                i--;
+                                size--;
                             }
                         }
                     }
@@ -721,6 +747,11 @@ public class FaceletCompositionContextImpl extends FaceletCompositionContext
         return _sectionUniqueIdCounter.generateUniqueId();
     }
     
+    public void generateUniqueId(StringBuilder builderToAdd)
+    {
+        _sectionUniqueIdCounter.generateUniqueId(builderToAdd);
+    }
+
     public String generateUniqueComponentId()
     {
         return _sectionUniqueComponentIdCounter.generateUniqueId();

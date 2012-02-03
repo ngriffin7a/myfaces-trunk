@@ -34,7 +34,6 @@ _MF_CLS(_PFX_UTIL+"_ListenerQueue", myfaces._impl._util._Queue,
  * @lends myfaces._impl._util._ListenerQueue.prototype
  */
 {
-
     /**
      * listener type safety assertion function
      *
@@ -43,7 +42,7 @@ _MF_CLS(_PFX_UTIL+"_ListenerQueue", myfaces._impl._util._Queue,
     _assertListener : function( listener) {
         if ("function" != typeof (listener)) {
             var msg = myfaces._impl._util._Lang.getMessage("ERR_PARAM_GENERIC",null,"_ListenerQueue", arguments.caller.toString(),"function" );
-            throw this._Lang.makeException(null, null, this._nameSpace,arguments.caller.toString(),  msg);
+            throw this._Lang.makeException(new Error(), null, null, this._nameSpace,arguments.caller.toString(),  msg);
         }
     },
 
@@ -69,7 +68,7 @@ _MF_CLS(_PFX_UTIL+"_ListenerQueue", myfaces._impl._util._Queue,
 
     /**
      * generic broadcast with a number of arguments being passed down
-     * @param {Object} argument, the arguments passed down which are broadcast
+     * @param {Object} argument the arguments passed down which are broadcast
      */
     broadcastEvent : function(argument) {
         var _args = myfaces._impl._util._Lang.objToArray(arguments);

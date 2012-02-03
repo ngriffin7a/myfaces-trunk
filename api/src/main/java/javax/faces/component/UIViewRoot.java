@@ -79,7 +79,7 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
     public static final String UNIQUE_ID_PREFIX = "j_id";
     public static final String VIEW_PARAMETERS_KEY = "javax.faces.component.VIEW_PARAMETERS_KEY";
 
-    private final Logger logger = Logger.getLogger(UIViewRoot.class.getName());
+    private transient Logger logger = null;
 
     private static final PhaseProcessor APPLY_REQUEST_VALUES_PROCESSOR = new ApplyRequestValuesPhaseProcessor();
     private static final PhaseProcessor PROCESS_VALIDATORS_PROCESSOR = new ProcessValidatorPhaseProcessor();
@@ -275,7 +275,7 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
         {
             // First broadcast events that have been queued for PhaseId.ANY_PHASE.
             _broadcastAll(context, events.getAnyPhase(), eventsAborted);
-            Collection<FacesEvent> eventsOnPhase = events.getOnPhase();
+            List<FacesEvent> eventsOnPhase = events.getOnPhase();
             if (!eventsAborted.isEmpty())
             {
                 eventsOnPhase.removeAll(eventsAborted);
@@ -293,7 +293,7 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
             // broadcast reach maxLoops - probably a infinitive recursion:
             boolean production = getFacesContext().isProjectStage(ProjectStage.Production);
             Level level = production ? Level.FINE : Level.WARNING;
-            if (logger.isLoggable(level))
+            if (_getLogger().isLoggable(level))
             {
                 List<String> name = new ArrayList<String>(events.getAnyPhase().size() + events.getOnPhase().size());
                 for (FacesEvent facesEvent : events.getAnyPhase())
@@ -306,7 +306,7 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
                     String clientId = facesEvent.getComponent().getClientId(getFacesContext());
                     name.add(clientId);
                 }
-                logger.log(level,
+                _getLogger().log(level,
                         "Event broadcating for PhaseId {0} at UIViewRoot {1} reaches maximal limit, please check " +
                         "listeners for infinite recursion. Component id: {2}",
                         new Object [] {phaseId, getViewId(), name});
@@ -364,7 +364,7 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
         catch (Exception e)
         {
             // following the spec we have to swallow the exception
-            logger.log(Level.SEVERE, "Exception while processing phase listener: " + e.getMessage(), e);
+            _getLogger().log(Level.SEVERE, "Exception while processing phase listener: " + e.getMessage(), e);
         }
 
         if (!skipPhase)
@@ -439,7 +439,8 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
                     }
                     catch(UnsupportedOperationException e)
                     {
-                        logger.log(Level.SEVERE, "Exception while obtaining the view metadata: " + e.getMessage(), e);
+                        _getLogger().log(Level.SEVERE, "Exception while obtaining the view metadata: " +
+                                e.getMessage(), e);
                     }
                     
                     if (metadata != null)
@@ -473,7 +474,7 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
         catch (Exception e)
         {
             // following the spec we have to swallow the exception
-            logger.log(Level.SEVERE, "Exception while processing phase listener: " + e.getMessage(), e);
+            _getLogger().log(Level.SEVERE, "Exception while processing phase listener: " + e.getMessage(), e);
         }
     }
 
@@ -862,7 +863,7 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
                 catch (Throwable t) 
                 {
                     beforePhaseSuccess[0] = false; // redundant - for clarity
-                    logger.log(Level.SEVERE, "An Exception occured while processing " +
+                    _getLogger().log(Level.SEVERE, "An Exception occured while processing " +
                                              listener.getExpressionString() + 
                                              " in Phase " + phaseId, t);
                     if (beforePhase)
@@ -908,7 +909,7 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
                             catch (Throwable t) 
                             {
                                 beforePhaseSuccess[i + 1] = false; // redundant - for clarity
-                                logger.log(Level.SEVERE, "An Exception occured while processing the " +
+                                _getLogger().log(Level.SEVERE, "An Exception occured while processing the " +
                                                          "beforePhase method of PhaseListener " + phaseListener +
                                                          " in Phase " + phaseId, t);
                                 return context.getResponseComplete() ||
@@ -991,13 +992,14 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
      * @return <code>true</code> if the broadcast was completed without abortion, <code>false</code> otherwise
      */
     private void _broadcastAll(FacesContext context,
-                               Collection<? extends FacesEvent> events,
+                               List<? extends FacesEvent> events,
                                Collection<FacesEvent> eventsAborted)
     {
         assert events != null;
 
-        for (FacesEvent event : events)
+        for (int i = 0; i < events.size(); i++)
         {
+            FacesEvent event = events.get(i);
             UIComponent source = event.getComponent();
             UIComponent compositeParent = UIComponent.getCompositeComponentParent(source);
             if (compositeParent != null)
@@ -1025,10 +1027,10 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
             finally
             {
                 // Restore the current component
-                popComponentFromEL(context);
+                source.popComponentFromEL(context);
                 if (compositeParent != null)
                 {
-                    popComponentFromEL(context);
+                    compositeParent.popComponentFromEL(context);
                 }
             }
         }
@@ -1201,6 +1203,11 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
                 //No values
                 return null;
             }
+            else if (parentSaved == null && _viewScope != null && _viewScope.size() == 0)
+            {
+                //Empty view scope, no values
+                return null;
+            }
             
             Object[] values = new Object[2];
             values[0] = parentSaved;
@@ -1370,6 +1377,15 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor
         }
         
         return new Events(anyPhase, onPhase);
+    }
+    
+    private Logger _getLogger()
+    {
+        if (logger == null)
+        {
+            logger = Logger.getLogger(UIViewRoot.class.getName());
+        }
+        return logger;
     }
 
     private static interface PhaseProcessor

@@ -31,7 +31,6 @@ import javax.faces.component.UINamingContainer;
 import javax.faces.component.UIPanel;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
-import javax.faces.event.PhaseId;
 import javax.faces.view.facelets.FaceletContext;
 import javax.faces.view.facelets.TagAttribute;
 import javax.faces.view.facelets.TagAttributeException;
@@ -543,10 +542,11 @@ public final class ComponentSupport
                                                 UIComponent parent, String uniqueId)
     {
         Object value = null;
-        if (fcc.isUsingPSSOnThisView() &&
-            PhaseId.RESTORE_VIEW.equals(ctx.getFacesContext().getCurrentPhaseId()) &&
-            !MyfacesConfig.getCurrentInstance(
-                    ctx.getFacesContext().getExternalContext()).isRefreshTransientBuildOnPSSPreserveState())
+        //if (fcc.isUsingPSSOnThisView() &&
+        //    PhaseId.RESTORE_VIEW.equals(ctx.getFacesContext().getCurrentPhaseId()) &&
+        //    !MyfacesConfig.getCurrentInstance(
+        //            ctx.getFacesContext().getExternalContext()).isRefreshTransientBuildOnPSSPreserveState())
+        if (fcc.isUsingPSSOnThisView() && !fcc.isRefreshTransientBuildOnPSSPreserveState())
         {
             UIViewRoot root = getViewRoot(ctx, parent);
             FaceletState map = (FaceletState) root.getAttributes().get(FACELET_STATE_INSTANCE);
@@ -565,24 +565,26 @@ public final class ComponentSupport
     public static void saveInitialTagState(FaceletContext ctx, FaceletCompositionContext fcc,
                                            UIComponent parent, String uniqueId, Object value)
     {
-        if (fcc.isUsingPSSOnThisView())
+        // Only save the value when the view was built the first time, to ensure PSS algorithm 
+        // work correctly. If preserve state is enabled, just ignore it, because this tag will
+        // force full restore over the parent
+        //if (fcc.isUsingPSSOnThisView()) {
+        //    if (!fcc.isRefreshingTransientBuild() && !ctx.getFacesContext().isPostback()
+        //        && !MyfacesConfig.getCurrentInstance(
+        //            ctx.getFacesContext().getExternalContext()).isRefreshTransientBuildOnPSSPreserveState())
+        
+        // If we save the value each time the view is updated, we can use PSS on the dynamic parts,
+        // just calling markInitialState() on the required components, simplifying the algorithm.
+        if (fcc.isUsingPSSOnThisView() && !fcc.isRefreshTransientBuildOnPSSPreserveState())
         {
-            // Only save the value when the view was built the first time, to ensure PSS algorithm 
-            // work correctly. If preserve state is enabled, just ignore it, because this tag will
-            // force full restore over the parent
-            if (!fcc.isRefreshingTransientBuild() && !ctx.getFacesContext().isPostback()
-                && !MyfacesConfig.getCurrentInstance(
-                    ctx.getFacesContext().getExternalContext()).isRefreshTransientBuildOnPSSPreserveState())
+            UIViewRoot root = getViewRoot(ctx, parent);
+            FaceletState map = (FaceletState) root.getAttributes().get(FACELET_STATE_INSTANCE);
+            if (map == null)
             {
-                UIViewRoot root = getViewRoot(ctx, parent);
-                FaceletState map = (FaceletState) root.getAttributes().get(FACELET_STATE_INSTANCE);
-                if (map == null)
-                {
-                    map = new FaceletState();
-                    root.getAttributes().put(FACELET_STATE_INSTANCE, map);
-                }
-                map.putState(uniqueId, value);
+                map = new FaceletState();
+                root.getAttributes().put(FACELET_STATE_INSTANCE, map);
             }
+            map.putState(uniqueId, value);
         }
     }
 

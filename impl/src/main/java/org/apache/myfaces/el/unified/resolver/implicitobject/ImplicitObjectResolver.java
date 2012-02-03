@@ -44,11 +44,13 @@ public class ImplicitObjectResolver extends ELResolver
      */
     public static ELResolver makeResolverForJSP()
     {
-        Map<String, ImplicitObject> forJSPList = new HashMap<String, ImplicitObject>(2);
+        Map<String, ImplicitObject> forJSPList = new HashMap<String, ImplicitObject>(4);//2
         ImplicitObject io1 = new FacesContextImplicitObject();
         forJSPList.put(io1.getName(), io1);
         ImplicitObject io2 = new ViewImplicitObject();
         forJSPList.put(io2.getName(), io2);
+        ImplicitObject io3 = new ResourceImplicitObject();
+        forJSPList.put(io3.getName(), io3);
         return new ImplicitObjectResolver(forJSPList);
     }
 
@@ -57,7 +59,7 @@ public class ImplicitObjectResolver extends ELResolver
      */
     public static ELResolver makeResolverForFaces()
     {
-        Map<String, ImplicitObject> forFacesList = new HashMap<String, ImplicitObject>(14);
+        Map<String, ImplicitObject> forFacesList = new HashMap<String, ImplicitObject>(30);//14
         ImplicitObject io1 = new ApplicationImplicitObject();
         forFacesList.put(io1.getName(), io1);
         ImplicitObject io2 = new ApplicationScopeImplicitObject();
