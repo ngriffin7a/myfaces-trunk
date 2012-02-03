@@ -22,7 +22,9 @@ import java.io.IOException;
 
 import javax.el.ELException;
 import javax.faces.FacesException;
+import javax.faces.application.StateManager;
 import javax.faces.component.UIComponent;
+import javax.faces.event.PhaseId;
 import javax.faces.view.facelets.FaceletContext;
 import javax.faces.view.facelets.TagAttribute;
 import javax.faces.view.facelets.TagConfig;
@@ -78,14 +80,68 @@ public final class IfHandler extends TagHandler
     {
         FaceletCompositionContext fcc = FaceletCompositionContext.getCurrentInstance(ctx);
         String uniqueId = fcc.startComponentUniqueIdSection();
-        boolean b = getTestValue(ctx, fcc, parent, uniqueId);
+        Boolean restoredValue = (Boolean) ComponentSupport.restoreInitialTagState(ctx, fcc, parent, uniqueId);
+        boolean b = false;
+        boolean markInitialState = false;
+        if (restoredValue != null)
+        {
+            if (!PhaseId.RESTORE_VIEW.equals(ctx.getFacesContext().getCurrentPhaseId()))
+            {
+                b = this.test.getBoolean(ctx);
+                if (!restoredValue.equals(b))
+                {
+                    markInitialState = true;
+                }
+            }
+            else
+            {
+                b = restoredValue;
+            }
+        }
+        else
+        {
+            // No state restored, calculate
+            b = this.test.getBoolean(ctx);
+        }
+        //boolean b = getTestValue(ctx, fcc, parent, uniqueId);
         if (this.var != null)
         {
             ctx.setAttribute(var.getValue(ctx), new Boolean(b));
         }
         if (b)
         {
-            this.nextHandler.apply(ctx, parent);
+            boolean oldMarkInitialState = false;
+            Boolean isBuildingInitialState = null;
+            try
+            {
+                if (markInitialState)
+                {
+                    //set markInitialState flag
+                    oldMarkInitialState = fcc.isMarkInitialState();
+                    fcc.setMarkInitialState(true);
+                    isBuildingInitialState = (Boolean) ctx.getFacesContext().getAttributes().put(
+                            "javax.faces.IS_BUILDING_INITIAL_STATE", Boolean.TRUE);
+                }
+                this.nextHandler.apply(ctx, parent);
+            }
+            finally
+            {
+                if (markInitialState)
+                {
+                    //unset markInitialState flag
+                    if (isBuildingInitialState == null)
+                    {
+                        ctx.getFacesContext().getAttributes().remove(
+                                "javax.faces.IS_BUILDING_INITIAL_STATE");
+                    }
+                    else
+                    {
+                        ctx.getFacesContext().getAttributes().put(
+                                "javax.faces.IS_BUILDING_INITIAL_STATE", isBuildingInitialState);
+                    }
+                    fcc.setMarkInitialState(oldMarkInitialState);
+                }
+            }
         }
         fcc.endComponentUniqueIdSection();
         //AbstractFaceletContext actx = (AbstractFaceletContext) ctx;
@@ -94,19 +150,6 @@ public final class IfHandler extends TagHandler
         {
             //Mark the parent component to be saved and restored fully.
             ComponentSupport.markComponentToRestoreFully(ctx.getFacesContext(), parent);
-        }
-    }
-    
-    private boolean getTestValue(FaceletContext ctx, FaceletCompositionContext fcc, UIComponent parent, String uniqueId)
-    {
-        Boolean b = (Boolean) ComponentSupport.restoreInitialTagState(ctx, fcc, parent, uniqueId);
-        if (b != null)
-        {
-            return b.booleanValue();
-        }
-        else
-        {
-            return this.test.getBoolean(ctx);
         }
     }
 }

@@ -175,7 +175,16 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
             event = window.event || null;
         }
 
+        //improve the error messages if an empty elem is passed
+        if(!elem) {
+            throw _Lang.makeException(new Error(), "ArgNotSet", null, this._nameSpace, "request", _Lang.getMessage("ERR_MUST_BE_PROVIDED1","{0}: source  must be provided","jsf.ajax.request", "source element id"));
+        }
+        var oldElem = elem;
         elem = _Dom.byIdOrName(elem);
+        if(!elem) {
+            throw _Lang.makeException(new Error(), "Notfound", null, this._nameSpace, "request", _Lang.getMessage("ERR_PPR_UNKNOWNCID","{0}: Node with id {1} could not be found from source",this._nameSpace+".request", oldElem));
+        }
+
         var elementId = _Dom.nodeIdOrName(elem);
 
         /*
@@ -237,7 +246,7 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
         }
 
         /**
-         * multiple transports upcoming jsf 2.1 feature currently allowed
+         * multiple transports upcoming jsf 2.x feature currently allowed
          * default (no value) xhrQueuedPost
          *
          * xhrQueuedPost
@@ -295,10 +304,10 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
             //in case of no form is given we retry over the issuing event
             form = _Dom.fuzzyFormDetection(_Lang.getEventTarget(event));
             if (!form) {
-                throw this._Lang.makeException(null, null, this._nameSpace, "_getForm", _Lang.getMessage("ERR_FORM"));
+                throw _Lang.makeException(new Error(), null, null, this._nameSpace, "_getForm", _Lang.getMessage("ERR_FORM"));
             }
         } else if (!form) {
-            throw this._Lang.makeException(null, null, this._nameSpace, "_getForm", _Lang.getMessage("ERR_FORM"));
+            throw _Lang.makeException(new Error(), null, null, this._nameSpace, "_getForm", _Lang.getMessage("ERR_FORM"));
 
         }
         return form;
@@ -426,6 +435,8 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
      * @param {String} name the error name
      * @param {String} serverErrorName the server error name in case of a server error
      * @param {String} serverErrorMessage the server error message in case of a server error
+     * @param {String} caller optional caller reference for extended error messages
+     * @param {String} callFunc optional caller Function reference for extended error messages
      *
      *  handles the errors, in case of an onError exists within the context the onError is called as local error handler
      *  the registered error handlers in the queue receiv an error message to be dealt with
@@ -436,7 +447,7 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
      *
      *
      */
-    sendError : function sendError(/*Object*/request, /*Object*/ context, /*String*/ name, /*String*/ serverErrorName, /*String*/ serverErrorMessage) {
+    sendError : function sendError(/*Object*/request, /*Object*/ context, /*String*/ name, /*String*/ serverErrorName, /*String*/ serverErrorMessage, caller, callFunc) {
         var _Lang = myfaces._impl._util._Lang;
         var UNKNOWN = _Lang.getMessage("UNKNOWN");
 
@@ -454,6 +465,8 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
         eventData.serverErrorName = serverErrorName || UNKNOWN;
         eventData.serverErrorMessage = serverErrorMessage || UNKNOWN;
 
+
+
         try {
             eventData.source = context.source || UNKNOWN;
             eventData.responseCode = request.status || UNKNOWN;
@@ -461,6 +474,12 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
             eventData.responseXML = request.responseXML || UNKNOWN;
         } catch (e) {
             // silently ignore: user can find out by examining the event data
+        }
+         //extended error message only in dev mode
+        if(jsf.getProjectStage() === "Development") {
+            eventData.serverErrorMessage = eventData.serverErrorMessage || "";
+            eventData.serverErrorMessage = (caller)?  eventData.serverErrorMessage + "\nCalling class: "+caller:eventData.serverErrorMessage;
+            eventData.serverErrorMessage = (callFunc)? eventData.serverErrorMessage + "\n Calling function: "+callFunc :eventData.serverErrorMessage;
         }
 
         /**/
@@ -472,24 +491,26 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
         this._errListeners.broadcastEvent(eventData);
 
         if (jsf.getProjectStage() === "Development" && this._errListeners.length() == 0 && !context["onerror"]) {
-            var defaultErrorOutput = myfaces._impl.core._Runtime.getGlobalConfig("defaultErrorOutput", alert),
+            var DIVIDER = "--------------------------------------------------------",
+                    defaultErrorOutput = myfaces._impl.core._Runtime.getGlobalConfig("defaultErrorOutput", alert),
                     finalMessage = [],
-                //we remap the function to achieve a better compressability
-                    finalMessagePush = _Lang.hitch(finalMessage, finalMessage.push);
+                    //we remap the function to achieve a better compressability
+                    pushMsg = _Lang.hitch(finalMessage, finalMessage.push);
 
-            finalMessagePush((name) ? name : "");
-            if (name) {
-                finalMessagePush(": ");
-            }
-            finalMessagePush((serverErrorName) ? serverErrorName : "");
-            if (serverErrorName) {
-                finalMessagePush(" ");
-            }
-            finalMessagePush((serverErrorMessage) ? serverErrorMessage : "");
-            finalMessagePush(malFormedMessage());
-            finalMessagePush("\n\n");
-            finalMessagePush(_Lang.getMessage("MSG_DEV_MODE"));
-            defaultErrorOutput(finalMessage.join(""));
+            (serverErrorMessage) ? pushMsg(_Lang.getMessage("MSG_ERROR_MESSAGE") +" "+ serverErrorMessage +"\n") : null;
+            
+            pushMsg(DIVIDER);
+
+            (caller)? pushMsg("Calling class:"+ caller): null;
+            (callFunc)? pushMsg("Calling function:"+ callFunc): null;
+            (name) ? pushMsg(_Lang.getMessage("MSG_ERROR_NAME") +" "+name ): null;
+            (serverErrorName && name != serverErrorName) ? pushMsg("Server error name: "+ serverErrorName ) : null;
+
+
+            pushMsg(malFormedMessage());
+            pushMsg(DIVIDER);
+            pushMsg(_Lang.getMessage("MSG_DEV_MODE"));
+            defaultErrorOutput(finalMessage.join("\n"));
         }
     },
 
@@ -561,6 +582,7 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
      */
     getProjectStage : function() {
         //since impl is a singleton we only have to do it once at first access
+
         if(!this._projectStage) {
             var PRJ_STAGE = "projectStage",
                     STG_PROD = "Production",
@@ -575,11 +597,14 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
             for (var i = 0; i < scriptTags.length && !found; i++) {
                 if (scriptTags[i].src.search(/\/javax\.faces\.resource\/jsf\.js.*ln=javax\.faces/) != -1) {
                     var result = scriptTags[i].src.match(/stage=([^&;]*)/);
+                    //alert("result found");
+                    //alert(result);
                     found = true;
                     if (result) {
                         // we found stage=XXX
                         // return only valid values of ProjectStage
                         projectStage = (allowedProjectStages[result[1]]) ? result[1] : null;
+
                     }
                     else {
                         //we found the script, but there was no stage parameter -- Production
@@ -615,20 +640,30 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
      *   but can be undefined
      */
     chain : function(source, event) {
-        var len = arguments.length;
-        var _Lang = this._Lang;
-        var throwErr = function(msgKey) {
-            throw Error(_Lang.getMessage(msgKey));
+        var len         = arguments.length;
+        var _Lang       = this._Lang;
+        var throwErr    = function(msgKey) {
+            throw Error("jsf.util.chain: "+ _Lang.getMessage(msgKey));
         };
+        /**
+         * generic error condition checker which raises
+         * an exception if the condition is met
+         * @param assertion
+         * @param message
+         */
+        var errorCondition = function(assertion, message) {
+            if(assertion === true) throwErr(message);
+        };
+        var FUNC    = 'function';
+        var ISSTR   = _Lang.isString;
+        
         //the spec is contradicting here, it on one hand defines event, and on the other
         //it says it is optional, I have cleared this up now
         //the spec meant the param must be passed down, but can be 'undefined'
-        if (len < 2) {
-            throwErr("ERR_EV_OR_UNKNOWN");
-        } else if (len < 3) {
-            if ('function' == typeof event || this._Lang.isString(event)) {
-                throwErr("ERR_EVT_PASS");
-            }
+
+        errorCondition(len < 2, "ERR_EV_OR_UNKNOWN");
+        errorCondition(len < 3 && (FUNC == typeof event || ISSTR(event)), "ERR_EVT_PASS");
+        if (len < 3) {
             //nothing to be done here, move along
             return true;
         }
@@ -637,30 +672,20 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
         //arguments only are give if not set to undefined even null values!
 
         //assertions source either null or set as dom element:
-
-        if ('undefined' == typeof source) {
-            throwErr("ERR_SOURCE_DEF_NULL");
-            //allowed chain datatypes
-        } else if ('function' == typeof source) {
-            throwErr("ERR_SOURCE_FUNC");
-        }
-        if (this._Lang.isString(source)) {
-            throwErr("ERR_SOURCE_NOSTR");
-        }
+        errorCondition('undefined' == typeof source, "ERR_SOURCE_DEF_NULL");
+        errorCondition(FUNC == typeof source, "ERR_SOURCE_FUNC");
+        errorCondition(ISSTR(source), "ERR_SOURCE_NOSTR");
 
         //assertion if event is a function or a string we already are in our function elements
         //since event either is undefined, null or a valid event object
-
-        if ('function' == typeof event || this._Lang.isString(event)) {
-            throwErr("ERR_EV_OR_UNKNOWN");
-        }
+        errorCondition(FUNC == typeof event || ISSTR(event), "ERR_EV_OR_UNKNOWN");
 
         for (var cnt = 2; cnt < len; cnt++) {
             //we do not change the scope of the incoming functions
             //but we reuse the argument array capabilities of apply
             var ret;
 
-            if ('function' == typeof arguments[cnt]) {
+            if (FUNC == typeof arguments[cnt]) {
                 ret = arguments[cnt].call(source, event);
             } else {
                 //either a function or a string can be passed in case of a string we have to wrap it into another function
@@ -673,7 +698,6 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
             }
         }
         return true;
-
     },
 
     /**
@@ -697,17 +721,12 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
                 //TODO clean the name mess here
                 var finalMsg = [];
 
-                //extended error message only in dev mode
-                if(jsf.getProjectStage() === "Development") {
-                   (mfInternal.caller)? finalMsg.push("Caller: "+mfInternal.caller):null;
-                   (mfInternal.callFunc)? finalMsg.push("Caller Function: "+mfInternal.callFunc):null;
-                }
+
 
                 finalMsg.push(exception.message);
                 this.sendError(request, context,
-                        mfInternal.title || this.CLIENT_ERROR, mfInternal.name || exception.name, finalMsg.join("\n"));
+                        mfInternal.title || this.CLIENT_ERROR, mfInternal.name || exception.name, finalMsg.join("\n"), mfInternal.caller, mfInternal.callFunc);
             }
-
     }
 });
 

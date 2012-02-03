@@ -51,7 +51,6 @@ _MF_SINGLTN(_PFX_UTIL+"_LangQuirks", myfaces._impl._util._Lang, {
     constructor_: function() {
         this._callSuper("constructor_");
         var _RT = this._RT;
-        var singletons = this.attr(_RT, "registeredSingletons");
         var _T = this;
         //we only apply lazy if the jsf part is loaded already
         //otherwise we are at the correct position
@@ -221,7 +220,7 @@ _MF_SINGLTN(_PFX_UTIL+"_LangQuirks", myfaces._impl._util._Lang, {
      */
     arrToString : function(/*String or array*/ arr, /*string*/ delimiter) {
         if (!arr) {
-            throw this._Lang.makeException(null, null, this._nameSpace,"arrToString",  this.getMessage("ERR_MUST_BE_PROVIDED1",null, "arr {array}"));
+            throw this._Lang.makeException(new Error(), null, null, this._nameSpace,"arrToString",  this.getMessage("ERR_MUST_BE_PROVIDED1",null, "arr {array}"));
         }
         if (this.isString(arr)) {
             return arr;

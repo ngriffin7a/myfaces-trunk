@@ -80,7 +80,24 @@ public class HtmlBodyRendererBase extends HtmlRenderer
             {
                 HtmlRendererUtils.writeIdIfNecessary(writer, component, facesContext);
             }
-            HtmlRendererUtils.renderBehaviorizedEventHandlers(facesContext, writer, component, behaviors);
+            if (behaviors.isEmpty() && isCommonPropertiesOptimizationEnabled(facesContext))
+            {
+                CommonPropertyUtils.renderEventProperties(writer, 
+                        CommonPropertyUtils.getCommonPropertiesMarked(component), component);
+            }
+            else
+            {
+                if (isCommonEventsOptimizationEnabled(facesContext))
+                {
+                    CommonEventUtils.renderBehaviorizedEventHandlers(facesContext, writer, 
+                           CommonPropertyUtils.getCommonPropertiesMarked(component),
+                           CommonEventUtils.getCommonEventsMarked(component), component, behaviors);
+                }
+                else
+                {
+                    HtmlRendererUtils.renderBehaviorizedEventHandlers(facesContext, writer, component, behaviors);
+                }
+            }
             HtmlRendererUtils.renderBehaviorizedAttribute(facesContext, writer, HTML.ONLOAD_ATTR, component,
                     ClientBehaviorEvents.LOAD, behaviors, HTML.ONLOAD_ATTR);
             HtmlRendererUtils.renderBehaviorizedAttribute(facesContext, writer, HTML.ONUNLOAD_ATTR, component,
@@ -125,10 +142,18 @@ public class HtmlBodyRendererBase extends HtmlRenderer
 
         ResponseWriter writer = facesContext.getResponseWriter();
         UIViewRoot root = facesContext.getViewRoot();
-        for (UIComponent child : root.getComponentResources(facesContext,
-                HTML.BODY_TARGET))
+        // Perf: use indexes for iteration over children,
+        // componentResources are javax.faces.component._ComponentChildrenList._ComponentChildrenList(UIComponent)  
+        List<UIComponent> componentResources = root.getComponentResources(facesContext,
+                HTML.BODY_TARGET);
+        int childrenCount = componentResources.size();
+        if (childrenCount > 0)
         {
-            child.encodeAll(facesContext);
+            for (int i = 0; i < childrenCount; i++)
+            {
+                UIComponent child = componentResources.get(i);
+                child.encodeAll(facesContext);
+            }
         }
         
         // render all unhandled FacesMessages when ProjectStage is Development

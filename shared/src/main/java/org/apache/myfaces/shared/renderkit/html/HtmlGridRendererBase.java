@@ -19,7 +19,6 @@
 package org.apache.myfaces.shared.renderkit.html;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -94,7 +93,8 @@ public class HtmlGridRendererBase
         }
         else
         {
-            Integer i = (Integer)component.getAttributes().get(org.apache.myfaces.shared.renderkit.JSFAttr.COLUMNS_ATTR);
+            Integer i = (Integer)component.getAttributes().get(
+                    org.apache.myfaces.shared.renderkit.JSFAttr.COLUMNS_ATTR);
             columns = i != null ? i.intValue() : 0;
         }
 
@@ -102,7 +102,8 @@ public class HtmlGridRendererBase
         {
             if (log.isLoggable(Level.SEVERE))
             {
-                log.severe("Wrong columns attribute for PanelGrid " + component.getClientId(facesContext) + ": " + columns);
+                log.severe("Wrong columns attribute for PanelGrid " + 
+                        component.getClientId(facesContext) + ": " + columns);
             }
             columns = 1;
         }
@@ -121,7 +122,8 @@ public class HtmlGridRendererBase
         
         writer.startElement(HTML.TABLE_ELEM, component);
         
-        if (component instanceof ClientBehaviorHolder && JavascriptUtils.isJavascriptAllowed(facesContext.getExternalContext()))
+        if (component instanceof ClientBehaviorHolder && JavascriptUtils.isJavascriptAllowed(
+                facesContext.getExternalContext()))
         {
             if (!behaviors.isEmpty())
             {
@@ -131,16 +133,39 @@ public class HtmlGridRendererBase
             {
                 HtmlRendererUtils.writeIdIfNecessary(writer, component, facesContext);
             }
-            HtmlRendererUtils.renderBehaviorizedEventHandlers(facesContext, writer, component, behaviors);
+            long commonPropertiesMarked = 0L;
+            if (isCommonPropertiesOptimizationEnabled(facesContext))
+            {
+                commonPropertiesMarked = CommonPropertyUtils.getCommonPropertiesMarked(component);
+            }
+            if (behaviors.isEmpty() && isCommonPropertiesOptimizationEnabled(facesContext))
+            {
+                CommonPropertyUtils.renderEventProperties(writer, 
+                        commonPropertiesMarked, component);
+            }
+            else
+            {
+                if (isCommonEventsOptimizationEnabled(facesContext))
+                {
+                    CommonEventUtils.renderBehaviorizedEventHandlers(facesContext, writer, 
+                           commonPropertiesMarked,
+                           CommonEventUtils.getCommonEventsMarked(component), component, behaviors);
+                }
+                else
+                {
+                    HtmlRendererUtils.renderBehaviorizedEventHandlers(facesContext, writer, component, behaviors);
+                }
+            }
             if (isCommonPropertiesOptimizationEnabled(facesContext))
             {
                 HtmlRendererUtils.renderHTMLAttributes(writer, component, HTML.TABLE_ATTRIBUTES);
                 CommonPropertyUtils.renderCommonPassthroughPropertiesWithoutEvents(writer, 
-                        CommonPropertyUtils.getCommonPropertiesMarked(component), component);
+                        commonPropertiesMarked, component);
             }
             else
             {
-                HtmlRendererUtils.renderHTMLAttributes(writer, component, HTML.TABLE_PASSTHROUGH_ATTRIBUTES_WITHOUT_EVENTS);
+                HtmlRendererUtils.renderHTMLAttributes(writer, component, 
+                        HTML.TABLE_PASSTHROUGH_ATTRIBUTES_WITHOUT_EVENTS);
             }
         }
         else
@@ -181,10 +206,14 @@ public class HtmlGridRendererBase
         throws IOException
     {
         UIComponent facet = component.getFacet(header ? "header" : "footer");
-        if (facet == null) return;
+        if (facet == null)
+        {
+            return;
+        }
 
         HtmlRendererUtils.writePrettyLineSeparator(context);
-        writer.startElement(header ? org.apache.myfaces.shared.renderkit.html.HTML.THEAD_ELEM : HTML.TFOOT_ELEM, component);
+        writer.startElement(
+                header ? org.apache.myfaces.shared.renderkit.html.HTML.THEAD_ELEM : HTML.TFOOT_ELEM, component);
         writer.startElement(HTML.TR_ELEM, component);
         writer.startElement(header ? HTML.TH_ELEM : HTML.TD_ELEM, component);
 
@@ -194,11 +223,13 @@ public class HtmlGridRendererBase
                          ((HtmlPanelGrid)component).getFooterClass())
             : (header ?
                          (String)component.getAttributes().get(JSFAttr.HEADER_CLASS_ATTR) :
-                         (String)component.getAttributes().get(org.apache.myfaces.shared.renderkit.JSFAttr.FOOTER_CLASS_ATTR));
+                         (String)component.getAttributes().get(
+                                 org.apache.myfaces.shared.renderkit.JSFAttr.FOOTER_CLASS_ATTR));
         if (styleClass != null)
         {
             writer.writeAttribute(HTML.CLASS_ATTR, styleClass,
-                                  header ? JSFAttr.HEADER_CLASS_ATTR : org.apache.myfaces.shared.renderkit.JSFAttr.FOOTER_CLASS_ATTR);
+                                  header ? JSFAttr.HEADER_CLASS_ATTR : 
+                                      org.apache.myfaces.shared.renderkit.JSFAttr.FOOTER_CLASS_ATTR);
         }
 
         if (header)
@@ -243,7 +274,8 @@ public class HtmlGridRendererBase
         }
         else
         {
-            columnClasses = (String)component.getAttributes().get(org.apache.myfaces.shared.renderkit.JSFAttr.COLUMN_CLASSES_ATTR);
+            columnClasses = (String)component.getAttributes().get(
+                    org.apache.myfaces.shared.renderkit.JSFAttr.COLUMN_CLASSES_ATTR);
             rowClasses = (String)component.getAttributes().get(JSFAttr.ROW_CLASSES_ATTR);
         }
 
@@ -284,9 +316,9 @@ public class HtmlGridRendererBase
             int columnIndex = 0;
             int rowClassIndex = 0;
             boolean rowStarted = false;
-            for (Iterator it = getChildren(component).iterator(); it.hasNext(); )
+            for (int i = 0, size =  component.getChildCount(); i < size; i++)
             {
-                UIComponent child = (UIComponent)it.next();
+                UIComponent child = component.getChildren().get(i);
                 if (child.isRendered())
                 {
                     if (columnIndex == 0)
@@ -316,12 +348,14 @@ public class HtmlGridRendererBase
                         
                         //start of new/next row
                         writer.startElement(HTML.TR_ELEM, component);
-                        if (rowClassIndex < rowClassesCount) {
+                        if (rowClassIndex < rowClassesCount)
+                        {
                             writer.writeAttribute(HTML.CLASS_ATTR, rowClassesArray[rowClassIndex], null);
                         }
                         rowStarted = true;
                         rowClassIndex++;
-                        if (rowClassIndex == rowClassesCount) {
+                        if (rowClassIndex == rowClassesCount)
+                        {
                             rowClassIndex = 0;
                         }
                     }
@@ -337,7 +371,8 @@ public class HtmlGridRendererBase
                     writer.endElement(HTML.TD_ELEM);
 
                     columnIndex++;
-                    if (columnIndex >= columns) {
+                    if (columnIndex >= columns)
+                    {
                         columnIndex = 0;
                     }
                 }
@@ -350,7 +385,9 @@ public class HtmlGridRendererBase
                     Level level = context.isProjectStage(ProjectStage.Production) ? Level.FINE : Level.WARNING;
                     if (log.isLoggable(level))
                     {
-                        log.log(level, "PanelGrid " + RendererUtils.getPathToComponent(component) + " has not enough children. Child count should be a multiple of the columns attribute.");
+                        log.log(level, "PanelGrid " + RendererUtils.getPathToComponent(component) 
+                                + " has not enough children. Child count should be a " 
+                                + "multiple of the columns attribute.");
                     }
                     //Render empty columns, so that table is correct
                     for ( ; columnIndex < columns; columnIndex++)
