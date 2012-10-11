@@ -1,37 +1,4 @@
 /**
- * Abstract Base for all classes which simulate the xhr level2 object
- * with a different transport
- *
- * <h3>Every class inheriting the interface must expose following methods and attributes</h3>
- *
- * <ul>
- *      <li>open(method, url, async)</li>
- *      <li>send(formData)</li>
- *      <li>setRequestHeader(key, value)</li>
- *      <li>abort()</li>
- *      <li>onloadstart()</li>
- *      <li>onprogress()</li>
- *      <li>onabort()</li>
- *      <li>onerror()</li>
- *      <li>onload()</li>
- *      <li>ontimeout()</li>
- *      <li>onloadend()</li>
- *      <li>onreadystatechange()</li>
- * </ul>
- * <h3>following attributes are supported</h3>
- * <ul>
- *      <li>async</li>
- *      <li>url</li>
- *      <li>method</li>
- *      <li>timeout</li>
- *      <li>response</li>
- *      <li>responseText</li>
- *      <li>responseXML</li>
- *      <li>status</li>
- *      <li>statusText</li>
- * </ul>
- */
-/**
  * @class
  * @name BaseRequest
  * @memberOf myfaces._impl.xhrCore.engine

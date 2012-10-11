@@ -990,14 +990,8 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
         return this._dummyPlaceHolder;
     },
 
-    /**
-     * fetches the window id for the current request
-     * note, this is a preparation method for jsf 2.2
-     *
-     */
-    getWindowId: function() {
-        //implementation in the experimental part
-        return null;
+    getNamedElementFromForm: function(form, elementId) {
+        throw new Error("Implement this");
     }
 });
 

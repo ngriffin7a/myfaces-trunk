@@ -669,7 +669,6 @@ _MF_SINGLTN(_PFX_UTIL + "_Lang", Object, /** @lends myfaces._impl._util._Lang.pr
      * @param {String} message the message for the exception
      */
     makeException:function (error, title, name, callerCls, callFunc, message) {
-        //var error = new Error(message || "");
         error.name = name || "clientError";
         error.title = title || "";
         error.message = message || "";

@@ -51,11 +51,11 @@ if (_MF_SINGLTN) {
                 myfaces.config = myfaces.config || {};
                 myfaces.config._autoeval = false;
                 return;
-            }  else {
+            } else {
                 //for whatever reason autoeval is set here on Firefox 3.5 only
                 // could be a firebug problem, by setting setters
                 //and getters no assignment was revealed.
-                if('undefined' != typeof myfaces.config && 'undefined' != typeof myfaces.config._autoeval) {
+                if ('undefined' != typeof myfaces.config && 'undefined' != typeof myfaces.config._autoeval) {
                     delete myfaces.config._autoeval;
                 }
             }
@@ -104,7 +104,7 @@ if (_MF_SINGLTN) {
             if ('undefined' == typeof this._isCompliantBrowser) {
                 this._isCompliantBrowser = !!((window.Range
                         && typeof Range.prototype.createContextualFragment == 'function')
-                                                            //createContextualFragment hints to a no quirks browser but we need more fallbacks
+                    //createContextualFragment hints to a no quirks browser but we need more fallbacks
                         || document.querySelectoryAll       //query selector all hints to html5 capabilities
                         || document.createTreeWalker);      //treewalker is either firefox 3.5+ or ie9 standards mode
             }
@@ -552,48 +552,64 @@ if (_MF_SINGLTN) {
             if (!node) return;
             var evtArr = this.IE_QUIRKS_EVENTS;
             for (var key in evtArr) {
-                if(!evtArr.hasOwnProperty(key)) continue;
+                if (!evtArr.hasOwnProperty(key)) continue;
                 if (key != "onunload" && node[key]) {
                     node[key] = null;
                 }
             }
         },
 
-        isManualScriptEval: function() {
+        isManualScriptEval:function () {
 
-                if (!this._Lang.exists(myfaces, "config._autoeval")) {
+            if (!this._Lang.exists(myfaces, "config._autoeval")) {
 
-                    //now we rely on the document being processed if called for the first time
-                    var evalDiv = document.createElement("div");
-                    this._Lang.reserveNamespace("myfaces.config._autoeval");
-                    //null not swallowed
-                    myfaces.config._autoeval = false;
+                //now we rely on the document being processed if called for the first time
+                var evalDiv = document.createElement("div");
+                this._Lang.reserveNamespace("myfaces.config._autoeval");
+                //null not swallowed
+                myfaces.config._autoeval = false;
 
-                    var markup = "<script type='text/javascript'> myfaces.config._autoeval = true; </script>";
-                    //now we rely on the same replacement mechanisms as outerhtml because
-                    //some browsers have different behavior of embedded scripts in the contextualfragment
-                    //or innerhtml case (opera for instance), this way we make sure the
-                    //eval detection is covered correctly
-                    this.setAttribute(evalDiv, "style", "display:none");
+                var markup = "<script type='text/javascript'> myfaces.config._autoeval = true; </script>";
+                //now we rely on the same replacement mechanisms as outerhtml because
+                //some browsers have different behavior of embedded scripts in the contextualfragment
+                //or innerhtml case (opera for instance), this way we make sure the
+                //eval detection is covered correctly
+                this.setAttribute(evalDiv, "style", "display:none");
 
-                    //it is less critical in some browsers (old ie versions)
-                    //to append as first element than as last
-                    //it should not make any difference layoutwise since we are on display none anyway.
-                    this.insertFirst(evalDiv);
+                //it is less critical in some browsers (old ie versions)
+                //to append as first element than as last
+                //it should not make any difference layoutwise since we are on display none anyway.
+                this.insertFirst(evalDiv);
 
-                    //we remap it into a real boolean value
-                    if (window.Range
-                            && typeof Range.prototype.createContextualFragment == 'function') {
-                        this._outerHTMLCompliant(evalDiv, markup);
-                    } else {
-                        //will not be called placeholder for quirks class
-                        this._outerHTMLNonCompliant(evalDiv, markup);
-                    }
-
+                //we remap it into a real boolean value
+                if (window.Range
+                        && typeof Range.prototype.createContextualFragment == 'function') {
+                    this._outerHTMLCompliant(evalDiv, markup);
+                } else {
+                    //will not be called placeholder for quirks class
+                    this._outerHTMLNonCompliant(evalDiv, markup);
                 }
 
-                return  !myfaces.config._autoeval;
             }
+
+            return  !myfaces.config._autoeval;
+        },
+
+        getNamedElementFromForm:function (form, elementName) {
+            if(this._RT.browser.isIE < 8) {
+                if(!form.elements) return null;
+                for(var cnt = 0, l = form.elements.length; cnt < l; cnt ++) {
+                    var element = form.elements[cnt];
+                    if(element.name == elementName) {
+                        return element;
+                    }
+                }
+                return null;
+            } else {
+                return form[elementName];
+            }
+        }
+
     });
 
 }

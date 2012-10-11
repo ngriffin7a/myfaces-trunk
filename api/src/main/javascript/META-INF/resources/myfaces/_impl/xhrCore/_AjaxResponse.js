@@ -205,16 +205,7 @@ _MF_SINGLTN(_PFX_XHR + "_AjaxResponse", _MF_OBJECT, /** @lends myfaces._impl.xhr
 
         //in IE7 looking up form elements with complex names (such as 'javax.faces.ViewState') fails in certain cases
         //iterate through the form elements to find the element, instead
-        var viewStateField = null;
-        if (theForm.elements) {
-            var elements = theForm.elements;
-            for (var i = 0, l = elements.length; i < l; i++) {
-                var e = elements[i];
-                if (e.name == this.P_VIEWSTATE) {
-                    viewStateField = e;
-                }
-            }
-        }
+        var viewStateField = this._Dom.getNamedElementFromForm(theForm, this.P_VIEWSTATE);
 
         if (viewStateField) {
             this._Dom.setAttribute(viewStateField, "value", mfInternal.appliedViewState);
@@ -603,7 +594,7 @@ _MF_SINGLTN(_PFX_XHR + "_AjaxResponse", _MF_OBJECT, /** @lends myfaces._impl.xhr
                 _Dom.byIdOrName(itemIdToReplace);
 
         if (!item) {
-            throw this._raiseError(_Lang.getMessage("ERR_ITEM_ID_NOTFOUND", null, "_AjaxResponse.replaceHtmlItem", (itemIdToReplace) ? itemIdToReplace.toString() : "undefined"));
+            throw this._raiseError(new Error(),_Lang.getMessage("ERR_ITEM_ID_NOTFOUND", null, "_AjaxResponse.replaceHtmlItem", (itemIdToReplace) ? itemIdToReplace.toString() : "undefined"),"replaceHtmlItem");
         }
         return _Dom.outerHTML(item, markup);
     },
