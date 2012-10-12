@@ -32,7 +32,7 @@ _MF_CLS(_PFX_XHR+"engine.IFrame", myfaces._impl.xhrCore.engine.BaseRequest,
 
             /*the target frame responsible for the communication*/
             _frame: null,
-            _requestHeader: null,
+            //_requestHeader: null,
             _aborted: false,
 
 
@@ -51,7 +51,7 @@ _MF_CLS(_PFX_XHR+"engine.IFrame", myfaces._impl.xhrCore.engine.BaseRequest,
                 this._callSuper("constructor", arguments);
 
                 this._initDefaultFinalizableFields();
-                this._requestHeader = {};
+                //this._requestHeader = {};
 
                 this._XHRConst = myfaces._impl.xhrCore.engine.XhrConst;
 
@@ -60,7 +60,7 @@ _MF_CLS(_PFX_XHR+"engine.IFrame", myfaces._impl.xhrCore.engine.BaseRequest,
             },
 
             setRequestHeader: function(key, value) {
-                this._requestHeader[key] = value;
+                //this._requestHeader[key] = value;
             },
 
             open: function(method, url, async) {
@@ -109,9 +109,9 @@ _MF_CLS(_PFX_XHR+"engine.IFrame", myfaces._impl.xhrCore.engine.BaseRequest,
                 
                 try {
                     //_t._initAjaxParams();
-                    for (var key in this._requestHeader) {
-                        formData.append(key, this._requestHeader[key]);
-                    }
+                    //for (var key in this._requestHeader) {
+                    //    formData.append(key, this._requestHeader[key]);
+                    //}
 
                     formDataForm.target = this._frame.name;
                     formDataForm.method = this.method;

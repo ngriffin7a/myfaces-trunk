@@ -62,6 +62,8 @@ public class PartialViewContextImpl extends PartialViewContext
     private static final String PARTIAL_AJAX = "partial/ajax";
     private static final String PARTIAL_PROCESS = "partial/process";
     private static final String SOURCE_PARAM_NAME = "javax.faces.source";
+    private static final String JAVAX_FACES_REQUEST = "javax.faces.request";
+
     /**
      * Internal extension for
      * https://issues.apache.org/jira/browse/MYFACES-2841
@@ -119,9 +121,11 @@ public class PartialViewContextImpl extends PartialViewContext
             String requestType = _facesContext.getExternalContext().
                     getRequestHeaderMap().get(FACES_REQUEST);
             _ajaxRequest = (requestType != null && PARTIAL_AJAX.equals(requestType));
+            String reqParmamterPartialAjax = _facesContext.getExternalContext().
+                    getRequestParameterMap().get(JAVAX_FACES_REQUEST);
+            _ajaxRequest = _ajaxRequest || PARTIAL_AJAX.equals(reqParmamterPartialAjax);
         }
-        //for now we have to treat the partial iframe request also as ajax request
-        return _ajaxRequest || isIFrameRequest();
+        return _ajaxRequest;
     }
 
     @Override

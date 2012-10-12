@@ -132,10 +132,11 @@ _MF_CLS(_PFX_XHR + "_AjaxRequest", _MF_OBJECT, /** @lends myfaces._impl.xhrCore.
             }, true);
             var xhr = this._xhr,
                     sourceForm = this._sourceForm,
-                    targetURL = (typeof sourceForm.elements[this.ENCODED_URL] == 'undefined') ?
+                    encodedURLElement = this._Dom.getNamedElementFromForm(sourceForm, this.ENCODED_URL);
+                    var targetURL = (typeof encodedURLElement == 'undefined') ?
                             sourceForm.action :
-                            sourceForm.elements[this.ENCODED_URL].value,
-                    formData = this.getFormData();
+                            encodedURLElement.value;
+                    var formData = this.getFormData();
 
             for (var key in this._passThrough) {
                 if(!this._passThrough.hasOwnProperty(key)) continue;
