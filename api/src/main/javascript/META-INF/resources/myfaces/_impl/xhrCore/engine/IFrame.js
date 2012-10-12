@@ -153,12 +153,12 @@ _MF_CLS(_PFX_XHR+"engine.IFrame", myfaces._impl.xhrCore.engine.BaseRequest,
                     var myevt = {};
 
                     this._addProgressAttributes(myevt, 100, 100);
-                    this.readyState = this._XHRConst.READY_STATE_DONE;
-                    this.onreadystatechange(myevt);
+                    //this.readyState = this._XHRConst.READY_STATE_DONE;
+                    //this.onreadystatechange(myevt);
 
                     this.responseText = this._getFrameText();
                     this.responseXML = this._getFrameXml();
-                    this.readyState = this._READY_STATE_DONE;
+                    this.readyState = this._XHRConst.READY_STATE_DONE;
 
                     //TODO status and statusText
 
