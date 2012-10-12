@@ -61,6 +61,7 @@ _MF_SINGLTN(_PFX_XHR+"_ExtTransports" , myfaces._impl.xhrCore._Transports,
      * @param {Object} passThrgh (Map) values to be passed through
      **/
     xhrPost : function(source, sourceForm, context, passThrgh) {
+        context._mfInternal.xhrOp = "xhrPost";
         var args = this._getArguments(source, sourceForm, context, passThrgh);
          delete args.xhrQueue;
         (new (this._getAjaxReqClass(context))(args)).send();
@@ -78,6 +79,7 @@ _MF_SINGLTN(_PFX_XHR+"_ExtTransports" , myfaces._impl.xhrCore._Transports,
      * @param {Object} passThrgh (Map) values to be passed through
      **/
     xhrGet : function(source, sourceForm, context, passThrgh) {
+        context._mfInternal.xhrOp = "xhrGet";
         var args = this._getArguments(source, sourceForm, context, passThrgh);
         // note in get the timeout is not working delay however is and queue size as well
         // since there are no cross browser ways to resolve a timeout on xhr level
@@ -99,6 +101,7 @@ _MF_SINGLTN(_PFX_XHR+"_ExtTransports" , myfaces._impl.xhrCore._Transports,
      * @param {Object} passThrgh (Map) values to be passed through
      **/
     xhrQueuedGet : function(source, sourceForm, context, passThrgh) {
+        context._mfInternal.xhrOp = "xhrQueuedGet";
         var args = this._getArguments(source, sourceForm, context, passThrgh);
         // note in get the timeout is not working delay however is and queue size as well
         // since there are no cross browser ways to resolve a timeout on xhr level
@@ -120,6 +123,7 @@ _MF_SINGLTN(_PFX_XHR+"_ExtTransports" , myfaces._impl.xhrCore._Transports,
      * @param {Object} passThrgh (Map) values to be passed through
      **/
     multipartPost : function(source, sourceForm, context, passThrgh) {
+        context._mfInternal.xhrOp = "multipartPost";
         var args = this._getArguments(source, sourceForm, context, passThrgh);
         // note in get the timeout is not working delay however is and queue size as well
         // since there are no cross browser ways to resolve a timeout on xhr level
@@ -139,6 +143,7 @@ _MF_SINGLTN(_PFX_XHR+"_ExtTransports" , myfaces._impl.xhrCore._Transports,
      * @param {Object} passThrgh (Map) values to be passed through
      **/
     multipartQueuedPost : function(source, sourceForm, context, passThrgh) {
+        context._mfInternal.xhrOp = "multipartQueuedPost";
         var args = this._getArguments(source, sourceForm, context, passThrgh);
         // note in get the timeout is not working delay however is and queue size as well
         // since there are no cross browser ways to resolve a timeout on xhr level
@@ -157,6 +162,7 @@ _MF_SINGLTN(_PFX_XHR+"_ExtTransports" , myfaces._impl.xhrCore._Transports,
      * @param {Object} passThrgh (Map) values to be passed through
      **/
     multipartGet : function(source, sourceForm, context, passThrgh) {
+        context._mfInternal.xhrOp = "multiPartGet";
         var args = this._getArguments(source, sourceForm, context, passThrgh);
         // note in get the timeout is not working delay however is and queue size as well
         // since there are no cross browser ways to resolve a timeout on xhr level
@@ -177,6 +183,7 @@ _MF_SINGLTN(_PFX_XHR+"_ExtTransports" , myfaces._impl.xhrCore._Transports,
      * @param {Object} passThrgh (Map) values to be passed through
      **/
     multipartQueuedGet : function(source, sourceForm, context, passThrgh) {
+        context._mfInternal.xhrOp = "multipartQueuedGet";
         var args = this._getArguments(source, sourceForm, context, passThrgh);
         // note in get the timeout is not working delay however is and queue size as well
         // since there are no cross browser ways to resolve a timeout on xhr level

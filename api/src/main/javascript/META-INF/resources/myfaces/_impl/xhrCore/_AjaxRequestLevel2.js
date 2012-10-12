@@ -31,17 +31,29 @@ _MF_CLS(_PFX_XHR+"_AjaxRequestLevel2", myfaces._impl.xhrCore._AjaxRequest, {
 
     getFormData: function() {
         var ret;
-        if (!this._partialIdsArray || this._partialIdsArray.length == 0) {
+
+        if (this._context._mfInternal.xhrOp.indexOf("multipart") != -1) {
             ret = new FormData(this._sourceForm);
         } else {
-            //for speed reasons we only need encodesubmittablefields
-            //in the pps case
-            ret = new FormData(this._sourceForm);
-            this._AJAXUTIL.encodeSubmittableFields(ret, this._xhr, this._context, this._source,
-                    this._sourceForm, this._partialIdsArray);
+            ret = this._callSuper("getFormData");
         }
         return ret;
     },
+
+    /**
+        * applies the content type, this needs to be done only for xhr
+        * level1
+        * @param xhr
+        * @private
+        */
+       _applyContentType: function(xhr) {
+            //content type is not set in case of xhr level2 unless we have a pps
+            //but then we have to deal with the file handling differently
+            if (this._context._mfInternal.xhrOp.indexOf("multipart") == -1) {
+               //xhr.setRequestHeader(this._CONTENT_TYPE, contentType);
+                this._callSuper("_applyContentType", xhr);
+            }
+       },
 
     _formDataToURI: function() {
         //i assume in xhr level2 form data takes care of the http get parametrisation
@@ -51,5 +63,8 @@ _MF_CLS(_PFX_XHR+"_AjaxRequestLevel2", myfaces._impl.xhrCore._AjaxRequest, {
     _getTransport: function() {
         return new XMLHttpRequest();
     }
+
+
+
 
 });
