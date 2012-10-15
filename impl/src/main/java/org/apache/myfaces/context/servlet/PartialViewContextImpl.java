@@ -60,6 +60,7 @@ public class PartialViewContextImpl extends PartialViewContext
 
     private static final String FACES_REQUEST = "Faces-Request";
     private static final String PARTIAL_AJAX = "partial/ajax";
+    private static final String PARTIAL_AJAX_REQ = "javax.faces.partial.ajax";
     private static final String PARTIAL_PROCESS = "partial/process";
     private static final String SOURCE_PARAM_NAME = "javax.faces.source";
     private static final String JAVAX_FACES_REQUEST = "javax.faces.request";
@@ -119,11 +120,13 @@ public class PartialViewContextImpl extends PartialViewContext
         if (_ajaxRequest == null)
         {
             String requestType = _facesContext.getExternalContext().
-                    getRequestHeaderMap().get(FACES_REQUEST);
+                   getRequestHeaderMap().get(FACES_REQUEST);
             _ajaxRequest = (requestType != null && PARTIAL_AJAX.equals(requestType));
             String reqParmamterPartialAjax = _facesContext.getExternalContext().
-                    getRequestParameterMap().get(JAVAX_FACES_REQUEST);
-            _ajaxRequest = _ajaxRequest || PARTIAL_AJAX.equals(reqParmamterPartialAjax);
+                    getRequestParameterMap().get(PARTIAL_AJAX_REQ);
+            //jsdoc reference in an ajax request the javax.faces.partial.ajax must be set as ajax parameter
+            //the other one is Faces-Request == partial/ajax which is basically the same
+            _ajaxRequest = _ajaxRequest || reqParmamterPartialAjax != null;
         }
         return _ajaxRequest;
     }

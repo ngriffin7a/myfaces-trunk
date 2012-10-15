@@ -19,52 +19,47 @@
  * IT is a specialized request which uses the form data
  * element for the handling of forms
  */
-_MF_CLS(_PFX_XHR+"_AjaxRequestLevel2", myfaces._impl.xhrCore._AjaxRequest, {
+_MF_CLS(_PFX_XHR + "_AjaxRequestLevel2", myfaces._impl.xhrCore._AjaxRequest, {
 
-    _sourceForm: null,
+    _sourceForm:null,
 
-    constructor_: function(arguments) {
+    constructor_:function (arguments) {
         this._callSuper("constructor_", arguments);
         //TODO xhr level2 can deal with real props
 
     },
 
-    getFormData: function() {
+    getFormData:function () {
         var ret;
 
-        if (this._context._mfInternal.xhrOp.indexOf("multipart") != -1) {
+        if (!this._partialIdsArray || this._partialIdsArray.length == 0) {
             ret = new FormData(this._sourceForm);
+            this._AJAXUTIL.appendIssuingItem(this._source, ret);
         } else {
-            ret = this._callSuper("getFormData");
+            //we switch back to the encode submittable fields system
+            this._AJAXUTIL.encodeSubmittableFields(ret, this._sourceForm, null);
+            this._AJAXUTIL.appendIssuingItem(this._source, ret);
         }
         return ret;
     },
 
     /**
-        * applies the content type, this needs to be done only for xhr
-        * level1
-        * @param xhr
-        * @private
-        */
-       _applyContentType: function(xhr) {
-            //content type is not set in case of xhr level2 unless we have a pps
-            //but then we have to deal with the file handling differently
-            if (this._context._mfInternal.xhrOp.indexOf("multipart") == -1) {
-               //xhr.setRequestHeader(this._CONTENT_TYPE, contentType);
-                this._callSuper("_applyContentType", xhr);
-            }
-       },
+     * applies the content type, this needs to be done only for xhr
+     * level1
+     * @param xhr
+     * @private
+     */
+    _applyContentType:function (xhr) {
+        //content type is not set in case of xhr level2 because
+        //the form data object does it itself
+    },
 
-    _formDataToURI: function() {
-        //i assume in xhr level2 form data takes care of the http get parametrisation
+    _formDataToURI:function (formData) {
+        //in xhr level2 form data takes care of the http get parametrisation
         return "";
     },
 
-    _getTransport: function() {
+    _getTransport:function () {
         return new XMLHttpRequest();
     }
-
-
-
-
 });

@@ -51,6 +51,21 @@ _MF_CLS(_PFX_XHR+"_IFrameRequest", myfaces._impl.xhrCore._AjaxRequest,
         //ret.append(this.JX_PART_IFRAME, "true");
         ret.append(this.MF_PART_IFRAME, "true");
         ret.append(this.MF_PART_FACES_REQUEST, "partial/ajax");
+
+        var viewState = decodeURIComponent(jsf.getViewState(this._sourceForm));
+        viewState = viewState.split("&");
+
+        //we append all viewstate values which are not part of the original form
+        //just in case getViewState is decorated
+        for(var cnt = 0, len = viewState.length; cnt < len; cnt++) {
+            var currViewState = viewState[cnt];
+            var keyVal = currViewState.split("=");
+            var name = keyVal[0];
+            if(!this._Dom.getNamedElementFromForm(this._sourceForm, name)) {
+                ret.append(name, keyVal[1]);
+            }
+        }
+
         return ret;
     },
 
