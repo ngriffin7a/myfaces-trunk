@@ -991,7 +991,7 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
     },
 
     getNamedElementFromForm: function(form, elementId) {
-        throw new Error("Implement this");
+        return form[elementId];
     }
 });
 
