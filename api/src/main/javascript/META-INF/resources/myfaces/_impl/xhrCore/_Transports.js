@@ -81,6 +81,26 @@ _MF_SINGLTN(_PFX_XHR + "_Transports", _MF_OBJECT,
     },
 
     /**
+      * iframe queued post
+      *
+      * mapped options already have the exec and view properly in place
+      * myfaces specifics can be found under mappedOptions.myFaces
+      * @param {Node} source the source of this call
+      * @param {Node} sourceForm the html form which is the source of this call
+      * @param {Object} context (Map) the internal pass through context
+      * @param {Object} passThrgh (Map) values to be passed through
+      **/
+     multipartQueuedPost : function(source, sourceForm, context, passThrgh) {
+         context._mfInternal.xhrOp = "multipartQueuedPost";
+         var args = this._getArguments(source, sourceForm, context, passThrgh);
+         // note in get the timeout is not working delay however is and queue size as well
+         // since there are no cross browser ways to resolve a timeout on xhr level
+         this._q.enqueue(
+                 new (this._getMultipartReqClass(context))(args));
+     },
+
+
+    /**
      * creates the arguments map and
      * fetches the config params in a proper way in to
      * deal with them in a flat way (from the nested context way)
@@ -149,21 +169,21 @@ _MF_SINGLTN(_PFX_XHR + "_Transports", _MF_OBJECT,
      * @param context the context which is passed down
      */
     _getMultipartReqClass: function(context) {
-       // if (this._RT.getXHRLvl() >= 2) {
-       //     return myfaces._impl.xhrCore._AjaxRequestLevel2;
-       // } else {
+        if (this._RT.getXHRLvl() >= 2) {
+            return myfaces._impl.xhrCore._MultipartAjaxRequestLevel2;
+        } else {
             return myfaces._impl.xhrCore._IFrameRequest;
-       // }
+        }
     },
 
 
     _getAjaxReqClass: function(context) {
         // var _RT = myfaces._impl.core._Runtime;
-        //if(this._RT.getXHRLvl() < 2) {
+        if(this._RT.getXHRLvl() < 2) {
            return myfaces._impl.xhrCore._AjaxRequest;
-        //} else {
-        //    return myfaces._impl.xhrCore._AjaxRequestLevel2;
-        //}
+        } else {
+           return myfaces._impl.xhrCore._AjaxRequestLevel2;
+        }
     }
 
 });

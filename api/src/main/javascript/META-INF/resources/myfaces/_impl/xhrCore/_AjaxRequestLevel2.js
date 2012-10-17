@@ -19,7 +19,7 @@
  * IT is a specialized request which uses the form data
  * element for the handling of forms
  */
-_MF_CLS(_PFX_XHR + "_AjaxRequestLevel2", myfaces._impl.xhrCore._AjaxRequest, {
+_MF_CLS(_PFX_XHR + "_MultipartAjaxRequestLevel2", myfaces._impl.xhrCore._AjaxRequest, {
 
     _sourceForm:null,
 
@@ -32,7 +32,7 @@ _MF_CLS(_PFX_XHR + "_AjaxRequestLevel2", myfaces._impl.xhrCore._AjaxRequest, {
     getFormData:function () {
         var ret;
 
-        if (!this._partialIdsArray || this._partialIdsArray.length == 0) {
+        if (this._context._mfInternal.xhrOp) {
             ret = new FormData(this._sourceForm);
             this._AJAXUTIL.appendIssuingItem(this._source, ret);
         } else {
@@ -41,6 +41,7 @@ _MF_CLS(_PFX_XHR + "_AjaxRequestLevel2", myfaces._impl.xhrCore._AjaxRequest, {
             this._AJAXUTIL.appendIssuingItem(this._source, ret);
         }
         return ret;
+        //return this._callSuper("getFormData");
     },
 
     /**
@@ -63,3 +64,26 @@ _MF_CLS(_PFX_XHR + "_AjaxRequestLevel2", myfaces._impl.xhrCore._AjaxRequest, {
         return new XMLHttpRequest();
     }
 });
+
+/**
+ * for normal requests we basically use
+ * only the xhr level2 object but
+ */
+_MF_CLS(_PFX_XHR + "_AjaxRequestLevel2", myfaces._impl.xhrCore._AjaxRequest, {
+
+    _sourceForm:null,
+
+    constructor_:function (arguments) {
+        this._callSuper("constructor_", arguments);
+        //TODO xhr level2 can deal with real props
+
+    },
+
+    _getTransport:function () {
+        return new XMLHttpRequest();
+    }
+});
+
+
+
+

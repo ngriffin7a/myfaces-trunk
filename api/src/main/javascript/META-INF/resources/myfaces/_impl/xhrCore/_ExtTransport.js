@@ -132,24 +132,6 @@ _MF_SINGLTN(_PFX_XHR+"_ExtTransports" , myfaces._impl.xhrCore._Transports,
         (new (this._getMultipartReqClass(context))(args)).send();
     },
 
-    /**
-     * iframe queued post
-     *
-     * mapped options already have the exec and view properly in place
-     * myfaces specifics can be found under mappedOptions.myFaces
-     * @param {Node} source the source of this call
-     * @param {Node} sourceForm the html form which is the source of this call
-     * @param {Object} context (Map) the internal pass through context
-     * @param {Object} passThrgh (Map) values to be passed through
-     **/
-    multipartQueuedPost : function(source, sourceForm, context, passThrgh) {
-        context._mfInternal.xhrOp = "multipartQueuedPost";
-        var args = this._getArguments(source, sourceForm, context, passThrgh);
-        // note in get the timeout is not working delay however is and queue size as well
-        // since there are no cross browser ways to resolve a timeout on xhr level
-        this._q.enqueue(
-                new (this._getMultipartReqClass(context))(args));
-    },
 
     /**
      * iframe get without queueing
