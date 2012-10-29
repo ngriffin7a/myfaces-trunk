@@ -206,9 +206,10 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
                 _Lang.byId(options.myfaces.form) :
                 this._getForm(elem, event);
 
-        /*preparations for jsf 2.2 windowid handling*/
-        var windowId = this.getClientWindow(form);
-        (windowId) ? passThrgh[this.P_WINDOW_ID] = windowId : null;
+        /**
+        * JSF2.2 client window must be part of the issuing form so it is encoded
+        * automatically in the request
+        */
 
         /**
          * binding contract the javax.faces.source must be set
