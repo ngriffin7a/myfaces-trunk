@@ -27,6 +27,8 @@ import javax.faces.component.UIInput;
 /**
  * @author Werner Punz (latest modification by $Author$)
  * @version $Revision$ $Date$
+ *
+ * TODO add missing attributes
  */
 @JSFComponent
 (name = "h:inputFile",
@@ -71,5 +73,6 @@ abstract class _InputFile extends UIInput implements _AccesskeyProperty,
      */
     @JSFProperty
     public abstract String getAutocomplete();
+
 
 }
