@@ -50,6 +50,7 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
 
     P_PARTIAL_SOURCE:"javax.faces.source",
     P_VIEWSTATE:"javax.faces.ViewState",
+    P_CLIENTWINDOW: "javax.faces.ClientWindow",
     P_AJAX:"javax.faces.partial.ajax",
     P_EXECUTE:"javax.faces.partial.execute",
     P_RENDER:"javax.faces.partial.render",
@@ -210,7 +211,20 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
         * JSF2.2 client window must be part of the issuing form so it is encoded
         * automatically in the request
         */
-
+        //we set the client window before encoding by a call to jsf.getClientWindow
+        var clientWindow = jsf.getClientWindow(form);
+        //in case someone decorates the getClientWindow we reset the value from
+        //what we are getting
+        if('undefined' != typeof clientWindow && null != clientWindow) {
+            var formElem = _Dom.getNamedElementFromForm(form, this.P_CLIENTWINDOW);
+            if(formElem) {
+                //we let the encoding do the
+                //job so that we do not get double values
+                formElem.value = clientWindow;
+            } else {
+                passThrgh[this.P_CLIENTWINDOW] = jsf.getClientWindow(form);
+            }
+        }
         /**
          * binding contract the javax.faces.source must be set
          */
