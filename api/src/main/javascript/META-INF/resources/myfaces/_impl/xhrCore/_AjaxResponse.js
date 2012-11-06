@@ -186,14 +186,14 @@ _MF_SINGLTN(_PFX_XHR + "_AjaxResponse", _MF_OBJECT, /** @lends myfaces._impl.xhr
         // view state is updated.
 
         //set the viewstates of all outer forms parents of our updated elements
-        var _T = this;
+
         _Lang.arrForEach(mfInternal._updateForms, function (elem) {
-            _T._setVSTCWForm(context, elem, mfInternal.appliedViewState, this.P_VIEWSTATE);
+            this._setVSTCWForm(context, elem, mfInternal.appliedViewState, this.P_VIEWSTATE);
         }, 0, this);
 
         //set the viewstate of all forms within our updated elements
         _Lang.arrForEach(mfInternal._updateElems, function (elem) {
-            _T._setVSTCWInnerForms(context, elem, mfInternal.appliedViewState, this.P_VIEWSTATE);
+            this._setVSTCWInnerForms(context, elem, mfInternal.appliedViewState, this.P_VIEWSTATE);
         }, 0, this);
     },
 
@@ -213,14 +213,14 @@ _MF_SINGLTN(_PFX_XHR + "_AjaxResponse", _MF_OBJECT, /** @lends myfaces._impl.xhr
             return;
         }
         //set the client window of all outer form of updated elements
-        var _T = this;
+
         _Lang.arrForEach(mfInternal._updateForms, function (elem) {
-            _T._setVSTCWForm(context, elem, mfInternal.appliedClientWindow, this.P_CLIENTWINDOW);
+            this._setVSTCWForm(context, elem, mfInternal.appliedClientWindow, this.P_CLIENTWINDOW);
         }, 0, this);
 
         //set the client window of all forms within our updated elements
         _Lang.arrForEach(mfInternal._updateElems, function (elem) {
-            _T._setVSTCWInnerForms(context, elem, mfInternal.appliedClientWindow, this.P_CLIENTWINDOW);
+            this._setVSTCWInnerForms(context, elem, mfInternal.appliedClientWindow, this.P_CLIENTWINDOW);
         }, 0, this);
     },
 
