@@ -21,14 +21,13 @@
     <parent>
     <artifactId>myfaces-core-module</artifactId>
     <groupId>org.apache.myfaces.core</groupId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.2.0-SNAPSHOT</version>
   </parent>
     <groupId>org.apache.myfaces.example.clientWindow</groupId>
     <artifactId>client-window-example</artifactId>
     <packaging>war</packaging>
-    <version>2.0.0-SNAPSHOT</version>
     <name>client-window-example</name>
-    <description>A custom project used to debug MyFaces Core 2.0</description>
+    <description>A custom project used to debug MyFaces Core 2.2</description>
     <url>http://www.myorganization.org</url>
 
     <!-- Instructions 
