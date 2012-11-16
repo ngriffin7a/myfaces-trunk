@@ -553,25 +553,9 @@
                     <createSourcesJar>true</createSourcesJar>
                     <artifactSet>
                         <includes>
-                            <include>org.apache.myfaces.core.internal:myfaces-impl-ee6</include>
                             <include>org.apache.myfaces.core.internal:myfaces-impl-shared</include>
                         </includes>
                     </artifactSet>
-                    <filters>
-                        <filter>
-                            <artifact>org.apache.myfaces.core.internal:myfaces-impl-ee6</artifact>
-                            <includes>
-                                <include>META-INF/services/**</include>
-                                <include>org/apache/myfaces/**</include>
-                            </includes>
-                            <excludes>
-                                <exclude>META-INF/LICENSE</exclude>
-                                <exclude>META-INF/NOTICE</exclude>
-                                <exclude>META-INF/DEPENDENCIES</exclude>
-                                <exclude>META-INF/MANIFEST.MF</exclude>
-                            </excludes>
-                        </filter>
-                    </filters>
                 </configuration>
             </plugin>
 
@@ -1021,13 +1005,6 @@
             <groupId>org.apache.myfaces.core.internal</groupId>
             <artifactId>myfaces-impl-shared</artifactId>
             <optional>true</optional> 
-        </dependency>
-
-        <!-- maven-shade-plugin will exclude this dependency automatically -->
-        <dependency>
-            <groupId>org.apache.myfaces.core.internal</groupId>
-            <artifactId>myfaces-impl-ee6</artifactId>
-            <optional>true</optional> <!-- optional does not completely work in dependencyManagement (MNG-1630) -->
         </dependency>
 
         <!-- Servlet 3.0 by default. Use the -Pee5 compile for servlet-2.5 -->
