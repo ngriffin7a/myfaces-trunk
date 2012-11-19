@@ -260,7 +260,7 @@ class ServerSideStateCacheImpl extends StateCache<Object, Object>
     {
       if (state != null)
       {
-          return getKeyFactory(facesContext).decode(state);
+          return getKeyFactory(facesContext).decode((String) state);
       }
       return null;
     }

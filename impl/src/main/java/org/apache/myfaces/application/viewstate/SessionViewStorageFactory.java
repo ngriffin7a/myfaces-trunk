@@ -24,18 +24,17 @@ import javax.faces.context.FacesContext;
  *
  * @param <T>
  * @param <K>
- * @param <V>
  */
-abstract class SessionViewStorageFactory<T extends KeyFactory<K, V>, K, V>
+abstract class SessionViewStorageFactory<T extends KeyFactory<K>, K>
 {
-    private KeyFactory<K, V> keyFactory;
+    private KeyFactory<K> keyFactory;
 
-    public SessionViewStorageFactory(KeyFactory<K, V> keyFactory)
+    public SessionViewStorageFactory(KeyFactory<K> keyFactory)
     {
         this.keyFactory = keyFactory;
     }
 
-    public KeyFactory<K, V> getKeyFactory()
+    public KeyFactory<K> getKeyFactory()
     {
         return keyFactory;
     }
