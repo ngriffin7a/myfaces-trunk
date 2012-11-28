@@ -30,21 +30,6 @@ if (_MF_SINGLTN) {
             return (elemForm) ? this.byId(elemForm) : null;
         },
 
-        isMultipartCandidate:function (executes) {
-            if (this._Lang.isString(executes)) {
-                executes = this._Lang.strToArray(executes, /\s+/);
-            }
-
-            for (var cnt = 0, len = executes.length; cnt < len ; cnt ++) {
-                var element = this.byId(executes[cnt]);
-                var inputs = this.findByTagName(element, "input", true);
-                for (var cnt2 = 0, len2 = inputs.length; cnt2 < len2 ; cnt2++) {
-                    if (this.getAttribute(inputs[cnt2], "type") == "file") return true;
-                }
-            }
-            return false;
-        },
-
         getNamedElementFromForm: function(form, elementId) {
             return form[elementId];
         }

@@ -31,8 +31,8 @@ _MF_CLS(_PFX_XHR + "_MultipartAjaxRequestLevel2", myfaces._impl.xhrCore._AjaxReq
 
     getFormData:function () {
         var ret;
-
-        if (this._context._mfInternal.xhrOp) {
+        //in case of a multipart form post we savely can use the FormData object
+        if (this._context._mfInternal.xhrOp === "multipartQueuedPost") {
             ret = new FormData(this._sourceForm);
             this._AJAXUTIL.appendIssuingItem(this._source, ret);
         } else {
@@ -41,7 +41,6 @@ _MF_CLS(_PFX_XHR + "_MultipartAjaxRequestLevel2", myfaces._impl.xhrCore._AjaxReq
             this._AJAXUTIL.appendIssuingItem(this._source, ret);
         }
         return ret;
-        //return this._callSuper("getFormData");
     },
 
     /**

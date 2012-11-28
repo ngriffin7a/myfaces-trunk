@@ -122,12 +122,16 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
             finalScripts = [],
             execScrpt = function(item) {
                 var tagName = item.tagName;
-                var itemType = item.type || "";
-                if(tagName && _Lang.equalsIgnoreCase(tagName, "script") &&
-                        (itemType === "" || _Lang.equalsIgnoreCase(itemType,"text/javascript") ||
-                         _Lang.equalsIgnoreCase(itemType,"javascript") ||
-                         _Lang.equalsIgnoreCase(itemType,"text/ecmascript") ||
-                         _Lang.equalsIgnoreCase(itemType,"ecmascript"))) {
+                var type = item.type || "";
+                //script type javascript has to be handled by eval, other types
+                //must be handled by the browser
+                if (tagName && _Lang.equalsIgnoreCase(tagName, "script") &&
+                        (type === "" ||
+                        _Lang.equalsIgnoreCase(type,"text/javascript") ||
+                        _Lang.equalsIgnoreCase(type,"javascript") ||
+                        _Lang.equalsIgnoreCase(type,"text/ecmascript") ||
+                        _Lang.equalsIgnoreCase(type,"ecmascript"))) {
+
                     var src = item.getAttribute('src');
                     if ('undefined' != typeof src
                             && null != src
@@ -1219,8 +1223,26 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
         return true;
     },
 
-    isMultipartCandidate: function(/*executes*/) {
-        //implementation in the experimental part
+    /**
+     * jsf2.2
+     * checks if there is a fileupload element within
+     * the executes list
+     *
+     * @param executes the executes list
+     * @return {Boolean} true if there is a fileupload element
+     */
+    isMultipartCandidate:function (executes) {
+        if (this._Lang.isString(executes)) {
+            executes = this._Lang.strToArray(executes, /\s+/);
+        }
+
+        for (var cnt = 0, len = executes.length; cnt < len ; cnt ++) {
+            var element = this.byId(executes[cnt]);
+            var inputs = this.findByTagName(element, "input", true);
+            for (var cnt2 = 0, len2 = inputs.length; cnt2 < len2 ; cnt2++) {
+                if (this.getAttribute(inputs[cnt2], "type") == "file") return true;
+            }
+        }
         return false;
     },
 

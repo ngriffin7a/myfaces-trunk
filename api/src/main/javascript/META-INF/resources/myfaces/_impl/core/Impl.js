@@ -342,10 +342,22 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
                 _Dom = this._Dom;
 
         var transportAutoSelection = getConfig(context, "transportAutoSelection", true);
-        var isMultipart = (transportAutoSelection && _Dom.getAttribute(form, "enctype") == "multipart/form-data") ?
+        /*var isMultipart = (transportAutoSelection && _Dom.getAttribute(form, "enctype") == "multipart/form-data") ?
                 _Dom.isMultipartCandidate((!getConfig(context, "pps",false))? form : passThrgh[this.P_EXECUTE]) :
                 false;
-
+         **/
+        if(!transportAutoSelection) {
+            return getConfig(context, "transportType", "xhrQueuedPost");
+        }
+        var multiPartCandidate = _Dom.isMultipartCandidate((!getConfig(context, "pps",false)) ?
+                form : passThrgh[this.P_EXECUTE]);
+        var multipartForm =  (_Dom.getAttribute(form, "enctype") || "").toLowerCase() == "multipart/form-data";
+        //spec section jsdoc, if we have a multipart candidate in our execute (aka fileupload)
+        //and the form is not multipart then we have to raise an error
+        if(multiPartCandidate && ! multipartForm) {
+            throw _Lang.makeException(new Error(), null, null, this._nameSpace, "_getForm", "No multipart form");
+        }
+        var isMultipart = multiPartCandidate && multipartForm;
         /**
          * multiple transports upcoming jsf 2.2 feature currently allowed
          * default (no value) xhrQueuedPost
