@@ -44,7 +44,7 @@ public class ThreadsafeXorShiftRandom extends XorShiftRandom
         super(0);
     }
 
-    private static final ThreadLocal<XorShiftRandom> random = new ThreadLocal<XorShiftRandom>()
+    private static final ThreadLocal<XorShiftRandom> randomThreadLocal = new ThreadLocal<XorShiftRandom>()
     {
         @Override
         protected XorShiftRandom initialValue()
@@ -61,6 +61,6 @@ public class ThreadsafeXorShiftRandom extends XorShiftRandom
     @Override
     public long random()
     {
-        return random.get().random();
+        return randomThreadLocal.get().random();
     }
 }
