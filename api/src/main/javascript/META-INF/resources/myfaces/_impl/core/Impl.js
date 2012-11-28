@@ -355,7 +355,7 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
         //spec section jsdoc, if we have a multipart candidate in our execute (aka fileupload)
         //and the form is not multipart then we have to raise an error
         if(multiPartCandidate && ! multipartForm) {
-            throw _Lang.makeException(new Error(), null, null, this._nameSpace, "_getForm", "No multipart form");
+            throw _Lang.makeException(new Error(), null, null, this._nameSpace, "_getTransportType",  _Lang.getMessage("ERR_NO_MULTIPART_FORM", "No Multipart form", form.id));
         }
         var isMultipart = multiPartCandidate && multipartForm;
         /**
