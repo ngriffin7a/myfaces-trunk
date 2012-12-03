@@ -50,7 +50,7 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
 
     P_PARTIAL_SOURCE:"javax.faces.source",
     P_VIEWSTATE:"javax.faces.ViewState",
-    P_CLIENTWINDOW: "javax.faces.ClientWindow",
+    P_CLIENTWINDOW:"javax.faces.ClientWindow",
     P_AJAX:"javax.faces.partial.ajax",
     P_EXECUTE:"javax.faces.partial.execute",
     P_RENDER:"javax.faces.partial.render",
@@ -193,8 +193,12 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
             onerror:options.onerror,
 
             //TODO move the myfaces part into the _mfInternal part
-            myfaces:options.myfaces
+            myfaces:options.myfaces,
+            _mfInternal:{}
         };
+        //additional meta information to speed things up, note internal non jsf
+        //pass through options are stored under _mfInternal in the context
+        var mfInternal = context._mfInternal;
 
         /**
          * fetch the parent form
@@ -208,23 +212,33 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
                 this._getForm(elem, event);
 
         /**
-        * JSF2.2 client window must be part of the issuing form so it is encoded
-        * automatically in the request
-        */
+         * JSF2.2 client window must be part of the issuing form so it is encoded
+         * automatically in the request
+         */
         //we set the client window before encoding by a call to jsf.getClientWindow
         var clientWindow = jsf.getClientWindow(form);
         //in case someone decorates the getClientWindow we reset the value from
         //what we are getting
-        if('undefined' != typeof clientWindow && null != clientWindow) {
+        if ('undefined' != typeof clientWindow && null != clientWindow) {
             var formElem = _Dom.getNamedElementFromForm(form, this.P_CLIENTWINDOW);
-            if(formElem) {
-                //we let the encoding do the
+            if (formElem) {
+                //we store the value for later processing during the ajax phase
                 //job so that we do not get double values
-                formElem.value = clientWindow;
+                context._mfInternal._clientWindow = jsf.getClientWindow(form);
             } else {
                 passThrgh[this.P_CLIENTWINDOW] = jsf.getClientWindow(form);
             }
+        } /*  spec proposal
+        else {
+            var formElem = _Dom.getNamedElementFromForm(form, this.P_CLIENTWINDOW);
+            if (formElem) {
+                context._mfInternal._clientWindow = "undefined";
+            } else {
+                passThrgh[this.P_CLIENTWINDOW] = "undefined";
+            }
         }
+        */
+
         /**
          * binding contract the javax.faces.source must be set
          */
@@ -264,11 +278,6 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
          *
          */
         var transportType = this._getTransportType(context, passThrgh, form);
-
-        //additional meta information to speed things up, note internal non jsf
-        //pass through options are stored under _mfInternal in the context
-        context._mfInternal = {};
-        var mfInternal = context._mfInternal;
 
         mfInternal["_mfSourceFormId"] = form.id;
         mfInternal["_mfSourceControlId"] = elementId;
@@ -343,19 +352,19 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
 
         var transportAutoSelection = getConfig(context, "transportAutoSelection", true);
         /*var isMultipart = (transportAutoSelection && _Dom.getAttribute(form, "enctype") == "multipart/form-data") ?
-                _Dom.isMultipartCandidate((!getConfig(context, "pps",false))? form : passThrgh[this.P_EXECUTE]) :
-                false;
+         _Dom.isMultipartCandidate((!getConfig(context, "pps",false))? form : passThrgh[this.P_EXECUTE]) :
+         false;
          **/
-        if(!transportAutoSelection) {
+        if (!transportAutoSelection) {
             return getConfig(context, "transportType", "xhrQueuedPost");
         }
-        var multiPartCandidate = _Dom.isMultipartCandidate((!getConfig(context, "pps",false)) ?
+        var multiPartCandidate = _Dom.isMultipartCandidate((!getConfig(context, "pps", false)) ?
                 form : passThrgh[this.P_EXECUTE]);
-        var multipartForm =  (_Dom.getAttribute(form, "enctype") || "").toLowerCase() == "multipart/form-data";
+        var multipartForm = (_Dom.getAttribute(form, "enctype") || "").toLowerCase() == "multipart/form-data";
         //spec section jsdoc, if we have a multipart candidate in our execute (aka fileupload)
         //and the form is not multipart then we have to raise an error
-        if(multiPartCandidate && ! multipartForm) {
-            throw _Lang.makeException(new Error(), null, null, this._nameSpace, "_getTransportType",  _Lang.getMessage("ERR_NO_MULTIPART_FORM", "No Multipart form", form.id));
+        if (multiPartCandidate && !multipartForm) {
+            throw _Lang.makeException(new Error(), null, null, this._nameSpace, "_getTransportType", _Lang.getMessage("ERR_NO_MULTIPART_FORM", "No Multipart form", form.id));
         }
         var isMultipart = multiPartCandidate && multipartForm;
         /**
@@ -412,8 +421,8 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
 
         if (none) {
             //in case of none nothing is returned
-            if('undefined' != typeof passThrgh.target) {
-               delete passThrgh.target;
+            if ('undefined' != typeof passThrgh.target) {
+                delete passThrgh.target;
             }
             return passThrgh;
         }
