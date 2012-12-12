@@ -387,6 +387,35 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
         }
     },
 
+    isFunctionNative: function(func) {
+        return /^\s*function[^{]+{\s*\[native code\]\s*}\s*$/.test(String(func));
+    },
+
+    detectAttributes: function(element) {
+        //test if 'hasAttribute' method is present and its native code is intact
+        //for example, Prototype can add its own implementation if missing
+        if (element.hasAttribute && this.isFunctionNative(element.hasAttribute)) {
+            return function(name) {
+                return element.hasAttribute(name);
+            }
+        } else {
+            try {
+                //when accessing .getAttribute method without arguments does not throw an error then the method is not available
+                element.getAttribute;
+
+                var html = element.outerHTML;
+                var startTag = html.match(/^<[^>]*>/)[0];
+                return function(name) {
+                    return startTag.indexOf(name + '=') > -1;
+                }
+            } catch (ex) {
+                return function(name) {
+                    return element.getAttribute(name);
+                }
+            }
+        }
+    },
+
     /**
      * copy all attributes from one element to another - except id
      * @param target element to copy attributes to
@@ -547,6 +576,7 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
     },
 
     setCaretPosition:function (ctrl, pos) {
+
         if (ctrl.createTextRange) {
             var range = ctrl.createTextRange();
             range.collapse(true);
@@ -624,9 +654,6 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
             this._removeNode(item, false);
             return null;
         }
-        // and remove the old item, in case of an empty newtag and do nothing else
-        this._removeNode(item, false);
-        return null;
     },
 
     isFunctionNative: function(func) {
