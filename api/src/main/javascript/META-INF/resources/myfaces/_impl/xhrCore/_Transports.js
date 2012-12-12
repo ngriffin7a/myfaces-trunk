@@ -169,11 +169,11 @@ _MF_SINGLTN(_PFX_XHR + "_Transports", _MF_OBJECT,
      * @param context the context which is passed down
      */
     _getMultipartReqClass: function(context) {
-        if (this._RT.getXHRLvl() >= 2) {
+       if (this._RT.getXHRLvl() >= 2) {
             return myfaces._impl.xhrCore._MultipartAjaxRequestLevel2;
-        } else {
+       } else {
             return myfaces._impl.xhrCore._IFrameRequest;
-        }
+       }
     },
 
 

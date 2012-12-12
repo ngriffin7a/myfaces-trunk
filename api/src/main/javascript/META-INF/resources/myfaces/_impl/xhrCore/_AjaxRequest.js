@@ -173,24 +173,37 @@ _MF_CLS(_PFX_XHR + "_AjaxRequest", _MF_OBJECT, /** @lends myfaces._impl.xhrCore.
             e = (e._mfInternal) ? e : this._Lang.makeException(new Error(), "sendError", "sendError", this._nameSpace, "send", e.message);
             this._stdErrorHandler(this._xhr, this._context, e);
         } finally {
-            this._restoreClientWindowId();
+            //no finally possible since the iframe uses real asynchronousity
         }
     },
 
     _applyClientWindowId:function () {
-
+        var clientWindow = this._Dom.getNamedElementFromForm(this._sourceForm, "javax.faces.ClientWindow");
+        //pass through if exists already set by _Impl
         if ('undefined' != typeof this._context._mfInternal._clientWindow) {
-            var clientWindow = this._Dom.getNamedElementFromForm(this._sourceForm, "javax.faces.ClientWindow");
             this._context._mfInternal._clientWindowOld = clientWindow.value;
             clientWindow.value = this._context._mfInternal._clientWindow;
+        } else {
+            if(clientWindow) {
+                this._context._mfInternal._clientWindowDisabled = !! clientWindow.disabled;
+                clientWindow.disabled = true;
+            }
         }
     },
 
     _restoreClientWindowId:function () {
         //we have to reset the client window back to its original state
+
+        var clientWindow = this._Dom.getNamedElementFromForm(this._sourceForm, "javax.faces.ClientWindow");
+        if(!clientWindow) {
+            return;
+        }
         if ('undefined' != typeof this._context._mfInternal._clientWindowOld) {
-            var clientWindow = this._Dom.getNamedElementFromForm(this._sourceForm, "javax.faces.ClientWindow");
             clientWindow.value =  this._context._mfInternal._clientWindow;
+        }
+        if('undefined' != typeof this._context._mfInternal._clientWindowDisabled) {
+            //we reset it to the old value
+            clientWindow.disabled = this._context._mfInternal._clientWindowDisabled;
         }
     },
 
@@ -210,7 +223,7 @@ _MF_CLS(_PFX_XHR + "_AjaxRequest", _MF_OBJECT, /** @lends myfaces._impl.xhrCore.
     },
 
     onsuccess:function (/*evt*/) {
-
+        this._restoreClientWindowId();
         var context = this._context;
         var xhr = this._xhr;
         try {
@@ -232,6 +245,7 @@ _MF_CLS(_PFX_XHR + "_AjaxRequest", _MF_OBJECT, /** @lends myfaces._impl.xhrCore.
     },
 
     onerror:function (/*evt*/) {
+        this._restoreClientWindowId();
         //TODO improve the error code detection here regarding server errors etc...
         //and push it into our general error handling subframework
         var context = this._context;
@@ -271,6 +285,7 @@ _MF_CLS(_PFX_XHR + "_AjaxRequest", _MF_OBJECT, /** @lends myfaces._impl.xhrCore.
 
     ontimeout:function (/*evt*/) {
         try {
+            this._restoreClientWindowId();
             //we issue an event not an error here before killing the xhr process
             this._sendEvent("TIMEOUT_EVENT");
             //timeout done we process the next in the queue

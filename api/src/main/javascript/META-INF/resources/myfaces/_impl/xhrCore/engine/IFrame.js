@@ -24,17 +24,16 @@
  * wrapper for an iframe transport object with all its differences
  * it emulates the xhr level2 api
  */
-_MF_CLS(_PFX_XHR+"engine.IFrame", myfaces._impl.xhrCore.engine.BaseRequest,
+_MF_CLS(_PFX_XHR + "engine.IFrame", myfaces._impl.xhrCore.engine.BaseRequest,
         /** @lends myfaces._impl.xhrCore.engine.IFrame.prototype */
         {
 
-
+            _finalized: false,
 
             /*the target frame responsible for the communication*/
             _frame: null,
             //_requestHeader: null,
             _aborted: false,
-
 
             CLS_NAME: "myfaces._impl.xhrCore._IFrameRequest",
             _FRAME_ID: "_mf_comm_frm",
@@ -45,7 +44,7 @@ _MF_CLS(_PFX_XHR+"engine.IFrame", myfaces._impl.xhrCore.engine.BaseRequest,
              *
              * @param arguments
              */
-            constructor_: function(arguments) {
+            constructor_: function (arguments) {
                 //we fetch in the standard arguments
 
                 this._callSuper("constructor", arguments);
@@ -57,13 +56,14 @@ _MF_CLS(_PFX_XHR+"engine.IFrame", myfaces._impl.xhrCore.engine.BaseRequest,
 
                 this._Lang.applyArgs(this, arguments);
                 this.readyState = this._XHRConst.READY_STATE_UNSENT;
+                this._startTimeout();
             },
 
-            setRequestHeader: function(key, value) {
+            setRequestHeader: function (key, value) {
                 //this._requestHeader[key] = value;
             },
 
-            open: function(method, url, async) {
+            open: function (method, url, async) {
 
                 this.readyState = this._XHRConst.READY_STATE_OPENED;
 
@@ -94,7 +94,7 @@ _MF_CLS(_PFX_XHR+"engine.IFrame", myfaces._impl.xhrCore.engine.BaseRequest,
                 this.onprogress(myevt);
             },
 
-            send: function(formData) {
+            send: function (formData) {
 
                 var myevt = {};
                 this._addProgressAttributes(myevt, 20, 100);
@@ -102,11 +102,10 @@ _MF_CLS(_PFX_XHR+"engine.IFrame", myfaces._impl.xhrCore.engine.BaseRequest,
                 this.onprogress(myevt);
 
                 var formDataForm = formData.form,
-                    oldTarget   = formDataForm.target,
-                    oldMethod   = formDataForm.method,
-                    oldAction   = formDataForm.action;
+                        oldTarget = formDataForm.target,
+                        oldMethod = formDataForm.method,
+                        oldAction = formDataForm.action;
 
-                
                 try {
                     //_t._initAjaxParams();
                     //for (var key in this._requestHeader) {
@@ -127,17 +126,19 @@ _MF_CLS(_PFX_XHR+"engine.IFrame", myfaces._impl.xhrCore.engine.BaseRequest,
                     formDataForm.method = oldMethod;
 
                     formData._finalize();
+                    //alert("finalizing");
+                    this._finalized = true;
                 }
             },
 
             /*we can implement it, but it will work only on browsers
              * which have asynchronous iframe loading*/
-            abort: function() {
+            abort: function () {
                 this._aborted = true;
                 this.onabort({});
             },
 
-            _addProgressAttributes: function(evt, percent, total) {
+            _addProgressAttributes: function (evt, percent, total) {
                 //http://www.w3.org/TR/progress-events/#progressevent
                 evt.lengthComputable = true;
                 evt.loaded = percent;
@@ -145,10 +146,22 @@ _MF_CLS(_PFX_XHR+"engine.IFrame", myfaces._impl.xhrCore.engine.BaseRequest,
 
             },
 
-            _callback: function() {
-
-                //aborted no further processing
+            _callback: function () {
+                //------------------------------------
+                // we are asynchronous which means we
+                // have to check wether our code
+                // is finalized or not
+                //------------------------------------
                 if (this._aborted) return;
+                if (this._timeoutTimer) {
+                    clearTimeout(this._timeoutTimer);
+                }
+                if (!this._finalized) {
+                    setTimeout(this._Lang.hitch(this, this._callback), 10);
+                    return;
+                }
+                //aborted no further processing
+
                 try {
                     var myevt = {};
 
@@ -182,21 +195,21 @@ _MF_CLS(_PFX_XHR+"engine.IFrame", myfaces._impl.xhrCore.engine.BaseRequest,
             /**
              * returns the frame text in a browser independend manner
              */
-            _getFrameDocument: function() {
+            _getFrameDocument: function () {
 
                 //we cover various browsers here, because almost all browsers keep the document in a different
                 //position
                 return this._frame.contentWindow.document || this._frame.contentDocument || this._frame.document;
             },
 
-            _getFrameText: function() {
+            _getFrameText: function () {
                 var framedoc = this._getFrameDocument();
                 //also ie keeps the body in framedoc.body the rest in documentElement
                 var body = framedoc.body || framedoc.documentElement;
                 return  body.innerHTML;
             },
 
-            _clearFrame: function() {
+            _clearFrame: function () {
 
                 var framedoc = this._getFrameDocument();
                 var body = framedoc.documentElement || framedoc.body;
@@ -213,14 +226,14 @@ _MF_CLS(_PFX_XHR+"engine.IFrame", myfaces._impl.xhrCore.engine.BaseRequest,
             /**
              * returns the processed xml from the frame
              */
-            _getFrameXml: function() {
+            _getFrameXml: function () {
                 var framedoc = this._getFrameDocument();
                 //same situation here, the xml is hosted either in xmlDocument or
                 //is located directly under the frame document
                 return  framedoc.XMLDocument || framedoc;
             },
 
-            _createTransportFrame: function() {
+            _createTransportFrame: function () {
 
                 var _FRM_ID = this._FRAME_ID;
                 var frame = document.getElementById(_FRM_ID);
@@ -268,10 +281,10 @@ _MF_CLS(_PFX_XHR+"engine.IFrame", myfaces._impl.xhrCore.engine.BaseRequest,
                 return document.getElementById(_FRM_ID);
             },
 
-            _startTimeout: function() {
+            _startTimeout: function () {
 
                 if (this.timeout == 0) return;
-                this._timeoutTimer = setTimeout(this._Lang.hitch(this, function() {
+                this._timeoutTimer = setTimeout(this._Lang.hitch(this, function () {
                     if (this._xhrObject.readyState != this._XHRConst.READY_STATE_DONE) {
 
                         this._aborted = true;
