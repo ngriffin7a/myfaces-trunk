@@ -629,6 +629,7 @@
 
 
     <profiles>
+
         <!--
           - Whenever the full website is generated, the command
           -   mvn -Pgenerate-site -Pgenerate-tlddoc site
@@ -959,19 +960,20 @@
             </dependencies>
 
             <build>
-              <plugins>
+                <plugins>
                   <plugin>
-                      <groupId>org.apache.maven.plugins</groupId>
-                      <artifactId>maven-compiler-plugin</artifactId>
-                      <configuration>
-                          <excludes>
-                              <exclude>src/main/java/org/apache/myfaces/ee6</exclude>
-                          </excludes>
-                      </configuration>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                      <excludes>
+                         <exclude>src/main/java/org/apache/myfaces/ee6</exclude>
+                      </excludes>
+                    </configuration>
                   </plugin>
-              </plugins>
+                </plugins>
             </build>
         </profile>
+
     </profiles>
 
     
@@ -1006,6 +1008,7 @@
             <artifactId>myfaces-impl-shared</artifactId>
             <optional>true</optional> 
         </dependency>
+
 
         <!-- Servlet 3.0 by default. Use the -Pee5 compile for servlet-2.5 -->
         <dependency>
