@@ -104,7 +104,7 @@ if (_MF_SINGLTN) {
             if ('undefined' == typeof this._isCompliantBrowser) {
                 this._isCompliantBrowser = !!((window.Range
                         && typeof Range.prototype.createContextualFragment == 'function')
-                    //createContextualFragment hints to a no quirks browser but we need more fallbacks
+                                                            //createContextualFragment hints to a no quirks browser but we need more fallbacks
                         || document.querySelectoryAll       //query selector all hints to html5 capabilities
                         || document.createTreeWalker);      //treewalker is either firefox 3.5+ or ie9 standards mode
             }
@@ -325,9 +325,9 @@ if (_MF_SINGLTN) {
                         if (!this._isTableElement(childNode)) {    //table elements cannot be deleted
                             childNode.innerHTML = "";
                         }
-                        if (b.isIE && b.isIE < 8 && 'undefined' != childNode.outerHTML)
+                        if (b.isIE && b.isIE < 8 && 'undefined' != typeof childNode.outerHTML) {
                             childNode.outerHTML = '';
-                        else {
+                        } else {
                             node.removeChild(childNode);
                         }
                         if (!b.isIEMobile) {
@@ -582,13 +582,13 @@ if (_MF_SINGLTN) {
                 this.insertFirst(evalDiv);
 
                 //we remap it into a real boolean value
-                if (window.Range
-                        && typeof Range.prototype.createContextualFragment == 'function') {
+                if (this.isDomCompliant()) {
                     this._outerHTMLCompliant(evalDiv, markup);
                 } else {
                     //will not be called placeholder for quirks class
                     this._outerHTMLNonCompliant(evalDiv, markup);
                 }
+
 
             }
 
@@ -596,7 +596,8 @@ if (_MF_SINGLTN) {
         },
 
         getNamedElementFromForm:function (form, elementName) {
-            if(this._RT.browser.isIE < 8) {
+			var browser = this._RT.browser;
+            if(browser.isIE && browser.isIE < 8) {
                 if(!form.elements) return null;
                 for(var cnt = 0, l = form.elements.length; cnt < l; cnt ++) {
                     var element = form.elements[cnt];
