@@ -21,6 +21,7 @@ package org.apache.myfaces.view.facelets.tag.jsf.core;
 import javax.faces.component.UIParameter;
 import javax.faces.component.UISelectItem;
 import javax.faces.component.UISelectItems;
+import javax.faces.component.UIViewAction;
 import javax.faces.component.UIViewParameter;
 import javax.faces.convert.DateTimeConverter;
 import javax.faces.convert.NumberConverter;
@@ -100,6 +101,8 @@ public final class CoreLibrary extends AbstractTagLibrary
         this.addTagHandler("valueChangeListener", ValueChangeListenerHandler.class);
 
         this.addTagHandler("view", ViewHandler.class);
+        
+        this.addComponent("viewAction", UIViewAction.COMPONENT_TYPE, null);
         
         this.addComponent("viewParam", UIViewParameter.COMPONENT_TYPE, null);
 

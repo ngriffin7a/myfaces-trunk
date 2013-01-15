@@ -21,6 +21,7 @@ package javax.faces.event;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.faces.FacesException;
 
 /**
  * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
@@ -88,5 +89,29 @@ public class PhaseId implements Comparable
     {
         return _name + "(" + _ordinal + ")";
     }
+    
+    /*
+     * @since 2.2
+     */
+    public String getName()
+    {
+        return this._name;
+    }
 
+    public static PhaseId phaseIdValueOf(String phase)
+    {
+        if (phase == null)
+        {
+            throw new NullPointerException("phase");
+        }
+        for (int i = 0; i < VALUES.size(); i++)
+        {
+            PhaseId phaseId = VALUES.get(i);
+            if (phaseId.getName().equals(phase))
+            {
+                return phaseId;
+            }
+        }
+        throw new FacesException("Phase "+phase+" is invalid");
+    }
 }

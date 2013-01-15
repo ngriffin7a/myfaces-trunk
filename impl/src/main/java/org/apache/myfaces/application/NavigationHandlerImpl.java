@@ -39,6 +39,7 @@ import javax.faces.application.NavigationCase;
 import javax.faces.application.ProjectStage;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIViewAction;
 import javax.faces.component.UIViewRoot;
 import javax.faces.component.visit.VisitCallback;
 import javax.faces.component.visit.VisitContext;
@@ -103,7 +104,30 @@ public class NavigationHandlerImpl
                           " toViewId =" + navigationCase.getToViewId(facesContext) +
                           " redirect=" + navigationCase.isRedirect());
             }
-            if (navigationCase.isRedirect())
+            boolean isViewActionProcessingBroadcastAndRequiresRedirect = false;
+            if (UIViewAction.isProcessingBroadcast(facesContext))
+            {
+                // f:viewAction tag always triggers a redirect to enforce execution of 
+                // the lifecycle again. Note this requires enables flash scope 
+                // keepMessages automatically, because a view action can add messages
+                // and these ones requires to be renderer afterwards.
+                facesContext.getExternalContext().getFlash().setKeepMessages(true);
+                String fromViewId = (facesContext.getViewRoot() == null) ? null :
+                    facesContext.getViewRoot().getViewId();
+                String toViewId = navigationCase.getToViewId(facesContext);
+                // A redirect is required only if the viewId changes. If the viewId
+                // does not change, section 7.4.2 says that a redirect/restart JSF
+                // lifecycle is not necessary.
+                if (fromViewId == null && toViewId != null)
+                {
+                    isViewActionProcessingBroadcastAndRequiresRedirect = true;
+                }
+                else if (fromViewId != null && !fromViewId.equals(toViewId))
+                {
+                    isViewActionProcessingBroadcastAndRequiresRedirect = true;
+                }
+            }
+            if (navigationCase.isRedirect() || isViewActionProcessingBroadcastAndRequiresRedirect)
             { 
                 //&& (!PortletUtil.isPortletRequest(facesContext)))
                 // Spec section 7.4.2 says "redirects not possible" in this case for portlets
