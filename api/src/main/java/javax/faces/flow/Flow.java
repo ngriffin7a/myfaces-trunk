@@ -16,37 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package javax.faces.context;
-
-import java.util.Map;
+package javax.faces.flow;
 
 /**
- * @author Simon Lessard (latest modification by $Author$)
- * @version $Revision$ $Date$
- * 
- * @since 2.0
+ *
+ * @TODO: Implement me!
+ * @since 2.2
  */
-public abstract class Flash implements Map<String, Object>
+public abstract class Flow
 {
-    /**
-     * @since 2.2
-     */
-    public static final String NULL_VALUE = "javax.faces.context.Flash.NULL_VALUE";
-    
-    public abstract boolean isKeepMessages();
-
-    public abstract boolean isRedirect();
-
-    public abstract void keep(String key);
-
-    public abstract void putNow(String key, Object value);
-    
-    public abstract void setKeepMessages(boolean newValue);
-    
-    public abstract void setRedirect(boolean newValue);
-    
-    public abstract void doPrePhaseActions(FacesContext context);
-    
-    public abstract void doPostPhaseActions(FacesContext context);
     
 }

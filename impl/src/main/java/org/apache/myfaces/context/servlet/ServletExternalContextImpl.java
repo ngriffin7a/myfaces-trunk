@@ -34,8 +34,10 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.faces.FacesException;
+import javax.faces.FactoryFinder;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
+import javax.faces.context.FlashFactory;
 import javax.faces.context.PartialResponseWriter;
 import javax.faces.context.PartialViewContext;
 import javax.faces.lifecycle.ClientWindow;
@@ -82,6 +84,8 @@ public final class ServletExternalContextImpl extends ServletExternalContextImpl
     private HttpServletResponse _httpServletResponse;
     private String _requestServletPath;
     private String _requestPathInfo;
+    private FlashFactory _flashFactory;
+    private Flash _flash;
 
     public ServletExternalContextImpl(final ServletContext servletContext, 
             final ServletRequest servletRequest,
@@ -109,6 +113,15 @@ public final class ServletExternalContextImpl extends ServletExternalContextImpl
             _requestServletPath = _httpServletRequest.getServletPath();
             _requestPathInfo = _httpServletRequest.getPathInfo();
         }
+    }
+    
+    public ServletExternalContextImpl(final ServletContext servletContext, 
+            final ServletRequest servletRequest,
+            final ServletResponse servletResponse,
+            final FlashFactory flashFactory)
+    {
+        this(servletContext, servletRequest, servletResponse);
+        _flashFactory = flashFactory;
     }
 
     public void release()
@@ -887,7 +900,29 @@ public final class ServletExternalContextImpl extends ServletExternalContextImpl
      */
     public Flash getFlash()
     {
-        return FlashImpl.getCurrentInstance(this);
+        if (_flash == null)
+        {
+            if (_flashFactory == null)
+            {
+                _flashFactory = (FlashFactory) FactoryFinder.getFactory(
+                    FactoryFinder.FLASH_FACTORY);
+                if (_flashFactory == null)
+                {
+                    //Fallback to servlet default flash
+                    _flash = FlashImpl.getCurrentInstance(this);
+                }
+                else
+                {
+                    _flash = _flashFactory.getFlash(true);
+                }
+            }
+            else
+            {
+                _flash = _flashFactory.getFlash(true);
+            }
+        }
+        return _flash;
+        //return FlashImpl.getCurrentInstance(this);
     }
 
     @Override

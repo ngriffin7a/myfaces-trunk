@@ -16,37 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package javax.faces.context;
+package javax.faces.event;
 
-import java.util.Map;
+import javax.faces.context.Flash;
 
 /**
- * @author Simon Lessard (latest modification by $Author$)
- * @version $Revision$ $Date$
- * 
- * @since 2.0
+ *
+ * @author Leonardo Uribe
  */
-public abstract class Flash implements Map<String, Object>
+public class PreRemoveFlashValueEvent extends SystemEvent
 {
-    /**
-     * @since 2.2
-     */
-    public static final String NULL_VALUE = "javax.faces.context.Flash.NULL_VALUE";
-    
-    public abstract boolean isKeepMessages();
 
-    public abstract boolean isRedirect();
+    public PreRemoveFlashValueEvent(String key)
+    {
+        super(key == null ? Flash.NULL_VALUE : key);
+    }
 
-    public abstract void keep(String key);
+    public String getKey()
+    {
+        return getSource().toString();
+    }
 
-    public abstract void putNow(String key, Object value);
-    
-    public abstract void setKeepMessages(boolean newValue);
-    
-    public abstract void setRedirect(boolean newValue);
-    
-    public abstract void doPrePhaseActions(FacesContext context);
-    
-    public abstract void doPostPhaseActions(FacesContext context);
-    
 }

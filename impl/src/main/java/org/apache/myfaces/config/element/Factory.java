@@ -56,4 +56,9 @@ public abstract class Factory implements Serializable
     {
         return Collections.emptyList();
     }
+    
+    public List<String> getFlashFactory()
+    {
+        return Collections.emptyList();
+    }
 }

@@ -40,6 +40,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
+import javax.faces.event.PostKeepFlashValueEvent;
+import javax.faces.event.PostPutFlashValueEvent;
+import javax.faces.event.PreClearFlashEvent;
+import javax.faces.event.PreRemoveFlashValueEvent;
 import javax.faces.lifecycle.ClientWindow;
 
 /**
@@ -138,10 +142,15 @@ public class FlashImpl extends Flash
      */
     public static Flash getCurrentInstance(ExternalContext context)
     {
+        return getCurrentInstance(context, true);
+    }
+    
+    public static Flash getCurrentInstance(ExternalContext context, boolean create)
+    {
         Map<String, Object> applicationMap = context.getApplicationMap();
         
         Flash flash = (Flash) applicationMap.get(FLASH_INSTANCE);
-        if (flash == null)
+        if (flash == null && create)
         {
             // synchronize the ApplicationMap to ensure that only
             // once instance of FlashImpl is created and stored in it.
@@ -365,6 +374,9 @@ public class FlashImpl extends Flash
         
         // put it in the render FlashMap
         _getRenderFlashMap(facesContext).put(key, value);
+        
+        facesContext.getApplication().publishEvent(facesContext,
+                PostKeepFlashValueEvent.class, key);
     }
 
     /**
@@ -495,7 +507,13 @@ public class FlashImpl extends Flash
         }
         else
         {
-            return _getFlashMapForWriting().put(key, value); 
+            Object resp = _getFlashMapForWriting().put(key, value); 
+            
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            facesContext.getApplication().publishEvent(facesContext,
+                PostPutFlashValueEvent.class, key);
+
+            return resp;
         }
     }
 
@@ -508,6 +526,11 @@ public class FlashImpl extends Flash
     public Object remove(Object key)
     {
         _checkFlashScopeDisabled();
+        
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        facesContext.getApplication().publishEvent(facesContext,
+            PreRemoveFlashValueEvent.class, key);
+        
         return _getFlashMapForWriting().remove(key);
     }
 
@@ -1012,6 +1035,10 @@ public class FlashImpl extends Flash
     {
         Map<String, Object> map = _getExecuteFlashMap(facesContext);
 
+        //JSF 2.2 invoke PreClearFlashEvent
+        facesContext.getApplication().publishEvent(facesContext, 
+            PreClearFlashEvent.class, map);
+        
         // Clear everything - note that because of naming conventions,
         // this will in fact automatically recurse through all children
         // grandchildren etc. - which is kind of a design flaw of SubKeyMap,

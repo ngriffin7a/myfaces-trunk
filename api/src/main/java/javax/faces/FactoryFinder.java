@@ -34,7 +34,9 @@ import javax.faces.component.visit.VisitContextFactory;
 import javax.faces.context.ExceptionHandlerFactory;
 import javax.faces.context.ExternalContextFactory;
 import javax.faces.context.FacesContextFactory;
+import javax.faces.context.FlashFactory;
 import javax.faces.context.PartialViewContextFactory;
+import javax.faces.flow.FlowHandlerFactory;
 import javax.faces.lifecycle.LifecycleFactory;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.view.ViewDeclarationLanguageFactory;
@@ -60,6 +62,8 @@ public final class FactoryFinder
     public static final String VIEW_DECLARATION_LANGUAGE_FACTORY = "javax.faces.view.ViewDeclarationLanguageFactory";
     public static final String VISIT_CONTEXT_FACTORY = "javax.faces.component.visit.VisitContextFactory";
     public static final String FACELET_CACHE_FACTORY = "javax.faces.view.facelets.FaceletCacheFactory";
+    public static final String FLASH_FACTORY = "javax.faces.context.FlashFactory";
+    public static final String FLOW_HANDLER_FACTORY = "javax.faces.flow.FlowHandlerFactory";
 
     /**
      * used as a monitor for itself and _factories. Maps in this map are used as monitors for themselves and the
@@ -96,6 +100,8 @@ public final class FactoryFinder
         VALID_FACTORY_NAMES.add(VIEW_DECLARATION_LANGUAGE_FACTORY);
         VALID_FACTORY_NAMES.add(VISIT_CONTEXT_FACTORY);
         VALID_FACTORY_NAMES.add(FACELET_CACHE_FACTORY);
+        VALID_FACTORY_NAMES.add(FLASH_FACTORY);
+        VALID_FACTORY_NAMES.add(FLOW_HANDLER_FACTORY);
         
         ABSTRACT_FACTORY_CLASSES.put(APPLICATION_FACTORY, ApplicationFactory.class);
         ABSTRACT_FACTORY_CLASSES.put(EXCEPTION_HANDLER_FACTORY, ExceptionHandlerFactory.class);
@@ -108,6 +114,8 @@ public final class FactoryFinder
         ABSTRACT_FACTORY_CLASSES.put(VIEW_DECLARATION_LANGUAGE_FACTORY, ViewDeclarationLanguageFactory.class);
         ABSTRACT_FACTORY_CLASSES.put(VISIT_CONTEXT_FACTORY, VisitContextFactory.class);
         ABSTRACT_FACTORY_CLASSES.put(FACELET_CACHE_FACTORY, FaceletCacheFactory.class);
+        ABSTRACT_FACTORY_CLASSES.put(FLASH_FACTORY, FlashFactory.class);
+        ABSTRACT_FACTORY_CLASSES.put(FLOW_HANDLER_FACTORY, FlowHandlerFactory.class);
         try
         {
             ClassLoader classLoader;
