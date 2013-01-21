@@ -16,34 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.myfaces.spi;
+package javax.faces;
 
-import java.util.List;
-import java.util.ServiceLoader;
+import org.w3c.dom.Document;
 
 /**
- * This class provides an interface to override SPI handling done by
- * MyFaces.
- * 
- * This is useful on environments like in OSGi, because it allows to
- * put custom code to find SPI interfaces under META-INF/services/
- * 
- * @author Leonardo Uribe
- * @since 2.0.3
  *
+ * @author Leonardo Uribe
  */
-public abstract class ServiceProviderFinder
+public abstract class ApplicationConfigurationResourceDocumentPopulator
 {
     
-    /**
-     * Gets the list of classes bound to the spiClass key, looking
-     * for entries under META-INF/services/[spiClass]
-     * 
-     * @param spiClass
-     * @return
-     */
-    public abstract List<String> getServiceProviderList(String spiClass);
-    
-    public abstract <S> ServiceLoader<S> load(Class<S> spiClass);
-    
+    public abstract void populateApplicationConfigurationResource(Document toPopulate);
 }

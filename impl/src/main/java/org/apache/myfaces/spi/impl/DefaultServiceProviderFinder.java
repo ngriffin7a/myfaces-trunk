@@ -29,6 +29,7 @@ import java.util.Enumeration;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ServiceLoader;
 import java.util.Set;
 
 import org.apache.myfaces.shared.util.ClassUtils;
@@ -153,5 +154,10 @@ public class DefaultServiceProviderFinder extends ServiceProviderFinder
         URLConnection connection = url.openConnection();
         connection.setUseCaches(false);
         return connection.getInputStream();
+    }
+    
+    public <S> ServiceLoader<S> load(Class<S> spiClass)
+    {
+        return ServiceLoader.load(spiClass);
     }
 }

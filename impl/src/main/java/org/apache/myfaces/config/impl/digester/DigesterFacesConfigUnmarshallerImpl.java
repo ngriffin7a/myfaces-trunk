@@ -29,6 +29,7 @@ import org.xml.sax.SAXException;
 import javax.faces.context.ExternalContext;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
@@ -328,4 +329,27 @@ public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshal
 
         return config;
     }
+    
+    public FacesConfig getFacesConfig(Reader r) throws IOException, SAXException
+    {
+        //InputSource is = new InputSource(in);
+        //is.setSystemId(systemId);
+
+        // Fix for http://issues.apache.org/jira/browse/MYFACES-236
+        FacesConfig config = (FacesConfig) digester.parse(r);
+
+        for (org.apache.myfaces.config.element.Application application : config.getApplications())
+        {
+            for (org.apache.myfaces.config.element.LocaleConfig localeConfig : application.getLocaleConfig())
+            {
+                if (!localeConfig.getSupportedLocales().contains(localeConfig.getDefaultLocale()))
+                {
+                    localeConfig.getSupportedLocales().add(localeConfig.getDefaultLocale());
+                }
+            }
+        }
+
+        return config;
+    }
+
 }
