@@ -43,6 +43,7 @@ import javax.faces.event.PhaseId;
 import javax.faces.event.PostValidateEvent;
 import javax.faces.event.PreValidateEvent;
 import javax.faces.model.ArrayDataModel;
+import javax.faces.model.CollectionDataModel;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.ResultDataModel;
@@ -2001,6 +2002,10 @@ public class UIData extends UIComponentBase implements NamingContainer, UniqueId
         else if (value instanceof Result)
         {
             return new ResultDataModel((Result) value);
+        }
+        else if (value instanceof Collection)
+        {
+            return new CollectionDataModel((Collection) value);
         }
         else
         {
