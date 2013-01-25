@@ -753,4 +753,25 @@ class UILeaf extends UIComponent implements Map<String, Object>
         return _attributes;
     }
 
+    @Override
+    public Map<String, Object> getPassThroughAttributes()
+    {
+        return getPassThroughAttributes(true);
+    }
+
+    @Override
+    public Map<String, Object> getPassThroughAttributes(boolean create)
+    {
+        if (create)
+        {
+            // Just return an empty map, because UILeaf cannot contain
+            // passthrough attributes.
+            return Collections.emptyMap();
+        }
+        else
+        {
+            return null;
+        }
+    }
+
 }
