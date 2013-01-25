@@ -491,4 +491,9 @@ public abstract class ExternalContextWrapper extends ExternalContext implements 
         getWrapped().setClientWindow(window);
     }
     
+    @Override
+    public String getSessionId(boolean create)
+    {
+        return getWrapped().getSessionId(create);
+    }
 }

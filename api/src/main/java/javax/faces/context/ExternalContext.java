@@ -738,6 +738,10 @@ public abstract class ExternalContext
         ctx.setSessionMaxInactiveInterval(interval);
     }
 
+    /**
+     * @since 2.2
+     * @return 
+     */
     public ClientWindow getClientWindow()
     {
         ExternalContext ctx = _MyFacesExternalContextHelper.firstInstance.get();
@@ -753,6 +757,10 @@ public abstract class ExternalContext
         return ctx.getClientWindow();
     }
     
+    /**
+     * @since 2.2
+     * @param window 
+     */
     public void setClientWindow(ClientWindow window)
     {
         // No op for now.
@@ -766,5 +774,22 @@ public abstract class ExternalContext
         
         ctx.setClientWindow(window);
         */
+    }
+    
+    /**
+     * @since 2.2
+     * @param create
+     * @return 
+     */
+    public String getSessionId(boolean create)
+    {
+        ExternalContext ctx = _MyFacesExternalContextHelper.firstInstance.get();
+        
+        if (ctx == null)
+        {
+            throw new UnsupportedOperationException();
+        }
+        
+        return ctx.getSessionId(create);
     }
 }

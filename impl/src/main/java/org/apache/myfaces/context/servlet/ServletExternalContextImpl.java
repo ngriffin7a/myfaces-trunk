@@ -147,6 +147,22 @@ public final class ServletExternalContextImpl extends ServletExternalContextImpl
         checkHttpServletRequest();
         return ((HttpServletRequest) _servletRequest).getSession(create);
     }
+    
+    @Override
+    public String getSessionId(boolean create)
+    {
+        checkHttpServletRequest();
+        HttpSession session = ((HttpServletRequest) _servletRequest).getSession(create);
+        if (session != null)
+        {
+            return session.getId();
+        }
+        else
+        {
+            return null;
+        }
+    }
+    
 
     @Override
     public Object getRequest()
