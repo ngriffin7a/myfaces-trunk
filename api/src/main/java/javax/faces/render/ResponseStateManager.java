@@ -37,6 +37,8 @@ public abstract class ResponseStateManager
     
     public static final String CLIENT_WINDOW_PARAM = "javax.faces.ClientWindow";
     public static final String CLIENT_WINDOW_URL_PARAM = "jfwid";
+    
+    public static final String NON_POSTBACK_VIEW_TOKEN_PARAM = "javax.faces.Token";
 
     public void writeState(FacesContext context, Object state) throws IOException
     {
@@ -130,4 +132,13 @@ public abstract class ResponseStateManager
         return context.getExternalContext().getRequestParameterMap().containsKey(ResponseStateManager.VIEW_STATE_PARAM);
     }
 
+    /**
+     * @since 2.2
+     * @param context
+     * @return 
+     */
+    public String getCryptographicallyStrongTokenFromSession(FacesContext context)
+    {
+        return null;
+    }
 }
