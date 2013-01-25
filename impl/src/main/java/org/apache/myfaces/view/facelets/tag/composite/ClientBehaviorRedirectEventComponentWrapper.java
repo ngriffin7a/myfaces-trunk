@@ -437,4 +437,16 @@ public class ClientBehaviorRedirectEventComponentWrapper extends UIComponent
     protected void removeFacesListener(FacesListener listener)
     {
     }
+
+    @Override
+    public Map<String, Object> getPassThroughAttributes()
+    {
+        return getWrapped().getPassThroughAttributes();
+    }
+
+    @Override
+    public Map<String, Object> getPassThroughAttributes(boolean create)
+    {
+        return getWrapped().getPassThroughAttributes(create);
+    }
 }
