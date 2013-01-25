@@ -184,7 +184,7 @@ public abstract class HtmlMessagesRendererBase
 
         while(messagesIterator.hasNext())
         {
-            writer.startElement(org.apache.myfaces.shared.renderkit.html.HTML.LI_ELEM, messages);
+            writer.startElement(org.apache.myfaces.shared.renderkit.html.HTML.LI_ELEM, null); //messages);
             
             FacesMessage facesMessage = (FacesMessage)messagesIterator.next();
             // determine style and style class
@@ -237,8 +237,8 @@ public abstract class HtmlMessagesRendererBase
         
         while(messagesIterator.hasNext())
         {
-            writer.startElement(HTML.TR_ELEM, messages);
-            writer.startElement(HTML.TD_ELEM, messages);
+            writer.startElement(HTML.TR_ELEM, null); // messages);
+            writer.startElement(HTML.TD_ELEM, null); // messages);
             
             FacesMessage facesMessage = (FacesMessage)messagesIterator.next();
             // determine style and style class

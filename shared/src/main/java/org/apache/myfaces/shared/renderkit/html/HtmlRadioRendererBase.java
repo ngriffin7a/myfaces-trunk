@@ -112,7 +112,7 @@ public class HtmlRadioRendererBase
 
         if (!pageDirectionLayout)
         {
-            writer.startElement(HTML.TR_ELEM, selectOne);
+            writer.startElement(HTML.TR_ELEM, null); // selectOne);
         }
 
         Converter converter;
@@ -190,10 +190,10 @@ public class HtmlRadioRendererBase
         {
             if (pageDirectionLayout)
             {
-                writer.startElement(HTML.TR_ELEM, selectOne);
+                writer.startElement(HTML.TR_ELEM, null); // selectOne);
             }
 
-            writer.startElement(HTML.TD_ELEM, selectOne);
+            writer.startElement(HTML.TD_ELEM, null); // selectOne);
             if (selectItem.isEscape())
             {
                 writer.writeText(selectItem.getLabel(),HTML.LABEL_ATTR);
@@ -207,16 +207,16 @@ public class HtmlRadioRendererBase
             if (pageDirectionLayout)
             {
                 writer.endElement(HTML.TR_ELEM);
-                writer.startElement(HTML.TR_ELEM, selectOne);
+                writer.startElement(HTML.TR_ELEM, null); // selectOne);
             }
-            writer.startElement(HTML.TD_ELEM, selectOne);
+            writer.startElement(HTML.TD_ELEM, null); // selectOne);
 
-            writer.startElement(HTML.TABLE_ELEM, selectOne);
+            writer.startElement(HTML.TABLE_ELEM, null); // selectOne);
             writer.writeAttribute(HTML.BORDER_ATTR, "0", null);
             
             if(!pageDirectionLayout)
             {
-                writer.startElement(HTML.TR_ELEM, selectOne);
+                writer.startElement(HTML.TR_ELEM, null); // selectOne);
             }
 
             SelectItemGroup group = (SelectItemGroup) selectItem;
@@ -265,9 +265,9 @@ public class HtmlRadioRendererBase
             writer.write("\t\t");
             if (pageDirectionLayout)
             {
-                writer.startElement(HTML.TR_ELEM, selectOne);
+                writer.startElement(HTML.TR_ELEM, null); // selectOne);
             }
-            writer.startElement(HTML.TD_ELEM, selectOne);
+            writer.startElement(HTML.TD_ELEM, null); // selectOne);
     
             boolean itemDisabled = selectItem.isDisabled();
     
