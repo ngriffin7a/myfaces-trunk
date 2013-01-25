@@ -57,6 +57,8 @@ public final class CoreLibrary extends AbstractTagLibrary
         this.addTagHandler("ajax", AjaxHandler.class);
         
         this.addTagHandler("attribute", AttributeHandler.class);
+        
+        this.addTagHandler("attributes", AttributesHandler.class);
 
         this.addConverter("convertDateTime", DateTimeConverter.CONVERTER_ID, ConvertDateTimeHandler.class);
 
@@ -73,6 +75,10 @@ public final class CoreLibrary extends AbstractTagLibrary
         this.addTagHandler("metadata", ViewMetadataHandler.class);
         
         this.addComponent("param", UIParameter.COMPONENT_TYPE, null);
+        
+        this.addTagHandler("passThroughAttribute", PassThroughAttributeHandler.class);
+        
+        this.addTagHandler("passThroughAttributes", PassThroughAttributesHandler.class);
 
         this.addTagHandler("phaseListener", PhaseListenerHandler.class);
 
