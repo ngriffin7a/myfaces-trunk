@@ -213,7 +213,8 @@ public class HtmlGridRendererBase
 
         HtmlRendererUtils.writePrettyLineSeparator(context);
         writer.startElement(
-                header ? org.apache.myfaces.shared.renderkit.html.HTML.THEAD_ELEM : HTML.TFOOT_ELEM, null); // component);
+                header ? org.apache.myfaces.shared.renderkit.html.HTML.THEAD_ELEM : HTML.TFOOT_ELEM, null);
+                // component);
         writer.startElement(HTML.TR_ELEM, null); // component);
         writer.startElement(header ? HTML.TH_ELEM : HTML.TD_ELEM, null); // component);
 
