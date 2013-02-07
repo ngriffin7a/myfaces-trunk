@@ -237,4 +237,22 @@ public abstract class FacesConfigData implements Serializable
         return Collections.emptyList();
     }
 
+    /**
+     * @since 2.2.0
+     * @return 
+     */
+    public Collection<FacesFlowDefinition> getFacesFlowDefinitions()
+    {
+        return Collections.emptyList();
+    }
+    
+    public Collection<String> getProtectedViewUrlPatterns()
+    {
+        return Collections.emptyList();
+    }
+    
+    public Collection<ContractMapping> getResourceLibraryContractMappings()
+    {
+        return Collections.emptyList();
+    }
 }

@@ -16,27 +16,42 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.myfaces.config.element;
-
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
+package org.apache.myfaces.config.impl.digester.elements;
 
 /**
- * Entry of the Collection returned by
- * {@link org.apache.myfaces.config.RuntimeConfig#getNavigationRules()}.
  *
- * @author Manfred Geiler (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * @author Leonardo Uribe
  */
-public abstract class NavigationRule implements Serializable
+public class FacesFlowParameterImpl extends org.apache.myfaces.config.element.FacesFlowParameter
 {
-    // <!ELEMENT navigation-rule (description*, display-name*, icon*, from-view-id?, navigation-case*)>
+    private String _name;
+    private String _value;
 
-    public abstract String getFromViewId();
+    @Override
+    public String getName()
+    {
+        return _name;
+    }
+
+    @Override
+    public String getValue()
+    {
+        return _value;
+    }
 
     /**
-     * @return a Collection of {@link org.apache.myfaces.config.element.NavigationCase}s
+     * @param name the name to set
      */
-    public abstract List<? extends NavigationCase> getNavigationCases();
+    public void setName(String name)
+    {
+        this._name = name;
+    }
+
+    /**
+     * @param value the value to set
+     */
+    public void setValue(String value)
+    {
+        this._value = value;
+    }
 }

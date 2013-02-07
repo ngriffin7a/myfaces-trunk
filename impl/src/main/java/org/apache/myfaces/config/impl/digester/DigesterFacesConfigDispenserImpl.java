@@ -37,8 +37,10 @@ import org.apache.myfaces.config.element.ManagedBean;
 import org.apache.myfaces.config.element.NavigationRule;
 import org.apache.myfaces.config.element.Renderer;
 import org.apache.myfaces.config.element.Application;
+import org.apache.myfaces.config.element.ContractMapping;
 import org.apache.myfaces.config.element.Converter;
 import org.apache.myfaces.config.element.FacesConfig;
+import org.apache.myfaces.config.element.FacesFlowDefinition;
 import org.apache.myfaces.config.element.Factory;
 import org.apache.myfaces.config.element.LocaleConfig;
 import org.apache.myfaces.config.element.NamedEvent;
@@ -111,6 +113,11 @@ public class DigesterFacesConfigDispenserImpl extends FacesConfigDispenser
     private Map<String, FaceletsProcessing> faceletsProcessingByFileExtension
             = new HashMap<String, FaceletsProcessing>();
     
+    private List<FacesFlowDefinition> facesFlowDefinitions = new ArrayList<FacesFlowDefinition>();
+    
+    private List<String> protectedViewUrlPatterns = new ArrayList<String>();
+    private List<ContractMapping> resourceLibraryContractMappings = new ArrayList<ContractMapping>();
+    
     /**
      * Add another unmarshalled faces config object.
      * 
@@ -171,6 +178,7 @@ public class DigesterFacesConfigDispenserImpl extends FacesConfigDispenser
             variableResolver.addAll(application.getVariableResolver());
             resourceBundles.addAll(application.getResourceBundle());
             elResolvers.addAll(application.getElResolver());
+            resourceLibraryContractMappings.addAll(application.getResourceLibraryContractMappings());
 
             // Jsf 2.0 spec section 3.5.3 says this: 
             // ".... Any configuration resource that declares a list of default 
@@ -254,6 +262,8 @@ public class DigesterFacesConfigDispenserImpl extends FacesConfigDispenser
         navigationRules.addAll(config.getNavigationRules());
         facesVersion = config.getVersion();
         namedEvents.addAll(config.getNamedEvents());
+        facesFlowDefinitions.addAll(config.getFacesFlowDefinitions());
+        protectedViewUrlPatterns.addAll(config.getProtectedViewsUrlPatternList());
     }
 
     /**
@@ -710,4 +720,22 @@ public class DigesterFacesConfigDispenserImpl extends FacesConfigDispenser
         return flashFactories;
     }
 
+    @Override
+    public Collection<FacesFlowDefinition> getFacesFlowDefinitions()
+    {
+        return facesFlowDefinitions;
+    }
+
+    @Override
+    public Collection<String> getProtectedViewUrlPatterns()
+    {
+        return protectedViewUrlPatterns;
+    }
+
+    @Override
+    public Collection<ContractMapping> getResourceLibraryContractMappings()
+    {
+        return resourceLibraryContractMappings;
+    }
+    
 }

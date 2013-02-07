@@ -16,27 +16,44 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.myfaces.config.element;
-
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
+package org.apache.myfaces.config.impl.digester.elements;
 
 /**
- * Entry of the Collection returned by
- * {@link org.apache.myfaces.config.RuntimeConfig#getNavigationRules()}.
  *
- * @author Manfred Geiler (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * @author Leonardo Uribe
  */
-public abstract class NavigationRule implements Serializable
+public class FacesFlowViewImpl extends org.apache.myfaces.config.element.FacesFlowView
 {
-    // <!ELEMENT navigation-rule (description*, display-name*, icon*, from-view-id?, navigation-case*)>
+    private String _id;
+    private String _vdlDocument;
 
-    public abstract String getFromViewId();
+    public FacesFlowViewImpl()
+    {
+    }
+    
+    @Override
+    public String getVdlDocument()
+    {
+        return _vdlDocument;
+    }
 
     /**
-     * @return a Collection of {@link org.apache.myfaces.config.element.NavigationCase}s
+     * @param vdlDocument the vdlDocument to set
      */
-    public abstract List<? extends NavigationCase> getNavigationCases();
+    public void setVdlDocument(String vdlDocument)
+    {
+        this._vdlDocument = vdlDocument;
+    }
+    
+    @Override
+    public String getId()
+    {
+        return _id;
+    }
+
+    public void setId(String id)
+    {
+        this._id = id;
+    }
+
 }

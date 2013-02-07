@@ -19,24 +19,17 @@
 package org.apache.myfaces.config.element;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
 
 /**
- * Entry of the Collection returned by
- * {@link org.apache.myfaces.config.RuntimeConfig#getNavigationRules()}.
  *
- * @author Manfred Geiler (latest modification by $Author$)
- * @version $Revision$ $Date$
+ * @author Leonardo Uribe
  */
-public abstract class NavigationRule implements Serializable
+public abstract class FacesFlowCall implements Serializable
 {
-    // <!ELEMENT navigation-rule (description*, display-name*, icon*, from-view-id?, navigation-case*)>
-
-    public abstract String getFromViewId();
-
-    /**
-     * @return a Collection of {@link org.apache.myfaces.config.element.NavigationCase}s
-     */
-    public abstract List<? extends NavigationCase> getNavigationCases();
+    public abstract String getId();
+    
+    public abstract String getCalledFlowId();
+    
+    public abstract List<FacesFlowParameter> getOutboundParameterList();
 }

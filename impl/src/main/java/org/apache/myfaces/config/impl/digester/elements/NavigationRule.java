@@ -53,7 +53,7 @@ public class NavigationRule extends org.apache.myfaces.config.element.Navigation
     }
 
 
-    public Collection<org.apache.myfaces.config.element.NavigationCase> getNavigationCases()
+    public List<org.apache.myfaces.config.element.NavigationCase> getNavigationCases()
     {
         return navigationCases;
     }

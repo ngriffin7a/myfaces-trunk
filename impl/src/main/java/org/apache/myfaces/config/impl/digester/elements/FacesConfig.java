@@ -20,9 +20,11 @@ package org.apache.myfaces.config.impl.digester.elements;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.myfaces.config.element.FacesFlowDefinition;
 
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
@@ -51,6 +53,11 @@ public class FacesConfig extends org.apache.myfaces.config.element.FacesConfig i
             = new ArrayList<org.apache.myfaces.config.element.NamedEvent>();
     private List<org.apache.myfaces.config.element.FacesConfigExtension> facesConfigExtensions
             = new ArrayList<org.apache.myfaces.config.element.FacesConfigExtension>();
+    
+    private List <FacesFlowDefinition> facesFlowDefinitions 
+        = new ArrayList<FacesFlowDefinition>();
+    private List <String> protectedViewsUrlPatternList
+        = new ArrayList<String>();
     
     private String metadataComplete;
     private String version;
@@ -247,5 +254,26 @@ public class FacesConfig extends org.apache.myfaces.config.element.FacesConfig i
     {
         facesConfigExtensions.add(elem);
     }
+
+    @Override
+    public List<FacesFlowDefinition> getFacesFlowDefinitions()
+    {
+        return facesFlowDefinitions;
+    }
     
+    public void addFacesFlowDefinition(FacesFlowDefinition elem)
+    {
+        facesFlowDefinitions.add(elem);
+    }
+    
+    public List<String> getProtectedViewsUrlPatternList()
+    {
+        return protectedViewsUrlPatternList;
+    }
+    
+    public void addProtectedViewUrlPattern(String urlPattern)
+    {
+        protectedViewsUrlPatternList.add(urlPattern);
+    }
+
 }
