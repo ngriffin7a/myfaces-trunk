@@ -111,13 +111,12 @@ public class UIViewAction extends UIComponentBase implements ActionSource2
                     {
                         wrappedFacesContext.setWrapperAsCurrentFacesContext();
 
-                        /* Note f:viewAction does not have actionListener property defined.
                         MethodBinding mb = getActionListener();
                         if (mb != null)
                         {
                             mb.invoke(context, new Object[]
                             { event });
-                        }*/
+                        }
 
                         if (defaultActionListener != null)
                         {
@@ -280,18 +279,16 @@ public class UIViewAction extends UIComponentBase implements ActionSource2
         getStateHelper().put(PropertyKeys.actionExpression, actionExpression);
     }
 
-    //@JSFProperty(stateHolder=true, returnSignature = "void", methodSignature = "javax.faces.event.ActionEvent")
+    @JSFProperty(stateHolder=true, returnSignature = "void", methodSignature = "javax.faces.event.ActionEvent")
     public MethodBinding getActionListener()
     {
         return (MethodBinding) getStateHelper().eval(PropertyKeys.actionListener);
-        // Note f:viewAction does not have actionListener property defined.
-        //throw new UnsupportedOperationException();
     }
 
     /**
      * @deprecated
      */
-    //@JSFProperty(returnSignature="void",methodSignature="javax.faces.event.ActionEvent")
+    @JSFProperty(returnSignature="void",methodSignature="javax.faces.event.ActionEvent")
     public void setActionListener(MethodBinding actionListener)
     {
         getStateHelper().put(PropertyKeys.actionListener, actionListener);
