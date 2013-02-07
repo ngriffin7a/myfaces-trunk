@@ -16,13 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package javax.faces.flow.builder;
+package javax.faces.flow;
+
+import javax.faces.context.FacesContext;
 
 /**
  *
  * @since 2.2
  */
-public interface NodeBuilder
+public abstract class ReturnNode extends FlowNode
 {
-    NodeBuilder markAsStartNode();
+    public abstract String getFromOutcome(FacesContext context);
+    
 }

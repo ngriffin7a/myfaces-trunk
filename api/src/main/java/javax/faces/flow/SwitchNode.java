@@ -16,13 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package javax.faces.flow.builder;
+package javax.faces.flow;
+
+import java.util.List;
+import javax.faces.context.FacesContext;
 
 /**
  *
  * @since 2.2
  */
-public interface NodeBuilder
+public abstract class SwitchNode extends FlowNode
 {
-    NodeBuilder markAsStartNode();
+    public abstract List<SwitchCase> getCases();
+    
+    public abstract String getDefaultOutcome(FacesContext context);
+    
 }

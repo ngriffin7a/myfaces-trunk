@@ -16,13 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package javax.faces.flow.builder;
+package javax.faces.flow;
 
 /**
  *
  * @since 2.2
  */
-public interface NodeBuilder
+public abstract class ViewNode extends FlowNode
 {
-    NodeBuilder markAsStartNode();
+    public abstract String getVdlDocumentId();
 }

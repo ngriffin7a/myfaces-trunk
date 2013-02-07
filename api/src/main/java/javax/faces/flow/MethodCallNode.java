@@ -16,13 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package javax.faces.flow.builder;
+package javax.faces.flow;
+
+import java.util.List;
 
 /**
- *
+ * 
  * @since 2.2
  */
-public interface NodeBuilder
+public abstract class MethodCallNode extends FlowNode
 {
-    NodeBuilder markAsStartNode();
+    public abstract javax.el.MethodExpression getMethodExpression();
+    
+    public abstract javax.el.ValueExpression getOutcome();
+    
+    public abstract List<Parameter> getParameters();
 }

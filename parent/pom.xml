@@ -395,7 +395,23 @@
                 <optional>true</optional>
             </dependency>
 
+            <!-- CDI 1.0 -->
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-jcdi_1.0_spec</artifactId>
+                <version>1.0</version>
+                <scope>compile</scope>
+                <optional>true</optional>
+            </dependency>
 
+            <!-- Injection -->
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-atinject_1.0_spec</artifactId>
+                <version>1.0</version>
+                <scope>compile</scope>
+                <optional>true</optional>
+            </dependency>            
             <!-- UTILITY DEPENDENCIES -->
 
             <!-- builder-annotations like @JSFWebConfigParam -->

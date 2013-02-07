@@ -18,12 +18,43 @@
  */
 package javax.faces.flow;
 
+import java.util.List;
+import java.util.Map;
+import javax.faces.lifecycle.ClientWindow;
+
 /**
  *
- * @TODO: Implement me!
  * @since 2.2
  */
 public abstract class Flow
 {
+    
+    public abstract String getClientWindowFlowId(ClientWindow curWindow);
+
+    public abstract String getDefiningDocumentId();
+
+    public abstract String getId();
+
+    public abstract Map<String,Parameter> getInboundParameters();
+    
+    public abstract javax.el.MethodExpression getInitializer();
+    
+    public abstract javax.el.MethodExpression getFinalizer();
+    
+    public abstract FlowCallNode getFlowCall(Flow targetFlow);
+    
+    public abstract Map<String,FlowCallNode> getFlowCalls();
+    
+    public abstract List<MethodCallNode> getMethodCalls();
+    
+    public abstract FlowNode getNode(String nodeId);
+    
+    public abstract Map<String,ReturnNode> getReturns();
+    
+    public abstract Map<String,SwitchNode> getSwitches();
+    
+    public abstract List<ViewNode> getViews();
+    
+    public abstract String getStartNodeId();
     
 }

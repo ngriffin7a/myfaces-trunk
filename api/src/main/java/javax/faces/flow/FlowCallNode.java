@@ -16,13 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package javax.faces.flow.builder;
+package javax.faces.flow;
+
+import java.util.Map;
+import javax.faces.context.FacesContext;
 
 /**
- *
  * @since 2.2
  */
-public interface NodeBuilder
+public abstract class FlowCallNode extends FlowNode
 {
-    NodeBuilder markAsStartNode();
+   
+    public abstract Map<String,Parameter> getOutboundParameters();
+    
+    public abstract String getCalledFlowDocumentId(FacesContext context);
+    
+    public abstract String getCalledFlowId(FacesContext context);
 }

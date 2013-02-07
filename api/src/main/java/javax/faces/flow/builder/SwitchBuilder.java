@@ -22,7 +22,13 @@ package javax.faces.flow.builder;
  *
  * @since 2.2
  */
-public interface NodeBuilder
+public abstract class SwitchBuilder implements NodeBuilder
 {
-    NodeBuilder markAsStartNode();
+    public abstract SwitchCaseBuilder switchCase();
+    
+    public abstract SwitchCaseBuilder defaultOutcome(String outcome);
+    
+    public abstract SwitchCaseBuilder defaultOutcome(javax.el.ValueExpression outcome);
+    
+    public abstract SwitchBuilder markAsStartNode();
 }

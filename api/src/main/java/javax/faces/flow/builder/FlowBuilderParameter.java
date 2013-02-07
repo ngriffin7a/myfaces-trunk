@@ -18,11 +18,22 @@
  */
 package javax.faces.flow.builder;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import javax.inject.Qualifier;
+
 /**
  *
  * @since 2.2
  */
-public interface NodeBuilder
+@Qualifier
+@Target(value={ElementType.TYPE,ElementType.METHOD,ElementType.PARAMETER,ElementType.FIELD})
+@Retention(value= RetentionPolicy.RUNTIME)
+@Documented
+public @interface FlowBuilderParameter
 {
-    NodeBuilder markAsStartNode();
+    
 }

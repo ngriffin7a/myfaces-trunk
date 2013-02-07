@@ -22,7 +22,12 @@ package javax.faces.flow.builder;
  *
  * @since 2.2
  */
-public interface NodeBuilder
+public abstract class ReturnBuilder implements NodeBuilder
 {
-    NodeBuilder markAsStartNode();
+    public abstract ReturnBuilder fromOutcome(String outcome);
+    
+    public abstract ReturnBuilder fromOutcome(javax.el.ValueExpression outcome);
+    
+    public abstract ReturnBuilder markAsStartNode();
+    
 }

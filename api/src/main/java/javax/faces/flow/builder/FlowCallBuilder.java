@@ -22,7 +22,17 @@ package javax.faces.flow.builder;
  *
  * @since 2.2
  */
-public interface NodeBuilder
+public abstract class FlowCallBuilder implements NodeBuilder
 {
-    NodeBuilder markAsStartNode();
+
+    public abstract FlowCallBuilder flowReference(String flowDocumentId,
+        String flowId);
+
+    public abstract FlowCallBuilder outboundParameter(String name,
+        javax.el.ValueExpression value);
+
+    public abstract FlowCallBuilder outboundParameter(String name,
+        String value);
+
+    public abstract FlowCallBuilder markAsStartNode();
 }

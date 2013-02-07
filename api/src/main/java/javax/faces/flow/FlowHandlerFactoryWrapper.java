@@ -16,13 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package javax.faces.flow.builder;
+package javax.faces.flow;
+
+import javax.faces.FacesWrapper;
+import javax.faces.context.FacesContext;
 
 /**
  *
  * @since 2.2
+ * @author Leonardo Uribe
  */
-public interface NodeBuilder
+public abstract class FlowHandlerFactoryWrapper extends FlowHandlerFactory
+    implements FacesWrapper<FlowHandlerFactory>
 {
-    NodeBuilder markAsStartNode();
+    
+    public FlowHandler createFlowHandler(FacesContext context)
+    {
+        return getWrapped().createFlowHandler(context);
+    }
+    
+    public abstract FlowHandlerFactory getWrapped();
 }

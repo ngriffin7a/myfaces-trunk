@@ -22,7 +22,7 @@ package javax.faces.flow.builder;
  *
  * @since 2.2
  */
-public interface NodeBuilder
+public abstract class ViewBuilder implements NodeBuilder
 {
-    NodeBuilder markAsStartNode();
+    public abstract ViewBuilder markAsStartNode();
 }

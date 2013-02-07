@@ -16,13 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package javax.faces.flow.builder;
+package javax.faces.flow;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import javax.enterprise.context.NormalScope;
 
 /**
  *
  * @since 2.2
  */
-public interface NodeBuilder
+@NormalScope
+@Inherited
+@Documented
+@Target(value=ElementType.TYPE)
+@Retention(value= RetentionPolicy.RUNTIME)
+public @interface FlowScoped
 {
-    NodeBuilder markAsStartNode();
+    
 }

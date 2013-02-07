@@ -18,11 +18,28 @@
  */
 package javax.faces.flow.builder;
 
+import java.util.List;
+import javax.faces.flow.Parameter;
+
 /**
  *
  * @since 2.2
  */
-public interface NodeBuilder
+public abstract class MethodCallBuilder implements NodeBuilder
 {
-    NodeBuilder markAsStartNode();
+
+    public abstract MethodCallBuilder expression(javax.el.MethodExpression me);
+
+    public abstract MethodCallBuilder expression(String methodExpression);
+
+    public abstract MethodCallBuilder expression(String methodExpression,
+        Class[] paramTypes);
+
+    public abstract MethodCallBuilder parameters(List<Parameter> parameters);
+
+    public abstract MethodCallBuilder defaultOutcome(String outcome);
+
+    public abstract MethodCallBuilder defaultOutcome(javax.el.ValueExpression outcome);
+
+    public abstract MethodCallBuilder markAsStartNode();
 }

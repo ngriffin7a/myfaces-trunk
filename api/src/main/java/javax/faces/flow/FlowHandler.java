@@ -18,12 +18,37 @@
  */
 package javax.faces.flow;
 
+import javax.faces.context.FacesContext;
+
 /**
  *
- * @TODO: Implement me!
  * @since 2.2
  */
-public class FlowHandler
+public abstract class FlowHandler
 {
-    
+
+    public abstract java.util.Map<java.lang.Object, java.lang.Object> getCurrentFlowScope();
+
+    public abstract Flow getFlow(FacesContext context,
+        java.lang.String definingDocumentId,
+        java.lang.String id);
+
+    public abstract void addFlow(FacesContext context,
+        Flow toAdd);
+
+    public abstract Flow getCurrentFlow(FacesContext context);
+
+    public Flow getCurrentFlow()
+    {
+        return getCurrentFlow(FacesContext.getCurrentInstance());
+    }
+
+    public abstract void transition(FacesContext context,
+        Flow sourceFlow,
+        Flow targetFlow,
+        FlowCallNode outboundCallNode);
+
+    public abstract boolean isActive(FacesContext context,
+        java.lang.String definingDocument,
+        java.lang.String id);
 }
