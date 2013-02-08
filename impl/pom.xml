@@ -143,7 +143,16 @@
                             <goal>make-config</goal>
                         </goals>
                     </execution>
-                    
+                    <execution>
+                        <id>makecomp</id>
+                        <configuration>
+                            <jsfVersion>20</jsfVersion>
+                            <templateComponentName>componentClass20.vm</templateComponentName>
+                        </configuration>
+                        <goals>
+                            <goal>make-components</goal>
+                        </goals>
+                    </execution>
                     <execution>
                         <id>make_tags</id>
                         <configuration>
