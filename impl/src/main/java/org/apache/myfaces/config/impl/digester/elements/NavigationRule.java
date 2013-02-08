@@ -21,7 +21,6 @@ package org.apache.myfaces.config.impl.digester.elements;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Collection;
 
 
 /**

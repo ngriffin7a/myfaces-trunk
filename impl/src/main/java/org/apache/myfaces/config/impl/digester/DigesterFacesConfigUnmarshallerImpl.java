@@ -376,7 +376,8 @@ public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshal
         digester.addCallMethod("faces-config/faces-flow-definition/switch/default-outcome/from-outcome", 
             "setFromOutcome", 0);
         
-        addNavigationCases(externalContext, "faces-config/faces-flow-definition/switch/navigation-case", "addNavigationCase");
+        addNavigationCases(externalContext, "faces-config/faces-flow-definition/switch/navigation-case",
+            "addNavigationCase");
         
         digester.addObjectCreate("faces-config/faces-flow-definition/flow-return", FacesFlowReturnImpl.class);
         digester.addSetNext("faces-config/faces-flow-definition/flow-return", "addReturn");
