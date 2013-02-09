@@ -104,10 +104,7 @@ public class FlowBuilderImpl extends FlowBuilder
     @Override
     public FlowBuilder initializer(String methodExpression)
     {
-        FacesContext facesContext = getFacesContext();
-        _facesFlow.setInitializer(
-            getFacesContext().getApplication().getExpressionFactory().createMethodExpression(
-            facesContext.getELContext(), methodExpression, null, EMPTY_PARAMS));
+        _facesFlow.setInitializer(createMethodExpression(methodExpression));
         return this;
     }
 
@@ -121,10 +118,7 @@ public class FlowBuilderImpl extends FlowBuilder
     @Override
     public FlowBuilder finalizer(String methodExpression)
     {
-        FacesContext facesContext = getFacesContext();
-        _facesFlow.setFinalizer(
-            facesContext.getApplication().getExpressionFactory().createMethodExpression(
-            facesContext.getELContext(), methodExpression, null, EMPTY_PARAMS));
+        _facesFlow.setFinalizer(createMethodExpression(methodExpression));
         return this;
     }
 
@@ -138,10 +132,8 @@ public class FlowBuilderImpl extends FlowBuilder
     @Override
     public FlowBuilder inboundParameter(String name, String value)
     {
-        FacesContext facesContext = getFacesContext();
         _facesFlow.putInboundParameter(name, new ParameterImpl(name,
-            facesContext.getApplication().getExpressionFactory()
-            .createValueExpression(facesContext.getELContext(), value, Object.class)));
+            createValueExpression(value)));
         return this;
     }
 

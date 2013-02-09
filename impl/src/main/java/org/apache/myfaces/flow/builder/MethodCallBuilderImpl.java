@@ -39,6 +39,7 @@ public class MethodCallBuilderImpl extends MethodCallBuilder
 
     public MethodCallBuilderImpl(FlowBuilderImpl flowBuilder, FlowImpl facesFlow, String methodCallNodeId)
     {
+        this._flowBuilder = flowBuilder;
         this._facesFlow = facesFlow;
         this._methodCallNode = new MethodCallNodeImpl(methodCallNodeId);
         this._facesFlow.addMethodCall(_methodCallNode);

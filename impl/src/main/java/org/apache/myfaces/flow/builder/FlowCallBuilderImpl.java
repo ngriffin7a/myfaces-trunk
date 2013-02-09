@@ -23,6 +23,7 @@ import javax.faces.flow.builder.FlowCallBuilder;
 import org.apache.myfaces.flow.FlowCallNodeImpl;
 import org.apache.myfaces.flow.FlowImpl;
 import org.apache.myfaces.flow.ParameterImpl;
+import org.apache.myfaces.view.facelets.el.ELText;
 
 /**
  *
@@ -46,8 +47,22 @@ public class FlowCallBuilderImpl extends FlowCallBuilder
     @Override
     public FlowCallBuilder flowReference(String flowDocumentId, String flowId)
     {
-        this._flowCallNode.setCalledFlowDocumentId(flowDocumentId);
-        this._flowCallNode.setCalledFlowId(flowId);
+        if (ELText.isLiteral(flowDocumentId))
+        {
+            this._flowCallNode.setCalledFlowDocumentId(flowDocumentId);
+        }
+        else
+        {
+            this._flowCallNode.setCalledFlowDocumentId(_flowBuilder.createValueExpression(flowDocumentId));
+        }
+        if (ELText.isLiteral(flowId))
+        {
+            this._flowCallNode.setCalledFlowId(flowId);
+        }
+        else
+        {
+            this._flowCallNode.setCalledFlowId(_flowBuilder.createValueExpression(flowId));
+        }
         return this;
     }
 

@@ -23,6 +23,7 @@ import javax.faces.flow.builder.SwitchCaseBuilder;
 import org.apache.myfaces.flow.FlowImpl;
 import org.apache.myfaces.flow.SwitchCaseImpl;
 import org.apache.myfaces.flow.SwitchNodeImpl;
+import org.apache.myfaces.view.facelets.el.ELText;
 
 /**
  *
@@ -44,13 +45,20 @@ public class SwitchCaseBuilderImpl extends SwitchCaseBuilder
         this._facesFlow = facesFlow;
         this._switchBuilderImpl = switchBuilderImpl;
         this._switchNodeImpl = switchNode;
-        this._switchCase = new SwitchCaseImpl();
+        this._switchCase = null;
     }
     
     @Override
     public SwitchCaseBuilder condition(String expression)
     {
-        this._switchCase.setCondition(Boolean.valueOf(expression));
+        if (ELText.isLiteral(expression))
+        {
+            this._switchCase.setCondition(Boolean.valueOf(expression));
+        }
+        else
+        {
+            this._switchCase.setCondition(_flowBuilder.createValueExpression(expression));
+        }
         return this;
     }
 
@@ -71,6 +79,7 @@ public class SwitchCaseBuilderImpl extends SwitchCaseBuilder
     @Override
     public SwitchCaseBuilder switchCase()
     {
+        this._switchCase =  new SwitchCaseImpl();
         this._switchNodeImpl.addCase(this._switchCase);
         return this;
     }

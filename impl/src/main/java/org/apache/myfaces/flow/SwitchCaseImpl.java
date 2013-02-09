@@ -45,7 +45,7 @@ public class SwitchCaseImpl extends SwitchCase implements Freezable
     @Override
     public Boolean getCondition(FacesContext context)
     {
-        if (_condition != null)
+        if (_conditionEL != null)
         {
             Object value = _conditionEL.getValue(context.getELContext());
             if (value instanceof String)

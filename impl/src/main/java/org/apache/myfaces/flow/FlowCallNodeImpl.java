@@ -21,6 +21,7 @@ package org.apache.myfaces.flow;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import javax.el.ValueExpression;
 import javax.faces.context.FacesContext;
 import javax.faces.flow.FlowCallNode;
 import javax.faces.flow.Parameter;
@@ -34,7 +35,9 @@ public class FlowCallNodeImpl extends FlowCallNode implements Freezable
 {
     private String _id;
     private String _calledFlowId;
+    private ValueExpression _calledFlowIdEL;
     private String _calledFlowDocumentId;
+    private ValueExpression _calledFlowDocumentIdEL;
     
     private Map<String, Parameter> _outboundParametersMap;
     private Map<String, Parameter>_unmodifiableOutboundParametersMap;
@@ -63,12 +66,20 @@ public class FlowCallNodeImpl extends FlowCallNode implements Freezable
     @Override
     public String getCalledFlowDocumentId(FacesContext context)
     {
+        if (_calledFlowDocumentIdEL != null)
+        {
+            return (String) _calledFlowDocumentIdEL.getValue(context.getELContext());
+        }
         return _calledFlowDocumentId;
     }
 
     @Override
     public String getCalledFlowId(FacesContext context)
     {
+        if (_calledFlowIdEL != null)
+        {
+            return (String) _calledFlowIdEL.getValue(context.getELContext());
+        }
         return _calledFlowId;
     }
 
@@ -88,12 +99,14 @@ public class FlowCallNodeImpl extends FlowCallNode implements Freezable
     {
         checkInitialized();
         this._calledFlowId = calledFlowId;
+        this._calledFlowIdEL = null;
     }
 
     public void setCalledFlowDocumentId(String calledFlowDocumentId)
     {
         checkInitialized();
         this._calledFlowDocumentId = calledFlowDocumentId;
+        this._calledFlowDocumentIdEL = null;
     }
     
     public void freeze()
@@ -115,5 +128,23 @@ public class FlowCallNodeImpl extends FlowCallNode implements Freezable
         {
             throw new IllegalStateException("Flow is inmutable once initialized");
         }
+    }
+
+    /**
+     * @param calledFlowIdEL the _calledFlowIdEL to set
+     */
+    public void setCalledFlowId(ValueExpression calledFlowIdEL)
+    {
+        this._calledFlowIdEL = calledFlowIdEL;
+        this._calledFlowId = null;
+    }
+
+    /**
+     * @param calledFlowDocumentIdEL the _calledFlowDocumentIdEL to set
+     */
+    public void setCalledFlowDocumentId(ValueExpression calledFlowDocumentIdEL)
+    {
+        this._calledFlowDocumentIdEL = calledFlowDocumentIdEL;
+        this._calledFlowDocumentId = null;
     }
 }
