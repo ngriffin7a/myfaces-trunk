@@ -174,6 +174,13 @@ public abstract class ServletExternalContextImplBase extends ExternalContext
         _clientWindow = window;
     }
     
+    @Override
+    public String getApplicationContextPath() 
+    {
+        return _servletContext.getContextPath();
+        
+    }
+    
     // ~ Methods which verify some required behavior---------------------------
     
     protected void checkNull(final Object o, final String param)

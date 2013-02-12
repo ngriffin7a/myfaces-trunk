@@ -792,4 +792,20 @@ public abstract class ExternalContext
         
         return ctx.getSessionId(create);
     }
+    
+    /**
+     * @since 2.2
+     * @return
+     */
+    public String getApplicationContextPath()
+    {
+        ExternalContext ctx = _MyFacesExternalContextHelper.firstInstance.get();
+        
+        if (ctx == null)
+        {
+            throw new UnsupportedOperationException();
+        }
+        
+        return ctx.getApplicationContextPath();
+    }
 }

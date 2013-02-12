@@ -496,4 +496,10 @@ public abstract class ExternalContextWrapper extends ExternalContext implements 
     {
         return getWrapped().getSessionId(create);
     }
+    
+    @Override
+    public String getApplicationContextPath()
+    {
+        return getWrapped().getApplicationContextPath();
+    }
 }
