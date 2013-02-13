@@ -159,7 +159,7 @@ public final class ServletExternalContextImpl extends ServletExternalContextImpl
         }
         else
         {
-            return null;
+            return "";
         }
     }
     
