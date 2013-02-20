@@ -44,6 +44,7 @@ import javax.faces.el.VariableResolver;
 import javax.faces.event.ActionListener;
 import javax.faces.event.SystemEvent;
 import javax.faces.event.SystemEventListener;
+import javax.faces.flow.FlowHandler;
 import javax.faces.validator.Validator;
 
 /**
@@ -1223,5 +1224,35 @@ public abstract class Application
             return;
         }
         unsubscribeFromEvent(systemEventClass, null, listener);
+    }
+    
+    /**
+     * @since 2.2
+     * @return 
+     */
+    public FlowHandler getFlowHandler()
+    {
+        Application application = getMyfacesApplicationInstance();
+        if (application != null)
+        {
+            return application.getFlowHandler();
+        }
+        throw new UnsupportedOperationException();
+    }
+    
+    /**
+     * @since 2.2
+     * @param newHandler 
+     */
+    public void setFlowHandler(FlowHandler flowHandler)
+    {
+        Application application = getMyfacesApplicationInstance();
+        if (application != null)
+        {
+            application.setFlowHandler(flowHandler);
+            return;
+        }
+        throw new UnsupportedOperationException();
+
     }
 }

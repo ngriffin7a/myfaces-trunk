@@ -18,43 +18,31 @@
  */
 package javax.faces.application;
 
-import java.util.Map;
-import java.util.Set;
-
+import javax.faces.FacesWrapper;
 import javax.faces.context.FacesContext;
-import javax.faces.flow.Flow;
 
 /**
- * @author Simon Lessard (latest modification by $Author$)
- * @version $Revision$ $Date$
- * 
- * @since 2.0
+ *
+ * @since 2.2
  */
-public abstract class ConfigurableNavigationHandler extends NavigationHandler
+public abstract class NavigationHandlerWrapper extends NavigationHandler
+    implements FacesWrapper<NavigationHandler>
 {
 
-    /**
-     * 
-     */
-    public ConfigurableNavigationHandler()
+    @Override
+    public void handleNavigation(FacesContext context, String fromAction, String outcome)
     {
-    }
-
-    public abstract NavigationCase getNavigationCase(FacesContext context, String fromAction, String outcome);
-
-    public abstract Map<String,Set<NavigationCase>> getNavigationCases();
-
-    public void performNavigation(String outcome)
-    {
-        handleNavigation(FacesContext.getCurrentInstance(), null, outcome);
+        getWrapped().handleNavigation(context, fromAction, outcome);
     }
     
-    /**
-     * @since 2.2
-     * @param context
-     * @param flow 
-     */
-    public void inspectFlow(FacesContext context, Flow flow)
+    @Override
+    public void handleNavigation(FacesContext context,
+                                 String fromAction,
+                                 String outcome,
+                                 String toFlowDocumentId)
     {
+        getWrapped().handleNavigation(context, fromAction, outcome, toFlowDocumentId);
     }
+    
+    public abstract NavigationHandler getWrapped();
 }
