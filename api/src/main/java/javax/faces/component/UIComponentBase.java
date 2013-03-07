@@ -811,12 +811,6 @@ public abstract class UIComponentBase extends UIComponent
     }
 
     @Override
-    public Map<String, Object> getPassThroughAttributes()
-    {
-        return getPassThroughAttributes(true);
-    }
-
-    @Override
     public Map<String, Object> getPassThroughAttributes(boolean create)
     {
         // Take into account the param "create" in MyFaces case does not have

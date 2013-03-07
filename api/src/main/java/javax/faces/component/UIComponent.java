@@ -187,7 +187,10 @@ public abstract class UIComponent
      * @since 2.2
      * @return 
      */
-    public abstract Map<String,Object> getPassThroughAttributes();
+    public final Map<String,Object> getPassThroughAttributes()
+    {
+        return getPassThroughAttributes(true);
+    }
     
     /**
      * @since 2.2
