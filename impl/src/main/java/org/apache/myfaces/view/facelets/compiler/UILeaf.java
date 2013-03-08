@@ -754,12 +754,6 @@ class UILeaf extends UIComponent implements Map<String, Object>
     }
 
     @Override
-    public Map<String, Object> getPassThroughAttributes()
-    {
-        return getPassThroughAttributes(true);
-    }
-
-    @Override
     public Map<String, Object> getPassThroughAttributes(boolean create)
     {
         if (create)

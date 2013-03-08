@@ -439,12 +439,6 @@ public class ClientBehaviorRedirectEventComponentWrapper extends UIComponent
     }
 
     @Override
-    public Map<String, Object> getPassThroughAttributes()
-    {
-        return getWrapped().getPassThroughAttributes();
-    }
-
-    @Override
     public Map<String, Object> getPassThroughAttributes(boolean create)
     {
         return getWrapped().getPassThroughAttributes(create);
