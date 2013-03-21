@@ -56,6 +56,7 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
     P_RENDER:"javax.faces.partial.render",
     P_EVT:"javax.faces.partial.event",
     P_WINDOW_ID:"javax.faces.ClientWindow",
+    P_RESET_VALUES:"javax.faces.partial.resetValues",
 
     /* message types */
     ERROR:"error",
@@ -79,7 +80,7 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
 
     /*blockfilter for the passthrough filtering, the attributes given here
      * will not be transmitted from the options into the passthrough*/
-    _BLOCKFILTER:{onerror:1, onevent:1, render:1, execute:1, myfaces:1, delay:1},
+    _BLOCKFILTER:{onerror:1, onevent:1, render:1, execute:1, myfaces:1, delay:1, resetValues:1},
 
     /**
      * collect and encode data for a given form element (must be of type form)
@@ -248,6 +249,17 @@ _MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.
          * javax.faces.partial.ajax must be set to true
          */
         passThrgh[this.P_AJAX] = true;
+
+        /**
+         * if resetValues is set to true
+         * then we have to set javax.faces.resetValues as well
+         * as pass through parameter
+         * the value has to be explicitly true, according to
+         * the specs jsdoc
+         */
+        if(options.resetValues === true) {
+            passThrgh[this.P_RESET_VALUES] = true;
+        }
 
         if (options.execute) {
             /*the options must be a blank delimited list of strings*/
