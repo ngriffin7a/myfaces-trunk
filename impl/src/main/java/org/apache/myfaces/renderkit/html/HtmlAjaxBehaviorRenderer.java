@@ -52,6 +52,8 @@ public class HtmlAjaxBehaviorRenderer extends ClientBehaviorRenderer
     private static final String AJAX_KEY_ONEVENT = "onevent";
     private static final String AJAX_KEY_EXECUTE = "execute";
     private static final String AJAX_KEY_RENDER = "render";
+    private static final String AJAX_KEY_DELAY = "delay";
+    private static final String AJAX_KEY_RESETVALUES = "resetValues";
 
     private static final String AJAX_VAL_THIS = "this";
     private static final String AJAX_VAL_EVENT = "event";
@@ -60,6 +62,7 @@ public class HtmlAjaxBehaviorRenderer extends ClientBehaviorRenderer
     private static final String COLON = ":";
     private static final String EMPTY = "";
     private static final String COMMA = ",";
+    private static final String TRUE  = "true";
 
     private static final String ERR_NO_AJAX_BEHAVIOR = "The behavior must be an instance of AjaxBehavior";
     private static final String L_PAREN = "(";
@@ -183,6 +186,30 @@ public class HtmlAjaxBehaviorRenderer extends ClientBehaviorRenderer
         {
             onEvent = null;
         }
+        String delay = behavior.getDelay();
+        if (delay != null && !delay.trim().equals(EMPTY)) {
+            paramBuffer.setLength(0);
+            paramBuffer.append(AJAX_KEY_DELAY);
+            paramBuffer.append(COLON);
+            paramBuffer.append(delay);
+            delay = paramBuffer.toString();
+        }
+        else
+        {
+            delay = null;
+        }
+        String resetValues = Boolean.toString(behavior.isResetValues());
+        if (resetValues.equals("true")) {
+            paramBuffer.setLength(0);
+            paramBuffer.append(AJAX_KEY_RESETVALUES);
+            paramBuffer.append(COLON);
+            paramBuffer.append(resetValues);
+            resetValues = paramBuffer.toString();
+        }
+        else
+        {
+            resetValues = null;
+        }
 
         String sourceId = null;
         if (context.getSourceId() == null) 
@@ -197,6 +224,8 @@ public class HtmlAjaxBehaviorRenderer extends ClientBehaviorRenderer
             paramBuffer.append('\'');
             sourceId = paramBuffer.toString();
         }
+
+
         String event = context.getEventName();
 
         retVal.append(JS_AJAX_REQUEST);
@@ -225,6 +254,13 @@ public class HtmlAjaxBehaviorRenderer extends ClientBehaviorRenderer
         if (onEvent != null)
         {
             parameterList.add(onEvent);
+        }
+        if (delay != null)
+        {
+            parameterList.add(delay);
+        }
+        if (resetValues != null) {
+            parameterList.add(resetValues);
         }
         if (paramSize > 0)
         {
