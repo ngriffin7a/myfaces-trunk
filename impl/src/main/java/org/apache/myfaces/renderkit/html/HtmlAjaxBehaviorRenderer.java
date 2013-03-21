@@ -186,6 +186,9 @@ public class HtmlAjaxBehaviorRenderer extends ClientBehaviorRenderer
         {
             onEvent = null;
         }
+        /*
+         * since version 2.2
+         */
         String delay = behavior.getDelay();
         if (delay != null && !delay.trim().equals(EMPTY)) {
             paramBuffer.setLength(0);
@@ -198,6 +201,9 @@ public class HtmlAjaxBehaviorRenderer extends ClientBehaviorRenderer
         {
             delay = null;
         }
+        /*
+         * since version 2.2
+         */
         String resetValues = Boolean.toString(behavior.isResetValues());
         if (resetValues.equals("true")) {
             paramBuffer.setLength(0);
@@ -255,10 +261,16 @@ public class HtmlAjaxBehaviorRenderer extends ClientBehaviorRenderer
         {
             parameterList.add(onEvent);
         }
+        /*
+         * since version 2.2
+         */
         if (delay != null)
         {
             parameterList.add(delay);
         }
+        /*
+         * since version 2.2
+         */
         if (resetValues != null) {
             parameterList.add(resetValues);
         }
