@@ -24,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.faces.FacesException;
+import javax.faces.FactoryFinder;
 import javax.faces.application.ProjectStage;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
@@ -32,10 +33,10 @@ import javax.faces.event.ExceptionQueuedEventContext;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
 import javax.faces.lifecycle.ClientWindow;
+import javax.faces.lifecycle.ClientWindowFactory;
 import javax.faces.lifecycle.Lifecycle;
 
 import org.apache.myfaces.config.FacesConfigurator;
-import org.apache.myfaces.shared.util.WebConfigParamUtils;
 import org.apache.myfaces.shared_impl.webapp.webxml.WebXml;
 import org.apache.myfaces.util.DebugUtils;
 
@@ -91,15 +92,8 @@ public class LifecycleImpl extends Lifecycle
      */
     //private PhaseListener[] _phaseListenerArray = null;
     
-    private String windowMode;
-    private TokenGenerator windowTokenGenerator;
-    private ClientConfig clientConfig;
-    private WindowContextConfig windowContextConfig;
+    private ClientWindowFactory clientWindowFactory;
     
-    private static final String WINDOW_MODE_NONE = "none";
-    private static final String WINDOW_MODE_URL = "url";
-    private static final String WINDOW_MODE_CLIENT = "client";
-
     public LifecycleImpl()
     {
         // hide from public access
@@ -107,49 +101,27 @@ public class LifecycleImpl extends Lifecycle
                 new ProcessValidationsExecutor(), new UpdateModelValuesExecutor(), new InvokeApplicationExecutor() };
 
         renderExecutor = new RenderResponseExecutor();
-        windowTokenGenerator = new TokenGenerator();
-        clientConfig = new ClientConfig();
-        windowContextConfig = new WindowContextConfig();
+        clientWindowFactory = (ClientWindowFactory) FactoryFinder.getFactory(FactoryFinder.CLIENT_WINDOW_FACTORY);
     }
     
-    private String getWindowMode(FacesContext context)
-    {
-        if (windowMode == null)
-        {
-            windowMode = WebConfigParamUtils.getStringInitParameter(
-                    context.getExternalContext(), 
-                    ClientWindow.CLIENT_WINDOW_MODE_PARAM_NAME, WINDOW_MODE_NONE);
-        }
-        return windowMode;
-    }
-
     @Override
     public void attachWindow(FacesContext facesContext)
     {
-        if (WINDOW_MODE_NONE.equals(getWindowMode(facesContext)))
+        ClientWindow clientWindow = facesContext.getExternalContext().getClientWindow();
+        if (clientWindow == null)
         {
-            //No need to do anything
-            return;
+            clientWindow = getClientWindowFactory().getClientWindow(facesContext);
         }
-        else
+        if (clientWindow != null)
         {
-            ClientWindow clientWindow = facesContext.getExternalContext().getClientWindow();
-            if (clientWindow == null)
-            {
-                if (WINDOW_MODE_URL.equals(getWindowMode(facesContext)))
-                {
-                    clientWindow = new UrlClientWindow(windowTokenGenerator);
-                }
-                else
-                {
-                    //clientWindow = new DefaultClientWindow(windowTokenGenerator);
-                    clientWindow = new CODIClientSideWindow(windowTokenGenerator,
-                            windowContextConfig, clientConfig);
-                }
-                clientWindow.decode(facesContext);
-                facesContext.getExternalContext().setClientWindow(clientWindow);
-            }
+            clientWindow.decode(facesContext);
+            facesContext.getExternalContext().setClientWindow(clientWindow);
         }
+    }
+    
+    protected ClientWindowFactory getClientWindowFactory()
+    {
+        return clientWindowFactory;
     }
 
     @Override

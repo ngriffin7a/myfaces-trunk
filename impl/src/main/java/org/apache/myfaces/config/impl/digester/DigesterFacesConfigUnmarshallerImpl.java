@@ -140,6 +140,7 @@ public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshal
         // 2.1 specific end
         // 2.2 specific start
         digester.addCallMethod("faces-config/factory/flash-factory", "addFlashFactory", 0);
+        // Note there is no client-window-factory, this factory can be set only using SPI.
         // 2.2 specific end
 
         digester.addObjectCreate("faces-config/factory", Factory.class);

@@ -353,12 +353,12 @@ public final class ServletExternalContextImpl extends ServletExternalContextImpl
     private String encodeWindowId(String encodedUrl)
     {
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        if (ClientWindow.isClientWindowRenderModeEnabled(facesContext))
+        ClientWindow window = facesContext.getExternalContext().getClientWindow();
+        if (window != null)
         {
-            //TODO: Use StringBuilder or some optimization.
-            ClientWindow window = facesContext.getExternalContext().getClientWindow();
-            if (window != null)
+            if (window.isClientWindowRenderModeEnabled(facesContext))
             {
+            //TODO: Use StringBuilder or some optimization.
                 Map<String, String> map = window.getQueryURLParameters(facesContext);
                 if (map != null)
                 {
@@ -847,11 +847,11 @@ public final class ServletExternalContextImpl extends ServletExternalContextImpl
         }
         
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        if (ClientWindow.isClientWindowRenderModeEnabled(facesContext))
+        ClientWindow window = facesContext.getExternalContext().getClientWindow();
+        if (window != null)
         {
             //TODO: Use StringBuilder or some optimization.
-            ClientWindow window = facesContext.getExternalContext().getClientWindow();
-            if (window != null)
+            if (window.isClientWindowRenderModeEnabled(facesContext))
             {
                 Map<String, String> map = window.getQueryURLParameters(facesContext);
                 if (map != null)

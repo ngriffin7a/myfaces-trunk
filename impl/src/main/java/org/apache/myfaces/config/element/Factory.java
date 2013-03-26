@@ -57,7 +57,29 @@ public abstract class Factory implements Serializable
         return Collections.emptyList();
     }
     
+    /**
+     * @since 2.2
+     * @return 
+     */
     public List<String> getFlashFactory()
+    {
+        return Collections.emptyList();
+    }
+    
+    /**
+     * @since 2.2
+     * @return 
+     */
+    public List<String> getFlowHandlerFactory()
+    {
+        return Collections.emptyList();
+    }
+
+    /**
+     * @since 2.2
+     * @return 
+     */
+    public List<String> getClientWindowFactory()
     {
         return Collections.emptyList();
     }

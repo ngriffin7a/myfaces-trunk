@@ -94,6 +94,7 @@ import org.apache.myfaces.context.servlet.ServletFlashFactoryImpl;
 import org.apache.myfaces.el.DefaultPropertyResolver;
 import org.apache.myfaces.el.VariableResolverImpl;
 import org.apache.myfaces.el.unified.ResolverBuilderBase;
+import org.apache.myfaces.lifecycle.ClientWindowFactoryImpl;
 import org.apache.myfaces.lifecycle.LifecycleFactoryImpl;
 import org.apache.myfaces.renderkit.RenderKitFactoryImpl;
 import org.apache.myfaces.renderkit.html.HtmlRenderKitImpl;
@@ -143,6 +144,7 @@ public class FacesConfigurator
     private static final String DEFAULT_TAG_HANDLER_DELEGATE_FACTORY = TagHandlerDelegateFactoryImpl.class.getName();
     private static final String DEFAULT_FACELET_CACHE_FACTORY = FaceletCacheFactoryImpl.class.getName();
     private static final String DEFAULT_FLASH_FACTORY = ServletFlashFactoryImpl.class.getName();
+    private static final String DEFAULT_CLIENT_WINDOW_FACTORY = ClientWindowFactoryImpl.class.getName();
     private static final String DEFAULT_FACES_CONFIG = "/WEB-INF/faces-config.xml";
 
     private final ExternalContext _externalContext;
@@ -495,7 +497,8 @@ public class FacesConfigurator
                 DEFAULT_FACELET_CACHE_FACTORY);
         setFactories(FactoryFinder.FLASH_FACTORY, dispenser.getFlashFactoryIterator(),
                 DEFAULT_FLASH_FACTORY);
-
+        setFactories(FactoryFinder.CLIENT_WINDOW_FACTORY, dispenser.getClientWindowFactoryIterator(),
+                DEFAULT_CLIENT_WINDOW_FACTORY);
     }
 
     private void setFactories(String factoryName, Collection<String> factories, String defaultFactory)

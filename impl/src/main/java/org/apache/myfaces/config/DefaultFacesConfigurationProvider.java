@@ -237,7 +237,18 @@ public class DefaultFacesConfigurationProvider extends FacesConfigurationProvide
                     {
                         factory.addViewDeclarationLanguageFactory(className);
                     }
-                    
+                    else if(factoryName.equals(FactoryFinder.FLASH_FACTORY)) 
+                    {
+                        factory.addFlashFactory(className);
+                    }
+                    else if(factoryName.equals(FactoryFinder.FLOW_HANDLER_FACTORY)) 
+                    {
+                        factory.addFlowHandlerFactory(className);
+                    }
+                    else if(factoryName.equals(FactoryFinder.CLIENT_WINDOW_FACTORY)) 
+                    {
+                        factory.addClientWindowFactory(className);
+                    }
                     else
                     {
                         throw new IllegalStateException("Unexpected factory name " + factoryName);
