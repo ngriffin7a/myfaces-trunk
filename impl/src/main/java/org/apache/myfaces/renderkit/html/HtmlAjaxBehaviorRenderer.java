@@ -190,7 +190,8 @@ public class HtmlAjaxBehaviorRenderer extends ClientBehaviorRenderer
          * since version 2.2
          */
         String delay = behavior.getDelay();
-        if (delay != null && !delay.trim().equals(EMPTY)) {
+        if (delay != null && !delay.trim().equals(EMPTY))
+        {
             paramBuffer.setLength(0);
             paramBuffer.append(AJAX_KEY_DELAY);
             paramBuffer.append(COLON);
@@ -205,7 +206,8 @@ public class HtmlAjaxBehaviorRenderer extends ClientBehaviorRenderer
          * since version 2.2
          */
         String resetValues = Boolean.toString(behavior.isResetValues());
-        if (resetValues.equals("true")) {
+        if (resetValues.equals("true"))
+        {
             paramBuffer.setLength(0);
             paramBuffer.append(AJAX_KEY_RESETVALUES);
             paramBuffer.append(COLON);
@@ -271,7 +273,8 @@ public class HtmlAjaxBehaviorRenderer extends ClientBehaviorRenderer
         /*
          * since version 2.2
          */
-        if (resetValues != null) {
+        if (resetValues != null)
+        {
             parameterList.add(resetValues);
         }
         if (paramSize > 0)
