@@ -19,42 +19,47 @@
 package javax.faces.lifecycle;
 
 import java.util.Map;
+import javax.faces.FacesWrapper;
 import javax.faces.context.FacesContext;
 
 /**
  *
  * @since 2.2
- * @author Leonardo Uribe
  */
-public abstract class ClientWindow
+public abstract class ClientWindowWrapper extends ClientWindow 
+    implements FacesWrapper<ClientWindow>
 {
-    
-    public static final String CLIENT_WINDOW_MODE_PARAM_NAME = 
-            "javax.faces.CLIENT_WINDOW_MODE";
-    
-    private static final String CLIENT_WINDOW_RENDER_MODE_DISABLED = 
-            "org.apache.myfaces.CLIENT_WINDOW_URL_QUERY_PARAMETER_DISABLED";
-    
-    public abstract void decode(FacesContext context);
-    
-    public abstract String getId();
-    
-    public abstract Map<String,String> getQueryURLParameters(FacesContext context);
-    
+
+    public void decode(FacesContext context)
+    {
+        getWrapped().decode(context);
+    }
+
+    public String getId()
+    {
+        return getWrapped().getId();
+    }
+
+    public Map<String, String> getQueryURLParameters(FacesContext context)
+    {
+        return getWrapped().getQueryURLParameters(context);
+    }
+
     public boolean isClientWindowRenderModeEnabled(FacesContext context)
     {
-        // By default is enabled, so it is easier to check the opposite.
-        return !Boolean.TRUE.equals(
-                context.getAttributes().get(CLIENT_WINDOW_RENDER_MODE_DISABLED));
+        return getWrapped().isClientWindowRenderModeEnabled(context);
     }
-    
+
     public void disableClientWindowRenderMode(FacesContext context)
     {
-        context.getAttributes().put(CLIENT_WINDOW_RENDER_MODE_DISABLED, Boolean.TRUE);
+        getWrapped().disableClientWindowRenderMode(context);
     }
-    
+
     public void enableClientWindowRenderMode(FacesContext context)
     {
-        context.getAttributes().put(CLIENT_WINDOW_RENDER_MODE_DISABLED, Boolean.FALSE);
+        getWrapped().enableClientWindowRenderMode(context);
     }
+    
+    public abstract ClientWindow getWrapped();
+
 }
