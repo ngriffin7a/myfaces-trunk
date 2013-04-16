@@ -21,9 +21,19 @@ import junit.framework.TestCase;
 
 import org.apache.myfaces.config.impl.digester.DigesterFacesConfigUnmarshallerImpl;
 import org.apache.myfaces.config.element.Application;
+import org.apache.myfaces.config.element.ContractMapping;
 import org.apache.myfaces.config.element.FacesConfig;
 import org.apache.myfaces.config.element.FacesConfigNameSlot;
+import org.apache.myfaces.config.element.FacesFlowCall;
+import org.apache.myfaces.config.element.FacesFlowDefinition;
+import org.apache.myfaces.config.element.FacesFlowMethodCall;
+import org.apache.myfaces.config.element.FacesFlowParameter;
+import org.apache.myfaces.config.element.FacesFlowReturn;
+import org.apache.myfaces.config.element.FacesFlowSwitch;
+import org.apache.myfaces.config.element.FacesFlowView;
 import org.apache.myfaces.config.element.LocaleConfig;
+import org.apache.myfaces.config.element.NavigationCase;
+import org.apache.myfaces.config.element.NavigationRule;
 import org.apache.myfaces.config.element.OrderSlot;
 
 /**
@@ -156,5 +166,103 @@ public class DigesterFacesConfigUnmarshallerImplTest extends TestCase
         assertTrue(cfg.getNavigationRules().isEmpty());
         assertTrue(cfg.getRenderKits().isEmpty());
         assertTrue(cfg.getValidators().isEmpty());
-    }    
+    }
+    
+    public void testFacesFlowConfig() throws Exception
+    {
+        FacesConfig cfg = _impl.getFacesConfig(getClass().getResourceAsStream(
+                "faces-flow.xml"), "faces-flow.xml");
+
+        assertNotNull(cfg);
+        assertEquals(1, cfg.getFacesFlowDefinitions().size());
+        FacesFlowDefinition facesFlowDefinition = cfg.getFacesFlowDefinitions().get(0);
+        
+        assertEquals("flow1", facesFlowDefinition.getId());
+        assertEquals("node1", facesFlowDefinition.getStartNode());
+        assertEquals("#{flowBean.init}", facesFlowDefinition.getInitializer());
+        assertEquals("#{flowBean.finalize}", facesFlowDefinition.getFinalizer());
+        
+        //view
+        assertEquals(1, facesFlowDefinition.getViewList().size());
+        FacesFlowView facesFlowView = facesFlowDefinition.getViewList().get(0);
+        assertEquals("outcome2", facesFlowView.getId());
+        assertEquals("outcome-to-2.xhtml", facesFlowView.getVdlDocument());
+
+        //switch
+        assertEquals(1, facesFlowDefinition.getSwitchList().size());
+        FacesFlowSwitch facesFlowSwitch = facesFlowDefinition.getSwitchList().get(0);
+        assertEquals("switch1", facesFlowSwitch.getId());
+        assertEquals("outcome2", facesFlowSwitch.getDefaultOutcome().getFromOutcome());
+        NavigationCase swNavigationCase = facesFlowSwitch.getNavigationCaseList().get(0);
+        assertEquals("#{flowBean.token > 0}", swNavigationCase.getIf());
+        assertEquals("outcome2", swNavigationCase.getFromOutcome());
+
+        //flow return
+        assertEquals(1, facesFlowDefinition.getReturnList().size());
+        FacesFlowReturn facesFlowReturn = facesFlowDefinition.getReturnList().get(0);
+        assertEquals("flowReturn1", facesFlowReturn.getId());
+        assertEquals("/outcome1", facesFlowReturn.getNavigationCase().getFromOutcome());
+        
+        //navigation rule
+        assertEquals(1, facesFlowDefinition.getNavigationRuleList().size());
+        NavigationRule navigationRule = facesFlowDefinition.getNavigationRuleList().get(0);
+        assertEquals("/x.xhtml", navigationRule.getFromViewId());
+        assertEquals(1, navigationRule.getNavigationCases().size());
+        NavigationCase navigationCase = navigationRule.getNavigationCases().get(0);
+        assertEquals("go", navigationCase.getFromOutcome());
+        assertEquals("#{test.true}", navigationCase.getIf());
+        assertEquals("/y.xhtml", navigationCase.getToViewId());
+
+        //flow call
+        assertEquals(1, facesFlowDefinition.getFlowCallList().size());
+        FacesFlowCall facesFlowCall = facesFlowDefinition.getFlowCallList().get(0);
+        assertEquals("flowCall", facesFlowCall.getId());
+        assertEquals("flow2", facesFlowCall.getCalledFlowId());
+        assertEquals(1, facesFlowCall.getOutboundParameterList().size());
+        FacesFlowParameter facesFlowOutboundParameter = facesFlowCall.getOutboundParameterList().get(0);
+        assertEquals("name1", facesFlowOutboundParameter.getName());
+        assertEquals("value1", facesFlowOutboundParameter.getValue());
+        
+        //method call
+        assertEquals(1, facesFlowDefinition.getMethodCallList().size());
+        FacesFlowMethodCall facesFlowMethodCall = facesFlowDefinition.getMethodCallList().get(0);
+        assertEquals("method1", facesFlowMethodCall.getId());
+        assertEquals("#{flowBean.doSomething}", facesFlowMethodCall.getMethod());
+        assertEquals("outcome2", facesFlowMethodCall.getDefaultOutcome());
+        
+        //inbound param
+        assertEquals(1, facesFlowDefinition.getInboundParameterList().size());
+        FacesFlowParameter facesFlowParameter = facesFlowDefinition.getInboundParameterList().get(0);
+        assertEquals("name1", facesFlowParameter.getName());
+        assertEquals("value1", facesFlowParameter.getValue());
+    }
+    
+    public void testCsrf() throws Exception
+    {
+        FacesConfig cfg = _impl.getFacesConfig(getClass().getResourceAsStream(
+                "csrf-and-contracts.xml"), "csrf-and-contracts.xml");
+        
+        assertNotNull(cfg);
+        assertEquals(2, cfg.getProtectedViewsUrlPatternList().size());
+        assertEquals("/files/*.xhtml", cfg.getProtectedViewsUrlPatternList().get(0));
+        assertEquals("/files2/*.xhtml", cfg.getProtectedViewsUrlPatternList().get(1));
+        
+        
+    }
+    
+    public void testContracts() throws Exception
+    {
+        FacesConfig cfg = _impl.getFacesConfig(getClass().getResourceAsStream(
+                "csrf-and-contracts.xml"), "csrf-and-contracts.xml");
+        
+        assertNotNull(cfg);
+
+        Application app = cfg.getApplications().get(0);
+        assertNotNull(app);
+        assertEquals(1, app.getResourceLibraryContractMappings().size());
+        
+        ContractMapping mapping = app.getResourceLibraryContractMappings().get(0);
+        assertEquals("/files/*.xhtml", mapping.getUrlPattern());
+        assertEquals("contractA contractB", mapping.getContracts());
+    }
 }

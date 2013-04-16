@@ -141,7 +141,7 @@ public class HtmlCheckboxRendererBase extends HtmlRenderer
 
         if (!pageDirectionLayout)
         {
-            writer.startElement(HTML.TR_ELEM, selectMany);
+            writer.startElement(HTML.TR_ELEM, null); //selectMany);
         }
         
         Converter converter = getConverter(facesContext, selectMany);
@@ -216,10 +216,10 @@ public class HtmlCheckboxRendererBase extends HtmlRenderer
         {
             if (pageDirectionLayout)
             {
-                writer.startElement(HTML.TR_ELEM, selectMany);
+                writer.startElement(HTML.TR_ELEM, null); // selectMany);
             }
 
-            writer.startElement(HTML.TD_ELEM, selectMany);
+            writer.startElement(HTML.TD_ELEM, null); // selectMany);
             if (selectItem.isEscape())
             {
                 writer.writeText(selectItem.getLabel(),HTML.LABEL_ATTR);
@@ -233,16 +233,16 @@ public class HtmlCheckboxRendererBase extends HtmlRenderer
             if (pageDirectionLayout)
             {
                 writer.endElement(HTML.TR_ELEM);
-                writer.startElement(HTML.TR_ELEM, selectMany);
+                writer.startElement(HTML.TR_ELEM, null); // selectMany);
             }
-            writer.startElement(HTML.TD_ELEM, selectMany);
+            writer.startElement(HTML.TD_ELEM, null); // selectMany);
 
-            writer.startElement(HTML.TABLE_ELEM, selectMany);
+            writer.startElement(HTML.TABLE_ELEM, null); // selectMany);
             writer.writeAttribute(HTML.BORDER_ATTR, "0", null);
             
             if(!pageDirectionLayout)
             {
-                writer.startElement(HTML.TR_ELEM, selectMany);
+                writer.startElement(HTML.TR_ELEM, null); // selectMany);
             }
 
             SelectItemGroup group = (SelectItemGroup) selectItem;
@@ -290,9 +290,9 @@ public class HtmlCheckboxRendererBase extends HtmlRenderer
             writer.write("\t\t");
             if (pageDirectionLayout)
             {
-                writer.startElement(HTML.TR_ELEM, selectMany);
+                writer.startElement(HTML.TR_ELEM, null); // selectMany);
             }
-            writer.startElement(HTML.TD_ELEM, selectMany);
+            writer.startElement(HTML.TD_ELEM, null); // selectMany);
 
             boolean disabled = selectItem.isDisabled();
 

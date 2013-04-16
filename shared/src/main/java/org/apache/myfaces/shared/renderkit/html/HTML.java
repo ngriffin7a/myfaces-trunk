@@ -356,6 +356,7 @@ public interface HTML
     String INPUT_TYPE_TEXT = "text";
     String INPUT_TYPE_RADIO = "radio";
     String INPUT_TYPE_BUTTON = "button";
+    String INPUT_TYPE_FILE = "file";
 
     // <button>
     String[] BUTTON_ATTRIBUTES =

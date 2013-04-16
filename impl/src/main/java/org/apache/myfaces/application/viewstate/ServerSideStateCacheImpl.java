@@ -36,6 +36,8 @@ import java.util.zip.GZIPOutputStream;
 
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.lifecycle.ClientWindow;
+
 import org.apache.myfaces.application.StateCache;
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
 import org.apache.myfaces.shared.renderkit.RendererUtils;
@@ -285,7 +287,16 @@ class ServerSideStateCacheImpl extends StateCache<Object, Object>
             
             if (key == null )
             {
-                if (isUseFlashScopePurgeViewsInSession(context.getExternalContext()) && 
+                // Check if clientWindow is enabled and if the last view key is stored
+                // into session, so we can use it to chain the precedence in GET-GET
+                // cases.
+                ClientWindow clientWindow = context.getExternalContext().getClientWindow();
+                if (clientWindow != null)
+                {
+                    key = (SerializedViewKey) viewCollection.
+                            getLastWindowKey(context, clientWindow.getId());
+                }
+                else if (isUseFlashScopePurgeViewsInSession(context.getExternalContext()) && 
                     Boolean.TRUE.equals(context.getExternalContext().getRequestMap()
                             .get("oam.Flash.REDIRECT.PREVIOUSREQUEST")))
                 {
@@ -299,6 +310,13 @@ class ServerSideStateCacheImpl extends StateCache<Object, Object>
                 context, context.getViewRoot().getViewId(), getNextViewSequence(context));
         viewCollection.add(context, serializeView(context, serializedView), nextKey, key);
 
+        ClientWindow clientWindow = context.getExternalContext().getClientWindow();
+        if (clientWindow != null)
+        {
+            //Update the last key generated for the current windowId in session map
+            viewCollection.putLastWindowKey(context, clientWindow.getId(), nextKey);
+        }
+        
         // replace the value to notify the container about the change
         sessionMap.put(SERIALIZED_VIEW_SESSION_ATTR, viewCollection);
     }

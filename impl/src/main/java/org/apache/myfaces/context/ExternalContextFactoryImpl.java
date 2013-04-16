@@ -19,8 +19,10 @@
 package org.apache.myfaces.context;
 
 import javax.faces.FacesException;
+import javax.faces.FactoryFinder;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.ExternalContextFactory;
+import javax.faces.context.FlashFactory;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -38,6 +40,14 @@ public class ExternalContextFactoryImpl extends ExternalContextFactory
 
     public static final String EXTERNAL_CONTEXT_KEY = 
         "org.apache.myfaces.context.servlet.ServletExternalContextImpl";
+    
+    private final FlashFactory _flashFactory;
+    
+    public ExternalContextFactoryImpl()
+    {
+        _flashFactory = (FlashFactory) FactoryFinder.getFactory(
+                    FactoryFinder.FLASH_FACTORY);
+    }
     
     @Override
     public ExternalContext getExternalContext(Object context, Object request,
@@ -59,7 +69,8 @@ public class ExternalContextFactoryImpl extends ExternalContextFactory
         if (context instanceof ServletContext)
         {
             ExternalContext externalContext = new ServletExternalContextImpl(
-                    (ServletContext) context, (ServletRequest) request, (ServletResponse) response);
+                    (ServletContext) context, (ServletRequest) request, (ServletResponse) response,
+                    _flashFactory);
             
             externalContext.getRequestMap().put(EXTERNAL_CONTEXT_KEY, externalContext);
             

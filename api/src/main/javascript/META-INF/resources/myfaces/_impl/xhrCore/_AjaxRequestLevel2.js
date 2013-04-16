@@ -19,37 +19,70 @@
  * IT is a specialized request which uses the form data
  * element for the handling of forms
  */
-_MF_CLS(_PFX_XHR+"_AjaxRequestLevel2", myfaces._impl.xhrCore._AjaxRequest, {
+_MF_CLS(_PFX_XHR + "_MultipartAjaxRequestLevel2", myfaces._impl.xhrCore._AjaxRequest, {
 
-    _sourceForm: null,
+    _sourceForm:null,
 
-    constructor_: function(arguments) {
+    constructor_:function (arguments) {
         this._callSuper("constructor_", arguments);
         //TODO xhr level2 can deal with real props
 
     },
 
-    getFormData: function() {
+    getFormData:function () {
         var ret;
-        if (!this._partialIdsArray || this._partialIdsArray.length == 0) {
+        //in case of a multipart form post we savely can use the FormData object
+        if (this._context._mfInternal.xhrOp === "multipartQueuedPost") {
             ret = new FormData(this._sourceForm);
+            this._AJAXUTIL.appendIssuingItem(this._source, ret);
         } else {
-            //for speed reasons we only need encodesubmittablefields
-            //in the pps case
-            ret = new FormData(this._sourceForm);
-            this._AJAXUTIL.encodeSubmittableFields(ret, this._xhr, this._context, this._source,
-                    this._sourceForm, this._partialIdsArray);
+            //we switch back to the encode submittable fields system
+            this._AJAXUTIL.encodeSubmittableFields(ret, this._sourceForm, null);
+            this._AJAXUTIL.appendIssuingItem(this._source, ret);
         }
         return ret;
     },
 
-    _formDataToURI: function() {
-        //i assume in xhr level2 form data takes care of the http get parametrisation
+    /**
+     * applies the content type, this needs to be done only for xhr
+     * level1
+     * @param xhr
+     * @private
+     */
+    _applyContentType:function (xhr) {
+        //content type is not set in case of xhr level2 because
+        //the form data object does it itself
+    },
+
+    _formDataToURI:function (formData) {
+        //in xhr level2 form data takes care of the http get parametrisation
         return "";
     },
 
-    _getTransport: function() {
+    _getTransport:function () {
         return new XMLHttpRequest();
     }
-
 });
+
+/**
+ * for normal requests we basically use
+ * only the xhr level2 object but
+ */
+_MF_CLS(_PFX_XHR + "_AjaxRequestLevel2", myfaces._impl.xhrCore._AjaxRequest, {
+
+    _sourceForm:null,
+
+    constructor_:function (arguments) {
+        this._callSuper("constructor_", arguments);
+        //TODO xhr level2 can deal with real props
+
+    },
+
+    _getTransport:function () {
+        return new XMLHttpRequest();
+    }
+});
+
+
+
+

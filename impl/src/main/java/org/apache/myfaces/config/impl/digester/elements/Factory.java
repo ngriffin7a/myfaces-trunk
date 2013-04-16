@@ -38,6 +38,9 @@ public class Factory extends org.apache.myfaces.config.element.Factory implement
     private List<String> tagHandlerDelegateFactories = new ArrayList<String>();
     private List<String> visitContextFactories = new ArrayList<String>();
     private List<String> faceletCacheFactories = new ArrayList<String>();
+    private List<String> flowHandlerFactories = new ArrayList<String>();
+    private List<String> flashFactories = new ArrayList<String>();
+    private List<String> clientWindowFactories = new ArrayList<String>();
 
     public void addApplicationFactory(String factory)
     {
@@ -94,6 +97,21 @@ public class Factory extends org.apache.myfaces.config.element.Factory implement
         faceletCacheFactories.add(factory);
     }
 
+    public void addFlashFactory(String factory)
+    {
+        flashFactories.add(factory);
+    }
+    
+    public void addFlowHandlerFactory(String factory)
+    {
+        flowHandlerFactories.add(factory);
+    }
+
+    public void addClientWindowFactory(String factory)
+    {
+        clientWindowFactories.add(factory);
+    }
+    
     public List<String> getApplicationFactory()
     {
         return applicationFactories;
@@ -149,5 +167,22 @@ public class Factory extends org.apache.myfaces.config.element.Factory implement
     {
         return faceletCacheFactories;
     }
-    
+
+    @Override
+    public List<String> getFlashFactory()
+    {
+        return flashFactories;
+    }
+
+    @Override
+    public List<String> getFlowHandlerFactory()
+    {
+        return flowHandlerFactories;
+    }
+
+    @Override
+    public List<String> getClientWindowFactory()
+    {
+        return clientWindowFactories;
+    }
 }

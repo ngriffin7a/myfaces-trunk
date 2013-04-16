@@ -34,10 +34,13 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.faces.FacesException;
+import javax.faces.FactoryFinder;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
+import javax.faces.context.FlashFactory;
 import javax.faces.context.PartialResponseWriter;
 import javax.faces.context.PartialViewContext;
+import javax.faces.lifecycle.ClientWindow;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -81,6 +84,8 @@ public final class ServletExternalContextImpl extends ServletExternalContextImpl
     private HttpServletResponse _httpServletResponse;
     private String _requestServletPath;
     private String _requestPathInfo;
+    private FlashFactory _flashFactory;
+    private Flash _flash;
 
     public ServletExternalContextImpl(final ServletContext servletContext, 
             final ServletRequest servletRequest,
@@ -109,6 +114,15 @@ public final class ServletExternalContextImpl extends ServletExternalContextImpl
             _requestPathInfo = _httpServletRequest.getPathInfo();
         }
     }
+    
+    public ServletExternalContextImpl(final ServletContext servletContext, 
+            final ServletRequest servletRequest,
+            final ServletResponse servletResponse,
+            final FlashFactory flashFactory)
+    {
+        this(servletContext, servletRequest, servletResponse);
+        _flashFactory = flashFactory;
+    }
 
     public void release()
     {
@@ -133,6 +147,22 @@ public final class ServletExternalContextImpl extends ServletExternalContextImpl
         checkHttpServletRequest();
         return ((HttpServletRequest) _servletRequest).getSession(create);
     }
+    
+    @Override
+    public String getSessionId(boolean create)
+    {
+        checkHttpServletRequest();
+        HttpSession session = ((HttpServletRequest) _servletRequest).getSession(create);
+        if (session != null)
+        {
+            return session.getId();
+        }
+        else
+        {
+            return "";
+        }
+    }
+    
 
     @Override
     public Object getRequest()
@@ -314,7 +344,35 @@ public final class ServletExternalContextImpl extends ServletExternalContextImpl
     {
         checkNull(url, "url");
         checkHttpServletRequest();
-        return ((HttpServletResponse) _servletResponse).encodeURL(url);
+        String encodedUrl = ((HttpServletResponse) _servletResponse).encodeURL(url);
+        encodedUrl = encodeURL(encodedUrl, null);
+        //encodedUrl = encodeWindowId(encodedUrl);
+        return encodedUrl;
+    }
+    
+    private String encodeWindowId(String encodedUrl)
+    {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ClientWindow window = facesContext.getExternalContext().getClientWindow();
+        if (window != null)
+        {
+            if (window.isClientWindowRenderModeEnabled(facesContext))
+            {
+            //TODO: Use StringBuilder or some optimization.
+                Map<String, String> map = window.getQueryURLParameters(facesContext);
+                if (map != null)
+                {
+                    for (Map.Entry<String , String> entry : map.entrySet())
+                    {
+                        encodedUrl = encodedUrl + ( (encodedUrl.indexOf(URL_QUERY_SEPERATOR) != -1) ? 
+                            URL_PARAM_SEPERATOR : URL_QUERY_SEPERATOR ) + 
+                            entry.getKey() +
+                            URL_NAME_VALUE_PAIR_SEPERATOR+ entry.getValue();
+                    }
+                }
+            }
+        }
+        return encodedUrl;
     }
 
     @Override
@@ -342,12 +400,14 @@ public final class ServletExternalContextImpl extends ServletExternalContextImpl
     {
         checkNull(url, "url");
         checkHttpServletRequest();
-        return ((HttpServletResponse) _servletResponse).encodeURL(url);
+        //return encodeWindowId(((HttpServletResponse) _servletResponse).encodeURL(url));
+        return encodeURL(((HttpServletResponse) _servletResponse).encodeURL(url), null);
     }
 
     @Override
     public String encodeRedirectURL(String baseUrl, Map<String,List<String>> parameters)
     {
+        //return encodeWindowId(_httpServletResponse.encodeRedirectURL(encodeURL(baseUrl, parameters)));
         return _httpServletResponse.encodeRedirectURL(encodeURL(baseUrl, parameters));
     }
 
@@ -704,6 +764,11 @@ public final class ServletExternalContextImpl extends ServletExternalContextImpl
                     cookie.setPath((String) propertyValue);
                     continue;
                 }
+                else if ("httpOnly".equals(propertyKey))
+                {
+                    cookie.setHttpOnly((Boolean) propertyValue);
+                    continue;
+                }
                 throw new IllegalArgumentException("Unused key when creating Cookie");
             }
         }
@@ -780,6 +845,30 @@ public final class ServletExternalContextImpl extends ServletExternalContextImpl
                 }
             }
         }
+        
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ClientWindow window = facesContext.getExternalContext().getClientWindow();
+        if (window != null)
+        {
+            //TODO: Use StringBuilder or some optimization.
+            if (window.isClientWindowRenderModeEnabled(facesContext))
+            {
+                Map<String, String> map = window.getQueryURLParameters(facesContext);
+                if (map != null)
+                {
+                    for (Map.Entry<String , String> entry : map.entrySet())
+                    {
+                        ArrayList<String> value = new ArrayList<String>(1);
+                        value.add(entry.getValue());
+                        if (paramMap == null)
+                        {
+                            paramMap = new HashMap<String, List<String>>();
+                        }
+                        paramMap.put(entry.getKey(), value);
+                    }
+                }
+            }
+        }        
 
         // start building the new URL
         StringBuilder newUrl = new StringBuilder(baseUrl);
@@ -832,7 +921,29 @@ public final class ServletExternalContextImpl extends ServletExternalContextImpl
      */
     public Flash getFlash()
     {
-        return FlashImpl.getCurrentInstance(this);
+        if (_flash == null)
+        {
+            if (_flashFactory == null)
+            {
+                _flashFactory = (FlashFactory) FactoryFinder.getFactory(
+                    FactoryFinder.FLASH_FACTORY);
+                if (_flashFactory == null)
+                {
+                    //Fallback to servlet default flash
+                    _flash = FlashImpl.getCurrentInstance(this);
+                }
+                else
+                {
+                    _flash = _flashFactory.getFlash(true);
+                }
+            }
+            else
+            {
+                _flash = _flashFactory.getFlash(true);
+            }
+        }
+        return _flash;
+        //return FlashImpl.getCurrentInstance(this);
     }
 
     @Override

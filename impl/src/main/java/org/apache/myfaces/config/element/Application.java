@@ -61,4 +61,5 @@ public abstract class Application implements Serializable
 
     public abstract boolean isDefaultValidatorsPresent();
 
+    public abstract List<ContractMapping> getResourceLibraryContractMappings();
 }

@@ -548,7 +548,7 @@ public final class HtmlRendererUtils
             SelectItem selectItem = (SelectItem) it.next();
             if (selectItem instanceof SelectItemGroup)
             {
-                writer.startElement(HTML.OPTGROUP_ELEM, component);
+                writer.startElement(HTML.OPTGROUP_ELEM, null); // component);
                 writer.writeAttribute(HTML.LABEL_ATTR, selectItem.getLabel(),
                         null);
                 SelectItem[] selectItems = ((SelectItemGroup) selectItem)
@@ -581,7 +581,7 @@ public final class HtmlRendererUtils
                 }
 
                 writer.write(TABULATOR);
-                writer.startElement(HTML.OPTION_ELEM, component);
+                writer.startElement(HTML.OPTION_ELEM, null); // component);
                 if (itemStrValue != null)
                 {
                     writer.writeAttribute(HTML.VALUE_ATTR, itemStrValue, null);
@@ -1118,7 +1118,7 @@ public final class HtmlRendererUtils
                     //only when useSubmittedValue==true, else use the real item value Objects
                     if (!isSelectOne)
                     {
-                        writer.startElement(HTML.LI_ELEM, component);
+                        writer.startElement(HTML.LI_ELEM, null); // component);
                     }
                     writer.writeText(selectItem.getLabel(), null);
                     if (!isSelectOne)
@@ -1165,7 +1165,7 @@ public final class HtmlRendererUtils
                     .get(org.apache.myfaces.shared.renderkit.JSFAttr.CAPTION_STYLE_ATTR);
         }
         HtmlRendererUtils.writePrettyLineSeparator(context);
-        writer.startElement(HTML.CAPTION_ELEM, component);
+        writer.startElement(HTML.CAPTION_ELEM, null); // component);
         if (captionClass != null)
         {
             writer.writeAttribute(HTML.CLASS_ATTR, captionClass, null);
@@ -1399,7 +1399,7 @@ public final class HtmlRendererUtils
             UIComponent component, String forClientId, String labelValue,
             boolean disabled) throws IOException
     {
-        writer.startElement(HTML.LABEL_ELEM, component);
+        writer.startElement(HTML.LABEL_ELEM, null); // component);
         writer.writeAttribute(HTML.FOR_ATTR, forClientId, null);
         String labelClass = null;
         if (disabled)
@@ -1430,7 +1430,7 @@ public final class HtmlRendererUtils
             UIComponent component, String forClientId, SelectItem item,
             boolean disabled) throws IOException
     {
-        writer.startElement(HTML.LABEL_ELEM, component);
+        writer.startElement(HTML.LABEL_ELEM, null); // component);
         writer.writeAttribute(HTML.FOR_ATTR, forClientId, null);
         String labelClass = null;
         if (disabled)
@@ -1471,7 +1471,7 @@ public final class HtmlRendererUtils
             UIComponent component, String forClientId, SelectItem item,
             boolean disabled, boolean selected) throws IOException
     {
-        writer.startElement(HTML.LABEL_ELEM, component);
+        writer.startElement(HTML.LABEL_ELEM, null); // component);
         writer.writeAttribute(HTML.FOR_ATTR, forClientId, null);
         String labelClass = null;
         if (disabled)

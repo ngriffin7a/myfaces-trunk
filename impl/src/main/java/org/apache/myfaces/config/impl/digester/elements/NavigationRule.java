@@ -21,7 +21,6 @@ package org.apache.myfaces.config.impl.digester.elements;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Collection;
 
 
 /**
@@ -53,7 +52,7 @@ public class NavigationRule extends org.apache.myfaces.config.element.Navigation
     }
 
 
-    public Collection<org.apache.myfaces.config.element.NavigationCase> getNavigationCases()
+    public List<org.apache.myfaces.config.element.NavigationCase> getNavigationCases()
     {
         return navigationCases;
     }

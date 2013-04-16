@@ -70,4 +70,23 @@ public abstract class FacesConfig implements Serializable
     {
         return Collections.emptyList();
     }
+    
+    /**
+     * @since 2.2.0
+     * @return 
+     */
+    public List<FacesFlowDefinition> getFacesFlowDefinitions()
+    {
+        return Collections.emptyList();
+    }
+
+    
+    /**
+     * @since 2.2.0
+     * @return 
+     */
+    public List<String> getProtectedViewsUrlPatternList()
+    {
+        return Collections.emptyList();
+    }
 }

@@ -41,6 +41,7 @@ abstract class SessionViewStorageFactory<T extends KeyFactory<K>, K>
 
     public abstract SerializedViewCollection createSerializedViewCollection(FacesContext context);
 
-    public abstract SerializedViewKey createSerializedViewKey(FacesContext facesContext, String viewId, K key);
+    public abstract SerializedViewKey createSerializedViewKey(
+        FacesContext facesContext, String viewId, K key);
     
 }

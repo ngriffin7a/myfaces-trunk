@@ -91,6 +91,7 @@ public abstract class UIComponentBase extends UIComponent
             = "javax.faces.component.UIComponentBase.SHARED_STRING_BUILDER";
 
     private _ComponentAttributesMap _attributesMap = null;
+    private _PassThroughAttributesMap _passthroughAttributesMap = null;
     private List<UIComponent> _childrenList = null;
     private Map<String, UIComponent> _facetMap = null;
     private _DeltaList<FacesListener> _facesListeners = null;
@@ -99,12 +100,19 @@ public abstract class UIComponentBase extends UIComponent
     private UIComponent _parent = null;
     private boolean _transient = false;
     
-    private boolean _isRendererTypeSet = false;
+    //private boolean _isRendererTypeSet = false;
     private String _rendererType;
     private String _markCreated;
     private String _facetName;
-    private boolean _addedByHandler = false;
-    private boolean _facetCreatedUIPanel = false;
+    //private boolean _addedByHandler = false;
+    //private boolean _facetCreatedUIPanel = false;
+    //private boolean _passthroughAttributesMapSet = false;
+    
+    private int _capabilities = 0;
+    private final static int FLAG_IS_RENDERER_TYPE_SET = 1;
+    private final static int FLAG_ADDED_BY_HANDLER = 2;
+    private final static int FLAG_FACET_CREATED_UIPANEL = 4;
+    private final static int FLAG_PASSTHROUGH_ATTRIBUTE_MAP_SET = 8;
 
     /**
      * This map holds ClientBehavior instances.
@@ -444,7 +452,8 @@ public abstract class UIComponentBase extends UIComponent
                 ((PartialStateHolder) entry.getValue()).clearInitialState();
             }
         }
-        _isRendererTypeSet = false;
+        //_isRendererTypeSet = false;
+        _capabilities &= ~(FLAG_IS_RENDERER_TYPE_SET);
     }
 
     /**
@@ -799,6 +808,30 @@ public abstract class UIComponentBase extends UIComponent
         }
 
         return _attributesMap;
+    }
+
+    @Override
+    public Map<String, Object> getPassThroughAttributes(boolean create)
+    {
+        // Take into account the param "create" in MyFaces case does not have
+        // sense at all
+        if (_passthroughAttributesMap == null)
+        {
+            if (!create)
+            {
+                if ((_capabilities & FLAG_PASSTHROUGH_ATTRIBUTE_MAP_SET) != 0)
+                {
+                    // Was already created, return wrapper
+                    _passthroughAttributesMap = new _PassThroughAttributesMap(this);
+                }
+            }
+            else
+            {
+                _passthroughAttributesMap = new _PassThroughAttributesMap(this);
+                _capabilities |= FLAG_PASSTHROUGH_ATTRIBUTE_MAP_SET;
+            }
+        }
+        return _passthroughAttributesMap;
     }
 
     /**
@@ -1922,12 +1955,12 @@ public abstract class UIComponentBase extends UIComponent
             
             if (facesListenersSaved == null && stateHelperSaved == null && 
                 behaviorsMapSaved == null && systemEventListenerClassMapSaved == null &&
-               !_isRendererTypeSet)
+               !((_capabilities & FLAG_IS_RENDERER_TYPE_SET) != 0))
             {
                 return null;
             }
             
-            if (_isRendererTypeSet)
+            if ((_capabilities & FLAG_IS_RENDERER_TYPE_SET) != 0)
             {
                 return new Object[] {facesListenersSaved, stateHelperSaved, behaviorsMapSaved,
                                     systemEventListenerClassMapSaved, 
@@ -1942,7 +1975,7 @@ public abstract class UIComponentBase extends UIComponent
         else
         {
             //Full
-            Object values[] = new Object[11];
+            Object values[] = new Object[9];
             values[0] = saveFacesListenersList(context);
             StateHelper stateHelper = getStateHelper(false);
             if (stateHelper != null)
@@ -1955,9 +1988,10 @@ public abstract class UIComponentBase extends UIComponent
             values[5] = _clientId;
             values[6] = _markCreated;
             values[7] = _rendererType;
-            values[8] = _isRendererTypeSet;
-            values[9] = _addedByHandler;
-            values[10] = _facetCreatedUIPanel;
+            values[8] = _capabilities;
+            //values[8] = _isRendererTypeSet;
+            //values[9] = _addedByHandler;
+            //values[10] = _facetCreatedUIPanel;
 
             return values;
         }
@@ -1993,7 +2027,7 @@ public abstract class UIComponentBase extends UIComponent
         
         Object values[] = (Object[]) state;
         
-        if ( values.length == 11 && initialStateMarked())
+        if ( values.length == 9 && initialStateMarked())
         {
             //Delta mode is active, but we are restoring a full state.
             //we need to clear the initial state, to restore state without
@@ -2011,7 +2045,7 @@ public abstract class UIComponentBase extends UIComponent
                         ((_AttachedDeltaWrapper) values[0]).getWrappedStateObject());
             //}
         }
-        else if (values[0] != null || (values.length == 11))
+        else if (values[0] != null || (values.length == 9))
         {
             //Full
             _facesListeners = (_DeltaList<FacesListener>)
@@ -2024,26 +2058,28 @@ public abstract class UIComponentBase extends UIComponent
         
         getStateHelper().restoreState(context, values[1]);
         
-        if (values.length == 11)
+        if (values.length == 9)
         {
             _id = (String) values[4];
             _clientId = (String) values[5];
             _markCreated = (String) values[6];
             _rendererType = (String) values[7];
-            _isRendererTypeSet = (Boolean) values[8];
-            _addedByHandler = (Boolean) values[9];
-            _facetCreatedUIPanel = (Boolean) values[10];
+            _capabilities = (Integer) values[8];
+            //_isRendererTypeSet = (Boolean) values[8];
+            //_addedByHandler = (Boolean) values[9];
+            //_facetCreatedUIPanel = (Boolean) values[10];
         }
         else if (values.length == 5)
         {
             _rendererType = (String) values[4];
-            _isRendererTypeSet = true;
+            //_isRendererTypeSet = true;
+            _capabilities |= FLAG_IS_RENDERER_TYPE_SET;
         }
 
         // rendererType needs to be restored before SystemEventListener,
         // otherwise UIComponent.getCurrentComponent(context).getRenderer(context)
         // will not work correctly
-        if (values.length == 11)
+        if (values.length == 9)
         {
             //Full restore
             restoreFullBehaviorsMap(context, values[2]);
@@ -2440,22 +2476,38 @@ public abstract class UIComponentBase extends UIComponent
     
     boolean isOamVfAddedByHandler()
     {
-        return _addedByHandler;
+        return (_capabilities & FLAG_ADDED_BY_HANDLER) != 0;
     }
     
     void setOamVfAddedByHandler(boolean addedByHandler)
     {
-        _addedByHandler = addedByHandler;
+        if (addedByHandler)
+        {
+            _capabilities |= FLAG_ADDED_BY_HANDLER;
+        }
+        else
+        {
+            _capabilities &= ~(FLAG_ADDED_BY_HANDLER);
+        }
+        //_addedByHandler = addedByHandler;
     }
     
     boolean isOamVfFacetCreatedUIPanel()
     {
-        return _facetCreatedUIPanel;
+        return (_capabilities & FLAG_FACET_CREATED_UIPANEL) != 0;
     }
     
     void setOamVfFacetCreatedUIPanel(boolean facetCreatedUIPanel)
     {
-        _facetCreatedUIPanel = facetCreatedUIPanel;
+        //_facetCreatedUIPanel = facetCreatedUIPanel;
+        if (facetCreatedUIPanel)
+        {
+            _capabilities |= FLAG_FACET_CREATED_UIPANEL;
+        }
+        else
+        {
+            _capabilities &= ~(FLAG_FACET_CREATED_UIPANEL);
+        }
     }
 
 /**
@@ -2537,7 +2589,8 @@ public abstract class UIComponentBase extends UIComponent
         {
             //This flag just indicates the rendererType 
             //should be included on the delta
-            this._isRendererTypeSet = true;
+            //this._isRendererTypeSet = true;
+            _capabilities |= FLAG_IS_RENDERER_TYPE_SET;
         }
         setCachedRenderer(null);
     }

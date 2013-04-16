@@ -28,13 +28,13 @@
     <groupId>org.apache.myfaces.core</groupId>
     <artifactId>myfaces-core-project</artifactId>
     <packaging>pom</packaging>
-    <name>Apache MyFaces JSF-2.1 Core Project</name>
+    <name>Apache MyFaces JSF-2.2 Core Project</name>
     <description>
-        This project is the home of the MyFaces implementation of the JavaServer Faces 2.1 specification, and
+        This project is the home of the MyFaces implementation of the JavaServer Faces 2.2 specification, and
         consists of an API module (javax.faces.* classes) and an implementation module (org.apache.myfaces.* classes).
     </description>
-    <version>2.1.12-SNAPSHOT</version>
-    <url>http://myfaces.apache.org/core21</url>
+    <version>2.2.0-SNAPSHOT</version>
+    <url>http://myfaces.apache.org/core22</url>
     
     <issueManagement>
         <system>jira</system>
@@ -42,9 +42,9 @@
     </issueManagement>
 
     <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/myfaces/core/trunk/parent</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/myfaces/core/trunk/parent</developerConnection>
-        <url>http://svn.apache.org/repos/asf/myfaces/core/trunk/parent</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/myfaces/core/branches/2.2.x/parent</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/myfaces/core/branches/2.2.x/parent</developerConnection>
+        <url>http://svn.apache.org/repos/asf/myfaces/core/branches/2.2.x/parent</url>
     </scm>
 
     <build>
@@ -112,26 +112,6 @@
                 </executions>
             </plugin>
             
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-scm-publish-plugin</artifactId>
-              <version>1.0-beta-1</version>
-              <configuration>
-                <pubScmUrl>${siteScmPublish.url}</pubScmUrl>
-                <tryUpdate>true</tryUpdate>
-                <checkoutDirectory>${scmCheckout.path}</checkoutDirectory>
-                <content>\${siteContent.path}</content>
-              </configuration>
-            </plugin>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-site-plugin</artifactId>
-              <configuration>
-                <stagingRepositoryId>myfaces-local-staging</stagingRepositoryId>
-                <stagingSiteURL>${siteDeploy.url}</stagingSiteURL>
-              </configuration>
-            </plugin>
-
         </plugins>
 
         <pluginManagement>
@@ -196,7 +176,7 @@
                 </plugin>
                 <plugin>
                   <artifactId>maven-site-plugin</artifactId>
-                  <version>3.1</version>
+                  <version>3.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jxr-plugin</artifactId>
@@ -415,7 +395,23 @@
                 <optional>true</optional>
             </dependency>
 
+            <!-- CDI 1.0 -->
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-jcdi_1.0_spec</artifactId>
+                <version>1.0</version>
+                <scope>compile</scope>
+                <optional>true</optional>
+            </dependency>
 
+            <!-- Injection -->
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-atinject_1.0_spec</artifactId>
+                <version>1.0</version>
+                <scope>compile</scope>
+                <optional>true</optional>
+            </dependency>            
             <!-- UTILITY DEPENDENCIES -->
 
             <!-- builder-annotations like @JSFWebConfigParam -->
@@ -513,8 +509,8 @@
 
             <dependency>
                 <groupId>org.apache.myfaces.test</groupId>
-                <artifactId>myfaces-test20</artifactId>
-                <version>1.0.4</version>
+                <artifactId>myfaces-test22</artifactId>
+                <version>1.0.5-SNAPSHOT</version>
                 <scope>test</scope>
             </dependency>
 
@@ -595,30 +591,12 @@
 
     </repositories>
     
-    <!--
     <distributionManagement>
         <site>
             <id>apache.website</id>
             <name>Apache Website</name>
             <url>scpexe://people.apache.org/www/myfaces.apache.org/core21/</url>
         </site>
-    </distributionManagement>-->
-  <distributionManagement>
-    <site>
-      <id>myfaces-local-staging</id>
-      <name>Apache Website</name>
-      <url>scp://localhost/${user.home}/myfaces-site/${siteModule.path}</url>
-    </site>
-  </distributionManagement>
-  <properties>
-    <siteModule.path>core21</siteModule.path>
-    <site.mainDirectory>${user.home}/myfaces-site/checkout</site.mainDirectory>
-    <siteContent.path>${user.home}/myfaces-site/site/${siteModule.path}</siteContent.path>
-    <!-- it's a default location for performance reason (not checkout the content all the time)
-         you can override this value in your settings. -->
-    <scmCheckout.path>\${site.mainDirectory}/${siteModule.path}</scmCheckout.path>
-    <siteDeploy.url>file://${user.home}/myfaces-site/site/${siteModule.path}</siteDeploy.url>
-    <siteScmPublish.url>scm:svn:https://svn.apache.org/repos/asf/myfaces/site/publish/</siteScmPublish.url>
-  </properties>
+    </distributionManagement>
 
 </project>

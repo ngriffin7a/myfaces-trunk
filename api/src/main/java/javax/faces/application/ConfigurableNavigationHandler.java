@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.faces.context.FacesContext;
+import javax.faces.flow.Flow;
 
 /**
  * @author Simon Lessard (latest modification by $Author$)
@@ -46,5 +47,14 @@ public abstract class ConfigurableNavigationHandler extends NavigationHandler
     public void performNavigation(String outcome)
     {
         handleNavigation(FacesContext.getCurrentInstance(), null, outcome);
+    }
+    
+    /**
+     * @since 2.2
+     * @param context
+     * @param flow 
+     */
+    public void inspectFlow(FacesContext context, Flow flow)
+    {
     }
 }

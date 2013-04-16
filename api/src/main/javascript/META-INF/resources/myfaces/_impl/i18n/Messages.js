@@ -134,6 +134,8 @@ _MF_CLS && _MF_CLS(_PFX_I18N+"Messages", Object,
     ERR_REQU_FAILED: "Request failed with status {0} and reason {1}",
 
     /** @constant */
-    UNKNOWN: "UNKNOWN"
+    UNKNOWN: "UNKNOWN",
+
+    ERR_NO_MULTIPART_FORM: "The form with the id {0} has an input file element, but is not a multipart form"
 });
 

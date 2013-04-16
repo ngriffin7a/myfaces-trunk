@@ -204,7 +204,7 @@ public class HtmlFormRendererBase
         }
 
         //write hidden input to determine "submitted" value on decode
-        writer.startElement(HTML.INPUT_ELEM, component);
+        writer.startElement(HTML.INPUT_ELEM, null); // component);
         writer.writeAttribute(HTML.TYPE_ATTR, HTML.INPUT_TYPE_HIDDEN, null);
         writer.writeAttribute(HTML.NAME_ATTR, component.getClientId(facesContext) +
                                               HIDDEN_SUBMIT_INPUT_SUFFIX, null);

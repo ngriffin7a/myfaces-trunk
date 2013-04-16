@@ -18,7 +18,7 @@
  */
 package org.apache.myfaces.lifecycle;
 
-import java.util.Collection;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,9 +27,9 @@ import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
 import javax.faces.application.ProjectStage;
+import javax.faces.application.ProtectedViewException;
 import javax.faces.application.ViewExpiredException;
 import javax.faces.application.ViewHandler;
-import javax.faces.component.UIViewParameter;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseEvent;
@@ -168,7 +168,7 @@ class RestoreViewExecutor extends PhaseExecutor
             {
                 ViewMetadata metadata = vdl.getViewMetadata(facesContext, viewId);
                 
-                Collection<UIViewParameter> viewParameters = null;
+                //Collection<UIViewParameter> viewParameters = null;
                 
                 if (metadata != null)
                 {
@@ -176,7 +176,7 @@ class RestoreViewExecutor extends PhaseExecutor
                     
                     if (viewRoot != null)
                     {
-                        viewParameters = ViewMetadata.getViewParameters(viewRoot);
+                        //viewParameters = ViewMetadata.getViewParameters(viewRoot);
                     }
                     else if(facesContext.getResponseComplete())
                     {
@@ -187,9 +187,17 @@ class RestoreViewExecutor extends PhaseExecutor
                 }
     
                 // If viewParameters is not an empty collection DO NOT call renderResponse
-                if ( !(viewParameters != null && !viewParameters.isEmpty()) )
-                {
+                //if ( !(viewParameters != null && !viewParameters.isEmpty()) )
+                //{
                     // Call renderResponse() on the FacesContext.
+                    //facesContext.renderResponse();
+                //}
+                if (viewRoot == null)
+                {
+                    facesContext.renderResponse();
+                }
+                else if (viewRoot != null && !ViewMetadata.hasMetadata(viewRoot))
+                {
                     facesContext.renderResponse();
                 }
             }
@@ -235,6 +243,36 @@ class RestoreViewExecutor extends PhaseExecutor
         _invokeViewRootAfterPhaseListener(facesContext);
         
         return false;
+    }
+    
+    private void checkViewProtection(FacesContext facesContext, ViewHandler viewHandler, 
+        UIViewRoot root) throws ProtectedViewException
+    {
+        Set<String> protectedViews = viewHandler.getProtectedViewsUnmodifiable();
+        
+        if (protectedViews.contains(root.getViewId()))
+        {
+            String referer = facesContext.getExternalContext().
+                getRequestHeaderMap().get("Referer");
+            if (referer != null)
+            {
+                // If the header is present, use the protected view API to determine if any of
+                // the declared protected views match the value of the Referer header.
+                
+                // - If so, conclude that the previously visited page is also a protected 
+                //   view and it is therefore safe to continue
+                
+                // - Otherwise, try to determine if the value of the Referer header corresponds 
+                //   to any of the views in the current web application.
+                
+                //   - If not, throw a ProtectedViewException
+            }
+            else
+            {
+                // fall back on inspecting the incoming URL.
+            }
+            
+        }
     }
     
     /**

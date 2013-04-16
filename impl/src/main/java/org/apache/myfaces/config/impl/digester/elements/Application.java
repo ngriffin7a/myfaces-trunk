@@ -21,6 +21,7 @@ package org.apache.myfaces.config.impl.digester.elements;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.myfaces.config.element.ContractMapping;
 
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
@@ -46,6 +47,9 @@ public class Application extends org.apache.myfaces.config.element.Application i
             = new ArrayList<org.apache.myfaces.config.element.ResourceBundle>();
     private final List<org.apache.myfaces.config.element.SystemEventListener> systemEventListeners
             = new ArrayList<org.apache.myfaces.config.element.SystemEventListener>();
+    private final List<ContractMapping> resourceLibraryContractMappings 
+            = new ArrayList<ContractMapping>();
+    
     private boolean defaultValidatorsPresent = false;
     
     public void addActionListener(String listener)
@@ -207,5 +211,15 @@ public class Application extends org.apache.myfaces.config.element.Application i
     {
         defaultValidatorsPresent = true;
     }
+
+    @Override
+    public List<ContractMapping> getResourceLibraryContractMappings()
+    {
+        return resourceLibraryContractMappings;
+    }
     
+    public void addResourceLibraryContractMapping(ContractMapping mapping)
+    {
+        resourceLibraryContractMappings.add(mapping);
+    }
 }

@@ -19,6 +19,7 @@
 package org.apache.myfaces.spi;
 
 import java.util.List;
+import java.util.ServiceLoader;
 
 /**
  * This class provides an interface to override SPI handling done by
@@ -42,5 +43,7 @@ public abstract class ServiceProviderFinder
      * @return
      */
     public abstract List<String> getServiceProviderList(String spiClass);
+    
+    public abstract <S> ServiceLoader<S> load(Class<S> spiClass);
     
 }

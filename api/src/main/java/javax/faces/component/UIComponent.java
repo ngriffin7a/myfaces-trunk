@@ -182,6 +182,22 @@ public abstract class UIComponent
     }
 
     public abstract Map<String, Object> getAttributes();
+    
+    /**
+     * @since 2.2
+     * @return 
+     */
+    public final Map<String,Object> getPassThroughAttributes()
+    {
+        return getPassThroughAttributes(true);
+    }
+    
+    /**
+     * @since 2.2
+     * @param create
+     * @return 
+     */
+    public abstract Map<String,Object> getPassThroughAttributes(boolean create);
 
     /**
      *
@@ -1027,7 +1043,8 @@ public abstract class UIComponent
         rendererType,
         attributesMap,
         bindings,
-        facesListeners
+        facesListeners,
+        passThroughAttributesMap
     }
 
     protected StateHelper getStateHelper()

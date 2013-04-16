@@ -39,8 +39,6 @@
     <include>**/_impl/_util/_Dom.js</include>
     <include>**/_impl/_util/_HtmlStripper.js</include>
 
-    <include>**/_impl/xhrCore/_FinalizeableObj.js</include>
-
     <include>**/_impl/xhrCore/_AjaxUtils.js</include>
     <include>**/_impl/xhrCore/_AjaxRequestQueue.js</include>
 
@@ -52,6 +50,7 @@
     <include>**/_impl/xhrCore/engine/IFrame.js</include>
 
     <include>**/_impl/xhrCore/_AjaxRequest.js</include>
+    <include>**/_impl/xhrCore/_AjaxRequestLevel2.js</include>
     <!-- not yet used in 2.0 but for development purposes it makes sense to include it here -->
     <include>**/_impl/xhrCore/_IFrameRequest.js</include>
     <include>**/_impl/xhrCore/_AjaxResponse.js</include>

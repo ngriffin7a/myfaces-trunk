@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIViewAction;
 import javax.faces.component.UIViewParameter;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
@@ -85,5 +86,68 @@ public abstract class ViewMetadata
         {
             return Collections.unmodifiableCollection (result);
         }
+    }
+    
+    /**
+     * @since 2.2
+     * @param root
+     * @return 
+     */
+    public static Collection<UIViewAction> getViewActions(UIViewRoot root)
+    {
+        LinkedList<UIViewAction> result = null;
+        UIComponent metadataFacet = root.getFacet (UIViewRoot.METADATA_FACET_NAME);
+        Iterator<UIComponent> children;
+        
+        if (metadataFacet == null)
+        {
+             // No metadata, so return an empty collection.
+             
+             return Collections.emptyList();
+        }
+        
+        // Iterate over all the children, keep only the view parameters.
+        
+        if (metadataFacet.getChildCount() > 0)
+        {
+            children = metadataFacet.getChildren().iterator();
+            
+            while (children.hasNext())
+            {
+                 UIComponent component = children.next();
+                 
+                 if (result == null)
+                 {
+                     result = new LinkedList<UIViewAction>();
+                 }
+                 
+                 if (component instanceof UIViewAction)
+                 {
+                      result.add ((UIViewAction) component);
+                 }
+            }
+        }
+        
+        // TODO: does this need to be immutable?  Spec does not indicate either
+        // way.
+        if (result == null)
+        {
+            return Collections.emptyList();
+        }
+        else
+        {
+            return Collections.unmodifiableCollection (result);
+        }
+    }
+    
+    /**
+     * @since 2.2
+     * @param root
+     * @return 
+     */
+    public static boolean hasMetadata(UIViewRoot root)
+    {
+        UIComponent metadataFacet = root.getFacet(UIViewRoot.METADATA_FACET_NAME);
+        return metadataFacet != null ? metadataFacet.getChildCount() > 0 : false;
     }
 }

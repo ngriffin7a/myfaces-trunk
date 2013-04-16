@@ -128,9 +128,11 @@ import org.apache.myfaces.view.facelets.util.ReflectionUtil;
 
 import static org.apache.myfaces.view.facelets.DefaultFaceletsStateManagementStrategy.*;
 import org.apache.myfaces.view.facelets.impl.SectionUniqueIdCounter;
+import org.apache.myfaces.view.facelets.tag.jsf.JsfLibrary;
 import org.apache.myfaces.view.facelets.tag.jsf.PartialMethodExpressionActionListener;
 import org.apache.myfaces.view.facelets.tag.jsf.PartialMethodExpressionValidator;
 import org.apache.myfaces.view.facelets.tag.jsf.PartialMethodExpressionValueChangeListener;
+import org.apache.myfaces.view.facelets.tag.jsf.PassThroughLibrary;
 
 /**
  * This class represents the abstraction of Facelets as a ViewDeclarationLanguage.
@@ -2536,6 +2538,8 @@ public class FaceletViewDeclarationLanguage extends ViewDeclarationLanguageBase
         compiler.addTagLibrary(new JstlFnLibrary());
         compiler.addTagLibrary(new CompositeLibrary());
         compiler.addTagLibrary(new CompositeResourceLibrary(context));
+        compiler.addTagLibrary(new JsfLibrary());
+        compiler.addTagLibrary(new PassThroughLibrary());
 
         String param = WebConfigParamUtils.getStringInitParameter(eContext, PARAMS_LIBRARIES);
         if (param != null)
