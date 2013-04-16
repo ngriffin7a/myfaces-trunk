@@ -74,4 +74,24 @@ public abstract class ResponseWriter extends Writer
     {
         writeText(object, string);
     }
+
+    /**
+     * @since 2.2
+     * @param preamble
+     * @throws IOException 
+     */
+    public void writePreamble(String preamble) throws IOException 
+    {
+        write(preamble);
+    }
+
+    /**
+     * @since 2.2
+     * @param doctype
+     * @throws IOException 
+     */
+    public void writeDoctype(String doctype) throws IOException
+    {
+        write(doctype);
+    }
 }

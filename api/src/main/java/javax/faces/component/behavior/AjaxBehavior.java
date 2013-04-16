@@ -52,6 +52,8 @@ public class AjaxBehavior extends ClientBehaviorBase
     private static final String ATTR_RENDER = "render";
     private static final String ATTR_DISABLED = "disabled";
     private static final String ATTR_IMMEDIATE = "immediate";
+    private static final String ATTR_DELAY = "delay";
+    private static final String ATTR_RESET_VALUES = "resetValues";
 
     /**
      * special render and execute targets
@@ -210,6 +212,51 @@ public class AjaxBehavior extends ClientBehaviorBase
     {
         return (getStateHelper().get(ATTR_IMMEDIATE) != null) ||
             (getValueExpression(ATTR_IMMEDIATE) != null);
+    }
+
+    /**
+     * @since 2.2
+     */
+    public boolean isResetValues()
+    {
+        Boolean retVal = (Boolean) getStateHelper().eval(ATTR_RESET_VALUES);
+        retVal = (retVal == null) ? false : retVal;
+        return retVal;
+    }
+    
+    /**
+     * @since 2.2
+     */
+    public void setResetValues(boolean resetValues)
+    {
+        getStateHelper().put(ATTR_RESET_VALUES, resetValues);
+    }
+    
+    /**
+     * @since 2.2
+     */
+    public boolean isResetValuesSet()
+    {
+        return (getStateHelper().get(ATTR_RESET_VALUES) != null) ||
+            (getValueExpression(ATTR_RESET_VALUES) != null);
+    }
+    
+    /**
+     * @since 2.2
+     * @return 
+     */
+    public String getDelay()
+    {
+        return (String) getStateHelper().get(ATTR_DELAY);
+    }
+
+    /**
+     * @since 2.2
+     * @param delay 
+     */
+    public void setDelay(String delay)
+    {
+        getStateHelper().put(ATTR_DELAY, delay);
     }
 
     @Override

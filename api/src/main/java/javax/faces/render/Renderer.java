@@ -32,6 +32,11 @@ import javax.faces.convert.ConverterException;
  */
 public abstract class Renderer
 {
+    /**
+     * @since 2.2
+     */
+    public static final String PASSTHROUGH_RENDERER_LOCALNAME_KEY = "elementName";
+    
     public void decode(FacesContext context, UIComponent component)
     {
         if (context == null)

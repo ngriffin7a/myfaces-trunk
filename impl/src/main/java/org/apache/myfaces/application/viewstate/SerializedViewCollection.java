@@ -27,6 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.context.FacesContext;
 import org.apache.commons.collections.map.AbstractReferenceMap;
+import org.apache.commons.collections.map.LRUMap;
 import org.apache.commons.collections.map.ReferenceMap;
 import org.apache.myfaces.shared.util.WebConfigParamUtils;
 
@@ -48,7 +49,7 @@ class SerializedViewCollection implements Serializable
 
     private final Map<SerializedViewKey, SerializedViewKey> _precedence =
         new HashMap<SerializedViewKey, SerializedViewKey>();
-
+    private Map<String, SerializedViewKey> _lastWindowKeys = null;
     // old views will be hold as soft references which will be removed by
     // the garbage collector if free memory is low
     private transient Map<Object, Object> _oldSerializedViews = null;
@@ -207,6 +208,33 @@ class SerializedViewCollection implements Serializable
             }
         }
         return views;
+    }
+
+    public synchronized void putLastWindowKey(FacesContext context, String id, SerializedViewKey key)
+    {
+        if (_lastWindowKeys == null)
+        {
+            Integer i = getNumberOfSequentialViewsInSession(context);
+            int j = getNumberOfViewsInSession(context);
+            if (i != null && i.intValue() > 0)
+            {
+                _lastWindowKeys = new LRUMap((j / i.intValue()) + 1);
+            }
+            else
+            {
+                _lastWindowKeys = new LRUMap(j + 1);
+            }
+        }
+        _lastWindowKeys.put(id, key);
+    }
+
+    public SerializedViewKey getLastWindowKey(FacesContext context, String id)
+    {
+        if (_lastWindowKeys != null)
+        {
+            return _lastWindowKeys.get(id);
+        }
+        return null;
     }
 
     /**

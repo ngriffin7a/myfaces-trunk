@@ -122,12 +122,16 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
             finalScripts = [],
             execScrpt = function(item) {
                 var tagName = item.tagName;
-                var itemType = item.type || "";
-                if(tagName && _Lang.equalsIgnoreCase(tagName, "script") &&
-                        (itemType === "" || _Lang.equalsIgnoreCase(itemType,"text/javascript") ||
-                         _Lang.equalsIgnoreCase(itemType,"javascript") ||
-                         _Lang.equalsIgnoreCase(itemType,"text/ecmascript") ||
-                         _Lang.equalsIgnoreCase(itemType,"ecmascript"))) {
+                var type = item.type || "";
+                //script type javascript has to be handled by eval, other types
+                //must be handled by the browser
+                if (tagName && _Lang.equalsIgnoreCase(tagName, "script") &&
+                        (type === "" ||
+                        _Lang.equalsIgnoreCase(type,"text/javascript") ||
+                        _Lang.equalsIgnoreCase(type,"javascript") ||
+                        _Lang.equalsIgnoreCase(type,"text/ecmascript") ||
+                        _Lang.equalsIgnoreCase(type,"ecmascript"))) {
+
                     var src = item.getAttribute('src');
                     if ('undefined' != typeof src
                             && null != src
@@ -649,6 +653,35 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
             // and remove the old item, in case of an empty newtag and do nothing else
             this._removeNode(item, false);
             return null;
+        }
+    },
+
+    isFunctionNative: function(func) {
+        return /^\s*function[^{]+{\s*\[native code\]\s*}\s*$/.test(String(func));
+    },
+
+    detectAttributes: function(element) {
+        //test if 'hasAttribute' method is present and its native code is intact
+        //for example, Prototype can add its own implementation if missing
+        if (element.hasAttribute && this.isFunctionNative(element.hasAttribute)) {
+            return function(name) {
+                return element.hasAttribute(name);
+            }
+        } else {
+            try {
+                //when accessing .getAttribute method without arguments does not throw an error then the method is not available
+                element.getAttribute;
+
+                var html = element.outerHTML;
+                var startTag = html.match(/^<[^>]*>/)[0];
+                return function(name) {
+                    return startTag.indexOf(name + '=') > -1;
+                }
+            } catch (ex) {
+                return function(name) {
+                    return element.getAttribute(name);
+                }
+            }
         }
     },
 
@@ -1225,8 +1258,26 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
         return true;
     },
 
-    isMultipartCandidate: function(/*executes*/) {
-        //implementation in the experimental part
+    /**
+     * jsf2.2
+     * checks if there is a fileupload element within
+     * the executes list
+     *
+     * @param executes the executes list
+     * @return {Boolean} true if there is a fileupload element
+     */
+    isMultipartCandidate:function (executes) {
+        if (this._Lang.isString(executes)) {
+            executes = this._Lang.strToArray(executes, /\s+/);
+        }
+
+        for (var cnt = 0, len = executes.length; cnt < len ; cnt ++) {
+            var element = this.byId(executes[cnt]);
+            var inputs = this.findByTagName(element, "input", true);
+            for (var cnt2 = 0, len2 = inputs.length; cnt2 < len2 ; cnt2++) {
+                if (this.getAttribute(inputs[cnt2], "type") == "file") return true;
+            }
+        }
         return false;
     },
 
@@ -1248,14 +1299,8 @@ _MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prot
         return this._dummyPlaceHolder;
     },
 
-    /**
-     * fetches the window id for the current request
-     * note, this is a preparation method for jsf 2.2
-     *
-     */
-    getWindowId: function() {
-        //implementation in the experimental part
-        return null;
+    getNamedElementFromForm: function(form, elementId) {
+        return form[elementId];
     }
 });
 

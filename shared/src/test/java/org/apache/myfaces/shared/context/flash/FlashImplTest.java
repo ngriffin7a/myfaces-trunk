@@ -30,26 +30,27 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.myfaces.test.base.junit4.AbstractJsfTestCase;
 
-import org.apache.myfaces.test.base.AbstractViewControllerTestCase;
 import org.apache.myfaces.test.mock.MockExternalContext20;
 import org.apache.myfaces.test.mock.MockFacesContext20;
 import org.apache.myfaces.test.mock.MockHttpServletRequest;
 import org.apache.myfaces.test.mock.MockHttpServletResponse;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Tests for FlashImpl.
  * @author Jakob Korherr (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class FlashImplTest extends AbstractViewControllerTestCase
+public class FlashImplTest extends AbstractJsfTestCase
 {
     
     private FlashImpl _flash;
 
-    public FlashImplTest(String name)
+    public FlashImplTest()
     {
-        super(name);
     }
 
     @Override
@@ -63,7 +64,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
     }
 
     @Override
-    protected void setUp() throws Exception
+    public void setUp() throws Exception
     {
         super.setUp();
         
@@ -71,7 +72,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
     }
 
     @Override
-    protected void tearDown() throws Exception
+    public void tearDown() throws Exception
     {
         _flash = null;
         
@@ -83,6 +84,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
      * and correctly stores the values in it.
      * @throws Exception
      */
+    @Test
     public void testSessionMapWrapperSubKeyMap() throws Exception
     {
         // set phase to RESTORE_VIEW to create the flash tokens on doPrePhaseActions()
@@ -103,7 +105,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
                 FlashImpl.SEPARATOR_CHAR + renderToken + "testkey1";
         
         // Assertion
-        assertEquals("The render FlashMap must use the session Map to store the values.",
+        Assert.assertEquals("The render FlashMap must use the session Map to store the values.",
                 "testvalue1", session.getAttribute(sessionMapKey));     
     }
     
@@ -112,6 +114,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
+    @Test
     public void testKeepValueNormalPostback() throws Exception
     {
         // simulate JSF lifecycle:
@@ -172,7 +175,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         // _flash.get() will ask the execute FlashMap for the value
         // and this must be the render FlashMap of the previous request,
         // thus it must contain the value from the previous request.
-        assertEquals("flashvalue", _flash.get("flashkey"));
+        Assert.assertEquals("flashvalue", _flash.get("flashkey"));
         
         // simulate JSF lifecycle
         facesContext.setCurrentPhaseId(PhaseId.RENDER_RESPONSE);
@@ -180,14 +183,14 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         
         // _flash.get() also references to the execute FlashMap, but
         // this one has to be cleared by now, thus it must be null.
-        assertNull("Execute FlashMap must have been cleared", _flash.get("flashkey"));
+        Assert.assertNull("Execute FlashMap must have been cleared", _flash.get("flashkey"));
         
         // get the execute Map of the second postback (FlashImpl internals)
         Map<String, Object> executeMap = (Map<String, Object>) externalContext
                 .getRequestMap().get(FlashImpl.FLASH_EXECUTE_MAP);
         
         // must be empty
-        assertTrue("The execute Map of the second postback must have been cleared",
+        Assert.assertTrue("The execute Map of the second postback must have been cleared",
                 executeMap.isEmpty());
     }
     
@@ -196,6 +199,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
+    @Test
     public void testKeepValuePostRedirectGet() throws Exception
     {
         // simulate JSF lifecycle:
@@ -237,7 +241,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         // set redirect to true, this happens by the NavigationHandler in phase 5
         _flash.setRedirect(true);
         
-        assertTrue("setRedirect(true) was just called, thus isRedirect() must be true",
+        Assert.assertTrue("setRedirect(true) was just called, thus isRedirect() must be true",
                 _flash.isRedirect());
         
         // note that setRedirect(true) was called, thus the cleanup happens
@@ -259,7 +263,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         _flash.doPrePhaseActions(facesContext);
         
         // check isRedirect();
-        assertTrue("setRedirect(true) was called on the previous request, "
+        Assert.assertTrue("setRedirect(true) was called on the previous request, "
                 + " and we are in the execute portion of the lifecycle, "
                 + " thus isRedirect() must be true.",
                 _flash.isRedirect());
@@ -268,14 +272,14 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         facesContext.setCurrentPhaseId(PhaseId.RENDER_RESPONSE);
         
         // check isRedirect();
-        assertFalse("setRedirect(true) was called on the previous request, "
+        Assert.assertFalse("setRedirect(true) was called on the previous request, "
                 + " but we are already in the render portion of the lifecycle, "
                 + " thus isRedirect() must be false.",
                 _flash.isRedirect());
         
         // _flash.get() will ask the execute FlashMap and this one
         // must contain the key used in keep()
-        assertEquals("flashvalue", _flash.get("flashkey"));
+        Assert.assertEquals("flashvalue", _flash.get("flashkey"));
         
         _flash.doPostPhaseActions(facesContext);
         
@@ -295,7 +299,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         facesContext.setCurrentPhaseId(PhaseId.INVOKE_APPLICATION);
         
         // check isRedirect();
-        assertFalse("setRedirect(true) was called on the pre-previous request, "
+        Assert.assertFalse("setRedirect(true) was called on the pre-previous request, "
                 + " thus isRedirect() must be false again.",
                 _flash.isRedirect());
         
@@ -304,7 +308,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         // thus it must not contain the value from the previous request,
         // because the value was on the previous request's execute FlashMap
         // and not on the previous request's render FlashMap.
-        assertNull(_flash.get("flashkey"));
+        Assert.assertNull(_flash.get("flashkey"));
         
         // simulate JSF lifecycle
         facesContext.setCurrentPhaseId(PhaseId.RENDER_RESPONSE);
@@ -315,7 +319,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
                 .getRequestMap().get(FlashImpl.FLASH_EXECUTE_MAP);
         
         // must be empty
-        assertTrue("The execute Map of the second postback must have been cleared",
+        Assert.assertTrue("The execute Map of the second postback must have been cleared",
                 executeMap.isEmpty());
     }
     
@@ -323,6 +327,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
      * Tests the functionality of keepMessages in a normal postback scenario.
      * @throws Exception
      */
+    @Test
     public void testKeepMessagesNormalPostback() throws Exception
     {
         // simulate JSF lifecycle:
@@ -364,12 +369,12 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         facesContext.addMessage(null, messageNoClientId);
         
         // now the FacesContext must contain 2 messages
-        assertEquals(2, facesContext.getMessageList().size());
+        Assert.assertEquals(2, facesContext.getMessageList().size());
         
         // keep messages
         _flash.setKeepMessages(true);
         
-        assertTrue("setKeepMessages(true) was just called, thus isKeepMessages() "
+        Assert.assertTrue("setKeepMessages(true) was just called, thus isKeepMessages() "
                 + "must be true.", _flash.isKeepMessages());
         
         // simulate JSF lifecycle
@@ -385,18 +390,18 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         ((MockFacesContext20) facesContext).setPostback(true);
         
         // now the FacesContext must contain 0 messages (new request, new FacesContext)
-        assertEquals(0, facesContext.getMessageList().size());
+        Assert.assertEquals(0, facesContext.getMessageList().size());
         
         // simulate JSF lifecycle
         facesContext.setCurrentPhaseId(PhaseId.RESTORE_VIEW);
         _flash.doPrePhaseActions(facesContext);
         
         // now the messages must be here again
-        assertEquals(2, facesContext.getMessageList().size());
-        assertEquals(Arrays.asList(messageClientId), facesContext.getMessageList("clientId"));
-        assertEquals(Arrays.asList(messageNoClientId), facesContext.getMessageList(null));
+        Assert.assertEquals(2, facesContext.getMessageList().size());
+        Assert.assertEquals(Arrays.asList(messageClientId), facesContext.getMessageList("clientId"));
+        Assert.assertEquals(Arrays.asList(messageNoClientId), facesContext.getMessageList(null));
         
-        assertFalse("setKeepMessages(true) was not called on this request, thus "
+        Assert.assertFalse("setKeepMessages(true) was not called on this request, thus "
                 + "isKeepMessages() must be false.", _flash.isKeepMessages());
         
         // simulate JSF lifecycle
@@ -412,7 +417,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         ((MockFacesContext20) facesContext).setPostback(true);
         
         // now the FacesContext must contain 0 messages (new request, new FacesContext)
-        assertEquals(0, facesContext.getMessageList().size());
+        Assert.assertEquals(0, facesContext.getMessageList().size());
         
         // simulate JSF lifecycle
         facesContext.setCurrentPhaseId(PhaseId.RESTORE_VIEW);
@@ -420,7 +425,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         
         // the messages must still be gone here, because setKeepMessages(true)
         // was not called on the previous request
-        assertEquals(0, facesContext.getMessageList().size());
+        Assert.assertEquals(0, facesContext.getMessageList().size());
         
         // simulate JSF lifecycle
         facesContext.setCurrentPhaseId(PhaseId.RENDER_RESPONSE);
@@ -433,6 +438,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
      * then not from the GET to the next postback.
      * @throws Exception
      */
+    @Test
     public void testKeepMessagesPostRedirectGet() throws Exception
     {
         // simulate JSF lifecycle:
@@ -474,16 +480,16 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         facesContext.addMessage(null, messageNoClientId);
         
         // now the FacesContext must contain 2 messages
-        assertEquals(2, facesContext.getMessageList().size());
+        Assert.assertEquals(2, facesContext.getMessageList().size());
         
         // keep messages
         _flash.setKeepMessages(true);
-        assertTrue("setKeepMessages(true) was just called, thus isKeepMessages() "
+        Assert.assertTrue("setKeepMessages(true) was just called, thus isKeepMessages() "
                 + "must be true.", _flash.isKeepMessages());
         
         // set redirect to true, this happens by the NavigationHandler in phase 5
         _flash.setRedirect(true);
-        assertTrue("setRedirect(true) was just called, thus isRedirect() must be true",
+        Assert.assertTrue("setRedirect(true) was just called, thus isRedirect() must be true",
                 _flash.isRedirect());
         
         // note that setRedirect(true) was called, thus the cleanup happens
@@ -499,7 +505,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         ((MockFacesContext20) facesContext).setPostback(false);
         
         // now the FacesContext must contain 0 messages (new request, new FacesContext)
-        assertEquals(0, facesContext.getMessageList().size());
+        Assert.assertEquals(0, facesContext.getMessageList().size());
         
         // simulate JSF lifecycle
         // Note that doPrePhaseActions() is called on RESTORE_VIEW even
@@ -511,12 +517,12 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         facesContext.setCurrentPhaseId(PhaseId.RENDER_RESPONSE);
         
         // now the messages must be here again
-        assertEquals(2, facesContext.getMessageList().size());
-        assertEquals(Arrays.asList(messageClientId), facesContext.getMessageList("clientId"));
-        assertEquals(Arrays.asList(messageNoClientId), facesContext.getMessageList(null));
+        Assert.assertEquals(2, facesContext.getMessageList().size());
+        Assert.assertEquals(Arrays.asList(messageClientId), facesContext.getMessageList("clientId"));
+        Assert.assertEquals(Arrays.asList(messageNoClientId), facesContext.getMessageList(null));
         
         // check isKeepMessages()
-        assertFalse("setKeepMessages(true) was not called on this request, thus "
+        Assert.assertFalse("setKeepMessages(true) was not called on this request, thus "
                 + "isKeepMessages() must be false.", _flash.isKeepMessages());
         
         _flash.doPostPhaseActions(facesContext);
@@ -530,7 +536,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         ((MockFacesContext20) facesContext).setPostback(true);
         
         // now the FacesContext must contain 0 messages (new request, new FacesContext)
-        assertEquals(0, facesContext.getMessageList().size());
+        Assert.assertEquals(0, facesContext.getMessageList().size());
         
         // simulate JSF lifecycle
         facesContext.setCurrentPhaseId(PhaseId.RESTORE_VIEW);
@@ -541,7 +547,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         
         // now the FacesContext must contain 0 messages, because 
         // setKeepMessages(true) was not called on the GET-request
-        assertEquals(0, facesContext.getMessageList().size());
+        Assert.assertEquals(0, facesContext.getMessageList().size());
         
         // simulate JSF lifecycle
         facesContext.setCurrentPhaseId(PhaseId.RENDER_RESPONSE);
@@ -554,6 +560,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
      * then also from the GET to the next postback.
      * @throws Exception
      */
+    @Test
     public void testKeepMessagesPostRedirectGetTwoTimes() throws Exception
     {
         // simulate JSF lifecycle:
@@ -595,16 +602,16 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         facesContext.addMessage(null, messageNoClientId);
         
         // now the FacesContext must contain 2 messages
-        assertEquals(2, facesContext.getMessageList().size());
+        Assert.assertEquals(2, facesContext.getMessageList().size());
         
         // keep messages
         _flash.setKeepMessages(true);
-        assertTrue("setKeepMessages(true) was just called, thus isKeepMessages() "
+        Assert.assertTrue("setKeepMessages(true) was just called, thus isKeepMessages() "
                 + "must be true.", _flash.isKeepMessages());
         
         // set redirect to true, this happens by the NavigationHandler in phase 5
         _flash.setRedirect(true);
-        assertTrue("setRedirect(true) was just called, thus isRedirect() must be true",
+        Assert.assertTrue("setRedirect(true) was just called, thus isRedirect() must be true",
                 _flash.isRedirect());
         
         // note that setRedirect(true) was called, thus the cleanup happens
@@ -620,7 +627,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         ((MockFacesContext20) facesContext).setPostback(false);
         
         // now the FacesContext must contain 0 messages (new request, new FacesContext)
-        assertEquals(0, facesContext.getMessageList().size());
+        Assert.assertEquals(0, facesContext.getMessageList().size());
         
         // simulate JSF lifecycle
         // Note that doPrePhaseActions() is called on RESTORE_VIEW even
@@ -632,17 +639,17 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         facesContext.setCurrentPhaseId(PhaseId.RENDER_RESPONSE);
         
         // now the messages must be here again
-        assertEquals(2, facesContext.getMessageList().size());
-        assertEquals(Arrays.asList(messageClientId), facesContext.getMessageList("clientId"));
-        assertEquals(Arrays.asList(messageNoClientId), facesContext.getMessageList(null));
+        Assert.assertEquals(2, facesContext.getMessageList().size());
+        Assert.assertEquals(Arrays.asList(messageClientId), facesContext.getMessageList("clientId"));
+        Assert.assertEquals(Arrays.asList(messageNoClientId), facesContext.getMessageList(null));
         
         // check isKeepMessages()
-        assertFalse("setKeepMessages(true) was not called on this request, thus "
+        Assert.assertFalse("setKeepMessages(true) was not called on this request, thus "
                 + "isKeepMessages() must be false.", _flash.isKeepMessages());
         
         // keep messages - again
         _flash.setKeepMessages(true);
-        assertTrue("setKeepMessages(true) was just called, thus isKeepMessages() "
+        Assert.assertTrue("setKeepMessages(true) was just called, thus isKeepMessages() "
                 + "must be true.", _flash.isKeepMessages());
         
         _flash.doPostPhaseActions(facesContext);
@@ -656,7 +663,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         ((MockFacesContext20) facesContext).setPostback(true);
         
         // now the FacesContext must contain 0 messages (new request, new FacesContext)
-        assertEquals(0, facesContext.getMessageList().size());
+        Assert.assertEquals(0, facesContext.getMessageList().size());
         
         // simulate JSF lifecycle
         facesContext.setCurrentPhaseId(PhaseId.RESTORE_VIEW);
@@ -666,9 +673,9 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         facesContext.setCurrentPhaseId(PhaseId.INVOKE_APPLICATION);
         
         // now the messages must be here again
-        assertEquals(2, facesContext.getMessageList().size());
-        assertEquals(Arrays.asList(messageClientId), facesContext.getMessageList("clientId"));
-        assertEquals(Arrays.asList(messageNoClientId), facesContext.getMessageList(null));
+        Assert.assertEquals(2, facesContext.getMessageList().size());
+        Assert.assertEquals(Arrays.asList(messageClientId), facesContext.getMessageList("clientId"));
+        Assert.assertEquals(Arrays.asList(messageNoClientId), facesContext.getMessageList(null));
         
         // simulate JSF lifecycle
         facesContext.setCurrentPhaseId(PhaseId.RENDER_RESPONSE);
@@ -683,7 +690,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         ((MockFacesContext20) facesContext).setPostback(true);
         
         // now the FacesContext must contain 0 messages (new request, new FacesContext)
-        assertEquals(0, facesContext.getMessageList().size());
+        Assert.assertEquals(0, facesContext.getMessageList().size());
         
         // simulate JSF lifecycle
         facesContext.setCurrentPhaseId(PhaseId.RESTORE_VIEW);
@@ -694,7 +701,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         
         // now the FacesContext must contain 0 messages, because 
         // setKeepMessages(true) was not called on the previous postback
-        assertEquals(0, facesContext.getMessageList().size());
+        Assert.assertEquals(0, facesContext.getMessageList().size());
         
         // simulate JSF lifecycle
         facesContext.setCurrentPhaseId(PhaseId.RENDER_RESPONSE);
@@ -705,53 +712,57 @@ public class FlashImplTest extends AbstractViewControllerTestCase
      * Test if setRedirect(true) works via _flash.put("redirect", true)
      * and if isRedirect() is equal to _flash.get("redirect").
      */
+    @Test
     public void testSetRedirect()
     {
-        assertFalse(_flash.isRedirect());
-        assertFalse((Boolean) _flash.get("redirect"));
+        Assert.assertFalse(_flash.isRedirect());
+        Assert.assertFalse((Boolean) _flash.get("redirect"));
         
         _flash.put("redirect", true);
         
-        assertTrue(_flash.isRedirect());
-        assertTrue((Boolean) _flash.get("redirect"));
+        Assert.assertTrue(_flash.isRedirect());
+        Assert.assertTrue((Boolean) _flash.get("redirect"));
     }
     
     /**
      * Test if setKeepMessages(true) works via _flash.put("keepMessages", true)
      * and if isKeepMessages() is equal to _flash.get("keepMessages").
      */
+    @Test
     public void testSetKeepMessages()
     {
-        assertFalse(_flash.isKeepMessages());
-        assertFalse((Boolean) _flash.get("keepMessages"));
+        Assert.assertFalse(_flash.isKeepMessages());
+        Assert.assertFalse((Boolean) _flash.get("keepMessages"));
         
         _flash.put("keepMessages", true);
         
-        assertTrue(_flash.isKeepMessages());
-        assertTrue((Boolean) _flash.get("keepMessages"));
+        Assert.assertTrue(_flash.isKeepMessages());
+        Assert.assertTrue((Boolean) _flash.get("keepMessages"));
     }
     
     /**
      * Tests the functionality of putNow().
      */
     @SuppressWarnings("unchecked")
+    @Test
     public void testPutNow()
     {
         Map<String, Object> requestMap = externalContext.getRequestMap();
         
         // requestMap must NOT contain the key
-        assertNull(requestMap.get("flashkey"));
+        Assert.assertNull(requestMap.get("flashkey"));
         
         _flash.putNow("flashkey", "flashvalue");
         
         // requestMap must contain the key
-        assertEquals("flashvalue", requestMap.get("flashkey"));
+        Assert.assertEquals("flashvalue", requestMap.get("flashkey"));
     }
     
     /**
      * Tests keep()
      * @throws Exception
      */
+    @Test
     public void testKeep() throws Exception
     {
         // simulate JSF lifecycle:
@@ -814,7 +825,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         facesContext.setCurrentPhaseId(PhaseId.INVOKE_APPLICATION);
      
         // the value must be in the executeMap
-        assertEquals("flashvalue", _flash.get("flashkey"));
+        Assert.assertEquals("flashvalue", _flash.get("flashkey"));
         
         // simulate JSF lifecycle
         facesContext.setCurrentPhaseId(PhaseId.RENDER_RESPONSE);
@@ -827,6 +838,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
      * Like testKeep(), but without calling keep() to keep the value.
      * @throws Exception
      */
+    @Test
     public void testNotKeep() throws Exception
     {
         // simulate JSF lifecycle:
@@ -887,7 +899,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         facesContext.setCurrentPhaseId(PhaseId.INVOKE_APPLICATION);
      
         // render FlashMap must be empty
-        assertNull(_flash.get("flashkey"));
+        Assert.assertNull(_flash.get("flashkey"));
         
         // simulate JSF lifecycle
         facesContext.setCurrentPhaseId(PhaseId.RENDER_RESPONSE);
@@ -900,6 +912,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
      * Tests if the reading functions use _getFlashMapForReading()
      * and if the writing functions use _getFlashMapForWriting().
      */
+    @Test
     public void testMapMethodsUseDifferentMaps() throws Exception
     {
         // simulate JSF lifecycle:
@@ -937,7 +950,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         // in this configuration put() and get() are executed on different maps
         
         // there must not be a value with the key "flashkey"
-        assertNull(_flash.get("flashkey"));
+        Assert.assertNull(_flash.get("flashkey"));
         
         // put() always references the active FlashMap,
         // which is the render FlashMap in this case (phase is render response)
@@ -945,7 +958,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         
         // there must still not be a value with the key "flashkey"
         // NOTE that get still references the execute FlashMap
-        assertNull(_flash.get("flashkey"));
+        Assert.assertNull(_flash.get("flashkey"));
         
         _flash.doPostPhaseActions(facesContext);
     }
@@ -953,6 +966,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
     /**
      * Tests the implementation of the methods from the java.util.Map interface.
      */
+    @Test
     public void testMapMethods()
     {
         // ensure that _getActiveFlashMap() returns the execute FlashMap
@@ -1000,13 +1014,13 @@ public class FlashImplTest extends AbstractViewControllerTestCase
      */
     private void _noElementAssertions()
     {
-        assertTrue(_flash.isEmpty());
-        assertEquals(0, _flash.size());
-        assertFalse(_flash.containsKey("flashkey"));
-        assertFalse(_flash.containsValue("flashvalue"));
-        assertEquals(Collections.emptySet(), _flash.keySet());
-        assertNull(_flash.get("flashkey"));
-        assertTrue(_flash.values().isEmpty());
+        Assert.assertTrue(_flash.isEmpty());
+        Assert.assertEquals(0, _flash.size());
+        Assert.assertFalse(_flash.containsKey("flashkey"));
+        Assert.assertFalse(_flash.containsValue("flashvalue"));
+        Assert.assertEquals(Collections.emptySet(), _flash.keySet());
+        Assert.assertNull(_flash.get("flashkey"));
+        Assert.assertTrue(_flash.values().isEmpty());
     }
     
     /**
@@ -1014,13 +1028,13 @@ public class FlashImplTest extends AbstractViewControllerTestCase
      */
     private void _oneElementAssertions()
     {
-        assertFalse(_flash.isEmpty());
-        assertEquals(1, _flash.size());
-        assertTrue(_flash.containsKey("flashkey"));
-        assertTrue(_flash.containsValue("flashvalue"));
-        assertEquals(new HashSet<String>(Arrays.asList("flashkey")), _flash.keySet());
-        assertEquals("flashvalue", _flash.get("flashkey"));
-        assertTrue(_flash.values().contains("flashvalue"));
+        Assert.assertFalse(_flash.isEmpty());
+        Assert.assertEquals(1, _flash.size());
+        Assert.assertTrue(_flash.containsKey("flashkey"));
+        Assert.assertTrue(_flash.containsValue("flashvalue"));
+        Assert.assertEquals(new HashSet<String>(Arrays.asList("flashkey")), _flash.keySet());
+        Assert.assertEquals("flashvalue", _flash.get("flashkey"));
+        Assert.assertTrue(_flash.values().contains("flashvalue"));
     }
     
     /**
@@ -1036,7 +1050,7 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         Cookie renderTokenCookie = response.getCookie(FlashImpl.FLASH_RENDER_MAP_TOKEN);
         
         // the Cookie must exist
-        assertNotNull(renderTokenCookie);
+        Assert.assertNotNull(renderTokenCookie);
         
         // check for the redirect-cookie
         Cookie redirectCookie = response.getCookie(FlashImpl.FLASH_REDIRECT);
@@ -1048,6 +1062,8 @@ public class FlashImplTest extends AbstractViewControllerTestCase
         response = new MockHttpServletResponse();
         setUpExternalContext();
         setUpFacesContext();
+        
+        facesContext.setApplication(application);
         
         // add the cookie to the new request
         request.addCookie(renderTokenCookie);

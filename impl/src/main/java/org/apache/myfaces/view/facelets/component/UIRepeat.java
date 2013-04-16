@@ -48,6 +48,7 @@ import javax.faces.event.FacesEvent;
 import javax.faces.event.FacesListener;
 import javax.faces.event.PhaseId;
 import javax.faces.model.ArrayDataModel;
+import javax.faces.model.CollectionDataModel;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.ResultSetDataModel;
@@ -211,6 +212,10 @@ public class UIRepeat extends UIComponentBase implements NamingContainer
         else if (value instanceof ResultSet)
         {
             return new ResultSetDataModel((ResultSet) value);
+        }
+        else if (value instanceof Collection)
+        {
+            return new CollectionDataModel((Collection) value);
         }
         else
         {

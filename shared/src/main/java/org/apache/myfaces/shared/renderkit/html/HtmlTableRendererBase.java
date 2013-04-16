@@ -376,10 +376,10 @@ public class HtmlTableRendererBase extends HtmlRenderer
         if (rowCount == 0)
         {
             //nothing to render, to get valid xhtml we render an empty dummy row
-            writer.startElement(HTML.TBODY_ELEM, uiData);
+            writer.startElement(HTML.TBODY_ELEM, null); // uiData);
             writer.writeAttribute(HTML.ID_ATTR, component.getClientId(facesContext) + ":tbody_element", null);
-            writer.startElement(HTML.TR_ELEM, uiData);
-            writer.startElement(HTML.TD_ELEM, uiData);
+            writer.startElement(HTML.TR_ELEM, null); // uiData);
+            writer.startElement(HTML.TD_ELEM, null); // uiData);
             writer.endElement(HTML.TD_ELEM);
             writer.endElement(HTML.TR_ELEM);
             writer.endElement(HTML.TBODY_ELEM);
@@ -470,7 +470,7 @@ public class HtmlTableRendererBase extends HtmlRenderer
                             writer.endElement(HTML.TBODY_ELEM);
                         }
                         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
-                        writer.startElement(HTML.TBODY_ELEM, uiData); 
+                        writer.startElement(HTML.TBODY_ELEM, null); // uiData); 
                         // Do not attach bodyrowsCount to the first TBODY element, because of backward compatibility
                         writer.writeAttribute(HTML.ID_ATTR, component.getClientId(facesContext) + ":tbody_element" + 
                             (bodyrowsCount == 0 ? "" : bodyrowsCount), null);
@@ -571,7 +571,7 @@ public class HtmlTableRendererBase extends HtmlRenderer
                     writer.endElement(HTML.TBODY_ELEM);
                 }
                 HtmlRendererUtils.writePrettyLineSeparator(facesContext);
-                writer.startElement(HTML.TBODY_ELEM, uiData); 
+                writer.startElement(HTML.TBODY_ELEM, null); // uiData); 
                 // Do not attach bodyrowsCount to the first TBODY element, because of backward compatibility
                 writer.writeAttribute(HTML.ID_ATTR, component.getClientId(facesContext) + ":tbody_element" + 
                     (bodyrowsCount == 0 ? "" : bodyrowsCount), null);
@@ -622,10 +622,10 @@ public class HtmlTableRendererBase extends HtmlRenderer
         if (!isRowRendered)
         {
             //nothing to render, to get valid xhtml we render an empty dummy row
-            writer.startElement(HTML.TBODY_ELEM, uiData);
+            writer.startElement(HTML.TBODY_ELEM, null); // uiData);
             writer.writeAttribute(HTML.ID_ATTR, component.getClientId(facesContext) + ":tbody_element", null);
-            writer.startElement(HTML.TR_ELEM, uiData);
-            writer.startElement(HTML.TD_ELEM, uiData);
+            writer.startElement(HTML.TR_ELEM, null); // uiData);
+            writer.startElement(HTML.TD_ELEM, null); // uiData);
             writer.endElement(HTML.TD_ELEM);
             writer.endElement(HTML.TR_ELEM);
             writer.endElement(HTML.TBODY_ELEM);
@@ -674,12 +674,12 @@ public class HtmlTableRendererBase extends HtmlRenderer
         
         if(rowHeader) 
         {
-            writer.startElement(HTML.TH_ELEM, uiData);   
+            writer.startElement(HTML.TH_ELEM, null); // uiData);   
             writer.writeAttribute(HTML.SCOPE_ATTR, HTML.SCOPE_ROW_VALUE, null);
         }
         else 
         {
-            writer.startElement(HTML.TD_ELEM, uiData);
+            writer.startElement(HTML.TD_ELEM, null); // uiData);
         }
         if (styles.hasColumnStyle())
         {
@@ -710,7 +710,7 @@ public class HtmlTableRendererBase extends HtmlRenderer
         UIData uiData,
         Styles styles, int rowStyleIndex) throws IOException
     {
-        writer.startElement(HTML.TR_ELEM, uiData);
+        writer.startElement(HTML.TR_ELEM, null); // uiData);
         
         renderRowStyle(facesContext, writer, uiData, styles, rowStyleIndex);
         
@@ -958,7 +958,7 @@ public class HtmlTableRendererBase extends HtmlRenderer
             HtmlRendererUtils.writePrettyLineSeparator(facesContext);
             if (elemName != null)
             {
-                writer.startElement(elemName, component);
+                writer.startElement(elemName, null); // component);
             }
             if (header)
             {
@@ -1104,8 +1104,8 @@ public class HtmlTableRendererBase extends HtmlRenderer
             throws IOException
     {
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
-        writer.startElement(HTML.TR_ELEM, component);
-        writer.startElement(colElementName, component);
+        writer.startElement(HTML.TR_ELEM, null); // component);
+        writer.startElement(colElementName, null); // component);
         if (colElementName.equals(determineHeaderCellTag(facesContext, component)) && isHeader)
         {
             writer.writeAttribute(HTML.SCOPE_ATTR, HTML.SCOPE_COLGROUP_VALUE, null);
@@ -1144,7 +1144,7 @@ public class HtmlTableRendererBase extends HtmlRenderer
     {
         HtmlRendererUtils.writePrettyLineSeparator(facesContext);
 
-        writer.startElement(HTML.TR_ELEM, component);
+        writer.startElement(HTML.TR_ELEM, null); // component);
         int columnIndex = 0;
         int newspaperColumns = getNewspaperColumns(component);
         for(int nc = 0; nc < newspaperColumns; nc++)
@@ -1193,7 +1193,7 @@ public class HtmlTableRendererBase extends HtmlRenderer
             return;
         }
          
-         writer.startElement(HTML.TD_ELEM, component);
+         writer.startElement(HTML.TD_ELEM, null); // component);
          //RendererUtils.renderChild(facesContext, spacer);
          spacer.encodeAll(facesContext);
          writer.endElement(HTML.TD_ELEM);
@@ -1289,7 +1289,7 @@ public class HtmlTableRendererBase extends HtmlRenderer
     protected void renderColumnHeaderCell(FacesContext facesContext, ResponseWriter writer, UIComponent uiComponent,
             UIComponent facet, String headerStyleClass, int colspan) throws IOException
     {
-        writer.startElement(determineHeaderCellTag(facesContext, uiComponent.getParent()), uiComponent);
+        writer.startElement(determineHeaderCellTag(facesContext, uiComponent.getParent()), null); // uiComponent);
         if (colspan > 1)
         {
             writer.writeAttribute(HTML.COLSPAN_ATTR, new Integer(colspan), null);
@@ -1344,7 +1344,7 @@ public class HtmlTableRendererBase extends HtmlRenderer
     protected void renderColumnFooterCell(FacesContext facesContext, ResponseWriter writer, UIComponent uiComponent,
         UIComponent facet, String footerStyleClass, int colspan) throws IOException
     {
-        writer.startElement(HTML.TD_ELEM, uiComponent);
+        writer.startElement(HTML.TD_ELEM, null); // uiComponent);
         if (colspan > 1)
         {
             writer.writeAttribute(HTML.COLSPAN_ATTR, new Integer(colspan), null);

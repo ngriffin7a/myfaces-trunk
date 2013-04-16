@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import javax.faces.lifecycle.ClientWindow;
 
 /**
  * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
@@ -735,5 +736,76 @@ public abstract class ExternalContext
         }
         
         ctx.setSessionMaxInactiveInterval(interval);
+    }
+
+    /**
+     * @since 2.2
+     * @return 
+     */
+    public ClientWindow getClientWindow()
+    {
+        ExternalContext ctx = _MyFacesExternalContextHelper.firstInstance.get();
+        
+        if (ctx == null)
+        {
+            /*throw new UnsupportedOperationException();*/
+            // TODO: Return null for now, but it should throw exception
+            // in JSF 2.2
+            return null;
+        }
+        
+        return ctx.getClientWindow();
+    }
+    
+    /**
+     * @since 2.2
+     * @param window 
+     */
+    public void setClientWindow(ClientWindow window)
+    {
+        // No op for now.
+        /*
+        ExternalContext ctx = _MyFacesExternalContextHelper.firstInstance.get();
+        
+        if (ctx == null)
+        {
+            throw new UnsupportedOperationException();
+        }
+        
+        ctx.setClientWindow(window);
+        */
+    }
+    
+    /**
+     * @since 2.2
+     * @param create
+     * @return 
+     */
+    public String getSessionId(boolean create)
+    {
+        ExternalContext ctx = _MyFacesExternalContextHelper.firstInstance.get();
+        
+        if (ctx == null)
+        {
+            throw new UnsupportedOperationException();
+        }
+        
+        return ctx.getSessionId(create);
+    }
+    
+    /**
+     * @since 2.2
+     * @return
+     */
+    public String getApplicationContextPath()
+    {
+        ExternalContext ctx = _MyFacesExternalContextHelper.firstInstance.get();
+        
+        if (ctx == null)
+        {
+            throw new UnsupportedOperationException();
+        }
+        
+        return ctx.getApplicationContextPath();
     }
 }

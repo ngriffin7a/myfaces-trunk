@@ -76,6 +76,19 @@ public abstract class FacesConfigData implements Serializable
         return Collections.emptyList();
     }
     
+    /**
+     * @since 2.2
+     * @return 
+     */
+    public Collection<String> getFlashFactoryIterator()
+    {
+        return Collections.emptyList();
+    }
+    
+    public Collection<String> getClientWindowFactoryIterator()
+    {
+        return Collections.emptyList();
+    }
 
     /** @return Iterator over ActionListener class names (in reverse order!) */
     public abstract Collection<String> getActionListenerIterator();
@@ -229,4 +242,22 @@ public abstract class FacesConfigData implements Serializable
         return Collections.emptyList();
     }
 
+    /**
+     * @since 2.2.0
+     * @return 
+     */
+    public Collection<FacesFlowDefinition> getFacesFlowDefinitions()
+    {
+        return Collections.emptyList();
+    }
+    
+    public Collection<String> getProtectedViewUrlPatterns()
+    {
+        return Collections.emptyList();
+    }
+    
+    public Collection<ContractMapping> getResourceLibraryContractMappings()
+    {
+        return Collections.emptyList();
+    }
 }

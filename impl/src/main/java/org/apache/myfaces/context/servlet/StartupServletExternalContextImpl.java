@@ -184,6 +184,12 @@ public class StartupServletExternalContextImpl extends ServletExternalContextImp
     }
 
     @Override
+    public String getSessionId(boolean create)
+    {
+        throw new UnsupportedOperationException(EXCEPTION_TEXT + _getTime());
+    }
+
+    @Override
     public Map<String, Object> getSessionMap()
     {
         throw new UnsupportedOperationException(EXCEPTION_TEXT + _getTime());

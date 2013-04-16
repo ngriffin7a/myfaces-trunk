@@ -24,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.faces.FacesException;
+import javax.faces.FactoryFinder;
 import javax.faces.application.ProjectStage;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
@@ -31,6 +32,8 @@ import javax.faces.event.ExceptionQueuedEvent;
 import javax.faces.event.ExceptionQueuedEventContext;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
+import javax.faces.lifecycle.ClientWindow;
+import javax.faces.lifecycle.ClientWindowFactory;
 import javax.faces.lifecycle.Lifecycle;
 
 import org.apache.myfaces.config.FacesConfigurator;
@@ -88,7 +91,9 @@ public class LifecycleImpl extends Lifecycle
      * Replaced by _phaseListenerList CopyOnWriteArrayList
      */
     //private PhaseListener[] _phaseListenerArray = null;
-
+    
+    private ClientWindowFactory clientWindowFactory;
+    
     public LifecycleImpl()
     {
         // hide from public access
@@ -96,6 +101,27 @@ public class LifecycleImpl extends Lifecycle
                 new ProcessValidationsExecutor(), new UpdateModelValuesExecutor(), new InvokeApplicationExecutor() };
 
         renderExecutor = new RenderResponseExecutor();
+        clientWindowFactory = (ClientWindowFactory) FactoryFinder.getFactory(FactoryFinder.CLIENT_WINDOW_FACTORY);
+    }
+    
+    @Override
+    public void attachWindow(FacesContext facesContext)
+    {
+        ClientWindow clientWindow = facesContext.getExternalContext().getClientWindow();
+        if (clientWindow == null)
+        {
+            clientWindow = getClientWindowFactory().getClientWindow(facesContext);
+        }
+        if (clientWindow != null)
+        {
+            clientWindow.decode(facesContext);
+            facesContext.getExternalContext().setClientWindow(clientWindow);
+        }
+    }
+    
+    protected ClientWindowFactory getClientWindowFactory()
+    {
+        return clientWindowFactory;
     }
 
     @Override

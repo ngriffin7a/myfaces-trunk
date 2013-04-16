@@ -35,4 +35,12 @@ public abstract class ComponentSystemEvent extends SystemEvent
     {
         return (UIComponent) getSource();
     }
+    
+    @Override
+    public boolean isAppropriateListener(FacesListener listener)
+    {
+        return listener instanceof ComponentSystemEventListener ||
+            super.isAppropriateListener(listener);
+    }
+
 }

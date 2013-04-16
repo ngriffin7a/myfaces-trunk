@@ -20,9 +20,11 @@ package javax.faces.application;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIViewRoot;
@@ -338,4 +340,30 @@ public abstract class ViewHandler
      */
     public abstract void writeState(FacesContext context) throws IOException;
 
+    /**
+     * @since 2.2
+     * @param urlPattern 
+     */
+    public void addProtectedView(String urlPattern)
+    {
+    }
+    
+    /**
+     * @since 2.2
+     * @param urlPattern 
+     */
+    public boolean removeProtectedView(String urlPattern)
+    {
+        return false;
+    }
+
+    /**
+     * @since 2.2
+     * @return 
+     */
+    public Set<String> getProtectedViewsUnmodifiable()
+    {
+        Set<String> set = Collections.emptySet();
+        return Collections.unmodifiableSet(set);
+    }
 }

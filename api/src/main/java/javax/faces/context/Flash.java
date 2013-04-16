@@ -28,6 +28,11 @@ import java.util.Map;
  */
 public abstract class Flash implements Map<String, Object>
 {
+    /**
+     * @since 2.2
+     */
+    public static final String NULL_VALUE = "javax.faces.context.Flash.NULL_VALUE";
+    
     public abstract boolean isKeepMessages();
 
     public abstract boolean isRedirect();
@@ -43,4 +48,5 @@ public abstract class Flash implements Map<String, Object>
     public abstract void doPrePhaseActions(FacesContext context);
     
     public abstract void doPostPhaseActions(FacesContext context);
+    
 }

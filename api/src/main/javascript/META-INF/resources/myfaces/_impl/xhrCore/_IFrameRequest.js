@@ -31,12 +31,15 @@ _MF_CLS(_PFX_XHR+"_IFrameRequest", myfaces._impl.xhrCore._AjaxRequest,
      * @constant
      * @description request marker that the request is an iframe based request
      */
-    JX_PART_IFRAME: "javax.faces.partial.iframe",
+    //JX_PART_IFRAME: "javax.faces.partial.iframe",
     /**
      * @constant
      * @description request marker that the request is an apache myfaces iframe request based request
      */
-    MF_PART_IFRAME: "org.apache.myfaces.partial.iframe",
+    MF_PART_IFRAME: "javax.faces.transport.iframe",
+
+    MF_PART_FACES_REQUEST: "javax.faces.request",
+
 
     constructor_: function(arguments) {
         this._callSuper("constructor_", arguments);
@@ -45,8 +48,24 @@ _MF_CLS(_PFX_XHR+"_IFrameRequest", myfaces._impl.xhrCore._AjaxRequest,
     getFormData: function() {
         var ret = new myfaces._impl.xhrCore.engine.FormData(this._sourceForm);
         //marker that this is an ajax iframe request
-        ret.append(this.JX_PART_IFRAME, "true");
+        //ret.append(this.JX_PART_IFRAME, "true");
         ret.append(this.MF_PART_IFRAME, "true");
+        ret.append(this.MF_PART_FACES_REQUEST, "partial/ajax");
+
+        var viewState = decodeURIComponent(jsf.getViewState(this._sourceForm));
+        viewState = viewState.split("&");
+
+        //we append all viewstate values which are not part of the original form
+        //just in case getViewState is decorated
+        for(var cnt = 0, len = viewState.length; cnt < len; cnt++) {
+            var currViewState = viewState[cnt];
+            var keyVal = currViewState.split("=");
+            var name = keyVal[0];
+            if(!this._Dom.getNamedElementFromForm(this._sourceForm, name)) {
+                ret.append(name, keyVal[1]);
+            }
+        }
+
         return ret;
     },
 

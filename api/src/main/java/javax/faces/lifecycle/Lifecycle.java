@@ -19,6 +19,7 @@
 package javax.faces.lifecycle;
 
 import javax.faces.FacesException;
+import javax.faces.context.FacesContext;
 
 /**
  * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
@@ -39,4 +40,14 @@ public abstract class Lifecycle
 
     public abstract void render(javax.faces.context.FacesContext context)
             throws FacesException;
+    
+    /**
+     * 
+     * @since 2.2
+     * @param context 
+     */
+    public void attachWindow(FacesContext context)
+    {
+        
+    }
 }

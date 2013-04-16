@@ -213,9 +213,10 @@ public class HtmlGridRendererBase
 
         HtmlRendererUtils.writePrettyLineSeparator(context);
         writer.startElement(
-                header ? org.apache.myfaces.shared.renderkit.html.HTML.THEAD_ELEM : HTML.TFOOT_ELEM, component);
-        writer.startElement(HTML.TR_ELEM, component);
-        writer.startElement(header ? HTML.TH_ELEM : HTML.TD_ELEM, component);
+                header ? org.apache.myfaces.shared.renderkit.html.HTML.THEAD_ELEM : HTML.TFOOT_ELEM, null);
+                // component);
+        writer.startElement(HTML.TR_ELEM, null); // component);
+        writer.startElement(header ? HTML.TH_ELEM : HTML.TD_ELEM, null); // component);
 
         String styleClass = (component instanceof HtmlPanelGrid)
             ? (header ?
@@ -341,13 +342,13 @@ public class HtmlGridRendererBase
                                 writer.endElement(HTML.TBODY_ELEM);
                                 HtmlRendererUtils.writePrettyLineSeparator(context);
                             }
-                            writer.startElement(HTML.TBODY_ELEM, component); 
+                            writer.startElement(HTML.TBODY_ELEM, null); // component); 
                             HtmlRendererUtils.writePrettyLineSeparator(context);
                             bodyrowsCount++;
                         }
                         
                         //start of new/next row
-                        writer.startElement(HTML.TR_ELEM, component);
+                        writer.startElement(HTML.TR_ELEM, null); // component);
                         if (rowClassIndex < rowClassesCount)
                         {
                             writer.writeAttribute(HTML.CLASS_ATTR, rowClassesArray[rowClassIndex], null);
@@ -360,7 +361,7 @@ public class HtmlGridRendererBase
                         }
                     }
 
-                    writer.startElement(HTML.TD_ELEM, component);
+                    writer.startElement(HTML.TD_ELEM, null); // component);
                     if (columnIndex < columnClassesCount)
                     {
                         writer.writeAttribute(HTML.CLASS_ATTR, columnClassesArray[columnIndex], null);
@@ -392,7 +393,7 @@ public class HtmlGridRendererBase
                     //Render empty columns, so that table is correct
                     for ( ; columnIndex < columns; columnIndex++)
                     {
-                        writer.startElement(HTML.TD_ELEM, component);
+                        writer.startElement(HTML.TD_ELEM, null); // component);
                         if (columnIndex < columnClassesCount)
                         {
                             writer.writeAttribute(HTML.CLASS_ATTR, columnClassesArray[columnIndex], null);

@@ -110,4 +110,20 @@ public abstract class FacesConfigDispenser extends FacesConfigData
     {
     }
 
+    /**
+     * @since 2.2
+     * @param factoryClassName 
+     */
+    public void feedFlashFactory(String factoryClassName)
+    {
+    }
+    
+    /**
+     * @since 2.2
+     * @param factoryClassName 
+     */
+    public void feedClientWindowFactory(String factoryClassName)
+    {
+    }
+
 }

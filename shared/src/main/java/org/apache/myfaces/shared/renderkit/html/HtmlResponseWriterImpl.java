@@ -21,12 +21,16 @@ package org.apache.myfaces.shared.renderkit.html;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.el.ValueExpression;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.render.Renderer;
 
 import org.apache.myfaces.shared.renderkit.ContentTypeUtils;
 import org.apache.myfaces.shared.renderkit.RendererUtils;
@@ -95,6 +99,8 @@ public class HtmlResponseWriterImpl
     private Boolean _isTextArea;
     private UIComponent _startElementUIComponent;
     private boolean _startTagOpen;
+    private Map<String, Object> _passThroughAttributesMap;
+    private FacesContext _facesContext;
 
     private boolean _cdataOpen;
 
@@ -296,6 +302,7 @@ public class HtmlResponseWriterImpl
     public void endDocument() throws IOException
     {
         _currentWriter.flush();
+        _facesContext = null;
     }
 
     public void startElement(String name, UIComponent uiComponent) throws IOException
@@ -307,13 +314,39 @@ public class HtmlResponseWriterImpl
 
         closeStartTagIfNecessary();
         _currentWriter.write('<');
-        _currentWriter.write(name);
 
         resetStartedElement();
 
         _startElementName = name;
         _startElementUIComponent = uiComponent;
         _startTagOpen = true;
+        _passThroughAttributesMap = (_startElementUIComponent != null) ?
+            _startElementUIComponent.getPassThroughAttributes(false) : null;
+
+        if (_passThroughAttributesMap != null)
+        {
+            Object value = _passThroughAttributesMap.get(
+                Renderer.PASSTHROUGH_RENDERER_LOCALNAME_KEY);
+            if (value != null)
+            {
+                if (value instanceof ValueExpression)
+                {
+                    value = ((ValueExpression)value).getValue(
+                        getFacesContext().getELContext());
+                }
+                String elementName = value.toString().trim();
+                
+                _currentWriter.write((String) elementName);
+            }
+            else
+            {
+                _currentWriter.write(name);
+            }
+        }
+        else
+        {
+            _currentWriter.write(name);
+        }
         
         // Each time we start a element, it is necessary to check <script> or <style>,
         // because we need to buffer all content to post process it later when it reach its end
@@ -357,6 +390,25 @@ public class HtmlResponseWriterImpl
     {
         if (_startTagOpen)
         {
+            if (_passThroughAttributesMap != null)
+            {
+                for (Map.Entry<String, Object> entry : _passThroughAttributesMap.entrySet())
+                {
+                    String key = entry.getKey();
+                    Object value = entry.getValue();
+                    if (Renderer.PASSTHROUGH_RENDERER_LOCALNAME_KEY.equals(key))
+                    {
+                        // Special attribute stored in passthrough attribute map,
+                        // skip rendering
+                        continue;
+                    }
+                    if (value instanceof ValueExpression)
+                    {
+                        value = ((ValueExpression)value).getValue(getFacesContext().getELContext());
+                    }
+                    encodeAndWriteURIAttribute(key, value, key);
+                }
+            }
             if (!_useStraightXml && isEmptyElement(_startElementName))
             {
                 _currentWriter.write(" />");
@@ -429,6 +481,7 @@ public class HtmlResponseWriterImpl
     {
         _startElementName = null;
         _startElementUIComponent = null;
+        _passThroughAttributesMap = null;
         _isStyle = null;
         _isTextArea = null;
     }
@@ -720,6 +773,12 @@ public class HtmlResponseWriterImpl
             throw new IllegalStateException("Must be called before the start element is closed (attribute '"
                     + name + "')");
         }
+        // From JSF 2.2 RenderKit javadoc: "... If there is a pass through attribute with the same 
+        // name as a renderer specific attribute, the pass through attribute takes precedence. ..."
+        if (_passThroughAttributesMap != null && _passThroughAttributesMap.containsKey(name))
+        {
+            return;
+        }
 
         if (value instanceof Boolean)
         {
@@ -756,7 +815,18 @@ public class HtmlResponseWriterImpl
             throw new IllegalStateException("Must be called before the start element is closed (attribute '"
                     + name + "')");
         }
-
+        // From JSF 2.2 RenderKit javadoc: "... If there is a pass through attribute with the same 
+        // name as a renderer specific attribute, the pass through attribute takes precedence. ..."
+        if (_passThroughAttributesMap != null && _passThroughAttributesMap.containsKey(name))
+        {
+            return;
+        }
+        
+        encodeAndWriteURIAttribute(name, value, componentPropertyName);
+    }
+    
+    private void encodeAndWriteURIAttribute(String name, Object value, String componentPropertyName) throws IOException
+    {
         String strValue = value.toString();
         _currentWriter.write(' ');
         _currentWriter.write(name);
@@ -974,6 +1044,7 @@ public class HtmlResponseWriterImpl
     {
         closeStartTagIfNecessary();
         _currentWriter.close();
+        _facesContext = null;
     }
 
     public void write(char cbuf[], int off, int len) throws IOException
@@ -1069,5 +1140,14 @@ public class HtmlResponseWriterImpl
             _buffer.reset();
         }
         return _buffer;
+    }
+    
+    protected FacesContext getFacesContext()
+    {
+        if (_facesContext == null)
+        {
+            _facesContext = FacesContext.getCurrentInstance();
+        }
+        return _facesContext;
     }
 }

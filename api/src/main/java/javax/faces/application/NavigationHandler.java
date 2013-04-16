@@ -31,4 +31,18 @@ public abstract class NavigationHandler
     public abstract void handleNavigation(FacesContext context,
                                           String fromAction,
                                           String outcome);
+    
+    /**
+     * @since 2.2
+     * @param context
+     * @param fromAction
+     * @param outcome
+     * @param toFlowDocumentId 
+     */
+    public void handleNavigation(FacesContext context,
+                                 String fromAction,
+                                 String outcome,
+                                 String toFlowDocumentId)
+    {
+    }
 }

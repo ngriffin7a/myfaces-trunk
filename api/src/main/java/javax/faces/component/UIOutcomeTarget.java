@@ -32,6 +32,7 @@ public class UIOutcomeTarget extends UIOutput
     public static final String COMPONENT_FAMILY = "javax.faces.OutcomeTarget";
     
     private static final boolean DEFAULT_INCLUDEVIEWPARAMS = false;
+    private static final boolean DEFAULT_DISABLE_CLIENT_WINDOW = false;
     
     public UIOutcomeTarget()
     {
@@ -72,10 +73,30 @@ public class UIOutcomeTarget extends UIOutput
     {
         getStateHelper().put(PropertyKeys.includeViewParams, includeViewParams);
     }
-    
+
+    /**
+     * @since 2.2
+     * @return 
+     */
+    @JSFProperty(defaultValue="false")
+    public boolean isDisableClientWindow()
+    {        
+        return (Boolean) getStateHelper().eval(PropertyKeys.disableClientWindow, DEFAULT_DISABLE_CLIENT_WINDOW);
+    }
+
+    /**
+     * @since 2.2
+     * @param disableClientWindow 
+     */
+    public void setDisableClientWindow(boolean disableClientWindow)
+    {
+        getStateHelper().put(PropertyKeys.disableClientWindow, disableClientWindow);
+    }
+
     enum PropertyKeys
     {
         includeViewParams,
-        outcome
+        outcome,
+        disableClientWindow,
     }
 }

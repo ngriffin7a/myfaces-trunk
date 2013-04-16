@@ -35,16 +35,34 @@ import javax.faces.context.ExternalContext;
 import javax.faces.webapp.FacesServlet;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.faces.ApplicationConfigurationResourceDocumentPopulator;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.apache.myfaces.shared.util.FastWriter;
+import org.apache.myfaces.spi.ServiceProviderFinder;
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Document;
 
 /**
  * 
@@ -219,7 +237,18 @@ public class DefaultFacesConfigurationProvider extends FacesConfigurationProvide
                     {
                         factory.addViewDeclarationLanguageFactory(className);
                     }
-                    
+                    else if(factoryName.equals(FactoryFinder.FLASH_FACTORY)) 
+                    {
+                        factory.addFlashFactory(className);
+                    }
+                    else if(factoryName.equals(FactoryFinder.FLOW_HANDLER_FACTORY)) 
+                    {
+                        factory.addFlowHandlerFactory(className);
+                    }
+                    else if(factoryName.equals(FactoryFinder.CLIENT_WINDOW_FACTORY)) 
+                    {
+                        factory.addClientWindowFactory(className);
+                    }
                     else
                     {
                         throw new IllegalStateException("Unexpected factory name " + factoryName);
@@ -406,4 +435,110 @@ public class DefaultFacesConfigurationProvider extends FacesConfigurationProvide
         }
     }
 
+    @Override
+    public List<FacesConfig> getApplicationConfigurationResourceDocumentPopulatorFacesConfig(ExternalContext ectx)
+    {
+        ServiceProviderFinder spff = ServiceProviderFinderFactory.getServiceProviderFinder(ectx);
+        ServiceLoader<ApplicationConfigurationResourceDocumentPopulator> instances = 
+            spff.load(ApplicationConfigurationResourceDocumentPopulator.class);
+        if (instances != null)
+        {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            // namespace aware
+            factory.setNamespaceAware(true);
+            // no validation
+            factory.setValidating(false);
+            
+            DocumentBuilder builder = null;
+            DOMImplementation domImpl = null;
+            try
+            {
+                builder = factory.newDocumentBuilder();
+                domImpl = builder.getDOMImplementation();
+            }
+            catch (ParserConfigurationException ex)
+            {
+                log.log(Level.SEVERE, "Cannot create dom document builder, skipping it", ex);
+            }
+            
+            if (builder != null)
+            {
+                List<FacesConfig> facesConfigList = new ArrayList<FacesConfig>();
+                List<Document> documentList = new ArrayList<Document>();
+                for (ApplicationConfigurationResourceDocumentPopulator populator : instances)
+                {
+                    // Spec says "... For each implementation, create a fresh org.w3c.dom.Document 
+                    // instance, configured to be in the XML namespace of the
+                    // application configuration resource format. ..."
+                    Document document = domImpl.createDocument(
+                        "http://java.sun.com/xml/ns/javaee", "faces-config", null);
+                    //Document document = builder.newDocument();
+                    populator.populateApplicationConfigurationResource(document);
+                    documentList.add(document);
+                }
+                
+                // Parse document. This strategy construct the faces-config.xml in a
+                // memory buffer and then loads it using commons digester.
+                // TODO: Find a better way without write the DOM and read it again and without
+                // rewrite commons-digester parser!.
+                Transformer trans = null;
+                try
+                {
+                    trans = TransformerFactory.newInstance().newTransformer();
+                    trans.setOutputProperty(OutputKeys.INDENT, "no");
+                    trans.setOutputProperty(OutputKeys.METHOD, "xml");
+                    trans.setOutputProperty(OutputKeys.VERSION, "1.0");
+                    trans.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+                }
+                catch (TransformerConfigurationException ex)
+                {
+                    Logger.getLogger(DefaultFacesConfigurationProvider.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                if (trans != null)
+                {
+                    FastWriter xmlAsWriter = new FastWriter();
+                    for (int i = 0; i < documentList.size(); i++)
+                    {
+                        Document document = documentList.get(i);
+                        xmlAsWriter.reset();
+                        try
+                        {
+                            DOMSource source = new DOMSource(document);
+                            StreamResult result = new StreamResult(xmlAsWriter);
+
+                            trans.transform(source, result);
+
+                            StringReader xmlReader = new StringReader(xmlAsWriter.toString());
+                            FacesConfig facesConfig = getUnmarshaller(ectx).getFacesConfig(
+                                xmlReader);
+                            facesConfigList.add(facesConfig);
+                        }
+                        catch (IOException ex)
+                        {
+                            log.log(Level.SEVERE, "Error while reading faces-config from populator", ex);
+                        }
+                        catch (SAXException ex)
+                        {
+                            log.log(Level.SEVERE, "Error while reading faces-config from populator", ex);
+                        }
+                        catch (TransformerConfigurationException ex)
+                        {
+                            log.log(Level.SEVERE, "Error while reading faces-config from populator", ex);
+                        }
+                        catch (TransformerException ex)
+                        {
+                            log.log(Level.SEVERE, "Error while reading faces-config from populator", ex);
+                        }
+                    }
+                    return facesConfigList;
+                }
+                else
+                {
+                    log.log(Level.SEVERE, "Cannot create xml transformer, skipping it");
+                }
+            }
+        }
+        return Collections.emptyList();
+    }
 }

@@ -93,4 +93,9 @@ public abstract class FacesConfigurationProvider
      */
     public abstract FacesConfig getWebAppFacesConfig(ExternalContext ectx); 
     
+    /**
+     * 
+     */
+    public abstract List<FacesConfig> 
+        getApplicationConfigurationResourceDocumentPopulatorFacesConfig(ExternalContext ectx);
 }

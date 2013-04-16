@@ -45,9 +45,6 @@
                 <include>**/_impl/_util/_ListenerQueue.js</include>
                 <include>**/_impl/_util/_Dom.js</include>
                 <include>**/_impl/_util/_HtmlStripper.js</include>
-                <include>**/_impl/_util/_OamSubmit.js</include>
-
-                <include>**/_impl/xhrCore/_FinalizeableObj.js</include>
 
                 <include>**/_impl/xhrCore/_AjaxUtils.js</include>
                 <include>**/_impl/xhrCore/_AjaxRequestQueue.js</include>
@@ -56,9 +53,9 @@
                 <include>**/_impl/xhrCore/engine/XhrConst.js</include>
                 <include>**/_impl/xhrCore/engine/FormData.js</include>
                 <include>**/_impl/xhrCore/engine/BaseRequest.js</include>
-                <include>**/_impl/xhrCore/engine/Xhr1.js</include>
 
                 <include>**/_impl/xhrCore/_AjaxRequest.js</include>
+                <include>**/_impl/xhrCore/_AjaxRequestLevel2.js</include>
                 <!-- not yet used in 2.0 but for development purposes it makes sense to include it here -->
                 <include>**/_impl/xhrCore/_AjaxResponse.js</include>
                 <include>**/_impl/xhrCore/_Transports.js</include>

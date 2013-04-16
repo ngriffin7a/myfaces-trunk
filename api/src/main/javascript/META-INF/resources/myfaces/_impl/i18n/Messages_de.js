@@ -98,7 +98,8 @@ _MF_CLS && _MF_CLS(_PFX_I18N + "Messages_de", myfaces._impl.i18n.Messages,
 
             ERR_REQ_FAILED_UNKNOWN: "Anfrage mit unbekanntem Status fehlgeschlagen",
             ERR_REQU_FAILED: "Anfrage mit Status {0} and Ursache {1} fehlgeschlagen",
-            UNKNOWN: "Unbekannt"
+            UNKNOWN: "Unbekannt",
+            ERR_NO_MULTIPART_FORM: "Das Form Element mit der ID {0} hat ein Fileupload Feld aber ist kein Multipart Form"
 
         });
 

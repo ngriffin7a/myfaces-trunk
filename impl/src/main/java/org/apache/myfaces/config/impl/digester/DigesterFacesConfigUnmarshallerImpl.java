@@ -29,6 +29,7 @@ import org.xml.sax.SAXException;
 import javax.faces.context.ExternalContext;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
@@ -53,6 +54,9 @@ public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshal
         digester.addSetProperties("faces-config", "version", "version");
         // 2.0 specific end
         // 2.0 config ordering name start
+        
+        digester.addCallMethod("faces-config/protected-views/url-pattern", "addProtectedViewUrlPattern", 0);
+        
         digester.addCallMethod("faces-config/name", "setName", 0);
         digester.addObjectCreate("faces-config/ordering", Ordering.class);
         digester.addSetNext("faces-config/ordering", "setOrdering");
@@ -122,9 +126,22 @@ public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshal
         digester.addCallMethod("faces-config/factory/visit-context-factory", "addVisitContextFactory", 0);
         // 2.0 specific end
         
+        digester.addObjectCreate("faces-config/application/resource-library-contracts/contract-mapping", 
+            ContractMappingImpl.class);
+        digester.addSetNext("faces-config/application/resource-library-contracts/contract-mapping", 
+            "addResourceLibraryContractMapping");
+        digester.addCallMethod(
+            "faces-config/application/resource-library-contracts/contract-mapping/url-pattern", "setUrlPattern", 0);
+        digester.addCallMethod(
+            "faces-config/application/resource-library-contracts/contract-mapping/contracts", "setContracts", 0);
+        
         // 2.1 specific start
         digester.addCallMethod("faces-config/factory/facelet-cache-factory", "addFaceletCacheFactory", 0);
         // 2.1 specific end
+        // 2.2 specific start
+        digester.addCallMethod("faces-config/factory/flash-factory", "addFlashFactory", 0);
+        // Note there is no client-window-factory, this factory can be set only using SPI.
+        // 2.2 specific end
 
         digester.addObjectCreate("faces-config/factory", Factory.class);
         digester.addSetNext("faces-config/factory", "addFactory");
@@ -302,6 +319,109 @@ public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshal
         //MyFaces specific facelets-processing instruction.
         digester.addCallMethod("faces-config/faces-config-extension/facelets-processing/oam-compress-spaces", 
                 "setOamCompressSpaces", 0);
+        
+        addFacesFlowRules(externalContext);
+        
+        
+    }
+    
+    private void addNavigationRules(ExternalContext externalContext, String prefix, String method)
+    {
+        digester.addObjectCreate(prefix, NavigationRule.class);
+        digester.addSetNext(prefix, method);
+        digester.addCallMethod(prefix+"/from-view-id", "setFromViewId", 0);
+        addNavigationCases(externalContext, prefix+"/navigation-case", "addNavigationCase");
+    }
+    
+    private void addNavigationCases(ExternalContext externalContext, String prefix, String method)
+    {
+        digester.addObjectCreate(prefix, NavigationCase.class);
+        digester.addSetNext(prefix, method);
+        digester.addCallMethod(prefix+"/from-action", "setFromAction", 0);
+        digester.addCallMethod(prefix+"/from-outcome", "setFromOutcome", 0);
+        digester.addCallMethod(prefix+"/if", "setIf", 0);
+        digester.addCallMethod(prefix+"/to-view-id", "setToViewId", 0);
+        digester.addObjectCreate(prefix+"/redirect", Redirect.class);
+        digester.addSetProperties(prefix+"/redirect", "include-view-params",
+                                  "includeViewParams");
+        digester.addSetNext(prefix+"/redirect", "setRedirect");
+        digester.addObjectCreate(prefix+"/redirect/view-param", ViewParam.class);
+        digester.addSetNext(prefix+"/redirect/view-param", "addViewParam");
+        digester.addCallMethod(prefix+"/redirect/view-param/name", "setName",0);
+        digester.addCallMethod(prefix+"/redirect/view-param/value", "setValue",0);
+    }
+    
+    private void addFacesFlowRules(ExternalContext externalContext)
+    {
+        digester.addObjectCreate("faces-config/faces-flow-definition", FacesFlowDefinitionImpl.class);
+        digester.addSetNext("faces-config/faces-flow-definition", "addFacesFlowDefinition");
+        digester.addSetProperties("faces-config/faces-flow-definition", "id", "id");
+        
+        digester.addCallMethod("faces-config/faces-flow-definition/start-node", "setStartNode", 0);
+        digester.addCallMethod("faces-config/faces-flow-definition/initializer", "setInitializer", 0);
+        digester.addCallMethod("faces-config/faces-flow-definition/finalizer", "setFinalizer", 0);
+        
+        digester.addObjectCreate("faces-config/faces-flow-definition/view", FacesFlowViewImpl.class);
+        digester.addSetNext("faces-config/faces-flow-definition/view", "addView");
+        digester.addSetProperties("faces-config/faces-flow-definition/view", "id", "id");
+        digester.addCallMethod("faces-config/faces-flow-definition/view/vdl-document", "setVdlDocument", 0);
+        
+        digester.addObjectCreate("faces-config/faces-flow-definition/switch", FacesFlowSwitchImpl.class);
+        digester.addSetNext("faces-config/faces-flow-definition/switch", "addSwitch");
+        digester.addSetProperties("faces-config/faces-flow-definition/switch", "id", "id");
+        
+        digester.addObjectCreate("faces-config/faces-flow-definition/switch/default-outcome", 
+            NavigationCase.class);
+        digester.addSetNext("faces-config/faces-flow-definition/switch/default-outcome", 
+            "setDefaultOutcome");
+        digester.addCallMethod("faces-config/faces-flow-definition/switch/default-outcome/from-outcome", 
+            "setFromOutcome", 0);
+        
+        addNavigationCases(externalContext, "faces-config/faces-flow-definition/switch/navigation-case",
+            "addNavigationCase");
+        
+        digester.addObjectCreate("faces-config/faces-flow-definition/flow-return", FacesFlowReturnImpl.class);
+        digester.addSetNext("faces-config/faces-flow-definition/flow-return", "addReturn");
+        digester.addSetProperties("faces-config/faces-flow-definition/flow-return", "id", "id");
+        digester.addObjectCreate("faces-config/faces-flow-definition/flow-return/navigation-case", 
+            NavigationCase.class);
+        digester.addSetNext("faces-config/faces-flow-definition/flow-return/navigation-case", 
+            "setNavigationCase");
+        digester.addCallMethod("faces-config/faces-flow-definition/flow-return/navigation-case/from-outcome", 
+            "setFromOutcome", 0);
+        
+        addNavigationRules(externalContext, "faces-config/faces-flow-definition/navigation-rule", "addNavigationRule");
+        
+        digester.addObjectCreate("faces-config/faces-flow-definition/flow-call", FacesFlowCallImpl.class);
+        digester.addSetNext("faces-config/faces-flow-definition/flow-call", "addFlowCall");
+        digester.addSetProperties("faces-config/faces-flow-definition/flow-call", "id", "id");
+        digester.addCallMethod(
+            "faces-config/faces-flow-definition/flow-call/faces-flow-reference/faces-flow-id", 
+            "setCalledFlowId", 0);
+        digester.addObjectCreate("faces-config/faces-flow-definition/flow-call/outbound-parameter", 
+            FacesFlowParameterImpl.class);
+        digester.addSetNext("faces-config/faces-flow-definition/flow-call/outbound-parameter", 
+            "addOutboundParameter");
+        digester.addCallMethod("faces-config/faces-flow-definition/flow-call/outbound-parameter/name", "setName", 0);
+        digester.addCallMethod("faces-config/faces-flow-definition/flow-call/outbound-parameter/value", "setValue", 0);
+        
+        digester.addObjectCreate("faces-config/faces-flow-definition/method-call", FacesFlowMethodCallImpl.class);
+        digester.addSetNext("faces-config/faces-flow-definition/method-call", "addMethodCall");
+        digester.addCallMethod("faces-config/faces-flow-definition/method-call/method", "setMethod", 0);
+        digester.addSetProperties("faces-config/faces-flow-definition/method-call/method", "id", "id");
+        digester.addCallMethod("faces-config/faces-flow-definition/method-call/default-outcome", 
+            "setDefaultOutcome", 0);
+        digester.addObjectCreate("faces-config/faces-flow-definition/method-call/parameter", 
+            FacesFlowMethodParameterImpl.class);
+        digester.addSetNext("faces-config/faces-flow-definition/method-call/parameter", "addParameter");
+        digester.addCallMethod("faces-config/faces-flow-definition/method-call/parameter/class", "setClassName", 0);
+        digester.addCallMethod("faces-config/faces-flow-definition/method-call/parameter/value", "setValue", 0);
+        
+        digester.addObjectCreate("faces-config/faces-flow-definition/inbound-parameter", 
+            FacesFlowParameterImpl.class);
+        digester.addSetNext("faces-config/faces-flow-definition/inbound-parameter", "addInboundParameter");
+        digester.addCallMethod("faces-config/faces-flow-definition/inbound-parameter/name", "setName", 0);
+        digester.addCallMethod("faces-config/faces-flow-definition/inbound-parameter/value", "setValue", 0);
     }
 
     public FacesConfig getFacesConfig(InputStream in, String systemId) throws IOException, SAXException
@@ -325,4 +445,27 @@ public class DigesterFacesConfigUnmarshallerImpl implements FacesConfigUnmarshal
 
         return config;
     }
+    
+    public FacesConfig getFacesConfig(Reader r) throws IOException, SAXException
+    {
+        //InputSource is = new InputSource(in);
+        //is.setSystemId(systemId);
+
+        // Fix for http://issues.apache.org/jira/browse/MYFACES-236
+        FacesConfig config = (FacesConfig) digester.parse(r);
+
+        for (org.apache.myfaces.config.element.Application application : config.getApplications())
+        {
+            for (org.apache.myfaces.config.element.LocaleConfig localeConfig : application.getLocaleConfig())
+            {
+                if (!localeConfig.getSupportedLocales().contains(localeConfig.getDefaultLocale()))
+                {
+                    localeConfig.getSupportedLocales().add(localeConfig.getDefaultLocale());
+                }
+            }
+        }
+
+        return config;
+    }
+
 }

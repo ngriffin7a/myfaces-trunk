@@ -194,11 +194,7 @@ public class HtmlTextRendererBase
         ResponseWriter writer = facesContext.getResponseWriter();
 
         String clientId = component.getClientId(facesContext);
-        String value = org.apache.myfaces.shared.renderkit.RendererUtils.getStringValue(facesContext, component);
-        if (log.isLoggable(Level.FINE))
-        {
-            log.fine("renderInput '" + value + "'");
-        }
+
         writer.startElement(HTML.INPUT_ELEM, component);
         writer.writeAttribute(HTML.ID_ATTR, clientId, null);
         writer.writeAttribute(HTML.NAME_ATTR, clientId, null);
@@ -206,11 +202,8 @@ public class HtmlTextRendererBase
         //allow extending classes to modify html input element's type
         String inputHtmlType = getInputHtmlType(component);
         writer.writeAttribute(HTML.TYPE_ATTR, inputHtmlType, null);
-        
-        if (value != null)
-        {
-            writer.writeAttribute(HTML.VALUE_ATTR, value, JSFAttr.VALUE_ATTR);
-        }
+
+        renderValue(facesContext, component, writer);
 
         Map<String, List<ClientBehavior>> behaviors = null;
         if (component instanceof ClientBehaviorHolder && JavascriptUtils.isJavascriptAllowed(
@@ -285,7 +278,22 @@ public class HtmlTextRendererBase
             writer.writeAttribute(HTML.AUTOCOMPLETE_ATTR, AUTOCOMPLETE_VALUE_OFF, HTML.AUTOCOMPLETE_ATTR);
         }
     }
-    
+
+    protected void renderValue(FacesContext facesContext, UIComponent component, ResponseWriter writer)
+            throws IOException
+    {
+        String value = RendererUtils.getStringValue(facesContext, component);
+        if (log.isLoggable(Level.FINE))
+        {
+           log.fine("renderInput '" + value + "'");
+        }
+
+        if (value != null)
+        {
+            writer.writeAttribute(HTML.VALUE_ATTR, value, JSFAttr.VALUE_ATTR);
+        }
+    }
+
     protected void renderInputEnd(FacesContext facesContext, UIComponent component) throws IOException
     {
         ResponseWriter writer = facesContext.getResponseWriter(); 

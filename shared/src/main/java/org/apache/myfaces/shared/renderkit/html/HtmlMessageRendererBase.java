@@ -107,7 +107,7 @@ public abstract class HtmlMessageRendererBase
             if (alwaysRenderSpan)
             {
                 ResponseWriter writer = facesContext.getResponseWriter();
-                writer.startElement(HTML.SPAN_ELEM, null);
+                writer.startElement(HTML.SPAN_ELEM, message);
                 writer.writeAttribute(HTML.ID_ATTR, clientId + "_msgFor", null);
                 HtmlRendererUtils.renderHTMLStringAttribute(writer, message, JSFAttr.STYLE_ATTR, HTML.STYLE_ATTR);
                 HtmlRendererUtils.renderHTMLStringAttribute(writer, message, JSFAttr.STYLE_CLASS_ATTR, HTML.CLASS_ATTR);

@@ -166,9 +166,9 @@ public class UIViewParameter extends UIInput
     }
 
     @Override
-    public String getSubmittedValue()
+    public Object getSubmittedValue()
     {
-        return (String)super.getSubmittedValue();
+        return super.getSubmittedValue();
     }
 
     @JSFProperty(tagExcluded=true)

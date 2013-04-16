@@ -19,7 +19,7 @@
 package org.apache.myfaces.config.element;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Entry of the Collection returned by
@@ -37,5 +37,5 @@ public abstract class NavigationRule implements Serializable
     /**
      * @return a Collection of {@link org.apache.myfaces.config.element.NavigationCase}s
      */
-    public abstract Collection<? extends NavigationCase> getNavigationCases();
+    public abstract List<? extends NavigationCase> getNavigationCases();
 }

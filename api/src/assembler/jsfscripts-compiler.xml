@@ -69,7 +69,6 @@
                 <include>**/_impl/_util/_HtmlStripper.js</include>
                 <include>**/_impl/_util/_OamSubmit.js</include>
 
-                <include>**/_impl/xhrCore/_FinalizeableObj.js</include>
                 <include>**/_impl/xhrCore/_AjaxUtils.js</include>
                 <include>**/_impl/xhrCore/_AjaxRequestQueue.js</include>
 
@@ -83,7 +82,7 @@
 
                 <include>**/_impl/xhrCore/_AjaxRequest.js</include>
                 <include>**/_impl/xhrCore/_ExtAjaxRequest.js</include>
-
+                <include>**/_impl/xhrCore/_AjaxRequestLevel2.js</include>
                 <!-- this is pure 2.2 functionality -->
                 <include>**/_impl/xhrCore/_IFrameRequest.js</include>
 
