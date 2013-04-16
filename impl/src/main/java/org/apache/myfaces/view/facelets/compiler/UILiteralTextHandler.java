@@ -27,7 +27,6 @@ import javax.faces.component.UniqueIdVendor;
 import javax.faces.view.facelets.FaceletContext;
 import javax.faces.view.facelets.FaceletException;
 
-import org.apache.myfaces.view.facelets.AbstractFaceletContext;
 import org.apache.myfaces.view.facelets.FaceletCompositionContext;
 import org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport;
 
@@ -47,9 +46,8 @@ final class UILiteralTextHandler extends AbstractUIHandler
         if (parent != null)
         {
             UIComponent c = new UILiteralText(this.txtString);
-            //c.setId(ComponentSupport.getViewRoot(ctx, parent).createUniqueId());
-            //AbstractFaceletContext actx = (AbstractFaceletContext) ctx;
-            UniqueIdVendor uniqueIdVendor = FaceletCompositionContext.getCurrentInstance(ctx).getUniqueIdVendorFromStack();
+            UniqueIdVendor uniqueIdVendor
+                    = FaceletCompositionContext.getCurrentInstance(ctx).getUniqueIdVendorFromStack();
             if (uniqueIdVendor == null)
             {
                 uniqueIdVendor = ComponentSupport.getViewRoot(ctx, parent);

@@ -20,7 +20,8 @@
     <parent>
         <groupId>org.apache.myfaces.core</groupId>
         <artifactId>myfaces-core-project</artifactId>
-        <version>2.1.0-SNAPSHOT</version>
+        <version>2.1.12-SNAPSHOT</version>
+        <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -34,9 +35,9 @@
     <url>http://myfaces.apache.org/core21/myfaces-impl</url>
 
     <scm>
-        <connection>scm:svn:https://svn.apache.org/repos/asf/myfaces/core/branches/2.1.x/impl</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/myfaces/core/branches/2.1.x/impl</developerConnection>
-        <url>https://svn.apache.org/repos/asf/myfaces/core/branches/2.1.x/impl</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/myfaces/core/trunk/impl</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/myfaces/core/trunk/impl</developerConnection>
+        <url>http://svn.apache.org/repos/asf/myfaces/core/trunk/impl</url>
     </scm>
     
     <build>
@@ -52,6 +53,44 @@
         
         <plugins>
 
+            <!-- license checker needs to exclude some kinds of files -->
+            <plugin>
+                <groupId>org.apache.rat</groupId>
+                <artifactId>apache-rat-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        
+                        <!-- The xsd files are CDDL+GLP:
+                          Category B: Reciprocal Licenses
+                         "For small amounts of source that is directly consumed by the ASF product
+                          at runtime in source form, and for which that source is unlikely to be
+                          changed anyway (say, by virtue of being specified by a standard), this
+                          action is sufficient. An example of this is the web-facesconfig_1_0.dtd,
+                          whose inclusion is mandated by the JSR 127: JavaServer Faces specification."
+                          http://www.apache.org/legal/3party.html
+                        -->
+                        <exclude>src/main/resources/META-INF/licenses/glassfish-LICENSE.txt</exclude>
+                        <exclude>src/main/resources/org/apache/myfaces/resource/javaee_5.xsd</exclude>
+                        <exclude>src/main/resources/org/apache/myfaces/resource/javaee_web_services_client_1_2.xsd</exclude>
+
+                        <!-- facelets has non-standard APL license -->
+                        <exclude>src/main/resources/META-INF/licenses/facelets-LICENSE.txt</exclude>
+                        
+                        <!-- services files are trivial config files with no comments -->
+                        <exclude>src/test/resources/META-INF/services/org.apache.myfaces.config.annotation.LifecycleProvider</exclude>
+                        <exclude>src/main/resources/META-INF/services/org.apache.myfaces.config.annotation.LifecycleProvider</exclude>
+
+                        <!-- these jsf.js files are trivial empty placeholders -->
+                        <exclude>src/test/resources/org/apache/myfaces/view/facelets/tag/composite/javax.faces/jsf.js</exclude>
+                        <exclude>src/test/resources/org/apache/myfaces/view/facelets/tag/jsf/html/javax.faces/jsf.js</exclude>
+                        <exclude>src/test/resources/org/apache/myfaces/view/facelets/updateheadres/resources/javax.faces/jsf.js</exclude>
+
+                        <!-- This file probably needs a license, but I don't know if it's safe to put it in there -->
+                        <exclude>src/test/resources/org/apache/myfaces/context/nestedScriptCDATA.xml</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            
             <!-- myfaces-build-plugin - we generate a lot of stuff with this plugin (see executions) -->
             <plugin>
                 <groupId>org.apache.myfaces.buildtools</groupId>
@@ -72,6 +111,23 @@
                     </execution>
                     
                     <execution>
+                        <id>makeWebConfigParamsLogger</id>
+                        <configuration>
+                            <templateFile>WebConfigParamsLogger.vm</templateFile>
+                            <outputDirectory>${project.build.directory}/generated-sources/myfaces-builder-plugin</outputDirectory>
+                            <xmlFile>org/apache/myfaces/webapp/WebConfigParamsLogger.java</xmlFile>
+                            <modelIds>
+                                <modelId>myfaces-api</modelId>
+                                <modelId>myfaces-impl</modelId>
+                                <modelId>myfaces-impl-shared</modelId>
+                            </modelIds>
+                        </configuration>
+                        <goals>
+                            <goal>make-config</goal>
+                        </goals>
+                    </execution>
+                    
+                    <execution>
                         <id>makefacesconfig</id>
                         <configuration>
                             <templateFile>faces-config20.vm</templateFile>
@@ -80,6 +136,7 @@
                             <modelIds>
                                 <modelId>myfaces-api</modelId>
                                 <modelId>myfaces-impl</modelId>
+                                <modelId>myfaces-impl-shared</modelId>
                             </modelIds>
                         </configuration>
                         <goals>
@@ -112,6 +169,7 @@
                             <modelIds>
                                 <modelId>myfaces-api</modelId>
                                 <modelId>myfaces-impl</modelId>
+                                <modelId>myfaces-impl-shared</modelId>
                             </modelIds>
                             <params>
                                 <shortname>f</shortname>
@@ -162,6 +220,7 @@
                             <modelIds>
                                 <modelId>myfaces-api</modelId>
                                 <modelId>myfaces-impl</modelId>
+                                <modelId>myfaces-impl-shared</modelId>
                             </modelIds>
                             <params>
                                 <shortname>f</shortname>
@@ -185,6 +244,7 @@
                             <modelIds>
                                 <modelId>myfaces-api</modelId>
                                 <modelId>myfaces-impl</modelId>
+                                <modelId>myfaces-impl-shared</modelId>
                             </modelIds>
                             <params>
                                <shortname>h</shortname>
@@ -208,6 +268,7 @@
                             <modelIds>
                                 <modelId>myfaces-api</modelId>
                                 <modelId>myfaces-impl</modelId>
+                                <modelId>myfaces-impl-shared</modelId>
                             </modelIds>
                             <params>
                                <shortname>c</shortname>
@@ -231,6 +292,7 @@
                             <modelIds>
                                 <modelId>myfaces-api</modelId>
                                 <modelId>myfaces-impl</modelId>
+                                <modelId>myfaces-impl-shared</modelId>
                             </modelIds>
                             <params>
                                <shortname>ui</shortname>
@@ -254,6 +316,7 @@
                             <modelIds>
                                 <modelId>myfaces-api</modelId>
                                 <modelId>myfaces-impl</modelId>
+                                <modelId>myfaces-impl-shared</modelId>
                             </modelIds>
                             <params>
                                <shortname>composite</shortname>
@@ -267,6 +330,29 @@
                         </goals>
                     </execution>
                     
+                    <execution>
+                        <id>make_fn_facelet_tld</id>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/tlddoc-facelets</outputDirectory>
+                            <xmlFile>myfaces_facelet_fn.tld</xmlFile>
+                            <templateFile>myfaces_facelet_html20.vm</templateFile>
+                            <modelIds>
+                                <modelId>myfaces-api</modelId>
+                                <modelId>myfaces-impl</modelId>
+                                <modelId>myfaces-impl-shared</modelId>
+                            </modelIds>
+                            <params>
+                               <shortname>fn</shortname>
+                               <uri>http://java.sun.com/jsp/jstl/functions</uri>
+                               <displayname>JSTL Facelets Function Library.</displayname>
+                               <description>JSTL Facelets Function Library.</description>
+                            </params>
+                        </configuration>
+                        <goals>
+                            <goal>make-config</goal>
+                        </goals>
+                    </execution>
+
                     <!-- START XSD GENERATION -->
                     
                     <execution>
@@ -277,6 +363,7 @@
                             <modelIds>
                                 <modelId>myfaces-api</modelId>
                                 <modelId>myfaces-impl</modelId>
+                                <modelId>myfaces-impl-shared</modelId>
                             </modelIds>
                             <params>
                                 <shortname>f</shortname>
@@ -299,6 +386,7 @@
                             <modelIds>
                                 <modelId>myfaces-api</modelId>
                                 <modelId>myfaces-impl</modelId>
+                                <modelId>myfaces-impl-shared</modelId>
                             </modelIds>
                             <params>
                                <shortname>h</shortname>
@@ -320,6 +408,7 @@
                             <modelIds>
                                 <modelId>myfaces-api</modelId>
                                 <modelId>myfaces-impl</modelId>
+                                <modelId>myfaces-impl-shared</modelId>
                             </modelIds>
                             <params>
                                <shortname>c</shortname>
@@ -341,6 +430,7 @@
                             <modelIds>
                                 <modelId>myfaces-api</modelId>
                                 <modelId>myfaces-impl</modelId>
+                                <modelId>myfaces-impl-shared</modelId>
                             </modelIds>
                             <params>
                                <shortname>ui</shortname>
@@ -362,6 +452,7 @@
                             <modelIds>
                                 <modelId>myfaces-api</modelId>
                                 <modelId>myfaces-impl</modelId>
+                                <modelId>myfaces-impl-shared</modelId>
                             </modelIds>
                             <params>
                                <shortname>composite</shortname>
@@ -379,26 +470,6 @@
                 </executions>
             </plugin>
 
-            <!-- copy src/main/conf using ant -->
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy_fn_tld</id>
-                        <phase>process-resources</phase>
-                        <configuration>
-                            <tasks>
-                                <copy todir="${project.build.directory}/tlddoc-facelets" flatten="true" overwrite="true" verbose="true" failonerror="true">
-                                    <fileset dir="${basedir}/src/main/conf/META-INF" includes="myfaces_facelet_fn.tld" />
-                                </copy>
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             
             <!-- generate a -tests.jar too -->
             <plugin>
@@ -432,7 +503,6 @@
             <!-- run test-cases -->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.5</version>
                 <configuration>
                     <!-- Only run JUnit tests -->
                     <testNGArtifactName>none:none</testNGArtifactName>
@@ -470,7 +540,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>1.3.3</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -484,24 +553,9 @@
                     <createSourcesJar>true</createSourcesJar>
                     <artifactSet>
                         <includes>
-                            <include>org.apache.myfaces.core:myfaces-impl-ee6</include>
+                            <include>org.apache.myfaces.core.internal:myfaces-impl-shared</include>
                         </includes>
                     </artifactSet>
-                    <filters>
-                        <filter>
-                            <artifact>org.apache.myfaces.core:myfaces-impl-ee6</artifact>
-                            <includes>
-                                <include>META-INF/services/**</include>
-                                <include>org/apache/myfaces/**</include>
-                            </includes>
-                            <excludes>
-                                <exclude>META-INF/LICENSE</exclude>
-                                <exclude>META-INF/NOTICE</exclude>
-                                <exclude>META-INF/DEPENDENCIES</exclude>
-                                <exclude>META-INF/MANIFEST.MF</exclude>
-                            </excludes>
-                        </filter>
-                    </filters>
                 </configuration>
             </plugin>
 
@@ -577,148 +631,6 @@
     <profiles>
 
         <!--
-            This profile use a shared dependency rather than unpack the
-            code directly. The ideal is that this profile is active when the
-            version of this library is snapshot, but unfortunately there is
-            no way to activate it (see http://jira.codehaus.org/browse/MNG-3826).
-            Existing problems on maven 2.0.x architecture makes impossible do it.
-            For now the solution is trigger it manually using the property
-            -Ddev=true
-        -->
-        <profile>
-            <id>add-shared-dependency</id>
-            <activation>
-                <property>
-                    <name>dev</name>
-                    <value>true</value>
-                </property>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.myfaces.shared</groupId>
-                    <artifactId>myfaces-shared-impl</artifactId>
-                    <scope>compile</scope>  <!-- otherwise it is scope=provided -->
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <!-- standard unpacking of shared-impl -->
-        <profile>
-            <id>unpack-shared</id>
-            <activation>
-                <property>
-                    <name>!dev</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <!--
-                          - The shared-impl project generates a modified version of the "shared" module
-                          - source and classes. The result is a jar full of files in the "shared_impl"
-                          - package that we can merge into the jar for this project.
-                        -->
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <version>2.0</version>
-                        <executions>
-                            
-                            <execution>
-                                <id>unpack-shared-impl</id>
-                                <phase>process-classes</phase>
-                                <goals>
-                                    <goal>unpack</goal>
-                                </goals>
-                                <configuration>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>org.apache.myfaces.shared</groupId>
-                                            <artifactId>myfaces-shared-impl</artifactId>
-                                            <version>${myfaces-shared.version}</version>
-                                            <!-- we need to include META-INF/resources and META-INF/internal-resources -->
-                                            <excludes>META-INF/DEPENDENCIES,META-INF/LICENSE,META-INF/NOTICE,META-INF/MANIFEST.MF</excludes>
-                                        </artifactItem>
-                                    </artifactItems>
-                                    <outputDirectory>${project.build.directory}/classes</outputDirectory>
-                                </configuration>
-                            </execution>
-                            
-                            <execution>
-                                <id>unpack-shared-impl-sources</id>
-                                <phase>process-sources</phase>
-                                <goals>
-                                    <goal>unpack</goal>
-                                </goals>
-                                <configuration>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>org.apache.myfaces.shared</groupId>
-                                            <artifactId>myfaces-shared-impl</artifactId>
-                                            <version>${myfaces-shared.version}</version>
-                                            <classifier>sources</classifier>
-                                            <excludes>META-INF/**</excludes>
-                                        </artifactItem>
-                                    </artifactItems>
-                                    <outputDirectory>${project.build.directory}/shared_sources</outputDirectory>
-                                </configuration>
-                            </execution>
-                            
-                            <execution>
-                                <id>unpack-impl-ee6</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                  <goal>unpack</goal>
-                                </goals>
-                                <configuration>
-                                  <artifactItems>
-                                    <artifactItem>
-                                      <groupId>org.apache.myfaces.core</groupId>
-                                      <artifactId>myfaces-impl-ee6</artifactId>
-                                      <version>${project.version}</version>
-                                    </artifactItem>
-                                  </artifactItems>
-                                  <!-- Just include the .class files in org/** and the META-INF/services directory -->
-                                  <!-- <includes>org/**,META-INF/services/**</includes> -->
-                                  <!-- Only need copy .class, because maven shade plugin will do it at package
-                                       and maven-bundle-plugin requires it to include this entry on the manifest -->
-                                  <includes>org/**</includes>
-                                  <outputDirectory>${project.build.directory}/classes</outputDirectory>
-                                </configuration>
-                            </execution>
-                      
-                        </executions>
-                    </plugin>
-                    
-                    <plugin>
-                        <!--
-                            Add the unpacked shared sources directory as source directory into the pom datastructure,
-                            so that the -source jar includes them too; every .class file in the jar should have its
-                            source in the -source jar.
-                        -->
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <version>1.0</version>
-                        <executions>
-                            <execution>
-                                <id>add-source-shared</id>
-                                <phase>process-sources</phase>
-                                <goals>
-                                    <goal>add-source</goal>
-                                </goals>
-                                <configuration>
-                                    <sources>
-                                        <source>${project.build.directory}/shared_sources</source>
-                                    </sources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                </plugins>
-            </build>
-        </profile>
-
-        <!--
           - Whenever the full website is generated, the command
           -   mvn -Pgenerate-site -Pgenerate-tlddoc site
           - should be used. This will create the "tlddoc" directory containing
@@ -742,10 +654,14 @@
                                     <modelIds>
                                         <modelId>myfaces-api</modelId>
                                         <modelId>myfaces-impl</modelId>
+                                        <modelId>myfaces-impl-shared</modelId>
                                     </modelIds>
                                     <taglibs>
                                         <f>http://java.sun.com/jsf/core</f>
                                         <h>http://java.sun.com/jsf/html</h>
+                                        <ui>http://java.sun.com/jsf/facelets</ui>
+                                        <c>http://java.sun.com/jsp/jstl/core</c>
+                                        <fn>http://java.sun.com/jsp/jstl/functions</fn>
                                     </taglibs>
                                 </configuration>
                                 <goals>
@@ -762,6 +678,7 @@
                                     <modelIds>
                                         <modelId>myfaces-api</modelId>
                                         <modelId>myfaces-impl</modelId>
+                                        <modelId>myfaces-impl-shared</modelId>
                                     </modelIds>
                                 </configuration>
                                 <goals>
@@ -837,10 +754,14 @@
                                     <modelIds>
                                         <modelId>myfaces-api</modelId>
                                         <modelId>myfaces-impl</modelId>
+                                        <modelId>myfaces-impl-shared</modelId>
                                     </modelIds>
                                     <taglibs>
                                         <f>http://java.sun.com/jsf/core</f>
                                         <h>http://java.sun.com/jsf/html</h>
+                                        <ui>http://java.sun.com/jsf/facelets</ui>
+                                        <c>http://java.sun.com/jsp/jstl/core</c>
+                                        <fn>http://java.sun.com/jsp/jstl/functions</fn>
                                     </taglibs>
                                 </configuration>
                                 <reports>
@@ -873,7 +794,6 @@
 
                     <plugin>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.3</version>
                         <configuration>
                             <excludePackageNames>org.apache.myfaces.ee6</excludePackageNames>
                         </configuration>
@@ -954,7 +874,6 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>build-helper-maven-plugin</artifactId>
-                        <version>1.5</version>
                         <executions>
                             <execution>
                                 <id>attach-artifacts</id>
@@ -1023,6 +942,38 @@
             </pluginRepositories>
         </profile>
 
+        <profile>
+            <id>ee5</id>
+            <dependencies>
+                <!-- disable Servlet 3.0 -->
+                <dependency>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-servlet_3.0_spec</artifactId>
+                    <scope>test</scope> <!-- just to make it go away -->
+                </dependency>
+
+                <!-- and enable Servlet 2.5 -->
+                <dependency>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-servlet_2.5_spec</artifactId>
+                </dependency>
+            </dependencies>
+
+            <build>
+                <plugins>
+                  <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                      <excludes>
+                         <exclude>src/main/java/org/apache/myfaces/ee6</exclude>
+                      </excludes>
+                    </configuration>
+                  </plugin>
+                </plugins>
+            </build>
+        </profile>
+
     </profiles>
 
     
@@ -1036,22 +987,33 @@
         </dependency>
 
         <!-- this dependency will be packed together with the main artifact of this pom -->
+        <!-- 
         <dependency>
             <groupId>org.apache.myfaces.shared</groupId>
             <artifactId>myfaces-shared-impl</artifactId>
         </dependency>
-
-        <!-- maven-shade-plugin will exclude this dependency automatically -->
+         -->
+        
+        <!-- This is included in myfaces-impl-shared, but in eclipse
+             it is not detected, so an easy workaround is include it
+             as an optional dependency -->
         <dependency>
-            <groupId>org.apache.myfaces.core</groupId>
-            <artifactId>myfaces-impl-ee6</artifactId>
-            <optional>true</optional> <!-- optional does not completely work in dependencyManagement (MNG-1630) -->
+            <groupId>org.apache.myfaces.core.internal</groupId>
+            <artifactId>myfaces-impl-shared-public</artifactId>
+            <optional>true</optional> 
+        </dependency>
+         
+        <dependency>
+            <groupId>org.apache.myfaces.core.internal</groupId>
+            <artifactId>myfaces-impl-shared</artifactId>
+            <optional>true</optional> 
         </dependency>
 
-        <!-- Servlet 2.5 -->
+
+        <!-- Servlet 3.0 by default. Use the -Pee5 compile for servlet-2.5 -->
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-servlet_2.5_spec</artifactId>
+            <artifactId>geronimo-servlet_3.0_spec</artifactId>
         </dependency>
 
         <!-- JSP 2.1 -->
@@ -1178,11 +1140,6 @@
             <artifactId>myfaces-test20</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>cactus</groupId>
-            <artifactId>cactus</artifactId>
-        </dependency>
-
         <!-- easymock -->
         <dependency>
             <groupId>org.easymock</groupId>
@@ -1217,10 +1174,8 @@
                     <excludePackageNames>org.apache.myfaces.ee6</excludePackageNames>
                 </configuration>
             </plugin>
-
             <plugin>
                 <artifactId>maven-changelog-plugin</artifactId>
-                <version>2.2</version>
                 <reportSets>
                     <reportSet>
                         <id>dual-report</id>
@@ -1239,18 +1194,15 @@
             
             <plugin>
                 <artifactId>maven-jxr-plugin</artifactId>
-                <version>2.2</version>
             </plugin>
             
             <plugin>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.5</version>
             </plugin>
             
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>taglist-maven-plugin</artifactId>
-                <version>2.4</version>
             </plugin>
             
             <!-- override PMD settings to set targetJdk -->

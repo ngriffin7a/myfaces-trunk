@@ -25,7 +25,9 @@ import java.util.List;
 
 import javax.el.ELException;
 import javax.faces.FacesException;
+import javax.faces.application.StateManager;
 import javax.faces.component.UIComponent;
+import javax.faces.event.PhaseId;
 import javax.faces.view.facelets.FaceletContext;
 import javax.faces.view.facelets.FaceletException;
 import javax.faces.view.facelets.TagConfig;
@@ -34,6 +36,7 @@ import javax.faces.view.facelets.TagHandler;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTag;
 import org.apache.myfaces.view.facelets.FaceletCompositionContext;
+import org.apache.myfaces.view.facelets.tag.ComponentContainerHandler;
 import org.apache.myfaces.view.facelets.tag.TagHandlerUtils;
 import org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport;
 
@@ -43,10 +46,10 @@ import org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport;
  * &lt;when&gt; and &lt;otherwise&gt;
  * 
  * @author Jacob Hookom
- * @version $Id: ChooseHandler.java,v 1.3 2008/07/13 19:01:43 rlubke Exp $
+ * @version $Id$
  */
 @JSFFaceletTag(name="c:choose")
-public final class ChooseHandler extends TagHandler
+public final class ChooseHandler extends TagHandler implements ComponentContainerHandler
 {
 
     private final ChooseOtherwiseHandler otherwise;
@@ -83,24 +86,131 @@ public final class ChooseHandler extends TagHandler
     public void apply(FaceletContext ctx, UIComponent parent) throws IOException, FacesException, FaceletException,
             ELException
     {
-        for (int i = 0; i < this.when.length; i++)
+        FaceletCompositionContext fcc = FaceletCompositionContext.getCurrentInstance(ctx);
+        boolean processed = false;
+        //assign an unique id for this section
+        String uniqueId = fcc.startComponentUniqueIdSection();
+        Integer savedOption = null;
+        
+        Integer restoredSavedOption = getSavedOption(ctx, fcc, parent, uniqueId);
+        
+        if (restoredSavedOption != null)
         {
-            if (this.when[i].isTestTrue(ctx))
+            if (!PhaseId.RESTORE_VIEW.equals(ctx.getFacesContext().getCurrentPhaseId()))
             {
-                this.when[i].apply(ctx, parent);
-                return;
+                for (int i = 0; i < this.when.length; i++)
+                {
+                    //Ensure each option has its unique section
+                    fcc.startComponentUniqueIdSection();
+                    if (!processed)
+                    {
+                        if (this.when[i].isTestTrue(ctx))
+                        {
+                            boolean markInitialState = !restoredSavedOption.equals(i);
+                            boolean oldMarkInitialState = false;
+                            Boolean isBuildingInitialState = null;
+                            try
+                            {
+                                if (markInitialState)
+                                {
+                                    //set markInitialState flag
+                                    oldMarkInitialState = fcc.isMarkInitialState();
+                                    fcc.setMarkInitialState(true);
+                                    isBuildingInitialState = (Boolean) ctx.getFacesContext().getAttributes().put(
+                                            StateManager.IS_BUILDING_INITIAL_STATE, Boolean.TRUE);
+                                }
+                                this.when[i].apply(ctx, parent);
+                            }
+                            finally
+                            {
+                                if (markInitialState)
+                                {
+                                    //unset markInitialState flag
+                                    if (isBuildingInitialState == null)
+                                    {
+                                        ctx.getFacesContext().getAttributes().remove(
+                                                StateManager.IS_BUILDING_INITIAL_STATE);
+                                    }
+                                    else
+                                    {
+                                        ctx.getFacesContext().getAttributes().put(
+                                                StateManager.IS_BUILDING_INITIAL_STATE, isBuildingInitialState);
+                                    }
+                                    fcc.setMarkInitialState(oldMarkInitialState);
+                                }
+                            }
+                            processed = true;
+                            savedOption = i;
+                            //return;
+                        }
+                    }
+                    fcc.endComponentUniqueIdSection();
+                }
+
+            }
+            else
+            {
+                for (int i = 0; i < this.when.length; i++)
+                {
+                    //Ensure each option has its unique section
+                    fcc.startComponentUniqueIdSection();
+                    if (!processed)
+                    {
+                        if (restoredSavedOption.equals(i))
+                        {
+                            this.when[i].apply(ctx, parent);
+                            processed = true;
+                            savedOption = i;
+                            //return;
+                        }
+                    }
+                    fcc.endComponentUniqueIdSection();
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < this.when.length; i++)
+            {
+                //Ensure each option has its unique section
+                fcc.startComponentUniqueIdSection();
+                if (!processed)
+                {
+                    if (this.when[i].isTestTrue(ctx))
+                    {
+                        this.when[i].apply(ctx, parent);
+                        processed = true;
+                        savedOption = i;
+                        //return;
+                    }
+                }
+                fcc.endComponentUniqueIdSection();
             }
         }
         if (this.otherwise != null)
         {
-            this.otherwise.apply(ctx, parent);
+            fcc.startComponentUniqueIdSection();
+            if (!processed)
+            {
+                this.otherwise.apply(ctx, parent);
+                savedOption = -1;
+            }
+            fcc.endComponentUniqueIdSection();
         }
+        
+        fcc.endComponentUniqueIdSection();
 
-        if (FaceletCompositionContext.getCurrentInstance(ctx).
-                isMarkInitialStateAndIsRefreshTransientBuildOnPSS())
+        ComponentSupport.saveInitialTagState(ctx, fcc, parent, uniqueId, savedOption);
+        if (fcc.isUsingPSSOnThisView() && fcc.isRefreshTransientBuildOnPSS() && !fcc.isRefreshingTransientBuild())
         {
             //Mark the parent component to be saved and restored fully.
             ComponentSupport.markComponentToRestoreFully(ctx.getFacesContext(), parent);
         }
+    }
+    
+    private Integer getSavedOption(FaceletContext ctx, FaceletCompositionContext fcc,
+                                   UIComponent parent, String uniqueId)
+    {
+        return (Integer) ComponentSupport.restoreInitialTagState(ctx, fcc, parent, uniqueId);
     }
 }

@@ -141,8 +141,8 @@ import javax.faces.context.FacesContext;
  * </p>
  *
  * @author Werner Punz
- * @author Leonardo Uribe (latest modification by $Author: lu4242 $)
- * @version $Rev: 980927 $ $Date: 2010-07-30 14:05:55 -0500 (Vie, 30 Jul 2010) $
+ * @author Leonardo Uribe (latest modification by $Author$)
+ * @version $Rev$ $Date$
  */
 class _DeltaStateHelper <A extends AjaxBehavior> implements StateHelper
 {
@@ -595,7 +595,9 @@ class _DeltaStateHelper <A extends AjaxBehavior> implements StateHelper
     public void restoreState(FacesContext context, Object state)
     {
         if (state == null)
+        {
             return;
+        }
 
         Object[] serializedState = (Object[]) state;
         
@@ -832,7 +834,9 @@ class _DeltaStateHelper <A extends AjaxBehavior> implements StateHelper
         }
         
         if (attachedObject == null)
+        {
             return null;
+        }
         // StateHolder interface should take precedence over
         // List children
         if (attachedObject instanceof StateHolder)
@@ -871,9 +875,13 @@ class _DeltaStateHelper <A extends AjaxBehavior> implements StateHelper
     private static Object restoreAttachedState(FacesContext context, Object stateObj) throws IllegalStateException
     {
         if (context == null)
+        {
             throw new NullPointerException("context");
+        }
         if (stateObj == null)
+        {
             return null;
+        }
         if (stateObj instanceof _AttachedListStateWrapper)
         {
             List<Object> lst = ((_AttachedListStateWrapper) stateObj).getWrappedStateList();

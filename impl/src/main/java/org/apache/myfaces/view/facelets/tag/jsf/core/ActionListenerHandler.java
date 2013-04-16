@@ -42,7 +42,7 @@ import javax.faces.view.facelets.TagHandler;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletAttribute;
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTag;
-import org.apache.myfaces.shared_impl.renderkit.JSFAttr;
+import org.apache.myfaces.shared.renderkit.JSFAttr;
 import org.apache.myfaces.view.facelets.FaceletCompositionContext;
 import org.apache.myfaces.view.facelets.util.ReflectionUtil;
 
@@ -54,7 +54,7 @@ import org.apache.myfaces.view.facelets.util.ReflectionUtil;
  * @see javax.faces.event.ActionListener
  * @see javax.faces.component.ActionSource
  * @author Jacob Hookom
- * @version $Id: ActionListenerHandler.java,v 1.7 2008/07/13 19:01:44 rlubke Exp $
+ * @version $Id$
  */
 @JSFFaceletTag(
             name = "f:actionListener",
@@ -179,7 +179,8 @@ public final class ActionListenerHandler extends TagHandler
         }
         else
         {
-            throw new TagException(this.tag, "Parent is not composite component or of type ActionSource, type is: " + parent);
+            throw new TagException(this.tag,
+                    "Parent is not composite component or of type ActionSource, type is: " + parent);
         }
     }
 

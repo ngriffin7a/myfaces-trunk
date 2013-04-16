@@ -18,19 +18,9 @@
  */
 package org.apache.myfaces.view.facelets.impl;
 
-import org.apache.myfaces.view.facelets.Facelet;
-import org.apache.myfaces.view.facelets.FaceletFactory;
-import org.apache.myfaces.view.facelets.compiler.Compiler;
-import org.apache.myfaces.view.facelets.util.ParameterCheck;
-
-import javax.el.ELException;
-import javax.faces.FacesException;
-import javax.faces.view.facelets.FaceletException;
-import javax.faces.view.facelets.FaceletHandler;
-import javax.faces.view.facelets.ResourceResolver;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
@@ -39,11 +29,26 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import javax.el.ELException;
+import javax.faces.FacesException;
+import javax.faces.FactoryFinder;
+import javax.faces.view.facelets.FaceletCache;
+import javax.faces.view.facelets.FaceletCacheFactory;
+import javax.faces.view.facelets.FaceletException;
+import javax.faces.view.facelets.FaceletHandler;
+import javax.faces.view.facelets.ResourceResolver;
+
+import org.apache.myfaces.shared.resource.ResourceLoaderUtils;
+import org.apache.myfaces.view.facelets.Facelet;
+import org.apache.myfaces.view.facelets.FaceletFactory;
+import org.apache.myfaces.view.facelets.compiler.Compiler;
+import org.apache.myfaces.view.facelets.util.ParameterCheck;
+
 /**
  * Default FaceletFactory implementation.
  * 
  * @author Jacob Hookom
- * @version $Id: DefaultFaceletFactory.java,v 1.10 2007/04/09 01:13:17 youngm Exp $
+ * @version $Id$
  */
 public final class DefaultFaceletFactory extends FaceletFactory
 {
@@ -56,10 +61,10 @@ public final class DefaultFaceletFactory extends FaceletFactory
     private URL _baseUrl;
 
     private Compiler _compiler;
-
-    private Map<String, DefaultFacelet> _facelets;
     
-    private Map<String, DefaultFacelet> _viewMetadataFacelets;
+    //private Map<String, DefaultFacelet> _facelets;
+    
+    //private Map<String, DefaultFacelet> _viewMetadataFacelets;
     
     private Map<String, DefaultFacelet> _compositeComponentMetadataFacelets;
 
@@ -68,7 +73,9 @@ public final class DefaultFaceletFactory extends FaceletFactory
     private Map<String, URL> _relativeLocations;
 
     private javax.faces.view.facelets.ResourceResolver _resolver;
-
+    
+    private FaceletCache<Facelet> _faceletCache;
+    
     public DefaultFaceletFactory(Compiler compiler, ResourceResolver resolver) throws IOException
     {
         this(compiler, resolver, -1);
@@ -81,9 +88,9 @@ public final class DefaultFaceletFactory extends FaceletFactory
 
         _compiler = compiler;
 
-        _facelets = new HashMap<String, DefaultFacelet>();
+        //_facelets = new HashMap<String, DefaultFacelet>();
         
-        _viewMetadataFacelets = new HashMap<String, DefaultFacelet>();
+        //_viewMetadataFacelets = new HashMap<String, DefaultFacelet>();
         
         _compositeComponentMetadataFacelets = new HashMap<String, DefaultFacelet>();
 
@@ -94,6 +101,44 @@ public final class DefaultFaceletFactory extends FaceletFactory
         _baseUrl = resolver.resolveUrl("/");
 
         _refreshPeriod = refreshPeriod < 0 ? INFINITE_DELAY : refreshPeriod * 1000;
+        
+        // facelet cache. Lookup here, because after all this is a "part" of the facelet factory implementation.
+        FaceletCacheFactory cacheFactory
+                = (FaceletCacheFactory) FactoryFinder.getFactory(FactoryFinder.FACELET_CACHE_FACTORY);
+        _faceletCache = (FaceletCache<Facelet>) cacheFactory.getFaceletCache();
+        
+        FaceletCache.MemberFactory<Facelet> faceletFactory = new FaceletCache.MemberFactory<Facelet>()
+        {
+            public Facelet newInstance(URL url) throws IOException
+            {
+                return _createFacelet(url);
+            }
+        };
+        FaceletCache.MemberFactory<Facelet> viewMetadataFaceletFactory = new FaceletCache.MemberFactory<Facelet>()
+        {
+            public Facelet newInstance(URL url) throws IOException
+            {
+                return _createViewMetadataFacelet(url);
+            }
+        };
+        
+        // Note that FaceletCache.setMemberFactories method is protected, and this is the place where call
+        // this method has sense, because DefaultFaceletFactory is the responsible to create Facelet instances.
+        // The only way to do it is using reflection, and it has sense, because in this way it is possible to
+        // setup a java SecurityManager that prevents call this method (because it is protected, and to do that
+        // the code first check for "suppressAccessChecks" permission).
+        try
+        {
+            Method setMemberFactoriesMethod = FaceletCache.class.getDeclaredMethod("setMemberFactories",
+                    new Class[]{FaceletCache.MemberFactory.class, FaceletCache.MemberFactory.class});
+            setMemberFactoriesMethod.setAccessible(true);
+            setMemberFactoriesMethod.invoke(_faceletCache, faceletFactory, viewMetadataFaceletFactory);
+        } 
+        catch (Exception e)
+        {
+            throw new FacesException("Cannot call setMemberFactories method, Initialization of FaceletCache failed.",
+                                     e);
+        }
 
         if (log.isLoggable(Level.FINE))
         {
@@ -151,24 +196,7 @@ public final class DefaultFaceletFactory extends FaceletFactory
      */
     public Facelet getFacelet(URL url) throws IOException, FaceletException, FacesException, ELException
     {
-        ParameterCheck.notNull("url", url);
-        
-        String key = url.toString();
-        
-        DefaultFacelet f = _facelets.get(key);
-        
-        if (f == null || this.needsToBeRefreshed(f))
-        {
-            f = this._createFacelet(url);
-            if (_refreshPeriod != NO_CACHE_DELAY)
-            {
-                Map<String, DefaultFacelet> newLoc = new HashMap<String, DefaultFacelet>(_facelets);
-                newLoc.put(key, f);
-                _facelets = newLoc;
-            }
-        }
-        
-        return f;
+        return _faceletCache.getFacelet(url);
     }
 
     public long getRefreshPeriod()
@@ -235,17 +263,9 @@ public final class DefaultFaceletFactory extends FaceletFactory
             try
             {
                 URLConnection conn = facelet.getSource().openConnection();
-                InputStream is = conn.getInputStream();
-                try
-                {
-                    long lastModified = conn.getLastModified();
+                long lastModified = ResourceLoaderUtils.getResourceLastModified(conn);
 
-                    return lastModified == 0 || lastModified > target;
-                }
-                finally
-                {
-                    is.close();
-                }
+                return lastModified == 0 || lastModified > target;
             }
             catch (IOException e)
             {
@@ -278,7 +298,7 @@ public final class DefaultFaceletFactory extends FaceletFactory
         try
         {
             FaceletHandler h = _compiler.compile(url, alias);
-            DefaultFacelet f = new DefaultFacelet(this, _compiler.createExpressionFactory(), url, alias, h);
+            DefaultFacelet f = new DefaultFacelet(this, _compiler.createExpressionFactory(), url, alias, alias, h);
             return f;
         }
         catch (FileNotFoundException fnfe)
@@ -296,7 +316,8 @@ public final class DefaultFaceletFactory extends FaceletFactory
      * @throws FacesException
      * @throws ELException
      */
-    private DefaultFacelet _createViewMetadataFacelet(URL url) throws IOException, FaceletException, FacesException, ELException
+    private DefaultFacelet _createViewMetadataFacelet(URL url)
+            throws IOException, FaceletException, FacesException, ELException
     {
         if (log.isLoggable(Level.FINE))
         {
@@ -305,11 +326,13 @@ public final class DefaultFaceletFactory extends FaceletFactory
 
         // The alias is used later for informative purposes, so we append 
         // some prefix to identify later where the errors comes from.
-        String alias = "/viewMetadata/" + _removeFirst(url.getFile(), _baseUrl.getFile());
+        String faceletId = "/"+ _removeFirst(url.getFile(), _baseUrl.getFile());
+        String alias = "/viewMetadata" + faceletId;
         try
         {
             FaceletHandler h = _compiler.compileViewMetadata(url, alias);
-            DefaultFacelet f = new DefaultFacelet(this, _compiler.createExpressionFactory(), url, alias, h);
+            DefaultFacelet f = new DefaultFacelet(this, _compiler.createExpressionFactory(), url, alias, 
+                    faceletId, h);
             return f;
         }
         catch (FileNotFoundException fnfe)
@@ -328,7 +351,8 @@ public final class DefaultFaceletFactory extends FaceletFactory
      * @throws FacesException
      * @throws ELException
      */
-    private DefaultFacelet _createCompositeComponentMetadataFacelet(URL url) throws IOException, FaceletException, FacesException, ELException
+    private DefaultFacelet _createCompositeComponentMetadataFacelet(URL url)
+            throws IOException, FaceletException, FacesException, ELException
     {
         if (log.isLoggable(Level.FINE))
         {
@@ -341,7 +365,8 @@ public final class DefaultFaceletFactory extends FaceletFactory
         try
         {
             FaceletHandler h = _compiler.compileCompositeComponentMetadata(url, alias);
-            DefaultFacelet f = new DefaultFacelet(this, _compiler.createExpressionFactory(), url, alias, h, true);
+            DefaultFacelet f = new DefaultFacelet(this, _compiler.createExpressionFactory(), url, alias,
+                    alias, h, true);
             return f;
         }
         catch (FileNotFoundException fnfe)
@@ -383,24 +408,7 @@ public final class DefaultFaceletFactory extends FaceletFactory
     public Facelet getViewMetadataFacelet(URL url) throws IOException,
             FaceletException, FacesException, ELException
     {
-        ParameterCheck.notNull("url", url);
-        
-        String key = url.toString();
-        
-        DefaultFacelet f = _viewMetadataFacelets.get(key);
-        
-        if (f == null || this.needsToBeRefreshed(f))
-        {
-            f = this._createViewMetadataFacelet(url);
-            if (_refreshPeriod != NO_CACHE_DELAY)
-            {
-                Map<String, DefaultFacelet> newLoc = new HashMap<String, DefaultFacelet>(_viewMetadataFacelets);
-                newLoc.put(key, f);
-                _viewMetadataFacelets = newLoc;
-            }
-        }
-        
-        return f;
+        return _faceletCache.getViewMetadataFacelet(url);
     }
     
     /**
@@ -447,7 +455,8 @@ public final class DefaultFaceletFactory extends FaceletFactory
             f = this._createCompositeComponentMetadataFacelet(url);
             if (_refreshPeriod != NO_CACHE_DELAY)
             {
-                Map<String, DefaultFacelet> newLoc = new HashMap<String, DefaultFacelet>(_compositeComponentMetadataFacelets);
+                Map<String, DefaultFacelet> newLoc
+                        = new HashMap<String, DefaultFacelet>(_compositeComponentMetadataFacelets);
                 newLoc.put(key, f);
                 _compositeComponentMetadataFacelets = newLoc;
             }

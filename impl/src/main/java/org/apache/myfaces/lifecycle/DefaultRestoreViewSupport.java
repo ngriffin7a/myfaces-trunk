@@ -20,28 +20,34 @@ package org.apache.myfaces.lifecycle;
 
 import java.net.MalformedURLException;
 import java.util.Collections;
-import java.util.LinkedHashMap;
+import java.util.EnumSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.faces.FacesException;
+import javax.faces.FactoryFinder;
 import javax.faces.application.ProjectStage;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIComponent;
 import javax.faces.component.visit.VisitCallback;
 import javax.faces.component.visit.VisitContext;
+import javax.faces.component.visit.VisitContextFactory;
+import javax.faces.component.visit.VisitHint;
 import javax.faces.component.visit.VisitResult;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PostRestoreStateEvent;
+import javax.faces.render.RenderKitFactory;
 import javax.faces.render.ResponseStateManager;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
-import org.apache.myfaces.shared_impl.application.FacesServletMapping;
-import org.apache.myfaces.shared_impl.application.InvalidViewIdException;
-import org.apache.myfaces.shared_impl.renderkit.RendererUtils;
-import org.apache.myfaces.shared_impl.util.Assert;
+import org.apache.myfaces.shared.application.FacesServletMapping;
+import org.apache.myfaces.shared.application.InvalidViewIdException;
+import org.apache.myfaces.shared.util.Assert;
+import org.apache.myfaces.shared.util.ConcurrentLRUCache;
+import org.apache.myfaces.shared.util.ExternalContextUtils;
 
 /**
  * @author Mathias Broekelmann (latest modification by $Author$)
@@ -66,30 +72,72 @@ public class DefaultRestoreViewSupport implements RestoreViewSupport
     //private final Log log = LogFactory.getLog(DefaultRestoreViewSupport.class);
     private final Logger log = Logger.getLogger(DefaultRestoreViewSupport.class.getName());
 
-    @JSFWebConfigParam(defaultValue = "500", since = "2.0.2")
+    @JSFWebConfigParam(defaultValue = "500", since = "2.0.2", group="viewhandler",
+                       tags="performance", classType="java.lang.Integer")
     private static final String CHECKED_VIEWID_CACHE_SIZE_ATTRIBUTE = "org.apache.myfaces.CHECKED_VIEWID_CACHE_SIZE";
     private static final int CHECKED_VIEWID_CACHE_DEFAULT_SIZE = 500;
 
-    @JSFWebConfigParam(defaultValue = "true", since = "2.0.2")
-    private static final String CHECKED_VIEWID_CACHE_ENABLED_ATTRIBUTE = "org.apache.myfaces.CHECKED_VIEWID_CACHE_ENABLED";
+    @JSFWebConfigParam(defaultValue = "true", since = "2.0.2", group="viewhandler",
+                       expectedValues="true,false", tags="performance")
+    private static final String CHECKED_VIEWID_CACHE_ENABLED_ATTRIBUTE
+            = "org.apache.myfaces.CHECKED_VIEWID_CACHE_ENABLED";
     private static final boolean CHECKED_VIEWID_CACHE_ENABLED_DEFAULT = true;
     
     private static final String SKIP_ITERATION_HINT = "javax.faces.visit.SKIP_ITERATION";
+    
+    private static final Set<VisitHint> VISIT_HINTS = Collections.unmodifiableSet( 
+            EnumSet.of(VisitHint.SKIP_ITERATION));
 
-    private Map<String, Boolean> _checkedViewIdMap = null;
+    private volatile ConcurrentLRUCache<String, Boolean> _checkedViewIdMap = null;
     private Boolean _checkedViewIdCacheEnabled = null;
+    
+    private RenderKitFactory _renderKitFactory = null;
+    private VisitContextFactory _visitContextFactory = null;
+    
+    private final String[] _faceletsViewMappings;
+    private final String[] _contextSuffixes;
+    private final String _faceletsContextSufix;
+    private final boolean _initialized;
+    
+    public DefaultRestoreViewSupport()
+    {
+        _faceletsViewMappings = null;
+        _contextSuffixes = null;
+        _faceletsContextSufix = null;
+        _initialized = false;
+    }
+    
+    public DefaultRestoreViewSupport(FacesContext facesContext)
+    {
+        _faceletsViewMappings = getFaceletsViewMappings(facesContext);
+        _contextSuffixes = getContextSuffix(facesContext);
+        _faceletsContextSufix = getFaceletsContextSuffix(facesContext);
+        _initialized = true;
+    }
 
     public void processComponentBinding(FacesContext facesContext, UIComponent component)
     {
         // JSF 2.0: Old hack related to t:aliasBean was fixed defining a event that traverse
         // whole tree and let components to override UIComponent.processEvent() method to include it.
         
-        // TODO: Remove this hack and use VisitHints.SKIP_ITERATION in JSF 2.1
-        facesContext.getAttributes().put(SKIP_ITERATION_HINT, Boolean.TRUE);
+        // Remove this hack SKIP_ITERATION_HINT and use VisitHints.SKIP_ITERATION in JSF 2.1 only
+        // is not possible, because jsf 2.0 API-based libraries can use the String
+        // hint, JSF21-based libraries can use both.
+        try
+        {
+            facesContext.getAttributes().put(SKIP_ITERATION_HINT, Boolean.TRUE);
+
+            VisitContext visitContext = (VisitContext) getVisitContextFactory().
+                    getVisitContext(facesContext, null, VISIT_HINTS);
+            component.visitTree(visitContext, new RestoreStateCallback());
+        }
+        finally
+        {
+            // We must remove hint in finally, because an exception can break this phase,
+            // but lifecycle can continue, if custom exception handler swallows the exception
+            facesContext.getAttributes().remove(SKIP_ITERATION_HINT);
+        }
         
-        component.visitTree(VisitContext.createVisitContext(facesContext), new RestoreStateCallback());
-        
-        facesContext.getAttributes().remove(SKIP_ITERATION_HINT);
         
         /*
         ValueExpression binding = component.getValueExpression("binding");
@@ -132,8 +180,8 @@ public class DefaultRestoreViewSupport implements RestoreViewSupport
             {
                 if (traceEnabled)
                 {
-                    log.finest("Calculated viewId '" + viewId + "' from request param '" + JAVAX_SERVLET_INCLUDE_PATH_INFO
-                            + "'");
+                    log.finest("Calculated viewId '" + viewId + "' from request param '"
+                               + JAVAX_SERVLET_INCLUDE_PATH_INFO + "'");
                 }
             }
             else
@@ -177,8 +225,27 @@ public class DefaultRestoreViewSupport implements RestoreViewSupport
     {
         ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
         String renderkitId = viewHandler.calculateRenderKitId(facesContext);
-        ResponseStateManager rsm = RendererUtils.getResponseStateManager(facesContext, renderkitId);
+        ResponseStateManager rsm
+                = getRenderKitFactory().getRenderKit(facesContext, renderkitId).getResponseStateManager();
         return rsm.isPostback(facesContext);
+    }
+    
+    protected RenderKitFactory getRenderKitFactory()
+    {
+        if (_renderKitFactory == null)
+        {
+            _renderKitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+        }
+        return _renderKitFactory;
+    }
+    
+    protected VisitContextFactory getVisitContextFactory()
+    {
+        if (_visitContextFactory == null)
+        {
+            _visitContextFactory = (VisitContextFactory)FactoryFinder.getFactory(FactoryFinder.VISIT_CONTEXT_FACTORY);
+        }
+        return _visitContextFactory;
     }
         
     private static class RestoreStateCallback implements VisitCallback
@@ -221,6 +288,16 @@ public class DefaultRestoreViewSupport implements RestoreViewSupport
         else if(mapping.isPrefixMapping())
         {
             viewId = handlePrefixMapping(viewId,mapping.getPrefix());
+            
+            // A viewId that is equals to the prefix mapping on servlet mode is
+            // considered invalid, because jsp vdl will use RequestDispatcher and cause
+            // a loop that ends in a exception. Note in portlet mode the view
+            // could be encoded as a query param, so the viewId could be valid.
+            if (viewId != null && viewId.equals(mapping.getPrefix()) &&
+                !ExternalContextUtils.isPortlet(context.getExternalContext()))
+            {
+                throw new InvalidViewIdException();
+            }
         }
         else if (viewId != null && mapping.getUrlPattern().startsWith(viewId))
         {
@@ -259,10 +336,11 @@ public class DefaultRestoreViewSupport implements RestoreViewSupport
     
     protected String[] getFaceletsViewMappings(FacesContext context)
     {
-        String faceletsViewMappings= context.getExternalContext().getInitParameter(ViewHandler.FACELETS_VIEW_MAPPINGS_PARAM_NAME);
-        if(faceletsViewMappings == null)    //consider alias facelets.VIEWMAPPINGS
+        String faceletsViewMappings
+                = context.getExternalContext().getInitParameter(ViewHandler.FACELETS_VIEW_MAPPINGS_PARAM_NAME);
+        if(faceletsViewMappings == null)    //consider alias facelets.VIEW_MAPPINGS
         {
-            faceletsViewMappings= context.getExternalContext().getInitParameter("facelets.VIEWMAPPINGS");
+            faceletsViewMappings= context.getExternalContext().getInitParameter("facelets.VIEW_MAPPINGS");
         }
         
         return faceletsViewMappings == null ? null : faceletsViewMappings.split(";");
@@ -277,20 +355,38 @@ public class DefaultRestoreViewSupport implements RestoreViewSupport
      */
     protected String handlePrefixMapping(String viewId, String prefix)
     {
-        /*  If prefix mapping (such as "/faces/*") is used for FacesServlet, normalize the viewId according to the following
+        /*  If prefix mapping (such as "/faces/*") is used for FacesServlet,
+        normalize the viewId according to the following
             algorithm, or its semantic equivalent, and return it.
                
             Remove any number of occurrences of the prefix mapping from the viewId. For example, if the incoming value
             was /faces/faces/faces/view.xhtml the result would be simply view.xhtml.
          */
         String uri = viewId;
-        prefix = prefix + '/';  //need to make sure its really /faces/* and not /facesPage.xhtml
+        if ( "".equals(prefix) )
+        {
+            // if prefix is an empty string, we let it be "//"
+            // in order to prevent an infinite loop in uri.startsWith(-emptyString-).
+            // Furthermore a prefix of "//" is just another double slash prevention.
+            prefix = "//";
+        }
+        else
+        {
+            //need to make sure its really /faces/* and not /facesPage.xhtml
+            prefix = prefix + '/';  
+        }
         while (uri.startsWith(prefix) || uri.startsWith("//")) 
         {
             if(uri.startsWith(prefix))
-                    uri = uri.substring(prefix.length() - 1);    //cut off only /faces, leave the trailing '/' char for the next iteration
+            {
+                //cut off only /faces, leave the trailing '/' char for the next iteration
+                uri = uri.substring(prefix.length() - 1);
+            }
             else //uri starts with '//'
-                uri = uri.substring(1); //cut off the leading slash, leaving the second slash to compare for the next iteration
+            {
+                //cut off the leading slash, leaving the second slash to compare for the next iteration
+                uri = uri.substring(1);
+            }
         }
         //now delete any remaining leading '/'
         // TODO: CJH: I don't think this is correct, considering that getActionURL() expects everything to
@@ -312,8 +408,8 @@ public class DefaultRestoreViewSupport implements RestoreViewSupport
      */
     protected String handleSuffixMapping(FacesContext context, String requestViewId)
     {
-        String[] faceletsViewMappings = getFaceletsViewMappings(context);
-        String[] jspDefaultSuffixes = getContextSuffix(context);
+        String[] faceletsViewMappings = _initialized ? _faceletsViewMappings : getFaceletsViewMappings(context);
+        String[] jspDefaultSuffixes = _initialized ? _contextSuffixes : getContextSuffix(context);
         
         int slashPos = requestViewId.lastIndexOf('/');
         int extensionPos = requestViewId.lastIndexOf('.');
@@ -352,19 +448,23 @@ public class DefaultRestoreViewSupport implements RestoreViewSupport
                         builder.replace(candidateViewId.lastIndexOf('.'), candidateViewId.length(), mapping);
                         String tempViewId = builder.toString();
                         if(checkResourceExists(context,tempViewId))
+                        {
                             return tempViewId;
+                        }
                     }
                 }
             }
 
             // forced facelets mappings did not match or there were no entries in faceletsViewMappings array
             if(checkResourceExists(context,candidateViewId))
+            {
                 return candidateViewId;
+            }
         
         }
         
         //jsp suffixes didn't match, try facelets suffix
-        String faceletsDefaultSuffix = this.getFaceletsContextSuffix(context);
+        String faceletsDefaultSuffix = _initialized ? _faceletsContextSufix : this.getFaceletsContextSuffix(context);
         if (faceletsDefaultSuffix != null)
         {
             for (String defaultSuffix : jspDefaultSuffixes)
@@ -391,12 +491,16 @@ public class DefaultRestoreViewSupport implements RestoreViewSupport
             
             String candidateViewId = builder.toString();
             if(checkResourceExists(context,candidateViewId))
+            {
                 return candidateViewId;
+            }
         }
 
         // Otherwise, if a physical resource exists with the name requestViewId let that value be viewId.
         if(checkResourceExists(context,requestViewId))
+        {
             return requestViewId;
+        }
         
         //Otherwise return null.
         return null;
@@ -497,11 +601,12 @@ public class DefaultRestoreViewSupport implements RestoreViewSupport
         }
     }
     
-    private Map<String, Boolean> getCheckedViewIDMap(FacesContext context)
+    private ConcurrentLRUCache<String, Boolean> getCheckedViewIDMap(FacesContext context)
     {
         if (_checkedViewIdMap == null)
         {
-            _checkedViewIdMap = Collections.synchronizedMap(new _CheckedViewIDMap<String, Boolean>(getViewIDCacheMaxSize(context)));
+            int maxSize = getViewIDCacheMaxSize(context);
+            _checkedViewIdMap = new ConcurrentLRUCache<String, Boolean>((maxSize * 4 + 3) / 3, maxSize);
         }
         return _checkedViewIdMap;
     }
@@ -513,7 +618,8 @@ public class DefaultRestoreViewSupport implements RestoreViewSupport
             //first, check to make sure that ProjectStage is production, if not, skip caching
             if (!context.isProjectStage(ProjectStage.Production))
             {
-                return _checkedViewIdCacheEnabled = Boolean.FALSE;
+                _checkedViewIdCacheEnabled = Boolean.FALSE;
+                return _checkedViewIdCacheEnabled;
             }
 
             //if in production, make sure that the cache is not explicitly disabled via context param
@@ -541,22 +647,4 @@ public class DefaultRestoreViewSupport implements RestoreViewSupport
                 : Integer.parseInt(configParam);
     }
 
-    private class _CheckedViewIDMap<K, V> extends LinkedHashMap<K, V>
-    {
-        private static final long serialVersionUID = 1L;
-        private int maxCapacity;
-
-        public _CheckedViewIDMap(int cacheSize)
-        {
-            // create map at max capacity and 1.1 load factor to avoid rehashing
-            super(cacheSize + 1, 1.1f, true);
-            maxCapacity = cacheSize;
-        }
-
-        @Override
-        protected boolean removeEldestEntry(Map.Entry<K, V> eldest)
-        {
-            return size() > maxCapacity;
-        }
-    }
 }

@@ -20,6 +20,7 @@ package org.apache.myfaces.spi;
 
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 
 import javax.faces.FacesException;
 import javax.faces.context.ExternalContext;
@@ -28,6 +29,7 @@ import org.apache.myfaces.spi.impl.DefaultFacesConfigResourceProviderFactory;
 import org.apache.myfaces.spi.impl.SpiUtils;
 
 /**
+ * Factory that provide FacesConfigResourceProvider instances
  * 
  * @since 2.0.2
  * @author Leonardo Uribe
@@ -40,7 +42,8 @@ public abstract class FacesConfigResourceProviderFactory
 
     public static FacesConfigResourceProviderFactory getFacesConfigResourceProviderFactory(ExternalContext ctx)
     {
-        FacesConfigResourceProviderFactory instance = (FacesConfigResourceProviderFactory) ctx.getApplicationMap().get(FACTORY_KEY);
+        FacesConfigResourceProviderFactory instance
+                = (FacesConfigResourceProviderFactory) ctx.getApplicationMap().get(FACTORY_KEY);
         if (instance != null)
         {
             return instance;
@@ -52,7 +55,8 @@ public abstract class FacesConfigResourceProviderFactory
             if (System.getSecurityManager() != null)
             {
                 final ExternalContext ectx = ctx;
-                lpf = (FacesConfigResourceProviderFactory) AccessController.doPrivileged(new java.security.PrivilegedExceptionAction<Object>()
+                lpf = (FacesConfigResourceProviderFactory)
+                        AccessController.doPrivileged(new PrivilegedExceptionAction<Object>()
                         {
                             public Object run() throws PrivilegedActionException
                             {
@@ -64,7 +68,8 @@ public abstract class FacesConfigResourceProviderFactory
             }
             else
             {
-                lpf = (FacesConfigResourceProviderFactory) SpiUtils.build(ctx, FacesConfigResourceProviderFactory.class, FACTORY_DEFAULT);
+                lpf = (FacesConfigResourceProviderFactory)
+                        SpiUtils.build(ctx, FacesConfigResourceProviderFactory.class, FACTORY_DEFAULT);
             }
         }
         catch (PrivilegedActionException pae)
@@ -78,7 +83,8 @@ public abstract class FacesConfigResourceProviderFactory
         return lpf;
     }
 
-    public static void setFacesConfigResourceProviderFactory(ExternalContext ctx, FacesConfigResourceProviderFactory instance)
+    public static void setFacesConfigResourceProviderFactory(ExternalContext ctx,
+                                                             FacesConfigResourceProviderFactory instance)
     {
         ctx.getApplicationMap().put(FACTORY_KEY, instance);
     }

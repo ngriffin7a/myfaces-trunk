@@ -22,7 +22,8 @@ import javax.faces.FacesException;
 import javax.servlet.ServletContext;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
-import org.apache.myfaces.shared_impl.util.ClassUtils;
+import org.apache.myfaces.shared.config.MyfacesConfig;
+import org.apache.myfaces.shared.util.ClassUtils;
 import org.apache.myfaces.util.ContainerUtils;
 
 /**
@@ -34,7 +35,15 @@ import org.apache.myfaces.util.ContainerUtils;
  */
 public class FacesInitializerFactory
 {
-    
+ 
+    /**
+     * Indicate the class implementing FacesInitializer interface that will
+     * be used to setup MyFaces Core contexts.
+     * <p>This is used when some custom task must be done specifically when
+     * a myfaces web context is initialized or destroyed, or when MyFaces should
+     * be initialized in some custom environment. 
+     * </p>
+     */
     @JSFWebConfigParam(since = "2.0.1", desc = "Class name of a custom FacesInitializer implementation.")
     private static final String FACES_INITIALIZER_PARAM = "org.apache.myfaces.FACES_INITIALIZER";
     
@@ -91,7 +100,13 @@ public class FacesInitializerFactory
      */
     private static FacesInitializer _getDefaultFacesInitializer(ServletContext context)
     {
-        if (ContainerUtils.isJsp21(context)) 
+        // No MyfacesConfig available yet, we must read the parameter directly:
+        String initParameter = context.getInitParameter(MyfacesConfig.INIT_PARAM_SUPPORT_JSP_AND_FACES_EL);
+        if (Boolean.FALSE.toString().equals(initParameter))
+        {
+            return new FaceletsInitilializer();
+        } 
+        else if (ContainerUtils.isJsp21(context)) 
         {
             return new Jsp21FacesInitializer();
         } 

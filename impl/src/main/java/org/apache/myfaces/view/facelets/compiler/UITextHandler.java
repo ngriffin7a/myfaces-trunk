@@ -28,7 +28,6 @@ import javax.faces.component.UniqueIdVendor;
 import javax.faces.view.facelets.FaceletContext;
 import javax.faces.view.facelets.FaceletException;
 
-import org.apache.myfaces.view.facelets.AbstractFaceletContext;
 import org.apache.myfaces.view.facelets.FaceletCompositionContext;
 import org.apache.myfaces.view.facelets.el.ELText;
 import org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport;
@@ -36,7 +35,7 @@ import org.apache.myfaces.view.facelets.util.FastWriter;
 
 /**
  * @author Jacob Hookom
- * @version $Id: UITextHandler.java,v 1.10 2008/07/13 19:01:33 rlubke Exp $
+ * @version $Id$
  */
 final class UITextHandler extends AbstractUIHandler
 {
@@ -63,9 +62,9 @@ final class UITextHandler extends AbstractUIHandler
             {
                 ELText nt = this.txt.apply(ctx.getExpressionFactory(), ctx);
                 UIComponent c = new UIText(this.alias, nt);
-                //c.setId(ComponentSupport.getViewRoot(ctx, parent).createUniqueId());
 
-                UniqueIdVendor uniqueIdVendor = FaceletCompositionContext.getCurrentInstance(ctx).getUniqueIdVendorFromStack();
+                UniqueIdVendor uniqueIdVendor
+                        = FaceletCompositionContext.getCurrentInstance(ctx).getUniqueIdVendorFromStack();
                 if (uniqueIdVendor == null)
                 {
                     uniqueIdVendor = ComponentSupport.getViewRoot(ctx, parent);

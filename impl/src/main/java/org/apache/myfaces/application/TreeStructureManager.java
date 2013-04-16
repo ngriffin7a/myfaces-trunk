@@ -18,10 +18,12 @@
  */
 package org.apache.myfaces.application;
 
-import org.apache.myfaces.shared_impl.util.ClassUtils;
+import org.apache.myfaces.shared.util.ClassUtils;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
+import javax.faces.context.FacesContext;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,8 +58,9 @@ public class TreeStructureManager
         if (component.getChildCount() > 0)
         {
             List<TreeStructComponent> structChildList = new ArrayList<TreeStructComponent>();
-            for (UIComponent child : component.getChildren())
+            for (int i = 0, childCount = component.getChildCount(); i < childCount; i++)
             {
+                UIComponent child = component.getChildren().get(i);
                 if (!child.isTransient())
                 {
                     TreeStructComponent structChild = internalBuildTreeStructureToSave(child);
@@ -97,7 +100,7 @@ public class TreeStructureManager
     {
         if (treeStructRoot instanceof TreeStructComponent)
         {
-            return (UIViewRoot)internalRestoreTreeStructure((TreeStructComponent)treeStructRoot);
+            return (UIViewRoot)internalRestoreTreeStructure((TreeStructComponent)treeStructRoot, true);
         }
         
         
@@ -106,13 +109,17 @@ public class TreeStructureManager
         
     }
 
-    private UIComponent internalRestoreTreeStructure(TreeStructComponent treeStructComp)
+    private UIComponent internalRestoreTreeStructure(TreeStructComponent treeStructComp, boolean checkViewRoot)
     {
         String compClass = treeStructComp.getComponentClass();
         String compId = treeStructComp.getComponentId();
         UIComponent component = (UIComponent)ClassUtils.newInstance(compClass);
         component.setId(compId);
 
+        if (checkViewRoot && component instanceof UIViewRoot)
+        {
+            FacesContext.getCurrentInstance().setViewRoot((UIViewRoot) component);
+        }
         //children
         TreeStructComponent[] childArray = treeStructComp.getChildren();
         if (childArray != null)
@@ -120,7 +127,7 @@ public class TreeStructureManager
             List<UIComponent> childList = component.getChildren();
             for (int i = 0, len = childArray.length; i < len; i++)
             {
-                UIComponent child = internalRestoreTreeStructure(childArray[i]);
+                UIComponent child = internalRestoreTreeStructure(childArray[i], false);
                 childList.add(child);
             }
         }
@@ -135,7 +142,7 @@ public class TreeStructureManager
                 Object[] tuple = (Object[])facetArray[i];
                 String facetName = (String)tuple[0];
                 TreeStructComponent structChild = (TreeStructComponent)tuple[1];
-                UIComponent child = internalRestoreTreeStructure(structChild);
+                UIComponent child = internalRestoreTreeStructure(structChild, false);
                 facetMap.put(facetName, child);
             }
         }
@@ -151,7 +158,7 @@ public class TreeStructureManager
         private String _componentClass;
         private String _componentId;
         private TreeStructComponent[] _children = null;    // Array of children
-        private Object[] _facets = null;                   // Array of Array-tuples with Facetname and TreeStructComponent
+        private Object[] _facets = null;            // Array of Array-tuples with Facetname and TreeStructComponent
 
         TreeStructComponent(String componentClass, String componentId)
         {

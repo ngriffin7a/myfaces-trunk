@@ -42,9 +42,9 @@ import javax.faces.event.SystemEvent;
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
 
 /**
- * @author Simon Lessard (latest modification by $Author: slessard $)
+ * @author Simon Lessard (latest modification by $Author$)
  * @author Jakob Korherr
- * @version $Revision: 696523 $ $Date: 2009-03-14 20:06:50 -0400 (mer., 17 sept. 2008) $
+ * @version $Revision$ $Date$
  *
  * @since 2.0
  */
@@ -95,7 +95,7 @@ public class PreJsf2ExceptionHandlerFactory extends ExceptionHandlerFactory
          * </ul>
          * Furthermore, the init parameter only works when using the PreJsf2ExceptionHandlerFactory.
          */
-        @JSFWebConfigParam(since="1.2.4")
+        @JSFWebConfigParam(since="1.2.4",desc="Deprecated: use JSF 2.0 ExceptionHandler", deprecated=true)
         private static final String ERROR_HANDLER_PARAMETER = "org.apache.myfaces.ERROR_HANDLER";
         
         private Queue<ExceptionQueuedEvent> handled;
@@ -163,8 +163,10 @@ public class PreJsf2ExceptionHandlerFactory extends ExceptionHandlerFactory
          * 
          * Differs from ExceptionHandlerImpl.handle() in three points:
          *  - Any exceptions thrown before or after phase execution will be logged and swallowed.
-         *  - If the Exception is an instance of UpdateModelException, extract the FacesMessage from the UpdateModelException.
-         *    Log a SEVERE message to the log and queue the FacesMessage on the FacesContext, using the clientId of the source
+         *  - If the Exception is an instance of UpdateModelException, extract the
+         *  FacesMessage from the UpdateModelException.
+         *    Log a SEVERE message to the log and queue the FacesMessage on the
+         *    FacesContext, using the clientId of the source
          *    component in a call to FacesContext.addMessage(java.lang.String, javax.faces.application.FacesMessage).
          *  - Checks org.apache.myfaces.ERROR_HANDLER for backwards compatibility to myfaces-1.2's error handling
          */
@@ -208,13 +210,15 @@ public class PreJsf2ExceptionHandlerFactory extends ExceptionHandlerFactory
 
                                 Object errorHandler = clazz.newInstance();
 
-                                Method m = clazz.getMethod("handleException", new Class[] { FacesContext.class, Exception.class });
+                                Method m = clazz.getMethod("handleException",
+                                                           new Class[] { FacesContext.class, Exception.class });
                                 m.invoke(errorHandler, new Object[] { context.getContext(), exception });
                             }
                             catch (ClassNotFoundException ex)
                             {
                                 throw new FacesException("Error-Handler : " + errorHandlerClass
-                                        + " was not found. Fix your web.xml-parameter : " + ERROR_HANDLER_PARAMETER, ex);
+                                        + " was not found. Fix your web.xml-parameter : "
+                                        + ERROR_HANDLER_PARAMETER, ex);
                             }
                             catch (IllegalAccessException ex)
                             {
@@ -225,8 +229,8 @@ public class PreJsf2ExceptionHandlerFactory extends ExceptionHandlerFactory
                             catch (InstantiationException ex)
                             {
                                 throw new FacesException("Error-Handler : " + errorHandlerClass
-                                        + " could not be instantiated. Error-Handler is specified in web.xml-parameter : "
-                                        + ERROR_HANDLER_PARAMETER, ex);
+                                    + " could not be instantiated. Error-Handler is specified in web.xml-parameter : "
+                                    + ERROR_HANDLER_PARAMETER, ex);
                             }
                             catch (NoSuchMethodException ex)
                             {
@@ -267,9 +271,11 @@ public class PreJsf2ExceptionHandlerFactory extends ExceptionHandlerFactory
                                 // set handledAndThrown so that getHandledExceptionQueuedEvent() returns this event
                                 handledAndThrown = event;
                                 
-                                // Re-wrap toThrow in a ServletException or (PortletException, if in a portlet environment) 
+                                // Re-wrap toThrow in a ServletException or
+                                // (PortletException, if in a portlet environment)
                                 // and throw it
-                                // FIXME: The spec says to NOT use a FacesException to propagate the exception, but I see
+                                // FIXME: The spec says to NOT use a FacesException
+                                // to propagate the exception, but I see
                                 //        no other way as ServletException is not a RuntimeException
                                 toThrow = wrap(getRethrownException(exception));
                                 break;

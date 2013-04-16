@@ -18,12 +18,8 @@
  */
 package org.apache.myfaces.el.unified.resolver;
 
-import org.apache.myfaces.el.VariableResolverImpl;
-
 import javax.el.ELContext;
-import javax.faces.application.Application;
 import javax.faces.context.FacesContext;
-import javax.servlet.jsp.JspApplicationContext;
 import java.beans.FeatureDescriptor;
 import java.util.Iterator;
 import java.util.Map;
@@ -31,9 +27,11 @@ import java.util.Arrays;
 
 /**
  * <p>
- * This composite el resolver will be used at the top level resolver for faces ({@link Application#getELResolver()})
- * and jsp (the one we add with {@link JspApplicationContext#addELResolver(javax.el.ELResolver)}. It keeps track of its
- * scope to let the variable resolver {@link VariableResolverImpl} know in which scope it is executed. This is
+ * This composite el resolver will be used at the top level resolver for faces
+ * ({@link javax.faces.application.Application#getELResolver()})
+ * and jsp (the one we add with {@link javax.servlet.jsp.JspApplicationContext#addELResolver(javax.el.ELResolver)}.
+ * It keeps track of its scope to let the variable resolver {@link org.apache.myfaces.el.VariableResolverImpl}
+ * know in which scope it is executed. This is
  * necessarry to call either the faces or the jsp resolver head.
  * </p>
  * <p>
@@ -51,7 +49,7 @@ public final class FacesCompositeELResolver extends org.apache.myfaces.el.Compos
 
     public enum Scope
     {
-        Faces, JSP
+        Faces, JSP, NONE
     }
     
     public static final String SCOPE = "org.apache.myfaces.el.unified.resolver.FacesCompositeELResolver.Scope";
@@ -65,23 +63,42 @@ public final class FacesCompositeELResolver extends org.apache.myfaces.el.Compos
         _scope = scope;
     }
 
+    private static FacesContext facesContext(final ELContext context)
+    {
+        FacesContext facesContext = (FacesContext)context.getContext(FacesContext.class);
+        if (facesContext == null)
+        {
+            facesContext = FacesContext.getCurrentInstance();
+        }
+        return facesContext;
+    }
+    
     @Override
     public Class<?> getCommonPropertyType(final ELContext context, final Object base)
     {
-        final FacesContext facesContext = FacesContext.getCurrentInstance();
+        final FacesContext facesContext = facesContext(context);
         if (facesContext == null)
         {
             return null;
         }
         final Map<Object, Object> requestMap = facesContext.getAttributes();
+        Scope prevScope = null;
         try
         {
+            prevScope = getScope(requestMap);
             setScope(requestMap);
             return super.getCommonPropertyType(context, base);
         }
         finally
         {
-            unsetScope(requestMap);
+            if(prevScope != null)
+            {
+                setScope(requestMap, prevScope);
+            }
+            else
+            {
+                unsetScope(requestMap);
+            }
         }
 
     }
@@ -89,102 +106,147 @@ public final class FacesCompositeELResolver extends org.apache.myfaces.el.Compos
     @Override
     public Iterator<FeatureDescriptor> getFeatureDescriptors(final ELContext context, final Object base)
     {
-        final FacesContext facesContext = FacesContext.getCurrentInstance();
+        final FacesContext facesContext = facesContext(context);
         if (facesContext == null)
         {
             return null;
         }
         final Map<Object, Object> requestMap = facesContext.getAttributes();
+        Scope prevScope = null;
         try
         {
+            prevScope = getScope(requestMap);
             setScope(requestMap);
             return super.getFeatureDescriptors(context, base);
 
         }
         finally
         {
-            unsetScope(requestMap);
+            if(prevScope != null)
+            {
+                setScope(requestMap, prevScope);
+            }
+            else
+            {
+                unsetScope(requestMap);
+            }
         }
     }
 
     @Override
     public Class<?> getType(final ELContext context, final Object base, final Object property)
     {
-        final FacesContext facesContext = FacesContext.getCurrentInstance();
+        final FacesContext facesContext = facesContext(context);
         if (facesContext == null)
         {
             return null;
         }
         final Map<Object, Object> requestMap = facesContext.getAttributes();
+        Scope prevScope = null;
         try
         {
+            prevScope = getScope(requestMap);
             setScope(requestMap);
             return super.getType(context, base, property);
         }
         finally
         {
-            unsetScope(requestMap);
+            if(prevScope != null)
+            {
+                setScope(requestMap, prevScope);
+            }
+            else
+            {
+                unsetScope(requestMap);
+            }
         }
     }
 
     @Override
     public Object getValue(final ELContext context, final Object base, final Object property)
     {
-        final FacesContext facesContext = FacesContext.getCurrentInstance();
+        final FacesContext facesContext = facesContext(context);
         if (facesContext == null)
         {
             return null;
         }
         final Map<Object, Object> requestMap = facesContext.getAttributes();
+        Scope prevScope = null;
         try
         {
+            prevScope = getScope(requestMap);
             setScope(requestMap);
             return super.getValue(context, base, property);
         }
         finally
         {
-            unsetScope(requestMap);
+            if(prevScope != null)
+            {
+                setScope(requestMap, prevScope);
+            }
+            else
+            {
+                unsetScope(requestMap);
+            }
         }
     }
 
     @Override
     public boolean isReadOnly(final ELContext context, final Object base, final Object property)
     {
-        final FacesContext facesContext = FacesContext.getCurrentInstance();
+        final FacesContext facesContext = facesContext(context);
         if (facesContext == null)
         {
             return false;
         }
         final Map<Object, Object> requestMap = facesContext.getAttributes();
+        Scope prevScope = null;
         try
         {
+            prevScope = getScope(requestMap);
             setScope(requestMap);
             return super.isReadOnly(context, base, property);
         }
         finally
         {
-            unsetScope(requestMap);
+            if(prevScope != null)
+            {
+                setScope(requestMap, prevScope);
+            }
+            else
+            {
+                unsetScope(requestMap);
+            }
         }
     }
 
     @Override
     public void setValue(final ELContext context, final Object base, final Object property, final Object val)
     {
-        final FacesContext facesContext = FacesContext.getCurrentInstance();
+        final FacesContext facesContext = facesContext(context);
         if (facesContext == null)
         {
             return;
         }
         final Map<Object, Object> requestMap = facesContext.getAttributes();
+        Scope prevScope = null;
         try
         {
+            prevScope = getScope(requestMap);
             setScope(requestMap);
             super.setValue(context, base, property, val);
 
         }
         finally
         {
-            unsetScope(requestMap);
+            if(prevScope != null)
+            {
+                setScope(requestMap, prevScope);
+            }
+            else
+            {
+                unsetScope(requestMap);
+            }
         }
     }
 
@@ -192,9 +254,20 @@ public final class FacesCompositeELResolver extends org.apache.myfaces.el.Compos
     {
         attributes.put(SCOPE, _scope);
     }
+    
+    private Scope getScope(final Map<Object, Object> attributes)
+    {
+        return (Scope) attributes.get(SCOPE);
+    }
+
+    private void setScope(final Map<Object, Object> attributes, Scope prevScope)
+    {
+        attributes.put(SCOPE, prevScope);
+    }
 
     private static void unsetScope(final Map<Object, Object> attributes)
     {
-        attributes.remove(SCOPE);
+        //attributes.remove(SCOPE);
+        attributes.put(SCOPE, Scope.NONE);
     }
 }

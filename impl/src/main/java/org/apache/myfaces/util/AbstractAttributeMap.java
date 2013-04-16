@@ -32,8 +32,8 @@ import java.util.Set;
 /**
  * Helper Map implementation for use with different Attribute Maps.
  * 
- * @author Anton Koinov (latest modification by $Author: slessard $)
- * @version $Revision: 701829 $ $Date: 2008-10-05 12:06:02 -0500 (Dom, 05 Oct 2008) $
+ * @author Anton Koinov (latest modification by $Author$)
+ * @version $Revision$ $Date$
  */
 public abstract class AbstractAttributeMap<V> extends AbstractMap<String, V>
 {
@@ -85,7 +85,11 @@ public abstract class AbstractAttributeMap<V> extends AbstractMap<String, V>
     @Override
     public Set<Entry<String, V>> entrySet()
     {
-        return (_entrySet != null) ? _entrySet : (_entrySet = new EntrySet());
+        if (_entrySet == null)
+        {
+            _entrySet = new EntrySet();
+        }
+        return _entrySet;
     }
 
     @Override
@@ -103,7 +107,11 @@ public abstract class AbstractAttributeMap<V> extends AbstractMap<String, V>
     @Override
     public Set<String> keySet()
     {
-        return (_keySet != null) ? _keySet : (_keySet = new KeySet());
+        if (_keySet == null)
+        {
+            _keySet = new KeySet();
+        }
+        return _keySet;
     }
 
     @Override
@@ -126,9 +134,9 @@ public abstract class AbstractAttributeMap<V> extends AbstractMap<String, V>
     @Override
     public final V remove(final Object key)
     {
-        final String key_ = key.toString();
-        final V retval = getAttribute(key_);
-        removeAttribute(key_);
+        final String keyString = key.toString();
+        final V retval = getAttribute(keyString);
+        removeAttribute(keyString);
         return retval;
     }
 
@@ -147,7 +155,11 @@ public abstract class AbstractAttributeMap<V> extends AbstractMap<String, V>
     @Override
     public Collection<V> values()
     {
-        return (_values != null) ? _values : (_values = new Values());
+        if (_values == null)
+        {
+            _values = new Values();
+        }
+        return _values;
     }
 
     abstract protected V getAttribute(String key);
@@ -225,7 +237,8 @@ public abstract class AbstractAttributeMap<V> extends AbstractMap<String, V>
 
         public E next()
         {
-            return getValue(_currentKey = _e.nextElement());
+            _currentKey = _e.nextElement();
+            return getValue(_currentKey);
         }
 
         protected abstract E getValue(String attributeName);
@@ -397,19 +410,29 @@ public abstract class AbstractAttributeMap<V> extends AbstractMap<String, V>
         public boolean equals(final Object obj)
         {
             if (this == obj)
+            {
                 return true;
+            }
             if (obj == null)
+            {
                 return false;
+            }
             if (getClass() != obj.getClass())
+            {
                 return false;
+            }
             final EntrySetEntry other = (EntrySetEntry)obj;
             if (_currentKey == null)
             {
                 if (other._currentKey != null)
+                {
                     return false;
+                }
             }
             else if (!_currentKey.equals(other._currentKey))
+            {
                 return false;
+            }
             return true;
         }
 

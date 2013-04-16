@@ -46,8 +46,8 @@ import javax.faces.event.SystemEventListener;
 import javax.faces.validator.Validator;
 
 /**
- * @author Simon Lessard (latest modification by $Author: slessard $)
- * @version $Revision: 696523 $ $Date: 2008-12-02 18:14:34 -0400 (mer., 17 sept. 2008) $
+ * @author Simon Lessard (latest modification by $Author$)
+ * @version $Revision$ $Date$
  *
  * @since 2.0
  */
@@ -324,7 +324,8 @@ public abstract class ApplicationWrapper extends Application implements FacesWra
     public abstract Application getWrapped();
 
     @Override
-    public void publishEvent(FacesContext facesContext, Class<? extends SystemEvent> systemEventClass, Class<?> sourceBaseType, Object source)
+    public void publishEvent(FacesContext facesContext, Class<? extends SystemEvent> systemEventClass,
+                             Class<?> sourceBaseType, Object source)
     {
         getWrapped().publishEvent(facesContext, systemEventClass, sourceBaseType, source);
     }

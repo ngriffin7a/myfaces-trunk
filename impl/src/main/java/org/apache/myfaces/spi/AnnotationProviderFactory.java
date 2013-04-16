@@ -20,6 +20,7 @@ package org.apache.myfaces.spi;
 
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 
 import javax.faces.FacesException;
 import javax.faces.context.ExternalContext;
@@ -28,6 +29,7 @@ import org.apache.myfaces.spi.impl.DefaultAnnotationProviderFactory;
 import org.apache.myfaces.spi.impl.SpiUtils;
 
 /**
+ * Factory that provide AnnotationProvider instances
  * 
  * @since 2.0.2
  * @author Leonardo Uribe
@@ -52,7 +54,7 @@ public abstract class AnnotationProviderFactory
             if (System.getSecurityManager() != null)
             {
                 final ExternalContext ectx = ctx;
-                lpf = (AnnotationProviderFactory) AccessController.doPrivileged(new java.security.PrivilegedExceptionAction<Object>()
+                lpf = (AnnotationProviderFactory) AccessController.doPrivileged(new PrivilegedExceptionAction<Object>()
                         {
                             public Object run() throws PrivilegedActionException
                             {

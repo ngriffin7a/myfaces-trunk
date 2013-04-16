@@ -46,8 +46,14 @@ public class FloatConverter
     // METHODS
     public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value)
     {
-        if (facesContext == null) throw new NullPointerException("facesContext");
-        if (uiComponent == null) throw new NullPointerException("uiComponent");
+        if (facesContext == null)
+        {
+            throw new NullPointerException("facesContext");
+        }
+        if (uiComponent == null)
+        {
+            throw new NullPointerException("uiComponent");
+        }
 
         if (value != null)
         {
@@ -61,8 +67,8 @@ public class FloatConverter
                 catch (NumberFormatException e)
                 {
                     throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
-                                                                               FLOAT_ID,
-                                                                               new Object[]{value,"50000",_MessageUtils.getLabel(facesContext, uiComponent)}), e);
+                                   FLOAT_ID,
+                                   new Object[]{value,"50000",_MessageUtils.getLabel(facesContext, uiComponent)}), e);
                 }
             }
         }
@@ -71,8 +77,14 @@ public class FloatConverter
 
     public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value)
     {
-        if (facesContext == null) throw new NullPointerException("facesContext");
-        if (uiComponent == null) throw new NullPointerException("uiComponent");
+        if (facesContext == null)
+        {
+            throw new NullPointerException("facesContext");
+        }
+        if (uiComponent == null)
+        {
+            throw new NullPointerException("uiComponent");
+        }
 
         if (value == null)
         {
@@ -88,7 +100,8 @@ public class FloatConverter
         }
         catch (Exception e)
         {
-            throw new ConverterException(_MessageUtils.getErrorMessage(facesContext, STRING_ID, new Object[]{value,_MessageUtils.getLabel(facesContext, uiComponent)}),e);
+            throw new ConverterException(_MessageUtils.getErrorMessage(facesContext, STRING_ID,
+                    new Object[]{value,_MessageUtils.getLabel(facesContext, uiComponent)}),e);
         }
     }
 }

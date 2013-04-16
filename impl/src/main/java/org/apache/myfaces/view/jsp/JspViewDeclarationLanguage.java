@@ -27,13 +27,16 @@ import javax.faces.FacesException;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.PostAddToViewEvent;
+import javax.faces.render.ResponseStateManager;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.jstl.core.Config;
 
 import org.apache.myfaces.application.jsp.ServletViewResponseWrapper;
-import org.apache.myfaces.shared_impl.view.JspViewDeclarationLanguageBase;
+import org.apache.myfaces.application.viewstate.StateCacheUtils;
+import org.apache.myfaces.shared.view.JspViewDeclarationLanguageBase;
 import org.apache.myfaces.view.facelets.tag.composite.CompositeLibrary;
 import org.apache.myfaces.view.facelets.tag.jsf.core.CoreLibrary;
 import org.apache.myfaces.view.facelets.tag.jsf.html.HtmlLibrary;
@@ -65,7 +68,9 @@ public class JspViewDeclarationLanguage extends JspViewDeclarationLanguageBase
     public JspViewDeclarationLanguage()
     {
         if (log.isLoggable(Level.FINEST))
+        {
             log.finest("New JspViewDeclarationLanguage instance created");
+        }
     }
 
     /**
@@ -106,7 +111,7 @@ public class JspViewDeclarationLanguage extends JspViewDeclarationLanguageBase
                 // does the message contain "f" (prefix f of tags)
                 // or the related uri http://java.sun.com/jsf/core
                 if (message.contains("\"f\"") 
-                        || message.contains("\"" + CoreLibrary.Namespace + "\""))
+                        || message.contains("\"" + CoreLibrary.NAMESPACE + "\""))
                 {
                     // check facelets-only f tags
                     for (String tag : FACELETS_ONLY_F_TAGS)
@@ -121,7 +126,7 @@ public class JspViewDeclarationLanguage extends JspViewDeclarationLanguageBase
                     }
                 }  
                 else if (message.contains("\"h\"") 
-                        || message.contains("\"" + HtmlLibrary.Namespace + "\""))
+                        || message.contains("\"" + HtmlLibrary.NAMESPACE + "\""))
                 {
                     // check facelets-only h tags
                     for (String tag : FACELETS_ONLY_H_TAGS)
@@ -139,9 +144,9 @@ public class JspViewDeclarationLanguage extends JspViewDeclarationLanguageBase
                 {
                     // check facelets-only namespaces
                     String namespace = null;
-                    if (message.contains(UILibrary.Namespace))
+                    if (message.contains(UILibrary.NAMESPACE))
                     {
-                        namespace = UILibrary.Namespace;
+                        namespace = UILibrary.NAMESPACE;
                     }
                     else if (message.contains(CompositeLibrary.NAMESPACE))
                     {
@@ -171,6 +176,7 @@ public class JspViewDeclarationLanguage extends JspViewDeclarationLanguageBase
         if (errorResponse)
         {
             wrappedResponse.flushToWrappedResponse();
+            context.responseComplete();
             return;
         }
 
@@ -182,6 +188,34 @@ public class JspViewDeclarationLanguage extends JspViewDeclarationLanguageBase
         {
             // store the wrapped response in the request, so it is thread-safe
             setAfterViewTagResponseWrapper(externalContext, wrappedResponse);
+        }
+        
+        // Publish PostAddToView over UIViewRoot, because this is not done automatically.
+        context.getApplication().publishEvent(context, PostAddToViewEvent.class, UIViewRoot.class, view);
+    }
+
+    /**
+     * 
+     */
+    @Override
+    protected boolean isViewStateAlreadyEncoded(FacesContext context)
+    {
+        ResponseStateManager responseStateManager = context.getRenderKit().getResponseStateManager();
+        if (StateCacheUtils.isMyFacesResponseStateManager(responseStateManager))
+        {
+            if (StateCacheUtils.getMyFacesResponseStateManager(responseStateManager).
+                    isWriteStateAfterRenderViewRequired(context))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        else
+        {
+            return false;
         }
     }
 

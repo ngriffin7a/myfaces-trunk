@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.myfaces.shared_impl.context.flash.FlashImpl;
+import org.apache.myfaces.shared.context.flash.FlashImpl;
 import org.apache.myfaces.util.EnumerationIterator;
 
 /**
@@ -722,7 +723,7 @@ public final class ServletExternalContextImpl extends ServletExternalContextImpl
 
         String fragment = null;
         String queryString = null;
-        Map<String, List<String>> paramMap = new HashMap<String, List<String>>();
+        Map<String, List<String>> paramMap = null;
 
         //extract any URL fragment
         int index = baseUrl.indexOf(URL_FRAGMENT_SEPERATOR);
@@ -744,7 +745,22 @@ public final class ServletExternalContextImpl extends ServletExternalContextImpl
                 String[] currentPair = nameValuePairs[i].split(URL_NAME_VALUE_PAIR_SEPERATOR);
 
                 ArrayList<String> value = new ArrayList<String>(1);
-                value.add(currentPair.length > 1 ? currentPair[1] : "");
+                try
+                {
+                    value.add(currentPair.length > 1
+                                ? URLDecoder.decode(currentPair[1], getResponseCharacterEncoding())
+                                : "");
+                }
+                catch (UnsupportedEncodingException e)
+                {
+                    //shouldn't ever get here
+                    throw new UnsupportedOperationException("Encoding type=" + getResponseCharacterEncoding()
+                                                            + " not supported", e);
+                }
+                if (paramMap == null)
+                {
+                    paramMap = new HashMap<String, List<String>>();
+                }
                 paramMap.put(currentPair[0], value);
             }
         }
@@ -756,7 +772,11 @@ public final class ServletExternalContextImpl extends ServletExternalContextImpl
             {
                 if (pair.getKey() != null && pair.getKey().trim().length() != 0)
                 {
-                    paramMap.put(pair.getKey(), _evaluateValueExpressions(pair.getValue()));
+                    if (paramMap == null)
+                    {
+                        paramMap = new HashMap<String, List<String>>();
+                    }
+                    paramMap.put(pair.getKey(), pair.getValue());
                 }
             }
         }
@@ -765,7 +785,7 @@ public final class ServletExternalContextImpl extends ServletExternalContextImpl
         StringBuilder newUrl = new StringBuilder(baseUrl);
 
         //now add the updated param list onto the url
-        if (paramMap.size()>0)
+        if (paramMap != null && paramMap.size()>0)
         {
             boolean isFirstPair = true;
             for (Map.Entry<String, List<String>> pair : paramMap.entrySet())
@@ -791,7 +811,8 @@ public final class ServletExternalContextImpl extends ServletExternalContextImpl
                     catch (UnsupportedEncodingException e)
                     {
                         //shouldn't ever get here
-                        throw new UnsupportedOperationException("Encoding type=" + getResponseCharacterEncoding() + " not supported", e);
+                        throw new UnsupportedOperationException("Encoding type=" + getResponseCharacterEncoding()
+                                                                + " not supported", e);
                     }
                 }
             }
@@ -804,37 +825,6 @@ public final class ServletExternalContextImpl extends ServletExternalContextImpl
         }
 
         return newUrl.toString();
-    }
-    
-    /**
-     * Checks the Strings in the List for EL expressions and evaluates them.
-     * Note that the returned List will be a copy of the given List, because
-     * otherwise it will have unwanted side-effects.
-     * @param values
-     * @return
-     */
-    private List<String> _evaluateValueExpressions(List<String> values)
-    {
-        // note that we have to create a new List here, because if we
-        // change any value on the given List, it will be changed in the
-        // NavigationCase too and the EL expression won't be evaluated again
-        List<String> target = new ArrayList<String>(values.size());
-        FacesContext context = FacesContext.getCurrentInstance();
-        for (String value : values)
-        {
-            if (_isExpression(value))
-            {
-                // evaluate the ValueExpression
-                value = context.getApplication().evaluateExpressionGet(context, value, String.class);
-            }
-            target.add(value);
-        }
-        return target;
-    }
-    
-    private boolean _isExpression(String text)
-    {
-        return text.indexOf("#{") != -1;
     }
     
     /**

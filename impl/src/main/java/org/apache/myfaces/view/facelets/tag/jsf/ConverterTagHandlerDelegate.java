@@ -97,7 +97,8 @@ public class ConverterTagHandlerDelegate extends TagHandlerDelegate implements V
         }
         else
         {
-            throw new TagException(_delegate.getTag(), "Parent not composite component or an instance of ValueHolder: " + parent);
+            throw new TagException(_delegate.getTag(),
+                    "Parent not composite component or an instance of ValueHolder: " + parent);
         }      
     }
 
@@ -112,9 +113,9 @@ public class ConverterTagHandlerDelegate extends TagHandlerDelegate implements V
     {
         if (_delegate.getConverterId(ctx) == null)
         {
-            throw new TagException(
-                                   _delegate.getTag(),
-                                   "Default behavior invoked of requiring a converter-id passed in the constructor, must override ConvertHandler(ConverterConfig)");
+            throw new TagException(_delegate.getTag(),
+                                    "Default behavior invoked of requiring a converter-id passed in the "
+                                    + "constructor, must override ConvertHandler(ConverterConfig)");
         }
         return ctx.getFacesContext().getApplication().createConverter(_delegate.getConverterId(ctx));
     }

@@ -22,11 +22,10 @@ import java.io.IOException;
 
 import javax.faces.FactoryFinder;
 import javax.faces.component.UIComponent;
-import javax.faces.view.facelets.FaceletContext;
 
 /**
- * @author Simon Lessard (latest modification by $Author: slessard $)
- * @version $Revision: 696523 $ $Date: 2009-03-15 17:11:43 -0400 (mer., 17 sept. 2008) $
+ * @author Simon Lessard (latest modification by $Author$)
+ * @version $Revision$ $Date$
  * 
  * @since 2.0
  */
@@ -81,7 +80,8 @@ public abstract class DelegatingMetaTagHandler extends MetaTagHandler
 
     public boolean isDisabled(FaceletContext ctx)
     {
-        if (disabled == null) {
+        if (disabled == null)
+        {
             return false;
         }
         

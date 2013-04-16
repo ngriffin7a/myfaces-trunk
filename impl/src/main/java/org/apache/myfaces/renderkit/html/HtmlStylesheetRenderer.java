@@ -19,89 +19,102 @@
 package org.apache.myfaces.renderkit.html;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.application.ProjectStage;
 import javax.faces.application.Resource;
-import javax.faces.component.PartialStateHolder;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIViewRoot;
-import javax.faces.component.UniqueIdVendor;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.event.ComponentSystemEvent;
 import javax.faces.event.ComponentSystemEventListener;
 import javax.faces.event.ListenerFor;
-import javax.faces.event.ListenersFor;
 import javax.faces.event.PostAddToViewEvent;
 import javax.faces.render.Renderer;
+import javax.faces.view.Location;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFRenderer;
-import org.apache.myfaces.shared_impl.renderkit.JSFAttr;
-import org.apache.myfaces.shared_impl.renderkit.RendererUtils;
-import org.apache.myfaces.shared_impl.renderkit.html.HTML;
-import org.apache.myfaces.shared_impl.renderkit.html.util.ResourceUtils;
-import org.apache.myfaces.view.facelets.PostBuildComponentTreeOnRestoreViewEvent;
+import org.apache.myfaces.context.RequestViewContext;
+import org.apache.myfaces.shared.config.MyfacesConfig;
+import org.apache.myfaces.shared.renderkit.JSFAttr;
+import org.apache.myfaces.shared.renderkit.RendererUtils;
+import org.apache.myfaces.shared.renderkit.html.HTML;
+import org.apache.myfaces.shared.renderkit.html.util.ResourceUtils;
+import org.apache.myfaces.shared.util.ExternalContextUtils;
+import org.apache.myfaces.view.facelets.FaceletViewDeclarationLanguage;
+import org.apache.myfaces.view.facelets.el.CompositeComponentELUtils;
+import org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport;
 
 /**
- * Renderer used by h:outputStylesheet component
+ * Renderer used by h:outputStylesheet component 
+ * 
+ * Note: originally this component required PostBuildComponentTreeOnRestoreViewEvent,
+ * but that is no longer true because a tag handler implementing RelocatableResourceHandler
+ * interface was associated, so the component is really marked and refreshed.
  * 
  * @since 2.0
  * @author Leonardo Uribe (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 @JSFRenderer(renderKitId = "HTML_BASIC", family = "javax.faces.Output", type = "javax.faces.resource.Stylesheet")
-@ListenersFor({
-@ListenerFor(systemEventClass = PostAddToViewEvent.class),
-@ListenerFor(systemEventClass = PostBuildComponentTreeOnRestoreViewEvent.class)
-})
+@ListenerFor(systemEventClass = PostAddToViewEvent.class)
 public class HtmlStylesheetRenderer extends Renderer implements
-    ComponentSystemEventListener, PartialStateHolder
+    ComponentSystemEventListener
 {
     //private static final Log log = LogFactory.getLog(HtmlStylesheetRenderer.class);
     private static final Logger log = Logger.getLogger(HtmlStylesheetRenderer.class.getName());
     
+    private static final String IS_BUILDING_INITIAL_STATE = "javax.faces.IS_BUILDING_INITIAL_STATE";
+    
     public void processEvent(ComponentSystemEvent event)
     {
-        UIComponent component = event.getComponent();
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        
-        //if (component.getId() != null)
-        //{
-        //    UniqueIdVendor uiv = findParentUniqueIdVendor(component);
-        //
-        //    if ( (!(uiv instanceof UIViewRoot)) && component.getId().startsWith(UIViewRoot.UNIQUE_ID_PREFIX))
-        //    {
-        //        // The id was set using the closest UniqueIdVendor, but since this one
-        //        // will be relocated, we need to assign an id from the current root.
-        //        // otherwise a duplicate id exception could happen.
-        //        component.setId(facesContext.getViewRoot().createUniqueId(facesContext, null));
-        //    }
-        //}
-        
-        facesContext.getViewRoot().addComponentResource(facesContext,
-                    component, "head");
+        if (event instanceof PostAddToViewEvent)
+        {
+            UIComponent component = event.getComponent();
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            
+            Location location = (Location) component.getAttributes().get(CompositeComponentELUtils.LOCATION_KEY);
+            if (location != null)
+            {
+                UIComponent ccParent
+                        = CompositeComponentELUtils.getCompositeComponentBasedOnLocation(facesContext, location);
+                if (ccParent != null)
+                {
+                    component.getAttributes().put(
+                            CompositeComponentELUtils.CC_FIND_COMPONENT_EXPRESSION,
+                            ComponentSupport.getFindComponentExpression(facesContext, ccParent));
+                }
+            }
+            // If this is an ajax request and the view is being refreshed and a PostAddToViewEvent
+            // was propagated to relocate this resource, means the header must be refreshed.
+            // Note ajax request does not occur on non postback requests.
+            
+            if (!ExternalContextUtils.isPortlet(facesContext.getExternalContext()) &&
+                facesContext.getPartialViewContext().isAjaxRequest() )
+            {
+                boolean isBuildingInitialState = facesContext.getAttributes().
+                    containsKey(IS_BUILDING_INITIAL_STATE);
+                // The next condition takes into account the current request is an ajax request. 
+                boolean isPostAddToViewEventAfterBuildInitialState = 
+                    !isBuildingInitialState ||
+                    (isBuildingInitialState && 
+                            FaceletViewDeclarationLanguage.isRefreshingTransientBuild(facesContext));
+                if (isPostAddToViewEventAfterBuildInitialState &&
+                        MyfacesConfig.getCurrentInstance(facesContext.getExternalContext()).
+                            isStrictJsf2RefreshTargetAjax())
+                {
+                    //!(component.getParent() instanceof ComponentResourceContainer)
+                    RequestViewContext requestViewContext = RequestViewContext.getCurrentInstance(facesContext);
+                    requestViewContext.setRenderTarget("head", true);
+                }
+            }
+            facesContext.getViewRoot().addComponentResource(facesContext,
+                        component, "head");
+        }
     }
     
-    //private static UniqueIdVendor findParentUniqueIdVendor(UIComponent component)
-    //{
-    //    UIComponent parent = component.getParent();
-    //
-    //    while (parent != null)
-    //    {
-    //        if (parent instanceof UniqueIdVendor)
-    //        {
-    //            return (UniqueIdVendor) parent;
-    //        }
-    //        parent = parent.getParent();
-    //    }
-    //    return null;
-    //}
-
     @Override
     public boolean getRendersChildren()
     {
@@ -113,9 +126,13 @@ public class HtmlStylesheetRenderer extends Renderer implements
             throws IOException
     {
         if (facesContext == null)
+        {
             throw new NullPointerException("context");
+        }
         if (component == null)
+        {
             throw new NullPointerException("component");
+        }
 
         Map<String, Object> componentAttributesMap = component.getAttributes();
         String resourceName = (String) componentAttributesMap.get(JSFAttr.NAME_ATTR);
@@ -143,7 +160,7 @@ public class HtmlStylesheetRenderer extends Renderer implements
             {
                 if (!facesContext.isProjectStage(ProjectStage.Production))
                 {
-                    facesContext.addMessage(component.getClientId(), 
+                    facesContext.addMessage(component.getClientId(facesContext), 
                             new FacesMessage("Component with no name and no body content, so nothing rendered."));
                 }
             }            
@@ -206,8 +223,15 @@ public class HtmlStylesheetRenderer extends Renderer implements
         }
         else
         {
+            if (ResourceUtils.isRenderedStylesheet(facesContext, resource.getLibraryName(), resource.getResourceName()))
+            {
+                //Resource already founded
+                return;
+            }
+
             // Rendering resource
             ResourceUtils.markStylesheetAsRendered(facesContext, libraryName, resourceName);
+            ResourceUtils.markStylesheetAsRendered(facesContext, resource.getLibraryName(), resource.getResourceName());
             ResponseWriter writer = facesContext.getResponseWriter();
             writer.startElement(HTML.LINK_ELEM, component);
             writer.writeAttribute(HTML.REL_ATTR, HTML.STYLESHEET_VALUE,null );
@@ -216,43 +240,9 @@ public class HtmlStylesheetRenderer extends Renderer implements
             writer.writeAttribute(HTML.TYPE_ATTR, 
                     (resource.getContentType() == null ? HTML.STYLE_TYPE_TEXT_CSS
                             : resource.getContentType()) , null);
-            writer.writeURIAttribute(HTML.HREF_ATTR, facesContext.getExternalContext().encodeResourceURL(resource.getRequestPath()), null);
+            writer.writeURIAttribute(HTML.HREF_ATTR,
+                    facesContext.getExternalContext().encodeResourceURL(resource.getRequestPath()), null);
             writer.endElement(HTML.LINK_ELEM);
         }
-    }
-    
-    private boolean _initialStateMarked;
-    
-    public void clearInitialState()
-    {
-        _initialStateMarked = false;
-    }
-
-    public boolean initialStateMarked()
-    {
-        return _initialStateMarked;
-    }
-
-    public void markInitialState()
-    {
-        _initialStateMarked = true;
-    }
-
-    public boolean isTransient()
-    {
-        return false;
-    }
-
-    public void restoreState(FacesContext context, Object state)
-    {
-    }
-
-    public Object saveState(FacesContext context)
-    {
-        return null;
-    }
-
-    public void setTransient(boolean newTransientValue)
-    {
     }
 }

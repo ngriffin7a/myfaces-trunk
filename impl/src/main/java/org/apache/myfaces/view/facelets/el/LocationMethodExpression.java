@@ -18,6 +18,11 @@
  */
 package org.apache.myfaces.view.facelets.el;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 import javax.el.ELContext;
 import javax.el.MethodExpression;
 import javax.el.MethodInfo;
@@ -40,30 +45,57 @@ import javax.faces.view.Location;
  * @author Jakob Korherr (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class LocationMethodExpression extends MethodExpression implements FacesWrapper<MethodExpression>
+public class LocationMethodExpression extends MethodExpression 
+    implements FacesWrapper<MethodExpression>, Externalizable, LocationAware
 {
 
     private static final long serialVersionUID = 1634644578979226893L;
     
     private Location location;
     private MethodExpression delegate;
+    int ccLevel;
+    
+    public LocationMethodExpression()
+    {
+        super();
+    }
     
     public LocationMethodExpression(Location location, MethodExpression delegate)
     {
         this.location = location;
         this.delegate = delegate;
+        this.ccLevel = 0;
     }
-    
+
+    public LocationMethodExpression(Location location, MethodExpression delegate, int ccLevel)
+    {
+        this.location = location;
+        this.delegate = delegate;
+        this.ccLevel = ccLevel;
+    }
+
     public Location getLocation()
     {
         return location;
+    }
+    
+    public LocationMethodExpression apply(int newCCLevel)
+    {
+        if(this.ccLevel == newCCLevel)
+        {
+            return this;
+        }
+        else
+        {
+            return new LocationMethodExpression(this.location, this.delegate, newCCLevel);
+        }
     }
     
     @Override
     public MethodInfo getMethodInfo(ELContext context)
     {
         FacesContext facesContext = (FacesContext) context.getContext(FacesContext.class);
-        CompositeComponentELUtils.saveCompositeComponentForResolver(facesContext, location);
+        CompositeComponentELUtils.saveCompositeComponentForResolver(facesContext, location, ccLevel);
         try
         {
             return delegate.getMethodInfo(context);
@@ -78,7 +110,7 @@ public class LocationMethodExpression extends MethodExpression implements FacesW
     public Object invoke(ELContext context, Object[] params)
     {
         FacesContext facesContext = (FacesContext) context.getContext(FacesContext.class);
-        CompositeComponentELUtils.saveCompositeComponentForResolver(facesContext, location);
+        CompositeComponentELUtils.saveCompositeComponentForResolver(facesContext, location, ccLevel);
         try
         {
             return delegate.invoke(context, params);
@@ -117,4 +149,19 @@ public class LocationMethodExpression extends MethodExpression implements FacesW
     {
         return delegate;
     }
+    
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
+    {
+        this.delegate = (MethodExpression) in.readObject();
+        this.location = (Location) in.readObject();
+        this.ccLevel = in.readInt();
+    }
+
+    public void writeExternal(ObjectOutput out) throws IOException
+    {
+        out.writeObject(this.delegate);
+        out.writeObject(this.location);
+        out.writeInt(this.ccLevel);
+    }
+
 }

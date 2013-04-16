@@ -19,6 +19,7 @@
 package javax.faces.component;
 
 import java.util.Collection;
+import java.util.Map;
 
 import javax.faces.component.visit.VisitCallback;
 import javax.faces.component.visit.VisitContext;
@@ -70,17 +71,19 @@ public class UINamingContainer extends UIComponentBase implements NamingContaine
      */
     public String createUniqueId(FacesContext context, String seed)
     {
-        StringBuilder bld = __getSharedStringBuilder(context);
+        StringBuilder bld = _getSharedStringBuilder(context);
 
-        Long uniqueIdCounter = (Long) getStateHelper().get(PropertyKeys.uniqueIdCounter);
-        uniqueIdCounter = (uniqueIdCounter == null) ? 0 : uniqueIdCounter;
-        getStateHelper().put(PropertyKeys.uniqueIdCounter, (uniqueIdCounter+1L));
-        // Generate an identifier for a component. The identifier will be prefixed with UNIQUE_ID_PREFIX, and will be unique within this UIViewRoot. 
+        // Generate an identifier for a component. The identifier will be prefixed with UNIQUE_ID_PREFIX,
+        // and will be unique within this UIViewRoot.
         if(seed==null)
         {
+            Long uniqueIdCounter = (Long) getStateHelper().get(PropertyKeys.uniqueIdCounter);
+            uniqueIdCounter = (uniqueIdCounter == null) ? 0 : uniqueIdCounter;
+            getStateHelper().put(PropertyKeys.uniqueIdCounter, (uniqueIdCounter+1L));
             return bld.append(UIViewRoot.UNIQUE_ID_PREFIX).append(uniqueIdCounter).toString();    
         }
-        // Optionally, a unique seed value can be supplied by component creators which should be included in the generated unique id.
+        // Optionally, a unique seed value can be supplied by component creators
+        // which should be included in the generated unique id.
         else
         {
             return bld.append(UIViewRoot.UNIQUE_ID_PREFIX).append(seed).toString();
@@ -97,22 +100,30 @@ public class UINamingContainer extends UIComponentBase implements NamingContaine
     @SuppressWarnings("deprecation")
     public static char getSeparatorChar(FacesContext context)
     {
-        ExternalContext eContext = context.getExternalContext();
-        
-        // The implementation must determine if there is a <context-param> with the value given by the 
-        // value of the symbolic constant SEPARATOR_CHAR_PARAM_NAME
-        String param = eContext.getInitParameter(SEPARATOR_CHAR_PARAM_NAME);
-        if (param == null || param.length() == 0)
-        {
-            // Otherwise, the value of the symbolic constant NamingContainer.SEPARATOR_CHAR must be returned.
-            return NamingContainer.SEPARATOR_CHAR;
+        Map<Object, Object> attributes = context.getAttributes();
+        Character separatorChar = (Character) attributes.get(SEPARATOR_CHAR_PARAM_NAME);
+        if (separatorChar == null)
+        { // not cached yet for this request
+            ExternalContext eContext = context.getExternalContext();
+            
+            // The implementation must determine if there is a <context-param> with the value given by the 
+            // value of the symbolic constant SEPARATOR_CHAR_PARAM_NAME
+            String param = eContext.getInitParameter(SEPARATOR_CHAR_PARAM_NAME);
+            if (param == null || param.length() == 0)
+            {
+                // Otherwise, the value of the symbolic constant NamingContainer.SEPARATOR_CHAR must be returned.
+                separatorChar = NamingContainer.SEPARATOR_CHAR;
+            }
+            else
+            {
+                // If there is a value for this param, the first character of the value must be returned from 
+                // this method
+                separatorChar = param.charAt(0);
+            }
+            // Cache it under standard name
+            attributes.put(SEPARATOR_CHAR_PARAM_NAME, separatorChar);
         }
-        else
-        {
-            // If there is a value for this param, the first character of the value must be returned from 
-            // this method
-            return param.charAt(0);
-        }
+        return separatorChar.charValue();
     }
     
     @JSFProperty(deferredValueType="java.lang.Boolean")
@@ -133,48 +144,56 @@ public class UINamingContainer extends UIComponentBase implements NamingContaine
                 setCachedFacesContext(context.getFacesContext());
             }
             
-            if (!isVisitable(context)) {
+            if (!isVisitable(context))
+            {
                 return false;
             }
     
             pushComponentToEL(context.getFacesContext(), this);
-            try {
+            try
+            {
                 VisitResult res = context.invokeVisitCallback(this, callback);
-                switch (res) {
-                //we are done nothing has to be processed anymore
-                case COMPLETE:
-                    return true;
-    
-                case REJECT:
-                    return false;
-    
-                //accept
-                default:
-                    // Take advantage of the fact this is a NamingContainer
-                    // and we can know if there are ids to visit inside it 
-                    Collection<String> subtreeIdsToVisit = context.getSubtreeIdsToVisit(this);
-                    
-                    if (subtreeIdsToVisit != null && !subtreeIdsToVisit.isEmpty())
-                    {
-                        if (getFacetCount() > 0) {
-                            for (UIComponent facet : getFacets().values()) {
-                                if (facet.visitTree(context, callback)) {
+                switch (res)
+                {
+                    //we are done nothing has to be processed anymore
+                    case COMPLETE:
+                        return true;
+
+                    case REJECT:
+                        return false;
+
+                    //accept
+                    default:
+                        // Take advantage of the fact this is a NamingContainer
+                        // and we can know if there are ids to visit inside it
+                        Collection<String> subtreeIdsToVisit = context.getSubtreeIdsToVisit(this);
+
+                        if (subtreeIdsToVisit != null && !subtreeIdsToVisit.isEmpty())
+                        {
+                            if (getFacetCount() > 0)
+                            {
+                                for (UIComponent facet : getFacets().values())
+                                {
+                                    if (facet.visitTree(context, callback))
+                                    {
+                                        return true;
+                                    }
+                                }
+                            }
+                            for (int i = 0, childCount = getChildCount(); i < childCount; i++)
+                            {
+                                UIComponent child = getChildren().get(i);
+                                if (child.visitTree(context, callback))
+                                {
                                     return true;
                                 }
                             }
                         }
-                        if (getChildCount() > 0) {
-                            for (UIComponent child : getChildren()) {
-                                if (child.visitTree(context, callback)) {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                    return false;
+                        return false;
                 }
             }
-            finally {
+            finally
+            {
                 //all components must call popComponentFromEl after visiting is finished
                 popComponentFromEL(context.getFacesContext());
             }

@@ -31,8 +31,8 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
 /**
- * @author Simon Lessard (latest modification by $Author: slessard $)
- * @version $Revision: 696523 $ $Date: 2008-09-24 19:54:04 -0400 (mer., 17 sept. 2008) $
+ * @author Simon Lessard (latest modification by $Author$)
+ * @version $Revision$ $Date$
  * 
  * @since 2.0
  */
@@ -64,7 +64,8 @@ public abstract class ViewDeclarationLanguage
 
     public abstract UIViewRoot restoreView(FacesContext context, String viewId);
     
-    public void retargetAttachedObjects(FacesContext context, UIComponent topLevelComponent, List<AttachedObjectHandler> handlers)
+    public void retargetAttachedObjects(FacesContext context, UIComponent topLevelComponent,
+                                        List<AttachedObjectHandler> handlers)
     {
         throw new UnsupportedOperationException(); 
     }

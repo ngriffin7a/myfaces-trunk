@@ -33,14 +33,16 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFRenderer;
-import org.apache.myfaces.shared_impl.component.EscapeCapable;
-import org.apache.myfaces.shared_impl.renderkit.JSFAttr;
-import org.apache.myfaces.shared_impl.renderkit.RendererUtils;
-import org.apache.myfaces.shared_impl.renderkit.html.HTML;
-import org.apache.myfaces.shared_impl.renderkit.html.HtmlRenderer;
-import org.apache.myfaces.shared_impl.renderkit.html.HtmlRendererUtils;
-import org.apache.myfaces.shared_impl.renderkit.html.util.JavascriptUtils;
-import org.apache.myfaces.shared_impl.renderkit.html.util.ResourceUtils;
+import org.apache.myfaces.shared.component.EscapeCapable;
+import org.apache.myfaces.shared.renderkit.JSFAttr;
+import org.apache.myfaces.shared.renderkit.RendererUtils;
+import org.apache.myfaces.shared.renderkit.html.CommonEventUtils;
+import org.apache.myfaces.shared.renderkit.html.CommonPropertyUtils;
+import org.apache.myfaces.shared.renderkit.html.HTML;
+import org.apache.myfaces.shared.renderkit.html.HtmlRenderer;
+import org.apache.myfaces.shared.renderkit.html.HtmlRendererUtils;
+import org.apache.myfaces.shared.renderkit.html.util.JavascriptUtils;
+import org.apache.myfaces.shared.renderkit.html.util.ResourceUtils;
 
 /**
  * 
@@ -54,6 +56,18 @@ public class HtmlLabelRenderer extends HtmlRenderer
 {
     //private static final Log log = LogFactory.getLog(HtmlLabelRenderer.class);
     private static final Logger log = Logger.getLogger(HtmlLabelRenderer.class.getName());
+
+    @Override
+    protected boolean isCommonPropertiesOptimizationEnabled(FacesContext facesContext)
+    {
+        return true;
+    }
+
+    @Override
+    protected boolean isCommonEventsOptimizationEnabled(FacesContext facesContext)
+    {
+        return true;
+    }
 
     @Override
     public void decode(FacesContext context, UIComponent component)
@@ -84,7 +98,8 @@ public class HtmlLabelRenderer extends HtmlRenderer
         encodeBefore(facesContext, writer, uiComponent);
 
         writer.startElement(HTML.LABEL_ELEM, uiComponent);
-        if (uiComponent instanceof ClientBehaviorHolder && JavascriptUtils.isJavascriptAllowed(facesContext.getExternalContext()))
+        if (uiComponent instanceof ClientBehaviorHolder
+            && JavascriptUtils.isJavascriptAllowed(facesContext.getExternalContext()))
         {
             if (!behaviors.isEmpty())
             {
@@ -94,14 +109,59 @@ public class HtmlLabelRenderer extends HtmlRenderer
             {
                 HtmlRendererUtils.writeIdIfNecessary(writer, uiComponent, facesContext);
             }
-            HtmlRendererUtils.renderBehaviorizedEventHandlers(facesContext, writer, uiComponent, behaviors);
-            HtmlRendererUtils.renderBehaviorizedFieldEventHandlersWithoutOnchangeAndOnselect(facesContext, writer, uiComponent, behaviors);
-            HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.LABEL_PASSTHROUGH_ATTRIBUTES_WITHOUT_EVENTS);
+            long commonPropertiesMarked = 0L;
+            if (isCommonPropertiesOptimizationEnabled(facesContext))
+            {
+                commonPropertiesMarked = CommonPropertyUtils.getCommonPropertiesMarked(uiComponent);
+            }
+            if (behaviors.isEmpty() && isCommonPropertiesOptimizationEnabled(facesContext))
+            {
+                CommonPropertyUtils.renderEventProperties(writer, 
+                        commonPropertiesMarked, uiComponent);
+                CommonPropertyUtils.renderFocusBlurEventProperties(writer,
+                        commonPropertiesMarked, uiComponent);
+            }
+            else
+            {
+                if (isCommonEventsOptimizationEnabled(facesContext))
+                {
+                    Long commonEventsMarked = CommonEventUtils.getCommonEventsMarked(uiComponent);
+                    CommonEventUtils.renderBehaviorizedEventHandlers(facesContext, writer, 
+                            commonPropertiesMarked, commonEventsMarked, uiComponent, behaviors);
+                    CommonEventUtils.renderBehaviorizedFieldEventHandlersWithoutOnchangeAndOnselect(
+                        facesContext, writer, commonPropertiesMarked, commonEventsMarked, uiComponent, behaviors);
+                }
+                else
+                {
+                    HtmlRendererUtils.renderBehaviorizedEventHandlers(facesContext, writer, uiComponent, behaviors);
+                    HtmlRendererUtils.renderBehaviorizedFieldEventHandlersWithoutOnchangeAndOnselect(
+                            facesContext, writer,
+                            uiComponent, behaviors);
+                }
+            }
+            if (isCommonPropertiesOptimizationEnabled(facesContext))
+            {
+                CommonPropertyUtils.renderLabelPassthroughPropertiesWithoutEvents(writer, 
+                        CommonPropertyUtils.getCommonPropertiesMarked(uiComponent), uiComponent);
+            }
+            else
+            {
+                HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent,
+                                                       HTML.LABEL_PASSTHROUGH_ATTRIBUTES_WITHOUT_EVENTS);
+            }
         }
         else
         {
             HtmlRendererUtils.writeIdIfNecessary(writer, uiComponent, facesContext);
-            HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.LABEL_PASSTHROUGH_ATTRIBUTES);
+            if (isCommonPropertiesOptimizationEnabled(facesContext))
+            {
+                CommonPropertyUtils.renderLabelPassthroughProperties(writer, 
+                        CommonPropertyUtils.getCommonPropertiesMarked(uiComponent), uiComponent);
+            }
+            else
+            {
+                HtmlRendererUtils.renderHTMLAttributes(writer, uiComponent, HTML.LABEL_PASSTHROUGH_ATTRIBUTES);
+            }
         }
 
         String forAttr = getFor(uiComponent);
@@ -133,12 +193,13 @@ public class HtmlLabelRenderer extends HtmlRenderer
                 }
                 else
                 {
-                    escape = RendererUtils.getBooleanAttribute(uiComponent, org.apache.myfaces.shared_impl.renderkit.JSFAttr.ESCAPE_ATTR,
+                    escape = RendererUtils.getBooleanAttribute(uiComponent,
+                                                               org.apache.myfaces.shared.renderkit.JSFAttr.ESCAPE_ATTR,
                                                                true); //default is to escape
                 }                
                 if (escape)
                 {
-                    writer.writeText(text, org.apache.myfaces.shared_impl.renderkit.JSFAttr.VALUE_ATTR);
+                    writer.writeText(text, org.apache.myfaces.shared.renderkit.JSFAttr.VALUE_ATTR);
                 }
                 else
                 {

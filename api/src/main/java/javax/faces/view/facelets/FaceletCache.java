@@ -29,6 +29,9 @@ import java.net.URL;
  */
 public abstract class FaceletCache<V>
 {
+    private FaceletCache.MemberFactory<V> _faceletFactory;
+    private FaceletCache.MemberFactory<V> _viewMetadataFaceletFactory;
+    
     public abstract V getFacelet(URL url) throws IOException;
     
     public abstract boolean isFaceletCached(URL url);
@@ -37,21 +40,29 @@ public abstract class FaceletCache<V>
     
     public abstract boolean isViewMetadataFaceletCached(URL url);
     
-    protected void setMemberFactories(FaceletCache.MemberFactory<V> faceletFactory, FaceletCache.MemberFactory<V> viewMetadataFaceletFactory)
+    protected void setMemberFactories(FaceletCache.MemberFactory<V> faceletFactory,
+                                      FaceletCache.MemberFactory<V> viewMetadataFaceletFactory)
     {
-        //TODO: Write content
+        if (faceletFactory == null)
+        {
+            throw new NullPointerException("faceletFactory is null");
+        }
+        if  (viewMetadataFaceletFactory == null)
+        {
+            throw new NullPointerException("viewMetadataFaceletFactory is null");
+        }
+        _faceletFactory = faceletFactory;
+        _viewMetadataFaceletFactory = viewMetadataFaceletFactory;
     }
 
     protected FaceletCache.MemberFactory<V> getMemberFactory()
     {
-        //TODO: Write content
-        return null;
+        return _faceletFactory;
     }
     
     protected FaceletCache.MemberFactory<V> getMetadataMemberFactory()
     {
-        //TODO: Write content
-        return null;
+        return _viewMetadataFaceletFactory;
     }
     
     public static interface MemberFactory<V>

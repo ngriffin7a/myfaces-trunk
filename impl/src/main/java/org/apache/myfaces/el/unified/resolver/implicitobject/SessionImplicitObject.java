@@ -29,7 +29,7 @@ import javax.el.ELContext;
 public class SessionImplicitObject extends ImplicitObject
 {
 
-    private static final String NAME = "session".intern();
+    private static final String NAME = "session";
 
     /** Creates a new instance of SessionImplicitObject */
     public SessionImplicitObject()
@@ -57,7 +57,8 @@ public class SessionImplicitObject extends ImplicitObject
     @Override
     public FeatureDescriptor getDescriptor()
     {
-        return makeDescriptor(NAME, "Session instance for the current request or null if no session exists", Object.class);
+        return makeDescriptor(NAME, "Session instance for the current request or null if no session exists",
+                              Object.class);
     }
 
 }

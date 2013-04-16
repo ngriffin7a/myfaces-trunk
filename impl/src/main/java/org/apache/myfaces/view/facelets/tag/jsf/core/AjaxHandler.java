@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.el.MethodExpression;
-import javax.faces.component.StateHolder;
+import javax.faces.component.PartialStateHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UniqueIdVendor;
 import javax.faces.component.behavior.AjaxBehavior;
@@ -46,8 +46,8 @@ import javax.faces.view.facelets.TagHandler;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletAttribute;
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTag;
-import org.apache.myfaces.shared_impl.renderkit.JSFAttr;
-import org.apache.myfaces.shared_impl.renderkit.html.util.ResourceUtils;
+import org.apache.myfaces.shared.renderkit.JSFAttr;
+import org.apache.myfaces.shared.renderkit.html.util.ResourceUtils;
 import org.apache.myfaces.view.facelets.AbstractFaceletContext;
 import org.apache.myfaces.view.facelets.FaceletCompositionContext;
 import org.apache.myfaces.view.facelets.tag.TagHandlerUtils;
@@ -94,54 +94,64 @@ public class AjaxHandler extends TagHandler implements
      * library. It is necessary to remove this key from facesContext attribute map after build, to keep
      * working this code for next views to be built.
      */
-    public final static String STANDARD_JSF_AJAX_LIBRARY_LOADED = "org.apache.myfaces.STANDARD_JSF_AJAX_LIBRARY_LOADED"; 
+    public final static String STANDARD_JSF_AJAX_LIBRARY_LOADED
+            = "org.apache.myfaces.STANDARD_JSF_AJAX_LIBRARY_LOADED";
 
     /**
      * 
      */
-    @JSFFaceletAttribute(name = "disabled", className = "javax.el.ValueExpression", deferredValueType = "java.lang.Boolean")
+    @JSFFaceletAttribute(name = "disabled", className = "javax.el.ValueExpression",
+                         deferredValueType = "java.lang.Boolean")
     private final TagAttribute _disabled;
 
     /**
      * 
      */
-    @JSFFaceletAttribute(name = "event", className = "javax.el.ValueExpression", deferredValueType = "java.lang.String")
+    @JSFFaceletAttribute(name = "event", className = "javax.el.ValueExpression",
+                         deferredValueType = "java.lang.String")
     private final TagAttribute _event;
 
     /**
      * 
      */
-    @JSFFaceletAttribute(name = "execute", className = "javax.el.ValueExpression", deferredValueType = "java.lang.Object")
+    @JSFFaceletAttribute(name = "execute", className = "javax.el.ValueExpression",
+                         deferredValueType = "java.lang.Object")
     private final TagAttribute _execute;
 
     /**
      * 
      */
-    @JSFFaceletAttribute(name = "immediate", className = "javax.el.ValueExpression", deferredValueType = "java.lang.Boolean")
+    @JSFFaceletAttribute(name = "immediate", className = "javax.el.ValueExpression",
+                         deferredValueType = "java.lang.Boolean")
     private final TagAttribute _immediate;
 
     /**
      * 
      */
-    @JSFFaceletAttribute(name = "listener", className = "javax.el.MethodExpression", deferredMethodSignature = "public void m(javax.faces.event.AjaxBehaviorEvent evt) throws javax.faces.event.AbortProcessingException")
+    @JSFFaceletAttribute(name = "listener", className = "javax.el.MethodExpression",
+            deferredMethodSignature = "public void m(javax.faces.event.AjaxBehaviorEvent evt) "
+                                      + "throws javax.faces.event.AbortProcessingException")
     private final TagAttribute _listener;
 
     /**
      * 
      */
-    @JSFFaceletAttribute(name = "onevent", className = "javax.el.ValueExpression", deferredValueType = "java.lang.String")
+    @JSFFaceletAttribute(name = "onevent", className = "javax.el.ValueExpression",
+                         deferredValueType = "java.lang.String")
     private final TagAttribute _onevent;
 
     /**
      * 
      */
-    @JSFFaceletAttribute(name = "onerror", className = "javax.el.ValueExpression", deferredValueType = "java.lang.String")
+    @JSFFaceletAttribute(name = "onerror", className = "javax.el.ValueExpression",
+                         deferredValueType = "java.lang.String")
     private final TagAttribute _onerror;
 
     /**
      * 
      */
-    @JSFFaceletAttribute(name = "render", className = "javax.el.ValueExpression", deferredValueType = "java.lang.Object")
+    @JSFFaceletAttribute(name = "render", className = "javax.el.ValueExpression",
+                         deferredValueType = "java.lang.Object")
     private final TagAttribute _render;
     
     private final boolean _wrapMode;
@@ -333,7 +343,8 @@ public class AjaxHandler extends TagHandler implements
                 }
                 else
                 {
-                    throw new TagAttributeException(_event, "eventName could not be defined for f:ajax tag with no wrap mode.");
+                    throw new TagAttributeException(_event,
+                            "eventName could not be defined for f:ajax tag with no wrap mode.");
                 }
             }
         }
@@ -349,7 +360,8 @@ public class AjaxHandler extends TagHandler implements
             }
             else
             {
-                throw new TagAttributeException(_event, "event it is not a valid eventName defined for this component");
+                throw new TagAttributeException(_event,
+                        "event it is not a valid eventName defined for this component");
             }
         }
         
@@ -371,8 +383,7 @@ public class AjaxHandler extends TagHandler implements
             }
         }
 
-        AjaxBehavior ajaxBehavior = (AjaxBehavior) context.getApplication()
-                .createBehavior(AjaxBehavior.BEHAVIOR_ID);
+        AjaxBehavior ajaxBehavior = createBehavior(context);
 
         if (_disabled != null)
         {
@@ -444,6 +455,11 @@ public class AjaxHandler extends TagHandler implements
         cvh.addClientBehavior(eventName, ajaxBehavior);
     }
 
+    protected AjaxBehavior createBehavior(FacesContext context)
+    {
+        return (AjaxBehavior) context.getApplication().createBehavior(AjaxBehavior.BEHAVIOR_ID);
+    }
+
     /**
      * The documentation says this attribute should not be used since it is not
      * taken into account. Instead, getEventName is used on 
@@ -458,10 +474,11 @@ public class AjaxHandler extends TagHandler implements
      * Wraps a method expression in a AjaxBehaviorListener
      */
     public final static class AjaxBehaviorListenerImpl implements
-            AjaxBehaviorListener, StateHolder
+            AjaxBehaviorListener, PartialStateHolder
     {
         private MethodExpression _expr;
         private boolean _transient;
+        private boolean _initialStateMarked;
         
         public AjaxBehaviorListenerImpl ()
         {
@@ -486,16 +503,40 @@ public class AjaxHandler extends TagHandler implements
 
         public void restoreState(FacesContext context, Object state)
         {
+            if (state == null)
+            {
+                return;
+            }
             _expr = (MethodExpression) state;
         }
 
-        public Object saveState(FacesContext context) {
+        public Object saveState(FacesContext context)
+        {
+            if (initialStateMarked())
+            {
+                return null;
+            }
             return _expr;
         }
 
         public void setTransient(boolean newTransientValue)
         {
             _transient = newTransientValue;
+        }
+        
+        public void clearInitialState()
+        {
+            _initialStateMarked = false;
+        }
+
+        public boolean initialStateMarked()
+        {
+            return _initialStateMarked;
+        }
+
+        public void markInitialState()
+        {
+            _initialStateMarked = true;
         }
     }
 }

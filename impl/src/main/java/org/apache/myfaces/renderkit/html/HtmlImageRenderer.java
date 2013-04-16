@@ -18,8 +18,10 @@
  */
 package org.apache.myfaces.renderkit.html;
 
+import javax.faces.context.FacesContext;
+
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFRenderer;
-import org.apache.myfaces.shared_impl.renderkit.html.HtmlImageRendererBase;
+import org.apache.myfaces.shared.renderkit.html.HtmlImageRendererBase;
 
 
 /**
@@ -35,5 +37,16 @@ import org.apache.myfaces.shared_impl.renderkit.html.HtmlImageRendererBase;
 public class HtmlImageRenderer
 extends HtmlImageRendererBase
 {
+    @Override
+    protected boolean isCommonPropertiesOptimizationEnabled(FacesContext facesContext)
+    {
+        return true;
+    }
+
+    @Override
+    protected boolean isCommonEventsOptimizationEnabled(FacesContext facesContext)
+    {
+        return true;
+    }
 
 }

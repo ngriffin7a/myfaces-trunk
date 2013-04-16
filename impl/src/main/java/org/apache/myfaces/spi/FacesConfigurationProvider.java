@@ -23,7 +23,6 @@ import java.util.List;
 import javax.faces.context.ExternalContext;
 
 import org.apache.myfaces.config.element.FacesConfig;
-import org.apache.myfaces.config.element.FacesConfigData;
 
 /**
  * This interface provide a way to merge and store all JSF config information retrieved
@@ -33,7 +32,8 @@ import org.apache.myfaces.config.element.FacesConfigData;
  * is started.
  * 
  * <p>To wrap the default FacesConfigurationProvider, use a constructor like 
- * CustomFacesConfigurationProvider(FacesConfigurationProvider fcp)</p>
+ * CustomFacesConfigurationProvider(FacesConfigurationProvider fcp)
+ * and extend it from FacesConfigurationProviderWrapper</p>
  * 
  * @author Leonardo Uribe
  * @since 2.0.3
@@ -69,7 +69,8 @@ public abstract class FacesConfigurationProvider
     public abstract FacesConfig getAnnotationsFacesConfig(ExternalContext ectx, boolean metadataComplete);
     
     /**
-     * Return the FacesConfig object model retrieved from resources under the path META-INF/faces-config.xml and META-INF/[prefix].faces-config.xml
+     * Return the FacesConfig object model retrieved from resources under the path
+     * META-INF/faces-config.xml and META-INF/[prefix].faces-config.xml
      * 
      * @param ectx
      * @return

@@ -27,8 +27,8 @@ import javax.faces.context.FacesContext;
 
 /**
  *
- * @author  Leonardo Uribe (latest modification by $Author: lu4242 $)
- * @version $Revision: 799765 $ $Date: 2009-07-31 17:55:49 -0500 (vie, 31 jul 2009) $
+ * @author  Leonardo Uribe (latest modification by $Author$)
+ * @version $Revision$ $Date$
  * @since 2.0.2
  */
 public class RequestViewContext
@@ -36,9 +36,12 @@ public class RequestViewContext
 
     public static final String VIEW_CONTEXT_KEY = "oam.VIEW_CONTEXT";
     
-    private Map<ResourceDependency, Boolean> addedResources = new HashMap<ResourceDependency,Boolean>();
+    private Map<ResourceDependency, Boolean> addedResources;
     
+    // No lazy init: every view has one (UIView.class) or more classes to process   
     private Map<Class<?>, Boolean> processedClasses = new HashMap<Class<?>,Boolean>();
+    
+    private Map<String, Boolean> renderTargetMap = null;
 
     static public RequestViewContext getCurrentInstance()
     {
@@ -54,7 +57,8 @@ public class RequestViewContext
     @SuppressWarnings("unchecked")
     static public RequestViewContext getCurrentInstance(FacesContext ctx, UIViewRoot root)
     {
-        Map<UIViewRoot, RequestViewContext> map = (Map<UIViewRoot, RequestViewContext>) ctx.getAttributes().get(VIEW_CONTEXT_KEY);
+        Map<UIViewRoot, RequestViewContext> map
+                = (Map<UIViewRoot, RequestViewContext>) ctx.getAttributes().get(VIEW_CONTEXT_KEY);
         RequestViewContext rvc = null;        
         if (map == null)
         {
@@ -78,11 +82,19 @@ public class RequestViewContext
 
     public boolean isResourceDependencyAlreadyProcessed(ResourceDependency dependency)
     {
+        if (addedResources == null)
+        {
+            return false;
+        }
         return addedResources.containsKey(dependency); 
     }
     
     public void setResourceDependencyAsProcessed(ResourceDependency dependency)
     {
+        if (addedResources == null)
+        {
+            addedResources = new HashMap<ResourceDependency,Boolean>();
+        }
         addedResources.put(dependency, true);
     }
 
@@ -94,5 +106,23 @@ public class RequestViewContext
     public void setClassProcessed(Class<?> inspectedClass)
     {
         processedClasses.put(inspectedClass, Boolean.TRUE);
+    }
+    
+    public boolean isRenderTarget(String target)
+    {
+        if (renderTargetMap != null)
+        {
+            return Boolean.TRUE.equals(renderTargetMap.get(target));
+        }
+        return false;
+    }
+    
+    public void setRenderTarget(String target, boolean value)
+    {
+        if (renderTargetMap == null)
+        {
+            renderTargetMap = new HashMap<String, Boolean>(8);
+        }
+        renderTargetMap.put(target, value);
     }
 }

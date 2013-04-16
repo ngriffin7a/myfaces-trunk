@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-/** @namespace myfaces._impl.core.Impl*/
-/** @namespace myfaces._impl._util._ListenerQueue */
-myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Object, {
+/**
+ * @class
+ * @name Impl
+ * @memberOf myfaces._impl.core
+ * @description Implementation singleton which implements all interface method
+ * defined by our jsf.js API
+ * */
+_MF_SINGLTN(_PFX_CORE + "Impl", _MF_OBJECT, /**  @lends myfaces._impl.core.Impl.prototype */ {
 
     //third option myfaces._impl.xhrCoreAjax which will be the new core impl for now
-    _transport      : new (myfaces._impl.core._Runtime.getGlobalConfig("transport", myfaces._impl.xhrCore._Transports))(),
+    _transport      : myfaces._impl.core._Runtime.getGlobalConfig("transport", myfaces._impl.xhrCore._Transports),
 
     /**
      * external event listener queue!
@@ -67,22 +72,22 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
     CLIENT_ERROR:   "clientError",
     TIMEOUT_EVENT:  "timeout",
 
-    _Lang:  myfaces._impl._util._Lang,
-    _Dom:   myfaces._impl._util._Dom,
 
     /*error reporting threshold*/
     _threshold: "ERROR",
 
     /*blockfilter for the passthrough filtering, the attributes given here
      * will not be transmitted from the options into the passthrough*/
-    _BLOCKFILTER: {onerror: true, onevent: true, render: true, execute: true, myfaces: true},
+    _BLOCKFILTER: {onerror: 1, onevent: 1, render: 1, execute: 1, myfaces: 1},
+
+
 
     /**
      * collect and encode data for a given form element (must be of type form)
      * find the javax.faces.ViewState element and encode its value as well!
      * return a concatenated string of the encoded values!
      *
-     * @throws error in case of the given element not being of type form!
+     * @throws Error in case of the given element not being of type form!
      * https://issues.apache.org/jira/browse/MYFACES-2110
      */
     getViewState : function(form) {
@@ -100,10 +105,11 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
             throw new Error(this._Lang.getMessage("ERR_VIEWSTATE"));
         }
 
-        var ajaxUtils = new myfaces._impl.xhrCore._AjaxUtils(0);
+        var ajaxUtils = myfaces._impl.xhrCore._AjaxUtils;
 
         var ret = this._Lang.createFormDataDecorator([]);
-        ajaxUtils.encodeSubmittableFields(ret, null, null, form, null);
+        ajaxUtils.encodeSubmittableFields(ret, form, null);
+
         return ret.makeFinal();
     },
 
@@ -123,23 +129,21 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
      * @param {|Object|} options  map of options being pushed into the ajax cycle
      *
      *
-     * TODO refactoring, the passthrgh handling is only for dragging in request parameters
-     * we should rewrite this part
-     *
-     *
      * a) transformArguments out of the function
      * b) passThrough handling with a map copy with a filter map block map
      */
     request : function(elem, event, options) {
-     
+        if(this._delayTimeout) {
+            clearTimeout(this._delayTimeout);
+            delete this._delayTimeout;
+        }
         /*namespace remap for our local function context we mix the entire function namespace into
          *a local function variable so that we do not have to write the entire namespace
          *all the time
          **/
-        var _Lang = this._Lang;
-        var _Dom =  this._Dom;
-        var getConfig = myfaces._impl.core._Runtime.getLocalOrGlobalConfig;
-
+        var _Lang = this._Lang,
+                _Dom = this._Dom,
+                WINDOW_ID = "javax.faces.windowId";
         /*assert if the onerror is set and once if it is set it must be of type function*/
         _Lang.assertType(options.onerror, "function");
         /*assert if the onevent is set and once if it is set it must be of type function*/
@@ -147,6 +151,16 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
 
         //options not set we define a default one with nothing
         options = options || {};
+
+        /*preparations for jsf 2.2 windowid handling*/
+        //pass the window id into the options if not set already
+        if (!options.windowId) {
+            var windowId = _Dom.getWindowId();
+            (windowId) ? options[WINDOW_ID] = windowId : null;
+        } else {
+            options[WINDOW_ID] = options.windowId;
+            delete options.windowId;
+        }
 
         /**
          * we cross reference statically hence the mapping here
@@ -157,7 +171,16 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
             event = window.event || null;
         }
 
-        elem = _Lang.byId(elem);
+        //improve the error messages if an empty elem is passed
+        if(!elem) {
+            throw _Lang.makeException(new Error(), "ArgNotSet", null, this._nameSpace, "request", _Lang.getMessage("ERR_MUST_BE_PROVIDED1","{0}: source  must be provided","jsf.ajax.request", "source element id"));
+        }
+        var oldElem = elem;
+        elem = _Dom.byIdOrName(elem);
+        if(!elem) {
+            throw _Lang.makeException(new Error(), "Notfound", null, this._nameSpace, "request", _Lang.getMessage("ERR_PPR_UNKNOWNCID","{0}: Node with id {1} could not be found from source",this._nameSpace+".request", oldElem));
+        }
+
         var elementId = _Dom.nodeIdOrName(elem);
 
         /*
@@ -190,8 +213,8 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
          * so that people can use dummy forms and work
          * with detached objects
          */
-        var form = (options.myfaces && options.myfaces.form)?
-                _Lang.byId(options.myfaces.form):
+        var form = (options.myfaces && options.myfaces.form) ?
+                _Lang.byId(options.myfaces.form) :
                 this._getForm(elem, event);
 
         /**
@@ -209,7 +232,10 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
             /*compliance with Mojarra which automatically adds @this to an execute
              * the spec rev 2.0a however states, if none is issued nothing at all should be sent down
              */
-            this._transformList(passThrgh, this.P_EXECUTE, options.execute + " @this", form, elementId);
+            if(options.execute.indexOf("@this") == -1) {
+                options.execute = options.execute + " @this";
+            }
+            this._transformList(passThrgh, this.P_EXECUTE, options.execute, form, elementId);
         } else {
             passThrgh[this.P_EXECUTE] = elementId;
         }
@@ -219,7 +245,7 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
         }
 
         /**
-         * multiple transports upcoming jsf 2.1 feature currently allowed
+         * multiple transports upcoming jsf 2.x feature currently allowed
          * default (no value) xhrQueuedPost
          *
          * xhrQueuedPost
@@ -237,9 +263,9 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
         context._mfInternal = {};
         var mfInternal = context._mfInternal;
 
-        mfInternal["_mfSourceFormId"] =     form.id;
-        mfInternal["_mfSourceControlId"] =  elementId;
-        mfInternal["_mfTransportType"] =    transportType;
+        mfInternal["_mfSourceFormId"] = form.id;
+        mfInternal["_mfSourceControlId"] = elementId;
+        mfInternal["_mfTransportType"] = transportType;
 
         //mojarra compatibility, mojarra is sending the form id as well
         //this is not documented behavior but can be determined by running
@@ -248,8 +274,17 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
         //wont hurt but for the sake of compatibility we are going to add it
         passThrgh[form.id] = form.id;
 
-        this._transport[transportType](elem, form, context, passThrgh);
-
+        //delay handling is an experimental feature which will most likely
+        //make it into jsf 2.2
+        /* jsf2.2 only: options.delay || */
+        var delayTimeout = this._RT.getLocalOrGlobalConfig(context, "delay", false);
+        if (delayTimeout) {
+            this._delayTimeout = setTimeout(_Lang.hitch(this, function() {
+                this._transport[transportType](elem, form, context, passThrgh);
+            }), delayTimeout);
+        } else {
+            this._transport[transportType](elem, form, context, passThrgh);
+        }
     },
 
     /**
@@ -260,18 +295,19 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
      * @param event
      */
     _getForm: function(elem, event) {
-        var _Dom =  this._Dom;
+        var _Dom = this._Dom;
         var _Lang = this._Lang;
-        var form =  _Dom.fuzzyFormDetection(elem);
+        var form = _Dom.fuzzyFormDetection(elem);
 
         if (!form && event) {
             //in case of no form is given we retry over the issuing event
             form = _Dom.fuzzyFormDetection(_Lang.getEventTarget(event));
             if (!form) {
-                throw Error(_Lang.getMessage("ERR_FORM"));
+                throw _Lang.makeException(new Error(), null, null, this._nameSpace, "_getForm", _Lang.getMessage("ERR_FORM"));
             }
         } else if (!form) {
-            throw Error(_Lang.getMessage("ERR_FORM"));
+            throw _Lang.makeException(new Error(), null, null, this._nameSpace, "_getForm", _Lang.getMessage("ERR_FORM"));
+
         }
         return form;
     },
@@ -280,9 +316,9 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
      * determines the transport type to be called
      * for the ajax call
      *
-     * @param context
-     * @param passThrgh
-     * @param form
+     * @param context the context
+     * @param passThrgh  pass through values
+     * @param form the form which issues the request
      */
     _getTransportType: function(context, passThrgh, form) {
         /**
@@ -290,11 +326,11 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
          * we have to pass them down as a blank delimited string representation
          * of an array of ids!
          */
-        //for now we turn off the transport auto selection, to enable 2.0 backwards compatibility
-        //on protocol level, the file upload only can be turned on if the auto selection is set to true
-        var getConfig = myfaces._impl.core._Runtime.getLocalOrGlobalConfig;
-        var _Lang     = this._Lang;
-        var _Dom      = this._Dom;
+            //for now we turn off the transport auto selection, to enable 2.0 backwards compatibility
+            //on protocol level, the file upload only can be turned on if the auto selection is set to true
+        var getConfig = this._RT.getLocalOrGlobalConfig,
+                _Lang = this._Lang,
+                _Dom = this._Dom;
 
         var transportAutoSelection = getConfig(context, "transportAutoSelection", false);
         var isMultipart = (transportAutoSelection && _Dom.getAttribute(form, "enctype") == "multipart/form-data") ?
@@ -318,7 +354,7 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
                 getConfig(context, "transportType", "multipartQueuedPost");
         if (!this._transport[transportType]) {
             //throw new Error("Transport type " + transportType + " does not exist");
-            throw new Error(_Lang.getMessage("ERR_TRANSPORT",null, transportType));
+            throw new Error(_Lang.getMessage("ERR_TRANSPORT", null, transportType));
         }
         return transportType;
 
@@ -342,19 +378,22 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
         //it uses an array and an index to position all elements correctly
         //the offset variable is there to prevent 0 which results in a javascript
         //false
+        srcStr = _Lang.trim(srcStr);
         var offset = 1,
-                vals  = (srcStr) ? srcStr.split(/\s+/) : [],
+                vals = (srcStr) ? srcStr.split(/\s+/) : [],
                 idIdx = (vals.length) ? _Lang.arrToMap(vals, offset) : {},
 
-                //helpers to improve speed and compression
-                none    = idIdx[this.IDENT_NONE],
-                all     = idIdx[this.IDENT_ALL],
+            //helpers to improve speed and compression
+                none = idIdx[this.IDENT_NONE],
+                all = idIdx[this.IDENT_ALL],
                 theThis = idIdx[this.IDENT_THIS],
                 theForm = idIdx[this.IDENT_FORM];
 
         if (none) {
-            //in case of none only one value is returned
-            passThrgh[target] = this.IDENT_NONE;
+            //in case of none nothing is returned
+            if('undefined' != typeof passThrgh.target) {
+                delete passThrgh.target;
+            }
             return passThrgh;
         }
         if (all) {
@@ -398,6 +437,8 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
      * @param {String} name the error name
      * @param {String} serverErrorName the server error name in case of a server error
      * @param {String} serverErrorMessage the server error message in case of a server error
+     * @param {String} caller optional caller reference for extended error messages
+     * @param {String} callFunc optional caller Function reference for extended error messages
      *
      *  handles the errors, in case of an onError exists within the context the onError is called as local error handler
      *  the registered error handlers in the queue receiv an error message to be dealt with
@@ -408,7 +449,7 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
      *
      *
      */
-    sendError : function sendError(/*Object*/request, /*Object*/ context, /*String*/ name, /*String*/ serverErrorName, /*String*/ serverErrorMessage) {
+    sendError : function sendError(/*Object*/request, /*Object*/ context, /*String*/ name, /*String*/ serverErrorName, /*String*/ serverErrorMessage, caller, callFunc) {
         var _Lang = myfaces._impl._util._Lang;
         var UNKNOWN = _Lang.getMessage("UNKNOWN");
 
@@ -418,23 +459,29 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
             return (name && name === myfaces._impl.core.Impl.MALFORMEDXML) ? _Lang.getMessage("ERR_MALFORMEDXML") : "";
         };
 
-
-
         //by setting unknown values to unknown we can handle cases
         //better where a simulated context is pushed into the system
         eventData.type = this.ERROR;
 
-        eventData.status            = name || UNKNOWN;
-        eventData.serverErrorName   = serverErrorName || UNKNOWN;
-        eventData.serverErrorMessage =  serverErrorMessage || UNKNOWN;
+        eventData.status = name || UNKNOWN;
+        eventData.serverErrorName = serverErrorName || UNKNOWN;
+        eventData.serverErrorMessage = serverErrorMessage || UNKNOWN;
+
+
 
         try {
-            eventData.source        = context.source || UNKNOWN;
-            eventData.responseCode  = request.status || UNKNOWN;
-            eventData.responseText  = request.responseText  || UNKNOWN;
-            eventData.responseXML   = request.responseXML || UNKNOWN;
+            eventData.source = context.source || UNKNOWN;
+            eventData.responseCode = request.status || UNKNOWN;
+            eventData.responseText = request.responseText || UNKNOWN;
+            eventData.responseXML = request.responseXML || UNKNOWN;
         } catch (e) {
             // silently ignore: user can find out by examining the event data
+        }
+         //extended error message only in dev mode
+        if(jsf.getProjectStage() === "Development") {
+            eventData.serverErrorMessage = eventData.serverErrorMessage || "";
+            eventData.serverErrorMessage = (caller)?  eventData.serverErrorMessage + "\nCalling class: "+caller:eventData.serverErrorMessage;
+            eventData.serverErrorMessage = (callFunc)? eventData.serverErrorMessage + "\n Calling function: "+callFunc :eventData.serverErrorMessage;
         }
 
         /**/
@@ -445,17 +492,27 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
         /*now we serve the queue as well*/
         this._errListeners.broadcastEvent(eventData);
 
-        if (jsf.getProjectStage() === "Development" && this._errListeners.length() == 0) {
-            var defaultErrorOutput = myfaces._impl.core._Runtime.getGlobalConfig("defaultErrorOutput", alert);
-            var finalMessage = [];
+        if (jsf.getProjectStage() === "Development" && this._errListeners.length() == 0 && !context["onerror"]) {
+            var DIVIDER = "--------------------------------------------------------",
+                    defaultErrorOutput = myfaces._impl.core._Runtime.getGlobalConfig("defaultErrorOutput", alert),
+                    finalMessage = [],
+                    //we remap the function to achieve a better compressability
+                    pushMsg = _Lang.hitch(finalMessage, finalMessage.push);
 
-            finalMessage.push((name) ? name : "");
-            finalMessage.push((serverErrorName) ? serverErrorName : "");
-            finalMessage.push((serverErrorMessage) ? serverErrorMessage : "");
-            finalMessage.push(malFormedMessage());
-            finalMessage.push("\n\n");
-            finalMessage.push( _Lang.getMessage("MSG_DEV_MODE"));
-            defaultErrorOutput(finalMessage.join(""));
+            (serverErrorMessage) ? pushMsg(_Lang.getMessage("MSG_ERROR_MESSAGE") +" "+ serverErrorMessage +"\n") : null;
+            
+            pushMsg(DIVIDER);
+
+            (caller)? pushMsg("Calling class:"+ caller): null;
+            (callFunc)? pushMsg("Calling function:"+ callFunc): null;
+            (name) ? pushMsg(_Lang.getMessage("MSG_ERROR_NAME") +" "+name ): null;
+            (serverErrorName && name != serverErrorName) ? pushMsg("Server error name: "+ serverErrorName ) : null;
+
+
+            pushMsg(malFormedMessage());
+            pushMsg(DIVIDER);
+            pushMsg(_Lang.getMessage("MSG_DEV_MODE"));
+            defaultErrorOutput(finalMessage.join("\n"));
         }
     },
 
@@ -472,7 +529,6 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
         eventData.status = name;
         eventData.source = context.source;
 
-
         if (name !== this.BEGIN) {
 
             try {
@@ -487,13 +543,13 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
 
                 eventData.responseCode = getValue(request, "status");
                 eventData.responseText = getValue(request, "responseText");
-                eventData.responseXML  = getValue(request, "responseXML");
+                eventData.responseXML = getValue(request, "responseXML");
 
             } catch (e) {
                 var impl = myfaces._impl.core._Runtime.getGlobalConfig("jsfAjaxImpl", myfaces._impl.core.Impl);
                 impl.sendError(request, context, this.CLIENT_ERROR, "ErrorRetrievingResponse",
                         _Lang.getMessage("ERR_CONSTRUCT", e.toString()));
-                     
+
                 //client errors are not swallowed
                 throw e;
             }
@@ -510,17 +566,15 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
         this._evtListeners.broadcastEvent(eventData);
     },
 
+
     /**
-     * processes the ajax response if the ajax request completes successfully
-     * this is the case for non queued outside calls which are triggered by calling response
-     * themselves and hence the case according to the spec
-     *
-     * @param {Object} request (xhrRequest) the ajax request!
-     * @param {Object} context (Map) context map keeping context data not being passed down over
-     * the request boundary but kept on the client
+     * Spec. 13.3.3
+     * Examining the response markup and updating the DOM tree
+     * @param {XMLHttpRequest} request - the ajax request
+     * @param {Object} context - the ajax context
      */
     response : function(request, context) {
-        this._transport.response(request, context);
+        this._RT.getLocalOrGlobalConfig(context, "responseHandler", myfaces._impl.xhrCore._AjaxResponse).processResponse(request, context);
     },
 
     /**
@@ -529,33 +583,42 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
      * The value for it comes from the request parameter of the jsf.js script called "stage".
      */
     getProjectStage : function() {
-        /* run through all script tags and try to find the one that includes jsf.js */
-        var scriptTags = document.getElementsByTagName("script");
-        var getConfig  = myfaces._impl.core._Runtime.getGlobalConfig;
-        
-        for (var i = 0; i < scriptTags.length; i++) {
-            if (scriptTags[i].src.search(/\/javax\.faces\.resource\/jsf\.js.*ln=javax\.faces/) != -1) {
-                var result = scriptTags[i].src.match(/stage=([^&;]*)/);
-                if (result) {
-                    // we found stage=XXX
-                    // return only valid values of ProjectStage
-                    if (   result[1] == "Production"
-                        || result[1] == "Development"
-                        || result[1] == "SystemTest"
-                        || result[1] == "UnitTest") {
-                        return result[1];
+        //since impl is a singleton we only have to do it once at first access
+
+        if(!this._projectStage) {
+            var PRJ_STAGE = "projectStage",
+                    STG_PROD = "Production",
+
+                    scriptTags = document.getElementsByTagName("script"),
+                    getConfig = myfaces._impl.core._Runtime.getGlobalConfig,
+                    projectStage = null,
+                    found = false,
+                    allowedProjectStages = {STG_PROD:1,"Development":1, "SystemTest":1,"UnitTest":1};
+
+            /* run through all script tags and try to find the one that includes jsf.js */
+            for (var i = 0; i < scriptTags.length && !found; i++) {
+                if (scriptTags[i].src.search(/\/javax\.faces\.resource\/jsf\.js.*ln=javax\.faces/) != -1) {
+                    var result = scriptTags[i].src.match(/stage=([^&;]*)/);
+                    //alert("result found");
+                    //alert(result);
+                    found = true;
+                    if (result) {
+                        // we found stage=XXX
+                        // return only valid values of ProjectStage
+                        projectStage = (allowedProjectStages[result[1]]) ? result[1] : null;
+
+                    }
+                    else {
+                        //we found the script, but there was no stage parameter -- Production
+                        //(we also add an override here for testing purposes, the default, however is Production)
+                        projectStage = getConfig(PRJ_STAGE, STG_PROD);
                     }
                 }
-                else {
-                    //we found the script, but there was no stage parameter -- Production
-                    //(we also add an override here for testing purposes, the default, however is Production)
-                    return getConfig("projectStage", "Production");
-                    //return "Production";
-                }
             }
+            /* we could not find anything valid --> return the default value */
+            this._projectStage = projectStage || getConfig(PRJ_STAGE, STG_PROD);
         }
-        /* we could not find anything valid --> return the default value */
-        return getConfig("projectStage", "Production");
+        return this._projectStage;
     },
 
     /**
@@ -579,19 +642,30 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
      *   but can be undefined
      */
     chain : function(source, event) {
-        var len   = arguments.length;
-        var _Lang = this._Lang;
-
+        var len         = arguments.length;
+        var _Lang       = this._Lang;
+        var throwErr    = function(msgKey) {
+            throw Error("jsf.util.chain: "+ _Lang.getMessage(msgKey));
+        };
+        /**
+         * generic error condition checker which raises
+         * an exception if the condition is met
+         * @param assertion
+         * @param message
+         */
+        var errorCondition = function(assertion, message) {
+            if(assertion === true) throwErr(message);
+        };
+        var FUNC    = 'function';
+        var ISSTR   = _Lang.isString;
+        
         //the spec is contradicting here, it on one hand defines event, and on the other
         //it says it is optional, I have cleared this up now
         //the spec meant the param must be passed down, but can be 'undefined'
-        if (len < 2) {
-            throw new Error(_Lang.getMessage("ERR_EV_OR_UNKNOWN"));
-        } else if (len < 3) {
-            if ('function' == typeof event || this._Lang.isString(event)) {
 
-                throw new Error(_Lang.getMessage("ERR_EVT_PASS"));
-            }
+        errorCondition(len < 2, "ERR_EV_OR_UNKNOWN");
+        errorCondition(len < 3 && (FUNC == typeof event || ISSTR(event)), "ERR_EVT_PASS");
+        if (len < 3) {
             //nothing to be done here, move along
             return true;
         }
@@ -600,30 +674,20 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
         //arguments only are give if not set to undefined even null values!
 
         //assertions source either null or set as dom element:
-
-        if ('undefined' == typeof source) {
-            throw new Error(_Lang.getMessage("ERR_SOURCE_DEF_NULL"));
-            //allowed chain datatypes
-        } else if ('function' == typeof source) {
-            throw new Error(_Lang.getMessage("ERR_SOURCE_FUNC"));
-        }
-        if (this._Lang.isString(source)) {
-            throw new Error(_Lang.getMessage("ERR_SOURCE_NOSTR"));
-        }
+        errorCondition('undefined' == typeof source, "ERR_SOURCE_DEF_NULL");
+        errorCondition(FUNC == typeof source, "ERR_SOURCE_FUNC");
+        errorCondition(ISSTR(source), "ERR_SOURCE_NOSTR");
 
         //assertion if event is a function or a string we already are in our function elements
         //since event either is undefined, null or a valid event object
-
-        if ('function' == typeof event || this._Lang.isString(event)) {
-            throw new Error(_Lang.getMessage("ERR_EV_OR_UNKNOWN"));
-        }
+        errorCondition(FUNC == typeof event || ISSTR(event), "ERR_EV_OR_UNKNOWN");
 
         for (var cnt = 2; cnt < len; cnt++) {
             //we do not change the scope of the incoming functions
             //but we reuse the argument array capabilities of apply
             var ret;
 
-            if ('function' == typeof arguments[cnt]) {
+            if (FUNC == typeof arguments[cnt]) {
                 ret = arguments[cnt].call(source, event);
             } else {
                 //either a function or a string can be passed in case of a string we have to wrap it into another function
@@ -636,7 +700,6 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
             }
         }
         return true;
-
     },
 
     /**
@@ -648,36 +711,22 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl.core.Impl", Obje
      *
      * @param request the request currently being processed
      * @param context the context affected by this error
-     * @param sourceClass the sourceclass throwing the error
-     * @param func the function throwing the error
      * @param exception the exception being thrown
      */
-     stdErrorHandler: function(request, context, sourceClass, func, exception) {
-
-        var _Lang = myfaces._impl._util._Lang;
-        var exProcessed = _Lang.isExceptionProcessed(exception);
-        try {
+    stdErrorHandler: function(request, context, exception) {
             //newer browsers do not allow to hold additional values on native objects like exceptions
             //we hence capsule it into the request, which is gced automatically
             //on ie as well, since the stdErrorHandler usually is called between requests
             //this is a valid approach
+            if (this._threshold == "ERROR") {
+                var mfInternal = exception._mfInternal || {};
 
-            if (this._threshold == "ERROR" && !exProcessed) {
-                this.sendError(request, context, this.CLIENT_ERROR, exception.name,
-                        "MyFaces ERROR:" + this._Lang.createErrorMsg(sourceClass, func, exception));
+                var finalMsg = [];
+                finalMsg.push(exception.message);
+                this.sendError(request, context,
+                        mfInternal.title || this.CLIENT_ERROR, mfInternal.name || exception.name, finalMsg.join("\n"), mfInternal.caller, mfInternal.callFunc);
             }
-        } finally {
-
-            //we forward the exception, just in case so that the client
-            //will receive it in any way
-            try {
-                if (!exProcessed) {
-                    _Lang.setExceptionProcessed(exception);
-                }
-            } catch(e) {
-
-            }
-            throw exception;
-        }
     }
-});    
+});
+
+

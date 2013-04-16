@@ -33,17 +33,45 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.component.html.HtmlCommandLink;
 import javax.faces.component.html.HtmlGraphicImage;
 import javax.faces.component.html.HtmlOutputText;
+import javax.faces.event.PreRenderViewEvent;
 
+import org.apache.myfaces.config.NamedEventManager;
+import org.apache.myfaces.config.RuntimeConfig;
 import org.apache.myfaces.test.mock.MockResponseWriter;
 import org.apache.myfaces.test.utils.HtmlCheckAttributesUtil;
 import org.apache.myfaces.test.utils.HtmlRenderedAttr;
 import org.apache.myfaces.view.facelets.FaceletTestCase;
 import org.apache.myfaces.view.facelets.bean.HelloWorld;
+import org.apache.myfaces.view.facelets.impl.FaceletCompositionContextImpl;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class CompositeComponentTestCase extends FaceletTestCase
 {
+
+    @Override
+    protected void setupComponents() throws Exception
+    {
+        super.setupComponents();
+        application.addComponent(CompositeTestComponent.class.getName(), 
+                CompositeTestComponent.class.getName());
+    }
+    
+    @Override
+    protected void setUpServletObjects() throws Exception
+    {
+        super.setUpServletObjects();
+        servletContext.addInitParameter("javax.faces.FACELETS_LIBRARIES", "/test-facelet.taglib.xml");
+    }
+    
+    
+    @Override
+    protected void setUpExternalContext() throws Exception
+    {
+        super.setUpExternalContext();
+        
+        RuntimeConfig.getCurrentInstance(externalContext).setNamedEventManager(new NamedEventManager());
+    }
 
     /**
      * Test if a child component inside composite component template is
@@ -553,6 +581,75 @@ public class CompositeComponentTestCase extends FaceletTestCase
         Assert.assertTrue(resp.contains("OMEGA"));
     }
     
+        
+    @Test
+    public void testCompositeInsertChildren5() throws Exception
+    {
+        HelloWorld helloWorld = new HelloWorld(); 
+        
+        facesContext.getExternalContext().getRequestMap().put("helloWorldBean",
+                helloWorld);
+        
+        UIViewRoot root = facesContext.getViewRoot();
+        vdl.buildView(facesContext, root, "testCompositeInsertChildren5.xhtml");
+        
+        UIComponent panelGroup1 = root.findComponent("testGroup1");
+        Assert.assertNotNull(panelGroup1);
+        //UINamingContainer compositeComponent1 = (UINamingContainer) panelGroup1.getChildren().get(0);
+        //Assert.assertNotNull(compositeComponent1);
+        //UIComponent facet1 = compositeComponent1.getFacet(UIComponent.COMPOSITE_FACET_NAME);
+        //Assert.assertNotNull(facet1);
+        
+        StringWriter sw = new StringWriter();
+        MockResponseWriter mrw = new MockResponseWriter(sw);
+        facesContext.setResponseWriter(mrw);
+
+        panelGroup1.encodeAll(facesContext);
+
+        sw.flush();
+        
+        String resp = sw.toString();
+
+        Assert.assertTrue(resp.contains("ALFA"));
+        Assert.assertTrue(resp.contains("BETA"));
+        Assert.assertTrue(resp.contains("GAMMA"));
+        Assert.assertTrue(resp.contains("OMEGA"));
+    }
+
+    @Test
+    public void testCompositeInsertChildren6() throws Exception
+    {
+        HelloWorld helloWorld = new HelloWorld(); 
+        
+        facesContext.getExternalContext().getRequestMap().put("helloWorldBean",
+                helloWorld);
+        
+        UIViewRoot root = facesContext.getViewRoot();
+        vdl.buildView(facesContext, root, "testCompositeInsertChildren6.xhtml");
+        
+        UIComponent panelGroup1 = root.findComponent("testGroup1");
+        Assert.assertNotNull(panelGroup1);
+        //UINamingContainer compositeComponent1 = (UINamingContainer) panelGroup1.getChildren().get(0);
+        //Assert.assertNotNull(compositeComponent1);
+        //UIComponent facet1 = compositeComponent1.getFacet(UIComponent.COMPOSITE_FACET_NAME);
+        //Assert.assertNotNull(facet1);
+        
+        StringWriter sw = new StringWriter();
+        MockResponseWriter mrw = new MockResponseWriter(sw);
+        facesContext.setResponseWriter(mrw);
+
+        panelGroup1.encodeAll(facesContext);
+
+        sw.flush();
+        
+        String resp = sw.toString();
+
+        Assert.assertTrue(resp.contains("ALFA"));
+        Assert.assertTrue(resp.contains("BETA"));
+        Assert.assertTrue(resp.contains("GAMMA"));
+        Assert.assertTrue(resp.contains("OMEGA"));
+    }
+
     @Test
     public void testCompositeInsertFacet() throws Exception
     {
@@ -639,6 +736,105 @@ public class CompositeComponentTestCase extends FaceletTestCase
         
     }
     
+    @Test
+    public void testSimpleFEvent() throws Exception
+    {
+        HelloWorld helloWorld = new HelloWorld(); 
+        
+        facesContext.getExternalContext().getRequestMap().put("helloWorldBean",
+                helloWorld);
+        
+        UIViewRoot root = facesContext.getViewRoot();
+        vdl.buildView(facesContext, root, "testSimpleFEvent.xhtml");
+        
+        UIComponent panelGroup1 = root.findComponent("testGroup1");
+        Assert.assertNotNull(panelGroup1);
+        CompositeTestComponent compositeComponent1 = (CompositeTestComponent) panelGroup1.getChildren().get(0);
+        Assert.assertNotNull(compositeComponent1);
+        
+        Assert.assertTrue("postAddToViewCallback should be called", (Boolean) compositeComponent1.getAttributes().get("postAddToViewCallback"));
+        
+        /*
+        StringWriter sw = new StringWriter();
+        MockResponseWriter mrw = new MockResponseWriter(sw);
+        facesContext.setResponseWriter(mrw);
+
+        compositeComponent1.encodeAll(facesContext);
+
+        sw.flush();
+        
+        String resp = sw.toString();
+
+        Assert.assertTrue(resp.contains("HELLO"));
+        Assert.assertTrue(resp.contains("WORLD"));
+        */
+        
+    }
+    
+    @Test
+    public void testSimpleFEvent2() throws Exception
+    {
+        HelloWorld helloWorld = new HelloWorld(); 
+        
+        facesContext.getExternalContext().getRequestMap().put("helloWorldBean",
+                helloWorld);
+        
+        UIViewRoot root = facesContext.getViewRoot();
+        vdl.buildView(facesContext, root, "testSimpleFEvent2.xhtml");
+        
+        UIComponent panelGroup1 = root.findComponent("testGroup1");
+        Assert.assertNotNull(panelGroup1);
+        CompositeTestComponent compositeComponent1 = (CompositeTestComponent) panelGroup1.getChildren().get(0);
+        Assert.assertNotNull(compositeComponent1);
+        
+        application.publishEvent(facesContext, PreRenderViewEvent.class, root);
+        
+        Assert.assertTrue("preRenderViewCallback should be called", (Boolean) compositeComponent1.getAttributes().get("preRenderViewCallback"));
+        
+        /*
+        StringWriter sw = new StringWriter();
+        MockResponseWriter mrw = new MockResponseWriter(sw);
+        facesContext.setResponseWriter(mrw);
+
+        compositeComponent1.encodeAll(facesContext);
+
+        sw.flush();
+        
+        String resp = sw.toString();
+
+        Assert.assertTrue(resp.contains("HELLO"));
+        Assert.assertTrue(resp.contains("WORLD"));
+        */
+        
+    }
+    
+    @Test
+    public void testsCompositeRefVE() throws Exception {
+        
+        servletContext.addInitParameter(
+                FaceletCompositionContextImpl.INIT_PARAM_CACHE_EL_EXPRESSIONS, 
+                "always");
+        
+        UIViewRoot root = facesContext.getViewRoot();
+        vdl.buildView(facesContext, root, "testCompositeRefVE.xhtml");
+
+        UIComponent panelGroup1 = root.findComponent("testGroup1");
+        Assert.assertNotNull(panelGroup1);
+        UINamingContainer compositeComponent1 = (UINamingContainer) panelGroup1.getChildren().get(0);
+        Assert.assertNotNull(compositeComponent1);
+        UIComponent facet1 = compositeComponent1.getFacet(UIComponent.COMPOSITE_FACET_NAME);
+        Assert.assertNotNull(facet1);
+
+        StringWriter sw = new StringWriter();
+        MockResponseWriter mrw = new MockResponseWriter(sw);
+        facesContext.setResponseWriter(mrw);
+        
+        compositeComponent1.encodeAll(facesContext);
+        sw.flush();
+        
+        Assert.assertTrue("Error when rendering" + sw.toString(), sw.toString().contains("success"));
+    }
+
     @Test
     public void testSimpleThisResourceReference() throws Exception
     {

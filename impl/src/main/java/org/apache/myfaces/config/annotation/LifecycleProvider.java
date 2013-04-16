@@ -26,9 +26,10 @@ import javax.naming.NamingException;
  * Proposed interface to annotation service. An implementation of this class needs to know the appropriate classloader,
  * dependencies to be injected, and lifecycle methods to be called.
  *
- * @version $Rev:$ $Date:$
+ * @version $Rev$ $Date$
  */
-public interface LifecycleProvider {
+public interface LifecycleProvider
+{
 
     /**
      * Create an object of the class with the supplied name, inject dependencies as appropriate,
@@ -37,7 +38,9 @@ public interface LifecycleProvider {
      * @param className name of the class of the desired object
      * @return a fully constructed, dependency-injected, and initialized object.
      */
-    Object newInstance(String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NamingException, InvocationTargetException;
+    Object newInstance(String className)
+            throws ClassNotFoundException, IllegalAccessException, InstantiationException,
+            NamingException, InvocationTargetException;
 
     /**
      * Take whatever steps are needed to shut down the object, including calling a preDestroy method.

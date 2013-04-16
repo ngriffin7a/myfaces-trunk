@@ -35,9 +35,13 @@ public abstract class Renderer
     public void decode(FacesContext context, UIComponent component)
     {
         if (context == null)
+        {
             throw new NullPointerException("context");
+        }
         if (component == null)
+        {
             throw new NullPointerException("component");
+        }
     }
 
     /**
@@ -46,9 +50,13 @@ public abstract class Renderer
     public void encodeBegin(FacesContext context, UIComponent component) throws IOException
     {
         if (context == null)
+        {
             throw new NullPointerException("context");
+        }
         if (component == null)
+        {
             throw new NullPointerException("component");
+        }
     }
 
     /**
@@ -64,14 +72,19 @@ public abstract class Renderer
     public void encodeChildren(FacesContext context, UIComponent component) throws IOException
     {
         if (context == null)
+        {
             throw new NullPointerException("context");
+        }
         if (component == null)
+        {
             throw new NullPointerException("component");
+        }
 
         if (component.getChildCount() > 0)
         {
-            for (UIComponent child : component.getChildren())
+            for (int i = 0, childCount = component.getChildCount(); i < childCount; i++)
             {
+                UIComponent child = component.getChildren().get(i);
                 if (!child.isRendered())
                 {
                     continue;
@@ -88,17 +101,25 @@ public abstract class Renderer
     public void encodeEnd(FacesContext context, UIComponent component) throws IOException
     {
         if (context == null)
+        {
             throw new NullPointerException("context");
+        }
         if (component == null)
+        {
             throw new NullPointerException("component");
+        }
     }
 
     public String convertClientId(FacesContext context, String clientId)
     {
         if (context == null)
+        {
             throw new NullPointerException("context");
+        }
         if (clientId == null)
+        {
             throw new NullPointerException("clientId");
+        }
         return clientId;
     }
 
@@ -121,9 +142,13 @@ public abstract class Renderer
         throws ConverterException
     {
         if (context == null)
+        {
             throw new NullPointerException("context");
+        }
         if (component == null)
+        {
             throw new NullPointerException("component");
+        }
         return submittedValue;
     }
 

@@ -22,7 +22,7 @@ import java.lang.reflect.Field;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.myfaces.shared_impl.util.ClassUtils;
+import org.apache.myfaces.shared.util.ClassUtils;
 
 /**
  * <p>{@link javax.faces.FactoryFinder} is a class with three methods:</p>
@@ -124,7 +124,7 @@ import org.apache.myfaces.shared_impl.util.ClassUtils;
  */
 public abstract class FactoryFinderProviderFactory
 {
-    private static volatile FactoryFinderProviderFactory _instance = null;
+    private static volatile FactoryFinderProviderFactory instance = null;
     
     /**
      * Set the instance to be used by {@link javax.faces.FactoryFinder} to resolve
@@ -148,23 +148,25 @@ public abstract class FactoryFinderProviderFactory
         try
         {
             Class clazz = ClassUtils.classForName("javax.faces.FactoryFinder");
-            Field field = clazz.getDeclaredField("_initialized");
+            Field field = clazz.getDeclaredField("initialized");
             field.setAccessible(true);
             
             if (field.getBoolean(null))
             {
                 Logger log = Logger.getLogger(FactoryFinderProviderFactory.class.getName());
                 if (log.isLoggable(Level.WARNING))
-                    log.log(Level.WARNING, 
+                {
+                    log.log(Level.WARNING,
                             "Called FactoryFinderProviderFactory.setFactory after " +
-                            "initialized FactoryFinder (first call to getFactory() or setFactory()). " +
-                            "This method should be called before " +
-                            "any 'web context' is initialized in the current 'classloader context'. " +
-                            "By that reason it will not be changed.");
+                                    "initialized FactoryFinder (first call to getFactory() or setFactory()). " +
+                                    "This method should be called before " +
+                                    "any 'web context' is initialized in the current 'classloader context'. " +
+                                    "By that reason it will not be changed.");
+                }
             }
             else
             {
-                _instance = instance;
+                FactoryFinderProviderFactory.instance = instance;
             }
             
             field.setBoolean(null, false);
@@ -174,8 +176,10 @@ public abstract class FactoryFinderProviderFactory
             // No Op
             Logger log = Logger.getLogger(FactoryFinderProviderFactory.class.getName());
             if (log.isLoggable(Level.FINE))
+            {
                 log.log(Level.FINE, "Cannot access field _initialized"
                         + "from FactoryFinder ", e);
+            }
         }
     }
     
@@ -187,7 +191,7 @@ public abstract class FactoryFinderProviderFactory
      */
     public static FactoryFinderProviderFactory getInstance()
     {
-        return _instance;
+        return instance;
     }
 
     /**

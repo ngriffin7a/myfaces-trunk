@@ -26,19 +26,28 @@ import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
 import javax.faces.application.ProjectStage;
 import javax.faces.application.Resource;
-import javax.faces.component.PartialStateHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.event.*;
+import javax.faces.event.ComponentSystemEvent;
+import javax.faces.event.ComponentSystemEventListener;
+import javax.faces.event.ListenerFor;
+import javax.faces.event.PostAddToViewEvent;
+import javax.faces.event.PreRenderViewEvent;
 import javax.faces.render.Renderer;
+import javax.faces.view.Location;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFRenderer;
-import org.apache.myfaces.shared_impl.renderkit.JSFAttr;
-import org.apache.myfaces.shared_impl.renderkit.RendererUtils;
-import org.apache.myfaces.shared_impl.renderkit.html.HTML;
-import org.apache.myfaces.shared_impl.renderkit.html.util.ResourceUtils;
-import org.apache.myfaces.view.facelets.PostBuildComponentTreeOnRestoreViewEvent;
+import org.apache.myfaces.context.RequestViewContext;
+import org.apache.myfaces.shared.config.MyfacesConfig;
+import org.apache.myfaces.shared.renderkit.JSFAttr;
+import org.apache.myfaces.shared.renderkit.RendererUtils;
+import org.apache.myfaces.shared.renderkit.html.HTML;
+import org.apache.myfaces.shared.renderkit.html.util.ResourceUtils;
+import org.apache.myfaces.shared.util.ExternalContextUtils;
+import org.apache.myfaces.view.facelets.FaceletViewDeclarationLanguage;
+import org.apache.myfaces.view.facelets.el.CompositeComponentELUtils;
+import org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport;
 
 /**
  * Renderer used by h:outputScript component
@@ -48,33 +57,60 @@ import org.apache.myfaces.view.facelets.PostBuildComponentTreeOnRestoreViewEvent
  * @since 2.0
  */
 @JSFRenderer(renderKitId = "HTML_BASIC", family = "javax.faces.Output", type = "javax.faces.resource.Script")
-@ListenersFor({
-@ListenerFor(systemEventClass = PostAddToViewEvent.class),
-@ListenerFor(systemEventClass = PostBuildComponentTreeOnRestoreViewEvent.class)
-})
-public class HtmlScriptRenderer extends Renderer implements PartialStateHolder, ComponentSystemEventListener {
+@ListenerFor(systemEventClass = PostAddToViewEvent.class)
+public class HtmlScriptRenderer extends Renderer implements ComponentSystemEventListener
+{
     //private static final Log log = LogFactory.getLog(HtmlScriptRenderer.class);
     private static final Logger log = Logger.getLogger(HtmlScriptRenderer.class.getName());
 
-    public void processEvent(ComponentSystemEvent event) {
-        if (event instanceof PostAddToViewEvent) {
+    private static final String IS_BUILDING_INITIAL_STATE = "javax.faces.IS_BUILDING_INITIAL_STATE";
+
+    public void processEvent(ComponentSystemEvent event)
+    {
+        if (event instanceof PostAddToViewEvent)
+        {
             UIComponent component = event.getComponent();
             String target = (String) component.getAttributes().get(JSFAttr.TARGET_ATTR);
-            if (target != null) {
+            if (target != null)
+            {
                 FacesContext facesContext = FacesContext.getCurrentInstance();
 
-                //if (component.getId() != null)
-                //{
-                //    UniqueIdVendor uiv = findParentUniqueIdVendor(component);
-                //
-                //    if ( (!(uiv instanceof UIViewRoot)) && component.getId().startsWith(UIViewRoot.UNIQUE_ID_PREFIX))
-                //    {
-                //        // The id was set using the closest UniqueIdVendor, but since this one
-                //        // will be relocated, we need to assign an id from the current root.
-                //        // otherwise a duplicate id exception could happen.
-                //        component.setId(facesContext.getViewRoot().createUniqueId(facesContext, null));
-                //    }
-                //}
+                Location location = (Location) component.getAttributes().get(CompositeComponentELUtils.LOCATION_KEY);
+                if (location != null)
+                {
+                    UIComponent ccParent
+                            = CompositeComponentELUtils.getCompositeComponentBasedOnLocation(facesContext, location);
+                    if (ccParent != null)
+                    {
+                        component.getAttributes().put(
+                                CompositeComponentELUtils.CC_FIND_COMPONENT_EXPRESSION,
+                                ComponentSupport.getFindComponentExpression(facesContext, ccParent));
+                    }
+                }
+
+                // If this is an ajax request and the view is being refreshed and a PostAddToViewEvent
+                // was propagated to relocate this resource, means the header must be refreshed.
+                // Note ajax request does not occur on non postback requests.
+                
+                if (!ExternalContextUtils.isPortlet(facesContext.getExternalContext()) &&
+                    facesContext.getPartialViewContext().isAjaxRequest())
+                {
+                    boolean isBuildingInitialState = facesContext.getAttributes().
+                        containsKey(IS_BUILDING_INITIAL_STATE);
+                    // The next condition takes into account the current request is an ajax request. 
+                    boolean isPostAddToViewEventAfterBuildInitialState = 
+                        !isBuildingInitialState ||
+                        (isBuildingInitialState && 
+                                FaceletViewDeclarationLanguage.isRefreshingTransientBuild(facesContext));
+                    if (isPostAddToViewEventAfterBuildInitialState &&                    
+                        MyfacesConfig.getCurrentInstance(facesContext.getExternalContext()).
+                            isStrictJsf2RefreshTargetAjax())
+                    {
+                        //!(component.getParent() instanceof ComponentResourceContainer)
+                        RequestViewContext requestViewContext = RequestViewContext.getCurrentInstance(facesContext);
+                        requestViewContext.setRenderTarget("head", true);
+                    }
+                }
 
                 facesContext.getViewRoot().addComponentResource(facesContext,
                         component, target);
@@ -87,55 +123,53 @@ public class HtmlScriptRenderer extends Renderer implements PartialStateHolder, 
             //TODO target check here
             UIComponent component = event.getComponent();
             String target = (String) component.getAttributes().get(JSFAttr.TARGET_ATTR);
-            if (target != null) {
+            if (target != null)
+            {
                 FacesContext facesContext = FacesContext.getCurrentInstance();
                 UIComponent uiTarget = facesContext.getViewRoot().getFacet(target);
-                if (uiTarget == null) {
+                if (uiTarget == null)
+                {
                     throw new FacesException("Target for component not found");
                 }
             }
         }
     }
 
-//private static UniqueIdVendor findParentUniqueIdVendor(UIComponent component)
-//{
-//    UIComponent parent = component.getParent();
-//
-//    while (parent != null)
-//    {
-//        if (parent instanceof UniqueIdVendor)
-//        {
-//            return (UniqueIdVendor) parent;
-//        }
-//        parent = parent.getParent();
-//    }
-//    return null;
-//}
-
     @Override
-    public boolean getRendersChildren() {
+    public boolean getRendersChildren()
+    {
         return true;
     }
 
     @Override
     public void encodeChildren(FacesContext facesContext, UIComponent component)
-            throws IOException {
+            throws IOException
+    {
         if (facesContext == null)
+        {
             throw new NullPointerException("context");
+        }
         if (component == null)
+        {
             throw new NullPointerException("component");
+        }
 
         Map<String, Object> componentAttributesMap = component.getAttributes();
         String resourceName = (String) componentAttributesMap.get(JSFAttr.NAME_ATTR);
         boolean hasChildren = component.getChildCount() > 0;
 
-        if (resourceName != null && (!"".equals(resourceName))) {
-            if (hasChildren) {
+        if (resourceName != null && (!"".equals(resourceName)))
+        {
+            if (hasChildren)
+            {
                 log.info("Component with resourceName " + resourceName +
                         " and child components found. Child components will be ignored.");
             }
-        } else {
-            if (hasChildren) {
+        }
+        else
+        {
+            if (hasChildren)
+            {
                 // Children are encoded as usual. Usually the layout is
                 // <script type="text/javascript">
                 // ...... some javascript .......
@@ -145,10 +179,13 @@ public class HtmlScriptRenderer extends Renderer implements PartialStateHolder, 
                 writer.writeAttribute(HTML.SCRIPT_TYPE_ATTR, HTML.SCRIPT_TYPE_TEXT_JAVASCRIPT, null);
                 RendererUtils.renderChildren(facesContext, component);
                 writer.endElement(HTML.SCRIPT_ELEM);
-            } else {
+            }
+            else
+            {
                 if (!facesContext.getApplication().getProjectStage().equals(
-                        ProjectStage.Production)) {
-                    facesContext.addMessage(component.getClientId(),
+                        ProjectStage.Production))
+                {
+                    facesContext.addMessage(component.getClientId(facesContext),
                             new FacesMessage("Component with no name and no body content, so nothing rendered."));
                 }
             }
@@ -157,33 +194,49 @@ public class HtmlScriptRenderer extends Renderer implements PartialStateHolder, 
 
     @Override
     public void encodeEnd(FacesContext facesContext, UIComponent component)
-            throws IOException {
+            throws IOException
+    {
         super.encodeEnd(facesContext, component); //check for NP
 
         Map<String, Object> componentAttributesMap = component.getAttributes();
         String resourceName = (String) componentAttributesMap.get(JSFAttr.NAME_ATTR);
         String libraryName = (String) componentAttributesMap.get(JSFAttr.LIBRARY_ATTR);
 
-        if (resourceName == null) {
+        if (resourceName == null)
+        {
             //log.warn("Trying to encode resource represented by component" +
             //        component.getClientId() + " without resourceName."+
             //        " It will be silenty ignored.");
             return;
         }
-        if ("".equals(resourceName)) {
+        if ("".equals(resourceName))
+        {
             return;
         }
 
+        String additionalQueryParams = null;
+        int index = resourceName.indexOf('?');
+        if (index >= 0)
+        {
+            additionalQueryParams = resourceName.substring(index + 1);
+            resourceName = resourceName.substring(0, index);
+        }
+
         Resource resource;
-        if (libraryName == null) {
-            if (ResourceUtils.isRenderedScript(facesContext, libraryName, resourceName)) {
+        if (libraryName == null)
+        {
+            if (ResourceUtils.isRenderedScript(facesContext, libraryName, resourceName))
+            {
                 //Resource already founded
                 return;
             }
             resource = facesContext.getApplication().getResourceHandler()
                     .createResource(resourceName);
-        } else {
-            if (ResourceUtils.isRenderedScript(facesContext, libraryName, resourceName)) {
+        }
+        else
+        {
+            if (ResourceUtils.isRenderedScript(facesContext, libraryName, resourceName))
+            {
                 //Resource already founded
                 return;
             }
@@ -192,51 +245,39 @@ public class HtmlScriptRenderer extends Renderer implements PartialStateHolder, 
 
         }
 
-        if (resource == null) {
+        if (resource == null)
+        {
             //no resource found
             log.warning("Resource referenced by resourceName " + resourceName +
                     (libraryName == null ? "" : " and libraryName " + libraryName) +
                     " not found in call to ResourceHandler.createResource." +
                     " It will be silenty ignored.");
             return;
-        } else {
+        }
+        else
+        {
+            if (ResourceUtils.isRenderedScript(facesContext, resource.getLibraryName(), resource.getResourceName()))
+            {
+                //Resource already founded
+                return;
+            }
+
             // Rendering resource
             ResourceUtils.markScriptAsRendered(facesContext, libraryName, resourceName);
+            ResourceUtils.markStylesheetAsRendered(facesContext, resource.getLibraryName(), resource.getResourceName());
             ResponseWriter writer = facesContext.getResponseWriter();
             writer.startElement(HTML.SCRIPT_ELEM, component);
 // We can't render the content type, because usually it returns "application/x-javascript"
 // and this is not compatible with IE. We should force render "text/javascript".
             writer.writeAttribute(HTML.SCRIPT_TYPE_ATTR, HTML.SCRIPT_TYPE_TEXT_JAVASCRIPT, null);
-            writer.writeURIAttribute(HTML.SRC_ATTR, facesContext.getExternalContext().encodeResourceURL(resource.getRequestPath()), null);
+            String path = resource.getRequestPath();
+            if (additionalQueryParams != null)
+            {
+                path = path + ((path.indexOf('?') >= 0) ? "&amp;" : "?") + additionalQueryParams;
+            }
+            writer.writeURIAttribute(HTML.SRC_ATTR, facesContext.getExternalContext().encodeResourceURL(path), null);
             writer.endElement(HTML.SCRIPT_ELEM);
         }
     }
 
-    private boolean _initialStateMarked;
-
-    public void clearInitialState() {
-        _initialStateMarked = false;
-    }
-
-    public boolean initialStateMarked() {
-        return _initialStateMarked;
-    }
-
-    public void markInitialState() {
-        _initialStateMarked = true;
-    }
-
-    public boolean isTransient() {
-        return false;
-    }
-
-    public void restoreState(FacesContext context, Object state) {
-    }
-
-    public Object saveState(FacesContext context) {
-        return null;
-    }
-
-    public void setTransient(boolean newTransientValue) {
-    }
 }

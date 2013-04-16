@@ -34,8 +34,6 @@ import javax.faces.event.PhaseListener;
 import javax.faces.lifecycle.Lifecycle;
 
 import org.apache.myfaces.config.FacesConfigurator;
-import org.apache.myfaces.renderkit.ErrorPageWriter;
-import org.apache.myfaces.shared_impl.util.ClassUtils;
 import org.apache.myfaces.shared_impl.webapp.webxml.WebXml;
 import org.apache.myfaces.util.DebugUtils;
 
@@ -72,7 +70,8 @@ public class LifecycleImpl extends Lifecycle
      * we can expect only 2 calls for getPhaseListeners() per request (so only two copy 
      * operations of a very small list).
      */
-    private final List<PhaseListener> _phaseListenerList = new CopyOnWriteArrayList<PhaseListener>(); // new ArrayList();
+    private final List<PhaseListener> _phaseListenerList
+            = new CopyOnWriteArrayList<PhaseListener>(); // new ArrayList();
 
     /**
      * This variable should be marked as volatile to ensure all threads can see it
@@ -102,8 +101,8 @@ public class LifecycleImpl extends Lifecycle
     @Override
     public void execute(FacesContext facesContext) throws FacesException
     {
-        try
-        {
+        //try
+        //{
             // check for updates of web.xml and faces-config descriptors 
             // only if project state is not production
             if(!facesContext.isProjectStage(ProjectStage.Production))
@@ -120,12 +119,12 @@ public class LifecycleImpl extends Lifecycle
                     return;
                 }
             }
-        }
-        catch (Throwable ex)
-        {
+        //}
+        //catch (Throwable ex)
+        //{
             // handle the Throwable accordingly. Maybe generate an error page.
-            ErrorPageWriter.handleThrowable(facesContext, ex);
-        }
+            //ErrorPageWriter.handleThrowable(facesContext, ex);
+        //}
     }
 
     private boolean executePhase(FacesContext context, PhaseExecutor executor, PhaseListenerManager phaseListenerMgr)
@@ -174,7 +173,8 @@ public class LifecycleImpl extends Lifecycle
             }
         }
         
-        catch (Throwable e) {
+        catch (Throwable e)
+        {
             // JSF 2.0: publish the executor's exception (if any).
             
             publishException (e, currentPhaseId, context);
@@ -207,15 +207,17 @@ public class LifecycleImpl extends Lifecycle
     @Override
     public void render(FacesContext facesContext) throws FacesException
     {
-        try
-        {
+        //try
+        //{
             // if the response is complete we should not be invoking the phase listeners
             if (isResponseComplete(facesContext, renderExecutor.getPhase(), true))
             {
                 return;
             }
             if (log.isLoggable(Level.FINEST))
+            {
                 log.finest("entering " + renderExecutor.getPhase() + " in " + LifecycleImpl.class.getName());
+            }
     
             PhaseListenerManager phaseListenerMgr = new PhaseListenerManager(this, facesContext, getPhaseListeners());
             Flash flash = facesContext.getExternalContext().getFlash();
@@ -229,17 +231,18 @@ public class LifecycleImpl extends Lifecycle
                 // let the PhaseExecutor do some pre-phase actions
                 renderExecutor.doPrePhaseActions(facesContext);
                 
-                boolean renderResponse = phaseListenerMgr.informPhaseListenersBefore(renderExecutor.getPhase());
+                phaseListenerMgr.informPhaseListenersBefore(renderExecutor.getPhase());
                 // also possible that one of the listeners completed the response
                 if (isResponseComplete(facesContext, renderExecutor.getPhase(), true))
                 {
                     return;
                 }
-                if(renderResponse || facesContext.getExceptionHandler().getClass().equals(ClassUtils.classForName("javax.faces.webapp.PreJsf2ExceptionHandlerFactory$PreJsf2ExceptionHandlerImpl")))
-                    renderExecutor.execute(facesContext);
+                
+                renderExecutor.execute(facesContext);
             }
             
-            catch (Throwable e) {
+            catch (Throwable e)
+            {
                 // JSF 2.0: publish the executor's exception (if any).
                 
                 publishException (e, renderExecutor.getPhase(), facesContext);
@@ -267,12 +270,12 @@ public class LifecycleImpl extends Lifecycle
             {
                 log.finest("exiting " + renderExecutor.getPhase() + " in " + LifecycleImpl.class.getName());
             }
-        }
-        catch (Throwable ex)
-        {
+        //}
+        //catch (Throwable ex)
+        //{
             // handle the Throwable accordingly. Maybe generate an error page.
-            ErrorPageWriter.handleThrowable(facesContext, ex);
-        }
+            //ErrorPageWriter.handleThrowable(facesContext, ex);
+        //}
     }
 
     private boolean isResponseComplete(FacesContext facesContext, PhaseId phase, boolean before)

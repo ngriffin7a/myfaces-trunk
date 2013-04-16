@@ -47,7 +47,7 @@ class _ValueBindingToValueExpression extends ValueExpression implements StateHol
     private static final long serialVersionUID = 8071429285360496554L;
 
     //private static final Log logger = LogFactory.getLog(_ValueBindingToValueExpression.class);
-    private static final Logger logger = Logger.getLogger(_ValueBindingToValueExpression.class.getName());
+    private static final Logger log = Logger.getLogger(_ValueBindingToValueExpression.class.getName());
 
     private ValueBinding _valueBinding;
 
@@ -139,10 +139,10 @@ class _ValueBindingToValueExpression extends ValueExpression implements StateHol
     @Override
     public int hashCode()
     {
-        final int PRIME = 31;
+        int prime = 31;
         int result = 1;
-        result = PRIME * result + (_transient ? 1231 : 1237);
-        result = PRIME * result + ((_valueBinding == null) ? 0 : _valueBinding.hashCode());
+        result = prime * result + (_transient ? 1231 : 1237);
+        result = prime * result + ((_valueBinding == null) ? 0 : _valueBinding.hashCode());
         return result;
     }
 
@@ -150,21 +150,33 @@ class _ValueBindingToValueExpression extends ValueExpression implements StateHol
     public boolean equals(Object obj)
     {
         if (this == obj)
+        {
             return true;
+        }
         if (obj == null)
+        {
             return false;
+        }
         if (getClass() != obj.getClass())
+        {
             return false;
-        final _ValueBindingToValueExpression other = (_ValueBindingToValueExpression)obj;
+        }
+        _ValueBindingToValueExpression other = (_ValueBindingToValueExpression)obj;
         if (_transient != other._transient)
+        {
             return false;
+        }
         if (_valueBinding == null)
         {
             if (other._valueBinding != null)
+            {
                 return false;
+            }
         }
         else if (!_valueBinding.equals(other._valueBinding))
+        {
             return false;
+        }
         return true;
     }
 
@@ -195,7 +207,8 @@ class _ValueBindingToValueExpression extends ValueExpression implements StateHol
             }
             catch (Throwable e)
             {
-                logger.log(Level.WARNING, "Could not determine expected type for '" + _valueBinding.getExpressionString() + "': "
+                log.log(Level.WARNING, "Could not determine expected type for '"
+                        + _valueBinding.getExpressionString() + "': "
                         + e.getMessage(), e);
             }
         }

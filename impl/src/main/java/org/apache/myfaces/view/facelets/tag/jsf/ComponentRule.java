@@ -31,7 +31,7 @@ import javax.faces.view.facelets.TagAttribute;
 /**
  * 
  * @author Jacob Hookom
- * @version $Id: ComponentRule.java,v 1.4 2008/07/13 19:01:47 rlubke Exp $
+ * @version $Id$
  */
 final class ComponentRule extends MetaRule
 {
@@ -77,7 +77,7 @@ final class ComponentRule extends MetaRule
     //private final static Logger log = Logger.getLogger("facelets.tag.component");
     private final static Logger log = Logger.getLogger(ComponentRule.class.getName());
 
-    public final static ComponentRule Instance = new ComponentRule();
+    public final static ComponentRule INSTANCE = new ComponentRule();
 
     public ComponentRule()
     {

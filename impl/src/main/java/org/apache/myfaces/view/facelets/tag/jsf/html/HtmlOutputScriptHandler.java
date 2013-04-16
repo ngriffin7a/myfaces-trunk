@@ -26,14 +26,16 @@ import javax.faces.view.facelets.ComponentConfig;
 import javax.faces.view.facelets.FaceletContext;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTag;
+import org.apache.myfaces.view.facelets.FaceletCompositionContext;
+import org.apache.myfaces.view.facelets.el.CompositeComponentELUtils;
 import org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport;
 import org.apache.myfaces.view.facelets.tag.jsf.RelocatableResourceHandler;
 
 /**
  * 
  * @since 2.0
- * @author Leonardo Uribe (latest modification by $Author: lu4242 $)
- * @version $Revision: 931412 $ $Date: 2010-04-06 21:56:36 -0500 (Mar, 06 Abr 2010) $
+ * @author Leonardo Uribe (latest modification by $Author$)
+ * @version $Revision$ $Date$
  */
 @JSFFaceletTag(
         name = "h:outputScript",
@@ -54,11 +56,15 @@ public class HtmlOutputScriptHandler extends HtmlComponentHandler implements Rel
         if (c == null)
         {
             UIViewRoot root = ComponentSupport.getViewRoot(ctx, parent);
-            Iterator<UIComponent> itr = root.getFacets().values().iterator();
-            while (itr.hasNext() && c == null)
+            
+            if (root.getFacetCount() > 0)
             {
-                UIComponent facet = itr.next();
-                c = ComponentSupport.findChildByTagId(facet, id);
+                Iterator<UIComponent> itr = root.getFacets().values().iterator();
+                while (itr.hasNext() && c == null)
+                {
+                    UIComponent facet = itr.next();
+                    c = ComponentSupport.findChildByTagId(facet, id);
+                }
             }
             return c;
         }
@@ -68,4 +74,17 @@ public class HtmlOutputScriptHandler extends HtmlComponentHandler implements Rel
         }
     }
 
+
+    @Override
+    public void onComponentCreated(FaceletContext ctx, UIComponent c,
+            UIComponent parent)
+    {
+        UIComponent parentCompositeComponent
+                = FaceletCompositionContext.getCurrentInstance(ctx).getCompositeComponentFromStack();
+        if (parentCompositeComponent != null)
+        {
+            c.getAttributes().put(CompositeComponentELUtils.LOCATION_KEY,
+                    parentCompositeComponent.getAttributes().get(CompositeComponentELUtils.LOCATION_KEY));
+        }
+    }
 }

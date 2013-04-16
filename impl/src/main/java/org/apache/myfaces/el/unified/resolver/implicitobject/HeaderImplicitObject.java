@@ -30,7 +30,7 @@ import javax.el.ELContext;
 public class HeaderImplicitObject extends ImplicitObject
 {
 
-    private static final String NAME = "header".intern();
+    private static final String NAME = "header";
 
     /** Creates a new instance of HeaderImplicitObject */
     public HeaderImplicitObject()
@@ -58,7 +58,8 @@ public class HeaderImplicitObject extends ImplicitObject
     @Override
     public FeatureDescriptor getDescriptor()
     {
-        return makeDescriptor(NAME, "Map whose keys are a set of request header names in the current request", Map.class);
+        return makeDescriptor(NAME, "Map whose keys are a set of request header names in the current request",
+                              Map.class);
     }
 
 }

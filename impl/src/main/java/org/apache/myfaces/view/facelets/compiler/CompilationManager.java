@@ -24,6 +24,7 @@ import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.view.facelets.FaceletHandler;
 import javax.faces.view.facelets.Tag;
 import javax.faces.view.facelets.TagAttribute;
@@ -46,7 +47,7 @@ import org.apache.myfaces.view.facelets.tag.ui.UILibrary;
  * @see org.apache.myfaces.view.facelets.compiler.Compiler
  * 
  * @author Jacob Hookom
- * @version $Id: CompilationManager.java,v 1.15 2008/07/13 19:01:34 rlubke Exp $
+ * @version $Id$
  */
 final class CompilationManager
 {
@@ -122,7 +123,9 @@ final class CompilationManager
         }
         else
         {
-            unit = new TextUnit(this.alias, this.nextTagId(), faceletsProcessingInstructions.isEscapeInlineText());
+            unit = new TextUnit(this.alias, this.nextTagId(), 
+                    faceletsProcessingInstructions.isEscapeInlineText(),
+                    faceletsProcessingInstructions.isCompressSpaces());
             this.startUnit(unit);
         }
         unit.writeInstruction(value);
@@ -149,7 +152,9 @@ final class CompilationManager
         }
         else
         {
-            unit = new TextUnit(this.alias, this.nextTagId(), faceletsProcessingInstructions.isEscapeInlineText());
+            unit = new TextUnit(this.alias, this.nextTagId(), 
+                    faceletsProcessingInstructions.isEscapeInlineText(),
+                    faceletsProcessingInstructions.isCompressSpaces());
             this.startUnit(unit);
         }
         unit.write(value);
@@ -158,7 +163,9 @@ final class CompilationManager
     public void writeComment(String text)
     {
         if (this.compiler.isTrimmingComments())
+        {
             return;
+        }
 
         if (this.finished)
         {
@@ -178,7 +185,9 @@ final class CompilationManager
         }
         else
         {
-            unit = new TextUnit(this.alias, this.nextTagId(), faceletsProcessingInstructions.isEscapeInlineText());
+            unit = new TextUnit(this.alias, this.nextTagId(), 
+                    faceletsProcessingInstructions.isEscapeInlineText(),
+                    faceletsProcessingInstructions.isCompressSpaces());
             this.startUnit(unit);
         }
 
@@ -288,9 +297,44 @@ final class CompilationManager
             }
             else
             {
-                unit = new TextUnit(this.alias, this.nextTagId(), faceletsProcessingInstructions.isEscapeInlineText());
+                unit = new TextUnit(this.alias, this.nextTagId(),
+                        faceletsProcessingInstructions.isEscapeInlineText(),
+                        faceletsProcessingInstructions.isCompressSpaces());
                 this.startUnit(unit);
             }
+            
+            if (this.compiler.isDevelopmentProjectStage())
+            {
+                String qName = null;
+                boolean isPrefixed = false;
+                TagAttribute jsfc = t.getAttributes().get("jsfc");
+                if (jsfc != null)
+                {
+                    qName = jsfc.getValue();
+                    if (jsfc.getValue().indexOf(':') > 0)
+                    {
+                        isPrefixed = true;
+                    }
+                }
+                else if (t.getQName().indexOf(':') > 0 )
+                {
+                    qName = t.getQName();
+                    isPrefixed = true;
+                }
+                if (isPrefixed)
+                {
+                    unit.addMessage(FacesMessage.SEVERITY_WARN,
+                            "Warning: The page "+alias+" declares namespace "+qname[0]+ 
+                            " and uses the tag " + qName + " , but no TagLibrary associated to namespace.", 
+                            "Warning: The page "+alias+" declares namespace "+qname[0]+ 
+                            " and uses the tag " + qName + " , but no TagLibrary associated to namespace. "+
+                            "Please check the namespace name and if it is correct, it is probably that your " +
+                            "library .taglib.xml cannot be found on the current classpath, or if you are " +
+                            "referencing a composite component library check your library folder match with the " +
+                            "namespace and can be located by the installed ResourceHandler.");
+                }
+            }
+            
             unit.startTag(t);
         }
     }
@@ -414,13 +458,13 @@ final class CompilationManager
 
     protected static boolean isRemove(String ns, String name)
     {
-        return UILibrary.Namespace.equals(ns) && "remove".equals(name);
+        return UILibrary.NAMESPACE.equals(ns) && "remove".equals(name);
     }
 
     protected static boolean isTrimmed(String ns, String name)
     {
-        return UILibrary.Namespace.equals(ns)
-                && (CompositionHandler.Name.equals(name) || ComponentRefHandler.Name.equals(name));
+        return UILibrary.NAMESPACE.equals(ns)
+                && (CompositionHandler.NAME.equals(name) || ComponentRefHandler.NAME.equals(name));
     }
     
     protected static boolean isCompositeComponentInterface(String ns, String name)
@@ -443,7 +487,8 @@ final class CompilationManager
                 log.fine(attr + " JSF Facelet Compile Directive Found");
             }
             String value = attr.getValue();
-            String namespace, localName;
+            String namespace;
+            String localName;
             int c = value.indexOf(':');
             if (c == -1)
             {
@@ -536,3 +581,4 @@ final class CompilationManager
         return faceletsProcessingInstructions;
     }
 }
+

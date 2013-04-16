@@ -53,20 +53,28 @@ public class SetPropertyActionListener implements ActionListener, StateHolder
     {
         
         if( target == null )
+        {
             throw new AbortProcessingException("@target has not been set");
+        }
 
         if( value == null )
+        {
             throw new AbortProcessingException("@value has not been set");
+        }
         
         FacesContext ctx = FacesContext.getCurrentInstance();
         
         if( ctx == null )
+        {
             throw new AbortProcessingException("FacesContext ctx is null");
+        }
         
         ELContext ectx = ctx.getELContext();
         
         if( ectx == null )
+        {
             throw new AbortProcessingException("ELContext ectx is null");
+        }
         
         // TODO use a Converter before calling setValue 
         
@@ -94,9 +102,9 @@ public class SetPropertyActionListener implements ActionListener, StateHolder
         return _transient;
     }
 
-    public void setTransient(boolean _transient)
+    public void setTransient(boolean trans)
     {
-        this._transient = _transient;
+        this._transient = trans;
     }
 
     public ValueExpression getTarget()

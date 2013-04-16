@@ -41,7 +41,7 @@ import org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport;
  * href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/tlddocs/f/view.html">tag documentation</a>.
  * 
  * @author Jacob Hookom
- * @version $Id: ViewHandler.java,v 1.5 2008/07/13 19:01:44 rlubke Exp $
+ * @version $Id$
  */
 @JSFFaceletTag(
         name = "f:view",
@@ -131,16 +131,16 @@ public final class ViewHandler extends TagHandler
                         }
                     }
                 }
-                ctx.getFacesContext().getExternalContext().getRequestMap().put("facelets.ContentType", v);
+                ctx.getFacesContext().getAttributes().put("facelets.ContentType", v);
             }
             if (this.encoding != null)
             {
                 String v = this.encoding.getValue(ctx);
-                ctx.getFacesContext().getExternalContext().getRequestMap().put("facelets.Encoding", v);
+                ctx.getFacesContext().getAttributes().put("facelets.Encoding", v);
             }
             else if (encodingValue != null)
             {
-                ctx.getFacesContext().getExternalContext().getRequestMap().put("facelets.Encoding", encodingValue);
+                ctx.getFacesContext().getAttributes().put("facelets.Encoding", encodingValue);
             }
             if (this.beforePhase != null)
             {

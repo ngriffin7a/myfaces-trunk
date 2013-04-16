@@ -19,6 +19,9 @@
 package javax.faces.component;
 
 import java.io.IOException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.el.ValueExpression;
 import javax.faces.FactoryFinder;
@@ -48,16 +51,19 @@ import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFPropert
  */
 @JSFComponent(name = "f:viewParam", bodyContent = "JSP", 
         tagClass = "org.apache.myfaces.taglib.core.ViewParamTag")
-@JSFJspProperty(name = "maxlength", returnType = "int", longDesc = "The max number or characters allowed for this param")
+@JSFJspProperty(name = "maxlength", returnType = "int",
+                longDesc = "The max number or characters allowed for this param")
 public class UIViewParameter extends UIInput
 {
+    private static final Logger log = Logger.getLogger(UIViewParameter.class.getName());
     public static final String COMPONENT_FAMILY = "javax.faces.ViewParameter";
     public static final String COMPONENT_TYPE = "javax.faces.ViewParameter";
 
     private static final String DELEGATE_FAMILY = UIInput.COMPONENT_FAMILY;
     private static final String DELEGATE_RENDERER_TYPE = "javax.faces.Text";
     
-    private static Renderer _delegateRenderer;
+    private static ConcurrentHashMap<ClassLoader,Renderer> delegateRendererMap = 
+        new ConcurrentHashMap<ClassLoader,Renderer>();
 
     public UIViewParameter()
     {
@@ -97,7 +103,7 @@ public class UIViewParameter extends UIInput
 
     public String getName()
     {
-        return (String) getStateHelper().get(PropertyKeys.name);
+        return (String) getStateHelper().eval(PropertyKeys.name);
     }
 
     public String getStringValue(FacesContext context)
@@ -250,15 +256,63 @@ public class UIViewParameter extends UIInput
 
     private static Renderer getDelegateRenderer(FacesContext context)
     {
-        if (_delegateRenderer == null)
+        ClassLoader classLoader = _ClassUtils.getContextClassLoader();
+        Renderer delegateRenderer = delegateRendererMap.get(classLoader);
+        if(delegateRenderer == null)
         {
             RenderKitFactory factory = (RenderKitFactory) FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
             RenderKit kit = factory.getRenderKit(context, RenderKitFactory.HTML_BASIC_RENDER_KIT);
 
-            _delegateRenderer = kit.getRenderer(DELEGATE_FAMILY, DELEGATE_RENDERER_TYPE);
+            delegateRenderer = kit.getRenderer(DELEGATE_FAMILY, DELEGATE_RENDERER_TYPE);
+            delegateRendererMap.put(classLoader, delegateRenderer);
         }
 
-        return _delegateRenderer;
+        return delegateRenderer;
+    }
+
+    private static void releaseRenderer() 
+    {
+        if (log.isLoggable(Level.FINEST))
+        {
+            log.finest("releaseRenderer rendererMap -> " + delegateRendererMap.toString());
+        }
+        
+        
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        
+        if (log.isLoggable(Level.FINEST))
+        {
+            log.finest("releaseRenderer classLoader -> " + classLoader.toString() );
+            log.finest("releaseRenderer renderer -> " + delegateRendererMap.get(classLoader));
+        }
+        
+        
+        delegateRendererMap.remove(classLoader);
+        
+        if (log.isLoggable(Level.FINEST))
+        {
+            log.finest("releaseRenderer renderMap -> " + delegateRendererMap.toString());
+        }
+        
+    }
+
+    @Override
+    protected FacesContext getFacesContext()
+    {
+        //In theory the parent most of the times has 
+        //the cached FacesContext instance, because this
+        //element is purely logical, and the parent is the one
+        //where encodeXXX was invoked. But only limit the
+        //search to the closest parent.
+        UIComponent parent = getParent();
+        if (parent != null && parent.isCachedFacesContext())
+        {
+            return parent.getFacesContext();
+        }
+        else
+        {
+            return super.getFacesContext();
+        }
     }
 
     /**

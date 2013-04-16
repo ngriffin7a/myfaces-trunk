@@ -27,7 +27,6 @@ import java.util.Map;
 
 import javax.el.ELException;
 import javax.el.ValueExpression;
-import javax.el.VariableMapper;
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.view.facelets.FaceletContext;
@@ -39,7 +38,10 @@ import javax.faces.view.facelets.TagHandler;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletAttribute;
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTag;
+import org.apache.myfaces.view.facelets.AbstractFaceletContext;
 import org.apache.myfaces.view.facelets.FaceletCompositionContext;
+import org.apache.myfaces.view.facelets.PageContext;
+import org.apache.myfaces.view.facelets.tag.ComponentContainerHandler;
 import org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport;
 
 /**
@@ -49,10 +51,10 @@ import org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport;
  * 
  * @author Jacob Hookom
  * @author Andrew Robinson
- * @version $Id: ForEachHandler.java,v 1.12 2008/07/13 19:01:43 rlubke Exp $
+ * @version $Id$
  */
 @JSFFaceletTag(name="c:forEach")
-public final class ForEachHandler extends TagHandler
+public final class ForEachHandler extends TagHandler implements ComponentContainerHandler
 {
 
     private static class ArrayIterator implements Iterator<Object>
@@ -158,7 +160,8 @@ public final class ForEachHandler extends TagHandler
         if (this.items == null && this.begin != null && this.end == null)
         {
             throw new TagAttributeException(this.tag, this.begin,
-                                            "If the 'items' attribute is not specified, but the 'begin' attribute is, then the 'end' attribute is required");
+                                            "If the 'items' attribute is not specified, but the 'begin' attribute is, "
+                                            + "then the 'end' attribute is required");
         }
     }
 
@@ -190,8 +193,12 @@ public final class ForEachHandler extends TagHandler
             }
             src = b;
         }
+        FaceletCompositionContext fcc = FaceletCompositionContext.getCurrentInstance(ctx);
         if (src != null)
         {
+            fcc.startComponentUniqueIdSection();
+            AbstractFaceletContext actx = (AbstractFaceletContext) ctx;
+            PageContext pctx = actx.getPageContext();
             Iterator<?> itr = this.toIterator(src);
             if (itr != null)
             {
@@ -206,10 +213,9 @@ public final class ForEachHandler extends TagHandler
 
                 String v = this.getVarName(ctx);
                 String vs = this.getVarStatusName(ctx);
-                VariableMapper vars = ctx.getVariableMapper();
                 ValueExpression ve = null;
-                ValueExpression vO = this.capture(v, vars);
-                ValueExpression vsO = this.capture(vs, vars);
+                ValueExpression vO = this.capture(v, pctx);
+                ValueExpression vsO = this.capture(vs, pctx);
                 int mi = 0;
                 Object value = null;
                 try
@@ -224,12 +230,21 @@ public final class ForEachHandler extends TagHandler
                         {
                             if (t || srcVE == null)
                             {
-                                ctx.setAttribute(v, value);
+                                if (value == null)
+                                {
+                                    pctx.getAttributes().put(v, null);
+                                }
+                                else
+                                {
+                                    pctx.getAttributes().put(v, 
+                                            ctx.getExpressionFactory().createValueExpression(
+                                                value, Object.class));
+                                }
                             }
                             else
                             {
                                 ve = this.getVarExpr(srcVE, src, value, i);
-                                vars.setVariable(v, ve);
+                                pctx.getAttributes().put(v, ve);
                             }
                         }
 
@@ -239,12 +254,21 @@ public final class ForEachHandler extends TagHandler
                             IterationStatus itrS = new IterationStatus(first, !itr.hasNext(), i, sO, eO, mO, value);
                             if (t || srcVE == null)
                             {
-                                ctx.setAttribute(vs, itrS);
+                                if (srcVE == null)
+                                {
+                                    pctx.getAttributes().put(vs, null);
+                                }
+                                else
+                                {
+                                    pctx.getAttributes().put(vs, 
+                                            ctx.getExpressionFactory().createValueExpression(
+                                                itrS, Object.class));
+                                }
                             }
                             else
                             {
                                 ve = new IterationStatusExpression(itrS);
-                                vars.setVariable(vs, ve);
+                                pctx.getAttributes().put(vs, ve);
                             }
                         }
 
@@ -266,31 +290,40 @@ public final class ForEachHandler extends TagHandler
                 }
                 finally
                 {
+                    //Remove them from PageContext
                     if (v != null)
                     {
-                        vars.setVariable(v, vO);
+                        pctx.getAttributes().put(v, vO);
+                    }
+                    else
+                    {
+                        pctx.getAttributes().remove(v);
                     }
                     if (vs != null)
                     {
-                        vars.setVariable(vs, vsO);
+                        pctx.getAttributes().put(vs, vsO);
+                    }
+                    else
+                    {
+                        pctx.getAttributes().remove(vs);
                     }
                 }
             }
+            fcc.endComponentUniqueIdSection();
         }
 
-        if (FaceletCompositionContext.getCurrentInstance(ctx).
-                isMarkInitialStateAndIsRefreshTransientBuildOnPSS())
+        if (fcc.isUsingPSSOnThisView() && fcc.isRefreshTransientBuildOnPSS() && !fcc.isRefreshingTransientBuild())
         {
             //Mark the parent component to be saved and restored fully.
             ComponentSupport.markComponentToRestoreFully(ctx.getFacesContext(), parent);
         }
     }
 
-    private final ValueExpression capture(String name, VariableMapper vars)
+    private final ValueExpression capture(String name, PageContext pctx)
     {
         if (name != null)
         {
-            return vars.setVariable(name, null);
+            return pctx.getAttributes().put(name, null);
         }
         return null;
     }
@@ -386,7 +419,8 @@ public final class ForEachHandler extends TagHandler
         }
         else
         {
-            throw new TagAttributeException(this.tag, this.items, "Must evaluate to a Collection, Map, Array, or null.");
+            throw new TagAttributeException(this.tag, this.items,
+                    "Must evaluate to a Collection, Map, Array, or null.");
         }
     }
 

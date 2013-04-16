@@ -27,7 +27,6 @@ import javax.faces.el.ValueBinding;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 import java.util.Collection;
-import java.util.Iterator;
 
 /**
  * A collection of static helper methods for locating UIComponents.
@@ -51,7 +50,9 @@ class _ComponentUtils
         while (parent != null)
         {
             if (parent instanceof NamingContainer)
+            {
                 return parent;
+            }
             if (returnRootIfNotFound)
             {
                 UIComponent nextParent = parent.getParent();
@@ -91,7 +92,9 @@ class _ComponentUtils
         {
             parent = component.getParent();
             if (parent == null)
+            {
                 return component;
+            }
             component = parent;
         }
     }
@@ -110,26 +113,117 @@ class _ComponentUtils
      */
     static UIComponent findComponent(UIComponent findBase, String id, final char separatorChar)
     {
-        if (idsAreEqual(id, findBase, separatorChar))
+        if (!(findBase instanceof NamingContainer) && idsAreEqual(id, findBase, separatorChar))
         {
             return findBase;
         }
 
-        for (Iterator<UIComponent> it = findBase.getFacetsAndChildren(); it.hasNext();)
+        int facetCount = findBase.getFacetCount();
+        if (facetCount > 0)
         {
-            UIComponent childOrFacet = it.next();
-            if (!(childOrFacet instanceof NamingContainer))
+            for (UIComponent facet : findBase.getFacets().values())
             {
-                UIComponent find = findComponent(childOrFacet, id, separatorChar);
-                if (find != null)
-                    return find;
+                if (!(facet instanceof NamingContainer))
+                {
+                    UIComponent find = findComponent(facet, id, separatorChar);
+                    if (find != null)
+                    {
+                        return find;
+                    }
+                }
+                else if (idsAreEqual(id, facet, separatorChar))
+                {
+                    return facet;
+                }
             }
-            else if (idsAreEqual(id, childOrFacet, separatorChar))
+        }
+        
+        for (int i = 0, childCount = findBase.getChildCount(); i < childCount; i++)
+        {
+            UIComponent child = findBase.getChildren().get(i);
+            if (!(child instanceof NamingContainer))
             {
-                return childOrFacet;
+                UIComponent find = findComponent(child, id, separatorChar);
+                if (find != null)
+                {
+                    return find;
+                }
+            }
+            else if (idsAreEqual(id, child, separatorChar))
+            {
+                return child;
             }
         }
 
+        if (findBase instanceof NamingContainer && idsAreEqual(id, findBase, separatorChar))
+        {
+            return findBase;
+        }
+
+        return null;
+    }
+    
+    static UIComponent findComponentChildOrFacetFrom(UIComponent parent, String id, String innerExpr)
+    {
+        if (parent.getFacetCount() > 0)
+        {
+            for (UIComponent facet : parent.getFacets().values())
+            {
+                if (id.equals(facet.getId()))
+                {
+                    if (innerExpr == null)
+                    {
+                        return facet;
+                    }
+                    else if (facet instanceof NamingContainer)
+                    {
+                        UIComponent find = facet.findComponent(innerExpr);
+                        if (find != null)
+                        {
+                            return find;
+                        }
+                    }
+                }
+                else if (!(facet instanceof NamingContainer))
+                {
+                    UIComponent find = findComponentChildOrFacetFrom(facet, id, innerExpr);
+                    if (find != null)
+                    {
+                        return find;
+                    }
+                }
+            }
+        }
+        if (parent.getChildCount() > 0)
+        {
+            for (int i = 0, childCount = parent.getChildCount(); i < childCount; i++)
+            {
+                UIComponent child = parent.getChildren().get(i);
+                if (id.equals(child.getId()))
+                {
+                    if (innerExpr == null)
+                    {
+                        return child;
+                    }
+                    else if (child instanceof NamingContainer)
+                    {
+                        UIComponent find = child.findComponent(innerExpr);
+                        if (find != null)
+                        {
+                            return find;
+                        }
+                    }
+                }
+                else if (!(child instanceof NamingContainer))
+                {
+                    UIComponent find = findComponentChildOrFacetFrom(child, id, innerExpr);
+                    if (find != null)
+                    {
+                        return find;
+                    }
+                }
+            }
+        }
         return null;
     }
 
@@ -140,8 +234,12 @@ class _ComponentUtils
     private static boolean idsAreEqual(String id, UIComponent cmp, final char separatorChar)
     {
         if (id.equals(cmp.getId()))
+        {
             return true;
+        }
 
+        /* By the spec, findComponent algorithm does not take into account UIData.rowIndex() property,
+         * because it just scan over nested plain ids. 
         if (cmp instanceof UIData)
         {
             UIData uiData = ((UIData)cmp);
@@ -152,6 +250,7 @@ class _ComponentUtils
             }
             return id.equals(cmp.getId() + separatorChar + uiData.getRowIndex());
         }
+        */
 
         return false;
     }
@@ -294,11 +393,33 @@ class _ComponentUtils
 
         return buf.toString();
     }
+    
+    /**
+     * Call {@link UIComponent#pushComponentToEL(javax.faces.context.FacesContext,javax.faces.component.UIComponent)},
+     * reads the isRendered property, call {@link
+     * UIComponent#popComponentFromEL} and returns the value of isRendered.
+     */
+    static boolean isRendered(FacesContext facesContext, UIComponent uiComponent)
+    {
+        // We must call pushComponentToEL here because ValueExpression may have 
+        // implicit object "component" used. 
+        try
+        {
+            uiComponent.pushComponentToEL(facesContext, uiComponent);
+            return uiComponent.isRendered();
+        }
+        finally
+        {       
+            uiComponent.popComponentFromEL(facesContext);
+        }
+    }
 
     private static void getPathToComponent(UIComponent component, StringBuffer buf)
     {
         if (component == null)
+        {
             return;
+        }
 
         StringBuffer intBuf = new StringBuffer();
 

@@ -28,7 +28,7 @@ import java.net.URL;
  * FaceletFactory for producing Facelets relative to the context of the underlying implementation.
  * 
  * @author Jacob Hookom
- * @version $Id: FaceletFactory.java,v 1.4 2008/07/13 19:01:39 rlubke Exp $
+ * @version $Id$
  */
 public abstract class FaceletFactory
 {
@@ -90,7 +90,8 @@ public abstract class FaceletFactory
      * @throws FacesException
      * @throws ELException
      */
-    public abstract Facelet getViewMetadataFacelet(URL url) throws IOException, FaceletException, FacesException, ELException;
+    public abstract Facelet getViewMetadataFacelet(URL url)
+            throws IOException, FaceletException, FacesException, ELException;
 
     /**
      * Return a Facelet instance as specified by the file at the passed URI. The returned facelet is used
@@ -118,7 +119,8 @@ public abstract class FaceletFactory
      * @throws FacesException
      * @throws ELException
      */
-    public abstract Facelet getCompositeComponentMetadataFacelet(URL url) throws IOException, FaceletException, FacesException, ELException;
+    public abstract Facelet getCompositeComponentMetadataFacelet(URL url)
+            throws IOException, FaceletException, FacesException, ELException;
     
     /**
      * Set the static instance

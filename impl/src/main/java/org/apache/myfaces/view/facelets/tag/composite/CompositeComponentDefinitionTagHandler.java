@@ -51,8 +51,8 @@ import org.apache.myfaces.view.facelets.tag.TagHandlerUtils;
  * <li>Push the current composite component on FaceletCompositionContext stack</li>
  * <li>Set the attributes with declared default values</li>
  * </ul>
- * @author Leonardo Uribe (latest modification by $Author: lu4242 $)
- * @version $Revision: 945454 $ $Date: 2010-05-17 20:40:21 -0500 (Lun, 17 May 2010) $
+ * @author Leonardo Uribe (latest modification by $Author$)
+ * @version $Revision$ $Date$
  */
 public final class CompositeComponentDefinitionTagHandler implements FaceletHandler
 {
@@ -114,13 +114,19 @@ public final class CompositeComponentDefinitionTagHandler implements FaceletHand
         // to resolve the related composite component via #{cc} properly).
         if (_interfaceHandler != null)
         {
-            compositeBaseParent.getAttributes()
-                .put(CompositeComponentELUtils.LOCATION_KEY, this._interfaceHandler.getLocation());
+            if (!compositeBaseParent.getAttributes().containsKey(CompositeComponentELUtils.LOCATION_KEY))
+            {
+                compositeBaseParent.getAttributes()
+                    .put(CompositeComponentELUtils.LOCATION_KEY, this._interfaceHandler.getLocation());
+            }
         }
         else if (_implementationHandler != null)
         {
-            compositeBaseParent.getAttributes()
-                .put(CompositeComponentELUtils.LOCATION_KEY, this._implementationHandler.getLocation());
+            if (!compositeBaseParent.getAttributes().containsKey(CompositeComponentELUtils.LOCATION_KEY))
+            {
+                compositeBaseParent.getAttributes()
+                    .put(CompositeComponentELUtils.LOCATION_KEY, this._implementationHandler.getLocation());
+            }
         }
         
         // Only apply if we are building composite component metadata,
@@ -144,6 +150,13 @@ public final class CompositeComponentDefinitionTagHandler implements FaceletHand
                         try
                         {
                             mctx.pushCompositeComponentToStack(compositeBaseParent);
+                            
+                            // Store the ccLevel key here
+                            if (!compositeBaseParent.getAttributes().containsKey(CompositeComponentELUtils.LEVEL_KEY))
+                            {
+                                compositeBaseParent.getAttributes()
+                                    .put(CompositeComponentELUtils.LEVEL_KEY, mctx.getCompositeComponentLevel());
+                            }
 
                             _nextHandler.apply(ctx, parent);
                             
@@ -164,7 +177,8 @@ public final class CompositeComponentDefinitionTagHandler implements FaceletHand
                             {
                                 declaredDefaultValues = Collections.emptyList();
                             }
-                            _cachedBeanInfo.getBeanDescriptor().setValue(UIComponent.ATTRS_WITH_DECLARED_DEFAULT_VALUES, declaredDefaultValues);
+                            _cachedBeanInfo.getBeanDescriptor().
+                                    setValue(UIComponent.ATTRS_WITH_DECLARED_DEFAULT_VALUES, declaredDefaultValues);
                         }
                         finally
                         {
@@ -188,6 +202,13 @@ public final class CompositeComponentDefinitionTagHandler implements FaceletHand
                     try
                     {
                         mctx.pushCompositeComponentToStack(compositeBaseParent);
+                        
+                        // Store the ccLevel key here
+                        if (!compositeBaseParent.getAttributes().containsKey(CompositeComponentELUtils.LEVEL_KEY))
+                        {
+                            compositeBaseParent.getAttributes()
+                                .put(CompositeComponentELUtils.LEVEL_KEY, mctx.getCompositeComponentLevel());
+                        }
                     
                         _nextHandler.apply(ctx, parent);
                         
@@ -208,7 +229,8 @@ public final class CompositeComponentDefinitionTagHandler implements FaceletHand
                         {
                             declaredDefaultValues = Collections.emptyList();
                         }
-                        tempBeanInfo.getBeanDescriptor().setValue(UIComponent.ATTRS_WITH_DECLARED_DEFAULT_VALUES, declaredDefaultValues);
+                        tempBeanInfo.getBeanDescriptor().
+                                setValue(UIComponent.ATTRS_WITH_DECLARED_DEFAULT_VALUES, declaredDefaultValues);
                     }
                     finally
                     {
@@ -222,6 +244,13 @@ public final class CompositeComponentDefinitionTagHandler implements FaceletHand
             try
             {
                 mctx.pushCompositeComponentToStack(compositeBaseParent);
+
+                // Store the ccLevel key here
+                if (!compositeBaseParent.getAttributes().containsKey(CompositeComponentELUtils.LEVEL_KEY))
+                {
+                    compositeBaseParent.getAttributes()
+                        .put(CompositeComponentELUtils.LEVEL_KEY, mctx.getCompositeComponentLevel());
+                }
             
                 _nextHandler.apply(ctx, parent);
             }

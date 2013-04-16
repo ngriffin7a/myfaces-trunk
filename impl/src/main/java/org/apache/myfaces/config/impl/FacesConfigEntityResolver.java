@@ -27,12 +27,13 @@ import java.util.logging.Logger;
 
 import javax.faces.context.ExternalContext;
 
-import org.apache.myfaces.shared_impl.util.ClassUtils;
+import org.apache.myfaces.shared.util.ClassUtils;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
 /**
- * DOCUMENT ME!
+ * SAX EntityResolver to provide JSF-specific resources (DTDs) for well-known identifiers.
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @author Thomas Spiegl
  * @version $Revision$ $Date$
@@ -98,14 +99,16 @@ public class FacesConfigEntityResolver
             }
             else
             {
-                if (systemId.startsWith("file:")) {
+                if (systemId.startsWith("file:"))
+                {
                     systemId = systemId.substring(7); // remove file://
                 }
                 stream = _externalContext.getResourceAsStream(systemId);
             }
         }
 
-        if (stream == null) {
+        if (stream == null)
+        {
             return null;
         }
         InputSource is = new InputSource(stream);

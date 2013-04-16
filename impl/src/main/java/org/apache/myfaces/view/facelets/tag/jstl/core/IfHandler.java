@@ -22,7 +22,9 @@ import java.io.IOException;
 
 import javax.el.ELException;
 import javax.faces.FacesException;
+import javax.faces.application.StateManager;
 import javax.faces.component.UIComponent;
+import javax.faces.event.PhaseId;
 import javax.faces.view.facelets.FaceletContext;
 import javax.faces.view.facelets.TagAttribute;
 import javax.faces.view.facelets.TagConfig;
@@ -30,8 +32,8 @@ import javax.faces.view.facelets.TagHandler;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletAttribute;
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTag;
-import org.apache.myfaces.view.facelets.AbstractFaceletContext;
 import org.apache.myfaces.view.facelets.FaceletCompositionContext;
+import org.apache.myfaces.view.facelets.tag.ComponentContainerHandler;
 import org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport;
 
 /**
@@ -40,14 +42,14 @@ import org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport;
  * scripting variable representing the evaluation of this condition
  * 
  * @author Jacob Hookom
- * @version $Id: IfHandler.java,v 1.5 2008/07/13 19:01:44 rlubke Exp $
+ * @version $Id$
  */
 @JSFFaceletTag(name="c:if")
 @JSFFaceletAttribute(
         name="scope",
         className="java.lang.String",
         longDescription="Scope for var.")
-public final class IfHandler extends TagHandler
+public final class IfHandler extends TagHandler implements ComponentContainerHandler
 {
 
     /**
@@ -77,22 +79,78 @@ public final class IfHandler extends TagHandler
 
     public void apply(FaceletContext ctx, UIComponent parent) throws IOException, FacesException, ELException
     {
-        boolean b = this.test.getBoolean(ctx);
+        FaceletCompositionContext fcc = FaceletCompositionContext.getCurrentInstance(ctx);
+        String uniqueId = fcc.startComponentUniqueIdSection();
+        Boolean restoredValue = (Boolean) ComponentSupport.restoreInitialTagState(ctx, fcc, parent, uniqueId);
+        boolean b = false;
+        boolean markInitialState = false;
+        if (restoredValue != null)
+        {
+            if (!PhaseId.RESTORE_VIEW.equals(ctx.getFacesContext().getCurrentPhaseId()))
+            {
+                b = this.test.getBoolean(ctx);
+                if (!restoredValue.equals(b))
+                {
+                    markInitialState = true;
+                }
+            }
+            else
+            {
+                b = restoredValue;
+            }
+        }
+        else
+        {
+            // No state restored, calculate
+            b = this.test.getBoolean(ctx);
+        }
+        //boolean b = getTestValue(ctx, fcc, parent, uniqueId);
         if (this.var != null)
         {
             ctx.setAttribute(var.getValue(ctx), new Boolean(b));
         }
         if (b)
         {
-            this.nextHandler.apply(ctx, parent);
+            boolean oldMarkInitialState = false;
+            Boolean isBuildingInitialState = null;
+            try
+            {
+                if (markInitialState)
+                {
+                    //set markInitialState flag
+                    oldMarkInitialState = fcc.isMarkInitialState();
+                    fcc.setMarkInitialState(true);
+                    isBuildingInitialState = (Boolean) ctx.getFacesContext().getAttributes().put(
+                            StateManager.IS_BUILDING_INITIAL_STATE, Boolean.TRUE);
+                }
+                this.nextHandler.apply(ctx, parent);
+            }
+            finally
+            {
+                if (markInitialState)
+                {
+                    //unset markInitialState flag
+                    if (isBuildingInitialState == null)
+                    {
+                        ctx.getFacesContext().getAttributes().remove(
+                                StateManager.IS_BUILDING_INITIAL_STATE);
+                    }
+                    else
+                    {
+                        ctx.getFacesContext().getAttributes().put(
+                                StateManager.IS_BUILDING_INITIAL_STATE, isBuildingInitialState);
+                    }
+                    fcc.setMarkInitialState(oldMarkInitialState);
+                }
+            }
         }
+        fcc.endComponentUniqueIdSection();
         //AbstractFaceletContext actx = (AbstractFaceletContext) ctx;
-        if (FaceletCompositionContext.getCurrentInstance(ctx).
-                isMarkInitialStateAndIsRefreshTransientBuildOnPSS())
+        ComponentSupport.saveInitialTagState(ctx, fcc, parent, uniqueId, b);
+        if (fcc.isUsingPSSOnThisView() && fcc.isRefreshTransientBuildOnPSS() && !fcc.isRefreshingTransientBuild())
         {
             //Mark the parent component to be saved and restored fully.
             ComponentSupport.markComponentToRestoreFully(ctx.getFacesContext(), parent);
         }
     }
-
 }

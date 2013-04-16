@@ -78,44 +78,53 @@ public final class ResourceResolver extends ELResolver
         {
             String reference = (String) property;
             int colonIndex = (reference).indexOf(':');
-            Resource resource = null;
+            Resource resource;
             
-            if (colonIndex == -1) {
+            if (colonIndex == -1)
+            {
                 // No library name, just create as a simple resource.
                 
                 resource = ((ResourceHandler) base).createResource (reference);
             }
             
-            else {
-                if (reference.lastIndexOf (':') != colonIndex) {
+            else
+            {
+                if (reference.lastIndexOf (':') != colonIndex)
+                {
                     // Max of one ":" allowed, so throw an exception.
                     
                     throw new ELException ("Malformed resource reference found when " +
                         "resolving " + property);
                 }
                 
-                else {
+                else
+                {
                     // Otherwise, portion before the ":" is the library name.
                     
                     String libraryName = reference.substring (0, colonIndex);
                     
                     if (CC_LIBRARY_THIS.equals(libraryName))
                     {
+                        // note in this case we don't need to resolve to an specific 
+                        // composite component, instead we need to find the libraryName of the
+                        // composite component associated with the Location. For any composite component
+                        // instance that is created under the same facelet it will be the same,
+                        // so it is enought to get the first one matching the Location object.
                         FacesContext facesContext = facesContext(context);
                         Location location = ResourceELUtils.getResourceLocationForResolver(facesContext);
-                        UIComponent cc = CompositeComponentELUtils.getCompositeComponentBasedOnLocation(facesContext, location);
+                        UIComponent cc = CompositeComponentELUtils.
+                                getCompositeComponentBasedOnLocation(facesContext, location);
                         Resource ccResource = (Resource) cc.getAttributes().get(Resource.COMPONENT_RESOURCE_KEY); 
                         libraryName = ccResource.getLibraryName();
                     }
                     
-                    resource = ((ResourceHandler) base).createResource
-                        ( reference.substring(colonIndex + 1), libraryName);
+                    resource = ((ResourceHandler) base).createResource(reference.substring(colonIndex+1), libraryName);
                 }
             }
             
+            context.setPropertyResolved(true);
             if (resource != null)
             {
-                context.setPropertyResolved(true);
                 return resource.getRequestPath();
             }
         }

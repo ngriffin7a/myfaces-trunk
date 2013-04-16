@@ -19,7 +19,6 @@
 package javax.faces.validator;
 
 import javax.faces.component.PartialStateHolder;
-import javax.faces.component.StateHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
@@ -86,8 +85,14 @@ public class LengthValidator
                          Object value)
             throws ValidatorException
     {
-        if (facesContext == null) throw new NullPointerException("facesContext");
-        if (uiComponent == null) throw new NullPointerException("uiComponent");
+        if (facesContext == null)
+        {
+            throw new NullPointerException("facesContext");
+        }
+        if (uiComponent == null)
+        {
+            throw new NullPointerException("uiComponent");
+        }
 
         if (value == null)
         {
@@ -188,15 +193,35 @@ public class LengthValidator
     @Override
     public boolean equals(Object o)
     {
-        if (this == o) return true;
-        if (!(o instanceof LengthValidator)) return false;
+        if (this == o)
+        {
+            return true;
+        }
+        if (!(o instanceof LengthValidator))
+        {
+            return false;
+        }
 
-        final LengthValidator lengthValidator = (LengthValidator)o;
+        LengthValidator lengthValidator = (LengthValidator)o;
 
-        if (_maximum != null ? !_maximum.equals(lengthValidator._maximum) : lengthValidator._maximum != null) return false;
-        if (_minimum != null ? !_minimum.equals(lengthValidator._minimum) : lengthValidator._minimum != null) return false;
+        if (_maximum != null ? !_maximum.equals(lengthValidator._maximum) : lengthValidator._maximum != null)
+        {
+            return false;
+        }
+        if (_minimum != null ? !_minimum.equals(lengthValidator._minimum) : lengthValidator._minimum != null)
+        {
+            return false;
+        }
 
         return true;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = _minimum != null ? _minimum.hashCode() : 0;
+        result = 31 * result + (_maximum != null ? _maximum.hashCode() : 0);
+        return result;
     }
 
     private boolean _initialStateMarked = false;

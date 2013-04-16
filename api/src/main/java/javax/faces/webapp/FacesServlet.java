@@ -80,7 +80,9 @@ public final class FacesServlet implements Servlet
         _facesContextFactory = null;
         _lifecycle = null;
         if (log.isLoggable(Level.FINEST))
+        {
             log.finest("destroy");
+        }
     }
 
     public ServletConfig getServletConfig()
@@ -107,7 +109,9 @@ public final class FacesServlet implements Servlet
     public void init(ServletConfig servletConfig) throws ServletException
     {
         if (log.isLoggable(Level.FINEST))
+        {
             log.finest("init begin");
+        }
         _servletConfig = servletConfig;
         _facesContextFactory = (FacesContextFactory)FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
         // TODO: null-check for Weblogic, that tries to initialize Servlet before ContextListener
@@ -118,7 +122,9 @@ public final class FacesServlet implements Servlet
         LifecycleFactory lifecycleFactory = (LifecycleFactory)FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
         _lifecycle = lifecycleFactory.getLifecycle(getLifecycleId());
         if (log.isLoggable(Level.FINEST))
+        {
             log.finest("init end");
+        }
     }
 
     public void service(ServletRequest request, ServletResponse response) throws IOException, ServletException
@@ -160,9 +166,11 @@ public final class FacesServlet implements Servlet
         }
         
         // If none of the cases described above in the specification for this method apply to the servicing of this 
-        // request, the following action must be taken to service the request.
+        // request, the following action must be taken to service the request:
         if (log.isLoggable(Level.FINEST))
+        {
             log.finest("service begin");
+        }
 
         // Acquire a FacesContext instance for this request.
         FacesContext facesContext = prepareFacesContext(request, response);
@@ -171,7 +179,7 @@ public final class FacesServlet implements Servlet
         {
             // jsf 2.0 : get the current ResourceHandler and
             // check if it is a resource request, if true
-            // delegate to ResourceHandler, if continue with
+            // delegate to ResourceHandler, else continue with
             // the lifecycle.
             // Acquire the ResourceHandler for this request by calling Application.getResourceHandler(). 
             ResourceHandler resourceHandler = facesContext.getApplication().getResourceHandler();
@@ -184,7 +192,7 @@ public final class FacesServlet implements Servlet
             }
             else
             {
-                // If this returns false, handle as follow
+                // If this returns false, handle as follows:
                 // call Lifecycle.execute(javax.faces.context.FacesContext)
                 _lifecycle.execute(facesContext);
                 // followed by Lifecycle.render(javax.faces.context.FacesContext).
@@ -199,7 +207,7 @@ public final class FacesServlet implements Servlet
             Throwable cause = e.getCause();
             if (cause == null)
             {
-                // If the cause is null extract the message from the FacesException put it inside of a new 
+                // If the cause is null extract the message from the FacesException, put it inside of a new 
                 // ServletException instance, and pass the FacesException instance as the root cause, then 
                 // rethrow the ServletException instance.
                 throw new ServletException(e.getLocalizedMessage(), e);
@@ -227,7 +235,9 @@ public final class FacesServlet implements Servlet
             facesContext.release();
         }
         if (log.isLoggable(Level.FINEST))
+        {
             log.finest("service end");
+        }
     }
 
     private FacesContext prepareFacesContext(ServletRequest request, ServletResponse response)

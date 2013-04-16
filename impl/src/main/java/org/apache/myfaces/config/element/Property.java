@@ -19,14 +19,11 @@
 package org.apache.myfaces.config.element;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author Martin Marinschek
- * @version $Revision: 698799 $ $Date: 2008-09-24 21:03:47 -0500 (mié, 24 sep 2008) $
+ * @version $Revision$ $Date$
  *
      The "property" element represents a JavaBean property of the Java class
      represented by our parent element.
@@ -36,7 +33,8 @@ import java.util.List;
      property names that will be recognized when performing introspection
      against that class via java.beans.Introspector.
 
-    <!ELEMENT property        (description*, display-name*, icon*, property-name, property-class, default-value?, suggested-value?, property-extension*)>
+    <!ELEMENT property        (description*, display-name*, icon*, property-name, property-class,
+default-value?, suggested-value?, property-extension*)>
 
  *          <p/>
  */

@@ -1,7 +1,41 @@
-myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._ExtDom", myfaces._impl._util._Dom, {
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to you under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*only quirksmode browsers get the quirks part of the code*/
+_MF_SINGLTN && _MF_SINGLTN(_PFX_UTIL + "_ExtDom", myfaces._impl._util._Dom, {
 
     _Lang:myfaces._impl._util._Lang,
     _RT:myfaces._impl.core._Runtime,
+
+    constructor_:function () {
+        this._callSuper("constructor_");
+        var _T = this;
+        //we only apply lazy if the jsf part is loaded already
+        //otherwise we are at the correct position
+        if (myfaces._impl.core.Impl) {
+            this._RT.iterateClasses(function (proto) {
+                if (proto._Dom) {
+                    proto._Dom = _T;
+                }
+            });
+        }
+
+        myfaces._impl._util._Dom = _T;
+    },
 
     /**
      * finds the elements by an attached style class
@@ -10,8 +44,8 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._ExtDom", 
      * @param styleClass the styleclass to search for
      * @param deepScan if set to true a deep scan can be performed
      */
-    findByStyleClass : function(fragment, styleClass, deepScan) {
-        var filter = this._Lang.hitch(this, function(node) {
+    findByStyleClass:function (fragment, styleClass, deepScan) {
+        var filter = this._Lang.hitch(this, function (node) {
             var classes = this.getClasses(node);
             var len = classes.length;
             if (len == 0) return false;
@@ -27,7 +61,8 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._ExtDom", 
 
             //html5 getElementsByClassname
 
-            //TODO implement this
+            //TODO implement this, there is a better way to check for styleclasses
+            //check the richfaces code for that one
             /*if (fragment.getElementsByClassName && deepScan) {
              return fragment.getElementsByClassName(styleClass);
              }
@@ -46,13 +81,13 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._ExtDom", 
                         result.push(fragment);
                     }
                     return result;
-                } catch(e) {
+                } catch (e) {
                     //in case the selector bombs we have to retry with a different method
                 }
             } else {
                 //fallback to the classical filter methods if we cannot use the
                 //html 5 selectors for whatever reason
-                return this._callDelegate("findAll", fragment, filter, deepScan);
+                return this._callSuper("findAll", fragment, filter, deepScan);
             }
 
         } finally {
@@ -78,9 +113,9 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._ExtDom", 
      * in the dom node, multiple names are allowed though but we do not use it that way
      *
      */
-    getElementFromForm : function(nameId, form, nameSearch, localOnly) {
+    getElementFromForm:function (nameId, form, nameSearch, localOnly) {
         if (!nameId) {
-            throw Error("_Dom.getElementFromForm an item id or name must be given");
+            throw this._Lang.makeException(new Error(), null, null, this._nameSpace, "getElementFromForm", "_Dom.getElementFromForm an item id or name must be given");
         }
 
         if (!form) {
@@ -118,13 +153,9 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._ExtDom", 
      * checks for a a element with the name or identifier of nameOrIdentifier
      * @returns the found node or null otherwise
      */
-    findFormElement : function(form, nameId) {
-        if (!form) {
-            throw Error("_Dom.findFormElement a form node must be given");
-        }
-        if (!nameId) {
-            throw Error("_Dom.findFormElement an element or identifier must be given");
-        }
+    findFormElement:function (form, nameId) {
+        this._assertStdParams(form, nameId, "findFormElement");
+
         if (!form.elements) return null;
         return form.elements[nameId] || this.findById(form, nameId);
     },
@@ -138,7 +169,7 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._ExtDom", 
      * @param fragment the dom fragment to find the item for
      * @param itemId the identifier of the item
      */
-    findById : function(fragment, itemId) {
+    findById:function (fragment, itemId) {
         //we have to escape here
 
         if (fragment.getElementById) {
@@ -155,12 +186,12 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._ExtDom", 
                 }
 
                 return fragment.querySelector("#" + newItemId);
-            } catch(e) {
+            } catch (e) {
                 //in case the selector bombs we retry manually
             }
         }
 
-        var filter = function(node) {
+        var filter = function (node) {
             return node && node.id && node.id === itemId;
         };
         try {
@@ -171,10 +202,6 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._ExtDom", 
         }
     },
 
-
-
-
-
     /**
      * findfirst functionality, finds the first element
      * for which the filter can trigger
@@ -182,7 +209,7 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._ExtDom", 
      * @param fragment the processed fragment/domNode
      * @param filter a filter closure which either returns true or false depending on triggering or not
      */
-    findFirst : function(fragment, filter) {
+    findFirst:function (fragment, filter) {
         this._Lang.assertType(filter, "function");
 
         if (document.createTreeWalker && NodeFilter) {
@@ -200,7 +227,7 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._ExtDom", 
      * @param fragment the starting fragment
      * @param filter the filter to be applied to
      */
-    _recursionFindFirst: function(fragment, filter) {
+    _recursionFindFirst:function (fragment, filter) {
         if (filter(fragment)) {
             return fragment;
         }
@@ -229,7 +256,7 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._ExtDom", 
      * @param fragment the fragment to be started from
      * @param filter the filter which has to be used
      */
-    _iteratorFindFirst:function(fragment, filter) {
+    _iteratorFindFirst:function (fragment, filter) {
         if (filter(fragment)) {
             return fragment;
         }
@@ -244,7 +271,99 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._ExtDom", 
             return treeWalker.currentNode;
         }
         return null;
+    },
+
+    /**
+     * a closure based child filtering routine
+     * which steps one level down the tree and
+     * applies the filter closure
+     *
+     * @param item the node which has to be investigates
+     * @param filter the filter closure
+     */
+    getFilteredChild:function (item, filter) {
+
+        this._assertStdParams(item, filter, "getFilteredChild");
+
+        var childs = item.childNodes;
+        if (!childs) {
+            return null;
+        }
+        for (var c = 0, cLen = childs.length; c < cLen; c++) {
+            if (filter(childs[c])) {
+                return childs[c];
+            }
+        }
+        return null;
+    },
+
+    /**
+     * gets the child of an item with a given tag name
+     * @param {Node} item - parent element
+     * @param {String} childName - TagName of child element
+     * @param {String} itemName - name  attribute the child can have (can be null)
+     * @Deprecated
+     */
+    getChild:function (item, childName, itemName) {
+        var _Lang = this._Lang;
+
+        function filter(node) {
+            return node.tagName
+                    && _Lang.equalsIgnoreCase(node.tagName, childName)
+                    && (!itemName || (itemName && itemName == node.getAttribute("name")));
+
+        }
+
+        return this.getFilteredChild(item, filter);
+    },
+
+    /**
+     * fetches the style class for the node
+     * cross ported from the dojo toolkit
+     * @param {String|Object} node the node to search
+     * @returns the className or ""
+     */
+    getClass:function (node) {
+        node = this.byId(node);
+        if (!node) {
+            return "";
+        }
+        var cs = "";
+        if (node.className) {
+            cs = node.className;
+        } else {
+            if (this.hasAttribute(node, "class")) {
+                cs = this.getAttribute(node, "class");
+            }
+        }
+        return cs.replace(/^\s+|\s+$/g, "");
+    },
+
+    /**
+     * fetches the class for the node,
+     * cross ported from the dojo toolkit
+     * @param {String|Object}node the node to search
+     */
+    getClasses:function (node) {
+        var c = this.getClass(node);
+        return (c == "") ? [] : c.split(/\s+/g);
+    },
+    _isTable:function (item) {
+        return "table" == (item.nodeName || item.tagName).toLowerCase();
+    },
+
+    deleteScripts:function (nodeList) {
+        if (!nodeList || !nodeList.length) return;
+        var len = nodeList.length;
+        for (var cnt = 0; cnt < len; cnt++) {
+            var item = nodeList[cnt];
+            var src = item.getAttribute('src');
+            if (src && src.length > 0 && (src.indexOf("/jsf.js") != -1 || src.indexOf("/jsf-uncompressed.js") != -1)) {
+                continue;
+            }
+            this.deleteItem(item);
+        }
     }
 
-
 });
+

@@ -83,7 +83,8 @@ public class DigesterFacesConfigDispenserImpl extends FacesConfigDispenser
     
     private Map<String, Converter> converterConfigurationByClassName = new HashMap<String, Converter>();
     
-    private Map<String, org.apache.myfaces.config.impl.digester.elements.RenderKit> renderKits = new LinkedHashMap<String, org.apache.myfaces.config.impl.digester.elements.RenderKit>();
+    private Map<String, org.apache.myfaces.config.impl.digester.elements.RenderKit> renderKits
+            = new LinkedHashMap<String, org.apache.myfaces.config.impl.digester.elements.RenderKit>();
     
     private List<String> actionListeners = new ArrayList<String>();
     private List<String> elResolvers = new ArrayList<String>();
@@ -95,6 +96,7 @@ public class DigesterFacesConfigDispenserImpl extends FacesConfigDispenser
     private List<String> variableResolver = new ArrayList<String>();
     private List<String> viewHandlers = new ArrayList<String>();
     private List<String> defaultValidatorIds = new ArrayList<String>();
+    private List<String> defaultAnnotatedValidatorIds = new ArrayList<String>();
     
     private List<ManagedBean> managedBeans = new ArrayList<ManagedBean>();
     
@@ -105,7 +107,8 @@ public class DigesterFacesConfigDispenserImpl extends FacesConfigDispenser
     
     private List<NamedEvent> namedEvents = new ArrayList<NamedEvent>();
     
-    private Map<String, FaceletsProcessing> faceletsProcessingByFileExtension = new HashMap<String, FaceletsProcessing>();
+    private Map<String, FaceletsProcessing> faceletsProcessingByFileExtension
+            = new HashMap<String, FaceletsProcessing>();
     
     /**
      * Add another unmarshalled faces config object.
@@ -181,6 +184,13 @@ public class DigesterFacesConfigDispenserImpl extends FacesConfigDispenser
                 
                 // now add all default-validator entries (could be zero)
                 defaultValidatorIds.addAll(application.getDefaultValidatorIds());
+            }
+            else
+            {
+                //If isDefaultValidatorsPresent() is false, and there are still 
+                //default validators, it means they were added using annotations, so
+                //they are not affected by the empty entry according to section 3.5.3
+                defaultAnnotatedValidatorIds.addAll(application.getDefaultValidatorIds());
             }
             
             systemEventListeners.addAll(application.getSystemEventListeners());
@@ -554,7 +564,10 @@ public class DigesterFacesConfigDispenserImpl extends FacesConfigDispenser
      */
     public Collection<String> getDefaultValidatorIds ()
     {
-        return defaultValidatorIds;
+        List<String> allDefaultValidatorIds = new ArrayList<String>();
+        allDefaultValidatorIds.addAll(defaultAnnotatedValidatorIds);
+        allDefaultValidatorIds.addAll(defaultValidatorIds);
+        return allDefaultValidatorIds;
     }
     
     /**
@@ -606,7 +619,9 @@ public class DigesterFacesConfigDispenserImpl extends FacesConfigDispenser
     }
 
     /**
-     * @return Iterator over {@link org.apache.myfaces.config.element.ClientBehaviorRenderer ClientBehaviorRenderer}s for the given renderKitId
+     * @return Iterator over
+     * {@link org.apache.myfaces.config.element.ClientBehaviorRenderer ClientBehaviorRenderer}s
+     * for the given renderKitId
      */
     public Collection<ClientBehaviorRenderer> getClientBehaviorRenderers (String renderKitId)
     {

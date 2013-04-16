@@ -98,6 +98,7 @@ public class RestoreViewExecutorTest extends FacesTestCase
         ViewDeclarationLanguage vdl = _mocksControl.createMock(ViewDeclarationLanguage.class);
         //expect(_restoreViewSupport.deriveViewId(same(_facesContext), eq("calculatedViewId"))).andReturn("calculatedViewId");
         expect(_viewHandler.deriveLogicalViewId(same(_facesContext), eq("calculatedViewId"))).andReturn("calculatedViewId");
+        expect(_facesContext.getResponseComplete()).andReturn(false);
         expect(_viewHandler.getViewDeclarationLanguage(same(_facesContext), eq("calculatedViewId")))
             .andReturn(vdl);
         expect(vdl.getViewMetadata(same(_facesContext), eq("calculatedViewId")))
@@ -180,7 +181,14 @@ public class RestoreViewExecutorTest extends FacesTestCase
      */
     public void testGetRestoreViewSupport() throws Exception
     {
-        assertTrue(DefaultRestoreViewSupport.class.equals(new RestoreViewExecutor().getRestoreViewSupport().getClass()));
+        expect(_facesContext.getExternalContext()).andReturn(_externalContext).anyTimes();
+        expect(_externalContext.getInitParameter("javax.faces.FACELETS_VIEW_MAPPINGS")).andReturn(null).anyTimes();
+        expect(_externalContext.getInitParameter("facelets.VIEW_MAPPINGS")).andReturn(null).anyTimes();
+        expect(_externalContext.getInitParameter("javax.faces.FACELETS_SUFFIX")).andReturn(null).anyTimes();
+        expect(_externalContext.getInitParameter("javax.faces.DEFAULT_SUFFIX")).andReturn(null).anyTimes();
+        _mocksControl.replay();
+        assertTrue(DefaultRestoreViewSupport.class.equals(new RestoreViewExecutor().getRestoreViewSupport(_facesContext).getClass()));
+        _mocksControl.verify();
     }
 
     /**

@@ -46,6 +46,8 @@ class _SelectItemsIterator implements Iterator<SelectItem>
     
     private static final Logger log = Logger.getLogger(_SelectItemsIterator.class.getName());
     
+    private static final Iterator<UIComponent> _EMPTY_UICOMPONENT_ITERATOR = new _EmptyIterator<UIComponent>();
+    
     // org.apache.myfaces.shared.util.SelectItemsIterator uses JSFAttr
     private static final String VAR_ATTR = "var";
     private static final String ITEM_VALUE_ATTR = "itemValue";
@@ -56,14 +58,16 @@ class _SelectItemsIterator implements Iterator<SelectItem>
     private static final String NO_SELECTION_VALUE_ATTR = "noSelectionValue";
     
     private final Iterator<UIComponent> _children;
-    private Iterator<? extends Object> _nestedItems;
+    private Iterator<?> _nestedItems;
     private SelectItem _nextItem;
     private UISelectItems _currentUISelectItems;
     private FacesContext _facesContext;
 
     public _SelectItemsIterator(UIComponent selectItemsParent, FacesContext facesContext)
     {
-        _children = selectItemsParent.getChildren().iterator();
+        _children = selectItemsParent.getChildCount() > 0
+                        ? selectItemsParent.getChildren().iterator()
+                        : _EMPTY_UICOMPONENT_ITERATOR;
         _facesContext = facesContext;
     }
 
@@ -149,7 +153,7 @@ class _SelectItemsIterator implements Iterator<SelectItem>
                 {
                     // value is any kind of array (primitive or non-primitive)
                     // --> we have to use class Array to get the values
-                    final int length = Array.getLength(value);
+                    int length = Array.getLength(value);
                     Collection<Object> items = new ArrayList<Object>(length);
                     for (int i = 0; i < length; i++)
                     {
@@ -228,7 +232,7 @@ class _SelectItemsIterator implements Iterator<SelectItem>
                 // write the current item into the request map under the key listed in var, if available
                 boolean wroteRequestMapVarValue = false;
                 Object oldRequestMapVarValue = null;
-                final String var = (String) attributeMap.get(VAR_ATTR);
+                String var = (String) attributeMap.get(VAR_ATTR);
                 if(var != null && !"".equals(var))
                 {
                     // save the current value of the key listed in var from the request map

@@ -31,11 +31,11 @@ import javax.faces.view.facelets.TagAttributeException;
 /**
  * 
  * @author Jacob Hookom
- * @version $Id: BeanPropertyTagRule.java,v 1.3 2008/07/13 19:01:35 rlubke Exp $
+ * @version $Id$
  */
 public final class BeanPropertyTagRule extends MetaRule
 {
-    public final static BeanPropertyTagRule Instance = new BeanPropertyTagRule();
+    public final static BeanPropertyTagRule INSTANCE = new BeanPropertyTagRule();
 
     public Metadata applyRule(String name, TagAttribute attribute, MetadataTarget meta)
     {

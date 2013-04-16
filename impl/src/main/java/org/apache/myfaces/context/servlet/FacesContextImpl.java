@@ -20,14 +20,16 @@ package org.apache.myfaces.context.servlet;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.faces.FactoryFinder;
+import javax.faces.application.ApplicationFactory;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.faces.context.PartialViewContext;
 import javax.faces.context.PartialViewContextFactory;
 import javax.faces.context.ResponseStream;
@@ -41,7 +43,7 @@ import javax.servlet.ServletResponse;
 
 import org.apache.myfaces.context.ReleaseableExternalContext;
 import org.apache.myfaces.context.ReleaseableFacesContextFactory;
-import org.apache.myfaces.shared_impl.util.NullIterator;
+import org.apache.myfaces.shared.util.NullIterator;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
@@ -67,6 +69,9 @@ public class FacesContextImpl extends FacesContextImplBase
     private boolean _validationFailed = false;
     private PartialViewContext _partialViewContext = null;
     private ReleaseableFacesContextFactory _facesContextFactory = null;
+    
+    private PartialViewContextFactory _partialViewContextFactory = null;
+    private RenderKitFactory _renderKitFactory = null;
 
     // ~ Constructors -------------------------------------------------------------------------------
     
@@ -104,6 +109,22 @@ public class FacesContextImpl extends FacesContextImplBase
         
         _facesContextFactory = facesContextFactory;
     }
+    
+    public FacesContextImpl(final ExternalContext externalContext,
+            final ReleaseableExternalContext defaultExternalContext , 
+            final ReleaseableFacesContextFactory facesContextFactory,
+            final ApplicationFactory applicationFactory,
+            final RenderKitFactory renderKitFactory,
+            final PartialViewContextFactory partialViewContextFactory)
+    {
+        // setCurrentInstance is called in constructor of super class
+        super(externalContext, defaultExternalContext, applicationFactory, 
+                renderKitFactory);
+        
+        _facesContextFactory = facesContextFactory;
+        _renderKitFactory = renderKitFactory;
+        _partialViewContextFactory = partialViewContextFactory;
+    }
 
     // ~ Methods ------------------------------------------------------------------------------------
     
@@ -119,7 +140,9 @@ public class FacesContextImpl extends FacesContextImplBase
         _responseWriter = null;
         _maximumSeverity = null;
         _partialViewContext = null;
-        
+        _renderKitFactory = null;
+        _partialViewContextFactory = null;
+
         if (_facesContextFactory != null)
         {
             _facesContextFactory.release();
@@ -150,7 +173,7 @@ public class FacesContextImpl extends FacesContextImplBase
 
         if (_messages == null)
         {
-            _messages = new HashMap<String, List<FacesMessage>>();
+            _messages = new LinkedHashMap<String, List<FacesMessage>>();
             _orderedMessages = new ArrayList<FacesMessage>();
         }
         
@@ -268,9 +291,13 @@ public class FacesContextImpl extends FacesContextImplBase
         if (_partialViewContext == null)
         {
             //Get through factory finder
-            PartialViewContextFactory factory = (PartialViewContextFactory)
-                FactoryFinder.getFactory(FactoryFinder.PARTIAL_VIEW_CONTEXT_FACTORY);
-            _partialViewContext = factory.getPartialViewContext(this);
+            if (_partialViewContextFactory == null)
+            {
+                _partialViewContextFactory = (PartialViewContextFactory)
+                    FactoryFinder.getFactory(FactoryFinder.PARTIAL_VIEW_CONTEXT_FACTORY);
+            }
+            // Put actual facesContext as param, not this - this can be wrapped
+            _partialViewContext = _partialViewContextFactory.getPartialViewContext(FacesContext.getCurrentInstance());
         }
         return _partialViewContext;
     }
@@ -353,6 +380,7 @@ public class FacesContextImpl extends FacesContextImplBase
         assertNotReleased();
 
         RenderKit renderKit = getRenderKit();
+        FacesContext facesContext = FacesContext.getCurrentInstance();
         if (renderKit == null)
         {
             // NullPointerException with StateManager, because
@@ -371,12 +399,15 @@ public class FacesContextImpl extends FacesContextImplBase
             // will be the one tied to faces-config selected RenderKit. But the usual 
             // method to check if a request is a postback, is always detect the param
             // javax.faces.ViewState, so there is no problem after all.
-            String renderKitId = this.getApplication().getViewHandler().calculateRenderKitId(this);
-            RenderKitFactory factory = (RenderKitFactory) 
-                FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
-            renderKit = factory.getRenderKit(this, renderKitId);            
+            String renderKitId = facesContext.getApplication().getViewHandler().calculateRenderKitId(facesContext);
+            if (_renderKitFactory == null)
+            {
+                _renderKitFactory = (RenderKitFactory) 
+                    FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+            }
+            renderKit = _renderKitFactory.getRenderKit(facesContext, renderKitId);
         }
-        return renderKit.getResponseStateManager().isPostback(this);            
+        return renderKit.getResponseStateManager().isPostback(facesContext);
     }
 
     @Override

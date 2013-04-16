@@ -44,7 +44,7 @@ import org.apache.myfaces.view.facelets.tag.MetaTagHandlerImpl;
  * 
  * @deprecated use javax.faces.view.facelets.ValidatorHandler instead
  * @author Jacob Hookom
- * @version $Id: ValidateHandler.java,v 1.4 2008/07/13 19:01:46 rlubke Exp $
+ * @version $Id$
  */
 @Deprecated
 public class ValidateHandler extends MetaTagHandlerImpl
@@ -126,7 +126,8 @@ public class ValidateHandler extends MetaTagHandlerImpl
         {
             throw new TagException(
                                    this.tag,
-                                   "Default behavior invoked of requiring a validator-id passed in the constructor, must override ValidateHandler(ValidatorConfig)");
+                                   "Default behavior invoked of requiring a validator-id passed in the "
+                                   + "constructor, must override ValidateHandler(ValidatorConfig)");
         }
         return ctx.getFacesContext().getApplication().createValidator(this.validatorId);
     }

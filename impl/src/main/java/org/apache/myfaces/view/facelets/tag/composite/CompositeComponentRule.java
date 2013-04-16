@@ -52,8 +52,6 @@ final class CompositeComponentRule extends MetaRule
         public void applyMetadata(FaceletContext ctx, Object instance)
         {
             ((UIComponent) instance).getAttributes().put(_name, _value);
-            //((UIComponent) instance).setValueExpression(_name,
-            //        ctx.getFacesContext().getApplication().getExpressionFactory().createValueExpression(_value, Object.class));
         }
     }
     
@@ -111,7 +109,7 @@ final class CompositeComponentRule extends MetaRule
     //private final static Logger log = Logger.getLogger("facelets.tag.component");
     private final static Logger log = Logger.getLogger(CompositeComponentRule.class.getName());
 
-    public final static CompositeComponentRule Instance = new CompositeComponentRule();
+    public final static CompositeComponentRule INSTANCE = new CompositeComponentRule();
 
     public CompositeComponentRule()
     {

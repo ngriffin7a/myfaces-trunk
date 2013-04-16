@@ -21,6 +21,13 @@ package javax.faces.application;
 
 import junit.framework.TestCase;
 
+import javax.faces.application.FacesMessage.Severity;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Map;
+
 public class FacesMessageTest extends TestCase
 {
 
@@ -183,4 +190,55 @@ public class FacesMessageTest extends TestCase
         assertEquals(0, FacesMessage.SEVERITY_ERROR.compareTo(FacesMessage.SEVERITY_ERROR));
         assertEquals(0, FacesMessage.SEVERITY_FATAL.compareTo(FacesMessage.SEVERITY_FATAL));
     }
+
+    public void testSeverityValues()
+    {
+        // JSF spec requires this list to be sorted by ordinal
+        for (int i = 0, sz = FacesMessage.VALUES.size(); i < sz; i++)
+        {
+            FacesMessage.Severity severity = (Severity) FacesMessage.VALUES.get(i);
+            assertEquals(i + 1, severity.getOrdinal());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void testSeverityValuesMap()
+    {
+        Map<String, FacesMessage.Severity> severityMap = (Map<String, FacesMessage.Severity>) FacesMessage.VALUES_MAP;
+
+        for (Map.Entry<String, FacesMessage.Severity> e : severityMap.entrySet())
+        {
+            assertEquals(e.getKey(), e.getValue().toString());
+        }
+    }
+
+    public void testSerialization() throws Exception
+    {
+        String summary = "summary";
+        String detail = "detail";
+        FacesMessage msg = new FacesMessage(summary, detail);
+
+        // check if properties are set correctly
+        assertEquals(msg.getSeverity(), FacesMessage.SEVERITY_INFO);
+        assertEquals(msg.getSummary(), summary);
+        assertEquals(msg.getDetail(), detail);
+        assertEquals(msg.isRendered(), false);
+
+        // serialize instance
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream out = new ObjectOutputStream(baos);
+        out.writeObject(msg);
+        out.close();
+
+        // deserialize instance
+        ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()));
+        FacesMessage deserialized = (FacesMessage) in.readObject();
+
+        // FacesMessage properties must equal!
+        assertSame(msg.getSeverity(), deserialized.getSeverity());
+        assertEquals(msg.getSummary(), deserialized.getSummary());
+        assertEquals(msg.getDetail(), deserialized.getDetail());
+        assertEquals(msg.isRendered(), deserialized.isRendered());
+    }
+
 }

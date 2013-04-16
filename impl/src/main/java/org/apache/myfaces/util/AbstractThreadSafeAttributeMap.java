@@ -37,9 +37,9 @@ import java.util.Set;
  */
 public abstract class AbstractThreadSafeAttributeMap<V> extends AbstractMap<String, V>
 {
-    private Set<String> _keySet;
-    private Collection<V> _values;
-    private Set<Entry<String, V>> _entrySet;
+    private Set<String> _keySet = new KeySet();
+    private Collection<V> _values =  new Values();
+    private Set<Entry<String, V>> _entrySet = new EntrySet();
 
     @Override
     public void clear()
@@ -81,7 +81,7 @@ public abstract class AbstractThreadSafeAttributeMap<V> extends AbstractMap<Stri
     @Override
     public Set<Entry<String, V>> entrySet()
     {
-        return (_entrySet != null) ? _entrySet : (_entrySet = new EntrySet());
+        return _entrySet;
     }
 
     @Override
@@ -99,7 +99,7 @@ public abstract class AbstractThreadSafeAttributeMap<V> extends AbstractMap<Stri
     @Override
     public Set<String> keySet()
     {
-        return (_keySet != null) ? _keySet : (_keySet = new KeySet());
+        return _keySet;
     }
 
     @Override
@@ -122,9 +122,9 @@ public abstract class AbstractThreadSafeAttributeMap<V> extends AbstractMap<Stri
     @Override
     public final V remove(final Object key)
     {
-        final String key_ = key.toString();
-        final V retval = getAttribute(key_);
-        removeAttribute(key_);
+        final String keyString = key.toString();
+        final V retval = getAttribute(keyString);
+        removeAttribute(keyString);
         return retval;
     }
 
@@ -143,7 +143,7 @@ public abstract class AbstractThreadSafeAttributeMap<V> extends AbstractMap<Stri
     @Override
     public Collection<V> values()
     {
-        return (_values != null) ? _values : (_values = new Values());
+        return _values;
     }
 
     abstract protected V getAttribute(String key);
@@ -224,7 +224,8 @@ public abstract class AbstractThreadSafeAttributeMap<V> extends AbstractMap<Stri
 
         public E next()
         {
-            return getValue(_currentKey = _i.next());
+            _currentKey = _i.next();
+            return getValue(_currentKey);
         }
 
         protected abstract E getValue(String attributeName);
@@ -396,19 +397,29 @@ public abstract class AbstractThreadSafeAttributeMap<V> extends AbstractMap<Stri
         public boolean equals(final Object obj)
         {
             if (this == obj)
+            {
                 return true;
+            }
             if (obj == null)
+            {
                 return false;
+            }
             if (getClass() != obj.getClass())
+            {
                 return false;
+            }
             final EntrySetEntry other = (EntrySetEntry)obj;
             if (_currentKey == null)
             {
                 if (other._currentKey != null)
+                {
                     return false;
+                }
             }
             else if (!_currentKey.equals(other._currentKey))
+            {
                 return false;
+            }
             return true;
         }
 

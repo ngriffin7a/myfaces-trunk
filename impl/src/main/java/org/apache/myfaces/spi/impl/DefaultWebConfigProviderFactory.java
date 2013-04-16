@@ -21,6 +21,7 @@ package org.apache.myfaces.spi.impl;
 import java.lang.reflect.InvocationTargetException;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,7 +29,7 @@ import java.util.logging.Logger;
 import javax.faces.FacesException;
 import javax.faces.context.ExternalContext;
 
-import org.apache.myfaces.shared_impl.util.ClassUtils;
+import org.apache.myfaces.shared.util.ClassUtils;
 import org.apache.myfaces.spi.ServiceProviderFinderFactory;
 import org.apache.myfaces.spi.WebConfigProvider;
 import org.apache.myfaces.spi.WebConfigProviderFactory;
@@ -63,7 +64,7 @@ public class DefaultWebConfigProviderFactory extends WebConfigProviderFactory
         {
             if (System.getSecurityManager() != null)
             {
-                returnValue = AccessController.doPrivileged(new java.security.PrivilegedExceptionAction<WebConfigProvider>()
+                returnValue = AccessController.doPrivileged(new PrivilegedExceptionAction<WebConfigProvider>()
                         {
                             public WebConfigProvider run() throws ClassNotFoundException,
                                     NoClassDefFoundError,
@@ -120,7 +121,8 @@ public class DefaultWebConfigProviderFactory extends WebConfigProviderFactory
         List<String> classList = (List<String>) externalContext.getApplicationMap().get(WEB_CONFIG_PROVIDER_LIST);
         if (classList == null)
         {
-            classList = ServiceProviderFinderFactory.getServiceProviderFinder(externalContext).getServiceProviderList(WEB_CONFIG_PROVIDER);
+            classList = ServiceProviderFinderFactory.getServiceProviderFinder(externalContext).
+                    getServiceProviderList(WEB_CONFIG_PROVIDER);
             externalContext.getApplicationMap().put(WEB_CONFIG_PROVIDER_LIST, classList);
         }
 

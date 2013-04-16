@@ -36,13 +36,13 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFJspAttribute;
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFJspTag;
-import org.apache.myfaces.shared_impl.util.ClassUtils;
+import org.apache.myfaces.shared.util.ClassUtils;
 
 /**
  * Register a PhaseListener instance
  * 
  * @author martin.haimberger
- * @version $Revision: 462929 $ $Date: 2006-10-11 21:26:36 +0100 (mi�, 11 oct 2006) $
+ * @version $Revision$ $Date$
  */
 @JSFJspTag(name = "f:phaseListener", bodyContent = "empty")
 public class PhaseListenerTag extends TagSupport

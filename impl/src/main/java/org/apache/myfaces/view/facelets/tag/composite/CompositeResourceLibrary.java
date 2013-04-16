@@ -34,9 +34,9 @@ import javax.faces.view.facelets.Tag;
 import javax.faces.view.facelets.TagConfig;
 import javax.faces.view.facelets.TagHandler;
 
-import org.apache.myfaces.shared_impl.util.ArrayUtils;
-import org.apache.myfaces.shared_impl.util.StringUtils;
-import org.apache.myfaces.shared_impl.util.WebConfigParamUtils;
+import org.apache.myfaces.shared.util.ArrayUtils;
+import org.apache.myfaces.shared.util.StringUtils;
+import org.apache.myfaces.shared.util.WebConfigParamUtils;
 import org.apache.myfaces.view.facelets.tag.TagLibrary;
 
 /**
@@ -51,13 +51,15 @@ public class CompositeResourceLibrary implements TagLibrary
 {
     public final static String NAMESPACE_PREFIX = "http://java.sun.com/jsf/composite/";
     
+    private final ResourceHandler _resourceHandler;
     private Pattern _acceptPatterns;
     private String _extension;
     private String[] _defaultSuffixesArray;
     
-    public CompositeResourceLibrary()
+    public CompositeResourceLibrary(FacesContext facesContext)
     {
         super();
+        _resourceHandler = facesContext.getApplication().getResourceHandler();
 
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         
@@ -65,7 +67,8 @@ public class CompositeResourceLibrary implements TagLibrary
 
         _extension = loadFaceletExtension(externalContext);
         
-        String defaultSuffixes = WebConfigParamUtils.getStringInitParameter(externalContext, ViewHandler.DEFAULT_SUFFIX_PARAM_NAME, ViewHandler.DEFAULT_SUFFIX );
+        String defaultSuffixes = WebConfigParamUtils.getStringInitParameter(externalContext,
+                ViewHandler.DEFAULT_SUFFIX_PARAM_NAME, ViewHandler.DEFAULT_SUFFIX );
         
         _defaultSuffixesArray = StringUtils.splitShortString(defaultSuffixes, ' ');
         
@@ -187,13 +190,10 @@ public class CompositeResourceLibrary implements TagLibrary
     {
         if (ns != null && ns.startsWith(NAMESPACE_PREFIX))
         {
-            ResourceHandler resourceHandler = 
-                FacesContext.getCurrentInstance().getApplication().getResourceHandler();
-            
             if (ns.length() > NAMESPACE_PREFIX.length())
             {
                 String libraryName = ns.substring(NAMESPACE_PREFIX.length());
-                return resourceHandler.libraryExists(libraryName);
+                return _resourceHandler.libraryExists(libraryName);
             }
         }        
         return false;
@@ -203,9 +203,6 @@ public class CompositeResourceLibrary implements TagLibrary
     {
         if (ns != null && ns.startsWith(NAMESPACE_PREFIX))
         {
-            ResourceHandler resourceHandler = 
-                FacesContext.getCurrentInstance().getApplication().getResourceHandler();
-            
             if (ns.length() > NAMESPACE_PREFIX.length())
             {
                 String libraryName = ns.substring(NAMESPACE_PREFIX.length());
@@ -215,7 +212,8 @@ public class CompositeResourceLibrary implements TagLibrary
                     String resourceName = localName + defaultSuffix;
                     if (handles(resourceName))
                     {
-                        Resource compositeComponentResource = resourceHandler.createResource(resourceName, libraryName);
+                        Resource compositeComponentResource = 
+                            _resourceHandler.createResource(resourceName, libraryName);
                         if (compositeComponentResource != null)
                         {
                             URL url = compositeComponentResource.getURL();
@@ -239,9 +237,6 @@ public class CompositeResourceLibrary implements TagLibrary
     {
         if (ns != null && ns.startsWith(NAMESPACE_PREFIX))
         {
-            ResourceHandler resourceHandler = 
-                FacesContext.getCurrentInstance().getApplication().getResourceHandler();
-            
             if (ns.length() > NAMESPACE_PREFIX.length())
             {
                 String libraryName = ns.substring(NAMESPACE_PREFIX.length());
@@ -250,17 +245,25 @@ public class CompositeResourceLibrary implements TagLibrary
                     String resourceName = localName + defaultSuffix;
                     if (handles(resourceName))
                     {
-                        Resource compositeComponentResourceWrapped = resourceHandler.createResource(resourceName, libraryName);
+                        // MYFACES-3308 If a composite component exists, it requires to 
+                        // be always resolved. In other words, it should always exists a default.
+                        // The call here for resourceHandler.createResource, just try to get
+                        // the Resource and if it does not exists, it just returns null.
+                        // The intention of this code is just create an instance and pass to
+                        // CompositeComponentResourceTagHandler. Then, its values 
+                        // (resourceName, libraryName) will be used to derive the real instance
+                        // to use in a view, based on the locale used.
+                        Resource compositeComponentResourceWrapped
+                                = _resourceHandler.createResource(resourceName, libraryName);
                         if (compositeComponentResourceWrapped != null)
                         {
-                            Resource compositeComponentResource = new CompositeResouceWrapper(compositeComponentResourceWrapped);
-                            if (compositeComponentResource != null)
-                            {
-                                ComponentConfig componentConfig = new ComponentConfigWrapper(tag,
-                                        "javax.faces.NamingContainer", null);
-                                
-                                return new CompositeComponentResourceTagHandler(componentConfig, compositeComponentResource);
-                            }
+                            Resource compositeComponentResource
+                                    = new CompositeResouceWrapper(compositeComponentResourceWrapped);
+                            ComponentConfig componentConfig = new ComponentConfigWrapper(tag,
+                                    "javax.faces.NamingContainer", null);
+
+                            return new CompositeComponentResourceTagHandler(componentConfig,
+                                                                            compositeComponentResource);
                         }
                     }
                 }
@@ -268,8 +271,9 @@ public class CompositeResourceLibrary implements TagLibrary
         }
         return null;
     }
-    
-    private static class ComponentConfigWrapper implements ComponentConfig {
+
+    private static class ComponentConfigWrapper implements ComponentConfig
+    {
 
         protected final TagConfig parent;
 
@@ -278,29 +282,35 @@ public class CompositeResourceLibrary implements TagLibrary
         protected final String rendererType;
 
         public ComponentConfigWrapper(TagConfig parent, String componentType,
-                String rendererType) {
+                                      String rendererType)
+        {
             this.parent = parent;
             this.componentType = componentType;
             this.rendererType = rendererType;
         }
 
-        public String getComponentType() {
+        public String getComponentType()
+        {
             return this.componentType;
         }
 
-        public String getRendererType() {
+        public String getRendererType()
+        {
             return this.rendererType;
         }
 
-        public FaceletHandler getNextHandler() {
+        public FaceletHandler getNextHandler()
+        {
             return this.parent.getNextHandler();
         }
 
-        public Tag getTag() {
+        public Tag getTag()
+        {
             return this.parent.getTag();
         }
 
-        public String getTagId() {
+        public String getTagId()
+        {
             return this.parent.getTagId();
         }
     }

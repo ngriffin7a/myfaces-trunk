@@ -29,11 +29,11 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.behavior.ClientBehaviorHolder;
 import javax.faces.context.FacesContext;
 
-import org.apache.myfaces.shared_impl.util.StringUtils;
+import org.apache.myfaces.shared.util.StringUtils;
 
 /**
- * @author Leonardo Uribe (latest modification by $Author: lu4242 $)
- * @version $Revision: 808704 $ $Date: 2009-08-27 19:56:06 -0500 (jue, 27 ago 2009) $
+ * @author Leonardo Uribe (latest modification by $Author$)
+ * @version $Revision$ $Date$
  */
 public class ClientBehaviorAttachedObjectTargetImpl 
     implements ClientBehaviorAttachedObjectTarget, Serializable
@@ -79,13 +79,16 @@ public class ClientBehaviorAttachedObjectTargetImpl
                 
                 if (innerComponent != null)
                 {
-                    if (innerComponent instanceof ClientBehaviorHolder || UIComponent.isCompositeComponent(innerComponent))
+                    if (innerComponent instanceof ClientBehaviorHolder ||
+                        UIComponent.isCompositeComponent(innerComponent))
                     {
-                        targetsList.add(new ClientBehaviorRedirectEventComponentWrapper(innerComponent, getName(), getEvent()));
+                        targetsList.add(
+                                new ClientBehaviorRedirectEventComponentWrapper(innerComponent, getName(), getEvent()));
                     }
                     else
                     {
-                        throw new FacesException("Component with clientId "+innerComponent.getClientId()+ "should be instance of ClientBehaviorHolder");
+                        throw new FacesException("Component with clientId " + innerComponent.getClientId(facesContext)
+                                                 + "should be instance of ClientBehaviorHolder");
                     }
                 }
             }
@@ -103,15 +106,18 @@ public class ClientBehaviorAttachedObjectTargetImpl
                 UIComponent innerComponent = topLevelComponent.findComponent(getName());
                 if (innerComponent != null)
                 {
-                    if (innerComponent instanceof ClientBehaviorHolder || UIComponent.isCompositeComponent(innerComponent))
+                    if (innerComponent instanceof ClientBehaviorHolder ||
+                        UIComponent.isCompositeComponent(innerComponent))
                     {
                         List<UIComponent> targetsList = new ArrayList<UIComponent>(1);
-                        targetsList.add(new ClientBehaviorRedirectEventComponentWrapper(innerComponent, getName(), getEvent()));
+                        targetsList.add(
+                                new ClientBehaviorRedirectEventComponentWrapper(innerComponent, getName(), getEvent()));
                         return targetsList;
                     }
                     else
                     {
-                        throw new FacesException("Component with clientId "+innerComponent.getClientId()+ "should be instance of ClientBehaviorHolder");
+                        throw new FacesException("Component with clientId "+ innerComponent.getClientId(facesContext)
+                                                 + "should be instance of ClientBehaviorHolder");
                     }
                 }
             }
@@ -125,7 +131,7 @@ public class ClientBehaviorAttachedObjectTargetImpl
         {
             return StringUtils.splitShortString((String) _targets.getValue(context.getELContext()), ' ');
         }
-        return org.apache.myfaces.shared_impl.util.ArrayUtils.EMPTY_STRING_ARRAY;
+        return org.apache.myfaces.shared.util.ArrayUtils.EMPTY_STRING_ARRAY;
     }
     
     public void setName(ValueExpression name)

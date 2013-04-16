@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.el.ValueExpression;
 import javax.faces.application.ProjectStage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -237,7 +236,8 @@ public class AttributeHandler extends TagHandler implements InterfaceDescriptorC
     public void apply(FaceletContext ctx, UIComponent parent)
             throws IOException
     {
-        UIComponent compositeBaseParent = FaceletCompositionContext.getCurrentInstance(ctx).getCompositeComponentFromStack();
+        UIComponent compositeBaseParent
+                = FaceletCompositionContext.getCurrentInstance(ctx).getCompositeComponentFromStack();
 
         CompositeComponentBeanInfo beanInfo = 
             (CompositeComponentBeanInfo) compositeBaseParent.getAttributes()
@@ -364,7 +364,8 @@ public class AttributeHandler extends TagHandler implements InterfaceDescriptorC
             }
             if (_methodSignature != null)
             {
-                attributeDescriptor.setValue("method-signature", _methodSignature.getValueExpression(ctx, String.class));
+                attributeDescriptor.setValue("method-signature",
+                                             _methodSignature.getValueExpression(ctx, String.class));
             }
             if (_type != null)
             {
@@ -372,7 +373,8 @@ public class AttributeHandler extends TagHandler implements InterfaceDescriptorC
             }
             if (_targetAttributeName != null)
             {
-                attributeDescriptor.setValue("targetAttributeName", _targetAttributeName.getValueExpression(ctx, String.class));
+                attributeDescriptor.setValue("targetAttributeName",
+                                             _targetAttributeName.getValueExpression(ctx, String.class));
             }
             
             // If ProjectStage is Development, The "displayName", "shortDescription",
@@ -409,10 +411,4 @@ public class AttributeHandler extends TagHandler implements InterfaceDescriptorC
     {
         _cacheable = cacheable;
     }
-
-    //@Override
-    //public FaceletHandler getNextHandler()
-    //{
-    //    return nextHandler;
-    //}
 }

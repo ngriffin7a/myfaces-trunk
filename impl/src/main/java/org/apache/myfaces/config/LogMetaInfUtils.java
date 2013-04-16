@@ -19,7 +19,7 @@
 
 package org.apache.myfaces.config;
 
-import org.apache.myfaces.shared_impl.util.ClassUtils;
+import org.apache.myfaces.shared.util.ClassUtils;
 
 import javax.faces.FacesException;
 import java.net.URL;
@@ -34,7 +34,8 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class LogMetaInfUtils {
+class LogMetaInfUtils
+{
 
     private static final Logger log = Logger.getLogger(LogMetaInfUtils.class.getName());
 
@@ -65,7 +66,8 @@ class LogMetaInfUtils {
     @SuppressWarnings("unchecked")
     protected static void logMetaInf()
     {
-        if (!log.isLoggable(Level.WARNING)) {
+        if (!log.isLoggable(Level.WARNING))
+        {
           return;
         }
 
@@ -134,7 +136,8 @@ class LogMetaInfUtils {
         }
     }
 
-    protected static void addJarInfo(Map<String, List<JarInfo>> libs, URL url) {
+    protected static void addJarInfo(Map<String, List<JarInfo>> libs, URL url)
+    {
         Matcher matcher = REGEX_LIBRARY_PATTERN.matcher(url.toString());
         if (matcher.matches())
         {

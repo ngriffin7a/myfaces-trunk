@@ -32,7 +32,7 @@ import javax.faces.component.UIComponent;
 public class ComponentImplicitObject extends ImplicitObject
 {
 
-    private static final String NAME = "component".intern();
+    private static final String NAME = "component";
 
     /** Creates a new instance of ComponentImplicitObject */
     public ComponentImplicitObject()
@@ -60,6 +60,7 @@ public class ComponentImplicitObject extends ImplicitObject
     @Override
     public FeatureDescriptor getDescriptor()
     {
-        return makeDescriptor(NAME, "Represents the component most recently pushed using UIComponent.pushComponentToEL", UIComponent.class);
+        return makeDescriptor(NAME, "Represents the component most recently pushed using UIComponent.pushComponentToEL",
+                              UIComponent.class);
     }
 }

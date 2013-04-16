@@ -23,16 +23,16 @@ import javax.faces.component.behavior.AjaxBehavior;
 import javax.faces.component.behavior.ClientBehaviorHolder;
 import javax.faces.context.ResponseWriter;
 
-import org.apache.myfaces.shared_impl.renderkit.html.HtmlResponseWriterImpl;
-import org.apache.myfaces.shared_impl.util.FastWriter;
+import org.apache.myfaces.shared.renderkit.html.HtmlResponseWriterImpl;
+import org.apache.myfaces.shared.util.FastWriter;
 import org.apache.myfaces.test.base.junit4.AbstractJsfTestCase;
 import org.apache.myfaces.test.config.ConfigParser;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * @author Leonardo Uribe (latest modification by $Author: jankeesvanandel $)
- * @version $Revision: 799929 $ $Date: 2009-08-01 16:29:33 -0500 (sáb, 01 ago 2009) $
+ * @author Leonardo Uribe (latest modification by $Author$)
+ * @version $Revision$ $Date$
  */
 public abstract class AbstractClientBehaviorTestCase extends AbstractJsfTestCase
 {

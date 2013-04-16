@@ -30,7 +30,7 @@ import javax.faces.view.facelets.TagAttribute;
 /**
  * 
  * @author Jacob Hookom
- * @version $Id: ValueHolderRule.java,v 1.4 2008/07/13 19:01:46 rlubke Exp $
+ * @version $Id$
  */
 public final class ValueHolderRule extends MetaRule
 {
@@ -100,7 +100,7 @@ public final class ValueHolderRule extends MetaRule
         }
     }
 
-    public final static ValueHolderRule Instance = new ValueHolderRule();
+    public final static ValueHolderRule INSTANCE = new ValueHolderRule();
 
     public Metadata applyRule(String name, TagAttribute attribute, MetadataTarget meta)
     {

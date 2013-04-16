@@ -29,22 +29,25 @@ import javax.el.MethodExpression;
 import javax.el.MethodInfo;
 import javax.el.MethodNotFoundException;
 import javax.el.PropertyNotFoundException;
+import javax.faces.FacesWrapper;
 import javax.faces.view.facelets.TagAttribute;
 
 /**
  * 
  * 
  * @author Jacob Hookom
- * @version $Id: TagMethodExpression.java,v 1.7 2008/07/13 19:01:43 rlubke Exp $
+ * @version $Id$
  */
-public final class TagMethodExpression extends MethodExpression implements Externalizable
+public final class TagMethodExpression
+        extends MethodExpression
+        implements Externalizable, FacesWrapper<MethodExpression>
 {
 
     private static final long serialVersionUID = 1L;
 
     private String attr;
     private MethodExpression orig;
-
+    
     public TagMethodExpression()
     {
         super();
@@ -131,5 +134,10 @@ public final class TagMethodExpression extends MethodExpression implements Exter
     public String toString()
     {
         return this.attr + ": " + this.orig;
+    }
+
+    public MethodExpression getWrapped()
+    {
+        return this.orig;
     }
 }

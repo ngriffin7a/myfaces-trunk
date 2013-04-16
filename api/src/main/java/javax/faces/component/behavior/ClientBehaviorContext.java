@@ -24,16 +24,19 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
 /**
- * @author Simon Lessard (latest modification by $Author: slessard $)
- * @version $Revision: 696523 $ $Date: 2009-03-14 15:23:50 -0400 (mer., 17 sept. 2008) $
+ * @author Simon Lessard (latest modification by $Author$)
+ * @version $Revision$ $Date$
  * 
  * @since 2.0
  */
 public abstract class ClientBehaviorContext
 {
 
-    public static ClientBehaviorContext createClientBehaviorContext(FacesContext context, UIComponent component, String eventName,
-                                                        String sourceId, Collection<Parameter> parameters)
+    public static ClientBehaviorContext createClientBehaviorContext(FacesContext context,
+                                                                    UIComponent component,
+                                                                    String eventName,
+                                                                    String sourceId,
+                                                                    Collection<Parameter> parameters)
     {
         // This method is weird... Creating a dummy impl class seems stupid, yet I don't see any other way...
         if(context == null)
@@ -63,8 +66,8 @@ public abstract class ClientBehaviorContext
     public abstract String getSourceId();
 
     /**
-     * @author Simon Lessard (latest modification by $Author: slessard $)
-     * @version $Revision: 696523 $ $Date: 2009-03-14 15:15:41 -0400 (mer., 17 sept. 2008) $
+     * @author Simon Lessard (latest modification by $Author$)
+     * @version $Revision$ $Date$
      * 
      * @since 2.0
      */

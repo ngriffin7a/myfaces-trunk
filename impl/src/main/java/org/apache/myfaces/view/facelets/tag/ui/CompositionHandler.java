@@ -26,7 +26,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.el.ELException;
-import javax.el.VariableMapper;
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.view.facelets.FaceletContext;
@@ -39,14 +38,13 @@ import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFacelet
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTag;
 import org.apache.myfaces.view.facelets.AbstractFaceletContext;
 import org.apache.myfaces.view.facelets.TemplateClient;
-import org.apache.myfaces.view.facelets.el.VariableMapperWrapper;
 import org.apache.myfaces.view.facelets.tag.TagHandlerUtils;
 
 /**
  * TODO: REFACTOR - This class could easily use a common parent with DecoratorHandler
  * 
  * @author Jacob Hookom
- * @version $Id: CompositionHandler.java,v 1.14 2008/07/13 19:01:42 rlubke Exp $
+ * @version $Id$
  */
 @JSFFaceletTag(name="ui:composition")
 public final class CompositionHandler extends TagHandler implements TemplateClient
@@ -55,7 +53,7 @@ public final class CompositionHandler extends TagHandler implements TemplateClie
     //private static final Logger log = Logger.getLogger("facelets.tag.ui.composition");
     private static final Logger log = Logger.getLogger(CompositionHandler.class.getName());
 
-    public final static String Name = "composition";
+    public final static String NAME = "composition";
 
     /**
      * The resolvable URI of the template to use. The content within the composition tag will 
@@ -123,18 +121,28 @@ public final class CompositionHandler extends TagHandler implements TemplateClie
     {
         if (_template != null)
         {
-            VariableMapper orig = ctx.getVariableMapper();
+            //VariableMapper orig = ctx.getVariableMapper();
+            //if (_params != null)
+            //{
+            //    VariableMapper vm = new VariableMapperWrapper(orig);
+            //    ctx.setVariableMapper(vm);
+            //    for (int i = 0; i < _params.length; i++)
+            //    {
+            //        _params[i].apply(ctx, parent);
+            //    }
+            //}
+            AbstractFaceletContext actx = (AbstractFaceletContext) ctx;
+            actx.extendClient(this);
             if (_params != null)
             {
-                VariableMapper vm = new VariableMapperWrapper(orig);
-                ctx.setVariableMapper(vm);
+                //VariableMapper vm = new VariableMapperWrapper(orig);
+                //ctx.setVariableMapper(vm);
                 for (int i = 0; i < _params.length; i++)
                 {
                     _params[i].apply(ctx, parent);
                 }
             }
-            AbstractFaceletContext actx = (AbstractFaceletContext) ctx;
-            actx.extendClient(this);
+
             try
             {
                 ctx.includeFacelet(parent, _template.getValue(ctx));
@@ -142,7 +150,7 @@ public final class CompositionHandler extends TagHandler implements TemplateClie
             finally
             {
                 actx.popExtendedClient(this);
-                ctx.setVariableMapper(orig);
+                //ctx.setVariableMapper(orig);
             }
         }
         else

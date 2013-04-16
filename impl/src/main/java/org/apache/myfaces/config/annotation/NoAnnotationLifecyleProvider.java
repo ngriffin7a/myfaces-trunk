@@ -18,7 +18,7 @@
  */
 package org.apache.myfaces.config.annotation;
 
-import org.apache.myfaces.shared_impl.util.ClassUtils;
+import org.apache.myfaces.shared.util.ClassUtils;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -31,7 +31,8 @@ public class NoAnnotationLifecyleProvider implements LifecycleProvider2
 
     }
 
-    public Object newInstance(String className) throws InstantiationException, IllegalAccessException, InvocationTargetException, ClassNotFoundException
+    public Object newInstance(String className)
+            throws InstantiationException, IllegalAccessException, InvocationTargetException, ClassNotFoundException
     {
         return ClassUtils.classForName(className).newInstance();
     }

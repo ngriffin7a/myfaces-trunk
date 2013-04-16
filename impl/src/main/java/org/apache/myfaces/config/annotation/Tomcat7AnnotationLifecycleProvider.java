@@ -21,6 +21,7 @@ package org.apache.myfaces.config.annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.faces.FacesException;
@@ -28,7 +29,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.naming.NamingException;
 
-import org.apache.myfaces.shared_impl.util.ClassUtils;
+import org.apache.myfaces.shared.util.ClassUtils;
 import org.apache.tomcat.InstanceManager;
 
 /**
@@ -52,7 +53,10 @@ public class Tomcat7AnnotationLifecycleProvider implements
             InstantiationException, NamingException, InvocationTargetException
     {
         Class<?> clazz = ClassUtils.classForName(className);
-        log.info("Creating instance of " + className);
+        if (log.isLoggable(Level.FINEST))
+        {
+            log.finest("Creating instance of " + className);
+        }
         Object object = clazz.newInstance();
 
         return object;

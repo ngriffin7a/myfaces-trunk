@@ -42,8 +42,8 @@ import javax.faces.context.FacesContext;
  * A facesListener could hold PartialStateHolder instances, so it 
  * is necessary to provide convenient methods to track deltas.
  * 
- * @author Leonardo Uribe (latest modification by $Author: lu4242 $)
- * @version $Revision: 899525 $ $Date: 2010-01-14 23:53:46 -0500 (Jue, 14 Ene 2010) $
+ * @author Leonardo Uribe (latest modification by $Author$)
+ * @version $Revision$ $Date$
  */
 class _DeltaList<T> implements List<T>, PartialStateHolder
 {
@@ -165,6 +165,7 @@ class _DeltaList<T> implements List<T>, PartialStateHolder
 
     public boolean retainAll(Collection<?> c)
     {
+        clearInitialState();
         return _delegate.retainAll(c);
     }
 
@@ -222,7 +223,8 @@ class _DeltaList<T> implements List<T>, PartialStateHolder
                 if (lst[i] instanceof _AttachedDeltaWrapper)
                 {
                     //Delta
-                    ((StateHolder)_delegate.get(j)).restoreState(context, ((_AttachedDeltaWrapper) lst[i]).getWrappedStateObject());
+                    ((StateHolder)_delegate.get(j)).restoreState(context,
+                            ((_AttachedDeltaWrapper) lst[i]).getWrappedStateObject());
                     j++;
                 }
                 else if (lst[i] != null)
@@ -340,8 +342,10 @@ class _DeltaList<T> implements List<T>, PartialStateHolder
         _initialStateMarked = true;
         if (_delegate != null)
         {
-            for (T value : _delegate)
+            int size = _delegate.size();
+            for (int i = 0; i < size; i++)
             {
+                T value = _delegate.get(i);
                 if (value instanceof PartialStateHolder)
                 {
                     ((PartialStateHolder)value).markInitialState();

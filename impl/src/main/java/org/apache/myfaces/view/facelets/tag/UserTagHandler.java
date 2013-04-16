@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.el.ELException;
-import javax.el.VariableMapper;
+import javax.el.ValueExpression;
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.view.facelets.FaceletContext;
@@ -39,7 +39,6 @@ import javax.faces.view.facelets.TagHandler;
 import org.apache.myfaces.view.facelets.AbstractFaceletContext;
 import org.apache.myfaces.view.facelets.TemplateClient;
 import org.apache.myfaces.view.facelets.TemplateContext;
-import org.apache.myfaces.view.facelets.el.VariableMapperWrapper;
 import org.apache.myfaces.view.facelets.impl.TemplateContextImpl;
 import org.apache.myfaces.view.facelets.tag.ui.DefineHandler;
 
@@ -48,9 +47,9 @@ import org.apache.myfaces.view.facelets.tag.ui.DefineHandler;
  * including the targeted Facelet file.
  * 
  * @author Jacob Hookom
- * @version $Id: UserTagHandler.java,v 1.12 2008/07/13 19:01:35 rlubke Exp $
+ * @version $Id$
  */
-final class UserTagHandler extends TagHandler implements TemplateClient
+final class UserTagHandler extends TagHandler implements TemplateClient, ComponentContainerHandler
 {
 
     protected final TagAttribute[] _vars;
@@ -88,30 +87,39 @@ final class UserTagHandler extends TagHandler implements TemplateClient
      * Facelet. Finally, replace the old VariableMapper.
      * 
      * @see TagAttribute#getValueExpression(FaceletContext, Class)
-     * @see VariableMapper
-     * @see javax.faces.view.facelets.FaceletHandler#apply(javax.faces.view.facelets.FaceletContext, javax.faces.component.UIComponent)
+     * @see javax.el.VariableMapper
+     * @see javax.faces.view.facelets.FaceletHandler#apply(javax.faces.view.facelets.FaceletContext,
+     *        javax.faces.component.UIComponent)
      */
     public void apply(FaceletContext ctx, UIComponent parent) throws IOException, FacesException, FaceletException,
             ELException
     {
-        VariableMapper orig = ctx.getVariableMapper();
-
-        // setup a variable map
-        if (this._vars.length > 0)
-        {
-            VariableMapper varMapper = new VariableMapperWrapper(orig);
-            for (int i = 0; i < this._vars.length; i++)
-            {
-                varMapper.setVariable(this._vars[i].getLocalName(), this._vars[i].getValueExpression(ctx, Object.class));
-            }
-            ctx.setVariableMapper(varMapper);
-        }
-
         AbstractFaceletContext actx = (AbstractFaceletContext) ctx;
         // eval include
         try
         {
+            String[] names = null;
+            ValueExpression[] values = null;
+            if (this._vars.length > 0)
+            {
+                names = new String[_vars.length];
+                values = new ValueExpression[_vars.length];
+                for (int i = 0; i < _vars.length; i++)
+                {
+                    names[i] = _vars[i].getLocalName();
+                    values[i] = _vars[i].getValueExpression(ctx, Object.class);
+                }
+            }
             actx.pushTemplateContext(new TemplateContextImpl());
+            if (this._vars.length > 0)
+            {
+                for (int i = 0; i < this._vars.length; i++)
+                {
+                    ((AbstractFaceletContext) ctx).getTemplateContext().setParameter(names[i], values[i]);
+                }
+            }
+            //Disable caching always, even in 'always' mode
+            actx.getTemplateContext().setAllowCacheELExpressions(false);
             actx.pushClient(this);
             ctx.includeFacelet(parent, this._location);
         }
@@ -125,7 +133,7 @@ final class UserTagHandler extends TagHandler implements TemplateClient
             // make sure we undo our changes
             actx.popClient(this);
             actx.popTemplateContext();
-            ctx.setVariableMapper(orig);
+            //ctx.setVariableMapper(orig);
         }
     }
 

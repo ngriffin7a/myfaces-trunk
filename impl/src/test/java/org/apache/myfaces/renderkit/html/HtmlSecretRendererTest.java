@@ -33,8 +33,8 @@ import org.apache.myfaces.test.mock.MockRenderKitFactory;
 import org.apache.myfaces.test.mock.MockResponseWriter;
 
 /**
- * @author Bruno Aranda (latest modification by $Author: baranda $)
- * @version $Revision: 451814 $ $Date: 2006-10-01 22:28:42 +0100 (dom, 01 oct 2006) $
+ * @author Bruno Aranda (latest modification by $Author$)
+ * @version $Revision$ $Date$
  */
 public class HtmlSecretRendererTest extends AbstractJsfTestCase
 {
@@ -81,7 +81,7 @@ public class HtmlSecretRendererTest extends AbstractJsfTestCase
         facesContext.renderResponse();
 
         String output = writer.getWriter().toString();
-        assertEquals("<input type=\"password\" name=\"j_id0\"/>", output);
+        assertEquals("<input type=\"password\" name=\"j_id__v_0\"/>", output);
     }
 
     public void testHtmlPropertyPassTru() throws Exception

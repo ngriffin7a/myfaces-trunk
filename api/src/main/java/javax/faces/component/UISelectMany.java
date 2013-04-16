@@ -366,7 +366,8 @@ public class UISelectMany extends UIInput
                 if (!_SelectItemsUtil.matchValue(context, this, itemValue, items.iterator(), converter)
                         || (
                             this.isRequired()
-                            && _SelectItemsUtil.isNoSelectionOption(context, this, itemValue, items.iterator(), converter)
+                            && _SelectItemsUtil.isNoSelectionOption(context, this, itemValue,
+                                                                    items.iterator(), converter)
                         ))
                 {    
                     _MessageUtils.addErrorMessage(context, this, INVALID_MESSAGE_ID,
@@ -419,7 +420,7 @@ public class UISelectMany extends UIInput
         }
         else
         {
-            Class<? extends Object> valueClass = convertedValue.getClass();
+            Class<?> valueClass = convertedValue.getClass();
             if (valueClass.isArray())
             {
                 return new _PrimitiveArrayIterator(convertedValue);

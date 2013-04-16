@@ -107,6 +107,23 @@ public class HtmlTextRendererTest extends AbstractJsfTestCase
         assertEquals("<span class=\"myStyleClass\">Output</span>", output);
         assertNotSame("Output", output);
     }
+    
+    /**
+     * Don't add span over escape
+     * @throws IOException
+     */
+    public void testEscapeNoSpan() throws IOException
+    {
+        outputText.setValue("Output");
+        outputText.setEscape(true);
+
+        outputText.encodeEnd(facesContext);
+        facesContext.renderResponse();
+
+        String output = writer.getWriter().toString();
+
+        assertEquals("Output", output);
+    }
 
     public void testHtmlPropertyPassTru() throws Exception
     {
@@ -136,9 +153,13 @@ public class HtmlTextRendererTest extends AbstractJsfTestCase
                     throws ConverterException
             {
                 if (value == null || "".equals(value))
+                {
                     return null;
+                }
                 else
+                {
                     return value;
+                }
             }
 
             public String getAsString(FacesContext context,
@@ -146,9 +167,13 @@ public class HtmlTextRendererTest extends AbstractJsfTestCase
                     throws ConverterException
             {
                 if (value == null)
+                {
                     return "";
+                }
                 else
+                {
                     return value.toString();
+                }
             }
         };
         

@@ -18,16 +18,12 @@
  */
 package javax.faces.component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFListener;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
 
 import javax.el.ValueExpression;
-import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
 import javax.faces.application.ProjectStage;
 import javax.faces.context.ExternalContext;
@@ -48,11 +44,13 @@ import javax.faces.event.ValueChangeListener;
 import javax.faces.render.Renderer;
 import javax.faces.validator.Validator;
 import javax.faces.webapp.FacesServlet;
-
-import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
-import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFListener;
-import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
-import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * UICommand is a base abstraction for components that implement ActionSource.
@@ -71,15 +69,21 @@ public class UIInput extends UIOutput implements EditableValueHolder
     public static final String REQUIRED_MESSAGE_ID = "javax.faces.component.UIInput.REQUIRED";
     public static final String UPDATE_MESSAGE_ID = "javax.faces.component.UIInput.UPDATE";
 
-    @JSFWebConfigParam(defaultValue="auto", expectedValues="auto, true, false", since="2.0")
+    /**
+     * Force validation on empty fields (By default is auto, which means it is only 
+     * enabled when Bean Validation binaries are available on the current classpath).
+     */
+    @JSFWebConfigParam(defaultValue="auto", expectedValues="auto, true, false", since="2.0", group="validation")
     public static final String VALIDATE_EMPTY_FIELDS_PARAM_NAME = "javax.faces.VALIDATE_EMPTY_FIELDS";
     
-    /** -=Leonardo Uribe =- According to http://wiki.java.net/bin/view/Projects/Jsf2MR1ChangeLog 
-      * this constant will be made public on 2.1. For now, since this param is handled in
-      * 2.0, we should do it as well.
-      **/
-    @JSFWebConfigParam(defaultValue="false", expectedValues="true, false", since="2.0")
-    private static final String EMPTY_VALUES_AS_NULL_PARAM_NAME = "javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL";
+    /** 
+     * Submitted values are decoded as null values instead empty strings.
+     * 
+     * <p>Note this param is ignored for components extending from UISelectOne/UISelectMany.</p>
+     **/
+    @JSFWebConfigParam(defaultValue="false", expectedValues="true, false", since="2.0", group="validation")
+    private static final String EMPTY_VALUES_AS_NULL_PARAM_NAME
+            = "javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL";
 
     // our own, cached key
     private static final String MYFACES_EMPTY_VALUES_AS_NULL_PARAM_NAME =
@@ -119,10 +123,11 @@ public class UIInput extends UIOutput implements EditableValueHolder
     @Override
     public void setValue(Object value)
     {
-        if (getFacesContext().isProjectStage(ProjectStage.Development))
+        FacesContext facesContext = getFacesContext();
+        if (facesContext != null && facesContext.isProjectStage(ProjectStage.Development))
         {
             // extended debug-info when in Development mode
-            _createFieldDebugInfo(getFacesContext(), "localValue",
+            _createFieldDebugInfo(facesContext, "localValue",
                     getLocalValue(), value, 1);
         }
         setLocalValueSet(true);
@@ -139,7 +144,10 @@ public class UIInput extends UIOutput implements EditableValueHolder
      */
     public Object getValue()
     {
-        if (isLocalValueSet()) return super.getLocalValue();
+        if (isLocalValueSet())
+        {
+            return super.getLocalValue();
+        }
         return super.getValue();
     }
 
@@ -166,6 +174,7 @@ public class UIInput extends UIOutput implements EditableValueHolder
         try
         {
             setCachedFacesContext(context);
+            pushComponentToEL(context, this);
             if (!isRendered())
             {
                 return;
@@ -174,19 +183,19 @@ public class UIInput extends UIOutput implements EditableValueHolder
         finally
         {
             setCachedFacesContext(null);
+            popComponentFromEL(context);
         }
         super.processDecodes(context);
         try
         {
             setCachedFacesContext(context);
+            pushComponentToEL(context, this);
             if (isImmediate())
             {
+                //Pre validation event dispatch for component
+                context.getApplication().publishEvent(context,  PreValidateEvent.class, getClass(), this);
                 try
                 {
-                    pushComponentToEL(context, this);
-                    //Pre validation event dispatch for component
-                    context.getApplication().publishEvent(context,  PreValidateEvent.class, UIComponent.class, this);
-    
                     validate(context);
                 }
                 catch (RuntimeException e)
@@ -196,8 +205,7 @@ public class UIInput extends UIOutput implements EditableValueHolder
                 }
                 finally
                 {
-                    context.getApplication().publishEvent(context,  PostValidateEvent.class, UIComponent.class, this);
-                    popComponentFromEL(context);
+                    context.getApplication().publishEvent(context,  PostValidateEvent.class, getClass(), this);
                 }
                 if (!isValid())
                 {
@@ -208,6 +216,7 @@ public class UIInput extends UIOutput implements EditableValueHolder
         finally
         {
             setCachedFacesContext(null);
+            popComponentFromEL(context);
         }
     }
 
@@ -221,6 +230,7 @@ public class UIInput extends UIOutput implements EditableValueHolder
         try
         {
             setCachedFacesContext(context);
+            pushComponentToEL(context, this);
             if (!isRendered())
             {
                 return;
@@ -229,21 +239,38 @@ public class UIInput extends UIOutput implements EditableValueHolder
         finally
         {
             setCachedFacesContext(null);
+            popComponentFromEL(context);
         }
 
-        super.processValidators(context);
+        //super.processValidators(context);
+        
+        // Call the processValidators() method of all facets and children of this UIComponent, in the order
+        // determined by a call to getFacetsAndChildren().
+        int facetCount = getFacetCount();
+        if (facetCount > 0)
+        {
+            for (UIComponent facet : getFacets().values())
+            {
+                facet.processValidators(context);
+            }
+        }
+
+        for (int i = 0, childCount = getChildCount(); i < childCount; i++)
+        {
+            UIComponent child = getChildren().get(i);
+            child.processValidators(context);
+        }
 
         try
         {
             setCachedFacesContext(context);
+            pushComponentToEL(context, this);
             if (!isImmediate())
             {
+                //Pre validation event dispatch for component
+                context.getApplication().publishEvent(context,  PreValidateEvent.class, getClass(), this);
                 try
                 {
-                    pushComponentToEL(context, this);
-                    //Pre validation event dispatch for component
-                    context.getApplication().publishEvent(context,  PreValidateEvent.class, UIComponent.class, this);
-    
                     validate(context);
                 }
                 catch (RuntimeException e)
@@ -253,8 +280,7 @@ public class UIInput extends UIOutput implements EditableValueHolder
                 }
                 finally
                 {
-                    context.getApplication().publishEvent(context,  PostValidateEvent.class, UIComponent.class, this);
-                    popComponentFromEL(context);
+                    context.getApplication().publishEvent(context,  PostValidateEvent.class, getClass(), this);
                 }
                 if (!isValid())
                 {
@@ -266,6 +292,7 @@ public class UIInput extends UIOutput implements EditableValueHolder
         finally
         {
             setCachedFacesContext(null);
+            popComponentFromEL(context);
         }
     }
 
@@ -279,6 +306,7 @@ public class UIInput extends UIOutput implements EditableValueHolder
         try
         {
             setCachedFacesContext(context);
+            pushComponentToEL(context, this);
             if (!isRendered())
             {
                 return;
@@ -287,25 +315,22 @@ public class UIInput extends UIOutput implements EditableValueHolder
         finally
         {
             setCachedFacesContext(null);
+            popComponentFromEL(context);
         }
         super.processUpdates(context);
 
         try
         {
             setCachedFacesContext(context);
+            pushComponentToEL(context, this);
             try
             {
-                pushComponentToEL(context, this);
                 updateModel(context);
             }
             catch (RuntimeException e)
             {
                 context.renderResponse();
                 throw e;
-            }
-            finally
-            {
-                popComponentFromEL(context);
             }
             if (!isValid())
             {
@@ -315,6 +340,7 @@ public class UIInput extends UIOutput implements EditableValueHolder
         finally
         {
             setCachedFacesContext(null);
+            popComponentFromEL(context);
         }
     }
 
@@ -384,7 +410,7 @@ public class UIInput extends UIOutput implements EditableValueHolder
         catch (Exception e)
         {
             // Enqueue an error message
-            context.getExternalContext().log(e.getMessage(), e);
+            //context.getExternalContext().log(e.getMessage(), e);
             
             // Create a FacesMessage with the id UPDATE_MESSAGE_ID
             FacesMessage facesMessage = _MessageUtils.getMessage(context,
@@ -397,7 +423,7 @@ public class UIInput extends UIOutput implements EditableValueHolder
             // continue for this lifecycle phase, as in all the other lifecycle phases.
             UpdateModelException updateModelException = new UpdateModelException(facesMessage, e);
             ExceptionQueuedEventContext exceptionQueuedContext 
-                    = new ExceptionQueuedEventContext (context, updateModelException, this, PhaseId.UPDATE_MODEL_VALUES);
+                    = new ExceptionQueuedEventContext(context, updateModelException, this, PhaseId.UPDATE_MODEL_VALUES);
             
             // spec javadoc says we should call context.getExceptionHandler().processEvent(exceptionQueuedContext),
             // which is not just syntactically wrong, but also stupid!!
@@ -411,7 +437,9 @@ public class UIInput extends UIOutput implements EditableValueHolder
     protected void validateValue(FacesContext context, Object convertedValue)
     {
         if (!isValid())
+        {
             return;
+        }
 
         // If our value is empty, check the required property
         boolean isEmpty = isEmpty(convertedValue); 
@@ -448,7 +476,8 @@ public class UIInput extends UIOutput implements EditableValueHolder
     private boolean shouldInterpretEmptyStringSubmittedValuesAsNull(FacesContext context)
     {
         ExternalContext ec = context.getExternalContext();
-        Boolean interpretEmptyStringAsNull = (Boolean)ec.getApplicationMap().get(MYFACES_EMPTY_VALUES_AS_NULL_PARAM_NAME);
+        Boolean interpretEmptyStringAsNull
+                = (Boolean)ec.getApplicationMap().get(MYFACES_EMPTY_VALUES_AS_NULL_PARAM_NAME);
 
         // not yet cached...
         if (interpretEmptyStringAsNull == null)
@@ -529,74 +558,69 @@ public class UIInput extends UIOutput implements EditableValueHolder
     public void validate(FacesContext context)
     {
         if (context == null)
+        {
             throw new NullPointerException("context");
+        }
 
+        Object submittedValue = getSubmittedValue();
+        if (submittedValue == null)
+        {
+            return;
+        }
 
+        // Begin new JSF 2.0 requirement (INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL)
+        if (shouldInterpretEmptyStringSubmittedValuesAsNull(context) && isEmptyString(submittedValue))
+        {   
+            // -= matzew = setSubmittedValue(null) is wrong, see:
+            // https://javaserverfaces-spec-public.dev.java.net/issues/show_bug.cgi?id=671
+            setSubmittedValue(null);
+            submittedValue = null;
+        }
+        // End new JSF 2.0 requirement (INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL)
+
+        Object convertedValue;
         try
         {
-            Object submittedValue = getSubmittedValue();
-            if (submittedValue == null)
+            convertedValue = getConvertedValue(context, submittedValue);
+        }
+        catch (ConverterException e)
+        {
+            String converterMessage = getConverterMessage();
+            if (converterMessage != null)
             {
-                return;
-            }
-
-            // Begin new JSF 2.0 requirement (INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL)
-            if (shouldInterpretEmptyStringSubmittedValuesAsNull(context) && isEmptyString(submittedValue))
-            {   
-                // -= matzew = setSubmittedValue(null) is wrong, see:
-                // https://javaserverfaces-spec-public.dev.java.net/issues/show_bug.cgi?id=671
-                setSubmittedValue(null);
-                submittedValue = null;
-            }
-            // End new JSF 2.0 requirement (INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL)
-
-            Object convertedValue;
-            try
-            {
-                convertedValue = getConvertedValue(context, submittedValue);
-            }
-            catch (ConverterException e)
-            {
-                String converterMessage = getConverterMessage();
-                if (converterMessage != null)
-                {
-                    context.addMessage(getClientId(context), new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                context.addMessage(getClientId(context), new FacesMessage(FacesMessage.SEVERITY_ERROR,
                         converterMessage, converterMessage));
+            }
+            else
+            {
+                FacesMessage facesMessage = e.getFacesMessage();
+                if (facesMessage != null)
+                {
+                    context.addMessage(getClientId(context), facesMessage);
                 }
                 else
                 {
-                    FacesMessage facesMessage = e.getFacesMessage();
-                    if (facesMessage != null)
-                    {
-                        context.addMessage(getClientId(context), facesMessage);
-                    }
-                    else
-                    {
-                        _MessageUtils.addErrorMessage(context, this, CONVERSION_MESSAGE_ID,
+                    _MessageUtils.addErrorMessage(context, this, CONVERSION_MESSAGE_ID,
                             new Object[] { _MessageUtils.getLabel(context, this) });
-                    }
                 }
-                setValid(false);
-                return;
             }
-
-            validateValue(context, convertedValue);
-
-            if (!isValid())
-                return;
-
-            Object previousValue = getValue();
-            setValue(convertedValue);
-            setSubmittedValue(null);
-            if (compareValues(previousValue, convertedValue))
-            {
-                queueEvent(new ValueChangeEvent(this, previousValue, convertedValue));
-            }
+            setValid(false);
+            return;
         }
-        catch (Exception ex)
+
+        validateValue(context, convertedValue);
+
+        if (!isValid())
         {
-            throw new FacesException("Exception while validating component with path : "
-                    + _ComponentUtils.getPathToComponent(this), ex);
+            return;
+        }
+
+        Object previousValue = getValue();
+        setValue(convertedValue);
+        setSubmittedValue(null);
+        if (compareValues(previousValue, convertedValue))
+        {
+            queueEvent(new ValueChangeEvent(this, previousValue, convertedValue));
         }
     }
 
@@ -736,7 +760,8 @@ public class UIInput extends UIOutput implements EditableValueHolder
      * @deprecated
      */
     @SuppressWarnings("dep-ann")
-    @JSFProperty(stateHolder=true, returnSignature = "void", methodSignature = "javax.faces.context.FacesContext,javax.faces.component.UIComponent,java.lang.Object")
+    @JSFProperty(stateHolder=true, returnSignature = "void",
+            methodSignature = "javax.faces.context.FacesContext,javax.faces.component.UIComponent,java.lang.Object")
     public MethodBinding getValidator()
     {
         return (MethodBinding) getStateHelper().eval(PropertyKeys.validator);
@@ -761,7 +786,8 @@ public class UIInput extends UIOutput implements EditableValueHolder
         
         if (_validatorList == null)
         {
-            _validatorList = new _DeltaList<Validator>(new ArrayList<Validator>());
+            //normally add user 0-3 validators: 
+            _validatorList = new _DeltaList<Validator>(new ArrayList<Validator>(3));
         }
 
         _validatorList.add(validator);
@@ -774,7 +800,9 @@ public class UIInput extends UIOutput implements EditableValueHolder
     public void removeValidator(Validator validator)
     {
         if (validator == null || _validatorList == null)
+        {
             return;
+        }
 
         _validatorList.remove(validator);
     }
@@ -809,7 +837,8 @@ public class UIInput extends UIOutput implements EditableValueHolder
      * 
      * @deprecated
      */
-    @JSFProperty(stateHolder=true, returnSignature = "void", methodSignature = "javax.faces.event.ValueChangeEvent", clientEvent="valueChange")
+    @JSFProperty(stateHolder=true, returnSignature = "void",
+                 methodSignature = "javax.faces.event.ValueChangeEvent", clientEvent="valueChange")
     public MethodBinding getValueChangeListener()
     {
         return (MethodBinding) getStateHelper().eval(PropertyKeys.valueChangeListener);
@@ -894,10 +923,11 @@ public class UIInput extends UIOutput implements EditableValueHolder
 
     public void setSubmittedValue(Object submittedValue)
     {
-        if (getFacesContext().isProjectStage(ProjectStage.Development))
+        FacesContext facesContext = getFacesContext();
+        if (facesContext != null && facesContext.isProjectStage(ProjectStage.Development))
         {
             // extended debug-info when in Development mode
-            _createFieldDebugInfo(getFacesContext(), "submittedValue",
+            _createFieldDebugInfo(facesContext, "submittedValue",
                     getSubmittedValue(), submittedValue, 1);
         }
         getStateHelper().put(PropertyKeys.submittedValue, submittedValue );
@@ -938,8 +968,25 @@ public class UIInput extends UIOutput implements EditableValueHolder
         , submittedValue
     }
     
+    private static final Object[] INITIAL_STATE_PROPERTIES = new
+            Object[]{
+                UIOutput.PropertyKeys.value,
+                null,
+                UIInput.PropertyKeys.localValueSet,
+                false,
+                UIInput.PropertyKeys.submittedValue,
+                null,
+                UIInput.PropertyKeys.valid,
+                true
+            };
+    
     public void markInitialState()
     {
+        StateHelper helper = getStateHelper(false);
+        if (helper != null && helper instanceof _DeltaStateHelper)
+        {
+            ((_DeltaStateHelper)helper).markPropertyInInitialState(INITIAL_STATE_PROPERTIES);
+        }
         super.markInitialState();
         if (_validatorList != null)
         {
@@ -1041,7 +1088,7 @@ public class UIInput extends UIOutput implements EditableValueHolder
     @SuppressWarnings("unchecked")
     private Map<String, List<Object[]>> _getDebugInfoMap()
     {
-        final Map<String, Object> requestMap = getFacesContext()
+        Map<String, Object> requestMap = getFacesContext()
                 .getExternalContext().getRequestMap();
         Map<String, List<Object[]>> debugInfo = (Map<String, List<Object[]>>) 
                 requestMap.get(DEBUG_INFO_KEY + getClientId());
@@ -1094,12 +1141,27 @@ public class UIInput extends UIOutput implements EditableValueHolder
             return;
         }
         
+        if (facesContext.getViewRoot() == null)
+        {
+            // No viewRoot set, it is creating component, 
+            // so it is not possible to calculate the clientId, 
+            // abort processing because the interesting part will
+            // happen later.
+            return;
+        }
+        
+        if (getParent() == null || !isInView())
+        {
+            //Skip if no parent or is not in view
+            return;
+        }
+        
         // convert Array values into a more readable format
-        if (oldValue != null && oldValue.getClass().isArray())
+        if (oldValue != null && oldValue.getClass().isArray() && Object[].class.isAssignableFrom(oldValue.getClass()))
         {
             oldValue = Arrays.deepToString((Object[]) oldValue);
         }
-        if (newValue != null && newValue.getClass().isArray())
+        if (newValue != null && newValue.getClass().isArray() && Object[].class.isAssignableFrom(newValue.getClass()))
         {
             newValue = Arrays.deepToString((Object[]) newValue);
         }

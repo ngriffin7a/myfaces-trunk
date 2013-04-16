@@ -23,6 +23,7 @@ import java.io.Serializable;
 
 import javax.el.ELContext;
 import javax.el.ELException;
+import javax.el.ExpressionFactory;
 import javax.el.ValueExpression;
 import javax.faces.FacesException;
 import javax.faces.component.ActionSource;
@@ -32,6 +33,7 @@ import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
 import javax.faces.view.ActionSource2AttachedObjectHandler;
+import javax.faces.view.Location;
 import javax.faces.view.facelets.ComponentHandler;
 import javax.faces.view.facelets.FaceletContext;
 import javax.faces.view.facelets.FaceletException;
@@ -43,6 +45,8 @@ import javax.faces.view.facelets.TagHandler;
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletAttribute;
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTag;
 import org.apache.myfaces.view.facelets.FaceletCompositionContext;
+import org.apache.myfaces.view.facelets.el.ContextAware;
+import org.apache.myfaces.view.facelets.el.ContextAwareELException;
 
 @JSFFaceletTag(
         name = "f:setPropertyActionListener",
@@ -61,8 +65,8 @@ public class SetPropertyActionListenerHandler extends TagHandler
         this._target = this.getRequiredAttribute("target");
     }
 
-    public void apply(FaceletContext ctx, UIComponent parent) throws IOException, FacesException, FaceletException,
-            ELException
+    public void apply(FaceletContext ctx, UIComponent parent)
+            throws IOException, FacesException, FaceletException, ELException
     {
         //Apply only if we are creating a new component
         if (!ComponentHandler.isNew(parent))
@@ -80,7 +84,8 @@ public class SetPropertyActionListenerHandler extends TagHandler
         }
         else
         {
-            throw new TagException(this.tag, "Parent is not composite component or of type ActionSource, type is: " + parent);
+            throw new TagException(this.tag,
+                    "Parent is not composite component or of type ActionSource, type is: " + parent);
         }
     }
 
@@ -101,13 +106,59 @@ public class SetPropertyActionListenerHandler extends TagHandler
 
         public void processAction(ActionEvent evt) throws AbortProcessingException
         {
-            FacesContext faces = FacesContext.getCurrentInstance();
+            FacesContext facesContext = FacesContext.getCurrentInstance();
             
-            ELContext el = faces.getELContext();
+            ELContext elContext = facesContext.getELContext();
             
-            Object valueObj = _value.getValue(el);
+            // Spec f:setPropertyActionListener: 
             
-            _target.setValue(el, valueObj);
+            // Call getValue() on the "value" ValueExpression.
+            Object value = _value.getValue(elContext);
+            
+            // If value of the "value" expression is null, call setValue() on the "target" ValueExpression with the null
+            
+            // If the value of the "value" expression is not null, call getType()on the "value" and "target"
+            // ValueExpressions to determine their property types.
+            if (value != null)
+            {
+                Class<?> targetType = _target.getType(elContext);
+                // Spec says: "all getType() on the "value" to determine  property type" but it is not necessary
+                // beacuse type we have objValue already
+
+                //   Coerce the value of the "value" expression to
+                // the "target" expression value type following the Expression
+                // Language coercion rules. 
+                ExpressionFactory expressionFactory = facesContext.getApplication().getExpressionFactory();
+                try
+                {
+                    value = expressionFactory.coerceToType(value, targetType);
+                }
+                catch (ELException e)
+                {
+                    // Happens when type of attribute "value" is not convertible to type of attribute "target"
+                    // by EL coercion rules. 
+                    // For example: value="#{10}" target="#{bean.booleanProperty}" 
+                    // In this case is not sure if problematic attribute is "value" or "target". But EL
+                    // impls say:
+                    // JUEL: "Cannot coerce from class java.lang.Long to class java.lang.Boolean"
+                    // Tomcat EL: Cannot convert 10 of type class java.long.Long to class java.lang.Boolean
+                    // Thus we report "value" attribute as exception source - that should be enough for user
+                    // to solve the problem.
+                    Location location = null;
+                    // Wrapping of ValueExpressions to org.apache.myfaces.view.facelets.el.ContextAware
+                    // can be disabled:
+                    if (_value instanceof ContextAware)
+                    {
+                        ContextAware contextAware = (ContextAware) _value;
+                        location = contextAware.getLocation();
+                    }
+                    throw new ContextAwareELException(location,
+                            _value.getExpressionString(), "value", e);
+                }
+            }
+
+            // Call setValue()on the "target" ValueExpression with the resulting value.
+            _target.setValue(elContext, value);
         }
     }
 

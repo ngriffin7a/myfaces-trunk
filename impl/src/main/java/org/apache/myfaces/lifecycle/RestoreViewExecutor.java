@@ -79,13 +79,15 @@ class RestoreViewExecutor extends PhaseExecutor
         Application application = facesContext.getApplication();
         ViewHandler viewHandler = application.getViewHandler();
         UIViewRoot viewRoot = facesContext.getViewRoot();
-        RestoreViewSupport restoreViewSupport = getRestoreViewSupport();
+        RestoreViewSupport restoreViewSupport = getRestoreViewSupport(facesContext);
 
         // Examine the FacesContext instance for the current request. If it already contains a UIViewRoot
         if (viewRoot != null)
         {
             if (log.isLoggable(Level.FINEST))
+            {
                 log.finest("View already exists in the FacesContext");
+            }
             
             // Set the locale on this UIViewRoot to the value returned by the getRequestLocale() method on the
             // ExternalContext for this request
@@ -113,7 +115,9 @@ class RestoreViewExecutor extends PhaseExecutor
         if (!errorPageRequest && restoreViewSupport.isPostback(facesContext))
         { // If the request is a postback
             if (log.isLoggable(Level.FINEST))
+            {
                 log.finest("Request is a postback");
+            }
 
             try
             {
@@ -125,8 +129,8 @@ class RestoreViewExecutor extends PhaseExecutor
                 {
                     // If the return from ViewHandler.restoreView() is null, throw a ViewExpiredException with an 
                     // appropriate error message.
-                    throw new ViewExpiredException("No saved view state could be found for the view identifier: " + viewId,
-                        viewId);
+                    throw new ViewExpiredException("No saved view state could be found for the view identifier: "
+                                                   + viewId, viewId);
                 }
                 
                 // Store the restored UIViewRoot in the FacesContext.
@@ -144,12 +148,21 @@ class RestoreViewExecutor extends PhaseExecutor
         else
         { // If the request is a non-postback
             if (log.isLoggable(Level.FINEST))
+            {
                 log.finest("Request is not a postback. New UIViewRoot will be created");
+            }
             
             //viewHandler.deriveViewId(facesContext, viewId)
             //restoreViewSupport.deriveViewId(facesContext, viewId)
             ViewDeclarationLanguage vdl = viewHandler.getViewDeclarationLanguage(facesContext, 
                     viewHandler.deriveLogicalViewId(facesContext, viewId));
+            
+            // viewHandler.deriveLogicalViewId() could trigger an InvalidViewIdException, which
+            // it is handled internally sending a 404 error code set the response as complete.
+            if (facesContext.getResponseComplete())
+            {
+                return true;
+            }
             
             if (vdl != null)
             {
@@ -271,9 +284,14 @@ class RestoreViewExecutor extends PhaseExecutor
     
     protected RestoreViewSupport getRestoreViewSupport()
     {
+        return getRestoreViewSupport(FacesContext.getCurrentInstance());
+    }
+    
+    protected RestoreViewSupport getRestoreViewSupport(FacesContext context)
+    {
         if (_restoreViewSupport == null)
         {
-            _restoreViewSupport = new DefaultRestoreViewSupport();
+            _restoreViewSupport = new DefaultRestoreViewSupport(context);
         }
         return _restoreViewSupport;
     }

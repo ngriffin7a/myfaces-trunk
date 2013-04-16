@@ -38,18 +38,18 @@ import org.apache.myfaces.view.facelets.tag.AbstractTagLibrary;
  * href="http://java.sun.com/j2ee/javaserverfaces/1.1_01/docs/tlddocs/f/tld-summary.html">taglib documentation</a>.
  *
  * @author Jacob Hookom
- * @version $Id: CoreLibrary.java,v 1.13 2008/07/13 19:01:44 rlubke Exp $
+ * @version $Id$
  */
 public final class CoreLibrary extends AbstractTagLibrary
 {
 
-    public final static String Namespace = "http://java.sun.com/jsf/core";
+    public final static String NAMESPACE = "http://java.sun.com/jsf/core";
 
-    public final static CoreLibrary Instance = new CoreLibrary();
+    public final static CoreLibrary INSTANCE = new CoreLibrary();
 
     public CoreLibrary()
     {
-        super(Namespace);
+        super(NAMESPACE);
 
         this.addTagHandler("actionListener", ActionListenerHandler.class);
 

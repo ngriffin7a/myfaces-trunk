@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-
 /**
- * A collection of dom helper routines
+ * @class
+ * @name _Dom
+ * @memberOf myfaces._impl._util
+ * @extends myfaces._impl.core._Runtime
+ * @description Object singleton collection of dom helper routines
  * (which in later incarnations will
  * get browser specific speed optimizations)
  *
@@ -24,124 +27,153 @@
  * we will focus with our dom routines to only
  * the parts which our impl uses.
  * A jquery like query API would be nice
- * but this would blow up our codebase significantly
+ * but this would increase up our codebase significantly
  *
- * TODO selector shortcuts bei chrome abdrehen da knallt es
- *
+ * <p>This class provides the proper fallbacks for ie8- and Firefox 3.6-</p>
  */
-/** @namespace myfaces._impl._util._Dom */
+_MF_SINGLTN(_PFX_UTIL + "_Dom", Object, /** @lends myfaces._impl._util._Dom.prototype */ {
 
-/** @namespace NodeFilter */
-/** @namespace NodeFilter.FILTER_ACCEPT */
-/** @namespace NodeFilter.FILTER_SKIP */
-/** @namespace NodeFilter.FILTER_REJECT */
-/** @namespace NodeFilter.SHOW_ELEMENT */
-myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._Dom", Object, {
-    IE_QUIRKS_EVENTS : {
-        "onabort": true,
-        "onload":true,
-        "onunload":true,
-        "onchange": true,
-        "onsubmit": true,
-        "onreset": true,
-        "onselect": true,
-        "onblur": true,
-        "onfocus": true,
-        "onkeydown": true,
-        "onkeypress": true,
-        "onkeyup": true,
-        "onclick": true,
-        "ondblclick": true,
-        "onmousedown": true,
-        "onmousemove": true,
-        "onmouseout": true,
-        "onmouseover": true,
-        "onmouseup": true
+    /*table elements which are used in various parts */
+    TABLE_ELEMS:  {
+        "thead": 1,
+        "tbody": 1,
+        "tr": 1,
+        "th": 1,
+        "td": 1,
+        "tfoot" : 1
     },
 
     _Lang:  myfaces._impl._util._Lang,
     _RT:    myfaces._impl.core._Runtime,
     _dummyPlaceHolder:null,
 
+    /**
+     * standard constructor
+     */
     constructor_: function() {
-        //we have to trigger it upfront because mozilla runs the eval
-        //after the dom updates and hence causes a race conditon if used on demand
-        //under normal circumstances this works, if there are no normal ones
-        //then this also will work at the second time, but the onload handler
-        //should cover 99% of all use cases to avoid a loading race condition
-        var b = myfaces._impl.core._Runtime.browser;
-
-        if (b.isIE <= 6 && b.isIEMobile) {
-            //winmobile hates add onLoad, and checks on the construct
-            //it does not eval scripts anyway
-            myfaces.config = myfaces.config || {};
-            myfaces.config._autoeval = false;
-            return;
-        }
-        this._RT.addOnLoad(window, function() {
-            myfaces._impl._util._Dom.isManualScriptEval();
-        });
-        //safety fallback if the window onload handler is overwritten and not chained
-        if (document.body) {
-            this._RT.addOnLoad(document.body, function() {
-                myfaces._impl._util._Dom.isManualScriptEval();
-            });
-        }
-        //now of the onload handler also is overwritten we have a problem
     },
+
+    runCss: function(item/*, xmlData*/) {
+
+        var  UDEF = "undefined",
+                _RT = this._RT,
+                _Lang = this._Lang,
+                applyStyle = function(item, style) {
+                    var newSS = document.createElement("style");
+
+                    newSS.setAttribute("rel", item.getAttribute("rel") || "stylesheet");
+                    newSS.setAttribute("type", item.getAttribute("type") || "text/css");
+                    document.getElementsByTagName("head")[0].appendChild(newSS);
+                    //ie merrily again goes its own way
+                    if (window.attachEvent && !_RT.isOpera && UDEF != typeof newSS.styleSheet && UDEF != newSS.styleSheet.cssText) newSS.styleSheet.cssText = style;
+                    else newSS.appendChild(document.createTextNode(style));
+                },
+
+                execCss = function(item) {
+                    var equalsIgnoreCase = _Lang.equalsIgnoreCase;
+                    var tagName = item.tagName;
+                    if (tagName && equalsIgnoreCase(tagName, "link") && equalsIgnoreCase(item.getAttribute("type"), "text/css")) {
+                        applyStyle(item, "@import url('" + item.getAttribute("href") + "');");
+                    } else if (tagName && equalsIgnoreCase(tagName, "style") && equalsIgnoreCase(item.getAttribute("type"), "text/css")) {
+                        var innerText = [];
+                        //compliant browsers know child nodes
+                        var childNodes = item.childNodes;
+                        if (childNodes) {
+                            var len = childNodes.length;
+                            for (var cnt = 0; cnt < len; cnt++) {
+                                innerText.push(childNodes[cnt].innerHTML || childNodes[cnt].data);
+                            }
+                            //non compliant ones innerHTML
+                        } else if (item.innerHTML) {
+                            innerText.push(item.innerHTML);
+                        }
+
+                        applyStyle(item, innerText.join(""));
+                    }
+                };
+
+        try {
+            var scriptElements = this.findByTagNames(item, {"link":1,"style":1}, true);
+            if (scriptElements == null) return;
+            for (var cnt = 0; cnt < scriptElements.length; cnt++) {
+                execCss(scriptElements[cnt]);
+            }
+
+        } finally {
+            //the usual ie6 fix code
+            //the IE6 garbage collector is broken
+            //nulling closures helps somewhat to reduce
+            //mem leaks, which are impossible to avoid
+            //at this browser
+            execCss = null;
+            applyStyle = null;
+        }
+    },
+
 
     /**
      * Run through the given Html item and execute the inline scripts
      * (IE doesn't do this by itself)
-     * @param {|Node|} item
+     * @param {Node} item
      */
     runScripts: function(item, xmlData) {
-        var finalScripts    = [];
-        var execScrpt       = this._Lang.hitch(this, function(item) {
-            if (item.tagName && this._Lang.equalsIgnoreCase(item.tagName, "script")) {
-                var src = item.getAttribute('src');
-                if ('undefined' != typeof src
-                        && null != src
-                        && src.length > 0
-                        ) {
-                    //we have to move this into an inner if because chrome otherwise chokes
-                    //due to changing the and order instead of relying on left to right
-                    if ((src.indexOf("ln=scripts") == -1 && src.indexOf("ln=javax.faces") == -1) || (src.indexOf("/jsf.js") == -1
-                            && src.indexOf("/jsf-uncompressed.js") == -1))
-                        if (finalScripts.length) {
-                            //script source means we have to eval the existing
-                            //scripts before running the include
-                            this._RT.globalEval(finalScripts.join("\n"));
+        var _Lang = this._Lang,
+            _RT = this._RT,
+            finalScripts = [],
+            execScrpt = function(item) {
+                var tagName = item.tagName;
+                var itemType = item.type || "";
+                if(tagName && _Lang.equalsIgnoreCase(tagName, "script") &&
+                        (itemType === "" || _Lang.equalsIgnoreCase(itemType,"text/javascript") ||
+                         _Lang.equalsIgnoreCase(itemType,"javascript") ||
+                         _Lang.equalsIgnoreCase(itemType,"text/ecmascript") ||
+                         _Lang.equalsIgnoreCase(itemType,"ecmascript"))) {
+                    var src = item.getAttribute('src');
+                    if ('undefined' != typeof src
+                            && null != src
+                            && src.length > 0
+                            ) {
+                        //we have to move this into an inner if because chrome otherwise chokes
+                        //due to changing the and order instead of relying on left to right
+                        //if jsf.js is already registered we do not replace it anymore
+                        if ((src.indexOf("ln=scripts") == -1 && src.indexOf("ln=javax.faces") == -1) || (src.indexOf("/jsf.js") == -1
+                                && src.indexOf("/jsf-uncompressed.js") == -1)) {
+                            if (finalScripts.length) {
+                                //script source means we have to eval the existing
+                                //scripts before running the include
+                                _RT.globalEval(finalScripts.join("\n"));
 
-                            finalScripts = [];
+                                finalScripts = [];
+                            }
+                            _RT.loadScriptEval(src, item.getAttribute('type'), false, "UTF-8", false);
                         }
-                    this._RT.loadScriptEval(src, item.getAttribute('type'), false, "UTF-8", false);
-                } else {
-                    // embedded script auto eval
-                    var test = (!xmlData) ? item.text : this._Lang.serializeChilds(item);
-                    var go = true;
-                    while (go) {
-                        go = false;
-                        if (test.substring(0, 1) == " ") {
-                            test = test.substring(1);
-                            go = true;
+
+                    } else {
+                        // embedded script auto eval
+                        var test = (!xmlData) ? item.text : _Lang.serializeChilds(item);
+                        var go = true;
+                        while (go) {
+                            go = false;
+                            if (test.substring(0, 1) == " ") {
+                                test = test.substring(1);
+                                go = true;
+                            }
+                            if (test.substring(0, 4) == "<!--") {
+                                test = test.substring(4);
+                                go = true;
+                            }
+                            if (test.substring(0, 11) == "//<![CDATA[") {
+                                test = test.substring(11);
+                                go = true;
+                            }
                         }
-                        if (test.substring(0, 4) == "<!--") {
-                            test = test.substring(4);
-                            go = true;
-                        }
-                        if (test.substring(0, 11) == "//<![CDATA[") {
-                            test = test.substring(11);
-                            go = true;
-                        }
+                        // we have to run the script under a global context
+                        //we store the script for less calls to eval
+                        finalScripts.push(test);
+
                     }
-                    // we have to run the script under a global context
-                    //we store the script for less calls to eval
-                    finalScripts.push(test);
-
                 }
-            }
-        });
+            };
         try {
             var scriptElements = this.findByTagName(item, "script", true);
             if (scriptElements == null) return;
@@ -149,7 +181,21 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._Dom", Obj
                 execScrpt(scriptElements[cnt]);
             }
             if (finalScripts.length) {
-                this._RT.globalEval(finalScripts.join("\n"));
+                _RT.globalEval(finalScripts.join("\n"));
+            }
+        } catch (e) {
+            if(window.console && window.console.error) {
+               //not sure if we
+               //should use our standard
+               //error mechanisms here
+               //because in the head appendix
+               //method only a console
+               //error would be raised as well
+               console.error(e.message||e.description);
+            } else {
+                if(jsf.ajax.getProjectStage() === "Development") {
+                    alert("Error in evaluated javascript:"+ (e.message||e.description));
+                }
             }
         } finally {
             //the usual ie6 fix code
@@ -161,20 +207,68 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._Dom", Obj
         }
     },
 
+
+    /**
+     * determines to fetch a node
+     * from its id or name, the name case
+     * only works if the element is unique in its name
+     * @param {String} elem
+     */
+    byIdOrName: function(elem) {
+        if (!elem) return null;
+        if (!this._Lang.isString(elem)) return elem;
+
+        var ret = this.byId(elem);
+        if (ret) return ret;
+        //we try the unique name fallback
+        var items = document.getElementsByName(elem);
+        return ((items.length == 1) ? items[0] : null);
+    },
+
+    /**
+     * node id or name, determines the valid form identifier of a node
+     * depending on its uniqueness
+     *
+     * Usually the id is chosen for an elem, but if the id does not
+     * exist we try a name fallback. If the passed element has a unique
+     * name we can use that one as subsequent identifier.
+     *
+     *
+     * @param {String} elem
+     */
     nodeIdOrName: function(elem) {
         if (elem) {
+            //just to make sure that the pas
+
             elem = this.byId(elem);
+            if (!elem) return null;
             //detached element handling, we also store the element name
             //to get a fallback option in case the identifier is not determinable
             // anymore, in case of a framework induced detachment the element.name should
             // be shared if the identifier is not determinable anymore
+            //the downside of this method is the element name must be unique
+            //which in case of jsf it is
             var elementId = elem.id || elem.name;
-            if ((elementId == null || elementId == '') && elem.name) {
+            if ((elem.id == null || elem.id == '') && elem.name) {
                 elementId = elem.name;
+
+                //last check for uniqueness
+                if (this.getElementsByName(elementId).length > 1) {
+                    //no unique element name so we need to perform
+                    //a return null to let the caller deal with this issue
+                    return null;
+                }
             }
             return elementId;
         }
         return null;
+    },
+
+    deleteItems: function(items) {
+        if (! items || ! items.length) return;
+        for (var cnt = 0; cnt < items.length; cnt++) {
+            this.deleteItem(items[cnt]);
+        }
     },
 
     /**
@@ -183,10 +277,315 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._Dom", Obj
     deleteItem: function(itemIdToReplace) {
         var item = this.byId(itemIdToReplace);
         if (!item) {
-            throw Error("_Dom.deleteItem  Unknown Html-Component-ID: " + itemIdToReplace);
+            throw this._Lang.makeException(new Error(),null, null, this._nameSpace, "deleteItem",  "_Dom.deleteItem  Unknown Html-Component-ID: " + itemIdToReplace);
         }
 
         this._removeNode(item, false);
+    },
+
+    /**
+     * creates a node upon a given node name
+     * @param nodeName {String} the node name to be created
+     * @param attrs {Array} a set of attributes to be set
+     */
+    createElement: function(nodeName, attrs) {
+        var ret = document.createElement(nodeName);
+        if (attrs) {
+            for (var key in attrs) {
+                if(!attrs.hasOwnProperty(key)) continue;
+                this.setAttribute(ret, key, attrs[key]);
+            }
+        }
+        return ret;
+    },
+
+    /**
+     * Checks whether the browser is dom compliant.
+     * Dom compliant means that it performs the basic dom operations safely
+     * without leaking and also is able to perform a native setAttribute
+     * operation without freaking out
+     *
+     *
+     * Not dom compliant browsers are all microsoft browsers in quirks mode
+     * and ie6 and ie7 to some degree in standards mode
+     * and pretty much every browser who cannot create ranges
+     * (older mobile browsers etc...)
+     *
+     * We dont do a full browser detection here because it probably is safer
+     * to test for existing features to make an assumption about the
+     * browsers capabilities
+     */
+    isDomCompliant: function() {
+        return true;
+    },
+
+    /**
+     * proper insert before which takes tables into consideration as well as
+     * browser deficiencies
+     * @param item the node to insert before
+     * @param markup the markup to be inserted
+     */
+    insertBefore: function(item, markup) {
+        this._assertStdParams(item, markup, "insertBefore");
+
+        markup = this._Lang.trim(markup);
+        if (markup === "") return null;
+
+        var evalNodes = this._buildEvalNodes(item, markup),
+                currentRef = item,
+                parentNode = item.parentNode,
+                ret = [];
+        for (var cnt = evalNodes.length - 1; cnt >= 0; cnt--) {
+            currentRef = parentNode.insertBefore(evalNodes[cnt], currentRef);
+            ret.push(currentRef);
+        }
+        ret = ret.reverse();
+        this._eval(ret);
+        return ret;
+    },
+
+    /**
+     * proper insert before which takes tables into consideration as well as
+     * browser deficiencies
+     * @param item the node to insert before
+     * @param markup the markup to be inserted
+     */
+    insertAfter: function(item, markup) {
+        this._assertStdParams(item, markup, "insertAfter");
+        markup = this._Lang.trim(markup);
+        if (markup === "") return null;
+
+        var evalNodes = this._buildEvalNodes(item, markup),
+                currentRef = item,
+                parentNode = item.parentNode,
+                ret = [];
+
+        for (var cnt = 0; cnt < evalNodes.length; cnt++) {
+            if (currentRef.nextSibling) {
+                //Winmobile 6 has problems with this strategy, but it is not really fixable
+                currentRef = parentNode.insertBefore(evalNodes[cnt], currentRef.nextSibling);
+            } else {
+                currentRef = parentNode.appendChild(evalNodes[cnt]);
+            }
+            ret.push(currentRef);
+        }
+        this._eval(ret);
+        return ret;
+    },
+
+    propertyToAttribute: function(name) {
+        if (name === 'className') {
+            return 'class';
+        } else if (name === 'xmllang') {
+            return 'xml:lang';
+        } else {
+            return name.toLowerCase();
+        }
+    },
+
+    isFunctionNative: function(func) {
+        return /^\s*function[^{]+{\s*\[native code\]\s*}\s*$/.test(String(func));
+    },
+
+    detectAttributes: function(element) {
+        //test if 'hasAttribute' method is present and its native code is intact
+        //for example, Prototype can add its own implementation if missing
+        if (element.hasAttribute && this.isFunctionNative(element.hasAttribute)) {
+            return function(name) {
+                return element.hasAttribute(name);
+            }
+        } else {
+            try {
+                //when accessing .getAttribute method without arguments does not throw an error then the method is not available
+                element.getAttribute;
+
+                var html = element.outerHTML;
+                var startTag = html.match(/^<[^>]*>/)[0];
+                return function(name) {
+                    return startTag.indexOf(name + '=') > -1;
+                }
+            } catch (ex) {
+                return function(name) {
+                    return element.getAttribute(name);
+                }
+            }
+        }
+    },
+
+    /**
+     * copy all attributes from one element to another - except id
+     * @param target element to copy attributes to
+     * @param source element to copy attributes from
+     * @ignore
+     */
+    cloneAttributes: function(target, source) {
+
+        // enumerate core element attributes - without 'dir' as special case
+        var coreElementProperties = ['className', 'title', 'lang', 'xmllang'];
+        // enumerate additional input element attributes
+        var inputElementProperties = [
+            'name', 'value', 'size', 'maxLength', 'src', 'alt', 'useMap', 'tabIndex', 'accessKey', 'accept', 'type'
+        ];
+        // enumerate additional boolean input attributes
+        var inputElementBooleanProperties = [
+            'checked', 'disabled', 'readOnly'
+        ];
+
+        // Enumerate all the names of the event listeners
+        var listenerNames =
+            [ 'onclick', 'ondblclick', 'onmousedown', 'onmousemove', 'onmouseout',
+                'onmouseover', 'onmouseup', 'onkeydown', 'onkeypress', 'onkeyup',
+                'onhelp', 'onblur', 'onfocus', 'onchange', 'onload', 'onunload', 'onabort',
+                'onreset', 'onselect', 'onsubmit'
+            ];
+
+        var sourceAttributeDetector = this.detectAttributes(source);
+        var targetAttributeDetector = this.detectAttributes(target);
+
+        var isInputElement = target.nodeName.toLowerCase() === 'input';
+        var propertyNames = isInputElement ? coreElementProperties.concat(inputElementProperties) : coreElementProperties;
+        var isXML = !source.ownerDocument.contentType || source.ownerDocument.contentType == 'text/xml';
+        for (var iIndex = 0, iLength = propertyNames.length; iIndex < iLength; iIndex++) {
+            var propertyName = propertyNames[iIndex];
+            var attributeName = this.propertyToAttribute(propertyName);
+            if (sourceAttributeDetector(attributeName)) {
+
+                //With IE 7 (quirks or standard mode) and IE 8/9 (quirks mode only),
+                //you cannot get the attribute using 'class'. You must use 'className'
+                //which is the same value you use to get the indexed property. The only
+                //reliable way to detect this (without trying to evaluate the browser
+                //mode and version) is to compare the two return values using 'className'
+                //to see if they exactly the same.  If they are, then use the property
+                //name when using getAttribute.
+                if( attributeName == 'class'){
+                    if( this._RT.browser.isIE && (source.getAttribute(propertyName) === source[propertyName]) ){
+                        attributeName = propertyName;
+                    }
+                }
+
+                var newValue = isXML ? source.getAttribute(attributeName) : source[propertyName];
+                var oldValue = target[propertyName];
+                if (oldValue != newValue) {
+                    target[propertyName] = newValue;
+                }
+            } else {
+                target.removeAttribute(attributeName);
+                if (attributeName == "value") {
+                    target[propertyName] = '';
+                }
+            }
+        }
+
+        var booleanPropertyNames = isInputElement ? inputElementBooleanProperties : [];
+        for (var jIndex = 0, jLength = booleanPropertyNames.length; jIndex < jLength; jIndex++) {
+            var booleanPropertyName = booleanPropertyNames[jIndex];
+            var newBooleanValue = source[booleanPropertyName];
+            var oldBooleanValue = target[booleanPropertyName];
+            if (oldBooleanValue != newBooleanValue) {
+                target[booleanPropertyName] = newBooleanValue;
+            }
+        }
+
+        //'style' attribute special case
+        if (sourceAttributeDetector('style')) {
+            var newStyle;
+            var oldStyle;
+            if (this._RT.browser.isIE) {
+                newStyle = source.style.cssText;
+                oldStyle = target.style.cssText;
+                if (newStyle != oldStyle) {
+                    target.style.cssText = newStyle;
+                }
+            } else {
+                newStyle = source.getAttribute('style');
+                oldStyle = target.getAttribute('style');
+                if (newStyle != oldStyle) {
+                    target.setAttribute('style', newStyle);
+                }
+            }
+        } else if (targetAttributeDetector('style')){
+            target.removeAttribute('style');
+        }
+
+        // Special case for 'dir' attribute
+        if (!this._RT.browser.isIE && source.dir != target.dir) {
+            if (sourceAttributeDetector('dir')) {
+                target.dir = source.dir;
+            } else if (targetAttributeDetector('dir')) {
+                target.dir = '';
+            }
+        }
+
+        for (var lIndex = 0, lLength = listenerNames.length; lIndex < lLength; lIndex++) {
+            var name = listenerNames[lIndex];
+            target[name] = source[name] ? source[name] : null;
+            if (source[name]) {
+                source[name] = null;
+            }
+        }
+
+        //clone HTML5 data-* attributes
+        try{
+            var targetDataset = target.dataset;
+            var sourceDataset = source.dataset;
+            if (targetDataset || sourceDataset) {
+                //cleanup the dataset
+                for (var tp in targetDataset) {
+                    delete targetDataset[tp];
+                }
+                //copy dataset's properties
+                for (var sp in sourceDataset) {
+                    targetDataset[sp] = sourceDataset[sp];
+                }
+            }
+        } catch (ex) {
+            //most probably dataset properties are not supported
+        }
+    },
+    //from
+    // http://blog.vishalon.net/index.php/javascript-getting-and-setting-caret-position-in-textarea/
+    getCaretPosition:function (ctrl) {
+        var caretPos = 0;
+
+        try {
+
+            // other browsers make it simpler by simply having a selection start element
+            if (ctrl.selectionStart || ctrl.selectionStart == '0')
+                caretPos = ctrl.selectionStart;
+            // ie 5 quirks mode as second option because
+            // this option is flakey in conjunction with text areas
+            // TODO move this into the quirks class
+            else if (document.selection) {
+                ctrl.focus();
+                var selection = document.selection.createRange();
+                //the selection now is start zero
+                selection.moveStart('character', -ctrl.value.length);
+                //the caretposition is the selection start
+                caretPos = selection.text.length;
+            }
+        } catch (e) {
+            //now this is ugly, but not supported input types throw errors for selectionStart
+            //this way we are future proof by having not to define every selection enabled
+            //input in an if (which will be a lot in the near future with html5)
+        }
+        return caretPos;
+    },
+
+    setCaretPosition:function (ctrl, pos) {
+
+        if (ctrl.createTextRange) {
+            var range = ctrl.createTextRange();
+            range.collapse(true);
+            range.moveEnd('character', pos);
+            range.moveStart('character', pos);
+            range.select();
+        }
+        //IE quirks mode again, TODO move this into the quirks class
+        else if (ctrl.setSelectionRange) {
+            ctrl.focus();
+            //the selection range is our caret position
+            ctrl.setSelectionRange(pos, pos);
+        }
     },
 
     /**
@@ -195,59 +594,94 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._Dom", Obj
      *
      * @param item the item to be replaced
      * @param markup the markup for the replacement
+     * @param preserveFocus, tries to preserve the focus within the outerhtml operation
+     * if set to true a focus preservation algorithm based on document.activeElement is
+     * used to preserve the focus at the exactly same location as it was
+     *
      */
-    outerHTML : function(item, markup) {
-        if (!item) {
-            throw Error(this._Lang.getMessage("ERR_MUST_BE_PROVIDED1",null,"myfaces._impl._util._Dom.outerHTML", "item"));
-        }
-        if (!markup) {
-            throw Error(this._Lang.getMessage("ERR_MUST_BE_PROVIDED1",null,"myfaces._impl._util._Dom.outerHTML", "markup"));
-        }
+    outerHTML : function(item, markup, preserveFocus) {
+        this._assertStdParams(item, markup, "outerHTML");
+        // we can work on a single element in a cross browser fashion
+        // regarding the focus thanks to the
+        // icefaces team for providing the code
+        if (item.nodeName.toLowerCase() === 'input') {
+            var replacingInput = this._buildEvalNodes(item, markup)[0];
+            this.cloneAttributes(item, replacingInput);
+            return item;
+        } else {
+            markup = this._Lang.trim(markup);
+            if (markup !== "") {
+                var ret = null;
 
-        markup = this._Lang.trim(markup);
-        if (markup !== "") {
-            var ret = null;
-
-            //w3c compliant browsers with proper contextual fragments
-            var parentNode;
-            if (window.Range
-                    && typeof Range.prototype.createContextualFragment == 'function') {
-                ret = this._outerHTMLCompliant(item, markup);
-            } else {
-
-                ret = this._outerHTMLNonCompliant(item, markup);
-            }
-
-            // and remove the old item
-            //first we have to save the node newly insert for easier access in our eval part
-            if (this.isManualScriptEval()) {
-                var isArr = ret instanceof Array;
-                if (isArr && ret.length) {
-                    for (var cnt = 0; cnt < ret.length; cnt++) {
-                        this.runScripts(ret[cnt]);
-                    }
-                } else if (!isArr) {
-                    this.runScripts(ret);
+                var focusElementId = null;
+                var caretPosition = 0;
+                if (preserveFocus && 'undefined' != typeof document.activeElement) {
+                    focusElementId = (document.activeElement) ? document.activeElement.id : null;
+                    caretPosition = this.getCaretPosition(document.activeElement);
                 }
+                // we try to determine the browsers compatibility
+                // level to standards dom level 2 via various methods
+                if (this.isDomCompliant()) {
+                    ret = this._outerHTMLCompliant(item, markup);
+                } else {
+                    //call into abstract method
+                    ret = this._outerHTMLNonCompliant(item, markup);
+                }
+                if (focusElementId) {
+                    var newFocusElement = this.byId(focusElementId);
+                    if (newFocusElement && newFocusElement.nodeName.toLowerCase() === 'input') {
+                        //just in case the replacement element is not focusable anymore
+                        if ("undefined" != typeof newFocusElement.focus) {
+                            newFocusElement.focus();
+                        }
+                    }
+                    if (newFocusElement && caretPosition) {
+                        //zero caret position is set automatically on focus
+                        this.setCaretPosition(newFocusElement, caretPosition);
+                    }
+                }
+
+                // and remove the old item
+                //first we have to save the node newly insert for easier access in our eval part
+                this._eval(ret);
+                return ret;
+            }
+            // and remove the old item, in case of an empty newtag and do nothing else
+            this._removeNode(item, false);
+            return null;
+        }
+    },
+
+    /**
+     * detaches a set of nodes from their parent elements
+     * in a browser independend manner
+     * @param {Object} items the items which need to be detached
+     * @return {Array} an array of nodes with the detached dom nodes
+     */
+    detach: function(items) {
+        var ret = [];
+        if ('undefined' != typeof items.nodeType) {
+            if (items.parentNode) {
+                ret.push(items.parentNode.removeChild(items));
+            } else {
+                ret.push(items);
             }
             return ret;
         }
-        // and remove the old item, in case of an empty newtag and do nothing else
-        this._removeNode(item, false);
-        return null;
+        //all ies treat node lists not as arrays so we have to take
+        //an intermediate step
+        var nodeArr = this._Lang.objToArray(items);
+        for (var cnt = 0; cnt < nodeArr.length; cnt++) {
+            ret.push(nodeArr[cnt].parentNode.removeChild(nodeArr[cnt]));
+        }
+        return ret;
     },
 
     _outerHTMLCompliant: function(item, markup) {
-        var evalNodes;
         //table element replacements like thead, tbody etc... have to be treated differently
-        if (this._isTableElement(item)) {
-            evalNodes = this._buildTableNodes(item, markup);
-        } else {
-            evalNodes = this._buildNodesCompliant(markup);
-        }
-        var evalNodeLen = evalNodes.length;
+        var evalNodes = this._buildEvalNodes(item, markup);
 
-        if (evalNodeLen == 1) {
+        if (evalNodes.length == 1) {
             var ret = evalNodes[0];
             item.parentNode.replaceChild(ret, item);
             return ret;
@@ -257,324 +691,142 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._Dom", Obj
     },
 
     /**
-     * checks if the provided element is a table element
-     * @param itemNodeName
-     * @param innerOnly
+     * checks if the provided element is a subelement of a table element
+     * @param item
      */
     _isTableElement: function(item) {
-        var itemNodeName = (item.nodeName || item.tagName).toLowerCase();
-
-        return this._isTableStructureElement(item) || itemNodeName == "td";
-    },
-
-    _isTableStructureElement: function(item) {
-        var itemNodeName = (item.nodeName || item.tagName).toLowerCase();
-
-        return itemNodeName == "table" || itemNodeName == "thead" ||
-                itemNodeName == "tbody" || itemNodeName == "tfoot" ||
-                itemNodeName == "th" || itemNodeName == "tr";
+        return !!this.TABLE_ELEMS[(item.nodeName || item.tagName).toLowerCase()];
     },
 
     /**
-     * now to the evil browsers
-     * of what we are dealing with is various bugs
-     * first a simple replaceElement leaks memory
-     * secondly embedded scripts can be swallowed upon
-     * innerHTML, we probably could also use direct outerHTML
-     * but then we would run into the script swallow bug
+     * non ie browsers do not have problems with embedded scripts or any other construct
+     * we simply can use an innerHTML in a placeholder
      *
-     * the entire mess is called IE6 and IE7
-     *
-     * @param item
-     * @param markup
+     * @param markup the markup to be used
      */
-    _outerHTMLNonCompliant: function(item, markup) {
-        
-        var b = this._RT.browser;
-        var evalNodes = null;
-
-        try {
-            if (this._isTableElement(item)) {
-                evalNodes = this._buildTableNodes(item, markup);
-            } else {
-                evalNodes = this._buildNodesNonCompliant(markup);
-            }
-
-            if (evalNodes.length == 1) {
-                var ret = evalNodes[0];
-                this.replaceElement(item, evalNodes[0]);
-                return ret;
-            } else {
-                return this.replaceElements(item, evalNodes);
-            }
-       
-        } finally {
-
-            var dummyPlaceHolder = this.getDummyPlaceHolder();
-            //now that Microsoft has finally given
-            //ie a working gc in 8 we can skip the costly operation
-            var b = myfaces._impl.core._Runtime.browser;
-
-            if (b.isIE && b.isIE < 8) {
-                this._removeChildNodes(dummyPlaceHolder, false);
-            }
-            dummyPlaceHolder.innerHTML = "";
-        }
-
-    },
-
     _buildNodesCompliant: function(markup) {
         var dummyPlaceHolder = this.getDummyPlaceHolder(); //document.createElement("div");
         dummyPlaceHolder.innerHTML = markup;
         return this._Lang.objToArray(dummyPlaceHolder.childNodes);
-    }
-    ,
+    },
+
+
+
 
     /**
      * builds up a correct dom subtree
      * if the markup is part of table nodes
+     * The usecase for this is to allow subtable rendering
+     * like single rows thead or tbody
+     *
      * @param item
      * @param markup
      */
     _buildTableNodes: function(item, markup) {
-        var evalNodes;
         var itemNodeName = (item.nodeName || item.tagName).toLowerCase();
-        var probe = this.getDummyPlaceHolder(); //document.createElement("div");
-        if (itemNodeName == "td") {
-            probe.innerHTML = "<table><tbody><tr><td></td></tr></tbody></table>";
-        } else {
-            probe.innerHTML = "<table><" + itemNodeName + "></" + itemNodeName + ">" + "</table>";
-        }
-        var depth = this._determineDepth(probe);
-        
-        this._removeChildNodes(probe, false);
-        probe.innerHTML = "";
 
-        var dummyPlaceHolder = this.getDummyPlaceHolder();//document.createElement("div");
+        var tmpNodeName = itemNodeName;
+        var depth = 0;
+        while (tmpNodeName != "table") {
+            item = item.parentNode;
+            tmpNodeName = (item.nodeName || item.tagName).toLowerCase();
+            depth++;
+        }
+
+        var dummyPlaceHolder = this.getDummyPlaceHolder();
         if (itemNodeName == "td") {
             dummyPlaceHolder.innerHTML = "<table><tbody><tr>" + markup + "</tr></tbody></table>";
         } else {
             dummyPlaceHolder.innerHTML = "<table>" + markup + "</table>";
         }
-        evalNodes = dummyPlaceHolder;
+
         for (var cnt = 0; cnt < depth; cnt++) {
-            evalNodes = evalNodes.childNodes[0];
+            dummyPlaceHolder = dummyPlaceHolder.childNodes[0];
         }
-        evalNodes = (evalNodes.parentNode) ? evalNodes.parentNode.childNodes : null;
-        return this._Lang.objToArray(evalNodes);
-    }
-    ,
+
+        return this.detach(dummyPlaceHolder.childNodes);
+    },
+
+    _removeChildNodes: function(node /*, breakEventsOpen */) {
+        if (!node) return;
+        node.innerHTML = "";
+    },
+
+
+
+    _removeNode: function(node /*, breakEventsOpen*/) {
+        if (!node) return;
+        var parentNode = node.parentNode;
+        if (parentNode) //if the node has a parent
+            parentNode.removeChild(node);
+    },
+
 
     /**
-     * builds the ie nodes properly in a placeholder
-     * and bypasses a non script insert bug that way
-     * @param markup the marku code
+     * build up the nodes from html markup in a browser independend way
+     * so that it also works with table nodes
+     *
+     * @param item the parent item upon the nodes need to be processed upon after building
+     * @param markup the markup to be built up
      */
-    _buildNodesNonCompliant: function(markup) {
-
+    _buildEvalNodes: function(item, markup) {
         var evalNodes = null;
-
-        //now to the non w3c compliant browsers
-        //http://blogs.perl.org/users/clinton_gormley/2010/02/forcing-ie-to-accept-script-tags-in-innerhtml.html
-        //we have to cope with deficiencies between ie and its simulations in this case
-        var probe = this.getDummyPlaceHolder();//document.createElement("div");
-
-        probe.innerHTML = "<table><tbody><tr><td><div></div></td></tr></tbody></table>";
-
-        //we have customers using html unit, this has a bug in the table resolution
-        //hence we determine the depth dynamically
-        var depth = this._determineDepth(probe);
-        var newProbe = probe;
-        this._removeChildNodes(probe, false);
-        probe.innerHTML = "";
-
-        var dummyPlaceHolder = this.getDummyPlaceHolder();//document.createElement("div");
-
-        //fortunately a table element also works which is less critical than form elements regarding
-        //the inner content
-        dummyPlaceHolder.innerHTML = "<table><tbody><tr><td>" + markup + "</td></tr></tbody></table>";
-        evalNodes = dummyPlaceHolder;
-
-        for (var cnt = 0; cnt < depth; cnt++) {
-            evalNodes = evalNodes.childNodes[0];
+        if (this._isTableElement(item)) {
+            evalNodes = this._buildTableNodes(item, markup);
+        } else {
+            var nonIEQuirks = (!this._RT.browser.isIE || this._RT.browser.isIE > 8);
+            //ie8 has a special problem it still has the swallow scripts and other
+            //elements bug, but it is mostly dom compliant so we have to give it a special
+            //treatment, IE9 finally fixes that issue finally after 10 years
+            evalNodes = (this.isDomCompliant() &&  nonIEQuirks) ?
+                    this._buildNodesCompliant(markup) :
+                    //ie8 or quirks mode browsers
+                    this._buildNodesNonCompliant(markup);
         }
-        evalNodes = (evalNodes.parentNode) ? evalNodes.parentNode.childNodes : null;
-
-        if ('undefined' == typeof evalNodes || null == evalNodes) {
-            //fallback for htmlunit which should be good enough
-            //to run the tests, maybe we have to wrap it as well
-            dummyPlaceHolder.innerHTML = "<div>" + markup + "</div>";
-            //note this is triggered only in htmlunit no other browser
-            //so we are save here
-            evalNodes = dummyPlaceHolder.childNodes[0].childNodes;
-        }
-        return this._Lang.objToArray(evalNodes);
-
-    }
-    ,
-
-    _determineDepth: function(probe) {
-        var depth = 0;
-        var newProbe = probe;
-        while (newProbe) {
-            newProbe = newProbe.childNodes[0];
-            depth++;
-        }
-        depth--;
-        return depth;
-    }
-    ,
-
-
-    //now to another nasty issue:
-    //for ie we have to walk recursively over all nodes:
-    //http://msdn.microsoft.com/en-us/library/bb250448%28VS.85%29.aspx
-    //http://weblogs.java.net/blog/driscoll/archive/2009/11/13/ie-memory-management-and-you
-    //http://home.orange.nl/jsrosman/
-    //http://www.quirksmode.org/blog/archives/2005/10/memory_leaks_li.html
-    //http://www.josh-davis.org/node/7
-    _removeNode: function(node, breakEventsOpen) {
-        if (!node) return;
-        var b = this._RT.browser;
-        if (!b.isIE || b.isIE >= 8) {
-            //recursive descension only needed for old ie versions
-            //all newer browsers cleanup the garbage just fine without it
-            //thank you
-            if ('undefined' != typeof node.parentNode && null != node.parentNode) //if the node has a parent
-                node.parentNode.removeChild(node);
-            return;
-        }
-
-        //now to the browsers with non working garbage collection
-        this._removeChildNodes(node, breakEventsOpen);
-
-        try {
-            //outer HTML setting is only possible in earlier IE versions all modern browsers throw an exception here
-            //again to speed things up we precheck first
-            if(!this._isTableStructureElement(childNode)) {
-                //we do not do a table structure innnerhtml on table elements except td
-                //htmlunit rightfully complains that we should not do it
-                node.innerHTML = "";
-            }
-            if (b.isIE && 'undefined' != typeof node.outerHTML) {//ie8+ check done earlier we skip it here
-                node.outerHTML = '';
-            } else {
-                this._removeFromParent(node);
-            }
-            if (!b.isIEMobile) {
-                delete node;
-            }
-        } catch (e) {
-            //on some elements we might not have covered by our table check on the outerHTML
-            // can fail we skip those in favor of stability
-            try {
-                // both innerHTML and outerHTML fails when <tr> is the node, but in that case 
-                // we need to force node removal, otherwise it will be on the tree (IE 7 IE 6)
-                this._removeFromParent(node);
-            } catch (e1) {
-            }
-        }
-    }
-    ,
-
-    _removeFromParent: function(node) {
-        if ('undefined' != typeof node.parentNode && null != node.parentNode) //if the node has a parent
-                    node.parentNode.removeChild(node);
+        return evalNodes;
     },
 
     /**
-     * recursive delete child nodes
-     * node, this method only makes sense in the context of IE6 + 7 hence
-     * it is not exposed to the public API, modern browsers
-     * can garbage collect the nodes just fine by doing the standard removeNode method
-     * from the dom API!
+     * we have lots of methods with just an item and a markup as params
+     * this method builds an assertion for those methods to reduce code
      *
-     * @param node  the node from which the childnodes have to be deletd
-     * @param breakEventsOpen if set to true a standard events breaking is performed
+     * @param item  the item to be tested
+     * @param markup the markup
+     * @param caller caller function
+     * @param {optional} params array of assertion param names
      */
-    _removeChildNodes: function(node, breakEventsOpen) {
-        if (!node) return;
-
-        //node types which cannot be cleared up by normal means
-        var disallowedNodes = {
-            "thead": true,
-            "tbody": true,
-            "tr": true,
-            "td": true
-        };
-
-        //for now we do not enable it due to speed reasons
-        //normally the framework has to do some event detection
-        //which we cannot do yet, I will dig for options
-        //to enable it in a speedly manner
-        //ie7 fixes this area anyway
-        //this.breakEvents(node);
-
-        var b = this._RT.browser;
-        if (breakEventsOpen) {
-            this.breakEvents(node);
+    _assertStdParams: function(item, markup, caller, params) {
+        //internal error
+        if (!caller) {
+            throw this._Lang.makeException(new Error(), null, null, this._nameSpace, "_assertStdParams",  "Caller must be set for assertion");
         }
+        var _Lang = this._Lang,
+                ERR_PROV = "ERR_MUST_BE_PROVIDED1",
+                DOM = "myfaces._impl._util._Dom.",
+                finalParams = params || ["item", "markup"];
 
-        for (var cnt = node.childNodes.length - 1; cnt >= 0; cnt -= 1) {
-            var childNode = node.childNodes[cnt];
-            //we cannot use our generic recursive tree walking due to the needed head recursion
-            //to clean it up bottom up, the tail recursion we were using in the search either would use more time
-            //because we had to walk and then clean bottom up, so we are going for a direct head recusion here
-            if ('undefined' != typeof childNode.childNodes && node.childNodes.length)
-                this._removeChildNodes(childNode);
-            try {
-                var nodeName = (childNode.nodeName || childNode.tagName) ? (childNode.nodeName || childNode.tagName).toLowerCase() : null;
-                //ie chokes on clearing out table inner elements, this is also covered by our empty
-                //catch block, but to speed things up it makes more sense to precheck that
-                if (!disallowedNodes[nodeName]) {
-                    //outer HTML setting is only possible in earlier IE versions all modern browsers throw an exception here
-                    //again to speed things up we precheck first
-                    if(!this._isTableStructureElement(childNode)) {    //table elements cannot be deleted
-                        childNode.innerHTML = "";
-                    }
-                    if (b.isIE && b.isIE < 8 && 'undefined' != childNode.outerHTML)
-                        childNode.outerHTML = '';
-                    else {
-                        node.removeChild(childNode);
-                    }
-                    if (!b.isIEMobile) {
-                        delete childNode;
-                    }
-                }
-            } catch (e) {
-                //on some elements the outerHTML can fail we skip those in favor
-                //of stability
-
-            }
+        if (!item || !markup) {
+            _Lang.makeException(new Error(), null, null,DOM, ""+caller,  _Lang.getMessage(ERR_PROV, null, DOM +"."+ caller, (!item) ? finalParams[0] : finalParams[1]));
+            //throw Error(_Lang.getMessage(ERR_PROV, null, DOM + caller, (!item) ? params[0] : params[1]));
         }
-    }
-    ,
+    },
 
     /**
-     * break the standard events from an existing dom node
-     * (note this method is not yet used, but can be used
-     * by framework authors to get rid of ie circular event references)
-     *
-     * another way probably would be to check all attributes of a node
-     * for a function and if one is present break it by nulling it
-     * I have to do some further investigation on this.
-     *
-     * The final fix is to move away from ie6 at all which is the root cause of
-     * this.
-     *
-     * @param node the node which has to be broken off its events
+     * internal eval handler used by various functions
+     * @param _nodeArr
      */
-    breakEvents: function(node) {
-        if (!node) return;
-        var evtArr = this.IE_QUIRKS_EVENTS;
-        for (var key in evtArr) {
-            if (key != "onunload" && node[key]) {
-                node[key] = null;
+    _eval: function(_nodeArr) {
+        if (this.isManualScriptEval()) {
+            var isArr = _nodeArr instanceof Array;
+            if (isArr && _nodeArr.length) {
+                for (var cnt = 0; cnt < _nodeArr.length; cnt++) {
+                    this.runScripts(_nodeArr[cnt]);
+                }
+            } else if (!isArr) {
+                this.runScripts(_nodeArr);
             }
         }
-    }
-    ,
-
+    },
 
     /**
      * for performance reasons we work with replaceElement and replaceElements here
@@ -583,21 +835,13 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._Dom", Obj
      * a single node case is the 95% case
      *
      * @param item
-     * @param evalNodes
+     * @param evalNode
      */
     replaceElement: function(item, evalNode) {
-
-        var _Browser = this._RT.browser;
-        if (!_Browser.isIE || _Browser.isIE >= 8) {
-            //standards conform no leaking browser
-            item.parentNode.replaceChild(evalNode, item);
-        } else {
-            //browsers with defect garbage collection
-            item.parentNode.insertBefore(evalNode, item);
-            this._removeNode(item, false);
-        }
-    }
-    ,
+        //browsers with defect garbage collection
+        item.parentNode.insertBefore(evalNode, item);
+        this._removeNode(item, false);
+    },
 
 
     /**
@@ -610,13 +854,13 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._Dom", Obj
     replaceElements: function (item, evalNodes) {
         var evalNodesDefined = evalNodes && 'undefined' != typeof evalNodes.length;
         if (!evalNodesDefined) {
-            throw new Error(this._Lang.getMessage("ERR_REPLACE_EL"));
+            throw this._Lang.makeException(new Error(), null, null, this._nameSpace, "replaceElements",  this._Lang.getMessage("ERR_REPLACE_EL"));
         }
 
-        var parentNode = item.parentNode;
+        var parentNode = item.parentNode,
 
-        var sibling = item.nextSibling;
-        var resultArr = this._Lang.objToArray(evalNodes);
+                sibling = item.nextSibling,
+                resultArr = this._Lang.objToArray(evalNodes);
 
         for (var cnt = 0; cnt < resultArr.length; cnt++) {
             if (cnt == 0) {
@@ -626,43 +870,37 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._Dom", Obj
                     parentNode.insertBefore(resultArr[cnt], sibling);
                 } else {
                     parentNode.appendChild(resultArr[cnt]);
-
                 }
             }
         }
-
         return resultArr;
-    }
-    ,
+    },
 
     /**
      * optimized search for an array of tag names
-     *
+     * deep scan will always be performed.
      * @param fragment the fragment which should be searched for
      * @param tagNames an map indx of tag names which have to be found
-     * @param deepScan if set to true a deep scan is performed otherwise a shallow scan
+     *
      */
-    findByTagNames: function(fragment, tagNames, deepScan) {
+    findByTagNames: function(fragment, tagNames) {
+        this._assertStdParams(fragment, tagNames, "findByTagNames", ["fragment", "tagNames"]);
 
+        var nodeType = fragment.nodeType;
+        if (nodeType != 1 && nodeType != 9 && nodeType != 11) return null;
 
-        //shortcut for single components
-        if (!deepScan && tagNames[fragment.tagName.toLowerCase()]) {
-            return fragment;
-        }
-
-        //shortcut elementsByTagName
-        if (deepScan && this._Lang.exists(fragment, "getElementsByTagName")) {
-            var retArr = [];
+        //we can use the shortcut
+        if (fragment.querySelectorAll) {
+            var query = [];
             for (var key in tagNames) {
-                var foundElems = this.findByTagName(fragment, key, deepScan);
-                if (foundElems) {
-                    retArr = retArr.concat(foundElems);
-                }
+                if(!tagNames.hasOwnProperty(key)) continue;
+                query.push(key);
             }
-            return retArr;
-        } else if (deepScan) {
-            //no node type with child tags we can handle that without node type checking
-            return null;
+            var res = [];
+            if (fragment.tagName && tagNames[fragment.tagName.toLowerCase()]) {
+                res.push(fragment);
+            }
+            return res.concat(this._Lang.objToArray(fragment.querySelectorAll(query.join(", "))));
         }
 
         //now the filter function checks case insensitively for the tag names needed
@@ -672,20 +910,18 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._Dom", Obj
 
         //now we run an optimized find all on it
         try {
-            return this.findAll(fragment, filter, deepScan);
+            return this.findAll(fragment, filter, true);
         } finally {
             //the usual IE6 is broken, fix code
             filter = null;
         }
-    }
-    ,
+    },
 
     /**
      * determines the number of nodes according to their tagType
      *
      * @param {Node} fragment (Node or fragment) the fragment to be investigated
      * @param {String} tagName the tag name (lowercase)
-     * @param {Boolean} deepScan if set to true a found element does not prevent to scan deeper
      * (the normal usecase is false, which means if the element is found only its
      * adjacent elements will be scanned, due to the recursive descension
      * this should work out with elements with different nesting depths but not being
@@ -694,85 +930,29 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._Dom", Obj
      * @return the child elements as array or null if nothing is found
      *
      */
-    findByTagName : function(fragment, tagName, deepScan) {
+    findByTagName : function(fragment, tagName) {
+        this._assertStdParams(fragment, tagName, "findByTagName", ["fragment", "tagName"]);
+        var _Lang = this._Lang,
+                nodeType = fragment.nodeType;
+        if (nodeType != 1 && nodeType != 9 && nodeType != 11) return null;
 
         //remapping to save a few bytes
-        var _Lang = this._Lang;
 
-        deepScan = !!deepScan;
+        var ret = _Lang.objToArray(fragment.getElementsByTagName(tagName));
+        if (fragment.tagName && _Lang.equalsIgnoreCase(fragment.tagName, tagName)) ret.unshift(fragment);
+        return ret;
+    },
 
-        //elements by tagname is the fastest, ie throws an error on fragment.getElementsByTagName, the exists type
-        //via namespace array checking is safe
-        if (deepScan && _Lang.exists(fragment, "getElementsByTagName")) {
-            var ret = _Lang.objToArray(fragment.getElementsByTagName(tagName));
-            if (fragment.tagName && _Lang.equalsIgnoreCase(fragment.tagName, tagName)) ret.unshift(fragment);
-            return ret;
-        } else if (deepScan) {
-            //no node type with child tags we can handle that without node type checking
-            return null;
-        }
-        //since getElementsByTagName is a standardized dom node function and ie also supports
-        //it since 5.5
-        //we need no fallback to the query api and the recursive filter
-        //also is only needed in case of no deep scan or non dom elements
+    findByName : function(fragment, name) {
+        this._assertStdParams(fragment, name, "findByName", ["fragment", "name"]);
 
-        var filter = function(node) {
-            return node.tagName && _Lang.equalsIgnoreCase(node.tagName, tagName);
-        };
-        try {
-            return this.findAll(fragment, filter, deepScan);
-        } finally {
-            //the usual IE6 is broken, fix code
-            filter = null;
-            _Lang = null;
-        }
+        var nodeType = fragment.nodeType;
+        if (nodeType != 1 && nodeType != 9 && nodeType != 11) return null;
 
-    }
-    ,
-
-    findByName : function(fragment, name, deepScan) {
-        var _Lang = this._Lang;
-        var filter = function(node) {
-            return  node.name && _Lang.equalsIgnoreCase(node.name, name);
-        };
-        try {
-            deepScan = !!deepScan;
-
-            //elements byName is the fastest
-            if (deepScan && _Lang.exists(fragment, "getElementsByName")) {
-                var ret = _Lang.objToArray(fragment.getElementsByName(name));
-                if (fragment.name == name) ret.unshift(fragment);
-                return ret;
-
-            }
-
-            if (deepScan && _Lang.exists(fragment, "querySelectorAll")) {
-                try {
-                    var newName = name;
-                    if (_Lang.isString(newName)) {
-                        newName = _Lang.escapeString(newName);
-                    }
-                    var result = fragment.querySelectorAll("[name=" + newName + "]");
-                    if (fragment.nodeType == 1 && filter(fragment)) {
-                        result = (result == null) ? [] : _Lang.objToArray(result);
-                        result.push(fragment);
-                    }
-                    return result;
-                } catch(e) {
-                    //in case the selector bombs we retry manually
-                }
-            }
-
-            return this.findAll(fragment, filter, deepScan);
-        } finally {
-            //the usual IE6 is broken, fix code
-            filter = null;
-            _Lang = null;
-        }
-    }
-    ,
-
-
+        var ret = this._Lang.objToArray(fragment.getElementsByName(name));
+        if (fragment.name == name) ret.unshift(fragment);
+        return ret;
+    },
 
     /**
      * a filtered findAll for subdom treewalking
@@ -789,44 +969,10 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._Dom", Obj
         if (document.createTreeWalker && NodeFilter) {
             return this._iteratorSearchAll(rootNode, filter, deepScan);
         } else {
+            //will not be called in dom level3 compliant browsers
             return this._recursionSearchAll(rootNode, filter, deepScan);
         }
-
-    }
-    ,
-
-    /**
-     * classical recursive way which definitely will work on all browsers
-     * including the IE6
-     *
-     * @param rootNode the root node
-     * @param filter the filter to be applied to
-     * @param deepScan if set to true a deep scan is performed
-     */
-    _recursionSearchAll: function(rootNode, filter, deepScan) {
-        var ret = [];
-        //fix the value to prevent undefined errors
-
-        if (filter(rootNode)) {
-            ret.push(rootNode);
-            if (!deepScan) return ret;
-        }
-
-        //
-        if (!rootNode.childNodes) {
-            return ret;
-        }
-
-        //subfragment usecases
-
-        var retLen = ret.length;
-        var childLen = rootNode.childNodes.length;
-        for (var cnt = 0; (deepScan || retLen == 0) && cnt < childLen; cnt++) {
-            ret = ret.concat(this._recursionSearchAll(rootNode.childNodes[cnt], filter, deepScan));
-        }
-        return ret;
-    }
-    ,
+    },
 
     /**
      * the faster dom iterator based search, works on all newer browsers
@@ -853,130 +999,44 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._Dom", Obj
         }
         //we use the reject mechanism to prevent a deep scan reject means any
         //child elements will be omitted from the scan
+        var FILTER_ACCEPT = NodeFilter.FILTER_ACCEPT,
+                FILTER_SKIP = NodeFilter.FILTER_SKIP,
+                FILTER_REJECT = NodeFilter.FILTER_REJECT;
+
         var walkerFilter = function (node) {
-            var retCode = (filter(node)) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
-            retCode = (!deepScan && retCode == NodeFilter.FILTER_ACCEPT) ? NodeFilter.FILTER_REJECT : retCode;
-            if (retCode == NodeFilter.FILTER_ACCEPT || retCode == NodeFilter.FILTER_REJECT) {
+            var retCode = (filter(node)) ? FILTER_ACCEPT : FILTER_SKIP;
+            retCode = (!deepScan && retCode == FILTER_ACCEPT) ? FILTER_REJECT : retCode;
+            if (retCode == FILTER_ACCEPT || retCode == FILTER_REJECT) {
                 retVal.push(node);
             }
             return retCode;
         };
+
         var treeWalker = document.createTreeWalker(rootNode, NodeFilter.SHOW_ELEMENT, walkerFilter, false);
         //noinspection StatementWithEmptyBodyJS
         while (treeWalker.nextNode());
         return retVal;
-    }
-    ,
+    },
 
     /**
      * bugfixing for ie6 which does not cope properly with setAttribute
      */
     setAttribute : function(node, attr, val) {
-
-        if (!node) {
-            throw Error(this._Lang.getMessage("ERR_MUST_BE_PROVIDED1",null, "_Dom.setAttribute", "node {DomNode}"));
-        }
-        if (!attr) {
-            throw Error(this._Lang.getMessage("ERR_MUST_BE_PROVIDED1",null, "_Dom.setAttribute", "attr {String}"));
-        }
-
-        //quirks mode and ie7 mode has the attributes problems ie8 standards mode behaves like
-        //a good citizen
-        var _Browser = this._RT.browser;
-        if (!_Browser.isIE || _Browser.isIE > 7) {
-            if (!node.setAttribute) {
-                return;
-            }
-            node.setAttribute(attr, val);
+        this._assertStdParams(node, attr, "setAttribute", ["fragment", "name"]);
+        if (!node.setAttribute) {
             return;
         }
 
-        /*
-         Now to the broken browsers IE6+.... ie7 and ie8 quirks mode
-
-         we deal mainly with three problems here
-         class and for are not handled correctly
-         styles are arrays and cannot be set directly
-         and javascript events cannot be set via setAttribute as well!
-
-         or in original words of quirksmode.org ... this is a mess!
-
-         Btw. thank you Microsoft for providing all necessary tools for free
-         for being able to debug this entire mess in the ie rendering engine out
-         (which is the Microsoft ie vms, developers toolbar, Visual Web Developer 2008 express
-         and the ie8 8 developers toolset!)
-
-         also thank you http://www.quirksmode.org/
-         dojotoolkit.org and   //http://delete.me.uk/2004/09/ieproto.html
-         for additional information on this mess!
-
-         The lowest common denominator tested within this code
-         is IE6, older browsers for now are legacy!
-         */
-        attr = attr.toLowerCase();
-
-        if (attr === "class") {
-            //setAttribute does not work for winmobile browsers
-            //firect calls work
-            node.className = val;
-        } else if (attr === "name") {
-            //the ie debugger fails to assign the name via setAttr
-            //in quirks mode
-            node[attr] = val;
-        } else if (attr === "for") {
-            if (!_Browser.isIEMobile || _Browser.isIEMobile >= 7) {
-                node.setAttribute("htmlFor", val);
-            } else {
-                node.htmlFor = val;
-            }
-        } else if (attr === "style") {
-            //We have to split the styles here and assign them one by one
-            var styles = val.split(";");
-            var stylesLen = styles.length;
-            for (var loop = 0; loop < stylesLen; loop++) {
-                var keyVal = styles[loop].split(":");
-                if (keyVal[0] != "" && keyVal[0] == "opacity") {
-                    //special ie quirks handling for opacity
-
-                    var opacityVal = Math.max(100, Math.round(parseFloat(keyVal[1]) * 10));
-                    //probably does not work in ie mobile anyway
-                    if (!_Browser.isIEMobile || _Browser.isIEMobile >= 7) {
-                        node.style.setAttribute("arrFilter", "alpha(opacity=" + opacityVal + ")");
-                    }
-                    //if you need more hacks I would recommend
-                    //to use the class attribute and conditional ie includes!
-                } else if (keyVal[0] != "") {
-                    if (!_Browser.isIEMobile || _Browser.isIEMobile >= 7) {
-                        node.style.setAttribute(keyVal[0], keyVal[1]);
-                    } else {
-                        node.style[keyVal[0]] = keyVal[1];
-                    }
-                }
-            }
+        if (attr === 'disabled') {
+            node.disabled = val === 'disabled' || val === 'true';
+        } else if (attr === 'checked') {
+            node.checked = val === 'checked' || val === 'on' || val === 'true';
+        } else if (attr == 'readonly') {
+            node.readOnly = val === 'readonly' || val === 'true';
         } else {
-            //check if the attribute is an event, since this applies only
-            //to quirks mode of ie anyway we can live with the standard html4/xhtml
-            //ie supported events
-            if (this.IE_QUIRKS_EVENTS[attr]) {
-                if (this._Lang.isString(attr)) {
-                    //event resolves to window.event in ie
-                    node.setAttribute(attr, function() {
-                        //event implicitly used
-                        return this._Lang.globalEval(val);
-                    });
-                }
-            } else {
-                //unknown cases we try to catch them via standard setAttributes
-                if (!_Browser.isIEMobile || _Browser.isIEMobile >= 7) {
-                    node.setAttribute(attr, val);
-                } else {
-                    node[attr] = val;
-                }
-            }
+            node.setAttribute(attr, val);
         }
-    }
-    ,
-
+    },
 
     /**
      * fuzzy form detection which tries to determine the form
@@ -1011,9 +1071,13 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._Dom", Obj
      * @param {Node} elem - element as source, can be detached, undefined or null
      *
      * @return either null or a form node if it could be determined
+     *
+     * TODO move this into extended and replace it with a simpler algorithm
      */
     fuzzyFormDetection : function(elem) {
-        if (!document.forms || !document.forms.length) {
+        var forms = document.forms, _Lang = this._Lang;
+
+        if (!forms || !forms.length) {
             return null;
         }
 
@@ -1022,69 +1086,33 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._Dom", Obj
         //we can cover that case by simply adding one of our config params
         //the default is the weaker, but more correct portlet code
         //you can override it with myfaces_config.no_portlet_env = true globally
-        else if (1 == document.forms.length && this._RT.getGlobalConfig("no_portlet_env", false)) {
-            return document.forms[0];
-        }
-        if (!elem) {
-            return null;
+        else if (1 == forms.length && this._RT.getGlobalConfig("no_portlet_env", false)) {
+            return forms[0];
         }
 
         //before going into the more complicated stuff we try the simple approach
-        if (!this._Lang.isString(elem)) {
-
-            //html 5 allows finally the detachement of elements
-            //by introducing a form attribute
-
-            var elemForm = this.html5FormDetection(elem);
-            if (elemForm) {
-                return elemForm;
-            }
-
+        var finalElem = this.byId(elem);
+        var fetchForm = _Lang.hitch(this, function(elem) {
             //element of type form then we are already
             //at form level for the issuing element
             //https://issues.apache.org/jira/browse/MYFACES-2793
 
-            if (this._Lang.equalsIgnoreCase(elem.tagName, "form")) {
-                return elem;
-            }
-            var ret = this.getParent(elem, "form");
-            if (ret) return ret;
-        } else {
-            elem = this.byId(elem);
-            // element might have removed from DOM in method processUpdate 
-            if (!elem){
-            	return null;
-            }
-            var ret = this.getParent(elem, "form");
-            if (ret) return ret;
-        }
+            return (_Lang.equalsIgnoreCase(elem.tagName, "form")) ? elem :
+                    ( this.html5FormDetection(elem) || this.getParent(elem, "form"));
+        });
 
-        var id = elem.id || null;
-        var name = elem.name || null;
-        //a framework in a detachment case also can replace an existing identifier element
-        // with a name element
-        name = name || id;
-        var foundForm;
-
-        if (id && '' != id) {
-            //we have to assert that the element passed down is detached
-            var domElement = this.byId(id);
-            var elemForm = this.html5FormDetection(domElement);
-            if (elemForm) {
-                return elemForm;
-            }
-
-            if (domElement) {
-                foundForm = this.getParent(domElement, "form");
-                if (null != foundForm) return foundForm;
-            }
+        if (finalElem) {
+            var elemForm = fetchForm(finalElem);
+            if (elemForm) return elemForm;
         }
 
         /**
          * name check
          */
         var foundElements = [];
-
+        var name = (_Lang.isString(elem)) ? elem : elem.name;
+        //id detection did not work
+        if (!name) return null;
         /**
          * the lesser chance is the elements which have the same name
          * (which is the more likely case in case of a brute dom replacement)
@@ -1093,28 +1121,20 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._Dom", Obj
         if (nameElems) {
             for (var cnt = 0; cnt < nameElems.length && foundElements.length < 2; cnt++) {
                 // we already have covered the identifier case hence we only can deal with names,
-                foundForm = this.getParent(nameElems[cnt], "form");
-                if (null != foundForm) {
+                var foundForm = fetchForm(nameElems[cnt]);
+                if (foundForm) {
                     foundElements.push(foundForm);
                 }
             }
         }
 
         return (1 == foundElements.length ) ? foundElements[0] : null;
-    }
-    ,
+    },
 
-    html5FormDetection: function(item) {
-        if (this._RT.browser.isIEMobile && this._RT.browser.isIEMobile <= 7) {
-            return null;
-        }
-        var elemForm = this.getAttribute(item, "form");
-        if (elemForm) {
-            return this.byId(elemForm);
-        }
+    html5FormDetection: function(/*item*/) {
         return null;
-    }
-    ,
+    },
+
 
     /**
      * gets a parent of an item with a given tagname
@@ -1124,7 +1144,8 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._Dom", Obj
     getParent : function(item, tagName) {
 
         if (!item) {
-            throw Error(this._Lang.getMessage("ERR_MUST_BE_PROVIDED1",null, "_Dom.getParent", "item {DomNode}"));
+            throw this._Lang.makeException(new Error(), null, null, this._nameSpace, "getParent",
+                    this._Lang.getMessage("ERR_MUST_BE_PROVIDED1", null, "_Dom.getParent", "item {DomNode}"));
         }
 
         var _Lang = this._Lang;
@@ -1138,8 +1159,7 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._Dom", Obj
             searchClosure = null;
             _Lang = null;
         }
-    }
-    ,
+    },
 
     /**
      * A parent walker which uses
@@ -1149,12 +1169,7 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._Dom", Obj
      * @param {function} filter the filter closure
      */
     getFilteredParent : function(item, filter) {
-        if (!item) {
-            throw Error(this._Lang.getMessage("ERR_MUST_BE_PROVIDED1",null, "_Dom.getFilteredParent", "item {DomNode}"));
-        }
-        if (!filter) {
-            throw Error(this._Lang.getMessage("ERR_MUST_BE_PROVIDED1",null, "_Dom.getFilteredParent", "filter {function}"));
-        }
+        this._assertStdParams(item, filter, "getFilteredParent", ["item", "filter"]);
 
         //search parent tag parentName
         var parentItem = (item.parentNode) ? item.parentNode : null;
@@ -1163,58 +1178,7 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._Dom", Obj
             parentItem = parentItem.parentNode;
         }
         return (parentItem) ? parentItem : null;
-    }
-    ,
-
-    /**
-     * a closure based child filtering routine
-     * which steps one level down the tree and
-     * applies the filter closure
-     *
-     * @param item the node which has to be investigates
-     * @param filter the filter closure
-     */
-    getFilteredChild: function(item, filter) {
-        if (!item) {
-            throw Error(this._Lang.getMessage("ERR_MUST_BE_PROVIDED1",null, "_Dom.getFilteredParent", "item {DomNode}"));
-        }
-        if (!filter) {
-            throw Error(this._Lang.getMessage("ERR_MUST_BE_PROVIDED1",null, "_Dom.getFilteredParent", "filter {function}"));
-        }
-
-        var childs = item.childNodes;
-        if (!childs) {
-            return null;
-        }
-        for (var c = 0, cLen = childs.length; c < cLen; c++) {
-            if (filter(childs[c])) {
-                return childs[c];
-            }
-        }
-        return null;
-    }
-    ,
-
-    /**
-     * gets the child of an item with a given tag name
-     * @param {Node} item - parent element
-     * @param {String} childName - TagName of child element
-     * @param {String} itemName - name  attribute the child can have (can be null)
-     * @Deprecated
-     */
-    getChild: function(item, childName, itemName) {
-        var _Lang = this._Lang;
-
-        function filter(node) {
-            return node.tagName
-                    && _Lang.equalsIgnoreCase(node.tagName, childName)
-                    && (!itemName || (itemName && itemName == node.getAttribute("name")));
-
-        }
-
-        return this.getFilteredChild(item, filter);
-    }
-    ,
+    },
 
     /**
      * cross ported from dojo
@@ -1225,40 +1189,8 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._Dom", Obj
      * @return the attributes value or null
      */
     getAttribute : function(/* HTMLElement */node, /* string */attr) {
-        //	summary
-        //	Returns the value of attribute attr from node.
-        node = this.byId(node);
-        // FIXME: need to add support for attr-specific accessors
-        if ((!node) || (!node.getAttribute)) {
-            // if(attr !== 'nwType'){
-            //	alert("getAttr of '" + attr + "' with bad node");
-            // }
-            return null;
-        }
-        var ta = typeof attr == 'string' ? attr : new String(attr);
-
-        // first try the approach most likely to succeed
-        var v = node.getAttribute(ta.toUpperCase());
-        if ((v) && (typeof v == 'string') && (v != "")) {
-            return v;	//	string
-        }
-
-        // try returning the attributes value, if we couldn't get it as a string
-        if (v && v.value) {
-            return v.value;	//	string
-        }
-
-        // this should work on Opera 7, but it's a little on the crashy side
-        if ((node.getAttributeNode) && (node.getAttributeNode(ta))) {
-            return (node.getAttributeNode(ta)).value;	//	string
-        } else if (node.getAttribute(ta)) {
-            return node.getAttribute(ta);	//	string
-        } else if (node.getAttribute(ta.toLowerCase())) {
-            return node.getAttribute(ta.toLowerCase());	//	string
-        }
-        return null;	//	string
-    }
-    ,
+        return node.getAttribute(attr);
+    },
 
     /**
      * checks whether the given node has an attribute attached
@@ -1271,41 +1203,7 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._Dom", Obj
         //	summary
         //	Determines whether or not the specified node carries a value for the attribute in question.
         return this.getAttribute(node, attr) ? true : false;	//	boolean
-    }
-    ,
-
-    /**
-     * fetches the style class for the node
-     * cross ported from the dojo toolkit
-     * @param {String|Object} node the node to search
-     * @returns the className or ""
-     */
-    getClass : function(node) {
-        node = this.byId(node);
-        if (!node) {
-            return "";
-        }
-        var cs = "";
-        if (node.className) {
-            cs = node.className;
-        } else {
-            if (this.hasAttribute(node, "class")) {
-                cs = this.getAttribute(node, "class");
-            }
-        }
-        return cs.replace(/^\s+|\s+$/g, "");
-    }
-    ,
-    /**
-     * fetches the class for the node,
-     * cross ported from the dojo toolkit
-     * @param {String|Object}node the node to search
-     */
-    getClasses : function(node) {
-        var c = this.getClass(node);
-        return (c == "") ? [] : c.split(/\s+/g);
-    }
-    ,
+    },
 
     /**
      * concatenation routine which concats all childnodes of a node which
@@ -1319,84 +1217,18 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._Dom", Obj
             cDataBlock.push(node.childNodes[i].data);
         }
         return cDataBlock.join('');
-    }
-    ,
+    },
 
+    //all modern browsers evaluate the scripts
+    //manually this is a w3d recommendation
     isManualScriptEval: function() {
+        return true;
+    },
 
-        if (!this._Lang.exists(myfaces, "config._autoeval")) {
-            var _Browser = this._RT.browser;
-            //now we rely on the document being processed if called for the first time
-            var evalDiv = document.createElement("div");
-            this._Lang.reserveNamespace("myfaces.config._autoeval");
-            //null not swallowed
-            myfaces.config._autoeval = false;
-
-            var markup = "<script type='text/javascript'> myfaces.config._autoeval = true; </script>";
-            //now we rely on the same replacement mechanisms as outerhtml because
-            //some browsers have different behavior of embedded scripts in the contextualfragment
-            //or innerhtml case (opera for instance), this way we make sure the
-            //eval detection is covered correctly
-            this.setAttribute(evalDiv, "style", "display:none");
-
-            //it is less critical in some browsers (old ie versions)
-            //to append as first element than as last
-            //it should not make any difference layoutwise since we are on display none anyway.
-            this.insertFirst(evalDiv);
-
-            //we remap it into a real boolean value
-            if (window.Range
-                    && typeof Range.prototype.createContextualFragment == 'function') {
-                this._outerHTMLCompliant(evalDiv, markup);
-            } else {
-                this._outerHTMLNonCompliant(evalDiv, markup);
-            }
-
-        }
-
-        return  !myfaces.config._autoeval;
-        /* var d = _this.browser;
-
-
-         return (_this.exists(d, "isIE") &&
-         ( d.isIE > 5.5)) ||
-         //firefox at version 4 beginning has dropped
-         //auto eval to be compliant with the rest
-         (_this.exists(d, "isFF") &&
-         (d.isFF > 3.9)) ||
-         (_this.exists(d, "isKhtml") &&
-         (d.isKhtml > 0)) ||
-         (_this.exists(d, "isWebKit") &&
-         (d.isWebKit > 0)) ||
-         (_this.exists(d, "isSafari") &&
-         (d.isSafari > 0));
-         */
-        //another way to determine this without direct user agent parsing probably could
-        //be to add an embedded script tag programmatically and check for the script variable
-        //set by the script if existing, the add went through an eval if not then we
-        //have to deal with it ourselves, this might be dangerous in case of the ie however
-        //so in case of ie we have to parse for all other browsers we can make a dynamic
-        //check if the browser does auto eval
-
-    }
-    ,
-
-    isMultipartCandidate: function(executes) {
-        if (this._Lang.isString(executes)) {
-            executes = this._Lang.strToArray(executes, /\s+/);
-        }
-
-        for (var exec in executes) {
-            var element = this.byId(executes[exec]);
-            var inputs = this.findByTagName(element, "input", true);
-            for (var key in inputs) {
-                if (this.getAttribute(inputs[key], "type") == "file") return true;
-            }
-        }
+    isMultipartCandidate: function(/*executes*/) {
+        //implementation in the experimental part
         return false;
-    }
-    ,
-
+    },
 
     insertFirst: function(newNode) {
         var body = document.body;
@@ -1405,35 +1237,26 @@ myfaces._impl.core._Runtime.singletonExtendClass("myfaces._impl._util._Dom", Obj
         } else {
             body.appendChild(newNode);
         }
-    }
-    ,
+    },
 
     byId: function(id) {
         return this._Lang.byId(id);
-    }
-    ,
+    },
 
-    getDummyPlaceHolder: function(markup) {
-        var created = false;
-        if (!this._dummyPlaceHolder) {
-            this._dummyPlaceHolder = document.createElement("div");
-            created = true;
-        }
-
-        //ieMobile in its 6.1-- incarnation cannot handle innerHTML detached objects so we have
-        //to attach the dummy placeholder, we try to avoid it for
-        //better browsers so that we do not have unecessary dom operations
-        if (this._RT.browser.isIEMobile && created) {
-            this.insertFirst(this._dummyPlaceHolder);
-
-            this.setAttribute(this._dummyPlaceHolder, "style", "display: none");
-
-        }
-
+    getDummyPlaceHolder: function() {
+        this._dummyPlaceHolder = this._dummyPlaceHolder ||this.createElement("div");
         return this._dummyPlaceHolder;
+    },
+
+    /**
+     * fetches the window id for the current request
+     * note, this is a preparation method for jsf 2.2
+     *
+     */
+    getWindowId: function() {
+        //implementation in the experimental part
+        return null;
     }
-}
-        )
-        ;
+});
 
 

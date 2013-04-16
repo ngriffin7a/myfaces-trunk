@@ -21,13 +21,16 @@ package javax.faces.component;
 import java.io.Serializable;
 import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.RandomAccess;
 
 /**
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-class _ComponentChildrenList extends AbstractList<UIComponent> implements Serializable
+class _ComponentChildrenList extends AbstractList<UIComponent> implements Serializable, RandomAccess
 {
     private static final long serialVersionUID = -6775078929331154224L;
     private UIComponent _component;
@@ -61,7 +64,7 @@ class _ComponentChildrenList extends AbstractList<UIComponent> implements Serial
             updateParent(value);
             if (child != null)
             {
-                child.setParent(null);
+                childRemoved(child);
             }
         }
         
@@ -112,10 +115,11 @@ class _ComponentChildrenList extends AbstractList<UIComponent> implements Serial
             throw new NullPointerException("value");
         }
         
-        if (!(value instanceof UIComponent))
-        {
-            throw new ClassCastException("value is not a UIComponent");
-        }
+        // Not necessary anymore because  
+        //if (!(value instanceof UIComponent))
+        //{
+        //    throw new ClassCastException("value is not a UIComponent");
+        //}
     }
 
     private void childRemoved(UIComponent child)
@@ -133,15 +137,37 @@ class _ComponentChildrenList extends AbstractList<UIComponent> implements Serial
         UIComponent oldParent = child.getParent();
         if (oldParent != null)
         {
-            oldParent.getChildren().remove(child);
+            if (!oldParent.getChildren().remove(child))
+            {
+                // Check if the component is inside a facet and remove from there
+                if (oldParent.getFacetCount() > 0)
+                {
+                    for (Iterator< Map.Entry<String, UIComponent > > it = 
+                        oldParent.getFacets().entrySet().iterator() ; it.hasNext() ; )
+                    {
+                        Map.Entry<String, UIComponent > entry = it.next();
+                        
+                        if (entry.getValue().equals(child))
+                        {
+                            it.remove();
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
 
     @Override
     public boolean remove(Object value)
     {
-        checkValue(value);
+        if (!(value instanceof UIComponent))
+        {
+            throw new ClassCastException("value is not a UIComponent");
+        }
         
+        checkValue(value);
+
         if (_list.remove(value))
         {
             childRemoved((UIComponent)value);

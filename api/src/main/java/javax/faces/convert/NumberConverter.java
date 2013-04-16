@@ -99,8 +99,14 @@ public class NumberConverter
     // METHODS
     public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value)
     {
-        if (facesContext == null) throw new NullPointerException("facesContext");
-        if (uiComponent == null) throw new NullPointerException("uiComponent");
+        if (facesContext == null)
+        {
+            throw new NullPointerException("facesContext");
+        }
+        if (uiComponent == null)
+        {
+            throw new NullPointerException("uiComponent");
+        }
 
         if (value != null)
         {
@@ -157,21 +163,32 @@ public class NumberConverter
                   {
 
                     if(getPattern() != null)
+                    {
                         throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
-                                                                                    PATTERN_ID,
-                                                                                    new Object[]{value,"$###,###",_MessageUtils.getLabel(facesContext, uiComponent)}));
+                                PATTERN_ID,
+                                new Object[]{value, "$###,###", _MessageUtils.getLabel(facesContext, uiComponent)}));
+                    }
                     else if(getType().equals("number"))
+                    {
                         throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
-                                                                                    NUMBER_ID,
-                                                                                    new Object[]{value,format.format(21),_MessageUtils.getLabel(facesContext, uiComponent)}));
+                                NUMBER_ID,
+                                new Object[]{value, format.format(21),
+                                             _MessageUtils.getLabel(facesContext, uiComponent)}));
+                    }
                     else if(getType().equals("currency"))
+                    {
                         throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
-                                                                                    CURRENCY_ID,
-                                                                                    new Object[]{value,format.format(42.25),_MessageUtils.getLabel(facesContext, uiComponent)}));
+                                CURRENCY_ID,
+                                new Object[]{value, format.format(42.25),
+                                             _MessageUtils.getLabel(facesContext, uiComponent)}));
+                    }
                     else if(getType().equals("percent"))
+                    {
                         throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
-                                                                                    PERCENT_ID,
-                                                                                    new Object[]{value,format.format(.90),_MessageUtils.getLabel(facesContext, uiComponent)}));
+                                PERCENT_ID,
+                                new Object[]{value, format.format(.90),
+                                             _MessageUtils.getLabel(facesContext, uiComponent)}));
+                    }
                   }
                 }
             }
@@ -181,8 +198,14 @@ public class NumberConverter
 
     public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value)
     {
-        if (facesContext == null) throw new NullPointerException("facesContext");
-        if (uiComponent == null) throw new NullPointerException("uiComponent");
+        if (facesContext == null)
+        {
+            throw new NullPointerException("facesContext");
+        }
+        if (uiComponent == null)
+        {
+            throw new NullPointerException("uiComponent");
+        }
 
         if (value == null)
         {
@@ -195,10 +218,22 @@ public class NumberConverter
 
         NumberFormat format = getNumberFormat(facesContext);
         format.setGroupingUsed(_groupingUsed);
-        if (_maxFractionDigitsSet) format.setMaximumFractionDigits(_maxFractionDigits);
-        if (_maxIntegerDigitsSet) format.setMaximumIntegerDigits(_maxIntegerDigits);
-        if (_minFractionDigitsSet) format.setMinimumFractionDigits(_minFractionDigits);
-        if (_minIntegerDigitsSet) format.setMinimumIntegerDigits(_minIntegerDigits);
+        if (_maxFractionDigitsSet)
+        {
+            format.setMaximumFractionDigits(_maxFractionDigits);
+        }
+        if (_maxIntegerDigitsSet)
+        {
+            format.setMaximumIntegerDigits(_maxIntegerDigits);
+        }
+        if (_minFractionDigitsSet)
+        {
+            format.setMinimumFractionDigits(_minFractionDigits);
+        }
+        if (_minIntegerDigitsSet)
+        {
+            format.setMinimumIntegerDigits(_minIntegerDigits);
+        }
         formatCurrency(format);
         try
         {
@@ -206,7 +241,8 @@ public class NumberConverter
         }
         catch (Exception e)
         {
-            throw new ConverterException(_MessageUtils.getErrorMessage(facesContext, STRING_ID, new Object[]{value,_MessageUtils.getLabel(facesContext, uiComponent)}),e);
+            throw new ConverterException(_MessageUtils.getErrorMessage(facesContext, STRING_ID,
+                    new Object[]{value,_MessageUtils.getLabel(facesContext, uiComponent)}),e);
         }
     }
 
@@ -413,7 +449,10 @@ public class NumberConverter
     @JSFProperty(deferredValueType="java.lang.Object")
     public Locale getLocale()
     {
-        if (_locale != null) return _locale;
+        if (_locale != null)
+        {
+            return _locale;
+        }
         FacesContext context = FacesContext.getCurrentInstance();
         return context.getViewRoot().getLocale();
     }
@@ -563,12 +602,14 @@ public class NumberConverter
                         {
                             java14 = 2;
                         }
+                        // fallthru
                     case 1:
                         if (java14 > 0 && value >= 4)
                         {
                             java14 = 2;
                         }
-                        ;
+                        //;
+                        // fallthru
                     default:
                         idx = 0;
                         version = null;

@@ -19,12 +19,14 @@
 package org.apache.myfaces.lifecycle;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.faces.FacesException;
 import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
+import javax.faces.application.ProjectStage;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
@@ -48,8 +50,17 @@ class RenderResponseExecutor extends PhaseExecutor
         Application application = facesContext.getApplication();
         ViewHandler viewHandler = application.getViewHandler();
         UIViewRoot root;
+        UIViewRoot previousRoot;
         String viewId;
         String newViewId;
+        boolean isNotSameRoot;
+        int loops = 0;
+        int maxLoops = 15;
+        
+        if (facesContext.getViewRoot() == null)
+        {
+            throw new ViewNotFoundException("A view is required to execute "+facesContext.getCurrentPhaseId());
+        }
         
         try
         {
@@ -57,6 +68,7 @@ class RenderResponseExecutor extends PhaseExecutor
             do
             {
                 root = facesContext.getViewRoot();
+                previousRoot = root;
                 viewId = root.getViewId();
                 
                 ViewDeclarationLanguage vdl = viewHandler.getViewDeclarationLanguage(
@@ -76,21 +88,45 @@ class RenderResponseExecutor extends PhaseExecutor
                 {
                     return false;
                 }
+
+                root = facesContext.getViewRoot();
                 
-                newViewId = facesContext.getViewRoot().getViewId();
+                newViewId = root.getViewId();
+                
+                isNotSameRoot = !( (newViewId == null ? newViewId == viewId : newViewId.equals(viewId) ) && 
+                        previousRoot.equals(root) ); 
+                
+                loops++;
             }
             while ((newViewId == null && viewId != null) 
-                    || (newViewId != null && !newViewId.equals(viewId)));
+                    || (newViewId != null && (!newViewId.equals(viewId) || isNotSameRoot ) ) && loops < maxLoops);
             
+            if (loops == maxLoops)
+            {
+                // PreRenderView reach maxLoops - probably a infinitive recursion:
+                boolean production = facesContext.isProjectStage(ProjectStage.Production);
+                Level level = production ? Level.FINE : Level.WARNING;
+                if (log.isLoggable(level))
+                {
+                    log.log(level, "Cicle over buildView-PreRenderViewEvent on RENDER_RESPONSE phase "
+                                   + "reaches maximal limit, please check listeners for infinite recursion.");
+                }
+            }
+
             viewHandler.renderView(facesContext, root);
             
             // log all unhandled FacesMessages, don't swallow them
-            if (!facesContext.getMessageList().isEmpty())
+            // perf: org.apache.myfaces.context.servlet.FacesContextImpl.getMessageList() creates
+            // new Collections.unmodifiableList with every invocation->  call it only once
+            // and messageList is RandomAccess -> use index based loop
+            List<FacesMessage> messageList = facesContext.getMessageList();
+            if (!messageList.isEmpty())
             {
                 StringBuilder builder = new StringBuilder();
                 boolean shouldLog = false;
-                for (FacesMessage message : facesContext.getMessageList())
+                for (int i = 0, size = messageList.size(); i < size; i++)
                 {
+                    FacesMessage message = messageList.get(i);
                     if (!message.isRendered())
                     {
                         builder.append("\n- ");

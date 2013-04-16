@@ -28,7 +28,7 @@ import javax.faces.component.html.HtmlForm;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.apache.myfaces.shared_impl.config.MyfacesConfig;
+import org.apache.myfaces.shared.config.MyfacesConfig;
 import org.apache.myfaces.test.base.AbstractJsfTestCase;
 import org.apache.myfaces.test.mock.MockExternalContext;
 import org.apache.myfaces.test.mock.MockHttpServletRequest;
@@ -91,6 +91,8 @@ public class HtmlButtonRendererTest extends AbstractJsfTestCase {
             new HtmlRenderedAttr("dir"), 
             new HtmlRenderedAttr("lang"), 
             new HtmlRenderedAttr("title"),
+
+            /* If js is set to false, no need to bother over event attributes
             //_FocusBlurProperties
             new HtmlRenderedAttr("onfocus"), 
             new HtmlRenderedAttr("onblur"),
@@ -108,12 +110,21 @@ public class HtmlButtonRendererTest extends AbstractJsfTestCase {
             new HtmlRenderedAttr("onmouseout"),
             new HtmlRenderedAttr("onmouseover"), 
             new HtmlRenderedAttr("onmouseup"),
+            */
+            
             //_StyleProperties
             new HtmlRenderedAttr("style"), 
             new HtmlRenderedAttr("styleClass", "styleClass", "class=\"styleClass\""),
             //_TabindexProperty
             new HtmlRenderedAttr("tabindex")
         };
+        
+        MockServletContext servletContext = new MockServletContext();
+        servletContext.addInitParameter("org.apache.myfaces.ALLOW_JAVASCRIPT", "false");
+        MockExternalContext mockExtCtx = new MockExternalContext(servletContext, 
+                new MockHttpServletRequest(), new MockHttpServletResponse());
+        MyfacesConfig config = MyfacesConfig.getCurrentInstance(mockExtCtx);
+        facesContext.setExternalContext(mockExtCtx);
     
         HtmlCheckAttributesUtil.checkRenderedAttributes(
                 commandButton, facesContext, writer, attrs);

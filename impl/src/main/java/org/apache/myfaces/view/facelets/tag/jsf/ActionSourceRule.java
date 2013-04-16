@@ -29,14 +29,13 @@ import javax.faces.view.facelets.Metadata;
 import javax.faces.view.facelets.MetadataTarget;
 import javax.faces.view.facelets.TagAttribute;
 
-import org.apache.myfaces.view.facelets.AbstractFaceletContext;
 import org.apache.myfaces.view.facelets.FaceletCompositionContext;
 import org.apache.myfaces.view.facelets.el.LegacyMethodBinding;
 
 /**
  * 
  * @author Jacob Hookom
- * @version $Id: ActionSourceRule.java,v 1.5 2008/07/13 19:01:46 rlubke Exp $
+ * @version $Id$
  */
 public final class ActionSourceRule extends MetaRule
 {
@@ -44,18 +43,20 @@ public final class ActionSourceRule extends MetaRule
 
     public final static Class<?>[] ACTION_LISTENER_SIG = new Class<?>[] { ActionEvent.class };
 
-    final static class ActionMapper extends Metadata {
+    final static class ActionMapper extends Metadata
+    {
 
         private final TagAttribute attr;
 
-        public ActionMapper(TagAttribute attr) {
+        public ActionMapper(TagAttribute attr)
+        {
             this.attr = attr;
         }
 
-        public void applyMetadata(FaceletContext ctx, Object instance) {
+        public void applyMetadata(FaceletContext ctx, Object instance)
+        {
             ((ActionSource) instance).setAction(new LegacyMethodBinding(
-                    this.attr.getMethodExpression(ctx, null,
-                            ActionSourceRule.ACTION_SIG)));
+                    this.attr.getMethodExpression(ctx, null, ActionSourceRule.ACTION_SIG)));
         }
     }
     
@@ -75,15 +76,18 @@ public final class ActionSourceRule extends MetaRule
         }
     }
 
-    final static class ActionListenerMapper extends Metadata {
+    final static class ActionListenerMapper extends Metadata
+    {
 
         private final TagAttribute attr;
 
-        public ActionListenerMapper(TagAttribute attr) {
+        public ActionListenerMapper(TagAttribute attr)
+        {
             this.attr = attr;
         }
 
-        public void applyMetadata(FaceletContext ctx, Object instance) {
+        public void applyMetadata(FaceletContext ctx, Object instance)
+        {
             ((ActionSource) instance)
                     .setActionListener(new LegacyMethodBinding(this.attr
                             .getMethodExpression(ctx, null,
@@ -109,8 +113,10 @@ public final class ActionSourceRule extends MetaRule
             // This is a problem when using facelets and <ui:decorate/> with EL params (see MYFACES-2541 for details).
             // So we must create two MethodExpressions here - both are created from the current 
             // facelets context and thus varibale mapping will work.
-            final MethodExpression methodExpressionOneArg = _attr.getMethodExpression(ctx, null, ActionSourceRule.ACTION_LISTENER_SIG);
-            final MethodExpression methodExpressionZeroArg = _attr.getMethodExpression(ctx, null, ActionSourceRule.ACTION_SIG);
+            final MethodExpression methodExpressionOneArg
+                    = _attr.getMethodExpression(ctx, null, ActionSourceRule.ACTION_LISTENER_SIG);
+            final MethodExpression methodExpressionZeroArg
+                    = _attr.getMethodExpression(ctx, null, ActionSourceRule.ACTION_SIG);
             if (FaceletCompositionContext.getCurrentInstance(ctx).isUsingPSSOnThisView())
             {
                 ((ActionSource2) instance).addActionListener(
@@ -124,7 +130,7 @@ public final class ActionSourceRule extends MetaRule
         }
     }
 
-    public final static ActionSourceRule Instance = new ActionSourceRule();
+    public final static ActionSourceRule INSTANCE = new ActionSourceRule();
 
     public ActionSourceRule()
     {

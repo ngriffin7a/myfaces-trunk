@@ -44,7 +44,8 @@ public class EnumConverter implements Converter, PartialStateHolder
      * 
      * See MYFACES-2739 for details.
      */
-    @JSFWebConfigParam(name="org.apache.myfaces.ENUM_CONVERTER_ALLOW_STRING_PASSTROUGH", since="2.0.1", expectedValues="true,false",defaultValue="false")
+    @JSFWebConfigParam(name="org.apache.myfaces.ENUM_CONVERTER_ALLOW_STRING_PASSTROUGH", since="2.0.1",
+                       expectedValues="true,false",defaultValue="false", group="validation")
     private static final String ALLOW_STRING_PASSTROUGH = "org.apache.myfaces.ENUM_CONVERTER_ALLOW_STRING_PASSTROUGH";
     
     // TODO: Find a valid generic usage -= Simon Lessard =-
@@ -60,7 +61,9 @@ public class EnumConverter implements Converter, PartialStateHolder
     public EnumConverter(Class targetClass)
     {
         if (!targetClass.isEnum())
+        {
             throw new IllegalArgumentException("targetClass for EnumConverter must be an Enum");
+        }
         this.targetClass = targetClass;
     }
 
@@ -68,14 +71,20 @@ public class EnumConverter implements Converter, PartialStateHolder
         throws ConverterException
     {
         if (facesContext == null)
+        {
             throw new NullPointerException("facesContext can not be null");
+        }
         if (uiComponent == null)
+        {
             throw new NullPointerException("uiComponent can not be null");
+        }
 
         checkTargetClass(facesContext, uiComponent, value);
 
         if (value == null)
+        {
             return null;
+        }
         
         if (value instanceof String
                 && _isPassThroughStringValues(facesContext))
@@ -100,14 +109,22 @@ public class EnumConverter implements Converter, PartialStateHolder
         throws ConverterException
     {
         if (facesContext == null)
+        {
             throw new NullPointerException("facesContext");
+        }
         if (uiComponent == null)
+        {
             throw new NullPointerException("uiComponent");
+        }
         if (value == null)
+        {
             return null;
+        }
         value = value.trim();
         if (value.length() == 0)
+        {
             return null;
+        }
         checkTargetClass(facesContext, uiComponent, value);
 
         // we know targetClass and value can't be null, so we can use Enum.valueOf
@@ -140,7 +157,9 @@ public class EnumConverter implements Converter, PartialStateHolder
         Object[] enumConstants = targetClass.getEnumConstants();
 
         if (enumConstants.length != 0)
+        {
             return enumConstants[0].toString();
+        }
 
         return ""; // if empty Enum
     }

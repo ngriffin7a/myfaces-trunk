@@ -28,7 +28,13 @@
         <tag-name>testComponent</tag-name>
         <component>
             <component-type>org.apache.myfaces.view.facelets.tag.composite.SimpleComponent</component-type>
+            <handler-class>org.apache.myfaces.view.facelets.tag.composite.SimpleComponentTagHandler</handler-class>
         </component>
+    </tag>
+    
+    <tag>
+        <tag-name>testUserTag5</tag-name>
+        <source>testCompositeInsertChildren5UserTagHandler.xhtml</source>
     </tag>
 
 </facelet-taglib>

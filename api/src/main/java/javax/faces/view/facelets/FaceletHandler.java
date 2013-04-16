@@ -20,15 +20,13 @@ package javax.faces.view.facelets;
 
 import java.io.IOException;
 
-import javax.el.ELException;
-import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 
 /**
  * A participant in UIComponent tree building
  * 
- * @author Jacob Hookom (latest modification by $Author: slessard $)
- * @version $Revision: 696523 $ $Date: 2008-12-10 18:36:19 -0400 (mer., 17 sept. 2008) $
+ * @author Jacob Hookom (latest modification by $Author$)
+ * @version $Revision$ $Date$
  *
  * @since 2.0
  */
@@ -40,9 +38,9 @@ public interface FaceletHandler
      * @param ctx the current FaceletContext instance for this execution
      * @param parent the parent UIComponent to operate upon
      * @throws IOException
-     * @throws FacesException
+     * @throws javax.faces.FacesException
      * @throws FaceletException
-     * @throws ELException
+     * @throws javax.el.ELException
      */
     public void apply(FaceletContext ctx, UIComponent parent)throws IOException;
 }

@@ -19,8 +19,10 @@
 package org.apache.myfaces.view.facelets;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.el.ELException;
+import javax.el.ValueExpression;
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
 import javax.faces.view.facelets.FaceletContext;
@@ -37,8 +39,8 @@ import javax.faces.view.facelets.FaceletException;
  * The methods here are only used by the current implementation and the intention
  * is not expose it as public api.
  * 
- * @author Leonardo Uribe (latest modification by $Author: lu4242 $)
- * @version $Revision: 947351 $ $Date: 2010-05-22 19:19:48 -0500 (Sáb, 22 May 2010) $
+ * @author Leonardo Uribe (latest modification by $Author$)
+ * @version $Revision$ $Date$
  * @since 2.0.1
  */
 public abstract class TemplateContext
@@ -47,22 +49,24 @@ public abstract class TemplateContext
      * Pop the last added pushed TemplateClient
      * @see TemplateClient
      */
-    public abstract TemplateManager popClient();
+    public abstract TemplateManager popClient(final AbstractFaceletContext actx);
     
     /**
      * Push the passed TemplateClient onto the stack for Definition Resolution
      * @param client
      * @see TemplateClient
      */
-    public abstract void pushClient(final AbstractFacelet owner, final TemplateClient client);
+    public abstract void pushClient(final AbstractFaceletContext actx, final AbstractFacelet owner,
+                                    final TemplateClient client);
     
     /**
      * Pop the last added extended TemplateClient
-     * @param client
+     * @param actx
      */
-    public abstract TemplateManager popExtendedClient();
+    public abstract TemplateManager popExtendedClient(final AbstractFaceletContext actx);
     
-    public abstract void extendClient(final AbstractFacelet owner, final TemplateClient client);
+    public abstract void extendClient(final AbstractFaceletContext actx, final AbstractFacelet owner,
+                                      final TemplateClient client);
     
     /**
      * This method will walk through the TemplateClient stack to resolve and
@@ -89,4 +93,51 @@ public abstract class TemplateContext
      */
     public abstract void setCompositeComponentClient(TemplateManager compositeComponentClient);
 
+    /**
+     * Return the param value expression associated to the key passed,
+     * preserving the precedence of each template client. 
+     * 
+     * @since 2.0.8
+     * @param key
+     * @return
+     */
+    public abstract ValueExpression getParameter(String key);
+    
+    /**
+     * Associate the param to the latest template client.
+     * 
+     * @since 2.0.8
+     * @param key
+     * @return
+     */
+    public abstract void setParameter(String key, ValueExpression value);
+    
+    /**
+     * Check if no parameters are set.
+     * 
+     * @since 2.0.8
+     * @return
+     */
+    public abstract boolean isParameterEmpty();
+    
+    /**
+     * 
+     * @since 2.0.8
+     * @return
+     */
+    public abstract Map<String, ValueExpression> getParameterMap();
+
+    /**
+     * 
+     * @since 2.0.8
+     * @return
+     */
+    public abstract boolean isAllowCacheELExpressions();
+
+    /**
+     * 
+     * @since 2.0.8
+     * @return
+     */
+    public abstract void setAllowCacheELExpressions(boolean cacheELExpressions);
 }

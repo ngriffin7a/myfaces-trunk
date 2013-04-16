@@ -39,11 +39,11 @@ import java.util.Iterator;
 public class FlashELResolver extends ELResolver
 {
 
-    private final static String FLASH = "flash".intern();
+    private final static String FLASH = "flash";
 
-    private final static String KEEP = "keep".intern();
+    private final static String KEEP = "keep";
 
-    private final static String NOW = "now".intern();
+    private final static String NOW = "now";
 
     public FlashELResolver()
     {
@@ -57,11 +57,15 @@ public class FlashELResolver extends ELResolver
             ELException
     {
         if (property == null)
+        {
             throw new PropertyNotFoundException();
+        }
         if (!(property instanceof String))
+        {
             return;
+        }
 
-        String strProperty = castAndIntern(property);
+        String strProperty = property.toString();
 
         if (FLASH.equals(strProperty))
         {
@@ -87,18 +91,23 @@ public class FlashELResolver extends ELResolver
     {
 
         if (property == null)
+        {
             throw new PropertyNotFoundException();
+        }
         if (!(property instanceof String))
+        {
             return false;
+        }
 
-        String strProperty = castAndIntern(property);
+        String strProperty = property.toString();
 
         if (FLASH.equals(strProperty))
         {
             context.setPropertyResolved(true);
             return true;
         }
-        else if (base instanceof Flash) {
+        else if (base instanceof Flash)
+        {
             context.setPropertyResolved(true);
         }
 
@@ -111,19 +120,31 @@ public class FlashELResolver extends ELResolver
     {
 
         if (property == null)
+        {
             throw new PropertyNotFoundException();
+        }
         if (!(property instanceof String))
+        {
             return null;
+        }
 
-        String strProperty = castAndIntern(property);
-
-        FacesContext facesContext = facesContext(elContext);
-        ExternalContext externalContext = facesContext.getExternalContext();
+        String strProperty = property.toString();
 
         if (base == null)
         {
             if (FLASH.equals(strProperty))
             {
+                FacesContext facesContext = facesContext(elContext);
+                if (facesContext == null)
+                {
+                    return null;
+                }
+                ExternalContext externalContext = facesContext.getExternalContext();
+                if (externalContext == null)
+                {
+                    return null;
+                }
+
                 //Access to flash object
                 elContext.setPropertyResolved(true);
                 Flash flash = externalContext.getFlash();
@@ -139,6 +160,16 @@ public class FlashELResolver extends ELResolver
         }
         else if (base instanceof Flash)
         {
+            FacesContext facesContext = facesContext(elContext);
+            if (facesContext == null)
+            {
+                return null;
+            }
+            ExternalContext externalContext = facesContext.getExternalContext();
+            if (externalContext == null)
+            {
+                return null;
+            }
             Flash flash = (Flash) base;
             if (KEEP.equals(strProperty))
             {
@@ -233,17 +264,22 @@ public class FlashELResolver extends ELResolver
     {
 
         if (property == null)
+        {
             throw new PropertyNotFoundException();
+        }
         if (!(property instanceof String))
+        {
             return null;
+        }
 
-        String strProperty = castAndIntern(property);
+        String strProperty = property.toString();
 
         if (FLASH.equals(strProperty))
         {
             context.setPropertyResolved(true);
         }
-        else if (base instanceof Flash) {
+        else if (base instanceof Flash)
+        {
             context.setPropertyResolved(true);
             Object obj = ((Flash) base).get(property);
             return (obj != null) ? obj.getClass() : null;
@@ -256,17 +292,18 @@ public class FlashELResolver extends ELResolver
     public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext context,
             Object base)
     {
-        ArrayList<FeatureDescriptor> descriptors = new ArrayList<FeatureDescriptor>(
-                1);
+        ArrayList<FeatureDescriptor> descriptors = new ArrayList<FeatureDescriptor>(1);
 
         descriptors.add(makeDescriptor(FLASH,
                 "Represents the current flash scope", Object.class));
 
-        if (base instanceof Flash) {
+        if (base instanceof Flash)
+        {
             Iterator itr = ((Flash) base).keySet().iterator();
             Object key;
             FeatureDescriptor desc;
-            while (itr.hasNext()) {
+            while (itr.hasNext())
+            {
                 key = itr.next();
                 desc = makeDescriptor(key.toString(), key.toString(), key.getClass());
                 descriptors.add(desc);
@@ -294,7 +331,9 @@ public class FlashELResolver extends ELResolver
     public Class<?> getCommonPropertyType(ELContext context, Object base)
     {
         if (base == null)
+        {
             return null;
+        }
 
         if (base instanceof Flash)
         {
@@ -306,12 +345,6 @@ public class FlashELResolver extends ELResolver
         }
 
         return null;
-    }
-
-    protected String castAndIntern(Object o)
-    {
-        String s = (String) o;
-        return s.intern();
     }
 
 }

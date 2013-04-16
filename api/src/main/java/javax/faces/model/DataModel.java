@@ -44,34 +44,46 @@ import java.util.NoSuchElementException;
   * stored in a non-transient member, or use a custom serialization method
   * that explicitly serializes dataModel.getWrappedData.
   *  
-  * See Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a> for more.
+  * See Javadoc of
+ * <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a> for more.
   * 
   * @author Thomas Spiegl (latest modification by $Author$)
   * @version $Revision$ $Date$
 */
 public abstract class DataModel<E> implements Iterable<E>
 {
+    private final static DataModelListener[] EMPTY_DATA_MODEL_LISTENER = new DataModelListener[]{};
     // FIELDS
     private List<DataModelListener> _listeners;
+    
+    private DataModelListener[] _cachedListenersArray = null;
 
     // METHODS
     public void addDataModelListener(DataModelListener listener)
     {
-        if (listener == null) throw new NullPointerException("listener");
+        if (listener == null)
+        {
+            throw new NullPointerException("listener");
+        }
         if (_listeners == null)
         {
             _listeners = new ArrayList<DataModelListener>();
         }
         _listeners.add(listener);
+        _cachedListenersArray = null;
     }
 
     public DataModelListener[] getDataModelListeners()
     {
         if (_listeners == null)
         {
-            return new DataModelListener[0];
+            return EMPTY_DATA_MODEL_LISTENER;
         }
-        return _listeners.toArray(new DataModelListener[_listeners.size()]);
+        if (_cachedListenersArray == null)
+        {
+            _cachedListenersArray = _listeners.toArray(new DataModelListener[_listeners.size()]);
+        }
+        return _cachedListenersArray;
     }
 
     /**
@@ -136,11 +148,15 @@ public abstract class DataModel<E> implements Iterable<E>
 
     public void removeDataModelListener(DataModelListener listener)
     {
-        if (listener == null) throw new NullPointerException("listener");
+        if (listener == null)
+        {
+            throw new NullPointerException("listener");
+        }
         if (_listeners != null)
         {
             _listeners.remove(listener);
         }
+        _cachedListenersArray = null;
     }
 
     /**
@@ -165,9 +181,15 @@ public abstract class DataModel<E> implements Iterable<E>
     {
         private int nextRowIndex = 0;
         
+        public DataModelIterator()
+        {
+            setRowIndex(nextRowIndex);
+        }
+        
         public boolean hasNext()
         {
-            return nextRowIndex < getRowCount();
+            //row count could be unknown, like in ResultSetDataModel
+            return isRowAvailable();
         }
 
         public E next()
@@ -176,18 +198,12 @@ public abstract class DataModel<E> implements Iterable<E>
             //       Or the spec needs to specify that the iterator alters the selected row explicitely
             if (hasNext())
             {
-                setRowIndex(nextRowIndex);
+                // TODO: Double-check if this cast is safe. It should be...
+                E data = (E) getRowData();
                 nextRowIndex++;
+                setRowIndex(nextRowIndex);
+                return data; 
                 
-                if (isRowAvailable())
-                {
-                    // TODO: Double-check if this cast is safe. It should be...
-                    return (E) getRowData();
-                }
-                else
-                {
-                    nextRowIndex--;
-                }
             }
             
             throw new NoSuchElementException("Couldn't find any element in DataModel at index " + nextRowIndex);

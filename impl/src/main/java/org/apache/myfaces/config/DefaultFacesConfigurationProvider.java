@@ -21,8 +21,8 @@ package org.apache.myfaces.config;
 import org.apache.myfaces.config.annotation.AnnotationConfigurator;
 import org.apache.myfaces.config.element.FacesConfig;
 import org.apache.myfaces.config.impl.digester.DigesterFacesConfigUnmarshallerImpl;
-import org.apache.myfaces.shared_impl.config.MyfacesConfig;
-import org.apache.myfaces.shared_impl.util.ClassUtils;
+import org.apache.myfaces.shared.config.MyfacesConfig;
+import org.apache.myfaces.shared.util.ClassUtils;
 import org.apache.myfaces.spi.FacesConfigResourceProvider;
 import org.apache.myfaces.spi.FacesConfigResourceProviderFactory;
 import org.apache.myfaces.spi.FacesConfigurationProvider;
@@ -124,9 +124,13 @@ public class DefaultFacesConfigurationProvider extends FacesConfigurationProvide
             }
             InputStream stream = ClassUtils.getResourceAsStream(STANDARD_FACES_CONFIG_RESOURCE);
             if (stream == null)
+            {
                 throw new FacesException("Standard faces config " + STANDARD_FACES_CONFIG_RESOURCE + " not found");
+            }
             if (log.isLoggable(Level.INFO))
+            {
                 log.info("Reading standard config " + STANDARD_FACES_CONFIG_RESOURCE);
+            }
             
             FacesConfig facesConfig = getUnmarshaller(ectx).getFacesConfig(stream, STANDARD_FACES_CONFIG_RESOURCE);
             stream.close();
@@ -335,7 +339,9 @@ public class DefaultFacesConfigurationProvider extends FacesConfigurationProvide
             if (stream != null)
             {
                 if (log.isLoggable(Level.INFO))
+                {
                     log.info("Reading config /WEB-INF/faces-config.xml");
+                }
                 webAppConfig = getUnmarshaller(ectx).getFacesConfig(stream, DEFAULT_FACES_CONFIG);
                 //getDispenser().feed(getUnmarshaller().getFacesConfig(stream, DEFAULT_FACES_CONFIG));
                 stream.close();
@@ -360,7 +366,8 @@ public class DefaultFacesConfigurationProvider extends FacesConfigurationProvide
         return connection.getInputStream();
     }
 
-    private List<String> getConfigFilesList(ExternalContext ectx) {
+    private List<String> getConfigFilesList(ExternalContext ectx)
+    {
         String configFiles = ectx.getInitParameter(FacesServlet.CONFIG_FILES_ATTR);
         List<String> configFilesList = new ArrayList<String>();
         if (configFiles != null)
@@ -374,7 +381,8 @@ public class DefaultFacesConfigurationProvider extends FacesConfigurationProvide
                 {
                     if (log.isLoggable(Level.WARNING))
                     {
-                        log.warning(DEFAULT_FACES_CONFIG + " has been specified in the " + FacesServlet.CONFIG_FILES_ATTR
+                        log.warning(DEFAULT_FACES_CONFIG + " has been specified in the "
+                                + FacesServlet.CONFIG_FILES_ATTR
                                 + " context parameter of "
                                 + "the deployment descriptor. This will automatically be removed, "
                                 + "if we wouldn't do this, it would be loaded twice.  See JSF spec 1.1, 10.3.2");

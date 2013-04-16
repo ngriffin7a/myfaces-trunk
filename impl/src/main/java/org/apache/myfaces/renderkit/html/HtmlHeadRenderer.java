@@ -19,6 +19,7 @@
 package org.apache.myfaces.renderkit.html;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
@@ -27,8 +28,8 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFRenderer;
-import org.apache.myfaces.shared_impl.renderkit.html.HTML;
-import org.apache.myfaces.shared_impl.renderkit.html.HtmlRendererUtils;
+import org.apache.myfaces.shared.renderkit.html.HTML;
+import org.apache.myfaces.shared.renderkit.html.HtmlRendererUtils;
 
 /**
  * Renderer used by h:head component
@@ -71,9 +72,12 @@ public class HtmlHeadRenderer extends Renderer
 
         ResponseWriter writer = facesContext.getResponseWriter();
         UIViewRoot root = facesContext.getViewRoot();
-        for (UIComponent child : root.getComponentResources(facesContext,
-                HEAD_TARGET))
+        List<UIComponent> componentResources = root.getComponentResources(facesContext,
+                HEAD_TARGET);
+        
+        for (int i = 0, childCount = componentResources.size(); i < childCount; i++)
         {
+            UIComponent child = componentResources.get(i);
             child.encodeAll(facesContext);
         }
         writer.endElement(HEAD_ELEM);

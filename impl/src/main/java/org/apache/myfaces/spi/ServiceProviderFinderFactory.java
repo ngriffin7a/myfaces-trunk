@@ -23,10 +23,12 @@ import javax.faces.context.ExternalContext;
 import javax.servlet.ServletContext;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
-import org.apache.myfaces.shared_impl.util.ClassUtils;
+import org.apache.myfaces.shared.util.ClassUtils;
 import org.apache.myfaces.spi.impl.DefaultServiceProviderFinder;
 
 /**
+ * Factory that provide a ServiceProviderFinder instance, that is used to locate
+ * classes through SPI interface.  
  * 
  * @author Leonardo Uribe
  * @since 2.0.3
@@ -37,6 +39,13 @@ public class ServiceProviderFinderFactory
 
     private final static String SERVICE_PROVIDER_KEY = "org.apache.myfaces.spi.ServiceProviderFinder";
     
+    /**
+     * Define the class name of a custom ServiceProviderFinder implementation.
+     * 
+     * <p>This class is used to override the default SPI scanning algorithm, that relies on the thread
+     * context class loader to locate entries under META-INF/services folder.
+     * </p>
+     */
     @JSFWebConfigParam(since = "2.0.3", desc = "Class name of a custom ServiceProviderFinder implementation.")
     private static final String SERVICE_PROVIDER_FINDER_PARAM = "org.apache.myfaces.SERVICE_PROVIDER_FINDER";
     
@@ -66,7 +75,7 @@ public class ServiceProviderFinderFactory
 
     
     /**
-     * Set a ServiceLoaderFinder to the current application, to locate 
+     * Set a ServiceProviderFinder to the current application, to locate 
      * SPI service providers used by MyFaces.  
      * 
      * This method should be called before the web application is initialized,
@@ -87,7 +96,7 @@ public class ServiceProviderFinderFactory
     }
 
     /**
-     * Gets a ServiceLoaderFinder from the web.xml config param.
+     * Gets a ServiceProviderFinder from the web.xml config param.
      * @param context
      * @return
      */

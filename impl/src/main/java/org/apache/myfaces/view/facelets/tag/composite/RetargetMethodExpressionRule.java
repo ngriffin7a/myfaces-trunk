@@ -55,7 +55,7 @@ final class RetargetMethodExpressionRule extends MetaRule
         }
     }
 
-    public final static RetargetMethodExpressionRule Instance = new RetargetMethodExpressionRule();
+    public final static RetargetMethodExpressionRule INSTANCE = new RetargetMethodExpressionRule();
 
     public RetargetMethodExpressionRule()
     {
@@ -84,6 +84,22 @@ final class RetargetMethodExpressionRule extends MetaRule
                     (ValueExpression) propertyDescriptor.getValue("method-signature");
                 
                 if (methodSignatureExpression != null)
+                {
+                    return new RetargetValueExpressionMapper(attribute, name);
+                }
+                
+                ValueExpression targetAttributeNameVE = 
+                    (ValueExpression)propertyDescriptor.getValue("targetAttributeName");
+                if (targetAttributeNameVE != null)
+                {
+                    return new RetargetValueExpressionMapper(attribute, name);
+                }
+                
+                //if there is a targets declaration, is a retarget without doubt
+                ValueExpression targets = 
+                    (ValueExpression)propertyDescriptor.getValue("targets");
+                
+                if (targets != null)
                 {
                     return new RetargetValueExpressionMapper(attribute, name);
                 }

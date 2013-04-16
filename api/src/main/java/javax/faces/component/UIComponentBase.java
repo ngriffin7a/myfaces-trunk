@@ -35,8 +35,10 @@ import javax.faces.event.BehaviorEvent;
 import javax.faces.event.FacesEvent;
 import javax.faces.event.FacesListener;
 import javax.faces.event.PostAddToViewEvent;
+import javax.faces.event.PostValidateEvent;
 import javax.faces.event.PreRemoveFromViewEvent;
 import javax.faces.event.PreRenderComponentEvent;
+import javax.faces.event.PreValidateEvent;
 import javax.faces.event.SystemEvent;
 import javax.faces.event.SystemEventListener;
 import javax.faces.render.RenderKit;
@@ -71,8 +73,13 @@ import java.util.logging.Logger;
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-@JSFComponent(type = "javax.faces.ComponentBase", family = "javax.faces.ComponentBase", desc = "base component when all components must inherit", tagClass = "javax.faces.webapp.UIComponentELTag", configExcluded = true)
-@JSFJspProperty(name = "binding", returnType = "javax.faces.component.UIComponent", longDesc = "Identifies a backing bean property (of type UIComponent or appropriate subclass) to bind to this component instance. This value must be an EL expression.", desc = "backing bean property to bind to this component instance")
+@JSFComponent(type = "javax.faces.ComponentBase", family = "javax.faces.ComponentBase",
+              desc = "base component when all components must inherit",
+              tagClass = "javax.faces.webapp.UIComponentELTag", configExcluded = true)
+@JSFJspProperty(name = "binding", returnType = "javax.faces.component.UIComponent",
+                longDesc = "Identifies a backing bean property (of type UIComponent or appropriate subclass) to bind "
+                           + "to this component instance. This value must be an EL expression.",
+                desc = "backing bean property to bind to this component instance")
 public abstract class UIComponentBase extends UIComponent
 {
     //private static Log log = LogFactory.getLog(UIComponentBase.class);
@@ -91,6 +98,13 @@ public abstract class UIComponentBase extends UIComponent
     private String _id = null;
     private UIComponent _parent = null;
     private boolean _transient = false;
+    
+    private boolean _isRendererTypeSet = false;
+    private String _rendererType;
+    private String _markCreated;
+    private String _facetName;
+    private boolean _addedByHandler = false;
+    private boolean _facetCreatedUIPanel = false;
 
     /**
      * This map holds ClientBehavior instances.
@@ -111,6 +125,8 @@ public abstract class UIComponentBase extends UIComponent
     private transient Map<String, List<ClientBehavior>> _unmodifiableBehaviorsMap = null;
     
     private transient FacesContext _facesContext;
+    private transient Boolean _cachedIsRendered;
+    private transient Renderer _cachedRenderer;
     
     public UIComponentBase()
     {
@@ -171,10 +187,20 @@ public abstract class UIComponentBase extends UIComponent
                 // trigger the "remove event" lifecycle
                 // and call setInView(false) for all children/facets
                 // doing this => recursive
-                _publishPreRemoveFromViewEvent(getFacesContext(), this);
+                FacesContext facesContext = getFacesContext();
+                if (facesContext.isProcessingEvents())
+                {
+                    _publishPreRemoveFromViewEvent(facesContext, this);
+                }
+                else
+                {
+                    _updateInView(this, false);
+                }
             }
             _parent = parent;
-        } else {
+        }
+        else
+        {
             _parent = parent;
             if (parent.isInView())
             {
@@ -183,7 +209,15 @@ public abstract class UIComponentBase extends UIComponent
                 // Application.publishEvent(java.lang.Class, java.lang.Object)  must be called, passing 
                 // PostAddToViewEvent.class as the first argument and the newly added component as the second 
                 // argument.
-                _publishPostAddToViewEvent(getFacesContext(), this);
+                FacesContext facesContext = getFacesContext();
+                if (facesContext.isProcessingEvents())
+                {
+                    _publishPostAddToViewEvent(facesContext, this);
+                }
+                else
+                {
+                    _updateInView(this, true);
+                }
             }
         }
     }
@@ -198,7 +232,7 @@ public abstract class UIComponentBase extends UIComponent
     private static void _publishPostAddToViewEvent(FacesContext context, UIComponent component)
     {
         component.setInView(true);
-        context.getApplication().publishEvent(context, PostAddToViewEvent.class, UIComponent.class, component);
+        context.getApplication().publishEvent(context, PostAddToViewEvent.class, component.getClass(), component);
         
         if (component.getChildCount() > 0)
         {
@@ -206,31 +240,44 @@ public abstract class UIComponentBase extends UIComponent
             // (h:outputScript, h:outputStylesheet, composite:insertChildren, composite:insertFacet)
             // so we need to check if the component was relocated or not
           
-            // is this all really needed ?
             List<UIComponent> children = component.getChildren();
-            UIComponent child = null;
-            UIComponent currentChild = null;
-            int i = 0;
-            while (i < children.size())
+            for (int i = 0; i < children.size(); i++)
             {
-                child = children.get(i);
-                // Iterate over the same index if the component was removed
-                // This prevents skip components when processing
-                do 
+                // spin on same index while component removed/replaced
+                // to prevent skipping components:
+                while (true)
                 {
-                    _publishPostAddToViewEvent(context, child);
-                    currentChild = child;
+                    UIComponent child = children.get(i);
+                    child.pushComponentToEL(context, child);
+                    try
+                    {
+                        _publishPostAddToViewEvent(context, child);
+                    }
+                    finally
+                    {
+                        child.popComponentFromEL(context);
+                    }
+                    if (i < children.size() && children.get(i) != child)
+                    {
+                        continue;
+                    }
+                    break;
                 }
-                while ((i < children.size()) &&
-                       ((child = children.get(i)) != currentChild) );
-                i++;
             }
         }
         if (component.getFacetCount() > 0)
         {
             for (UIComponent child : component.getFacets().values())
             {
-                _publishPostAddToViewEvent(context, child);
+                child.pushComponentToEL(context, child);
+                try
+                {
+                    _publishPostAddToViewEvent(context, child);
+                }
+                finally
+                {
+                    child.popComponentFromEL(context);
+                }
             }
         }        
     }
@@ -244,12 +291,13 @@ public abstract class UIComponentBase extends UIComponent
     private static void _publishPreRemoveFromViewEvent(FacesContext context, UIComponent component)
     {
         component.setInView(false);
-        context.getApplication().publishEvent(context, PreRemoveFromViewEvent.class, UIComponent.class, component);
+        context.getApplication().publishEvent(context, PreRemoveFromViewEvent.class, component.getClass(), component);
         
         if (component.getChildCount() > 0)
         {
-            for (UIComponent child : component.getChildren())
+            for (int i = 0, childCount = component.getChildCount(); i < childCount; i++)
             {
+                UIComponent child = component.getChildren().get(i);
                 _publishPreRemoveFromViewEvent(context, child);
             }
         }
@@ -261,6 +309,27 @@ public abstract class UIComponentBase extends UIComponent
             }
         }        
     }    
+    
+    private static void _updateInView(UIComponent component, boolean isInView)
+    {
+        component.setInView(isInView);
+        
+        if (component.getChildCount() > 0)
+        {
+            for (int i = 0, childCount = component.getChildCount(); i < childCount; i++)
+            {
+                UIComponent child = component.getChildren().get(i);
+                _updateInView(child, isInView);
+            }
+        }
+        if (component.getFacetCount() > 0)
+        {
+            for (UIComponent child : component.getFacets().values())
+            {
+                _updateInView(child, isInView);
+            }
+        }        
+    }  
     
     /**
      * 
@@ -279,7 +348,8 @@ public abstract class UIComponentBase extends UIComponent
             //log an error and return
             if(log.isLoggable(Level.SEVERE))
             {
-                log.severe("attempted to add a behavior to a component which did not properly implement getEventNames.  getEventNames must not return null");
+                log.severe("attempted to add a behavior to a component which did not properly "
+                           + "implement getEventNames.  getEventNames must not return null");
                 return;
             }
         }
@@ -294,7 +364,9 @@ public abstract class UIComponentBase extends UIComponent
             List<ClientBehavior> behaviorsForEvent = _behaviorsMap.get(eventName);
             if(behaviorsForEvent == null)
             {
-                behaviorsForEvent = new _DeltaList<ClientBehavior>(new ArrayList<ClientBehavior>());
+                // Normally have client only 1 client behaviour per event name,
+                // so size 2 must be sufficient: 
+                behaviorsForEvent = new _DeltaList<ClientBehavior>(new ArrayList<ClientBehavior>(2));
                 _behaviorsMap.put(eventName, behaviorsForEvent);
             }
             
@@ -325,36 +397,28 @@ public abstract class UIComponentBase extends UIComponent
     public void broadcast(FacesEvent event) throws AbortProcessingException
     {
         if (event == null)
+        {
             throw new NullPointerException("event");
-        try
-        {
-            if (event instanceof BehaviorEvent && event.getComponent() == this)
-            {
-                Behavior behavior = ((BehaviorEvent) event).getBehavior();
-                behavior.broadcast((BehaviorEvent) event);
-            }
-            
-            if (_facesListeners == null)
-                return;
-            for (Iterator<FacesListener> it = _facesListeners.iterator(); it.hasNext();)
-            {
-                FacesListener facesListener = it.next();
-                if (event.isAppropriateListener(facesListener))
-                {
-                    event.processListener(facesListener);
-                }
-            }
         }
-        catch (Exception ex)
+        
+        if (event instanceof BehaviorEvent && event.getComponent() == this)
         {
-            if (ex instanceof AbortProcessingException)
+            Behavior behavior = ((BehaviorEvent) event).getBehavior();
+            behavior.broadcast((BehaviorEvent) event);
+        }
+
+        if (_facesListeners == null)
+        {
+            return;
+        }
+        // perf: _facesListeners is RandomAccess instance (javax.faces.component._DeltaList)
+        for (int i = 0, size = _facesListeners.size(); i < size; i++)
+        {
+            FacesListener facesListener = _facesListeners.get(i);
+            if (event.isAppropriateListener(facesListener))
             {
-                throw (AbortProcessingException) ex;
+                event.processListener(facesListener);
             }
-            String location = getComponentLocation(this);
-            throw new FacesException("Exception while calling broadcast on component : " 
-                    + getPathToComponent(this) 
-                    + (location != null ? " created from: " + location : ""), ex);
         }
     }
     
@@ -380,6 +444,7 @@ public abstract class UIComponentBase extends UIComponent
                 ((PartialStateHolder) entry.getValue()).clearInitialState();
             }
         }
+        _isRendererTypeSet = false;
     }
 
     /**
@@ -390,21 +455,100 @@ public abstract class UIComponentBase extends UIComponent
     public void decode(FacesContext context)
     {
         if (context == null)
-            throw new NullPointerException("context");
-        try
         {
-            Renderer renderer = getRenderer(context);
-            if (renderer != null)
+            throw new NullPointerException("context");
+        }
+        
+        setCachedRenderer(null);
+        Renderer renderer = getRenderer(context);
+        if (renderer != null)
+        {
+            setCachedRenderer(renderer);
+            try
             {
                 renderer.decode(context, this);
             }
+            finally
+            {
+                setCachedRenderer(null);
+            }
         }
-        catch (Exception ex)
+
+    }
+
+    public void encodeAll(FacesContext context) throws IOException
+    {
+        if (context == null)
         {
-            String location = getComponentLocation(this);
-            throw new FacesException("Exception while decoding component : " 
-                    + getPathToComponent(this) 
-                    + (location != null ? " created from: " + location : ""), ex);
+            throw new NullPointerException();
+        }
+
+        pushComponentToEL(context, this);
+        try
+        {
+            setCachedIsRendered(null);
+            boolean rendered;
+            try
+            {
+                setCachedFacesContext(context);
+                rendered = isRendered();
+            }
+            finally
+            {
+                setCachedFacesContext(null);
+            } 
+            setCachedIsRendered(rendered);
+            if (!rendered)
+            {
+                setCachedIsRendered(null);
+                return;
+            }
+            setCachedRenderer(null);
+            setCachedRenderer(getRenderer(context));
+        }
+        finally
+        {
+            popComponentFromEL(context);
+        }
+
+        try
+        {
+            //if (isRendered()) {
+            this.encodeBegin(context);
+
+            // rendering children
+            boolean rendersChildren;
+            try
+            {
+                setCachedFacesContext(context);
+                rendersChildren = this.getRendersChildren();
+            }
+            finally
+            {
+                setCachedFacesContext(null);
+            }
+            if (rendersChildren)
+            {
+                this.encodeChildren(context);
+            } // let children render itself
+            else
+            {
+                if (this.getChildCount() > 0)
+                {
+                    for (int i = 0; i < this.getChildCount(); i++)
+                    {
+                        UIComponent comp = this.getChildren().get(i);
+                        comp.encodeAll(context);
+                    }
+                }
+            }
+            this.encodeEnd(context);
+            //}
+        }
+        finally
+        {
+            setCachedIsRendered(null);
+            setCachedRenderer(null);
         }
     }
 
@@ -424,14 +568,15 @@ public abstract class UIComponentBase extends UIComponent
     
             if (isRendered())
             {
-                // If our rendered property is true, render the beginning of the current state of this UIComponent to the
-                // response contained in the specified FacesContext.
+                // If our rendered property is true, render the beginning of the current state of this
+                // UIComponent to the response contained in the specified FacesContext.
     
                 // Call Application.publishEvent(java.lang.Class, java.lang.Object), passing BeforeRenderEvent.class as
                 // the first argument and the component instance to be rendered as the second argument.
     
-                //The main issue we have here is that the listeners are normally just registered to UIComponent, how do we deal with inherited ones?
-                //We have to ask the EG
+                // The main issue we have here is that the listeners are normally just registered
+                // to UIComponent, how do we deal with inherited ones?
+                // We have to ask the EG
                 context.getApplication().publishEvent(context,  PreRenderComponentEvent.class, UIComponent.class, this);
     
                 Renderer renderer = getRenderer(context);
@@ -475,8 +620,9 @@ public abstract class UIComponentBase extends UIComponent
                     // component and call UIComponent.encodeAll(javax.faces.context.FacesContext).
                     if (getChildCount() > 0)
                     {
-                        for (UIComponent child : getChildren())
+                        for (int i = 0, childCount = getChildCount(); i < childCount; i++)
                         {
+                            UIComponent child = getChildren().get(i);
                             child.encodeAll(context);
                         }
                     }
@@ -556,11 +702,15 @@ public abstract class UIComponentBase extends UIComponent
     public UIComponent findComponent(String expr)
     {
         if (expr == null)
+        {
             throw new NullPointerException("expr");
+        }
         if (expr.length() == 0)
+        {
             return null;
+        }
 
-        final char separatorChar = UINamingContainer.getSeparatorChar(getFacesContext());
+        char separatorChar = UINamingContainer.getSeparatorChar(getFacesContext());
         UIComponent findBase;
         if (expr.charAt(0) == separatorChar)
         {
@@ -593,8 +743,10 @@ public abstract class UIComponentBase extends UIComponent
         }
 
         if (!(findBase instanceof NamingContainer))
+        {
             throw new IllegalArgumentException("Intermediate identifier " + id + " in search expression " + expr
                     + " identifies a UIComponent that is not a NamingContainer");
+        }
 
         return findBase.findComponent(expr.substring(separator + 1));
 
@@ -720,10 +872,14 @@ public abstract class UIComponentBase extends UIComponent
     public String getClientId(FacesContext context)
     {
         if (context == null)
+        {
             throw new NullPointerException("context");
+        }
 
         if (_clientId != null)
+        {
             return _clientId;
+        }
 
         //boolean idWasNull = false;
         String id = getId();
@@ -770,8 +926,9 @@ public abstract class UIComponentBase extends UIComponent
             String containerClientId = namingContainer.getContainerClientId(context);
             if (containerClientId != null)
             {
-                StringBuilder bld = __getSharedStringBuilder(context);
-                _clientId = bld.append(containerClientId).append(UINamingContainer.getSeparatorChar(context)).append(id).toString();
+                StringBuilder bld = _getSharedStringBuilder(context);
+                _clientId = bld.append(containerClientId).append(
+                                      UINamingContainer.getSeparatorChar(context)).append(id).toString();
             }
             else
             {
@@ -825,7 +982,8 @@ public abstract class UIComponentBase extends UIComponent
      */
     public Collection<String> getEventNames()
     {
-        // must be specified by the implementing component.  Returning null will force an error message in addClientBehavior.
+        // must be specified by the implementing component.
+        // Returning null will force an error message in addClientBehavior.
         return null;
     }
 
@@ -865,14 +1023,18 @@ public abstract class UIComponentBase extends UIComponent
         if (getFacetCount() == 0)
         {
             if (getChildCount() == 0)
+            {
                 return _EMPTY_UICOMPONENT_ITERATOR;
+            }
 
             return getChildren().iterator();
         }
         else
         {
             if (getChildCount() == 0)
+            {
                 return getFacets().values().iterator();
+            }
 
             return new _FacetsAndChildrenIterator(getFacets(), getChildren());
         }
@@ -897,7 +1059,21 @@ public abstract class UIComponentBase extends UIComponent
     @Override
     public String getRendererType()
     {
-        return (String) getStateHelper().eval(PropertyKeys.rendererType);
+        // rendererType is literal-only, no ValueExpression - MYFACES-3136:
+        // Even if this is true, according to JSF spec section 8 Rendering Model,
+        // this part is essential to implement "delegated implementation" pattern,
+        // so we can't do this optimization here. Instead, JSF developers could prevent
+        // this evaluation overriding this method directly.
+        if (_rendererType != null)
+        {
+            return _rendererType;
+        }
+        ValueExpression expression = getValueExpression("rendererType");
+        if (expression != null)
+        {
+            return (String) expression.getValue(getFacesContext().getELContext());
+        }
+        return null;
     }
 
     /**
@@ -1004,6 +1180,10 @@ public abstract class UIComponentBase extends UIComponent
     @JSFProperty
     public boolean isRendered()
     {
+        if (_cachedIsRendered != null)
+        {
+            return Boolean.TRUE.equals(_cachedIsRendered);
+        }
         return (Boolean) getStateHelper().eval(PropertyKeys.rendered, DEFAULT_RENDERED);
     }
 
@@ -1041,10 +1221,13 @@ public abstract class UIComponentBase extends UIComponent
     protected void addFacesListener(FacesListener listener)
     {
         if (listener == null)
+        {
             throw new NullPointerException("listener");
+        }
         if (_facesListeners == null)
         {
-            _facesListeners = new _DeltaList<FacesListener>(new ArrayList<FacesListener>());
+            // How many facesListeners have single component normally? 
+            _facesListeners = new _DeltaList<FacesListener>(new ArrayList<FacesListener>(5));
         }
         _facesListeners.add(listener);
     }
@@ -1080,13 +1263,16 @@ public abstract class UIComponentBase extends UIComponent
             return (FacesListener[]) Array.newInstance(clazz, 0);
         }
         List<FacesListener> lst = null;
-        for (Iterator<FacesListener> it = _facesListeners.iterator(); it.hasNext();)
+        // perf: _facesListeners is RandomAccess instance (javax.faces.component._DeltaList)
+        for (int i = 0, size = _facesListeners.size(); i < size; i++)
         {
-            FacesListener facesListener = it.next();
+            FacesListener facesListener = _facesListeners.get(i);
             if (facesListener != null && clazz.isAssignableFrom(facesListener.getClass()))
             {
                 if (lst == null)
+                {
                     lst = new ArrayList<FacesListener>();
+                }
                 lst.add(facesListener);
             }
         }
@@ -1102,13 +1288,22 @@ public abstract class UIComponentBase extends UIComponent
     protected Renderer getRenderer(FacesContext context)
     {
         if (context == null)
+        {
             throw new NullPointerException("context");
+        }
+        Renderer renderer = getCachedRenderer();
+        if (renderer != null)
+        {
+            return renderer;
+        }
         String rendererType = getRendererType();
         if (rendererType == null)
+        {
             return null;
+        }
         
         RenderKit renderKit = context.getRenderKit();
-        Renderer renderer = renderKit.getRenderer(getFamily(), rendererType);
+        renderer = renderKit.getRenderer(getFamily(), rendererType);
         if (renderer == null)
         {
             String location = getComponentLocation(this);
@@ -1141,7 +1336,9 @@ public abstract class UIComponentBase extends UIComponent
     public void queueEvent(FacesEvent event)
     {
         if (event == null)
+        {
             throw new NullPointerException("event");
+        }
         UIComponent parent = getParent();
         if (parent == null)
         {
@@ -1156,44 +1353,46 @@ public abstract class UIComponentBase extends UIComponent
         try
         {
             setCachedFacesContext(context);
+            // Call UIComponent.pushComponentToEL(javax.faces.context.FacesContext, javax.faces.component.UIComponent)
+            pushComponentToEL(context, this);
             if (_isPhaseExecutable(context))
             {
-                // Call UIComponent.pushComponentToEL(javax.faces.context.FacesContext, javax.faces.component.UIComponent)
-                pushComponentToEL(context, this);
-    
-                try
+                // Call the processDecodes() method of all facets and children of this UIComponent, in the order
+                // determined by a call to getFacetsAndChildren().
+                int facetCount = getFacetCount();
+                if (facetCount > 0)
                 {
-                    // Call the processDecodes() method of all facets and children of this UIComponent, in the order
-                    // determined by a call to getFacetsAndChildren().
-                    for (Iterator<UIComponent> it = getFacetsAndChildren(); it.hasNext();)
+                    for (UIComponent facet : getFacets().values())
                     {
-                        it.next().processDecodes(context);
-                    }
-    
-                    try
-                    {
-                        // Call the decode() method of this component.
-                        decode(context);
-                    }
-                    catch (RuntimeException e)
-                    {
-                        // If a RuntimeException is thrown during decode processing, call FacesContext.renderResponse()
-                        // and re-throw the exception.
-                        context.renderResponse();
-                        throw e;
+                        facet.processDecodes(context);
                     }
                 }
-                finally
+                for (int i = 0, childCount = getChildCount(); i < childCount; i++)
                 {
-                    // Call UIComponent.popComponentFromEL(javax.faces.context.FacesContext) from inside of a finally
-                    // block, just before returning.
-    
-                    popComponentFromEL(context);
+                    UIComponent child = getChildren().get(i);
+                    child.processDecodes(context);
+                }
+
+                try
+                {
+                    // Call the decode() method of this component.
+                    decode(context);
+                }
+                catch (RuntimeException e)
+                {
+                    // If a RuntimeException is thrown during decode processing, call FacesContext.renderResponse()
+                    // and re-throw the exception.
+                    context.renderResponse();
+                    throw e;
                 }
             }
         }
         finally
         {
+            // Call UIComponent.popComponentFromEL(javax.faces.context.FacesContext) from inside of a finally
+            // block, just before returning.
+
+            popComponentFromEL(context);
             setCachedFacesContext(null);
         }
     }
@@ -1204,28 +1403,41 @@ public abstract class UIComponentBase extends UIComponent
         try
         {
             setCachedFacesContext(context);
+            // Call UIComponent.pushComponentToEL(javax.faces.context.FacesContext, javax.faces.component.UIComponent)
+            pushComponentToEL(context, this);
             if (_isPhaseExecutable(context))
             {
-                // Call UIComponent.pushComponentToEL(javax.faces.context.FacesContext, javax.faces.component.UIComponent)
-                pushComponentToEL(context, this);
-    
+                //Pre validation event dispatch for component
+                context.getApplication().publishEvent(context,  PreValidateEvent.class, getClass(), this);
+                
                 try
                 {
                     // Call the processValidators() method of all facets and children of this UIComponent, in the order
                     // determined by a call to getFacetsAndChildren().
-                    for (Iterator<UIComponent> it = getFacetsAndChildren(); it.hasNext();)
+                    int facetCount = getFacetCount();
+                    if (facetCount > 0)
                     {
-                        it.next().processValidators(context);
+                        for (UIComponent facet : getFacets().values())
+                        {
+                            facet.processValidators(context);
+                        }
+                    }
+    
+                    for (int i = 0, childCount = getChildCount(); i < childCount; i++)
+                    {
+                        UIComponent child = getChildren().get(i);
+                        child.processValidators(context);
                     }
                 }
                 finally
                 {
-                    popComponentFromEL(context);
+                    context.getApplication().publishEvent(context,  PostValidateEvent.class, getClass(), this);
                 }
             }
         }
         finally
         {
+            popComponentFromEL(context);
             setCachedFacesContext(null);
         }
     }
@@ -1244,30 +1456,33 @@ public abstract class UIComponentBase extends UIComponent
         try
         {
             setCachedFacesContext(context);
+            // Call UIComponent.pushComponentToEL(javax.faces.context.FacesContext, javax.faces.component.UIComponent)
+            pushComponentToEL(context, this);
             if (_isPhaseExecutable(context))
             {
-                // Call UIComponent.pushComponentToEL(javax.faces.context.FacesContext, javax.faces.component.UIComponent)
-                pushComponentToEL(context, this);
-    
-                try
+                // Call the processUpdates() method of all facets and children of this UIComponent, in the order
+                // determined by a call to getFacetsAndChildren().
+                int facetCount = getFacetCount();
+                if (facetCount > 0)
                 {
-                    // Call the processUpdates() method of all facets and children of this UIComponent, in the order
-                    // determined by a call to getFacetsAndChildren().
-                    for (Iterator<UIComponent> it = getFacetsAndChildren(); it.hasNext();)
+                    for (UIComponent facet : getFacets().values())
                     {
-                        it.next().processUpdates(context);
+                        facet.processUpdates(context);
                     }
                 }
-                finally
+
+                for (int i = 0, childCount = getChildCount(); i < childCount; i++)
                 {
-                    // After returning from the processUpdates() method on a child or facet, call
-                    // UIComponent.popComponentFromEL(javax.faces.context.FacesContext)
-                    popComponentFromEL(context);
+                    UIComponent child = getChildren().get(i);
+                    child.processUpdates(context);
                 }
+                popComponentFromEL(context);
             }
         }
         finally
         {
+            // After returning from the processUpdates() method on a child or facet, call
+            // UIComponent.popComponentFromEL(javax.faces.context.FacesContext)
             setCachedFacesContext(null);
         }
     }
@@ -1332,8 +1547,9 @@ public abstract class UIComponentBase extends UIComponent
 
                 // To improve speed and robustness, the facets and children processing is splited to maintain the
                 // facet --> state coherence based on the facet's name
-                for (UIComponent child : getChildren())
+                for (int i = 0; i < childCount; i++)
                 {
+                    UIComponent child = getChildren().get(i);
                     if (!child.isTransient())
                     {
                         if (childrenList == null)
@@ -1418,8 +1634,9 @@ public abstract class UIComponentBase extends UIComponent
                 // To improve speed and robustness, the facets and children processing is splited to maintain the
                 // facet --> state coherence based on the facet's name
                 int idx = 0;
-                for (UIComponent child : getChildren())
+                for (int i = 0, childCount = getChildCount(); i < childCount; i++)
                 {
+                    UIComponent child = getChildren().get(i);
                     if (!child.isTransient())
                     {
                         Object childState = childrenList.get(idx++);
@@ -1483,7 +1700,9 @@ public abstract class UIComponentBase extends UIComponent
     private void getPathToComponent(UIComponent component, StringBuffer buf)
     {
         if (component == null)
+        {
             return;
+        }
 
         StringBuffer intBuf = new StringBuffer();
 
@@ -1537,7 +1756,9 @@ public abstract class UIComponentBase extends UIComponent
         }
         
         if (attachedObject == null)
+        {
             return null;
+        }
         // StateHolder interface should take precedence over
         // List children
         if (attachedObject instanceof StateHolder)
@@ -1549,19 +1770,36 @@ public abstract class UIComponentBase extends UIComponent
             }
 
             return new _AttachedStateWrapper(attachedObject.getClass(), holder.saveState(context));
-        }        
-        else if (attachedObject instanceof List)
+        }
+        else if (attachedObject instanceof Collection)
         {
-            List<Object> lst = new ArrayList<Object>(((List<?>) attachedObject).size());
-            for (Object item : (List<?>) attachedObject)
+            if (ArrayList.class.equals(attachedObject.getClass()))
             {
-                if (item != null)
+                ArrayList<?> list = (ArrayList<?>) attachedObject;
+                int size = list.size();
+                List<Object> lst = new ArrayList<Object>(size);
+                for (int i = 0; i < size; i++)
                 {
-                    lst.add(saveAttachedState(context, item));
+                    Object item = list.get(i);
+                    if (item != null)
+                    {
+                        lst.add(saveAttachedState(context, item));
+                    }
                 }
+                return new _AttachedListStateWrapper(lst);
             }
-
-            return new _AttachedListStateWrapper(lst);
+            else
+            {
+                List<Object> lst = new ArrayList<Object>(((Collection<?>) attachedObject).size());
+                for (Object item : (Collection<?>) attachedObject)
+                {
+                    if (item != null)
+                    {
+                        lst.add(saveAttachedState(context, item));
+                    }
+                }
+                return new _AttachedCollectionStateWrapper(attachedObject.getClass(), lst);
+            }
         }
         else if (attachedObject instanceof Serializable)
         {
@@ -1576,18 +1814,51 @@ public abstract class UIComponentBase extends UIComponent
     public static Object restoreAttachedState(FacesContext context, Object stateObj) throws IllegalStateException
     {
         if (context == null)
+        {
             throw new NullPointerException("context");
+        }
         if (stateObj == null)
+        {
             return null;
+        }
         if (stateObj instanceof _AttachedListStateWrapper)
         {
-            List<Object> lst = ((_AttachedListStateWrapper) stateObj).getWrappedStateList();
+            // perf: getWrappedStateList in _AttachedListStateWrapper is always ArrayList: see saveAttachedState
+            ArrayList<Object> lst = (ArrayList<Object>) ((_AttachedListStateWrapper) stateObj).getWrappedStateList();
             List<Object> restoredList = new ArrayList<Object>(lst.size());
+            for (int i = 0, size = lst.size(); i < size; i++)
+            {
+                Object item = lst.get(i);
+                restoredList.add(restoreAttachedState(context, item));
+            }
+            return restoredList;
+        }
+        else if (stateObj instanceof _AttachedCollectionStateWrapper)
+        {
+            _AttachedCollectionStateWrapper wrappedState = (_AttachedCollectionStateWrapper) stateObj; 
+            Class<?> clazz = wrappedState.getClazz();
+            List<Object> lst = wrappedState.getWrappedStateList();
+            Collection restoredList;
+            try
+            {
+                restoredList = (Collection) clazz.newInstance();
+            }
+            catch (InstantiationException e)
+            {
+                throw new RuntimeException("Could not restore StateHolder of type " + clazz.getName()
+                        + " (missing no-args constructor?)", e);
+            }
+            catch (IllegalAccessException e)
+            {
+                throw new RuntimeException(e);
+            }
+
             for (Object item : lst)
             {
                 restoredList.add(restoreAttachedState(context, item));
             }
             return restoredList;
+
         }
         else if (stateObj instanceof _AttachedStateWrapper)
         {
@@ -1650,17 +1921,28 @@ public abstract class UIComponentBase extends UIComponent
             }
             
             if (facesListenersSaved == null && stateHelperSaved == null && 
-                behaviorsMapSaved == null && systemEventListenerClassMapSaved == null)
+                behaviorsMapSaved == null && systemEventListenerClassMapSaved == null &&
+               !_isRendererTypeSet)
             {
                 return null;
             }
             
-            return new Object[] {facesListenersSaved, stateHelperSaved, behaviorsMapSaved, systemEventListenerClassMapSaved};
+            if (_isRendererTypeSet)
+            {
+                return new Object[] {facesListenersSaved, stateHelperSaved, behaviorsMapSaved,
+                                    systemEventListenerClassMapSaved, 
+                                    _rendererType};
+            }
+            else
+            {
+                return new Object[] {facesListenersSaved, stateHelperSaved, behaviorsMapSaved,
+                    systemEventListenerClassMapSaved};
+            }
         }
         else
         {
             //Full
-            Object values[] = new Object[6];
+            Object values[] = new Object[11];
             values[0] = saveFacesListenersList(context);
             StateHelper stateHelper = getStateHelper(false);
             if (stateHelper != null)
@@ -1671,6 +1953,11 @@ public abstract class UIComponentBase extends UIComponent
             values[3] = saveSystemEventListenerClassMap(context);
             values[4] = _id;
             values[5] = _clientId;
+            values[6] = _markCreated;
+            values[7] = _rendererType;
+            values[8] = _isRendererTypeSet;
+            values[9] = _addedByHandler;
+            values[10] = _facetCreatedUIPanel;
 
             return values;
         }
@@ -1696,7 +1983,8 @@ public abstract class UIComponentBase extends UIComponent
         {
             //Only happens if initialStateMarked return true
             
-            if (initialStateMarked()) {
+            if (initialStateMarked())
+            {
                 return;
             }
             
@@ -1705,7 +1993,7 @@ public abstract class UIComponentBase extends UIComponent
         
         Object values[] = (Object[]) state;
         
-        if ( values.length == 6 && initialStateMarked())
+        if ( values.length == 11 && initialStateMarked())
         {
             //Delta mode is active, but we are restoring a full state.
             //we need to clear the initial state, to restore state without
@@ -1723,7 +2011,7 @@ public abstract class UIComponentBase extends UIComponent
                         ((_AttachedDeltaWrapper) values[0]).getWrappedStateObject());
             //}
         }
-        else if (values[0] != null || (values.length == 6))
+        else if (values[0] != null || (values.length == 11))
         {
             //Full
             _facesListeners = (_DeltaList<FacesListener>)
@@ -1736,7 +2024,26 @@ public abstract class UIComponentBase extends UIComponent
         
         getStateHelper().restoreState(context, values[1]);
         
-        if (values.length == 6)
+        if (values.length == 11)
+        {
+            _id = (String) values[4];
+            _clientId = (String) values[5];
+            _markCreated = (String) values[6];
+            _rendererType = (String) values[7];
+            _isRendererTypeSet = (Boolean) values[8];
+            _addedByHandler = (Boolean) values[9];
+            _facetCreatedUIPanel = (Boolean) values[10];
+        }
+        else if (values.length == 5)
+        {
+            _rendererType = (String) values[4];
+            _isRendererTypeSet = true;
+        }
+
+        // rendererType needs to be restored before SystemEventListener,
+        // otherwise UIComponent.getCurrentComponent(context).getRenderer(context)
+        // will not work correctly
+        if (values.length == 11)
         {
             //Full restore
             restoreFullBehaviorsMap(context, values[2]);
@@ -1747,12 +2054,6 @@ public abstract class UIComponentBase extends UIComponent
             //Delta restore
             restoreDeltaBehaviorsMap(context, values[2]);
             restoreDeltaSystemEventListenerClassMap(context, values[3]);
-        }
-        
-        if (values.length == 6)
-        {
-            _id = (String) values[4];
-            _clientId = (String) values[5];
         }
     }
     
@@ -1787,7 +2088,8 @@ public abstract class UIComponentBase extends UIComponent
             _unmodifiableBehaviorsMap = null;
             for (Map.Entry<String, Object> entry : stateMap.entrySet())
             {
-                _behaviorsMap.put(entry.getKey(), (List<ClientBehavior>) restoreAttachedState(facesContext, entry.getValue()));
+                _behaviorsMap.put(entry.getKey(),
+                                  (List<ClientBehavior>) restoreAttachedState(facesContext, entry.getValue()));
             }
         }
         else
@@ -1815,11 +2117,13 @@ public abstract class UIComponentBase extends UIComponent
                 if (savedObject instanceof _AttachedDeltaWrapper)
                 {
                     StateHolder holderList = (StateHolder) _behaviorsMap.get(entry.getKey());
-                    holderList.restoreState(facesContext, ((_AttachedDeltaWrapper) savedObject).getWrappedStateObject());
+                    holderList.restoreState(facesContext,
+                                            ((_AttachedDeltaWrapper) savedObject).getWrappedStateObject());
                 }
                 else
                 {
-                    _behaviorsMap.put(entry.getKey(), (List<ClientBehavior>) restoreAttachedState(facesContext, savedObject));
+                    _behaviorsMap.put(entry.getKey(),
+                                      (List<ClientBehavior>) restoreAttachedState(facesContext, savedObject));
                 }
             }
         }
@@ -1885,10 +2189,12 @@ public abstract class UIComponentBase extends UIComponent
         {
             Map<Class<? extends SystemEvent>, Object> stateMap = (Map<Class<? extends SystemEvent>, Object>) stateObj;
             int initCapacity = (stateMap.size() * 4 + 3) / 3;
-            _systemEventListenerClassMap = new HashMap<Class<? extends SystemEvent>, List<SystemEventListener>>(initCapacity);
+            _systemEventListenerClassMap
+                    = new HashMap<Class<? extends SystemEvent>, List<SystemEventListener>>(initCapacity);
             for (Map.Entry<Class<? extends SystemEvent>, Object> entry : stateMap.entrySet())
             {
-                _systemEventListenerClassMap.put(entry.getKey(), (List<SystemEventListener>) restoreAttachedState(facesContext, entry.getValue()));
+                _systemEventListenerClassMap.put(entry.getKey(),
+                        (List<SystemEventListener>) restoreAttachedState(facesContext, entry.getValue()));
             }
         }
         else
@@ -1906,7 +2212,8 @@ public abstract class UIComponentBase extends UIComponent
             int initCapacity = (stateMap.size() * 4 + 3) / 3;
             if (_systemEventListenerClassMap == null)
             {
-                _systemEventListenerClassMap = new HashMap<Class<? extends SystemEvent>, List<SystemEventListener>>(initCapacity);
+                _systemEventListenerClassMap
+                        = new HashMap<Class<? extends SystemEvent>, List<SystemEventListener>>(initCapacity);
             }
             for (Map.Entry<Class<? extends SystemEvent>, Object> entry : stateMap.entrySet())
             {
@@ -1914,11 +2221,13 @@ public abstract class UIComponentBase extends UIComponent
                 if (savedObject instanceof _AttachedDeltaWrapper)
                 {
                     StateHolder holderList = (StateHolder) _systemEventListenerClassMap.get(entry.getKey());
-                    holderList.restoreState(facesContext, ((_AttachedDeltaWrapper) savedObject).getWrappedStateObject());
+                    holderList.restoreState(facesContext,
+                                            ((_AttachedDeltaWrapper) savedObject).getWrappedStateObject());
                 }
                 else
                 {
-                    _systemEventListenerClassMap.put(entry.getKey(), (List<SystemEventListener>) restoreAttachedState(facesContext, savedObject));
+                    _systemEventListenerClassMap.put(entry.getKey(),
+                            (List<SystemEventListener>) restoreAttachedState(facesContext, savedObject));
                 }
             }
         }
@@ -1930,9 +2239,11 @@ public abstract class UIComponentBase extends UIComponent
         {
             if (initialStateMarked())
             {
-                HashMap<Class<? extends SystemEvent>, Object> stateMap = new HashMap<Class<? extends SystemEvent>, Object>(_systemEventListenerClassMap.size(), 1);
+                HashMap<Class<? extends SystemEvent>, Object> stateMap
+                        = new HashMap<Class<? extends SystemEvent>, Object>(_systemEventListenerClassMap.size(), 1);
                 boolean nullDelta = true;
-                for (Map.Entry<Class<? extends SystemEvent>, List<SystemEventListener> > entry : _systemEventListenerClassMap.entrySet())
+                for (Map.Entry<Class<? extends SystemEvent>, List<SystemEventListener> > entry
+                        : _systemEventListenerClassMap.entrySet())
                 {
                     // The list is always an instance of _DeltaList so we can cast to
                     // PartialStateHolder 
@@ -1942,8 +2253,8 @@ public abstract class UIComponentBase extends UIComponent
                         Object attachedState = holder.saveState(facesContext);
                         if (attachedState != null)
                         {
-                            stateMap.put(entry.getKey(), new _AttachedDeltaWrapper(_systemEventListenerClassMap.getClass(),
-                                    attachedState));
+                            stateMap.put(entry.getKey(),
+                                    new _AttachedDeltaWrapper(_systemEventListenerClassMap.getClass(), attachedState));
                             nullDelta = false;
                         }
                     }
@@ -1964,7 +2275,8 @@ public abstract class UIComponentBase extends UIComponent
                 //Save it in the traditional way
                 HashMap<Class<? extends SystemEvent>, Object> stateMap = 
                     new HashMap<Class<? extends SystemEvent>, Object>(_systemEventListenerClassMap.size(), 1);
-                for (Map.Entry<Class<? extends SystemEvent>, List<SystemEventListener> > entry : _systemEventListenerClassMap.entrySet())
+                for (Map.Entry<Class<? extends SystemEvent>, List<SystemEventListener> > entry
+                        : _systemEventListenerClassMap.entrySet())
                 {
                     stateMap.put(entry.getKey(), saveAttachedState(facesContext, entry.getValue()));
                 }
@@ -2022,7 +2334,9 @@ public abstract class UIComponentBase extends UIComponent
 
         // is there any component identifier ?
         if (string == null)
+        {
             return;
+        }
 
         // Component identifiers must obey the following syntax restrictions:
         // 1. Must not be a zero-length String.
@@ -2040,9 +2354,9 @@ public abstract class UIComponentBase extends UIComponent
         // 2. First character must be a letter or an underscore ('_').
         if (!Character.isLetter(string.charAt(0)) && string.charAt(0) != '_')
         {
-            throw new IllegalArgumentException(
-                                               "component identifier's first character must be a letter or an underscore ('_')! But it is \""
-                                                       + string.charAt(0) + "\"");
+            throw new IllegalArgumentException("component identifier's first character must be a letter "
+                                               + "or an underscore ('_')! But it is \""
+                                               + string.charAt(0) + "\"");
         }
         for (int i = 1; i < string.length(); i++)
         {
@@ -2050,9 +2364,10 @@ public abstract class UIComponentBase extends UIComponent
             // 3. Subsequent characters must be a letter, a digit, an underscore ('_'), or a dash ('-').
             if (!Character.isLetterOrDigit(c) && c != '-' && c != '_')
             {
-                throw new IllegalArgumentException(
-                                                   "Subsequent characters of component identifier must be a letter, a digit, an underscore ('_'), or a dash ('-')! But component identifier contains \""
-                                                           + c + "\"");
+                throw new IllegalArgumentException("Subsequent characters of component identifier must be a letter, "
+                                                   + "a digit, an underscore ('_'), or a dash ('-')! "
+                                                   + "But component identifier contains \""
+                                                   + c + "\"");
             }
         }
     }
@@ -2078,35 +2393,95 @@ public abstract class UIComponentBase extends UIComponent
         _facesContext = facesContext;
     }
     
+    Renderer getCachedRenderer()
+    {
+        return _cachedRenderer;
+    }
+    
+    void setCachedRenderer(Renderer renderer)
+    {
+        _cachedRenderer = renderer;
+    }
+
+    Boolean isCachedIsRendered()
+    {
+        return _cachedIsRendered;
+    }
+    
+    void setCachedIsRendered(Boolean rendered)
+    {
+       _cachedIsRendered = rendered;
+    }
+    
     <T> T getExpressionValue(String attribute, T explizitValue, T defaultValueIfExpressionNull)
     {
         return _ComponentUtils.getExpressionValue(this, attribute, explizitValue, defaultValueIfExpressionNull);
     }
 
+    void setOamVfMarkCreated(String markCreated)
+    {
+        _markCreated = markCreated;
+    }
+    
+    String getOamVfMarkCreated()
+    {
+        return _markCreated;
+    }
+    
+    String getOamVfFacetName()
+    {
+        return _facetName;
+    }
+    
+    void setOamVfFacetName(String facetName)
+    {
+        _facetName = facetName;
+    }
+    
+    boolean isOamVfAddedByHandler()
+    {
+        return _addedByHandler;
+    }
+    
+    void setOamVfAddedByHandler(boolean addedByHandler)
+    {
+        _addedByHandler = addedByHandler;
+    }
+    
+    boolean isOamVfFacetCreatedUIPanel()
+    {
+        return _facetCreatedUIPanel;
+    }
+    
+    void setOamVfFacetCreatedUIPanel(boolean facetCreatedUIPanel)
+    {
+        _facetCreatedUIPanel = facetCreatedUIPanel;
+    }
+
 /**
      * <p>
      * This gets a single FacesContext-local shared stringbuilder instance, each time you call
-     * __getSharedStringBuilder it sets the length of the stringBuilder instance to 0.
+     * _getSharedStringBuilder it sets the length of the stringBuilder instance to 0.
      * </p><p>
      * This allows you to use the same StringBuilder instance over and over.
-     * You must call toString on the instance before calling __getSharedStringBuilder again.
+     * You must call toString on the instance before calling _getSharedStringBuilder again.
      * </p>
      * Example that works
      * <pre><code>
-     * StringBuilder sb1 = __getSharedStringBuilder();
+     * StringBuilder sb1 = _getSharedStringBuilder();
      * sb1.append(a).append(b);
      * String c = sb1.toString();
      *
-     * StringBuilder sb2 = __getSharedStringBuilder();
+     * StringBuilder sb2 = _getSharedStringBuilder();
      * sb2.append(b).append(a);
      * String d = sb2.toString();
      * </code></pre>
      * <br><br>
      * Example that doesn't work, you must call toString on sb1 before
-     * calling __getSharedStringBuilder again.
+     * calling _getSharedStringBuilder again.
      * <pre><code>
-     * StringBuilder sb1 = __getSharedStringBuilder();
-     * StringBuilder sb2 = __getSharedStringBuilder();
+     * StringBuilder sb1 = _getSharedStringBuilder();
+     * StringBuilder sb2 = _getSharedStringBuilder();
      *
      * sb1.append(a).append(b);
      * String c = sb1.toString();
@@ -2116,12 +2491,13 @@ public abstract class UIComponentBase extends UIComponent
      * </code></pre>
      *
      */
-    static StringBuilder __getSharedStringBuilder()
+    static StringBuilder _getSharedStringBuilder()
     {
-        return __getSharedStringBuilder(FacesContext.getCurrentInstance());
+        return _getSharedStringBuilder(FacesContext.getCurrentInstance());
     }
-    
-    static StringBuilder __getSharedStringBuilder(FacesContext facesContext)
+
+    // TODO checkstyle complains; does this have to lead with __ ?
+    static StringBuilder _getSharedStringBuilder(FacesContext facesContext)
     {
         Map<Object, Object> attributes = facesContext.getAttributes();
 
@@ -2132,9 +2508,12 @@ public abstract class UIComponentBase extends UIComponent
             sb = new StringBuilder();
             attributes.put(_STRING_BUILDER_KEY, sb);
         }
+        else
+        {
 
-        // clear out the stringBuilder by setting the length to 0
-        sb.setLength(0);
+            // clear out the stringBuilder by setting the length to 0
+            sb.setLength(0);
+        }
 
         return sb;
     }
@@ -2146,13 +2525,21 @@ public abstract class UIComponentBase extends UIComponent
     @Override
     public void setRendered(boolean rendered)
     {
-        getStateHelper().put(PropertyKeys.rendered, rendered ); 
+        getStateHelper().put(PropertyKeys.rendered, rendered );
+        setCachedIsRendered(null);
     }
 
     @Override
     public void setRendererType(String rendererType)
     {
-        getStateHelper().put(PropertyKeys.rendererType, rendererType ); 
+        this._rendererType = rendererType;
+        if (initialStateMarked())
+        {
+            //This flag just indicates the rendererType 
+            //should be included on the delta
+            this._isRendererTypeSet = true;
+        }
+        setCachedRenderer(null);
     }
 
     // ------------------ GENERATED CODE END ---------------------------------------

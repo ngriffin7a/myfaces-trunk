@@ -46,20 +46,29 @@ public class CharacterConverter
     // METHODS
     public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value)
     {
-        if (facesContext == null) throw new NullPointerException("facesContext");
-        if (uiComponent == null) throw new NullPointerException("uiComponent");
+        if (facesContext == null)
+        {
+            throw new NullPointerException("facesContext");
+        }
+        if (uiComponent == null)
+        {
+            throw new NullPointerException("uiComponent");
+        }
 
         if (value != null)
         {
             value = value.trim();
             if (value.length() > 0)
             {
-                try {
+                try
+                {
                     return Character.valueOf(value.charAt(0));
-                }catch(Exception e) {
+                }
+                catch(Exception e)
+                {
                     throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
-                                                                                CHARACTER_ID,
-                                                                                new Object[]{value,_MessageUtils.getLabel(facesContext, uiComponent)}), e);
+                                        CHARACTER_ID,
+                                        new Object[]{value,_MessageUtils.getLabel(facesContext, uiComponent)}), e);
                 }
             }
         }
@@ -68,8 +77,14 @@ public class CharacterConverter
 
     public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value)
     {
-        if (facesContext == null) throw new NullPointerException("facesContext");
-        if (uiComponent == null) throw new NullPointerException("uiComponent");
+        if (facesContext == null)
+        {
+            throw new NullPointerException("facesContext");
+        }
+        if (uiComponent == null)
+        {
+            throw new NullPointerException("uiComponent");
+        }
 
         if (value == null)
         {
@@ -85,7 +100,8 @@ public class CharacterConverter
         }
         catch (Exception e)
         {
-            throw new ConverterException(_MessageUtils.getErrorMessage(facesContext, STRING_ID, new Object[]{value,_MessageUtils.getLabel(facesContext, uiComponent)}),e);
+            throw new ConverterException(_MessageUtils.getErrorMessage(facesContext, STRING_ID,
+                    new Object[]{value,_MessageUtils.getLabel(facesContext, uiComponent)}),e);
         }
     }
 

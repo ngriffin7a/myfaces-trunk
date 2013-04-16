@@ -18,49 +18,24 @@
  */
 package org.apache.myfaces.config;
 
-import org.apache.myfaces.application.ApplicationFactoryImpl;
-import org.apache.myfaces.application.BackwardsCompatibleNavigationHandlerWrapper;
-import org.apache.myfaces.component.visit.VisitContextFactoryImpl;
-import org.apache.myfaces.config.annotation.AnnotationConfigurator;
-import org.apache.myfaces.config.annotation.LifecycleProvider;
-import org.apache.myfaces.config.annotation.LifecycleProviderFactory;
-import org.apache.myfaces.config.element.Behavior;
-import org.apache.myfaces.config.element.ClientBehaviorRenderer;
-import org.apache.myfaces.config.element.FaceletsProcessing;
-import org.apache.myfaces.config.element.FacesConfig;
-import org.apache.myfaces.config.element.FacesConfigData;
-import org.apache.myfaces.config.element.ManagedBean;
-import org.apache.myfaces.config.element.NamedEvent;
-import org.apache.myfaces.config.element.NavigationRule;
-import org.apache.myfaces.config.element.Renderer;
-import org.apache.myfaces.config.element.ResourceBundle;
-import org.apache.myfaces.config.element.SystemEventListener;
-import org.apache.myfaces.config.impl.digester.DigesterFacesConfigDispenserImpl;
-import org.apache.myfaces.config.impl.digester.DigesterFacesConfigUnmarshallerImpl;
-import org.apache.myfaces.context.ExceptionHandlerFactoryImpl;
-import org.apache.myfaces.context.ExternalContextFactoryImpl;
-import org.apache.myfaces.context.FacesContextFactoryImpl;
-import org.apache.myfaces.context.PartialViewContextFactoryImpl;
-import org.apache.myfaces.el.DefaultPropertyResolver;
-import org.apache.myfaces.el.VariableResolverImpl;
-import org.apache.myfaces.lifecycle.LifecycleFactoryImpl;
-import org.apache.myfaces.renderkit.RenderKitFactoryImpl;
-import org.apache.myfaces.renderkit.html.HtmlRenderKitImpl;
-import org.apache.myfaces.shared_impl.config.MyfacesConfig;
-import org.apache.myfaces.shared_impl.util.ClassUtils;
-import org.apache.myfaces.shared_impl.util.LocaleUtils;
-import org.apache.myfaces.shared_impl.util.StateUtils;
-import org.apache.myfaces.shared_impl.util.serial.DefaultSerialFactory;
-import org.apache.myfaces.shared_impl.util.serial.SerialFactory;
-import org.apache.myfaces.spi.FacesConfigurationMerger;
-import org.apache.myfaces.spi.FacesConfigurationMergerFactory;
-import org.apache.myfaces.util.ContainerUtils;
-import org.apache.myfaces.util.ExternalSpecifications;
-import org.apache.myfaces.view.ViewDeclarationLanguageFactoryImpl;
-import org.apache.myfaces.view.facelets.FaceletCacheFactoryImpl;
-import org.apache.myfaces.view.facelets.tag.jsf.TagHandlerDelegateFactoryImpl;
-import org.apache.myfaces.view.facelets.tag.ui.DebugPhaseListener;
-import org.apache.myfaces.webapp.ManagedBeanDestroyerListener;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.el.ELResolver;
 import javax.faces.FacesException;
@@ -90,33 +65,66 @@ import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.validator.BeanValidator;
 import javax.faces.webapp.FacesServlet;
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.JarURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.commons.collections.Predicate;
+import org.apache.myfaces.application.ApplicationFactoryImpl;
+import org.apache.myfaces.application.BackwardsCompatibleNavigationHandlerWrapper;
+import org.apache.myfaces.component.visit.VisitContextFactoryImpl;
+import org.apache.myfaces.config.annotation.AnnotationConfigurator;
+import org.apache.myfaces.config.annotation.LifecycleProvider;
+import org.apache.myfaces.config.annotation.LifecycleProviderFactory;
+import org.apache.myfaces.config.element.Behavior;
+import org.apache.myfaces.config.element.ClientBehaviorRenderer;
+import org.apache.myfaces.config.element.FaceletsProcessing;
+import org.apache.myfaces.config.element.FacesConfig;
+import org.apache.myfaces.config.element.FacesConfigData;
+import org.apache.myfaces.config.element.ManagedBean;
+import org.apache.myfaces.config.element.NamedEvent;
+import org.apache.myfaces.config.element.NavigationRule;
+import org.apache.myfaces.config.element.Renderer;
+import org.apache.myfaces.config.element.ResourceBundle;
+import org.apache.myfaces.config.element.SystemEventListener;
+import org.apache.myfaces.config.impl.digester.DigesterFacesConfigDispenserImpl;
+import org.apache.myfaces.config.impl.digester.DigesterFacesConfigUnmarshallerImpl;
+import org.apache.myfaces.context.ExceptionHandlerFactoryImpl;
+import org.apache.myfaces.context.ExternalContextFactoryImpl;
+import org.apache.myfaces.context.FacesContextFactoryImpl;
+import org.apache.myfaces.context.PartialViewContextFactoryImpl;
+import org.apache.myfaces.el.DefaultPropertyResolver;
+import org.apache.myfaces.el.VariableResolverImpl;
+import org.apache.myfaces.el.unified.ResolverBuilderBase;
+import org.apache.myfaces.lifecycle.LifecycleFactoryImpl;
+import org.apache.myfaces.renderkit.RenderKitFactoryImpl;
+import org.apache.myfaces.renderkit.html.HtmlRenderKitImpl;
+import org.apache.myfaces.shared.config.MyfacesConfig;
+import org.apache.myfaces.shared.util.ClassUtils;
+import org.apache.myfaces.shared.util.LocaleUtils;
+import org.apache.myfaces.shared.util.StateUtils;
+import org.apache.myfaces.shared_impl.util.serial.DefaultSerialFactory;
+import org.apache.myfaces.shared_impl.util.serial.SerialFactory;
+import org.apache.myfaces.spi.FacesConfigurationMerger;
+import org.apache.myfaces.spi.FacesConfigurationMergerFactory;
+import org.apache.myfaces.util.ContainerUtils;
+import org.apache.myfaces.util.ExternalSpecifications;
+import org.apache.myfaces.view.ViewDeclarationLanguageFactoryImpl;
+import org.apache.myfaces.view.facelets.impl.FaceletCacheFactoryImpl;
+import org.apache.myfaces.view.facelets.tag.jsf.TagHandlerDelegateFactoryImpl;
+import org.apache.myfaces.view.facelets.tag.ui.DebugPhaseListener;
+import org.apache.myfaces.webapp.ManagedBeanDestroyerListener;
 
 /**
  * Configures everything for a given context. The FacesConfigurator is independent of the concrete implementations that
  * lie behind FacesConfigUnmarshaller and FacesConfigDispenser.
- * 
+ *
  * @author Manfred Geiler (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
 @SuppressWarnings("deprecation")
 public class FacesConfigurator
 {
+    private final Class<?>[] NO_PARAMETER_TYPES = new Class[]{};
+    private final Object[] NO_PARAMETERS = new Object[]{};
+
     //private static final Log log = LogFactory.getLog(FacesConfigurator.class);
     private static final Logger log = Logger.getLogger(FacesConfigurator.class.getName());
 
@@ -128,7 +136,8 @@ public class FacesConfigurator
     private static final String DEFAULT_RENDER_KIT_FACTORY = RenderKitFactoryImpl.class.getName();
     private static final String DEFAULT_PARTIAL_VIEW_CONTEXT_FACTORY = PartialViewContextFactoryImpl.class.getName();
     private static final String DEFAULT_VISIT_CONTEXT_FACTORY = VisitContextFactoryImpl.class.getName();
-    private static final String DEFAULT_VIEW_DECLARATION_LANGUAGE_FACTORY = ViewDeclarationLanguageFactoryImpl.class.getName();
+    private static final String DEFAULT_VIEW_DECLARATION_LANGUAGE_FACTORY
+            = ViewDeclarationLanguageFactoryImpl.class.getName();
     private static final String DEFAULT_EXCEPTION_HANDLER_FACTORY = ExceptionHandlerFactoryImpl.class.getName();
     private static final String DEFAULT_TAG_HANDLER_DELEGATE_FACTORY = TagHandlerDelegateFactoryImpl.class.getName();
     private static final String DEFAULT_FACELET_CACHE_FACTORY = FaceletCacheFactoryImpl.class.getName();
@@ -196,12 +205,12 @@ public class FacesConfigurator
 
         return _dispenser;
     }
-    
+
     public void setAnnotationConfigurator(AnnotationConfigurator configurator)
     {
         _annotationConfigurator = configurator;
     }
-    
+
     protected AnnotationConfigurator getAnnotationConfigurator()
     {
         if (_annotationConfigurator == null)
@@ -213,9 +222,9 @@ public class FacesConfigurator
 
     private long getResourceLastModified(String resource)
     {
-        try 
+        try
         {
-            URL url =  _externalContext.getResource(resource);
+            URL url = _externalContext.getResource(resource);
             if (url != null)
             {
                 return getResourceLastModified(url);
@@ -286,8 +295,8 @@ public class FacesConfigurator
         }
 
         return modified;
-    }    
-    
+    }
+
     private long getLastModifiedTime()
     {
         long lastModified = 0;
@@ -295,10 +304,15 @@ public class FacesConfigurator
 
         resModified = getResourceLastModified(DEFAULT_FACES_CONFIG);
         if (resModified > lastModified)
-            lastModified = resModified;
-
-        for (String systemId : getConfigFilesList())
         {
+            lastModified = resModified;
+        }
+
+        // perf: method getConfigFilesList() creates a ArrayList    
+        List<String> configFilesList = getConfigFilesList();
+        for (int i = 0, size = configFilesList.size(); i < size; i++)
+        {
+            String systemId = configFilesList.get(i);
             resModified = getResourceLastModified(systemId);
             if (resModified > lastModified)
             {
@@ -315,7 +329,9 @@ public class FacesConfigurator
         //and when an application is running on GAE there is no way to update faces config xml file.
         //thus, no need to check if the config file is modified.
         if (ContainerUtils.isRunningOnGoogleAppEngine(_externalContext))
+        {
             return;
+        }
         long refreshPeriod = (MyfacesConfig.getCurrentInstance(_externalContext).getConfigRefreshPeriod()) * 1000;
 
         if (refreshPeriod > 0)
@@ -347,21 +363,20 @@ public class FacesConfigurator
                     log.severe("Error during configuration clean-up" + e.getMessage());
                 }
                 configure();
-                                
+
                 // JSF 2.0 Publish PostConstructApplicationEvent after all configuration resources
                 // has been parsed and processed
                 FacesContext facesContext = FacesContext.getCurrentInstance();
                 Application application = facesContext.getApplication();
-                
-                application.publishEvent(facesContext, PostConstructApplicationEvent.class, Application.class, application);
+
+                application.publishEvent(facesContext, PostConstructApplicationEvent.class,
+                        Application.class, application);
             }
         }
     }
 
     private void purgeConfiguration() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException
     {
-        final Class<?>[] NO_PARAMETER_TYPES = new Class[]{};
-        final Object[] NO_PARAMETERS = new Object[]{};
 
         Method appFactoryPurgeMethod;
         Method renderKitPurgeMethod;
@@ -369,13 +384,16 @@ public class FacesConfigurator
 
         // Check that we have access to all of the necessary purge methods before purging anything
         //
-        ApplicationFactory applicationFactory = (ApplicationFactory) FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
+        ApplicationFactory applicationFactory
+                = (ApplicationFactory) FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY);
         appFactoryPurgeMethod = applicationFactory.getClass().getMethod("purgeApplication", NO_PARAMETER_TYPES);
 
-        RenderKitFactory renderKitFactory = (RenderKitFactory) FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+        RenderKitFactory renderKitFactory
+                = (RenderKitFactory) FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
         renderKitPurgeMethod = renderKitFactory.getClass().getMethod("purgeRenderKit", NO_PARAMETER_TYPES);
-        
-        LifecycleFactory lifecycleFactory = (LifecycleFactory) FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
+
+        LifecycleFactory lifecycleFactory
+                = (LifecycleFactory) FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
         lifecyclePurgeMethod = lifecycleFactory.getClass().getMethod("purgeLifecycle", NO_PARAMETER_TYPES);
 
         // If there was no exception so far, now we can purge
@@ -400,13 +418,13 @@ public class FacesConfigurator
         configureFactories();
         configureApplication();
         configureRenderKits();
-        
-                //Now we can configure annotations
+
+        //Now we can configure annotations
         //getAnnotationConfigurator().configure(
         //        ((ApplicationFactory) FactoryFinder.getFactory(
         //                FactoryFinder.APPLICATION_FACTORY)).getApplication(),
         //        getDispenser(), metadataComplete);
-        
+
         configureRuntimeConfig();
         configureLifecycle();
         handleSerialFactory();
@@ -416,7 +434,8 @@ public class FacesConfigurator
         lastUpdate = System.currentTimeMillis();
     }
 
-    private List<String> getConfigFilesList() {
+    private List<String> getConfigFilesList()
+    {
         String configFiles = _externalContext.getInitParameter(FacesServlet.CONFIG_FILES_ATTR);
         List<String> configFilesList = new ArrayList<String>();
         if (configFiles != null)
@@ -430,7 +449,8 @@ public class FacesConfigurator
                 {
                     if (log.isLoggable(Level.WARNING))
                     {
-                        log.warning(DEFAULT_FACES_CONFIG + " has been specified in the " + FacesServlet.CONFIG_FILES_ATTR
+                        log.warning(DEFAULT_FACES_CONFIG + " has been specified in the "
+                                + FacesServlet.CONFIG_FILES_ATTR
                                 + " context parameter of "
                                 + "the deployment descriptor. This will automatically be removed, "
                                 + "if we wouldn't do this, it would be loaded twice.  See JSF spec 1.1, 10.3.2");
@@ -444,32 +464,33 @@ public class FacesConfigurator
         }
         return configFilesList;
     }
-    
+
     private void configureFactories()
     {
         FacesConfigData dispenser = getDispenser();
         setFactories(FactoryFinder.APPLICATION_FACTORY, dispenser.getApplicationFactoryIterator(),
-                     DEFAULT_APPLICATION_FACTORY);
+                DEFAULT_APPLICATION_FACTORY);
         setFactories(FactoryFinder.EXCEPTION_HANDLER_FACTORY, dispenser.getExceptionHandlerFactoryIterator(),
-                     DEFAULT_EXCEPTION_HANDLER_FACTORY);        
+                DEFAULT_EXCEPTION_HANDLER_FACTORY);
         setFactories(FactoryFinder.EXTERNAL_CONTEXT_FACTORY, dispenser.getExternalContextFactoryIterator(),
-                     DEFAULT_EXTERNAL_CONTEXT_FACTORY);
+                DEFAULT_EXTERNAL_CONTEXT_FACTORY);
         setFactories(FactoryFinder.FACES_CONTEXT_FACTORY, dispenser.getFacesContextFactoryIterator(),
-                     DEFAULT_FACES_CONTEXT_FACTORY);
+                DEFAULT_FACES_CONTEXT_FACTORY);
         setFactories(FactoryFinder.LIFECYCLE_FACTORY, dispenser.getLifecycleFactoryIterator(),
-                     DEFAULT_LIFECYCLE_FACTORY);
+                DEFAULT_LIFECYCLE_FACTORY);
         setFactories(FactoryFinder.RENDER_KIT_FACTORY, dispenser.getRenderKitFactoryIterator(),
-                     DEFAULT_RENDER_KIT_FACTORY);
+                DEFAULT_RENDER_KIT_FACTORY);
         setFactories(FactoryFinder.TAG_HANDLER_DELEGATE_FACTORY, dispenser.getTagHandlerDelegateFactoryIterator(),
-                DEFAULT_TAG_HANDLER_DELEGATE_FACTORY);        
+                DEFAULT_TAG_HANDLER_DELEGATE_FACTORY);
         setFactories(FactoryFinder.PARTIAL_VIEW_CONTEXT_FACTORY, dispenser.getPartialViewContextFactoryIterator(),
-                     DEFAULT_PARTIAL_VIEW_CONTEXT_FACTORY);
+                DEFAULT_PARTIAL_VIEW_CONTEXT_FACTORY);
         setFactories(FactoryFinder.VISIT_CONTEXT_FACTORY, dispenser.getVisitContextFactoryIterator(),
-                     DEFAULT_VISIT_CONTEXT_FACTORY);
-        setFactories(FactoryFinder.VIEW_DECLARATION_LANGUAGE_FACTORY, dispenser.getViewDeclarationLanguageFactoryIterator(),
-                     DEFAULT_VIEW_DECLARATION_LANGUAGE_FACTORY);
+                DEFAULT_VISIT_CONTEXT_FACTORY);
+        setFactories(FactoryFinder.VIEW_DECLARATION_LANGUAGE_FACTORY,
+                dispenser.getViewDeclarationLanguageFactoryIterator(),
+                DEFAULT_VIEW_DECLARATION_LANGUAGE_FACTORY);
         setFactories(FactoryFinder.FACELET_CACHE_FACTORY, dispenser.getFaceletCacheFactoryIterator(),
-                DEFAULT_FACELET_CACHE_FACTORY);        
+                DEFAULT_FACELET_CACHE_FACTORY);
     }
 
     private void setFactories(String factoryName, Collection<String> factories, String defaultFactory)
@@ -483,14 +504,15 @@ public class FacesConfigurator
             }
         }
     }
-    
+
     private void configureApplication()
     {
-        Application application = ((ApplicationFactory) FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY)).getApplication();
+        Application application = ((ApplicationFactory)
+                FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY)).getApplication();
 
         FacesConfigData dispenser = getDispenser();
         application.setActionListener(ClassUtils.buildApplicationObject(ActionListener.class,
-                                                           dispenser.getActionListenerIterator(), null));
+                dispenser.getActionListenerIterator(), null));
 
         if (dispenser.getDefaultLocale() != null)
         {
@@ -508,18 +530,18 @@ public class FacesConfigurator
         }
 
         application.setNavigationHandler(ClassUtils.buildApplicationObject(NavigationHandler.class,
-                                                              ConfigurableNavigationHandler.class,
-                                                              BackwardsCompatibleNavigationHandlerWrapper.class,
-                                                              dispenser.getNavigationHandlerIterator(),
-                                                              application.getNavigationHandler()));
+                ConfigurableNavigationHandler.class,
+                BackwardsCompatibleNavigationHandlerWrapper.class,
+                dispenser.getNavigationHandlerIterator(),
+                application.getNavigationHandler()));
 
         application.setStateManager(ClassUtils.buildApplicationObject(StateManager.class,
-                                                         dispenser.getStateManagerIterator(),
-                                                         application.getStateManager()));
+                dispenser.getStateManagerIterator(),
+                application.getStateManager()));
 
         application.setResourceHandler(ClassUtils.buildApplicationObject(ResourceHandler.class,
-                                                            dispenser.getResourceHandlerIterator(),
-                                                            application.getResourceHandler()));
+                dispenser.getResourceHandlerIterator(),
+                application.getResourceHandler()));
 
         List<Locale> locales = new ArrayList<Locale>();
         for (String locale : dispenser.getSupportedLocalesIterator())
@@ -530,27 +552,45 @@ public class FacesConfigurator
         application.setSupportedLocales(locales);
 
         application.setViewHandler(ClassUtils.buildApplicationObject(ViewHandler.class,
-                                                        dispenser.getViewHandlerIterator(),
-                                                        application.getViewHandler()));
+                dispenser.getViewHandlerIterator(),
+                application.getViewHandler()));
         for (SystemEventListener systemEventListener : dispenser.getSystemEventListeners())
         {
 
 
-            try {
+            try
+            {
                 //note here used to be an instantiation to deal with the explicit source type in the registration,
                 // that cannot work because all system events need to have the source being passed in the constructor
-                //instead we now  rely on the standard system event types and map them to their appropriate constructor types
-                Class eventClass = ClassUtils.classForName((systemEventListener.getSystemEventClass() != null) ? systemEventListener.getSystemEventClass():SystemEvent.class.getName());
-                application.subscribeToEvent(
-                    (Class<? extends SystemEvent>)eventClass ,
-                        (Class<?>)ClassUtils.classForName((systemEventListener.getSourceClass() != null) ? systemEventListener.getSourceClass(): getDefaultSourcClassForSystemEvent(eventClass) ), //Application.class???
-                        (javax.faces.event.SystemEventListener)ClassUtils.newInstance(systemEventListener.getSystemEventListenerClass()));
-            } catch (ClassNotFoundException e) {
-                log.log(Level.SEVERE, "System event listener could not be initialized, reason:",e);
+                //instead we now  rely on the standard system event types and map them to their appropriate
+                // constructor types
+                Class eventClass = ClassUtils.classForName((systemEventListener.getSystemEventClass() != null)
+                        ? systemEventListener.getSystemEventClass()
+                        : SystemEvent.class.getName());
+
+                if (systemEventListener.getSourceClass() != null && systemEventListener.getSourceClass().length() > 0)
+                {
+                    application.subscribeToEvent(
+                            (Class<? extends SystemEvent>) eventClass,
+                            ClassUtils.classForName(systemEventListener.getSourceClass()),
+                            (javax.faces.event.SystemEventListener)
+                                    ClassUtils.newInstance(systemEventListener.getSystemEventListenerClass()));
+                }
+                else
+                {
+                    application.subscribeToEvent(
+                            (Class<? extends SystemEvent>) eventClass,
+                            (javax.faces.event.SystemEventListener)
+                                    ClassUtils.newInstance(systemEventListener.getSystemEventListenerClass()));
+                }
+            }
+            catch (ClassNotFoundException e)
+            {
+                log.log(Level.SEVERE, "System event listener could not be initialized, reason:", e);
             }
         }
 
-        
+
         for (String componentType : dispenser.getComponentTypes())
         {
             application.addComponent(componentType, dispenser.getComponentClass(componentType));
@@ -566,7 +606,7 @@ public class FacesConfigurator
             try
             {
                 application.addConverter(ClassUtils.simpleClassForName(converterClass),
-                                         dispenser.getConverterClassByClass(converterClass));
+                        dispenser.getConverterClassByClass(converterClass));
             }
             catch (Exception ex)
             {
@@ -584,7 +624,7 @@ public class FacesConfigurator
         //     - bean validation is available in the classpath
         String beanValidatorDisabled = _externalContext.getInitParameter(
                 BeanValidator.DISABLE_DEFAULT_BEAN_VALIDATOR_PARAM_NAME);
-        final boolean defaultBeanValidatorDisabled = (beanValidatorDisabled != null 
+        final boolean defaultBeanValidatorDisabled = (beanValidatorDisabled != null
                 && beanValidatorDisabled.toLowerCase().equals("true"));
         boolean beanValidatorInstalledProgrammatically = false;
         if (!defaultBeanValidatorDisabled
@@ -600,12 +640,12 @@ public class FacesConfigurator
         {
             application.addDefaultValidatorId(validatorId);
         }
-        
+
         // do some checks if the BeanValidator was not installed as a
         // default-validator programmatically, but via a config file.
-        if (!beanValidatorInstalledProgrammatically 
+        if (!beanValidatorInstalledProgrammatically
                 && application.getDefaultValidatorInfo()
-                        .containsKey(BeanValidator.VALIDATOR_ID))
+                .containsKey(BeanValidator.VALIDATOR_ID))
         {
             if (!ExternalSpecifications.isBeanValidationAvailable())
             {
@@ -623,26 +663,32 @@ public class FacesConfigurator
                 // (section 11.1.3: "though manual installation is still possible")
                 // --> inform the user about this scenario
                 log.log(Level.INFO, "The BeanValidator was disabled as a " +
-                        "default-validator via the config parameter " + 
+                        "default-validator via the config parameter " +
                         BeanValidator.DISABLE_DEFAULT_BEAN_VALIDATOR_PARAM_NAME +
                         " in web.xml, but a faces-config file added it, " +
                         "thus it actually was installed as a default-validator.");
             }
         }
 
-        for (Behavior behavior : dispenser.getBehaviors()) {
+        for (Behavior behavior : dispenser.getBehaviors())
+        {
             application.addBehavior(behavior.getBehaviorId(), behavior.getBehaviorClass());
         }
-        
+
         RuntimeConfig runtimeConfig = getRuntimeConfig();
 
-        runtimeConfig.setPropertyResolverChainHead(ClassUtils.buildApplicationObject(PropertyResolver.class,
-                                                                        dispenser.getPropertyResolverIterator(),
-                                                                        new DefaultPropertyResolver()));
-
-        runtimeConfig.setVariableResolverChainHead(ClassUtils.buildApplicationObject(VariableResolver.class,
-                                                                        dispenser.getVariableResolverIterator(),
-                                                                        new VariableResolverImpl()));
+        if (MyfacesConfig.getCurrentInstance(_externalContext).isSupportJSPAndFacesEL())
+        {
+            // If no JSP and old Faces EL, there is no need to initialize PropertyResolver
+            // and VariableResolver stuff.
+            runtimeConfig.setPropertyResolverChainHead(ClassUtils.buildApplicationObject(PropertyResolver.class,
+                    dispenser.getPropertyResolverIterator(),
+                    new DefaultPropertyResolver()));
+    
+            runtimeConfig.setVariableResolverChainHead(ClassUtils.buildApplicationObject(VariableResolver.class,
+                    dispenser.getVariableResolverIterator(),
+                    new VariableResolverImpl()));
+        }
     }
 
     /**
@@ -657,16 +703,19 @@ public class FacesConfigurator
     String getDefaultSourcClassForSystemEvent(Class systemEventClass)
     {
         Constructor[] constructors = systemEventClass.getConstructors();
-        for(Constructor constr: constructors) {
-            Class [] parms = constr.getParameterTypes();
-            if(parms == null || parms.length != 1)
+        for (Constructor constr : constructors)
+        {
+            Class[] parms = constr.getParameterTypes();
+            if (parms == null || parms.length != 1)
             {
                 //for standard types we have only one parameter representing the type
                 continue;
             }
             return parms[0].getName();
         }
-        log.warning("The SystemEvent source type for "+systemEventClass.getName() + " could not be detected, either register it manually or use a constructor argument for auto detection, defaulting now to java.lang.Object");
+        log.warning("The SystemEvent source type for " + systemEventClass.getName()
+                + " could not be detected, either register it manually or use a constructor argument "
+                + "for auto detection, defaulting now to java.lang.Object");
         return "java.lang.Object";
     }
 
@@ -712,7 +761,7 @@ public class FacesConfigurator
         for (String converterClassName : dispenser.getConverterConfigurationByClassName())
         {
             runtimeConfig.addConverterConfiguration(converterClassName,
-                                                                      _dispenser.getConverterConfiguration(converterClassName));
+                    _dispenser.getConverterConfiguration(converterClassName));
         }
 
         for (ResourceBundle bundle : dispenser.getResourceBundles())
@@ -722,24 +771,84 @@ public class FacesConfigurator
 
         for (String className : dispenser.getElResolvers())
         {
-            runtimeConfig.addFacesConfigElResolver((ELResolver)ClassUtils.newInstance(className, ELResolver.class));
+            runtimeConfig.addFacesConfigElResolver((ELResolver) ClassUtils.newInstance(className, ELResolver.class));
         }
-        
-        runtimeConfig.setFacesVersion (dispenser.getFacesVersion());
-        
+
+        runtimeConfig.setFacesVersion(dispenser.getFacesVersion());
+
         runtimeConfig.setNamedEventManager(new NamedEventManager());
-        
+
         for (NamedEvent event : dispenser.getNamedEvents())
         {
             try
             {
                 Class<? extends ComponentSystemEvent> clazz = ClassUtils.classForName(event.getEventClass());
-                runtimeConfig.getNamedEventManager().addNamedEvent(event.getShortName(), clazz);                
-            } catch (ClassNotFoundException e) {
-                log.log(Level.SEVERE, "Named event could not be initialized, reason:",e);
+                runtimeConfig.getNamedEventManager().addNamedEvent(event.getShortName(), clazz);
+            }
+            catch (ClassNotFoundException e)
+            {
+                log.log(Level.SEVERE, "Named event could not be initialized, reason:", e);
             }
         }
-        
+
+        String comparatorClass = _externalContext.getInitParameter(ResolverBuilderBase.EL_RESOLVER_COMPARATOR);
+
+        if (comparatorClass != null && !"".equals(comparatorClass))
+        {
+            // get the comparator class
+            Class<Comparator<ELResolver>> clazz;
+            try
+            {
+                clazz = (Class<Comparator<ELResolver>>) ClassUtils.classForName(comparatorClass);
+                // create the instance
+                Comparator<ELResolver> comparator = ClassUtils.newInstance(clazz);
+
+                runtimeConfig.setELResolverComparator(comparator);
+            }
+            catch (Exception e)
+            {
+                if (log.isLoggable(Level.SEVERE))
+                {
+                    log.log(Level.SEVERE, "Cannot instantiate EL Resolver Comparator " + comparatorClass
+                            + " . Check org.apache.myfaces.EL_RESOLVER_COMPARATOR web config param. "
+                            + "Initialization continues with no comparator used.", e);
+                }
+            }
+        }
+        else
+        {
+            runtimeConfig.setELResolverComparator(null);
+        }
+
+        String elResolverPredicateClass = _externalContext.getInitParameter(ResolverBuilderBase.EL_RESOLVER_PREDICATE);
+
+        if (elResolverPredicateClass != null && !"".equals(elResolverPredicateClass))
+        {
+            // get the comparator class
+            Class<Predicate> clazz;
+            try
+            {
+                clazz = (Class<Predicate>) ClassUtils.classForName(elResolverPredicateClass);
+                // create the instance
+                Predicate elResolverPredicate = ClassUtils.newInstance(clazz);
+
+                runtimeConfig.setELResolverPredicate(elResolverPredicate);
+            }
+            catch (Exception e)
+            {
+                if (log.isLoggable(Level.SEVERE))
+                {
+                    log.log(Level.SEVERE, "Cannot instantiate EL Resolver Comparator " + comparatorClass
+                            + " . Check org.apache.myfaces.EL_RESOLVER_COMPARATOR web config param. "
+                            + "Initialization continues with no comparator used.", e);
+                }
+            }
+        }
+        else
+        {
+            runtimeConfig.setELResolverPredicate(null);
+        }
+
         for (FaceletsProcessing faceletsProcessing : dispenser.getFaceletsProcessing())
         {
             runtimeConfig.addFaceletProcessingConfiguration(faceletsProcessing.getFileExtension(), faceletsProcessing);
@@ -767,13 +876,14 @@ public class FacesConfigurator
                 }
             }
         }
-        
+
         runtimeConfig.resetManagedBeansNotReaddedAfterPurge();
     }
 
     private void configureRenderKits()
     {
-        RenderKitFactory renderKitFactory = (RenderKitFactory)FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+        RenderKitFactory renderKitFactory
+                = (RenderKitFactory) FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
 
         FacesConfigData dispenser = getDispenser();
         for (String renderKitId : dispenser.getRenderKitIds())
@@ -792,8 +902,9 @@ public class FacesConfigurator
             for (Renderer element : dispenser.getRenderers(renderKitId))
             {
                 javax.faces.render.Renderer renderer;
-                Collection<ClientBehaviorRenderer> clientBehaviorRenderers = dispenser.getClientBehaviorRenderers (renderKitId);
-                
+                Collection<ClientBehaviorRenderer> clientBehaviorRenderers
+                        = dispenser.getClientBehaviorRenderers(renderKitId);
+
                 try
                 {
                     renderer = (javax.faces.render.Renderer) ClassUtils.newInstance(element.getRendererClass());
@@ -806,23 +917,28 @@ public class FacesConfigurator
                 }
 
                 renderKit.addRenderer(element.getComponentFamily(), element.getRendererType(), renderer);
-                
+
                 // Add in client behavior renderers.
-                
-                for (ClientBehaviorRenderer clientBehaviorRenderer : clientBehaviorRenderers) {
-                    try {
-                        javax.faces.render.ClientBehaviorRenderer behaviorRenderer = (javax.faces.render.ClientBehaviorRenderer)
-                            ClassUtils.newInstance (clientBehaviorRenderer.getRendererClass());
-                        
+
+                for (ClientBehaviorRenderer clientBehaviorRenderer : clientBehaviorRenderers)
+                {
+                    try
+                    {
+                        javax.faces.render.ClientBehaviorRenderer behaviorRenderer
+                                = (javax.faces.render.ClientBehaviorRenderer)
+                                ClassUtils.newInstance(clientBehaviorRenderer.getRendererClass());
+
                         renderKit.addClientBehaviorRenderer(clientBehaviorRenderer.getRendererType(), behaviorRenderer);
                     }
-                    
-                    catch (Throwable e) {
+
+                    catch (Throwable e)
+                    {
                         // Ignore.
-                        
-                        if (log.isLoggable(Level.SEVERE)) {
+
+                        if (log.isLoggable(Level.SEVERE))
+                        {
                             log.log(Level.SEVERE, "failed to configure client behavior renderer class " +
-                                 clientBehaviorRenderer.getRendererClass(), e);
+                                    clientBehaviorRenderer.getRendererClass(), e);
                         }
                     }
                 }
@@ -835,30 +951,39 @@ public class FacesConfigurator
     private void configureLifecycle()
     {
         // create the lifecycle used by the app
-        LifecycleFactory lifecycleFactory = (LifecycleFactory) FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
-        Lifecycle lifecycle = lifecycleFactory.getLifecycle(getLifecycleId());
-
-        // add phase listeners
-        for (String listenerClassName : getDispenser().getLifecyclePhaseListeners())
-        {
-            try
-            {
-                lifecycle.addPhaseListener((PhaseListener) ClassUtils.newInstance(listenerClassName, PhaseListener.class));
-            }
-            catch (ClassCastException e)
-            {
-                log.severe("Class " + listenerClassName + " does not implement PhaseListener");
-            }
-        }
+        LifecycleFactory lifecycleFactory
+                = (LifecycleFactory) FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
         
-        // if ProjectStage is Development, install the DebugPhaseListener
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        if (facesContext.isProjectStage(ProjectStage.Development))
+        //Lifecycle lifecycle = lifecycleFactory.getLifecycle(getLifecycleId());
+        for (Iterator<String> it = lifecycleFactory.getLifecycleIds(); it.hasNext();)
         {
-            lifecycle.addPhaseListener(new DebugPhaseListener());
+            Lifecycle lifecycle = lifecycleFactory.getLifecycle(it.next());
+            
+            // add phase listeners
+            for (String listenerClassName : getDispenser().getLifecyclePhaseListeners())
+            {
+                try
+                {
+                    lifecycle.addPhaseListener((PhaseListener)
+                            ClassUtils.newInstance(listenerClassName, PhaseListener.class));
+                }
+                catch (ClassCastException e)
+                {
+                    log.severe("Class " + listenerClassName + " does not implement PhaseListener");
+                }
+            }
+
+            // if ProjectStage is Development, install the DebugPhaseListener
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            if (facesContext.isProjectStage(ProjectStage.Development) &&
+                    MyfacesConfig.getCurrentInstance(facesContext.getExternalContext()).isDebugPhaseListenerEnabled())
+            {
+                lifecycle.addPhaseListener(new DebugPhaseListener());
+            }
         }
     }
 
+    /*
     private String getLifecycleId()
     {
         String id = _externalContext.getInitParameter(FacesServlet.LIFECYCLE_ID_ATTR);
@@ -869,7 +994,7 @@ public class FacesConfigurator
         }
 
         return LifecycleFactory.DEFAULT_LIFECYCLE;
-    }
+    }*/
 
     private void handleSerialFactory()
     {
@@ -894,7 +1019,7 @@ public class FacesConfigurator
             }
             catch (Exception e)
             {
-                log.log(Level.SEVERE,"", e);
+                log.log(Level.SEVERE, "", e);
             }
             finally
             {

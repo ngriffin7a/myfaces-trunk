@@ -29,12 +29,10 @@ import javax.faces.view.facelets.FaceletContext;
 import javax.faces.view.facelets.FaceletException;
 import javax.faces.view.facelets.FaceletHandler;
 
-import org.apache.myfaces.view.facelets.tag.CompositeFaceletHandler;
-
 /**
  * 
  * @author Jacob Hookom
- * @version $Id: CompilationUnit.java,v 1.7 2008/07/13 19:01:33 rlubke Exp $
+ * @version $Id$
  */
 class CompilationUnit
 {

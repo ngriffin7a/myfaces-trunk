@@ -13,39 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/** @namespace myfaces._impl.xhrCore._AjaxUtils */
-myfaces._impl.core._Runtime.extendClass("myfaces._impl.xhrCore._AjaxUtils", myfaces._impl.xhrCore._FinalizeableObj, {
-      _processedExceptions: {},
+/**
+ * @class
+ * @name _AjaxUtils
+ * @memberOf myfaces._impl.xhrCore
+ * @description
+ *
+ * A set of helper routines which are utilized within our Ajax subsystem and nowhere else
+ *
+ * TODO move this into a singleton, the current structure is
+ * still a j4fry legacy we need to get rid of it in the long run
+ */
+_MF_SINGLTN(_PFX_XHR+"_AjaxUtils", _MF_OBJECT,
+/** @lends myfaces._impl.xhrCore._AjaxUtils.prototype */
+{
 
-    /**
-     * Constructor
-     * @param {function} onException - exception handler
-     * @param {function} onWarning - warning handler
-     */
-    constructor_ : function(onException, onWarning) {
-        this._onException = onException;
-        this._onWarning = onWarning;
-    },
 
     /**
      * determines fields to submit
-     * @param {Object} request the xhr request object
-     * @param {Object} context (Map)
-     * @param {Node} item - item that triggered the event
+     * @param {Object} targetBuf - the target form buffer receiving the data
      * @param {Node} parentItem - form element item is nested in
      * @param {Array} partialIds - ids fo PPS
      */
-    encodeSubmittableFields : function(targetBuf, request, context, item,
+    encodeSubmittableFields : function(targetBuf,
                                        parentItem, partialIds) {
-
-        try {
-            if (!parentItem) {
-                this._onWarning(request, context, "myfaces._impl.xhrCore._AjaxUtils", "encodeSubmittableFields " + "Html-Component is not nested in a Form-Tag");
-                return null;
-            }
-
-            if (partialIds && partialIds.length > 0) {
-                this.encodePartialSubmit(parentItem, item, false, partialIds, targetBuf);
+            if (!parentItem) throw "NO_PARITEM";
+            if (partialIds ) {
+                this.encodePartialSubmit(parentItem, false, partialIds, targetBuf);
             } else {
                 // add all nodes
                 var eLen = parentItem.elements.length;
@@ -54,94 +48,9 @@ myfaces._impl.core._Runtime.extendClass("myfaces._impl.xhrCore._AjaxUtils", myfa
                 } // end of for (formElements)
             }
 
-            this.appendIssuingItem(item, targetBuf);
-        } catch (e) {
-            this._onException(request, context, "myfaces._impl.xhrCore._AjaxUtils", "encodeSubmittableFields", e);
-        }
     },
 
-    /**
-     * checks recursively if contained in PPS
-     * the algorithm is as follows we have an issuing item
-     * the parent form of the issuing item and a set of child ids which do not
-     * have to be inputs, we scan now for those ids and all inputs which are childs
-     * of those ids
-     *
-     * Now this algorithm is up for discussion because it is relatively complex
-     * but for now we will leave it as it is.
-     *
-     * @param {Node} node - the root node of the partial page submit
-     * @param {boolean} submitAll - if set to true, all elements within this node will
-     * be added to the partial page submit
-     * @param {Array} partialIds - an array of partial ids which should be used for the submit
-     * @param {Array} targetBuf a target string buffer which receives the encoded elements
-     */
-    encodePartialSubmit : function(node, issuingItem, submitAll,
-                                   partialIds, targetBuf) {
-        var _Lang = myfaces._impl._util._Lang;
-        var _Impl = myfaces._impl.core.Impl;
-        var _Dom = myfaces._impl._util._Dom;
-
-        var partialIdsFilter = function(curNode) {
-            if (curNode.nodeType != 1) return false;
-            if (submitAll && node != curNode) return true;
-
-            var id = curNode.id || curNode.name;
-
-            return (id && _Lang.contains(partialIds, id)) || id == _Impl.P_VIEWSTATE;
-        };
-
-        //shallow scan because we have a second scanning step, to find the encodable childs of
-        //the result nodes, that way we can reduce the number of nodes
-        var nodes = _Dom.findAll(node, partialIdsFilter, false);
-
-        var allowedTagNames = {"input":true, "select":true, "textarea":true};
-
-        if (nodes && nodes.length) {
-            for (var cnt = 0; cnt < nodes.length; cnt++) {
-                //we can shortcut the form any other nodetype
-                //must get a separate investigation
-                var subNodes = (nodes[cnt].tagName.toLowerCase() == "form") ?
-                        node.elements :
-                        _Dom.findByTagNames(nodes[cnt], allowedTagNames, true);
-
-                if (subNodes && subNodes.length) {
-                    for (var cnt2 = 0; cnt2 < subNodes.length; cnt2++) {
-                        this.encodeElement(subNodes[cnt2], targetBuf);
-                    }
-                } else {
-                    this.encodeElement(nodes[cnt], targetBuf);
-                }
-            }
-        }
-
-        this.appendViewState(node, targetBuf);
-    },
-
-    /**
-     * appends the viewstate element if not given already
-     *
-     * @param parentNode
-     * @param targetBuf
-     *
-     * TODO dom level2 handling here, for dom level2 we can omit the check and readd the viewstate
-     */
-    appendViewState: function(parentNode, targetBuf) {
-        var _Dom = myfaces._impl._util._Dom;
-        var _Impl = myfaces._impl.core.Impl;
-
-        //viewstate covered, do a preemptive check
-        if (targetBuf.hasKey(_Impl.P_VIEWSTATE)) return;
-
-        var viewStates = _Dom.findByName(parentNode, _Impl.P_VIEWSTATE, true);
-        if (viewStates && viewStates.length) {
-            for (var cnt2 = 0; cnt2 < viewStates.length; cnt2++) {
-                this.encodeElement(viewStates[cnt2], targetBuf);
-            }
-        }
-    },
-
-    /**
+     /**
      * appends the issuing item if not given already
      * @param item
      * @param targetBuf
@@ -168,7 +77,7 @@ myfaces._impl.core._Runtime.extendClass("myfaces._impl.xhrCore._AjaxUtils", myfa
             return;
         }
 
-        var _RT = myfaces._impl.core._Runtime;
+        var _RT = this._RT;
         var name = element.name;
         var tagName = element.tagName.toLowerCase();
         var elemType = element.type;
@@ -224,11 +133,5 @@ myfaces._impl.core._Runtime.extendClass("myfaces._impl.xhrCore._AjaxUtils", myfa
             }
 
         }
-    },
-
-    _finalize: function() {
-        delete this._onException;
-        delete this._onWarning;
     }
-
 });

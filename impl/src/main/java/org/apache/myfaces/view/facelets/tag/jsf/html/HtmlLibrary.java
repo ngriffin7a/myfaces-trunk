@@ -20,24 +20,24 @@ package org.apache.myfaces.view.facelets.tag.jsf.html;
 
 /**
  * @author Jacob Hookom
- * @version $Id: HtmlLibrary.java,v 1.3 2008/07/13 19:01:50 rlubke Exp $
+ * @version $Id$
  */
 public final class HtmlLibrary extends AbstractHtmlLibrary
 {
 
-    public final static String Namespace = "http://java.sun.com/jsf/html";
+    public final static String NAMESPACE = "http://java.sun.com/jsf/html";
 
-    public final static HtmlLibrary Instance = new HtmlLibrary();
+    public final static HtmlLibrary INSTANCE = new HtmlLibrary();
 
     public HtmlLibrary()
     {
-        super(Namespace);
+        super(NAMESPACE);
         
         this.addHtmlComponent ("body", "javax.faces.OutputBody", "javax.faces.Body");
         
         this.addHtmlComponent ("button", "javax.faces.HtmlOutcomeTargetButton", "javax.faces.Button");
         
-        this.addHtmlComponent("column", "javax.faces.Column", null);
+        this.addHtmlComponent("column", "javax.faces.HtmlColumn", null);
 
         this.addHtmlComponent("commandButton", "javax.faces.HtmlCommandButton", "javax.faces.Button");
 
@@ -45,6 +45,8 @@ public final class HtmlLibrary extends AbstractHtmlLibrary
 
         this.addHtmlComponent("dataTable", "javax.faces.HtmlDataTable", "javax.faces.Table");
 
+        this.addHtmlComponent("doctype", "javax.faces.OutputDoctype", "javax.faces.Doctype");
+        
         this.addHtmlComponent("form", "javax.faces.HtmlForm", "javax.faces.Form");
 
         this.addHtmlComponent("graphicImage", "javax.faces.HtmlGraphicImage", "javax.faces.Image");
@@ -71,9 +73,11 @@ public final class HtmlLibrary extends AbstractHtmlLibrary
 
         this.addHtmlComponent("outputLink", "javax.faces.HtmlOutputLink", "javax.faces.Link");
         
-        this.addComponent ("outputScript", "javax.faces.Output", "javax.faces.resource.Script", HtmlOutputScriptHandler.class);
+        this.addComponent("outputScript", "javax.faces.Output", "javax.faces.resource.Script",
+                          HtmlOutputScriptHandler.class);
         
-        this.addComponent ("outputStylesheet", "javax.faces.Output", "javax.faces.resource.Stylesheet", HtmlOutputStylesheetHandler.class);
+        this.addComponent("outputStylesheet", "javax.faces.Output", "javax.faces.resource.Stylesheet",
+                          HtmlOutputStylesheetHandler.class);
         
         this.addHtmlComponent("outputText", "javax.faces.HtmlOutputText", "javax.faces.Text");
 

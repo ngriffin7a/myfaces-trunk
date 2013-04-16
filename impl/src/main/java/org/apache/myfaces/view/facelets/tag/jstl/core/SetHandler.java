@@ -34,6 +34,8 @@ import javax.faces.view.facelets.TagHandler;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletAttribute;
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTag;
+import org.apache.myfaces.view.facelets.AbstractFaceletContext;
+import org.apache.myfaces.view.facelets.ELExpressionCacheMode;
 
 /**
  * Simplified implementation of c:set
@@ -41,7 +43,7 @@ import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFacelet
  * Sets the result of an expression evaluation in a 'scope'
  * 
  * @author Jacob Hookom
- * @version $Id: SetHandler.java,v 1.2 2008/07/13 19:01:44 rlubke Exp $
+ * @version $Id$
  */
 @JSFFaceletTag(name="c:set")
 public class SetHandler extends TagHandler
@@ -129,8 +131,19 @@ public class SetHandler extends TagHandler
                 ValueExpression expr = ctx.getExpressionFactory().createValueExpression(
                         elCtx, expStr.toString(), Object.class);
                 expr.setValue(elCtx, veObj.getValue(elCtx));
-            } else {
-                ctx.getVariableMapper().setVariable(varStr, veObj);
+            }
+            else
+            {
+                //ctx.getVariableMapper().setVariable(varStr, veObj);
+                AbstractFaceletContext actx = ((AbstractFaceletContext) ctx);
+                actx.getPageContext().getAttributes().put(varStr, veObj);
+                if (actx.getPageContext().isAllowCacheELExpressions())
+                {
+                    if (ELExpressionCacheMode.strict.equals(actx.getELExpressionCacheMode()))
+                    {
+                        actx.getPageContext().setAllowCacheELExpressions(false);
+                    }
+                }
             }
         }
         else

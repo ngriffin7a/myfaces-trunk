@@ -20,6 +20,7 @@ package org.apache.myfaces.spi;
 
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 
 import javax.faces.FacesException;
 import javax.faces.context.ExternalContext;
@@ -28,6 +29,7 @@ import org.apache.myfaces.spi.impl.DefaultFaceletConfigResourceProviderFactory;
 import org.apache.myfaces.spi.impl.SpiUtils;
 
 /**
+ * Factory that provide FaceletConfigResourceProvider instances
  * 
  * @since 2.0.2
  * @author Leonardo Uribe
@@ -40,7 +42,8 @@ public abstract class FaceletConfigResourceProviderFactory
 
     public static FaceletConfigResourceProviderFactory getFacesConfigResourceProviderFactory(ExternalContext ctx)
     {
-        FaceletConfigResourceProviderFactory instance = (FaceletConfigResourceProviderFactory) ctx.getApplicationMap().get(FACTORY_KEY);
+        FaceletConfigResourceProviderFactory instance
+                = (FaceletConfigResourceProviderFactory) ctx.getApplicationMap().get(FACTORY_KEY);
         if (instance != null)
         {
             return instance;
@@ -52,7 +55,8 @@ public abstract class FaceletConfigResourceProviderFactory
             if (System.getSecurityManager() != null)
             {
                 final ExternalContext ectx = ctx;
-                lpf = (FaceletConfigResourceProviderFactory) AccessController.doPrivileged(new java.security.PrivilegedExceptionAction<Object>()
+                lpf = (FaceletConfigResourceProviderFactory)
+                        AccessController.doPrivileged(new PrivilegedExceptionAction<Object>()
                         {
                             public Object run() throws PrivilegedActionException
                             {
@@ -64,7 +68,8 @@ public abstract class FaceletConfigResourceProviderFactory
             }
             else
             {
-                lpf = (FaceletConfigResourceProviderFactory) SpiUtils.build(ctx, FaceletConfigResourceProviderFactory.class, FACTORY_DEFAULT);
+                lpf = (FaceletConfigResourceProviderFactory)
+                        SpiUtils.build(ctx, FaceletConfigResourceProviderFactory.class, FACTORY_DEFAULT);
             }
         }
         catch (PrivilegedActionException pae)
@@ -78,7 +83,8 @@ public abstract class FaceletConfigResourceProviderFactory
         return lpf;
     }
 
-    public static void setFaceletConfigResourceProviderFactory(ExternalContext ctx, FaceletConfigResourceProviderFactory instance)
+    public static void setFaceletConfigResourceProviderFactory(ExternalContext ctx,
+                                                               FaceletConfigResourceProviderFactory instance)
     {
         ctx.getApplicationMap().put(FACTORY_KEY, instance);
     }

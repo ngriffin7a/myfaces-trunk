@@ -38,17 +38,20 @@ import javax.faces.component.behavior.ClientBehaviorHolder;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.BeanValidator;
 import javax.faces.validator.Validator;
+import javax.faces.view.EditableValueHolderAttachedObjectHandler;
 import javax.faces.view.facelets.ComponentConfig;
 import javax.faces.view.facelets.ComponentHandler;
 import javax.faces.view.facelets.FaceletContext;
 import javax.faces.view.facelets.MetaRuleset;
 import javax.faces.view.facelets.TagAttribute;
 import javax.faces.view.facelets.TagException;
-import javax.faces.view.facelets.TagHandler;
 import javax.faces.view.facelets.TagHandlerDelegate;
+import javax.faces.view.facelets.ValidatorHandler;
 
 import org.apache.myfaces.util.ExternalSpecifications;
 import org.apache.myfaces.view.facelets.AbstractFaceletContext;
+import org.apache.myfaces.view.facelets.ComponentState;
+import org.apache.myfaces.view.facelets.DefaultFaceletsStateManagementStrategy;
 import org.apache.myfaces.view.facelets.FaceletCompositionContext;
 import org.apache.myfaces.view.facelets.tag.MetaRulesetImpl;
 import org.apache.myfaces.view.facelets.tag.jsf.core.AjaxHandler;
@@ -66,7 +69,6 @@ import org.apache.myfaces.view.facelets.tag.jsf.core.FacetHandler;
  */
 public class ComponentTagHandlerDelegate extends TagHandlerDelegate
 {
-    //private final static Logger log = Logger.getLogger("facelets.tag.component");
     private final static Logger log = Logger.getLogger(ComponentTagHandlerDelegate.class.getName());
 
     private final ComponentHandler _delegate;
@@ -150,21 +152,24 @@ public class ComponentTagHandlerDelegate extends TagHandlerDelegate
      * <ol>
      * <li>First determines this UIComponent's id by calling {@link #getId(FaceletContext) getId(FaceletContext)}.</li>
      * <li>Search the parent for an existing UIComponent of the id we just grabbed</li>
-     * <li>If found, {@link #FaceletCompositionContext.markForDeletion(UIComponent) mark} its children for deletion.</li>
+     * <li>If found, {@link FaceletCompositionContext#markForDeletion(UIComponent) mark} its children for deletion.</li>
      * <li>If <i>not</i> found, call {@link #createComponent(FaceletContext) createComponent}.
      * <ol>
-     * <li>Only here do we apply {@link TagHandler#setAttributes(FaceletCompositionContext, Object) attributes}</li>
+     * <li>Only here do we apply
+     * {@link javax.faces.view.facelets.TagHandler#setAttributes(FaceletCompositionContext, Object) attributes}</li>
      * <li>Set the UIComponent's id</li>
      * <li>Set the RendererType of this instance</li>
      * </ol>
      * </li>
      * <li>Now apply the nextHandler, passing the UIComponent we've created/found.</li>
      * <li>Now add the UIComponent to the passed parent</li>
-     * <li>Lastly, if the UIComponent already existed (found), then {@link #finalizeForDeletion(FaceletCompositionContext, UIComponent) finalize}
+     * <li>Lastly, if the UIComponent already existed (found),
+     * then {@link #finalizeForDeletion(FaceletCompositionContext, UIComponent) finalize}
      * for deletion.</li>
      * </ol>
      * 
-     * @see javax.faces.view.facelets.FaceletHandler#apply(javax.faces.view.facelets.FaceletContext, javax.faces.component.UIComponent)
+     * @see javax.faces.view.facelets.FaceletHandler#apply(javax.faces.view.facelets.FaceletContext,
+     * javax.faces.component.UIComponent)
      * 
      * @throws TagException
      *             if the UIComponent parent is null
@@ -193,9 +198,13 @@ public class ComponentTagHandlerDelegate extends TagHandlerDelegate
         // grab our component
         UIComponent c = null;
         //boolean componentFoundInserted = false;
-        // MYFACES-2924 This optimization does not work as expected when component bindings are used.
-        //if (mctx.isRefreshingTransientBuild())
-        //{
+
+        //Used to preserve the original parent. Note when the view is being refreshed, the real parent could be
+        //another component.
+        UIComponent oldParent = parent;
+        
+        if (mctx.isRefreshingSection())
+        {
             if (_relocatableResourceHandler != null)
             {
                 c = _relocatableResourceHandler.findChildByTagId(ctx, parent, id);
@@ -204,59 +213,29 @@ public class ComponentTagHandlerDelegate extends TagHandlerDelegate
             {
                 c = ComponentSupport.findChildByTagId(parent, id); 
             }
-    
-            // Check if the component was relocated using
-            // composite:insertChildren or composite:insertFacet
-            /*
-            if (c == null && UIComponent.isCompositeComponent(parent))
-            {
-                if (facetName == null)
-                {
-                    String targetClientId = (String) parent.getAttributes().get(InsertChildrenHandler.INSERT_CHILDREN_TARGET_ID);
-                    if (targetClientId != null)
-                    {
-                        UIComponent targetComponent = parent.findComponent(targetClientId.substring(parent.getClientId().length()+1));
-                        if (targetComponent != null)
-                        {
-                            c = ComponentSupport.findChildByTagId(targetComponent, id);
-                        }
-                    }
-                    if (c != null)
-                    {
-                        c.getAttributes().put(InsertChildrenHandler.USES_INSERT_CHILDREN, Boolean.TRUE);
-                        componentFoundInserted = true;
-                    }
-                }
-                else
-                {
-                    String targetClientId = (String) parent.getAttributes().get(InsertFacetHandler.INSERT_FACET_TARGET_ID+facetName);
-                    if (targetClientId != null)
-                    {
-                        UIComponent targetComponent = parent.findComponent(targetClientId.substring(parent.getClientId().length()+1));
-                        if (targetComponent != null)
-                        {
-                            c = ComponentSupport.findChildByTagId(targetComponent, id);
-                            if (c != null)
-                            {
-                                c.getAttributes().put(InsertFacetHandler.USES_INSERT_FACET, Boolean.TRUE);
-                                componentFoundInserted = true;
-                            }
-                        }
-                    }
-                }
-            }
-            */
-        //}
+        }
         boolean componentFound = false;
         if (c != null)
         {
             componentFound = true;
+            
+            mctx.incrementUniqueComponentId();
+            
             // mark all children for cleaning
             if (log.isLoggable(Level.FINE))
             {
                 log.fine(_delegate.getTag() + " Component[" + id + "] Found, marking children for cleanup");
             }
+
+            // The call for mctx.markForDeletion(c) is always necessary, because
+            // component resource relocation occur as an effect of PostAddToViewEvent,
+            // so at this point it is unknown if the component was relocated or not.
             mctx.markForDeletion(c);
+
+            if (_relocatableResourceHandler != null)
+            {
+                mctx.markRelocatableResourceForDeletion(c);
+            }
         }
         else
         {
@@ -280,10 +259,12 @@ public class ComponentTagHandlerDelegate extends TagHandlerDelegate
             // assign our unique id
             if (this._id != null)
             {
+                mctx.incrementUniqueComponentId();
                 c.setId(this._id.getValue(ctx));
             }
             else
             {
+                String componentId = mctx.generateUniqueComponentId();
                 UniqueIdVendor uniqueIdVendor = mctx.getUniqueIdVendorFromStack();
                 if (uniqueIdVendor == null)
                 {
@@ -301,7 +282,7 @@ public class ComponentTagHandlerDelegate extends TagHandlerDelegate
                 {
                     // UIViewRoot implements UniqueIdVendor, so there is no need to cast to UIViewRoot
                     // and call createUniqueId()
-                    String uid = uniqueIdVendor.createUniqueId(facesContext, id);
+                    String uid = uniqueIdVendor.createUniqueId(facesContext, componentId);
                     c.setId(uid);
                 }
             }
@@ -313,6 +294,11 @@ public class ComponentTagHandlerDelegate extends TagHandlerDelegate
 
             // hook method
             _delegate.onComponentCreated(ctx, c, parent);
+            
+            if (mctx.isRefreshingTransientBuild() && _relocatableResourceHandler != null)
+            {
+                mctx.markRelocatableResourceForDeletion(c);
+            }
         }
         c.pushComponentToEL(facesContext, c);
 
@@ -331,9 +317,15 @@ public class ComponentTagHandlerDelegate extends TagHandlerDelegate
 
             //if (!componentFoundInserted)
             //{
-                if (mctx.isRefreshingTransientBuild())
+                if (mctx.isRefreshingSection())
                 {
-                    facesContext.setProcessingEvents(false); 
+                    facesContext.setProcessingEvents(false);
+                    if (_relocatableResourceHandler != null &&
+                        parent != null && !parent.equals(c.getParent()))
+                    {
+                        // Replace parent with the relocated parent.
+                        parent = c.getParent();
+                    }
                 }
                 if (facetName == null)
                 {
@@ -343,52 +335,13 @@ public class ComponentTagHandlerDelegate extends TagHandlerDelegate
                 {
                     ComponentSupport.removeFacet(ctx, parent, c, facetName);
                 }
-                if (mctx.isRefreshingTransientBuild())
+                if (mctx.isRefreshingSection())
                 {
                     facesContext.setProcessingEvents(oldProcessingEvents);
                 }
             //}
         }
-        
-        /*
-        if (mctx.isRefreshingTransientBuild() && 
-                UIComponent.isCompositeComponent(parent))
-        {
-            // Save the child structure behind this component, so it can be
-            // used later by InsertChildrenHandler and InsertFacetHandler
-            // to update components correctly.
-            if (facetName != null)
-            {
-                if (parent.getAttributes().containsKey(InsertFacetHandler.INSERT_FACET_TARGET_ID+facetName))
-                {
-                    List<String> ordering = (List<String>) parent.getAttributes().get(
-                            InsertFacetHandler.INSERT_FACET_ORDERING+facetName);
-                    if (ordering == null)
-                    {
-                        ordering = new ArrayList<String>();
-                        parent.getAttributes().put(InsertFacetHandler.INSERT_FACET_ORDERING+facetName, ordering);
-                    }
-                    ordering.remove(id);
-                    ordering.add(id);
-                }
-            }
-            else
-            {
-                if (parent.getAttributes().containsKey(InsertChildrenHandler.INSERT_CHILDREN_TARGET_ID))
-                {
-                    List<String> ordering = (List<String>) parent.getAttributes().get(
-                            InsertChildrenHandler.INSERT_CHILDREN_ORDERING);
-                    if (ordering == null)
-                    {
-                        ordering = new ArrayList<String>();
-                        parent.getAttributes().put(InsertChildrenHandler.INSERT_CHILDREN_ORDERING, ordering);
-                    }
-                    ordering.remove(id);
-                    ordering.add(id);
-                }
-            }
-        }
-        */
+
 
         if (!componentFound)
         {
@@ -408,50 +361,29 @@ public class ComponentTagHandlerDelegate extends TagHandlerDelegate
             {
                 // add default validators here, because this feature 
                 // is only available in facelets (see MYFACES-2362 for details)
-                addDefaultValidators(mctx, facesContext, (EditableValueHolder) c);
+                addEnclosingAndDefaultValidators(ctx, mctx, facesContext, (EditableValueHolder) c);
             }
         }
         
-        _delegate.onComponentPopulated(ctx, c, parent);
+        _delegate.onComponentPopulated(ctx, c, oldParent);
 
-        //if (!componentFoundInserted)
-        //{
-            // add to the tree afterwards
-            // this allows children to determine if it's
-            // been part of the tree or not yet
-            if (componentFound && mctx.isRefreshingTransientBuild())
-            {
-                facesContext.setProcessingEvents(false); 
-            }
-            if (facetName == null)
-            {
-                parent.getChildren().add(c);
-            }
-            else
-            {
-                ComponentSupport.addFacet(ctx, parent, c, facetName);
-            }
-            if (componentFound && mctx.isRefreshingTransientBuild())
-            {
-                facesContext.setProcessingEvents(oldProcessingEvents);
-            }
-        //}
-        /*
+        if (componentFound && mctx.isRefreshingSection())
+        {
+            facesContext.setProcessingEvents(false);
+        }
+        if (facetName == null)
+        {
+            parent.getChildren().add(c);
+        }
         else
         {
-            if (facetName != null)
-            {
-                if (UIComponent.isCompositeComponent(parent))
-                {
-                    UIComponent facet = parent.getFacet(facetName);
-                    if (Boolean.TRUE.equals(facet.getAttributes().get(ComponentSupport.FACET_CREATED_UIPANEL_MARKER)))
-                    {
-                        facet.getAttributes().put(InsertFacetHandler.USES_INSERT_FACET, Boolean.TRUE);
-                    }
-                }
-            }
-        }*/
-        
+            ComponentSupport.addFacet(ctx, parent, c, facetName);
+        }
+        if (componentFound && mctx.isRefreshingSection())
+        {
+            facesContext.setProcessingEvents(oldProcessingEvents);
+        }
+
         if (c instanceof UniqueIdVendor)
         {
             mctx.popUniqueIdVendorToStack();
@@ -513,18 +445,42 @@ public class ComponentTagHandlerDelegate extends TagHandlerDelegate
             if (c != null)
             {
                 c.setValueExpression("binding", ve);
+                
+                if (!ve.isReadOnly(faces.getELContext()))
+                {
+                    ComponentSupport.getViewRoot(ctx, c).getAttributes().put("oam.CALL_PRE_DISPOSE_VIEW", Boolean.TRUE);
+                    c.subscribeToEvent(PreDisposeViewEvent.class, new ClearBindingValueExpressionListener());
+                }
+                
+                if (c.getChildCount() > 0 || c.getFacetCount() > 0)
+                {
+                    // In this case, this component is used to hold a subtree that is generated
+                    // dynamically. In this case, the best is mark this component to be restored
+                    // fully, because this ensures the state is correctly preserved. Note this
+                    // is only necessary when the component has additional children or facets,
+                    // because those components requires an unique id provided by createUniqueId(),
+                    // and this ensures stability of the generated ids.
+                    c.getAttributes().put(DefaultFaceletsStateManagementStrategy.COMPONENT_ADDED_AFTER_BUILD_VIEW,
+                                          ComponentState.REMOVE_ADD);
+                }
             }
         }
         else
         {
+            // According to the, spec call the second alternative with null rendererType gives
+            // the same result, but without the unnecesary call for FacesContext.getCurrentInstance().
+            // Saves 1 call per component without rendererType (f:viewParam, h:column, f:selectItem, ...)
+            // and it does not have any side effects (the spec javadoc mentions in a explicit way
+            // that rendererType can be null!).
+            /*
             if (this._rendererType == null)
             {
                 c = app.createComponent(this._componentType);
             }
             else
-            {
+            {*/
                 c = app.createComponent(faces, this._componentType, this._rendererType);
-            }
+            //}
         }
         return c;
     }
@@ -554,25 +510,25 @@ public class ComponentTagHandlerDelegate extends TagHandlerDelegate
         m.ignore("binding").ignore("id");
 
         // add auto wiring for attributes
-        m.addRule(ComponentRule.Instance);
+        m.addRule(ComponentRule.INSTANCE);
 
         // if it's an ActionSource
         if (ActionSource.class.isAssignableFrom(type))
         {
-            m.addRule(ActionSourceRule.Instance);
+            m.addRule(ActionSourceRule.INSTANCE);
         }
 
         // if it's a ValueHolder
         if (ValueHolder.class.isAssignableFrom(type))
         {
-            m.addRule(ValueHolderRule.Instance);
+            m.addRule(ValueHolderRule.INSTANCE);
 
             // if it's an EditableValueHolder
             if (EditableValueHolder.class.isAssignableFrom(type))
             {
                 m.ignore("submittedValue");
                 m.ignore("valid");
-                m.addRule(EditableValueHolderRule.Instance);
+                m.addRule(EditableValueHolderRule.INSTANCE);
             }
         }
         
@@ -588,34 +544,37 @@ public class ComponentTagHandlerDelegate extends TagHandlerDelegate
      * @param mctx the AbstractFaceletContext
      * @param component The EditableValueHolder to which the validators should be added
      */
-    private void addDefaultValidators(FaceletCompositionContext mctx, FacesContext context, 
+    private void addEnclosingAndDefaultValidators(FaceletContext ctx, 
+                                      FaceletCompositionContext mctx, 
+                                      FacesContext context, 
                                       EditableValueHolder component)
     {
+        // add all enclosing validators, because they have precedence over default validators.
+        Iterator<Map.Entry<String, EditableValueHolderAttachedObjectHandler>> enclosingValidatorIds =
+            mctx.getEnclosingValidatorIdsAndHandlers();
+        if (enclosingValidatorIds != null)
+        {
+            while (enclosingValidatorIds.hasNext())
+            {
+                Map.Entry<String, EditableValueHolderAttachedObjectHandler> entry = enclosingValidatorIds.next();
+                addEnclosingValidator(ctx, mctx, context, component, entry.getKey(), entry.getValue());
+            }
+        }
         // add all defaultValidators
         Map<String, String> defaultValidators = context.getApplication().getDefaultValidatorInfo();
         if (defaultValidators != null && defaultValidators.size() != 0)
         {
             for (Map.Entry<String, String> entry : defaultValidators.entrySet())
             {
-                addDefaultValidator( mctx, context, component, entry.getKey(), entry.getValue());
-            }
-        }
-        // add all enclosing validators
-        Iterator<String> enclosingValidatorIds = mctx.getEnclosingValidatorIds();
-        if (enclosingValidatorIds != null)
-        {
-            while (enclosingValidatorIds.hasNext())
-            {
-                String validatorId = enclosingValidatorIds.next();
-                if (!defaultValidators.containsKey(validatorId))
+                if (!mctx.containsEnclosingValidatorId(entry.getKey()))
                 {
-                    addDefaultValidator(mctx, context, component, validatorId, null);
+                    addDefaultValidator(ctx, mctx, context, component, entry.getKey(), entry.getValue());
                 }
             }
         }
     }
-    
-    private void addDefaultValidator(FaceletCompositionContext mctx, FacesContext context, 
+
+    private void addDefaultValidator(FaceletContext ctx, FaceletCompositionContext mctx, FacesContext context, 
             EditableValueHolder component, String validatorId, String validatorClassName)
     {
         Validator enclosingValidator = null;
@@ -644,7 +603,7 @@ public class ComponentTagHandlerDelegate extends TagHandlerDelegate
         
         if (validator == null)
         {
-            if (shouldAddDefaultValidator(mctx, context, component, validatorId))
+            if (shouldAddDefaultValidator(ctx, mctx, context, component, validatorId))
             {
                 if (enclosingValidator != null)
                 {
@@ -678,24 +637,24 @@ public class ComponentTagHandlerDelegate extends TagHandlerDelegate
             {
                 // no validationGroups available
                 // --> get the validationGroups from the stack
-                String stackGroup = mctx.getFirstValidationGroupFromStack();
-                if (stackGroup != null)
-                {
-                    validationGroups = stackGroup;
-                }
-                else
-                {
+                //String stackGroup = mctx.getFirstValidationGroupFromStack();
+                //if (stackGroup != null)
+                //{
+                //    validationGroups = stackGroup;
+                //}
+                //else
+                //{
                     // no validationGroups on the stack
                     // --> set the default validationGroup
                     validationGroups = javax.validation.groups.Default.class.getName();
-                }
+                //}
                 beanValidator.setValidationGroups(validationGroups);
             }
         }
     }
 
     /**
-     * Determine if the default Validator with the given validatorId should be added.
+     * Determine if the validator with the given validatorId should be added.
      *
      * @param validatorId The validatorId.
      * @param facesContext The FacesContext.
@@ -704,7 +663,7 @@ public class ComponentTagHandlerDelegate extends TagHandlerDelegate
      * @return true if the Validator should be added, false otherwise.
      */
     @SuppressWarnings("unchecked")
-    private boolean shouldAddDefaultValidator(FaceletCompositionContext mctx,
+    private boolean shouldAddDefaultValidator(FaceletContext ctx, FaceletCompositionContext mctx,
                                               FacesContext facesContext,
                                               EditableValueHolder component, 
                                               String validatorId)
@@ -725,6 +684,7 @@ public class ComponentTagHandlerDelegate extends TagHandlerDelegate
         }
         
         // check if the validatorId is on the exclusion list on the stack
+        /*
         Iterator<String> it = mctx.getExcludedValidatorIds();
         if (it != null)
         {            
@@ -734,6 +694,24 @@ public class ComponentTagHandlerDelegate extends TagHandlerDelegate
                 if (excludedId.equals(validatorId))
                 {
                     return false;
+                }
+            }
+        }*/
+        Iterator<Map.Entry<String, EditableValueHolderAttachedObjectHandler>> enclosingValidatorIds =
+            mctx.getEnclosingValidatorIdsAndHandlers();
+        if (enclosingValidatorIds != null)
+        {
+            while (enclosingValidatorIds.hasNext())
+            {
+                Map.Entry<String, EditableValueHolderAttachedObjectHandler> entry = enclosingValidatorIds.next();
+                boolean validatorIdAvailable = entry.getKey() != null && !"".equals(entry.getKey());
+                if (validatorIdAvailable && entry.getKey().equals(validatorId))
+                {
+                    if (((ValidatorHandler)((FacesWrapper<ValidatorHandler>)entry.getValue()).getWrapped())
+                            .isDisabled(ctx))
+                    {
+                        return false;
+                    }
                 }
             }
         }
@@ -749,6 +727,109 @@ public class ComponentTagHandlerDelegate extends TagHandlerDelegate
                 log.log(Level.WARNING, "Bean validation is not available on the " +
                         "classpath, thus the BeanValidator will not be added for " +
                         "the component " + component);
+                return false;
+            }
+        }
+
+        // By default, all default validators should be added
+        return true;
+    }
+
+    private void addEnclosingValidator(FaceletContext ctx, FaceletCompositionContext mctx, FacesContext context, 
+            EditableValueHolder component, String validatorId, 
+            EditableValueHolderAttachedObjectHandler attachedObjectHandler)
+    {
+        if (shouldAddEnclosingValidator(mctx, context, component, validatorId))
+        {
+            if (attachedObjectHandler != null)
+            {
+                attachedObjectHandler.applyAttachedObject(context, (UIComponent) component);
+            }
+            else
+            {
+                Validator validator = null;
+                // create it
+                validator = context.getApplication().createValidator(validatorId);
+
+                // special things to configure for a BeanValidator
+                if (validator instanceof BeanValidator)
+                {
+                    BeanValidator beanValidator = (BeanValidator) validator;
+                    
+                    // check the validationGroups
+                    String validationGroups =  beanValidator.getValidationGroups();
+                    if (validationGroups == null 
+                            || validationGroups.matches(BeanValidator.EMPTY_VALIDATION_GROUPS_PATTERN))
+                    {
+                        // no validationGroups available
+                        // --> get the validationGroups from the stack
+                        //String stackGroup = mctx.getFirstValidationGroupFromStack();
+                        //if (stackGroup != null)
+                        //{
+                        //    validationGroups = stackGroup;
+                        //}
+                        //else
+                        //{
+                            // no validationGroups on the stack
+                            // --> set the default validationGroup
+                            validationGroups = javax.validation.groups.Default.class.getName();
+                        //}
+                        beanValidator.setValidationGroups(validationGroups);
+                    }
+                }
+                
+                // add the validator to the component
+                component.addValidator(validator);
+            }
+        }
+    }
+
+    /**
+     * Determine if the validator with the given validatorId should be added.
+     * 
+     * The difference here with shouldAddEnclosingValidator is the inner one has
+     * precedence over the outer one, so a disable="true" over the same outer 
+     * validator, the inner one should ignore this condition. 
+     * 
+     * @param mctx
+     * @param facesContext
+     * @param component
+     * @param validatorId
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    private boolean shouldAddEnclosingValidator(FaceletCompositionContext mctx,
+            FacesContext facesContext,
+            EditableValueHolder component, 
+            String validatorId)
+    {
+        // check if the validatorId is on the exclusion list on the component
+        List<String> exclusionList = (List<String>) ((UIComponent) component)
+                .getAttributes()
+                .get(ValidatorTagHandlerDelegate.VALIDATOR_ID_EXCLUSION_LIST_KEY);
+        if (exclusionList != null)
+        {
+            for (String excludedId : exclusionList)
+            {
+                if (excludedId.equals(validatorId))
+                {
+                    return false;
+                }
+            }
+        }
+
+        // Some extra rules are required for Bean Validation.
+        if (validatorId.equals(BeanValidator.VALIDATOR_ID))
+        {
+            if (!ExternalSpecifications.isBeanValidationAvailable())
+            {
+                // the BeanValidator was added as a default-validator, but
+                // bean validation is not available on the classpath.
+                // --> log a warning about this scenario.
+                log.log(Level.WARNING,
+                        "Bean validation is not available on the "
+                                + "classpath, thus the BeanValidator will not be added for "
+                                + "the component " + component);
                 return false;
             }
         }

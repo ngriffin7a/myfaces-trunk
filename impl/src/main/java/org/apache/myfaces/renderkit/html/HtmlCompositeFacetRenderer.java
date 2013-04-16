@@ -25,7 +25,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFRenderer;
-import org.apache.myfaces.shared_impl.renderkit.html.HtmlRenderer;
+import org.apache.myfaces.shared.renderkit.html.HtmlRenderer;
 
 /**
  * 
@@ -52,9 +52,13 @@ public class HtmlCompositeFacetRenderer extends HtmlRenderer
             throws IOException
     {
         if (context == null)
+        {
             throw new NullPointerException("context");
+        }
         if (component == null)
+        {
             throw new NullPointerException("component");
+        }
         
         String facetName = (String) component.getAttributes().get(UIComponent.FACETS_KEY);
         

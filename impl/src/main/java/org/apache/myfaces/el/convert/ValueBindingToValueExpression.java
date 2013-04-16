@@ -31,7 +31,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.EvaluationException;
 import javax.faces.el.ValueBinding;
 
-import org.apache.myfaces.shared_impl.util.ClassUtils;
+import org.apache.myfaces.shared.util.ClassUtils;
 
 /**
  * Wraps a ValueBinding inside a ValueExpression. Also allows access to the original ValueBinding object.
@@ -49,7 +49,7 @@ public class ValueBindingToValueExpression extends ValueExpression implements St
     private static final long serialVersionUID = 8071429285360496554L;
 
     //private static final Log logger = LogFactory.getLog(ValueBindingToValueExpression.class);
-    private static final Logger logger = Logger.getLogger(ValueBindingToValueExpression.class.getName());
+    private static final Logger log = Logger.getLogger(ValueBindingToValueExpression.class.getName());
 
     private ValueBinding _valueBinding;
 
@@ -151,21 +151,33 @@ public class ValueBindingToValueExpression extends ValueExpression implements St
     public boolean equals(Object obj)
     {
         if (this == obj)
+        {
             return true;
+        }
         if (obj == null)
+        {
             return false;
+        }
         if (getClass() != obj.getClass())
+        {
             return false;
+        }
         final ValueBindingToValueExpression other = (ValueBindingToValueExpression) obj;
         if (_transient != other._transient)
+        {
             return false;
+        }
         if (_valueBinding == null)
         {
             if (other._valueBinding != null)
+            {
                 return false;
+            }
         }
         else if (!_valueBinding.equals(other._valueBinding))
+        {
             return false;
+        }
         return true;
     }
 
@@ -196,8 +208,9 @@ public class ValueBindingToValueExpression extends ValueExpression implements St
             }
             catch (Throwable e)
             {
-                logger.log(Level.WARNING, "Could not determine expected type for '" + _valueBinding.getExpressionString() + "': "
-                        + e.getMessage(), e);
+                log.log(Level.WARNING, "Could not determine expected type for '"
+                                       + _valueBinding.getExpressionString() + "': "
+                                       + e.getMessage(), e);
             }
         }
         return null;

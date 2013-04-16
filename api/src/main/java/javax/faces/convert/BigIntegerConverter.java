@@ -48,8 +48,14 @@ public class BigIntegerConverter
     // METHODS
     public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value)
     {
-        if (facesContext == null) throw new NullPointerException("facesContext");
-        if (uiComponent == null) throw new NullPointerException("uiComponent");
+        if (facesContext == null)
+        {
+            throw new NullPointerException("facesContext");
+        }
+        if (uiComponent == null)
+        {
+            throw new NullPointerException("uiComponent");
+        }
 
         if (value != null)
         {
@@ -63,8 +69,8 @@ public class BigIntegerConverter
                 catch (NumberFormatException e)
                 {
                     throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
-                                                                               BIGINTEGER_ID,
-                                                                               new Object[]{value,"2345",_MessageUtils.getLabel(facesContext, uiComponent)}), e);
+                                   BIGINTEGER_ID,
+                                   new Object[]{value,"2345",_MessageUtils.getLabel(facesContext, uiComponent)}), e);
                 }
             }
         }
@@ -73,8 +79,14 @@ public class BigIntegerConverter
 
     public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value)
     {
-        if (facesContext == null) throw new NullPointerException("facesContext");
-        if (uiComponent == null) throw new NullPointerException("uiComponent");
+        if (facesContext == null)
+        {
+            throw new NullPointerException("facesContext");
+        }
+        if (uiComponent == null)
+        {
+            throw new NullPointerException("uiComponent");
+        }
 
         if (value == null)
         {
@@ -90,7 +102,8 @@ public class BigIntegerConverter
         }
         catch (Exception e)
         {
-            throw new ConverterException(_MessageUtils.getErrorMessage(facesContext, STRING_ID, new Object[]{value,_MessageUtils.getLabel(facesContext, uiComponent)}),e);
+            throw new ConverterException(_MessageUtils.getErrorMessage(facesContext, STRING_ID,
+                    new Object[]{value,_MessageUtils.getLabel(facesContext, uiComponent)}),e);
         }
     }
 

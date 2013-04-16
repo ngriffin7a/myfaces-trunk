@@ -18,7 +18,6 @@
  */
 package org.apache.myfaces.config.annotation;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
@@ -34,18 +33,26 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
-import org.apache.myfaces.shared_impl.util.ClassUtils;
+import org.apache.myfaces.shared.util.ClassUtils;
 import org.apache.myfaces.spi.ServiceProviderFinderFactory;
 
 /*
  * Date: Mar 12, 2007
  * Time: 9:53:40 PM
  */
-public class DefaultLifecycleProviderFactory extends LifecycleProviderFactory {
+public class DefaultLifecycleProviderFactory extends LifecycleProviderFactory
+{
     //private static Log log = LogFactory.getLog(DefaultLifecycleProviderFactory.class);
     private static Logger log = Logger.getLogger(DefaultLifecycleProviderFactory.class.getName());
 
-    public static final String LIFECYCLE_PROVIDER_INSTANCE_KEY = LifecycleProvider.class.getName() + ".LIFECYCLE_PROVIDER_INSTANCE";
+    /**
+     * Define the class implementing LifecycleProvider2 interface to handle PostConstruct and PreDestroy annotations.
+     * 
+     * <p>This also can be configured using a SPI entry (/META-INF/services/...).
+     * </p>
+     */
+    public static final String LIFECYCLE_PROVIDER_INSTANCE_KEY
+            = LifecycleProvider.class.getName() + ".LIFECYCLE_PROVIDER_INSTANCE";
 
     @JSFWebConfigParam(name="org.apache.myfaces.config.annotation.LifecycleProvider", since="1.1")
     public static final String LIFECYCLE_PROVIDER = LifecycleProvider.class.getName();
@@ -69,7 +76,8 @@ public class DefaultLifecycleProviderFactory extends LifecycleProviderFactory {
         }
         else
         {
-            lifecycleProvider = (LifecycleProvider) externalContext.getApplicationMap().get(LIFECYCLE_PROVIDER_INSTANCE_KEY);
+            lifecycleProvider = (LifecycleProvider)
+                    externalContext.getApplicationMap().get(LIFECYCLE_PROVIDER_INSTANCE_KEY);
         }
         if (lifecycleProvider == null)
         {
@@ -83,13 +91,15 @@ public class DefaultLifecycleProviderFactory extends LifecycleProviderFactory {
                 else
                 {
                     //Retrieve it because it was resolved
-                    lifecycleProvider = (LifecycleProvider) externalContext.getApplicationMap().get(LIFECYCLE_PROVIDER_INSTANCE_KEY);
+                    lifecycleProvider = (LifecycleProvider)
+                            externalContext.getApplicationMap().get(LIFECYCLE_PROVIDER_INSTANCE_KEY);
                 }
             }
             else
             {
                 //Retrieve it because it was resolved
-                lifecycleProvider = (LifecycleProvider) externalContext.getApplicationMap().get(LIFECYCLE_PROVIDER_INSTANCE_KEY);
+                lifecycleProvider = (LifecycleProvider)
+                        externalContext.getApplicationMap().get(LIFECYCLE_PROVIDER_INSTANCE_KEY);
             }
             log.info("Using LifecycleProvider "+ lifecycleProvider.getClass().getName());
         }
@@ -97,8 +107,8 @@ public class DefaultLifecycleProviderFactory extends LifecycleProviderFactory {
     }
 
     @Override
-    public void release() {
-
+    public void release()
+    {
     }
 
 
@@ -113,8 +123,9 @@ public class DefaultLifecycleProviderFactory extends LifecycleProviderFactory {
 
                 Object obj = createClass(lifecycleProvider, externalContext);
 
-                if (obj instanceof LifecycleProvider) {
-                    externalContext.getApplicationMap().put(LIFECYCLE_PROVIDER_INSTANCE_KEY, (LifecycleProvider) obj);
+                if (obj instanceof LifecycleProvider)
+                {
+                    externalContext.getApplicationMap().put(LIFECYCLE_PROVIDER_INSTANCE_KEY, obj);
                     return true;
                 }
             }
@@ -157,7 +168,9 @@ public class DefaultLifecycleProviderFactory extends LifecycleProviderFactory {
                                     InvocationTargetException,
                                     PrivilegedActionException
                             {
-                                List<String> classList = ServiceProviderFinderFactory.getServiceProviderFinder(extContext).getServiceProviderList(LIFECYCLE_PROVIDER);
+                                List<String> classList
+                                        = ServiceProviderFinderFactory.getServiceProviderFinder(extContext).
+                                                                       getServiceProviderList(LIFECYCLE_PROVIDER);
                                 Iterator<String> iter = classList.iterator();
                                 while (iter.hasNext())
                                 {
@@ -165,21 +178,24 @@ public class DefaultLifecycleProviderFactory extends LifecycleProviderFactory {
                                     Object obj = createClass(className,extContext);
                                     if (DiscoverableLifecycleProvider.class.isAssignableFrom(obj.getClass()))
                                     {
-                                        DiscoverableLifecycleProvider discoverableLifecycleProvider = (DiscoverableLifecycleProvider) obj;
+                                        DiscoverableLifecycleProvider discoverableLifecycleProvider =
+                                                (DiscoverableLifecycleProvider) obj;
                                         if (discoverableLifecycleProvider.isAvailable())
                                         {
-                                            extContext.getApplicationMap().put(LIFECYCLE_PROVIDER_INSTANCE_KEY, discoverableLifecycleProvider);
-                                            return (Boolean) true;
+                                            extContext.getApplicationMap().put(LIFECYCLE_PROVIDER_INSTANCE_KEY,
+                                                                               discoverableLifecycleProvider);
+                                            return true;
                                         }
                                     }
                                 }
-                                return (Boolean) false;
+                                return false;
                             }
                         });
             }
             else
             {
-                List<String> classList = ServiceProviderFinderFactory.getServiceProviderFinder(extContext).getServiceProviderList(LIFECYCLE_PROVIDER);
+                List<String> classList = ServiceProviderFinderFactory.getServiceProviderFinder(extContext).
+                        getServiceProviderList(LIFECYCLE_PROVIDER);
                 Iterator<String> iter = classList.iterator();
                 while (iter.hasNext())
                 {
@@ -187,10 +203,12 @@ public class DefaultLifecycleProviderFactory extends LifecycleProviderFactory {
                     Object obj = createClass(className,extContext);
                     if (DiscoverableLifecycleProvider.class.isAssignableFrom(obj.getClass()))
                     {
-                        DiscoverableLifecycleProvider discoverableLifecycleProvider = (DiscoverableLifecycleProvider) obj;
+                        DiscoverableLifecycleProvider discoverableLifecycleProvider
+                                = (DiscoverableLifecycleProvider) obj;
                         if (discoverableLifecycleProvider.isAvailable())
                         {
-                            extContext.getApplicationMap().put(LIFECYCLE_PROVIDER_INSTANCE_KEY, discoverableLifecycleProvider);
+                            extContext.getApplicationMap().put(LIFECYCLE_PROVIDER_INSTANCE_KEY,
+                                                               discoverableLifecycleProvider);
                             return (Boolean) true;
                         }
                     }

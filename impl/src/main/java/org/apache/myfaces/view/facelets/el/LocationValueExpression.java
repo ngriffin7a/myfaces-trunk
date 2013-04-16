@@ -18,6 +18,11 @@
  */
 package org.apache.myfaces.view.facelets.el;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 import javax.el.ELContext;
 import javax.el.ValueExpression;
 import javax.faces.FacesWrapper;
@@ -39,7 +44,8 @@ import javax.faces.view.Location;
  * @author Jakob Korherr (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class LocationValueExpression extends ValueExpression implements FacesWrapper<ValueExpression>
+public class LocationValueExpression extends ValueExpression
+    implements FacesWrapper<ValueExpression>, Externalizable
 {
     
     private static final long serialVersionUID = -5636849184764526288L;
@@ -47,16 +53,47 @@ public class LocationValueExpression extends ValueExpression implements FacesWra
     // location and delegate need to be available in LocationValueExpressionUEL
     Location location;
     ValueExpression delegate;
+    int ccLevel;
+    
+    public LocationValueExpression()
+    {
+        super();
+    }
     
     public LocationValueExpression(Location location, ValueExpression delegate)
     {
         this.location = location;
         this.delegate = delegate;
+        this.ccLevel = 0;
+    }
+
+    public LocationValueExpression(Location location, ValueExpression delegate, int ccLevel)
+    {
+        this.location = location;
+        this.delegate = delegate;
+        this.ccLevel = ccLevel;
     }
     
     public Location getLocation()
     {
         return location;
+    }
+    
+    public int getCCLevel()
+    {
+        return ccLevel;
+    }
+    
+    public LocationValueExpression apply(int newCCLevel)
+    {
+        if(this.ccLevel == newCCLevel)
+        {
+            return this;
+        }
+        else
+        {
+            return new LocationValueExpression(this.location, this.delegate, newCCLevel);
+        }
     }
     
     @Override
@@ -69,7 +106,7 @@ public class LocationValueExpression extends ValueExpression implements FacesWra
     public Class<?> getType(ELContext context)
     {
         FacesContext facesContext = (FacesContext) context.getContext(FacesContext.class);
-        CompositeComponentELUtils.saveCompositeComponentForResolver(facesContext, location);
+        CompositeComponentELUtils.saveCompositeComponentForResolver(facesContext, location, ccLevel);
         try
         {
             return delegate.getType(context);
@@ -84,7 +121,7 @@ public class LocationValueExpression extends ValueExpression implements FacesWra
     public Object getValue(ELContext context)
     {
         FacesContext facesContext = (FacesContext) context.getContext(FacesContext.class);
-        CompositeComponentELUtils.saveCompositeComponentForResolver(facesContext, location);
+        CompositeComponentELUtils.saveCompositeComponentForResolver(facesContext, location, ccLevel);
         try
         {
             return delegate.getValue(context);
@@ -99,7 +136,7 @@ public class LocationValueExpression extends ValueExpression implements FacesWra
     public boolean isReadOnly(ELContext context)
     {
         FacesContext facesContext = (FacesContext) context.getContext(FacesContext.class);
-        CompositeComponentELUtils.saveCompositeComponentForResolver(facesContext, location);
+        CompositeComponentELUtils.saveCompositeComponentForResolver(facesContext, location, ccLevel);
         try
         {
             return delegate.isReadOnly(context);
@@ -114,7 +151,7 @@ public class LocationValueExpression extends ValueExpression implements FacesWra
     public void setValue(ELContext context, Object value)
     {
         FacesContext facesContext = (FacesContext) context.getContext(FacesContext.class);
-        CompositeComponentELUtils.saveCompositeComponentForResolver(facesContext, location);
+        CompositeComponentELUtils.saveCompositeComponentForResolver(facesContext, location, ccLevel);
         try
         {
             delegate.setValue(context, value);
@@ -152,5 +189,19 @@ public class LocationValueExpression extends ValueExpression implements FacesWra
     public ValueExpression getWrapped()
     {
         return delegate;
+    }
+    
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
+    {
+        this.delegate = (ValueExpression) in.readObject();
+        this.location = (Location) in.readObject();
+        this.ccLevel = in.readInt();
+    }
+
+    public void writeExternal(ObjectOutput out) throws IOException
+    {
+        out.writeObject(this.delegate);
+        out.writeObject(this.location);
+        out.writeInt(this.ccLevel);
     }
 }

@@ -23,8 +23,8 @@ import javax.faces.view.BehaviorHolderAttachedObjectHandler;
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTag;
 
 /**
- * @author Simon Lessard (latest modification by $Author: slessard $)
- * @version $Revision: 696523 $ $Date: 2009-03-15 17:28:58 -0400 (mer., 17 sept. 2008) $
+ * @author Simon Lessard (latest modification by $Author$)
+ * @version $Revision$ $Date$
  *
  * @since 2.0
  */
@@ -33,6 +33,7 @@ public class BehaviorHandler extends FaceletsAttachedObjectHandler implements Be
 {
     private String behaviorId;
     private TagAttribute event;
+    private TagHandlerDelegate helper;
     
     /**
      * @param config
@@ -57,7 +58,8 @@ public class BehaviorHandler extends FaceletsAttachedObjectHandler implements Be
 
     public String getEventName ()
     {
-        if (event == null) {
+        if (event == null)
+        {
             return null;
         }
         
@@ -70,6 +72,13 @@ public class BehaviorHandler extends FaceletsAttachedObjectHandler implements Be
     @Override
     protected TagHandlerDelegate getTagHandlerDelegate()
     {
-        return delegateFactory.createBehaviorHandlerDelegate (this);
+        if (helper == null)
+        {
+            // Spec seems to indicate that the helper is created here, as opposed to other Handler
+            // instances, where it's presumably a new instance for every getter call.
+            
+            this.helper = delegateFactory.createBehaviorHandlerDelegate (this);
+        }
+        return helper;
     }
 }

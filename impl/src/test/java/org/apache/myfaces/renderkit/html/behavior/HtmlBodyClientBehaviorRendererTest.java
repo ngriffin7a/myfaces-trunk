@@ -23,14 +23,13 @@ import javax.faces.component.behavior.AjaxBehavior;
 import javax.faces.component.behavior.ClientBehaviorHolder;
 import javax.faces.component.html.HtmlBody;
 
-import org.apache.myfaces.shared_impl.renderkit.ClientBehaviorEvents;
-import org.apache.myfaces.shared_impl.renderkit.html.HTML;
-import org.apache.myfaces.test.utils.HtmlCheckAttributesUtil;
+import org.apache.myfaces.shared.renderkit.ClientBehaviorEvents;
+import org.apache.myfaces.shared.renderkit.html.HTML;
 import org.junit.Assert;
 
 /**
- * @author Leonardo Uribe (latest modification by $Author: jankeesvanandel $)
- * @version $Revision: 799929 $ $Date: 2009-08-01 16:29:33 -0500 (sáb, 01 ago 2009) $
+ * @author Leonardo Uribe (latest modification by $Author$)
+ * @version $Revision$ $Date$
  */
 public class HtmlBodyClientBehaviorRendererTest extends AbstractClientBehaviorTestCase
 {
@@ -41,7 +40,7 @@ public class HtmlBodyClientBehaviorRendererTest extends AbstractClientBehaviorTe
     {
         super.setUp();
         attrs = (HtmlRenderedClientEventAttr[]) 
-            org.apache.myfaces.shared_impl.util.ArrayUtils.concat( 
+            org.apache.myfaces.shared.util.ArrayUtils.concat( 
                     HtmlClientEventAttributesUtil.generateClientBehaviorEventAttrs(),
                 new HtmlRenderedClientEventAttr[]{
                     new HtmlRenderedClientEventAttr(HTML.ONLOAD_ATTR, ClientBehaviorEvents.LOAD),

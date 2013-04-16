@@ -28,15 +28,19 @@ import java.util.logging.Logger;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIOutput;
 import javax.faces.component.UIParameter;
+import javax.faces.component.UIViewRoot;
 import javax.faces.component.html.HtmlOutputFormat;
 import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFRenderer;
-import org.apache.myfaces.shared_impl.renderkit.JSFAttr;
-import org.apache.myfaces.shared_impl.renderkit.RendererUtils;
-import org.apache.myfaces.shared_impl.renderkit.html.HtmlRenderer;
-import org.apache.myfaces.shared_impl.renderkit.html.HtmlRendererUtils;
-import org.apache.myfaces.shared_impl.renderkit.html.HtmlTextRendererBase;
+import org.apache.myfaces.shared.renderkit.JSFAttr;
+import org.apache.myfaces.shared.renderkit.RendererUtils;
+import org.apache.myfaces.shared.renderkit.html.CommonPropertyConstants;
+import org.apache.myfaces.shared.renderkit.html.CommonPropertyUtils;
+import org.apache.myfaces.shared.renderkit.html.HTML;
+import org.apache.myfaces.shared.renderkit.html.HtmlRenderer;
+import org.apache.myfaces.shared.renderkit.html.HtmlRendererUtils;
 
 /**
  * 
@@ -51,6 +55,18 @@ public class HtmlFormatRenderer extends HtmlRenderer
     private static final Logger log = Logger.getLogger(HtmlFormatRenderer.class.getName());
 
     private static final Object[] EMPTY_ARGS = new Object[0];
+    
+    @Override
+    protected boolean isCommonPropertiesOptimizationEnabled(FacesContext facesContext)
+    {
+        return true;
+    }
+
+    @Override
+    protected boolean isCommonEventsOptimizationEnabled(FacesContext facesContext)
+    {
+        return true;
+    }
 
     @Override
     public void encodeBegin(FacesContext facesContext, UIComponent uiComponent) throws IOException
@@ -68,16 +84,78 @@ public class HtmlFormatRenderer extends HtmlRenderer
         RendererUtils.checkParamValidity(facesContext, component, UIOutput.class);
 
         String text = getOutputFormatText(facesContext, component);
-        boolean isEscape;
+        boolean escape;
         if (component instanceof HtmlOutputFormat)
         {
-            isEscape = ((HtmlOutputFormat) component).isEscape();
+            escape = ((HtmlOutputFormat) component).isEscape();
         }
         else
         {
-            isEscape = RendererUtils.getBooleanAttribute(component, JSFAttr.ESCAPE_ATTR, true);
+            escape = RendererUtils.getBooleanAttribute(component, JSFAttr.ESCAPE_ATTR, true);
         }
-        HtmlTextRendererBase.renderOutputText(facesContext, component, text, isEscape);
+        if (text != null)
+        {
+            ResponseWriter writer = facesContext.getResponseWriter();
+            boolean span = false;
+
+            if (isCommonPropertiesOptimizationEnabled(facesContext))
+            {
+                long commonPropertiesMarked = CommonPropertyUtils.getCommonPropertiesMarked(component);
+                
+                if ( (commonPropertiesMarked & ~(CommonPropertyConstants.ESCAPE_PROP)) > 0)
+                {
+                    span = true;
+                    writer.startElement(HTML.SPAN_ELEM, component);
+                    HtmlRendererUtils.writeIdIfNecessary(writer, component, facesContext);
+                }
+                else if (CommonPropertyUtils.isIdRenderingNecessary(component))
+                {
+                    span = true;
+                    writer.startElement(HTML.SPAN_ELEM, component);
+                    writer.writeAttribute(HTML.ID_ATTR, component.getClientId(facesContext), null);
+                }
+                
+                CommonPropertyUtils.renderUniversalProperties(writer, commonPropertiesMarked, component);
+                CommonPropertyUtils.renderStyleProperties(writer, commonPropertiesMarked, component);
+            }
+            else
+            {
+                if(component.getId()!=null && !component.getId().startsWith(UIViewRoot.UNIQUE_ID_PREFIX))
+                {
+                    span = true;
+    
+                    writer.startElement(HTML.SPAN_ELEM, component);
+    
+                    HtmlRendererUtils.writeIdIfNecessary(writer, component, facesContext);
+    
+                    HtmlRendererUtils.renderHTMLAttributes(writer, component, HTML.COMMON_PASSTROUGH_ATTRIBUTES);
+    
+                }
+                else
+                {
+                    span = HtmlRendererUtils.renderHTMLAttributesWithOptionalStartElement(writer,component,
+                            HTML.SPAN_ELEM,HTML.COMMON_PASSTROUGH_ATTRIBUTES);
+                }
+            }
+
+            if (escape)
+            {
+                if (log.isLoggable(Level.FINE))
+                {
+                    log.fine("renderOutputText writing '" + text + "'");
+                }
+                writer.writeText(text, org.apache.myfaces.shared.renderkit.JSFAttr.VALUE_ATTR);
+            }
+            else
+            {
+                writer.write(text);
+            }
+
+            if(span)
+            {
+                writer.endElement(org.apache.myfaces.shared.renderkit.html.HTML.SPAN_ELEM);
+            }
+        }
     }
 
     private String getOutputFormatText(FacesContext facesContext, UIComponent htmlOutputFormat)
@@ -90,16 +168,31 @@ public class HtmlFormatRenderer extends HtmlRenderer
         }
         else
         {
-            List<Object> argsList = new ArrayList<Object>();
+            List<Object> argsList = null;
             
-            List<UIParameter> validParams = HtmlRendererUtils.getValidUIParameterChildren(
-                    facesContext, htmlOutputFormat.getChildren(), false, false, false);
-            for (UIParameter param : validParams)
+            if (htmlOutputFormat.getChildCount() > 0)
             {
-                argsList.add(param.getValue());
+                List<UIParameter> validParams = HtmlRendererUtils.getValidUIParameterChildren(
+                        facesContext, htmlOutputFormat.getChildren(), false, false, false);
+                for (int i = 0, size = validParams.size(); i < size; i++)
+                {
+                    UIParameter param = validParams.get(i);
+                    if (argsList == null)
+                    {
+                        argsList = new ArrayList<Object>();
+                    }
+                    argsList.add(param.getValue());
+                }
             }
             
-            args = argsList.toArray(new Object[argsList.size()]);
+            if (argsList != null)
+            {
+                args = argsList.toArray(new Object[argsList.size()]);
+            }
+            else
+            {
+                args = EMPTY_ARGS;
+            }
         }
 
         MessageFormat format = new MessageFormat(pattern, facesContext.getViewRoot().getLocale());
@@ -109,7 +202,8 @@ public class HtmlFormatRenderer extends HtmlRenderer
         }
         catch (Exception e)
         {
-            log.log(Level.SEVERE, "Error formatting message of component " + htmlOutputFormat.getClientId(facesContext));
+            log.log(Level.SEVERE, "Error formatting message of component "
+                                  + htmlOutputFormat.getClientId(facesContext));
             return "";
         }
     }

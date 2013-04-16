@@ -19,14 +19,13 @@
 package javax.faces.view.facelets;
 
 import javax.faces.component.UIComponent;
-import javax.faces.view.facelets.FaceletContext;
 
 /**
  * Implementation of the tag logic used in the JSF specification. This is your golden hammer for wiring UIComponents to
  * Facelets.
  * 
  * @author Jacob Hookom
- * @version $Id: ComponentHandler.java,v 1.19 2008/07/13 19:01:47 rlubke Exp $
+ * @version $Id$
  */
 public class ComponentHandler extends DelegatingMetaTagHandler
 {

@@ -43,20 +43,20 @@ import javax.faces.context.FacesContext;
 
 import org.apache.commons.collections.map.AbstractReferenceMap;
 import org.apache.commons.collections.map.ReferenceMap;
-import org.apache.myfaces.shared_impl.renderkit.RendererUtils;
-import org.apache.myfaces.shared_impl.util.MyFacesObjectInputStream;
+import org.apache.myfaces.shared.renderkit.RendererUtils;
+import org.apache.myfaces.shared.util.MyFacesObjectInputStream;
 
 /**
  * This helper class contains methods used by DefaultFaceletsStateManagementStrategy that comes
  * from JspStateManagerImpl, but are used by our default StateManagementStrategy
  *  
- * TODO: Move all state saving methods commons to JspStateManagerImpl to some common place.
- * 
- * @author Leonardo Uribe (latest modification by $Author: lu4242 $)
- * @version $Revision: 793245 $ $Date: 2009-07-11 18:50:53 -0500 (Sat, 11 Jul 2009) $
+ * @author Leonardo Uribe (latest modification by $Author$)
+ * @version $Revision$ $Date$
  * @since 2.0
+ * @deprecated replaced by org.apache.myfaces.application.StateCache
  *
  */
+@Deprecated
 class DefaultFaceletsStateManagementHelper
 {
     //private static final Log log = LogFactory.getLog(DefaultFaceletsStateManagementHelper.class);
@@ -90,7 +90,8 @@ class DefaultFaceletsStateManagementHelper
     private static final String SERIALIZE_STATE_IN_SESSION_PARAM = "org.apache.myfaces.SERIALIZE_STATE_IN_SESSION";
 
     /**
-     * Only applicable if state saving method is "server" (= default) and if <code>org.apache.myfaces.SERIALIZE_STATE_IN_SESSION</code> is <code>true</code> (= default).
+     * Only applicable if state saving method is "server" (= default) and if
+     * <code>org.apache.myfaces.SERIALIZE_STATE_IN_SESSION</code> is <code>true</code> (= default).
      * If <code>true</code> (default) the serialized state will be compressed before it is written to the session.
      * If <code>false</code> the state will not be compressed.
      */
@@ -262,11 +263,17 @@ class DefaultFaceletsStateManagementHelper
 
     protected Object serializeView(FacesContext context, Object serializedView)
     {
-        if (log.isLoggable(Level.FINEST)) log.finest("Entering serializeView");
+        if (log.isLoggable(Level.FINEST))
+        {
+            log.finest("Entering serializeView");
+        }
 
         if(isSerializeStateInSession(context))
         {
-            if (log.isLoggable(Level.FINEST)) log.finest("Processing serializeView - serialize state in session");
+            if (log.isLoggable(Level.FINEST))
+            {
+                log.finest("Processing serializeView - serialize state in session");
+            }
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
             try
@@ -274,14 +281,20 @@ class DefaultFaceletsStateManagementHelper
                 OutputStream os = baos;
                 if(isCompressStateInSession(context))
                 {
-                    if (log.isLoggable(Level.FINEST)) log.finest("Processing serializeView - serialize compressed");
+                    if (log.isLoggable(Level.FINEST))
+                    {
+                        log.finest("Processing serializeView - serialize compressed");
+                    }
 
                     os.write(COMPRESSED_FLAG);
                     os = new GZIPOutputStream(os, 1024);
                 }
                 else
                 {
-                    if (log.isLoggable(Level.FINEST)) log.finest("Processing serializeView - serialize uncompressed");
+                    if (log.isLoggable(Level.FINEST))
+                    {
+                        log.finest("Processing serializeView - serialize uncompressed");
+                    }
 
                     os.write(UNCOMPRESSED_FLAG);
                 }
@@ -294,7 +307,10 @@ class DefaultFaceletsStateManagementHelper
                 out.close();
                 baos.close();
 
-                if (log.isLoggable(Level.FINEST)) log.finest("Exiting serializeView - serialized. Bytes : "+baos.size());
+                if (log.isLoggable(Level.FINEST))
+                {
+                    log.finest("Exiting serializeView - serialized. Bytes : " + baos.size());
+                }
                 return baos.toByteArray();
             }
             catch (IOException e)
@@ -306,7 +322,9 @@ class DefaultFaceletsStateManagementHelper
 
 
         if (log.isLoggable(Level.FINEST))
+        {
             log.finest("Exiting serializeView - do not serialize state in session.");
+        }
 
         return serializedView;
 
@@ -314,7 +332,7 @@ class DefaultFaceletsStateManagementHelper
 
     /**
      * Reads the value of the <code>org.apache.myfaces.SERIALIZE_STATE_IN_SESSION</code> context parameter.
-     * @see SERIALIZE_STATE_IN_SESSION_PARAM
+     * @see #SERIALIZE_STATE_IN_SESSION_PARAM
      * @param context <code>FacesContext</code> for the request we are processing.
      * @return boolean true, if the server state should be serialized in the session
      */
@@ -332,7 +350,7 @@ class DefaultFaceletsStateManagementHelper
 
     /**
      * Reads the value of the <code>org.apache.myfaces.COMPRESS_STATE_IN_SESSION</code> context parameter.
-     * @see COMPRESS_SERVER_STATE_PARAM
+     * @see #COMPRESS_SERVER_STATE_PARAM
      * @param context <code>FacesContext</code> for the request we are processing.
      * @return boolean true, if the server state steam should be compressed
      */
@@ -350,11 +368,18 @@ class DefaultFaceletsStateManagementHelper
 
     protected Object deserializeView(Object state)
     {
-        if (log.isLoggable(Level.FINEST)) log.finest("Entering deserializeView");
+        if (log.isLoggable(Level.FINEST))
+        {
+            log.finest("Entering deserializeView");
+        }
 
         if(state instanceof byte[])
         {
-            if (log.isLoggable(Level.FINEST)) log.finest("Processing deserializeView - deserializing serialized state. Bytes : "+((byte[]) state).length);
+            if (log.isLoggable(Level.FINEST))
+            {
+                log.finest("Processing deserializeView - deserializing serialized state. Bytes : "
+                           + ((byte[]) state).length);
+            }
 
             try
             {
@@ -376,7 +401,7 @@ class DefaultFaceletsStateManagementHelper
                         {
                             public Object[] run() throws PrivilegedActionException, IOException, ClassNotFoundException
                             {
-                                return new Object[] {in.readObject(), in.readObject()};                                    
+                                return new Object[] {in.readObject(), in.readObject()};
                             }
                         });
                     }
@@ -413,7 +438,10 @@ class DefaultFaceletsStateManagementHelper
         }
         else if (state instanceof Object[])
         {
-            if (log.isLoggable(Level.FINEST)) log.finest("Exiting deserializeView - state not serialized.");
+            if (log.isLoggable(Level.FINEST))
+            {
+                log.finest("Exiting deserializeView - state not serialized.");
+            }
 
             return state;
         }
@@ -424,7 +452,8 @@ class DefaultFaceletsStateManagementHelper
         }
         else
         {
-            log.severe("Exiting deserializeView - this method should not be called with a state of type : "+state.getClass());
+            log.severe("Exiting deserializeView - this method should not be called with a state of type : "
+                       + state.getClass());
             return null;
         }
     }
@@ -445,7 +474,10 @@ class DefaultFaceletsStateManagementHelper
             Object key = new SerializedViewKey(context);
             _serializedViews.put(key, state);
 
-            while (_keys.remove(key));
+            while (_keys.remove(key))
+            {
+                // do nothing
+            }
             _keys.add(key);
 
             int views = getNumberOfViewsInSession(context);
@@ -463,7 +495,7 @@ class DefaultFaceletsStateManagementHelper
 
         /**
          * Reads the amount (default = 20) of views to be stored in session.
-         * @see NUMBER_OF_VIEWS_IN_SESSION_PARAM
+         * @see #NUMBER_OF_VIEWS_IN_SESSION_PARAM
          * @param context FacesContext for the current request, we are processing
          * @return Number vf views stored in the session
          */
@@ -532,7 +564,7 @@ class DefaultFaceletsStateManagementHelper
          * @since 1.2.5
          * @param context
          * @return constant indicating caching mode
-         * @see CACHE_OLD_VIEWS_IN_SESSION_MODE
+         * @see #CACHE_OLD_VIEWS_IN_SESSION_MODE
          */
         protected String getCacheOldViewsInSessionMode(FacesContext context)
         {
@@ -602,10 +634,10 @@ class DefaultFaceletsStateManagementHelper
         @Override
         public int hashCode()
         {
-            final int PRIME = 31;
+            final int prime = 31;
             int result = 1;
-            result = PRIME * result + ((_sequenceId == null) ? 0 : _sequenceId.hashCode());
-            result = PRIME * result + ((_viewId == null) ? 0 : _viewId.hashCode());
+            result = prime * result + ((_sequenceId == null) ? 0 : _sequenceId.hashCode());
+            result = prime * result + ((_viewId == null) ? 0 : _viewId.hashCode());
             return result;
         }
 
@@ -613,26 +645,40 @@ class DefaultFaceletsStateManagementHelper
         public boolean equals(Object obj)
         {
             if (this == obj)
+            {
                 return true;
+            }
             if (obj == null)
+            {
                 return false;
+            }
             if (getClass() != obj.getClass())
+            {
                 return false;
+            }
             final SerializedViewKey other = (SerializedViewKey) obj;
             if (_sequenceId == null)
             {
                 if (other._sequenceId != null)
+                {
                     return false;
+                }
             }
             else if (!_sequenceId.equals(other._sequenceId))
+            {
                 return false;
+            }
             if (_viewId == null)
             {
                 if (other._viewId != null)
+                {
                     return false;
+                }
             }
             else if (!_viewId.equals(other._viewId))
+            {
                 return false;
+            }
             return true;
         }
 

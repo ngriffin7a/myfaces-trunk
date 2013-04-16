@@ -18,16 +18,18 @@
  */
 package org.apache.myfaces.application;
 
-import org.apache.myfaces.renderkit.ErrorPageWriter;
-import org.apache.myfaces.shared_impl.resource.ResourceHandlerCache;
-import org.apache.myfaces.shared_impl.resource.ResourceHandlerCache.ResourceValue;
-import org.apache.myfaces.shared_impl.resource.ResourceHandlerSupport;
-import org.apache.myfaces.shared_impl.resource.ResourceImpl;
-import org.apache.myfaces.shared_impl.resource.ResourceLoader;
-import org.apache.myfaces.shared_impl.resource.ResourceMeta;
-import org.apache.myfaces.shared_impl.util.ClassUtils;
-import org.apache.myfaces.shared_impl.util.ExternalContextUtils;
-import org.apache.myfaces.shared_impl.util.StringUtils;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
+import org.apache.myfaces.shared.resource.ResourceHandlerCache;
+import org.apache.myfaces.shared.resource.ResourceHandlerCache.ResourceValue;
+import org.apache.myfaces.shared.resource.ResourceHandlerSupport;
+import org.apache.myfaces.shared.resource.ResourceImpl;
+import org.apache.myfaces.shared.resource.ResourceLoader;
+import org.apache.myfaces.shared.resource.ResourceMeta;
+import org.apache.myfaces.shared.resource.ResourceValidationUtils;
+import org.apache.myfaces.shared.util.ClassUtils;
+import org.apache.myfaces.shared.util.ExternalContextUtils;
+import org.apache.myfaces.shared.util.StringUtils;
+import org.apache.myfaces.shared.util.WebConfigParamUtils;
 
 import javax.faces.application.Resource;
 import javax.faces.application.ResourceHandler;
@@ -49,9 +51,9 @@ import java.util.logging.Logger;
 /**
  * DOCUMENT ME!
  *
- * @author Simon Lessard (latest modification by $Author: slessard $)
+ * @author Simon Lessard (latest modification by $Author$)
  * 
- * @version $Revision: 696515 $ $Date: 2008-09-17 19:37:53 -0500 (mer., 17 sept. 2008) $
+ * @version $Revision$ $Date$
  */
 public class ResourceHandlerImpl extends ResourceHandler
 {
@@ -65,7 +67,28 @@ public class ResourceHandlerImpl extends ResourceHandler
     //private static final Log log = LogFactory.getLog(ResourceHandlerImpl.class);
     private static final Logger log = Logger.getLogger(ResourceHandlerImpl.class.getName());
 
-    private static final int _BUFFER_SIZE = 2048;
+    /**
+     * Allow slash in the library name of a Resource. 
+     */
+    @JSFWebConfigParam(since="2.1.6, 2.0.12", defaultValue="false", 
+            expectedValues="true, false", group="resources")
+    public static final String INIT_PARAM_STRICT_JSF_2_ALLOW_SLASH_LIBRARY_NAME = 
+            "org.apache.myfaces.STRICT_JSF_2_ALLOW_SLASH_LIBRARY_NAME";
+    public static final boolean INIT_PARAM_STRICT_JSF_2_ALLOW_SLASH_LIBRARY_NAME_DEFAULT = false;
+    
+    /**
+     * Define the default buffer size that is used between Resource.getInputStream() and 
+     * httpServletResponse.getOutputStream() when rendering resources using the default
+     * ResourceHandler.
+     */
+    @JSFWebConfigParam(since="2.1.10, 2.0.16", defaultValue="2048", group="resources")
+    public static final String INIT_PARAM_RESOURCE_BUFFER_SIZE = "org.apache.myfaces.RESOURCE_BUFFER_SIZE";
+    public static final int INIT_PARAM_RESOURCE_BUFFER_SIZE_DEFAULT = 2048;
+    
+    private Boolean _allowSlashLibraryName;
+    private int _resourceBufferSize = -1;
+    
+    private String[] _excludedResourceExtensions;
 
     @Override
     public Resource createResource(String resourceName)
@@ -85,32 +108,46 @@ public class ResourceHandlerImpl extends ResourceHandler
     {
         Resource resource = null;
         
+        if (!ResourceValidationUtils.isValidResourceName(resourceName))
+        {
+            return null;
+        }
+        if (libraryName != null && !ResourceValidationUtils.isValidLibraryName(
+                libraryName, isAllowSlashesLibraryName()))
+        {
+            return null;
+        }
+        
         if (contentType == null)
         {
             //Resolve contentType using ExternalContext.getMimeType
             contentType = FacesContext.getCurrentInstance().getExternalContext().getMimeType(resourceName);
         }
-        
-        if(getResourceLoaderCache().containsResource(resourceName, libraryName, contentType))
+
+        final String localePrefix = getLocalePrefixForLocateResource();
+
+        // check cache
+        if(getResourceLoaderCache().containsResource(resourceName, libraryName, contentType, localePrefix))
         {
-            ResourceValue resourceValue = getResourceLoaderCache().getResource(resourceName, libraryName, contentType);
+            ResourceValue resourceValue = getResourceLoaderCache().getResource(
+                    resourceName, libraryName, contentType, localePrefix);
+            
             resource = new ResourceImpl(resourceValue.getResourceMeta(), resourceValue.getResourceLoader(),
                     getResourceHandlerSupport(), contentType);
         }
         else
         {
-            for (ResourceLoader loader : getResourceHandlerSupport()
-                    .getResourceLoaders())
+            for (ResourceLoader loader : getResourceHandlerSupport().getResourceLoaders())
             {
-                ResourceMeta resourceMeta = deriveResourceMeta(loader,
-                        resourceName, libraryName);
+                ResourceMeta resourceMeta = deriveResourceMeta(loader, resourceName, libraryName, localePrefix);
     
                 if (resourceMeta != null)
                 {
-                    resource = new ResourceImpl(resourceMeta, loader,
-                            getResourceHandlerSupport(), contentType);
-                    
-                    getResourceLoaderCache().putResource(resourceName, libraryName, contentType, resourceMeta, loader);
+                    resource = new ResourceImpl(resourceMeta, loader, getResourceHandlerSupport(), contentType);
+
+                    // cache it
+                    getResourceLoaderCache().putResource(resourceName, libraryName, contentType,
+                            localePrefix, resourceMeta, loader);
                     break;
                 }
             }
@@ -126,9 +163,8 @@ public class ResourceHandlerImpl extends ResourceHandler
      * next registered ResourceLoader. 
      */
     protected ResourceMeta deriveResourceMeta(ResourceLoader resourceLoader,
-            String resourceName, String libraryName)
+            String resourceName, String libraryName, String localePrefix)
     {
-        String localePrefix = getLocalePrefixForLocateResource();
         String resourceVersion = null;
         String libraryVersion = null;
         ResourceMeta resourceId = null;
@@ -241,9 +277,13 @@ public class ResourceHandlerImpl extends ResourceHandler
     public String getRendererTypeForResourceName(String resourceName)
     {
         if (resourceName.endsWith(".js"))
+        {
             return "javax.faces.resource.Script";
+        }
         else if (resourceName.endsWith(".css"))
+        {
             return "javax.faces.resource.Stylesheet";
+        }
         return null;
     }
 
@@ -256,8 +296,8 @@ public class ResourceHandlerImpl extends ResourceHandler
     @Override
     public void handleResourceRequest(FacesContext facesContext) throws IOException
     {
-        try
-        {
+        //try
+        //{
             String resourceBasePath = getResourceHandlerSupport()
                     .calculateResourceBasePath(facesContext);
     
@@ -275,7 +315,8 @@ public class ResourceHandlerImpl extends ResourceHandler
             // ServletResponseWrapper (like ResponseSwitch).
             // Since we are handling a resource, we can expect to get an 
             // HttpServletResponse.
-            Object response = facesContext.getExternalContext().getResponse();
+            ExternalContext extContext = facesContext.getExternalContext();
+            Object response = extContext.getResponse();
             HttpServletResponse httpServletResponse = ExternalContextUtils.getHttpServletResponse(response);
             if (httpServletResponse == null)
             {
@@ -293,6 +334,12 @@ public class ResourceHandlerImpl extends ResourceHandler
             {
                 resourceName = resourceBasePath
                         .substring(ResourceHandler.RESOURCE_IDENTIFIER.length() + 1);
+                
+                if (resourceBasePath != null && !ResourceValidationUtils.isValidResourceName(resourceName))
+                {
+                    httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    return;
+                }
             }
             else
             {
@@ -304,6 +351,13 @@ public class ResourceHandlerImpl extends ResourceHandler
             String libraryName = facesContext.getExternalContext()
                     .getRequestParameterMap().get("ln");
     
+            if (libraryName != null && !ResourceValidationUtils.isValidLibraryName(
+                    libraryName, isAllowSlashesLibraryName()))
+            {
+                httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
+            
             Resource resource = null;
             if (libraryName != null)
             {
@@ -336,18 +390,25 @@ public class ResourceHandlerImpl extends ResourceHandler
                 httpServletResponse.setHeader(entry.getKey(), entry.getValue());
             }
     
+            // Sets the preferred buffer size for the body of the response
+            extContext.setResponseBufferSize(this.getResourceBufferSize());
+            
             //serve up the bytes (taken from trinidad ResourceServlet)
             try
             {
                 InputStream in = resource.getInputStream();
                 OutputStream out = httpServletResponse.getOutputStream();
-                byte[] buffer = new byte[_BUFFER_SIZE];
+                //byte[] buffer = new byte[_BUFFER_SIZE];
+                byte[] buffer = new byte[this.getResourceBufferSize()];
     
                 try
                 {
                     int count = pipeBytes(in, out, buffer);
                     //set the content lenght
-                    httpServletResponse.setContentLength(count);
+                    if (!httpServletResponse.isCommitted())
+                    {
+                        httpServletResponse.setContentLength(count);
+                    }
                 }
                 finally
                 {
@@ -365,19 +426,21 @@ public class ResourceHandlerImpl extends ResourceHandler
             {
                 //TODO: Log using a localized message (which one?)
                 if (log.isLoggable(Level.SEVERE))
+                {
                     log.severe("Error trying to load resource " + resourceName
                             + " with library " + libraryName + " :"
                             + e.getMessage());
+                }
                 httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
-        }
-        catch (Throwable ex)
-        {
+        //}
+        //catch (Throwable ex)
+        //{
             // handle the Throwable accordingly. Maybe generate an error page.
             // FIXME we are creating a html error page for a non html request here
             // shouln't we do something better? -=Jakob Korherr=-
-            ErrorPageWriter.handleThrowable(facesContext, ex);
-        }
+            //ErrorPageWriter.handleThrowable(facesContext, ex);
+        //}
     }
 
     /**
@@ -434,46 +497,70 @@ public class ResourceHandlerImpl extends ResourceHandler
     {
         String localePrefix = null;
         FacesContext context = FacesContext.getCurrentInstance();
+        boolean isResourceRequest = context.getApplication().getResourceHandler().isResourceRequest(context);
 
+        if (isResourceRequest)
+        {
+            localePrefix = context.getExternalContext().getRequestParameterMap().get("loc");
+            
+            if (localePrefix != null)
+            {
+                if (!ResourceValidationUtils.isValidLocalePrefix(localePrefix))
+                {
+                    return null;
+                }
+                return localePrefix;
+            }
+        }
+        
         String bundleName = context.getApplication().getMessageBundle();
 
         if (null != bundleName)
         {
-            Locale locale = context.getApplication().getViewHandler()
-                    .calculateLocale(context);
-
-            ResourceBundle bundle = ResourceBundle
-                    .getBundle(bundleName, locale, ClassUtils.getContextClassLoader());
-
-            if (bundle != null)
+            Locale locale = null;
+            
+            if (isResourceRequest || context.getViewRoot() == null)
             {
-                try
+                locale = context.getApplication().getViewHandler()
+                                .calculateLocale(context);
+            }
+            else
+            {
+                locale = context.getViewRoot().getLocale();
+            }
+
+            try
+            {
+                ResourceBundle bundle = ResourceBundle
+                        .getBundle(bundleName, locale, ClassUtils.getContextClassLoader());
+
+                if (bundle != null)
                 {
                     localePrefix = bundle.getString(ResourceHandler.LOCALE_PREFIX);
                 }
-                catch (MissingResourceException e)
-                {
-                    // Ignore it and return null
-                }
+            }
+            catch (MissingResourceException e)
+            {
+                // Ignore it and return null
             }
         }
         return localePrefix;
     }
 
-    protected boolean isResourceIdentifierExcluded(FacesContext context,
-            String resourceIdentifier)
+    protected boolean isResourceIdentifierExcluded(FacesContext context, String resourceIdentifier)
     {
-        String value = context.getExternalContext().getInitParameter(
-                RESOURCE_EXCLUDES_PARAM_NAME);
-        if (value == null)
+        if (_excludedResourceExtensions == null)
         {
-            value = RESOURCE_EXCLUDES_DEFAULT_VALUE;
+            String value = WebConfigParamUtils.getStringInitParameter(context.getExternalContext(),
+                            RESOURCE_EXCLUDES_PARAM_NAME,
+                            RESOURCE_EXCLUDES_DEFAULT_VALUE);
+            
+            _excludedResourceExtensions = StringUtils.splitShortString(value, ' ');
         }
-        //TODO: optimize this code
-        String[] extensions = StringUtils.splitShortString(value, ' ');
-        for (int i = 0; i < extensions.length; i++)
+        
+        for (int i = 0; i < _excludedResourceExtensions.length; i++)
         {
-            if (resourceIdentifier.endsWith(extensions[i]))
+            if (resourceIdentifier.endsWith(_excludedResourceExtensions[i]))
             {
                 return true;
             }
@@ -493,6 +580,12 @@ public class ResourceHandlerImpl extends ResourceHandler
         String localePrefix = getLocalePrefixForLocateResource();
 
         String pathToLib = null;
+        
+        if (libraryName != null && !ResourceValidationUtils.isValidLibraryName(
+                libraryName, isAllowSlashesLibraryName()))
+        {
+            return false;
+        }
         
         if (localePrefix != null)
         {
@@ -547,7 +640,9 @@ public class ResourceHandlerImpl extends ResourceHandler
     private ResourceHandlerCache getResourceLoaderCache()
     {
         if (_resourceHandlerCache == null)
+        {
             _resourceHandlerCache = new ResourceHandlerCache();
+        }
         return _resourceHandlerCache;
     }
 
@@ -591,4 +686,29 @@ public class ResourceHandlerImpl extends ResourceHandler
 
         return null;
     }
+    
+    protected boolean isAllowSlashesLibraryName()
+    {
+        if (_allowSlashLibraryName == null)
+        {
+            _allowSlashLibraryName = WebConfigParamUtils.getBooleanInitParameter(
+                    FacesContext.getCurrentInstance().getExternalContext(), 
+                    INIT_PARAM_STRICT_JSF_2_ALLOW_SLASH_LIBRARY_NAME,
+                    INIT_PARAM_STRICT_JSF_2_ALLOW_SLASH_LIBRARY_NAME_DEFAULT);
+        }
+        return _allowSlashLibraryName;
+    }
+
+    protected int getResourceBufferSize()
+    {
+        if (_resourceBufferSize == -1)
+        {
+            _resourceBufferSize = WebConfigParamUtils.getIntegerInitParameter(
+                FacesContext.getCurrentInstance().getExternalContext(),
+                INIT_PARAM_RESOURCE_BUFFER_SIZE,
+                INIT_PARAM_RESOURCE_BUFFER_SIZE_DEFAULT);
+        }
+        return _resourceBufferSize;
+    }
+
 }

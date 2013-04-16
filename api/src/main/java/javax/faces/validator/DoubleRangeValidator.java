@@ -19,7 +19,6 @@
 package javax.faces.validator;
 
 import javax.faces.component.PartialStateHolder;
-import javax.faces.component.StateHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
@@ -87,8 +86,14 @@ public class DoubleRangeValidator
                          Object value)
             throws ValidatorException
     {
-        if (facesContext == null) throw new NullPointerException("facesContext");
-        if (uiComponent == null) throw new NullPointerException("uiComponent");
+        if (facesContext == null)
+        {
+            throw new NullPointerException("facesContext");
+        }
+        if (uiComponent == null)
+        {
+            throw new NullPointerException("uiComponent");
+        }
 
         if (value == null)
         {
@@ -102,7 +107,8 @@ public class DoubleRangeValidator
                 dvalue > _maximum.doubleValue())
             {
                 Object[] args = {_minimum, _maximum,_MessageUtils.getLabel(facesContext, uiComponent)};
-                throw new ValidatorException(_MessageUtils.getErrorMessage(facesContext, NOT_IN_RANGE_MESSAGE_ID, args));
+                throw new ValidatorException(_MessageUtils.getErrorMessage(facesContext, NOT_IN_RANGE_MESSAGE_ID,
+                                                                           args));
             }
         }
         else if (_minimum != null)
@@ -216,16 +222,30 @@ public class DoubleRangeValidator
     @Override
     public boolean equals(Object o)
     {
-        if (this == o) return true;
-        if (!(o instanceof DoubleRangeValidator)) return false;
+        if (this == o)
+        {
+            return true;
+        }
+        if (!(o instanceof DoubleRangeValidator))
+        {
+            return false;
+        }
 
-        final DoubleRangeValidator doubleRangeValidator = (DoubleRangeValidator)o;
+        DoubleRangeValidator doubleRangeValidator = (DoubleRangeValidator)o;
 
-        if (_maximum != null ? !_maximum.equals(doubleRangeValidator._maximum) : doubleRangeValidator._maximum != null) return false;
-        if (_minimum != null ? !_minimum.equals(doubleRangeValidator._minimum) : doubleRangeValidator._minimum != null) return false;
+        if (_maximum != null ? !_maximum.equals(doubleRangeValidator._maximum) : doubleRangeValidator._maximum != null)
+        {
+            return false;
+        }
+        if (_minimum != null ? !_minimum.equals(doubleRangeValidator._minimum) : doubleRangeValidator._minimum != null)
+        {
+            return false;
+        }
 
         return true;
     }
+
+
 
     private boolean _initialStateMarked = false;
 
@@ -254,5 +274,13 @@ public class DoubleRangeValidator
     private String getFor()
     {
         return null;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = _minimum != null ? _minimum.hashCode() : 0;
+        result = 31 * result + (_maximum != null ? _maximum.hashCode() : 0);
+        return result;
     }
 }

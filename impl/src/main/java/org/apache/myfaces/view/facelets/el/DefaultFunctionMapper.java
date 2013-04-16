@@ -37,7 +37,7 @@ import org.apache.myfaces.view.facelets.util.ReflectionUtil;
  * @see javax.el.FunctionMapper
  * 
  * @author Jacob Hookom
- * @version $Id: DefaultFunctionMapper.java,v 1.6 2008/07/13 19:01:43 rlubke Exp $
+ * @version $Id$
  */
 public final class DefaultFunctionMapper extends FunctionMapper implements Externalizable
 {
@@ -173,7 +173,9 @@ public final class DefaultFunctionMapper extends FunctionMapper implements Exter
         {
             _prefix = in.readUTF();
             if ("".equals(_prefix))
+            {
                 _prefix = null;
+            }
             
             _localName = in.readUTF();
             _owner = in.readUTF();
@@ -205,9 +207,13 @@ public final class DefaultFunctionMapper extends FunctionMapper implements Exter
             if (_prefix != null)
             {
                 if (prefix == null)
+                {
                     return false;
+                }
                 if (!_prefix.equals(prefix))
+                {
                     return false;
+                }
             }
             
             return _localName.equals(localName);

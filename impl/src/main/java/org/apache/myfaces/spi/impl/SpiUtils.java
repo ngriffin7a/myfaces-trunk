@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 
 import javax.faces.context.ExternalContext;
 
-import org.apache.myfaces.shared_impl.util.ClassUtils;
+import org.apache.myfaces.shared.util.ClassUtils;
 import org.apache.myfaces.spi.ServiceProviderFinderFactory;
 
 /**
@@ -38,7 +38,8 @@ public final class SpiUtils
     
     public static Object build(ExternalContext ectx, Class spiClass, String defaultImpl)
     {
-        List<String> classList = ServiceProviderFinderFactory.getServiceProviderFinder(ectx).getServiceProviderList(spiClass.getName());
+        List<String> classList = ServiceProviderFinderFactory.getServiceProviderFinder(ectx).
+                getServiceProviderList(spiClass.getName());
         
         if (classList != null && !classList.isEmpty())
         {

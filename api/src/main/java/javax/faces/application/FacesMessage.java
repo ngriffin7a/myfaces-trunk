@@ -18,8 +18,15 @@
  */
 package javax.faces.application;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
@@ -30,11 +37,11 @@ import java.util.*;
  * </p>
  * 
  *<ui>The implementation must take the following steps when creating FacesMessage instances given a messageId: <li>Call
- * {@link Application.getMessageBundle()}. If <code>non-null</code>, locate the named <code>ResourceBundle</code>, using
+ * {@link Application#getMessageBundle()}. If <code>non-null</code>, locate the named <code>ResourceBundle</code>, using
  * the <code>Locale</code> from the current {@linkUIViewRoot} and see if it has a value for the argument
  * <code>messageId</code>. If it does, treat the value as the <code>summary</code> of the {@link FacesMessage}. If it
- * does not, or if {@link Application.getMessageBundle()} returned null, look in the ResourceBundle named by the value
- * of the constant {@link FACES_MESSAGES} and see if it has a value for the argument messageId. If it does, treat the
+ * does not, or if {@link Application#getMessageBundle()} returned null, look in the ResourceBundle named by the value
+ * of the constant {@link #FACES_MESSAGES} and see if it has a value for the argument messageId. If it does, treat the
  * value as the summary of the <code>FacesMessage</code>. If it does not, there is no initialization information for the
  * <code>FacesMessage</code> instance.</li> <li>In all cases, if a <code>ResourceBundle</code> hit is found for the
  * <code>{messageId}</code>, look for further hits under the key <code>{messageId}_detail</code>. Use this value, if
@@ -89,16 +96,19 @@ public class FacesMessage implements Serializable
 
     static
     {
-        Map<String, FacesMessage.Severity> map = new HashMap<String, FacesMessage.Severity>(7);
+        Map<String, FacesMessage.Severity> map = new HashMap<String, Severity>(7);
         map.put(SEVERITY_INFO.toString(), SEVERITY_INFO);
         map.put(SEVERITY_WARN.toString(), SEVERITY_WARN);
         map.put(SEVERITY_ERROR.toString(), SEVERITY_ERROR);
         map.put(SEVERITY_FATAL.toString(), SEVERITY_FATAL);
-        VALUES = Collections.unmodifiableList(new ArrayList<FacesMessage.Severity>(map.values()));
         VALUES_MAP = Collections.unmodifiableMap(map);
+
+        List<FacesMessage.Severity> severityList = new ArrayList<Severity>(map.values());
+        Collections.sort(severityList); // the JSF spec requires it to be sorted
+        VALUES = Collections.unmodifiableList(severityList);
     }
 
-    private FacesMessage.Severity _severity;
+    private transient FacesMessage.Severity _severity;  // transient, b/c FacesMessage.Severity is not Serializable
     private String _summary;
     private String _detail;
     private boolean _rendered;
@@ -152,7 +162,9 @@ public class FacesMessage implements Serializable
     public FacesMessage(FacesMessage.Severity severity, String summary, String detail)
     {
         if (severity == null)
+        {
             throw new NullPointerException("severity");
+        }
         _severity = severity;
         _summary = summary;
         _detail = detail;
@@ -174,7 +186,9 @@ public class FacesMessage implements Serializable
     public void setSeverity(FacesMessage.Severity severity)
     {
         if (severity == null)
+        {
             throw new NullPointerException("severity");
+        }
         _severity = severity;
     }
 
@@ -223,6 +237,31 @@ public class FacesMessage implements Serializable
         _detail = detail;
     }
 
+    public boolean isRendered()
+    {
+        return _rendered;
+    }
+
+    public void rendered()
+    {
+        this._rendered = true;
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException
+    {
+        out.defaultWriteObject();  // write summary, detail, rendered
+        out.writeInt(_severity._ordinal);  // FacesMessage.Severity is not Serializable, write ordinal only
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+        in.defaultReadObject();  // read summary, detail, rendered
+
+        // FacesMessage.Severity is not Serializable, read ordinal and get related FacesMessage.Severity
+        int severityOrdinal = in.readInt();
+        _severity = (Severity) VALUES.get(severityOrdinal - 1);
+    }
+
     public static class Severity implements Comparable
     {
         private String _name;
@@ -249,16 +288,6 @@ public class FacesMessage implements Serializable
         {
             return getOrdinal() - ((Severity)o).getOrdinal();
         }
-    }
-
-    public boolean isRendered()
-    {
-        return _rendered;
-    }
-
-    public void rendered()
-    {
-        this._rendered = true;
     }
 
 }

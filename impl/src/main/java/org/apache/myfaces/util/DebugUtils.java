@@ -82,20 +82,20 @@ public class DebugUtils
         // hide from public access
     }
 
-    public static void assertError(boolean condition, Logger log_, String msg) throws FacesException
+    public static void assertError(boolean condition, Logger logger, String msg) throws FacesException
     {
         if (!condition)
         {
-            log_.severe(msg);
+            logger.severe(msg);
             throw new FacesException(msg);
         }
     }
 
-    public static void assertFatal(boolean condition, Logger log_, String msg) throws FacesException
+    public static void assertFatal(boolean condition, Logger logger, String msg) throws FacesException
     {
         if (!condition)
         {
-            log_.severe(msg);
+            logger.severe(msg);
             throw new FacesException(msg);
         }
     }
@@ -310,8 +310,9 @@ public class DebugUtils
 
                 if (childCount > 0)
                 {
-                    for (UIComponent child : comp.getChildren())
+                    for (int i = 0; i < childCount; i++)
                     {
+                        UIComponent child = comp.getChildren().get(i);
                         printComponent(child, stream, indent + 1, true, null);
                     }
                 }
@@ -346,7 +347,9 @@ public class DebugUtils
     private static void printAttribute(PrintStream stream, String name, Object value)
     {
         if (IGNORE_ATTRIBUTES.contains(name))
+        {
             return;
+        }
         if (name.startsWith("javax.faces.webapp.UIComponentTag."))
         {
             name = name.substring("javax.faces.webapp.UIComponentTag.".length());

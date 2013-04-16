@@ -18,16 +18,13 @@
  */
 package org.apache.myfaces.application;
 
-import javax.el.ELException;
 import javax.el.MethodExpression;
-import javax.faces.FacesException;
 import javax.faces.application.Application;
 import javax.faces.application.NavigationHandler;
 import javax.faces.component.ActionSource;
 import javax.faces.component.ActionSource2;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.el.EvaluationException;
 import javax.faces.el.MethodBinding;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
@@ -53,72 +50,39 @@ public class ActionListenerImpl implements ActionListener
         String fromAction = null;
         String outcome = null;
         
-        // Backwards compatibility for pre-1.2.
-        
-        if (component instanceof ActionSource) {
-            methodBinding = ((ActionSource) component).getAction();
+        if (component instanceof ActionSource2)
+        {
+            // Must be an instance of ActionSource2, so don't look on action if the actionExpression is set 
+            methodExpression = ((ActionSource2) component).getActionExpression();            
         }
-        
-        else {
-            // Must be an instance of ActionSource2.
-            
-            methodExpression = ((ActionSource2) component).getActionExpression();
+        if (methodExpression == null && component instanceof ActionSource)
+        {
+            // Backwards compatibility for pre-1.2.
+            methodBinding = ((ActionSource) component).getAction();
         }
         
         if (methodExpression != null)
         {
             fromAction = methodExpression.getExpressionString();
-            try
+
+            Object objOutcome = methodExpression.invoke(facesContext.getELContext(), null);
+            if (objOutcome != null)
             {
-                Object objOutcome = methodExpression.invoke(facesContext.getELContext(), null);
-                if (objOutcome != null)
-                {
-                    outcome = objOutcome.toString();
-                }
+                outcome = objOutcome.toString();
             }
-            catch (ELException e)
-            {
-                Throwable cause = e.getCause();
-                if (cause != null && cause instanceof AbortProcessingException)
-                {
-                    throw (AbortProcessingException)cause;
-                }
-   
-                throw new FacesException("Error calling action method of component with id " + actionEvent.getComponent().getClientId(facesContext), e);
-                
-            }
-            catch (RuntimeException e)
-            {
-                throw new FacesException("Error calling action method of component with id " + actionEvent.getComponent().getClientId(facesContext), e);
-            }
+            
         }
         
-        else if (methodBinding != null) {
+        else if (methodBinding != null)
+        {
             fromAction = methodBinding.getExpressionString();
-            try
-            {
-                Object objOutcome = methodBinding.invoke(facesContext, null);
+            Object objOutcome = methodBinding.invoke(facesContext, null);
 
-                if (objOutcome != null)
-                {
-                    outcome = objOutcome.toString();
-                }
-            }
-            catch (EvaluationException e)
+            if (objOutcome != null)
             {
-                Throwable cause = e.getCause();
-                if (cause != null && cause instanceof AbortProcessingException)
-                {
-                    throw (AbortProcessingException)cause;
-                }
-   
-                throw new FacesException("Error calling action method of component with id " + actionEvent.getComponent().getClientId(facesContext), e);
-                
+                outcome = objOutcome.toString();
             }
-            catch (RuntimeException e)
-            {
-                throw new FacesException("Error calling action method of component with id " + actionEvent.getComponent().getClientId(facesContext), e);
-            }
+
         }
         
         NavigationHandler navigationHandler = application.getNavigationHandler();

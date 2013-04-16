@@ -18,21 +18,22 @@
  */
 package org.apache.myfaces.view.facelets;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIViewRoot;
 import javax.faces.component.UniqueIdVendor;
 import javax.faces.context.FacesContext;
 import javax.faces.view.AttachedObjectHandler;
+import javax.faces.view.EditableValueHolderAttachedObjectHandler;
 import javax.faces.view.facelets.FaceletContext;
 
 /**
  * @since 2.0.1
- * @author Leonardo Uribe (latest modification by $Author: lu4242 $)
- * @version $Revision: 899026 $ $Date: 2010-01-13 20:47:14 -0500 (Mié, 13 Ene 2010) $
+ * @author Leonardo Uribe (latest modification by $Author$)
+ * @version $Revision$ $Date$
  */
 abstract public class FaceletCompositionContext
 {
@@ -44,7 +45,8 @@ abstract public class FaceletCompositionContext
     
     static public FaceletCompositionContext getCurrentInstance()
     {
-        return (FaceletCompositionContext) FacesContext.getCurrentInstance().getAttributes().get(FACELET_COMPOSITION_CONTEXT_KEY);
+        return (FaceletCompositionContext)
+                FacesContext.getCurrentInstance().getAttributes().get(FACELET_COMPOSITION_CONTEXT_KEY);
     }
     
     static public FaceletCompositionContext getCurrentInstance(FaceletContext ctx)
@@ -58,7 +60,8 @@ abstract public class FaceletCompositionContext
             // Here we have two choices: retrieve it throught ThreadLocal var
             // or use the attribute value on FacesContext, but it seems better
             // use the FacesContext attribute map.
-            return (FaceletCompositionContext) ctx.getFacesContext().getAttributes().get(FACELET_COMPOSITION_CONTEXT_KEY);
+            return (FaceletCompositionContext)
+                    ctx.getFacesContext().getAttributes().get(FACELET_COMPOSITION_CONTEXT_KEY);
         }
     }
     
@@ -136,12 +139,14 @@ abstract public class FaceletCompositionContext
      * @return
      * @since 2.0.1
      */
+    @Deprecated
     public abstract String getFirstValidationGroupFromStack();
     
     /**
      * Removes top of stack.
      * @since 2.0.1
      */
+    @Deprecated
     public abstract void popValidationGroupsToStack();
     
     /**
@@ -149,6 +154,7 @@ abstract public class FaceletCompositionContext
      * @param validationGroups
      * @since 2.0.1
      */
+    @Deprecated
     public abstract void pushValidationGroupsToStack(String validationGroups);
     
     /**
@@ -156,12 +162,14 @@ abstract public class FaceletCompositionContext
      * @return
      * @since 2.0.1
      */
+    @Deprecated
     public abstract Iterator<String> getExcludedValidatorIds();
     
     /**
      * Removes top of stack.
      * @since 2.0.1
      */
+    @Deprecated
     public abstract void popExcludedValidatorIdToStack();
     
     /**
@@ -169,6 +177,7 @@ abstract public class FaceletCompositionContext
      * @param validatorId
      * @since 2.0.1
      */
+    @Deprecated
     public abstract void pushExcludedValidatorIdToStack(String validatorId);
     
     /**
@@ -176,6 +185,7 @@ abstract public class FaceletCompositionContext
      * @return
      * @since 2.0.1
      */
+    @Deprecated
     public abstract Iterator<String> getEnclosingValidatorIds();
     
     /**
@@ -189,7 +199,35 @@ abstract public class FaceletCompositionContext
      * @param validatorId
      * @since 2.0.1
      */
+    @Deprecated
     public abstract void pushEnclosingValidatorIdToStack(String validatorId);
+    
+    /**
+     * Pushes validatorId to the stack of all enclosing validatorIds.
+     * 
+     * @param validatorId
+     * @param attachedObjectHandler
+     * @since 2.0.10
+     */
+    public abstract void pushEnclosingValidatorIdToStack(String validatorId, 
+            EditableValueHolderAttachedObjectHandler attachedObjectHandler);
+
+    /**
+     * Gets all validationIds with its associated EditableValueHolderAttachedObjectHandler from the stack.
+     * 
+     * @return
+     * @since 2.0.10
+     */
+    public abstract Iterator<Map.Entry<String, EditableValueHolderAttachedObjectHandler>> 
+        getEnclosingValidatorIdsAndHandlers();
+    
+    /**
+     * 
+     * @param id
+     * @return
+     * @since 2.0.10
+     */
+    public abstract boolean containsEnclosingValidatorId(String id);
     
     /**
      * Check if this build is being refreshed, adding transient components
@@ -209,6 +247,10 @@ abstract public class FaceletCompositionContext
      */
     public abstract boolean isMarkInitialState();
     
+    public void setMarkInitialState(boolean value)
+    {
+    }
+    
     /**
      * Check if the current view will be refreshed with partial state saving.
      * 
@@ -223,6 +265,16 @@ abstract public class FaceletCompositionContext
      * @since 2.0.1
      */
     public abstract boolean isRefreshTransientBuildOnPSS();
+    
+    /**
+     * 
+     * @since 2.0.12, 2.1.6
+     * @return
+     */
+    public boolean isRefreshTransientBuildOnPSSPreserveState()
+    {
+        return false;
+    }
     
     /**
      * Check if we are using partial state saving on this view
@@ -271,7 +323,7 @@ abstract public class FaceletCompositionContext
      * Marks all direct children and Facets with an attribute for deletion.
      *
      * @since 2.0.2
-     * @see #finalizeForDeletion(FaceletCompositionContext, UIComponent)
+     * @see #finalizeForDeletion(UIComponent)
      * @param component
      *            UIComponent to mark
      */
@@ -285,16 +337,44 @@ abstract public class FaceletCompositionContext
      *            UIComponent to finalize
      */
     public abstract void finalizeForDeletion(UIComponent component);
+    
+    public void removeComponentForDeletion(UIComponent component)
+    {
+    }
+
+    /**
+     * Marks the given resource for deletion. Is to be used for relocatable 
+     * components instead of {@link #markForDeletion(UIComponent)}.
+     *
+     * @since 2.0.17 2.1.11
+     * @param component
+     *            UIComponent to finalize
+     */
+    public void markRelocatableResourceForDeletion(UIComponent component)
+    {
+    }
+
+    /**
+     * Used to clean up all unused relocatable components on the root component.
+     *
+     * @since 2.0.17 2.1.11
+     * @param component
+     *            UIComponent to finalize (root component)
+     */
+    public void finalizeRelocatableResourcesForDeletion(UIViewRoot root)
+    {
+    }
 
     /**
      * Add a method expression as targeted for the provided composite component
      * 
      * @since 2.0.3
-     * @param compositeComponentParent
+     * @param targetedComponent
      * @param attributeName
      * @param backingValue A value that could be useful to revert its effects.
      */
-    public abstract void addMethodExpressionTargeted(UIComponent targetedComponent, String attributeName, Object backingValue);
+    public abstract void addMethodExpressionTargeted(UIComponent targetedComponent, String attributeName,
+                                                     Object backingValue);
 
     /**
      * Check if the MethodExpression attribute has been applied using vdl.retargetMethodExpression 
@@ -304,7 +384,8 @@ abstract public class FaceletCompositionContext
      * @param attributeName
      * @return
      */
-    public abstract boolean isMethodExpressionAttributeApplied(UIComponent compositeComponentParent, String attributeName);
+    public abstract boolean isMethodExpressionAttributeApplied(UIComponent compositeComponentParent,
+                                                               String attributeName);
     
     /**
      * Mark the MethodExpression attribute as applied using vdl.retargetMethodExpression
@@ -328,10 +409,219 @@ abstract public class FaceletCompositionContext
      * Remove a method expression as targeted for the provided composite component
      * 
      * @since 2.0.3
-     * @param compositeComponentParent
+     * @param targetedComponent
      * @param attributeName
      * @return A value that could be useful to revert its effects.
      */
     public abstract Object removeMethodExpressionTargeted(UIComponent targetedComponent, String attributeName);
+    
+    /**
+     * Indicates if a EL Expression can be or not cached by facelets vdl.
+     * 
+     * @since 2.0.8
+     * @return
+     */
+    public ELExpressionCacheMode getELExpressionCacheMode()
+    {
+        return ELExpressionCacheMode.noCache;
+    }
+    
+    /**
+     * 
+     * @since 2.0.9
+     * @return
+     */
+    public boolean isWrapTagExceptionsAsContextAware()
+    {
+        return true;
+    }
 
+    /**
+     * Start a new unique id section, which means a new counter is used to
+     * generate unique ids to components
+     * 
+     * @since 2.0.10, 2.1.4
+     * @return
+     */
+    public String startComponentUniqueIdSection()
+    {
+        return null;
+    }
+    
+    /**
+     * Generate a unique id that will be used later to derive a unique id per tag
+     * by FaceletContext.generateUniqueId(). This generator ensures uniqueness per
+     * view but FaceletContext.generateUniqueId() ensures uniqueness per view and
+     * per facelet hierarchy, so different included facelets will generate different
+     * ids.
+     * 
+     * @return
+     */
+    public String generateUniqueId()
+    {
+        return null;
+    }
+    
+    public void generateUniqueId(StringBuilder builderToAdd)
+    {
+    }
+    
+    /**
+     * Generate a unique id for component instances. 
+     * 
+     * @return
+     */
+    public String generateUniqueComponentId()
+    {
+        return null;
+    }
+
+    /**
+     * Ends the current unique id section, so the previous counter will be used
+     * to generate unique ids to components.
+     */
+    public void endComponentUniqueIdSection()
+    {
+    }
+    
+    /**
+     * Set the iterator used to retrieve unique ids.
+     * 
+     * since 2.1.7, 2.0.13
+     * @param uniqueIdsIterator 
+     */
+    public void setUniqueIdsIterator(Iterator<String> uniqueIdsIterator)
+    {
+    }
+    
+    /**
+     * Activater record unique id mode, so an structure will be
+     * used to hold those values.
+     * 
+     * since 2.1.7, 2.0.13
+     */
+    public void initUniqueIdRecording()
+    {
+    }
+    
+    /**
+     * Add an unique id to the list if recording is enabled,
+     * if recording is not enabled it has no effect.
+     * 
+     * since 2.1.7, 2.0.13
+     * @param uniqueId 
+     */
+    public void addUniqueId(String uniqueId)
+    {
+    }
+    
+    /**
+     * Return the unique id from the iterator if applies
+     * 
+     * since 2.1.7, 2.0.13
+     * @return 
+     */
+    public String getUniqueIdFromIterator()
+    {
+        return null;
+    }
+    
+    /**
+     * Return the list of unique ids
+     * 
+     * since 2.1.7, 2.0.13
+     * @return 
+     */
+    public List<String> getUniqueIdList()
+    {
+        return null;
+    }
+
+    /**
+     * Increment the unique id without construct it.
+     * 
+     * since 2.1.7, 2.0.13
+     * @return 
+     */
+    public void incrementUniqueId()
+    {
+    }
+
+    /**
+     * Check if the facelet is building view metadata
+     * 
+     * since 2.1.7, 2.0.13
+     * @return 
+     */
+    public boolean isBuildingViewMetadata()
+    {
+        return FaceletViewDeclarationLanguage.isBuildingViewMetadata(
+                FacesContext.getCurrentInstance());
+    }
+    
+    /**
+     * Call this method to indicate a f:metadata section is about to be processed
+     * 
+     * since 2.1.7, 2.0.13
+     * @return 
+     */
+    public void startMetadataSection()
+    {
+    }
+    
+    /**
+     * Call this method to indicate f:metadata section has been already processed
+     * 
+     * since 2.1.7, 2.0.13
+     * @return 
+     */
+    public void endMetadataSection()
+    {
+    }
+    
+    /**
+     * Check if the component is created inside f:metadata section
+     * 
+     * since 2.1.7, 2.0.13
+     * @return 
+     */
+    public boolean isInMetadataSection()
+    {
+       return false;
+    }
+    
+    /**
+     * Check if the section to be processed is being refreshed.
+     * 
+     * since 2.1.7, 2.0.13
+     * @return 
+     */
+    public boolean isRefreshingSection()
+    {
+       return isRefreshingTransientBuild() ||  (!isBuildingViewMetadata() && isInMetadataSection());
+    }
+
+    /**
+     * 
+     * @since 2.1.8, 2.0.14
+     */
+    public void incrementUniqueComponentId()
+    {
+    }
+    
+    public StringBuilder getSharedStringBuilder()
+    {
+        return new StringBuilder();
+    }
+
+    /**
+     * Returns the current nesting level of composite components found. If
+     * no composite component has been used returns 0.
+     * 
+     * @since 2.1.9, 2.0.15
+     */
+    public int getCompositeComponentLevel()
+    {
+        return 0;
+    }
 }

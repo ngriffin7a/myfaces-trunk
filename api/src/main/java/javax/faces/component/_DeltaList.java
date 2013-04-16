@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.RandomAccess;
 
 import javax.faces.context.FacesContext;
 
@@ -42,7 +43,7 @@ import javax.faces.context.FacesContext;
  * @author Leonardo Uribe (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-class _DeltaList<T> implements List<T>, PartialStateHolder
+class _DeltaList<T> implements List<T>, PartialStateHolder, RandomAccess
 {
 
     private List<T> _delegate;
@@ -162,6 +163,7 @@ class _DeltaList<T> implements List<T>, PartialStateHolder
 
     public boolean retainAll(Collection<?> c)
     {
+        clearInitialState();
         return _delegate.retainAll(c);
     }
 
@@ -219,7 +221,8 @@ class _DeltaList<T> implements List<T>, PartialStateHolder
                 if (lst[i] instanceof _AttachedDeltaWrapper)
                 {
                     //Delta
-                    ((StateHolder)_delegate.get(j)).restoreState(context, ((_AttachedDeltaWrapper) lst[i]).getWrappedStateObject());
+                    ((StateHolder)_delegate.get(j)).restoreState(context,
+                            ((_AttachedDeltaWrapper) lst[i]).getWrappedStateObject());
                     j++;
                 }
                 else if (lst[i] != null)
@@ -337,8 +340,10 @@ class _DeltaList<T> implements List<T>, PartialStateHolder
         _initialStateMarked = true;
         if (_delegate != null)
         {
-            for (T value : _delegate)
+            int size = _delegate.size();
+            for (int i = 0; i < size; i++)
             {
+                T value = _delegate.get(i);
                 if (value instanceof PartialStateHolder)
                 {
                     ((PartialStateHolder)value).markInitialState();

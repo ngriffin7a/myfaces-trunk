@@ -29,7 +29,7 @@ import org.apache.myfaces.config.element.ManagedProperty;
 import org.apache.myfaces.config.element.MapEntries;
 import org.apache.myfaces.config.element.MapEntry;
 import org.apache.myfaces.context.servlet.StartupServletExternalContextImpl;
-import org.apache.myfaces.shared_impl.util.ClassUtils;
+import org.apache.myfaces.shared.util.ClassUtils;
 import org.apache.myfaces.util.ContainerUtils;
 
 import javax.el.ELContext;
@@ -77,7 +77,8 @@ public class ManagedBeanBuilder
      * REQUEST VIEW SESSION APPLICATION NONE
      * @author Jakob Korherr
      */
-    private final static Comparator<String> scopeComparator = new Comparator<String>()
+    private final static Comparator<String> SCOPE_COMPARATOR
+            = new Comparator<String>()
     {
 
         public int compare(String o1, String o2)
@@ -167,7 +168,8 @@ public class ManagedBeanBuilder
                                 e.getMessage()
                                         + " for bean '"
                                         + beanConfiguration.getManagedBeanName()
-                                        + "' check the configuration to make sure all properties correspond with get/set methods", e);
+                                        + "' check the configuration to make sure all properties "
+                                        + "correspond with get/set methods", e);
                     }
                     break;
 
@@ -298,7 +300,9 @@ public class ManagedBeanBuilder
                     // If the getter returns null or doesn't exist, create a java.util.HashMap,
                     // otherwise use the returned java.util.Map .
                     if (PropertyUtils.isReadable(bean, property.getPropertyName()))
+                    {
                         value = elResolver.getValue(elContext, bean, property.getPropertyName());
+                    }
                     value = value == null ? new HashMap<Object, Object>() : value;
 
                     if (!(value instanceof Map))
@@ -320,6 +324,8 @@ public class ManagedBeanBuilder
                     }
                     value = property.getRuntimeValue(facesContext);
                     break;
+                default:
+                    throw new FacesException("unknown ManagedProperty type: "+ property.getType());
             }
             
             Class<?> propertyClass = null;
@@ -348,7 +354,10 @@ public class ManagedBeanBuilder
     @SuppressWarnings("unchecked")
     public static <T> T coerceToType(FacesContext facesContext, Object value, Class<? extends T> desiredClass)
     {
-        if (value == null) return null;
+        if (value == null)
+        {
+            return null;
+        }
 
         try
         {
@@ -434,7 +443,7 @@ public class ManagedBeanBuilder
         }
         
         // the target scope needs to have a shorter (or equal) lifetime than the value scope
-        return (scopeComparator.compare(targetScope, valueScope) <= 0);
+        return (SCOPE_COMPARATOR.compare(targetScope, valueScope) <= 0);
     }
 
     /**
@@ -459,7 +468,7 @@ public class ManagedBeanBuilder
             }
             // we have found at least one valid scope at this point
             scopeFound = true;
-            if (scopeComparator.compare(valueScope, narrowestScope) < 0)
+            if (SCOPE_COMPARATOR.compare(valueScope, narrowestScope) < 0)
             {
                 narrowestScope = valueScope;
             }
@@ -692,7 +701,8 @@ public class ManagedBeanBuilder
                 Object value = entry.getValue();
                 if (ContainerUtils.isValueReference((String) value))
                 {
-                    ValueExpression valueExpression = expFactory.createValueExpression(elContext, (String) value, Object.class);
+                    ValueExpression valueExpression = expFactory.createValueExpression(elContext, (String) value,
+                                                                                       Object.class);
                     value = valueExpression.getValue(elContext);
                 }
                 

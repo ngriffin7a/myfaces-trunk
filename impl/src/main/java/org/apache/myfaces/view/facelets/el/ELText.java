@@ -27,14 +27,20 @@ import javax.el.ELContext;
 import javax.el.ELException;
 import javax.el.ExpressionFactory;
 import javax.el.ValueExpression;
+import javax.faces.component.UIComponent;
 import javax.faces.context.ResponseWriter;
+import javax.faces.view.Location;
+
+import org.apache.myfaces.util.ExternalSpecifications;
+import org.apache.myfaces.view.facelets.AbstractFaceletContext;
 
 /**
- * Handles parsing EL Strings in accordance with the EL-API Specification. The parser accepts either <code>${..}</code>
+ * Handles parsing EL Strings in accordance with the EL-API Specification.
+ * The parser accepts either <code>${..}</code>
  * or <code>#{..}</code>.
  * 
  * @author Jacob Hookom
- * @version $Id: ELText.java,v 1.8 2008/07/13 19:01:42 rlubke Exp $
+ * @version $Id$
  */
 public class ELText
 {
@@ -217,6 +223,147 @@ public class ELText
             }
         }
     }
+    
+    private static final class ELCacheableTextVariable extends ELText
+    {
+        private final ValueExpression ve;
+        
+        //Just like TagAttributeImpl
+        private final static int EL_CC = 2;
+        
+        private final static int EL_RESOURCE = 8;
+        
+        private final int capabilities;
+        
+        private volatile ELTextVariable cached;
+        
+        public ELCacheableTextVariable(ValueExpression ve)
+        {
+            super(ve.getExpressionString());
+            this.ve = ve;
+            boolean compositeComponentExpression
+                    = CompositeComponentELUtils.isCompositeComponentExpression(ve.getExpressionString());
+            boolean resourceExpression = ResourceELUtils.isResourceExpression(ve.getExpressionString());
+            this.capabilities = (compositeComponentExpression ? EL_CC : 0) | ( resourceExpression ? EL_RESOURCE : 0);
+        }
+
+        public boolean isLiteral()
+        {
+            return false;
+        }
+
+        public ELText apply(ExpressionFactory factory, ELContext ctx)
+        {
+            AbstractFaceletContext actx = (AbstractFaceletContext) ctx;
+            
+            if (actx.isAllowCacheELExpressions() && cached != null)
+            {
+                // In TagAttributeImpl.getValueExpression(), it is necessary to do an
+                // special logic to detect the cases where #{cc} is included into the
+                // EL expression and set the proper ccLevel. In this case, it is usual
+                // the parent composite component is always on top, but it is possible to
+                // write a nesting case with <composite:insertChildren>, and
+                // pass a flat EL expression over itself. So, it is necessary to update
+                // the ccLevel to make possible to find the right parent where this 
+                // expression belongs to.
+                if ((this.capabilities & EL_CC) != 0)
+                {
+                    return new ELTextVariable(((LocationValueExpression)cached.ve).apply(
+                            actx.getFaceletCompositionContext().getCompositeComponentLevel()));
+                }
+                return cached;
+            }
+            
+            actx.beforeConstructELExpression();
+            try
+            {
+                ValueExpression valueExpression
+                        = factory.createValueExpression(ctx, this.ve.getExpressionString(), String.class);
+              
+                if ((this.capabilities & EL_CC) != 0)
+                {
+                    UIComponent cc = actx.getFaceletCompositionContext().getCompositeComponentFromStack();
+                    if (cc != null)
+                    {
+                        Location location = (Location) cc.getAttributes().get(CompositeComponentELUtils.LOCATION_KEY);
+                        if (location != null)
+                        {
+                            if (ExternalSpecifications.isUnifiedELAvailable())
+                            {
+                                valueExpression = new LocationValueExpressionUEL(location, valueExpression,
+                                        actx.getFaceletCompositionContext().getCompositeComponentLevel());
+                            }
+                            else
+                            {
+                                valueExpression = new LocationValueExpression(location, valueExpression,
+                                        actx.getFaceletCompositionContext().getCompositeComponentLevel());
+                            }
+                        }
+                    }
+                }
+                else if ((this.capabilities & EL_RESOURCE) != 0)
+                {
+                    UIComponent cc = actx.getFaceletCompositionContext().getCompositeComponentFromStack();
+                    if (cc != null)
+                    {
+                        Location location = (Location) cc.getAttributes().get(CompositeComponentELUtils.LOCATION_KEY);
+                        if (location != null)
+                        {
+                            if (ExternalSpecifications.isUnifiedELAvailable())
+                            {
+                                valueExpression = new ResourceLocationValueExpressionUEL(location, valueExpression);
+                            }
+                            else
+                            {
+                                valueExpression = new ResourceLocationValueExpression(location, valueExpression);
+                            }
+                        }
+                    }
+                }
+                
+                ELTextVariable eltv = new ELTextVariable(valueExpression);
+                
+                if (actx.isAllowCacheELExpressions() && !actx.isAnyFaceletsVariableResolved())
+                {
+                     cached = eltv;
+                }
+                return eltv;
+            }
+            finally
+            {
+                actx.afterConstructELExpression();
+            }
+        }
+
+        public void write(Writer out, ELContext ctx) throws ELException, IOException
+        {
+            Object v = this.ve.getValue(ctx);
+            if (v != null)
+            {
+                out.write((String) v);
+            }
+        }
+
+        public String toString(ELContext ctx) throws ELException
+        {
+            Object v = this.ve.getValue(ctx);
+            if (v != null)
+            {
+                return v.toString();
+            }
+
+            return null;
+        }
+
+        public void writeText(ResponseWriter out, ELContext ctx) throws ELException, IOException
+        {
+            Object v = this.ve.getValue(ctx);
+            if (v != null)
+            {
+                out.writeText((String) v, null);
+            }
+        }
+    }
 
     protected final String literal;
 
@@ -296,8 +443,9 @@ public class ELText
      */
     public static boolean isLiteral(String in)
     {
-        ELText txt = parse(in);
-        return txt == null || txt.isLiteral();
+        //ELText txt = parse(in);
+        //return txt == null || txt.isLiteral();
+        return isLiteral(null, null, in);
     }
 
     /**
@@ -370,11 +518,11 @@ public class ELText
                         if (ctx != null && fact != null)
                         {
                             ve = fact.createValueExpression(ctx, new String(ca, i, vlen), String.class);
-                            t = new ELTextVariable(ve);
+                            t = new ELCacheableTextVariable(ve);
                         }
                         else
                         {
-                            t = new ELTextVariable(new LiteralValueExpression(new String(ca, i, vlen)));
+                            t = new ELCacheableTextVariable(new LiteralValueExpression(new String(ca, i, vlen)));
                         }
                         text.add(t);
                         i += vlen;
@@ -406,6 +554,46 @@ public class ELText
             ELText[] ta = (ELText[]) text.toArray(new ELText[text.size()]);
             return new ELTextComposite(ta);
         }
+    }
+    
+    public static boolean isLiteral(ExpressionFactory fact, ELContext ctx, String in) throws ELException
+    {
+        char[] ca = in.toCharArray();
+        int i = 0;
+        char c = 0;
+        int len = ca.length;
+        int end = len - 1;
+        boolean esc = false;
+        int vlen = 0;
+
+        while (i < len)
+        {
+            c = ca[i];
+            if ('\\' == c)
+            {
+                esc = !esc;
+                if (esc && i < end && (ca[i + 1] == '$' || ca[i + 1] == '#'))
+                {
+                    i++;
+                    continue;
+                }
+            }
+            else if (!esc && ('$' == c || '#' == c))
+            {
+                if (i < end)
+                {
+                    if ('{' == ca[i + 1])
+                    {
+                        vlen = findVarLength(ca, i);
+                        //In this point we have at least 1 EL expression, so it is not literal
+                        return false;
+                    }
+                }
+            }
+            esc = false;
+            i++;
+        }
+        return true;
     }
 
     private static int findVarLength(char[] ca, int s) throws ELException

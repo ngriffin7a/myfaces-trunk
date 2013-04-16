@@ -27,6 +27,7 @@ import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URL;
 
+import javax.el.ExpressionFactory;
 import javax.faces.FacesException;
 import javax.faces.FactoryFinder;
 import javax.faces.application.ProjectStage;
@@ -48,13 +49,12 @@ import org.apache.myfaces.config.element.Renderer;
 import org.apache.myfaces.config.impl.digester.DigesterFacesConfigDispenserImpl;
 import org.apache.myfaces.config.impl.digester.DigesterFacesConfigUnmarshallerImpl;
 import org.apache.myfaces.context.PartialViewContextFactoryImpl;
-import org.apache.myfaces.shared_impl.application.ViewHandlerSupport;
-import org.apache.myfaces.shared_impl.util.ClassUtils;
+import org.apache.myfaces.shared.application.ViewHandlerSupport;
+import org.apache.myfaces.shared.util.ClassUtils;
 import org.apache.myfaces.test.base.junit4.AbstractJsfConfigurableMockTestCase;
 import org.apache.myfaces.test.el.MockExpressionFactory;
-import org.apache.myfaces.test.mock.MockPropertyResolver;
-import org.apache.myfaces.test.mock.MockVariableResolver;
 import org.apache.myfaces.test.mock.visit.MockVisitContextFactory;
+import org.apache.myfaces.view.facelets.impl.FaceletCacheFactoryImpl;
 import org.apache.myfaces.view.facelets.mock.MockViewDeclarationLanguageFactory;
 import org.apache.myfaces.view.facelets.tag.jsf.TagHandlerDelegateFactoryImpl;
 
@@ -122,7 +122,7 @@ public abstract class FaceletTestCase extends AbstractJsfConfigurableMockTestCas
         return url;
     }
 
-    private String getDirectory()
+    protected String getDirectory()
     {
         return this.getClass().getName().substring(0,
                 this.getClass().getName().lastIndexOf('.')).replace('.', '/')
@@ -151,6 +151,8 @@ public abstract class FaceletTestCase extends AbstractJsfConfigurableMockTestCas
                 PartialViewContextFactoryImpl.class.getName());
         FactoryFinder.setFactory(FactoryFinder.VISIT_CONTEXT_FACTORY, 
                 MockVisitContextFactory.class.getName());
+        FactoryFinder.setFactory(FactoryFinder.FACELET_CACHE_FACTORY,
+                FaceletCacheFactoryImpl.class.getName());
     }
     
     @Override
@@ -166,7 +168,12 @@ public abstract class FaceletTestCase extends AbstractJsfConfigurableMockTestCas
         //        new MockVariableResolver());
         
         RuntimeConfig.getCurrentInstance(externalContext).setExpressionFactory(
-                new MockExpressionFactory());
+                createExpressionFactory());
+    }
+    
+    protected ExpressionFactory createExpressionFactory()
+    {
+        return new MockExpressionFactory();
     }
     
     @Override

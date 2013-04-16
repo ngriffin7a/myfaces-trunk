@@ -30,7 +30,7 @@ import javax.el.ELContext;
 public class InitParamImplicitObject extends ImplicitObject
 {
 
-    private static final String NAME = "initParam".intern();
+    private static final String NAME = "initParam";
 
     /** Creates a new instance of InitParamImplicitObject */
     public InitParamImplicitObject()
@@ -59,7 +59,8 @@ public class InitParamImplicitObject extends ImplicitObject
     public FeatureDescriptor getDescriptor()
     {
         return makeDescriptor(NAME,
-                              "Map whose keys are a set of application initialization param names and whose values are the corresponding values",
+                              "Map whose keys are a set of application initialization param names "
+                              + "and whose values are the corresponding values",
                               Map.class);
     }
 

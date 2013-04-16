@@ -19,7 +19,6 @@
 package org.apache.myfaces.spi;
 
 import java.io.IOException;
-import java.io.ObjectInputStream.GetField;
 import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.util.Map;
@@ -29,6 +28,8 @@ import javax.faces.FacesWrapper;
 import javax.faces.context.ExternalContext;
 
 /**
+ * Wrapper class that all AnnotationProvider instances should extend. This is used
+ * to wrap the default algorithm and add some additional custom processing.
  * 
  * @since 2.0.3
  * @author Leonardo Uribe 
@@ -51,4 +52,8 @@ public abstract class AnnotationProviderWrapper extends AnnotationProvider imple
         return getWrapped().getBaseUrls();
     }
     
+    public Set<URL> getBaseUrls(ExternalContext ctx) throws IOException
+    {
+        return getWrapped().getBaseUrls(ctx);
+    }
 }

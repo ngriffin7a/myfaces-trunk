@@ -26,9 +26,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.el.ELException;
-import javax.el.VariableMapper;
 import javax.faces.FacesException;
+import javax.faces.application.StateManager;
 import javax.faces.component.UIComponent;
+import javax.faces.event.PhaseId;
 import javax.faces.view.facelets.FaceletContext;
 import javax.faces.view.facelets.FaceletException;
 import javax.faces.view.facelets.TagAttribute;
@@ -38,9 +39,11 @@ import javax.faces.view.facelets.TagHandler;
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletAttribute;
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTag;
 import org.apache.myfaces.view.facelets.AbstractFaceletContext;
+import org.apache.myfaces.view.facelets.FaceletCompositionContext;
 import org.apache.myfaces.view.facelets.TemplateClient;
-import org.apache.myfaces.view.facelets.el.VariableMapperWrapper;
+import org.apache.myfaces.view.facelets.tag.ComponentContainerHandler;
 import org.apache.myfaces.view.facelets.tag.TagHandlerUtils;
+import org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport;
 
 /**
  * The decorate tag acts the same as a composition tag, but it will not trim 
@@ -53,10 +56,10 @@ import org.apache.myfaces.view.facelets.tag.TagHandlerUtils;
  * TODO: REFACTOR - This class could easily use a common parent with CompositionHandler
  * 
  * @author Jacob Hookom
- * @version $Id: DecorateHandler.java,v 1.16 2008/07/13 19:01:41 rlubke Exp $
+ * @version $Id$
  */
 @JSFFaceletTag(name="ui:decorate")
-public final class DecorateHandler extends TagHandler implements TemplateClient
+public final class DecorateHandler extends TagHandler implements TemplateClient, ComponentContainerHandler
 {
 
     //private static final Logger log = Logger.getLogger("facelets.tag.ui.decorate");
@@ -119,27 +122,119 @@ public final class DecorateHandler extends TagHandler implements TemplateClient
     public void apply(FaceletContext ctx, UIComponent parent) throws IOException, FacesException, FaceletException,
             ELException
     {
-        VariableMapper orig = ctx.getVariableMapper();
+        //VariableMapper orig = ctx.getVariableMapper();
+        //if (_params != null)
+        //{
+        //    VariableMapper vm = new VariableMapperWrapper(orig);
+        //    ctx.setVariableMapper(vm);
+        //    for (int i = 0; i < _params.length; i++)
+        //    {
+        //        _params[i].apply(ctx, parent);
+        //    }
+        //}
+
+        AbstractFaceletContext actx = (AbstractFaceletContext) ctx;
+        actx.pushClient(this);
+
         if (_params != null)
         {
-            VariableMapper vm = new VariableMapperWrapper(orig);
-            ctx.setVariableMapper(vm);
+            //VariableMapper vm = new VariableMapperWrapper(orig);
+            //ctx.setVariableMapper(vm);
             for (int i = 0; i < _params.length; i++)
             {
                 _params[i].apply(ctx, parent);
             }
         }
 
-        AbstractFaceletContext actx = (AbstractFaceletContext) ctx;
-        actx.pushClient(this);
+        FaceletCompositionContext fcc = FaceletCompositionContext.getCurrentInstance(ctx);
+        String path;
+        boolean markInitialState = false;
+        if (!_template.isLiteral())
+        {
+            String uniqueId = fcc.startComponentUniqueIdSection();
+            //path = getTemplateValue(actx, fcc, parent, uniqueId);
+            String restoredPath = (String) ComponentSupport.restoreInitialTagState(ctx, fcc, parent, uniqueId);
+            if (restoredPath != null)
+            {
+                // If is not restore view phase, the path value should be
+                // evaluated and if is not equals, trigger markInitialState stuff.
+                if (!PhaseId.RESTORE_VIEW.equals(ctx.getFacesContext().getCurrentPhaseId()))
+                {
+                    path = this._template.getValue(ctx);
+                    if (path == null || path.length() == 0)
+                    {
+                        return;
+                    }
+                    if (!path.equals(restoredPath))
+                    {
+                        markInitialState = true;
+                    }
+                }
+                else
+                {
+                    path = restoredPath;
+                }
+            }
+            else
+            {
+                //No state restored, calculate path
+                path = this._template.getValue(ctx);
+            }
+            ComponentSupport.saveInitialTagState(ctx, fcc, parent, uniqueId, path);
+        }
+        else
+        {
+            path = _template.getValue(ctx);
+        }
         try
         {
-            ctx.includeFacelet(parent, _template.getValue(ctx));
+            boolean oldMarkInitialState = false;
+            Boolean isBuildingInitialState = null;
+            if (markInitialState)
+            {
+                //set markInitialState flag
+                oldMarkInitialState = fcc.isMarkInitialState();
+                fcc.setMarkInitialState(true);
+                isBuildingInitialState = (Boolean) ctx.getFacesContext().getAttributes().put(
+                        StateManager.IS_BUILDING_INITIAL_STATE, Boolean.TRUE);
+            }
+            try
+            {
+                ctx.includeFacelet(parent, path);
+            }
+            finally
+            {
+                if (markInitialState)
+                {
+                    //unset markInitialState flag
+                    if (isBuildingInitialState == null)
+                    {
+                        ctx.getFacesContext().getAttributes().remove(
+                                StateManager.IS_BUILDING_INITIAL_STATE);
+                    }
+                    else
+                    {
+                        ctx.getFacesContext().getAttributes().put(
+                                StateManager.IS_BUILDING_INITIAL_STATE, isBuildingInitialState);
+                    }
+                    fcc.setMarkInitialState(oldMarkInitialState);
+                }
+            }
         }
         finally
         {
-            ctx.setVariableMapper(orig);
+            //ctx.setVariableMapper(orig);
             actx.popClient(this);
+        }
+        if (!_template.isLiteral())
+        {
+            fcc.endComponentUniqueIdSection();
+        }
+        if (!_template.isLiteral() && fcc.isUsingPSSOnThisView() && fcc.isRefreshTransientBuildOnPSS() &&
+            !fcc.isRefreshingTransientBuild())
+        {
+            //Mark the parent component to be saved and restored fully.
+            ComponentSupport.markComponentToRestoreFully(ctx.getFacesContext(), parent);
         }
     }
 

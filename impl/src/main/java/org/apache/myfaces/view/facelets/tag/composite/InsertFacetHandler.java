@@ -19,9 +19,13 @@
 package org.apache.myfaces.view.facelets.tag.composite;
 
 import java.beans.BeanDescriptor;
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,6 +33,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.view.facelets.FaceletContext;
 import javax.faces.view.facelets.TagAttribute;
 import javax.faces.view.facelets.TagConfig;
+import javax.faces.view.facelets.TagException;
 import javax.faces.view.facelets.TagHandler;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletAttribute;
@@ -49,7 +54,13 @@ public class InsertFacetHandler extends TagHandler
     //public static String INSERT_FACET_TARGET_ID = "org.apache.myfaces.INSERT_FACET_TARGET_ID.";
     //public static String INSERT_FACET_ORDERING = "org.apache.myfaces.INSERT_FACET_ORDERING.";
     
-    public static String INSERT_FACET_USED = "org.apache.myfaces.INSERT_FACET_USED";
+    public static final String INSERT_FACET_USED = "org.apache.myfaces.INSERT_FACET_USED";
+    
+    /**
+     * Key used to save on bean descriptor a map containing the metadata
+     * information related to this tag. It will be used later to check "required" property.
+     */
+    public static final String INSERT_FACET_KEYS = "org.apache.myfaces.INSERT_FACET_KEYS";
     
     private static final Logger log = Logger.getLogger(InsertFacetHandler.class.getName());
     
@@ -91,7 +102,8 @@ public class InsertFacetHandler extends TagHandler
         {
             String facetName = _name.getValue(ctx);
             
-            UIComponent compositeBaseParent = FaceletCompositionContext.getCurrentInstance(ctx).getCompositeComponentFromStack();
+            UIComponent compositeBaseParent
+                    = FaceletCompositionContext.getCurrentInstance(ctx).getCompositeComponentFromStack();
             
             CompositeComponentBeanInfo beanInfo = 
                 (CompositeComponentBeanInfo) compositeBaseParent.getAttributes()
@@ -120,6 +132,18 @@ public class InsertFacetHandler extends TagHandler
             }
             
             facetList.add(facetName);
+
+            Map<String, PropertyDescriptor> insertFacetPropertyDescriptorMap = (Map<String, PropertyDescriptor>)
+                beanDescriptor.getValue(INSERT_FACET_KEYS);
+        
+            if (insertFacetPropertyDescriptorMap == null)
+            {
+                insertFacetPropertyDescriptorMap = new HashMap<String, PropertyDescriptor>();
+                beanDescriptor.setValue(INSERT_FACET_KEYS, insertFacetPropertyDescriptorMap);
+            }
+            
+            PropertyDescriptor facetDescriptor = _createFacetPropertyDescriptor(facetName, ctx, parent);
+            insertFacetPropertyDescriptorMap.put(facetName, facetDescriptor);
         }
         else
         {
@@ -127,186 +151,37 @@ public class InsertFacetHandler extends TagHandler
             
             AbstractFaceletContext actx = (AbstractFaceletContext) ctx;
             
-            UIComponent parentCompositeComponent = FaceletCompositionContext.getCurrentInstance(ctx).getCompositeComponentFromStack();
-            
+            UIComponent parentCompositeComponent
+                    = FaceletCompositionContext.getCurrentInstance(ctx).getCompositeComponentFromStack();
+
             actx.includeCompositeComponentDefinition(parent, facetName);
-            
-            //parentCompositeComponent.getAttributes().put(INSERT_FACET_USED+facetName, Boolean.TRUE);
         }
         
     }
     
-    /*
-    public void apply(FaceletContext ctx, UIComponent parent)
-            throws IOException
+    private PropertyDescriptor _createFacetPropertyDescriptor(String facetName, FaceletContext ctx, UIComponent parent)
+    throws TagException, IOException
     {
-        String facetName = _name.getValue(ctx);
-        
-        UIComponent parentCompositeComponent = FaceletCompositionContext.getCurrentInstance(ctx).getCompositeComponentFromStack();
-        
-        if (_required != null && _required.getBoolean(ctx) && parentCompositeComponent.getFacet(facetName) == null)
+        try
         {
-            throw new TagException(this.tag, "Cannot find facet with name "+facetName+" in composite component "
-                    +parentCompositeComponent.getClientId(ctx.getFacesContext()));
-        }
-        
-        if (!ComponentHandler.isNew(parentCompositeComponent))
-        {
-            UIComponent facet = parent.getFacet(facetName);
-            if (facet != null)
-            {
-                if (facet.getAttributes().containsKey(ComponentSupport.FACET_CREATED_UIPANEL_MARKER))
-                {
-                    ComponentSupport.markForDeletion(facet);
-                    for (UIComponent child : facet.getChildren())
-                    {
-                        if (child.getAttributes().remove(USES_INSERT_FACET) != null)
-                        {
-                            ComponentSupport.finalizeForDeletion(child);
-                        }
-                    }
-                }
-                ComponentSupport.finalizeForDeletion(facet);
-            }
-            return;
-        }
-        
-        parentCompositeComponent.subscribeToEvent(PostAddToViewEvent.class, 
-                new RelocateFacetListener(parent, facetName));
-        parentCompositeComponent.subscribeToEvent(PostBuildComponentTreeOnRestoreViewEvent.class, 
-                new RelocateFacetListener(parent, facetName));
-        */
-        /*
-        if (ctx.getFacesContext().getAttributes().containsKey(
-                FaceletViewDeclarationLanguage.MARK_INITIAL_STATE_KEY))
-        {
-            parentCompositeComponent.subscribeToEvent(PostBuildComponentTreeOnRestoreViewEvent.class, 
-                    new RelocateFacetListener(parent, facetName));
-        }*/
-        /*
-    }
-    */
-    /*
-    public static final class RelocateFacetListener 
-        implements ComponentSystemEventListener, StateHolder
-    {
-        private UIComponent _targetComponent;
-        private String _targetClientId;
-        private String _facetName;
-    
-        public RelocateFacetListener()
-        {
-        }
-        
-        public RelocateFacetListener(UIComponent targetComponent, String facetName)
-        {
-            _targetComponent = targetComponent;
-            _facetName = facetName;
-        }
-        
-        public void processEvent(ComponentSystemEvent event)
-        {
-            UIComponent parentCompositeComponent = event.getComponent();
+            CompositeComponentPropertyDescriptor facetPropertyDescriptor = 
+                new CompositeComponentPropertyDescriptor(facetName);
             
-            UIComponent facetComponent = parentCompositeComponent.getFacet(_facetName);
-            
-            if (_targetComponent == null)
+            if (_required != null)
             {
-                //All composite components are NamingContainer and the target is inside it, so we can remove the prefix.
-                _targetComponent = parentCompositeComponent.findComponent(_targetClientId.substring(parentCompositeComponent.getClientId().length()+1));
-                
-                if (_targetComponent == null)
-                {
-                    //Could happen in no org.apache.myfaces.REFRESH_TRANSIENT_BUILD_ON_PSS_PRESERVE_STATE
-                    //In this case we cannot relocate, just return;
-                    return;
-                }
-            }            
-                        
-            if (facetComponent != null)
-            {
-                Map<String, Object> ccAttributes = parentCompositeComponent.getAttributes();
-                UIComponent oldFacet = _targetComponent.getFacets().get(_facetName);
-                String insertFacetKey = INSERT_FACET_TARGET_ID+_facetName;
-                
-                if (!ccAttributes.containsKey(insertFacetKey))
-                {
-                    ccAttributes.put(insertFacetKey, _targetComponent.getClientId());
-                }
-                
-                if (oldFacet != null && Boolean.TRUE.equals(oldFacet.getAttributes().get(ComponentSupport.FACET_CREATED_UIPANEL_MARKER)))
-                {
-                    List<UIComponent> childList = new ArrayList<UIComponent>(facetComponent.getChildren());
-                    
-                    List<UIComponent> targetChildrenList = oldFacet.getChildren(); 
-
-                    List<String> ids = (List<String>) ccAttributes.get(INSERT_FACET_ORDERING+_facetName);
-                    if (ids != null && targetChildrenList.size() > 0)
-                    {
-                        int i = 0;
-                        int j = 0;
-                        int k = 0;
-                        while (i < ids.size() && j < targetChildrenList.size() && k < childList.size())
-                        {
-                            if (ids.get(i) != null)
-                            {
-                                if (ids.get(i).equals(childList.get(k).getAttributes().get(ComponentSupport.MARK_CREATED)))
-                                {
-                                    if (!ids.get(i).equals(targetChildrenList.get(j).getAttributes().get(ComponentSupport.MARK_CREATED)))
-                                    {
-                                        targetChildrenList.add(j, childList.get(k));
-                                        k++;
-                                    }
-                                    j++;
-                                }
-                                else if (ids.get(i).equals(targetChildrenList.get(j).getAttributes().get(ComponentSupport.MARK_CREATED)))
-                                {
-                                    j++;
-                                }
-                            }
-                            i++;
-                        }
-                        while (k < childList.size())
-                        {
-                            targetChildrenList.add(j, childList.get(k));
-                            k++;
-                            j++;
-                        }
-                    }
-                    else
-                    {
-                        _targetComponent.getFacets().put(_facetName, facetComponent);
-                    }
-                }
-                else
-                {
-                    _targetComponent.getFacets().put(_facetName, facetComponent);
-                }
-
+                facetPropertyDescriptor.setValue("required", _required.getValueExpression(ctx, Boolean.class));
             }
+            
+            return facetPropertyDescriptor;
         }
-
-        public Object saveState(FacesContext context)
+        catch (IntrospectionException e)
         {
-            return new Object[]{_targetComponent != null ? _targetComponent.getClientId() : _targetClientId , _facetName};
-        }
-
-        public void restoreState(FacesContext context, Object state)
-        {
-            Object[] values = (Object[])state;
-            _targetClientId = (String) values[0];
-            _facetName = (String) values[1];
-        }
-
-        public boolean isTransient()
-        {
-            return false;
-        }
-
-        public void setTransient(boolean newTransientValue)
-        {
-            // no-op as listener is transient
+            if (log.isLoggable(Level.SEVERE))
+            {
+                log.log(Level.SEVERE, "Cannot create PropertyDescriptor for attribute ",e);
+            }
+            throw new TagException(tag,e);
         }
     }
-    */
+
 }

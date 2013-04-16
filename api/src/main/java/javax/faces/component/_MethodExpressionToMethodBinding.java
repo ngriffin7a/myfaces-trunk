@@ -21,7 +21,6 @@ package javax.faces.component;
 
 import javax.el.ELException;
 import javax.el.MethodExpression;
-import javax.faces.component.StateHolder;
 import javax.faces.context.FacesContext;
 import javax.faces.el.EvaluationException;
 import javax.faces.el.MethodBinding;
@@ -102,13 +101,17 @@ class _MethodExpressionToMethodBinding extends MethodBinding implements StateHol
     public void restoreState(FacesContext context, Object state)
     {
         if (state != null)
-            methodExpression = (MethodExpression)state;
+        {
+            methodExpression = (MethodExpression) state;
+        }
     }
 
     public Object saveState(FacesContext context)
     {
         if (!isTransient)
+        {
             return methodExpression;
+        }
         return null;
     }
 

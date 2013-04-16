@@ -22,7 +22,7 @@ import java.io.Serializable;
 
 /**
  * @author Jacob Hookom
- * @version $Id: IterationStatus.java,v 1.4 2008/07/13 19:01:43 rlubke Exp $
+ * @version $Id$
  */
 public final class IterationStatus implements Serializable
 {
@@ -49,7 +49,8 @@ public final class IterationStatus implements Serializable
     /**
      * 
      */
-    public IterationStatus(boolean first, boolean last, int index, Integer begin, Integer end, Integer step, Object value)
+    public IterationStatus(boolean first, boolean last, int index, Integer begin, Integer end,
+                           Integer step, Object value)
     {
         this.index = index;
         this.begin = begin;
@@ -77,7 +78,8 @@ public final class IterationStatus implements Serializable
     
     public Integer getCount()
     {
-        if ((step == null) || (step == 1)) {
+        if ((step == null) || (step == 1))
+        {
             return (index + 1);
         }
         

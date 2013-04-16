@@ -63,6 +63,8 @@ public abstract class FacesContextImplBase extends FacesContext
     
     protected boolean _released = false;
     
+    private ApplicationFactory _applicationFactory = null;
+
     /**
      * Base constructor.
      * Calls FacesContext.setCurrentInstance(this);
@@ -78,6 +80,22 @@ public abstract class FacesContextImplBase extends FacesContext
         FacesContext.setCurrentInstance(this);
     }
     
+    public FacesContextImplBase(final ExternalContext externalContext,
+            final ReleaseableExternalContext defaultExternalContext,
+            final ApplicationFactory applicationFactory,
+            final RenderKitFactory renderKitFactory)
+    {
+        _externalContext = externalContext;
+        _defaultExternalContext = defaultExternalContext;
+        
+        _applicationFactory = applicationFactory;
+        _renderKitFactory = renderKitFactory;
+        
+        // this FacesContext impl is now the current instance
+        // note that because this method is protected, it has to be called from here
+        FacesContext.setCurrentInstance(this);
+    }
+    
     /**
      * Releases the instance fields on FacesContextImplBase.
      * Must be called by sub-classes, when overriding it!
@@ -85,6 +103,8 @@ public abstract class FacesContextImplBase extends FacesContext
     @Override
     public void release()
     {
+        _applicationFactory = null;
+
         if (_defaultExternalContext != null)
         {
             _defaultExternalContext.release();
@@ -134,8 +154,12 @@ public abstract class FacesContextImplBase extends FacesContext
         
         if (_application == null)
         {
-            _application = ((ApplicationFactory) FactoryFinder.getFactory(
-                    FactoryFinder.APPLICATION_FACTORY)).getApplication();
+            if (_applicationFactory == null)
+            {
+                _applicationFactory = (ApplicationFactory) FactoryFinder.getFactory(
+                    FactoryFinder.APPLICATION_FACTORY);
+            }
+            _application = _applicationFactory.getApplication();
         }
         
         return _application;
@@ -183,7 +207,7 @@ public abstract class FacesContextImplBase extends FacesContext
             return _elContext;
         }
 
-        _elContext = new FacesELContext(getApplication().getELResolver(), this);
+        _elContext = new FacesELContext(getApplication().getELResolver(), FacesContext.getCurrentInstance());
 
         ELContextEvent event = new ELContextEvent(_elContext);
         for (ELContextListener listener : getApplication().getELContextListeners())
@@ -240,7 +264,8 @@ public abstract class FacesContextImplBase extends FacesContext
         {
             throw new NullPointerException("viewRoot");
         }
-        // If the current UIViewRoot is non-null, and calling equals() on the argument root, passing the current UIViewRoot returns false
+        // If the current UIViewRoot is non-null, and calling equals() on the argument root,
+        // passing the current UIViewRoot returns false
         // the clear method must be called on the Map returned from UIViewRoot.getViewMap().
         if (_viewRoot != null && !_viewRoot.equals(viewRoot))
         {
@@ -278,7 +303,7 @@ public abstract class FacesContextImplBase extends FacesContext
             {
                 _renderKitFactory = (RenderKitFactory) FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
             }
-            _cachedRenderKit = _renderKitFactory.getRenderKit(this, renderKitId);
+            _cachedRenderKit = _renderKitFactory.getRenderKit(FacesContext.getCurrentInstance(), renderKitId);
         }
         
         return _cachedRenderKit;

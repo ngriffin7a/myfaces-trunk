@@ -35,15 +35,19 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.el.CompositeComponentExpressionHolder;
 
+import org.apache.myfaces.shared.config.MyfacesConfig;
+import org.apache.myfaces.view.facelets.FaceletViewDeclarationLanguage;
+import org.apache.myfaces.view.facelets.tag.composite.CompositeComponentBeanInfo;
+
 /**
  * Composite component attribute EL resolver.  See JSF spec, section 5.6.2.2.
  */
 
 public final class CompositeComponentELResolver extends ELResolver
 {
-    private static final String ATTRIBUTES_MAP = "attrs".intern();
+    private static final String ATTRIBUTES_MAP = "attrs";
     
-    private static final String PARENT_COMPOSITE_COMPONENT = "parent".intern();
+    private static final String PARENT_COMPOSITE_COMPONENT = "parent";
     
     private static final String COMPOSITE_COMPONENT_ATTRIBUTES_MAPS = 
         "org.apache.myfaces.COMPOSITE_COMPONENT_ATTRIBUTES_MAPS";
@@ -68,7 +72,89 @@ public final class CompositeComponentELResolver extends ELResolver
     @Override
     public Class<?> getType(ELContext context, Object base, Object property)
     {
+        if (base != null && property != null &&
+             base instanceof CompositeComponentAttributesMapWrapper &&
+             property instanceof String)
+        {
+            FacesContext facesContext = facesContext(context);
+            if (facesContext == null)
+            {
+                facesContext = FacesContext.getCurrentInstance();
+            }
+            if (facesContext == null)
+            {
+                return null;
+            }
+            if (!MyfacesConfig.getCurrentInstance(facesContext.getExternalContext()).isStrictJsf2CCELResolver())
+            {
+                // handle JSF 2.2 spec revisions:
+                // code resembles that found in Mojarra because it originates from
+                // the same contributor, whose ICLA is on file
+                Class<?> exprType = null;
+                Class<?> metaType = null;
+
+                CompositeComponentAttributesMapWrapper evalMap = (CompositeComponentAttributesMapWrapper) base;
+                ValueExpression ve = evalMap.getExpression((String) property);
+                if (ve != null)
+                {
+                    exprType = ve.getType(context);
+                }
+
+                if (!"".equals(property))
+                {
+                    if (evalMap._propertyDescriptors != null)
+                    {
+                        for (PropertyDescriptor pd : evalMap._propertyDescriptors)
+                        {
+                            if (property.equals(pd.getName()))
+                            {
+                                metaType = resolveType(context, pd);
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (metaType != null)
+                {
+                    // override exprType only if metaType is narrower:
+                    if (exprType == null || exprType.isAssignableFrom(metaType))
+                    {
+                        context.setPropertyResolved(true);
+                        return metaType;
+                    }
+                }
+                return exprType;
+            }
+        }
+
         // Per the spec, return null.
+        return null;
+    }
+
+    // adapted from CompositeMetadataTargetImpl#getPropertyType():
+    private static Class<?> resolveType(ELContext context, PropertyDescriptor pd)
+    {
+        if (pd != null)
+        {
+            Object type = pd.getValue("type");
+            if (type != null)
+            {
+                type = ((ValueExpression)type).getValue(context);
+                if (type instanceof String)
+                {
+                    try
+                    {
+                        type = FaceletViewDeclarationLanguage._javaTypeToClass((String)type);
+                    }
+                    catch (ClassNotFoundException e)
+                    {
+                        type = null;
+                    }
+                }
+                return (Class<?>) type;
+            }
+            return pd.getPropertyType();
+        }
 
         return null;
     }
@@ -141,7 +227,7 @@ public final class CompositeComponentELResolver extends ELResolver
             {
                 //create a wrapper map
                 attributesMap = new CompositeComponentAttributesMapWrapper(
-                        baseComponent, elContext);
+                        baseComponent);
                 compositeComponentAttributesMaps.put(baseComponent,
                         new WeakReference<Map<String, Object>>(attributesMap));
             }
@@ -150,7 +236,7 @@ public final class CompositeComponentELResolver extends ELResolver
         {
             //Create both required maps
             attributesMap = new CompositeComponentAttributesMapWrapper(
-                    baseComponent, elContext);
+                    baseComponent);
             compositeComponentAttributesMaps = new WeakHashMap<UIComponent, WeakReference<Map<String, Object>>>();
             compositeComponentAttributesMaps.put(baseComponent,
                     new WeakReference<Map<String, Object>>(attributesMap));
@@ -189,16 +275,17 @@ public final class CompositeComponentELResolver extends ELResolver
         private final UIComponent _component;
         private final BeanInfo _beanInfo;
         private final Map<String, Object> _originalMap;
-        private final ELContext _elContext;
         private final PropertyDescriptor [] _propertyDescriptors;
+        private final CompositeComponentBeanInfo _ccBeanInfo;
 
-        private CompositeComponentAttributesMapWrapper(UIComponent component, ELContext context)
+        private CompositeComponentAttributesMapWrapper(UIComponent component)
         {
             this._component = component;
             this._originalMap = component.getAttributes();
             this._beanInfo = (BeanInfo) _originalMap.get(UIComponent.BEANINFO_KEY);
-            this._elContext = context;
             this._propertyDescriptors = _beanInfo.getPropertyDescriptors();
+            this._ccBeanInfo = (this._beanInfo instanceof CompositeComponentBeanInfo) ?
+                (CompositeComponentBeanInfo) this._beanInfo : null;
         }
 
         public ValueExpression getExpression(String name)
@@ -244,12 +331,23 @@ public final class CompositeComponentELResolver extends ELResolver
             }
             else
             {
-                for (PropertyDescriptor attribute : _propertyDescriptors)
+                if (_ccBeanInfo == null)
                 {
-                    if (attribute.getName().equals(key))
+                    for (PropertyDescriptor attribute : _propertyDescriptors)
+                    {
+                        if (attribute.getName().equals(key))
+                        {
+                            obj = attribute.getValue("default");
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    PropertyDescriptor attribute = _ccBeanInfo.getPropertyDescriptorsMap().get(key);
+                    if (attribute != null)
                     {
                         obj = attribute.getValue("default");
-                        break;
                     }
                 }
                 // We have to check for a ValueExpression and also evaluate it
@@ -257,7 +355,7 @@ public final class CompositeComponentELResolver extends ELResolver
                 // always stored as (Tag-)ValueExpressions.
                 if (obj != null && obj instanceof ValueExpression)
                 {
-                    return ((ValueExpression) obj).getValue(_elContext);
+                    return ((ValueExpression) obj).getValue(FacesContext.getCurrentInstance().getELContext());
                 }
                 else
                 {
@@ -283,7 +381,7 @@ public final class CompositeComponentELResolver extends ELResolver
             // Per the spec, if the result is a ValueExpression, call setValue().
             if (valueExpression != null)
             {
-                valueExpression.setValue(_elContext, value);
+                valueExpression.setValue(FacesContext.getCurrentInstance().getELContext(), value);
 
                 return null;
             }

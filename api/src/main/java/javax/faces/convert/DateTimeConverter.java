@@ -89,8 +89,14 @@ public class DateTimeConverter
     // METHODS
     public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value)
     {
-        if (facesContext == null) throw new NullPointerException("facesContext");
-        if (uiComponent == null) throw new NullPointerException("uiComponent");
+        if (facesContext == null)
+        {
+            throw new NullPointerException("facesContext");
+        }
+        if (uiComponent == null)
+        {
+            throw new NullPointerException("uiComponent");
+        }
 
         if (value != null)
         {
@@ -100,7 +106,9 @@ public class DateTimeConverter
                 DateFormat format = getDateFormat();
                 TimeZone tz = getTimeZone();
                 if( tz != null )
-                    format.setTimeZone( tz );
+                {
+                    format.setTimeZone(tz);
+                }
                 try
                 {
                     return format.parse(value);
@@ -108,16 +116,25 @@ public class DateTimeConverter
                 catch (ParseException e)
                 {
                     String type = getType();
-                    Object[] args = new Object[]{value,format.format(new Date()),_MessageUtils.getLabel(facesContext, uiComponent)};
+                    Object[] args = new Object[]{value,
+                            format.format(new Date()),_MessageUtils.getLabel(facesContext, uiComponent)};
                     
                     if(type.equals(TYPE_DATE))
-                        throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,DATE_ID,args));
+                    {
+                        throw new ConverterException(_MessageUtils.getErrorMessage(facesContext, DATE_ID, args));
+                    }
                     else if (type.equals(TYPE_TIME))
-                        throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,TIME_ID,args));
+                    {
+                        throw new ConverterException(_MessageUtils.getErrorMessage(facesContext, TIME_ID, args));
+                    }
                     else if (type.equals(TYPE_BOTH))
-                        throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,DATETIME_ID,args));
+                    {
+                        throw new ConverterException(_MessageUtils.getErrorMessage(facesContext, DATETIME_ID, args));
+                    }
                     else
+                    {
                         throw new ConverterException("invalid type '" + _type + "'");
+                    }
                 }
             }
         }
@@ -126,8 +143,14 @@ public class DateTimeConverter
 
     public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value)
     {
-        if (facesContext == null) throw new NullPointerException("facesContext");
-        if (uiComponent == null) throw new NullPointerException("uiComponent");
+        if (facesContext == null)
+        {
+            throw new NullPointerException("facesContext");
+        }
+        if (uiComponent == null)
+        {
+            throw new NullPointerException("uiComponent");
+        }
 
         if (value == null)
         {
@@ -150,7 +173,8 @@ public class DateTimeConverter
         }
         catch (Exception e)
         {
-            throw new ConverterException(_MessageUtils.getErrorMessage(facesContext, STRING_ID, new Object[]{value,_MessageUtils.getLabel(facesContext, uiComponent)}),e);
+            throw new ConverterException(_MessageUtils.getErrorMessage(facesContext, STRING_ID,
+                    new Object[]{value,_MessageUtils.getLabel(facesContext, uiComponent)}),e);
         }
     }
 
@@ -277,7 +301,10 @@ public class DateTimeConverter
     @JSFProperty
     public Locale getLocale()
     {
-        if (_locale != null) return _locale;
+        if (_locale != null)
+        {
+            return _locale;
+        }
         FacesContext context = FacesContext.getCurrentInstance();
         return context.getViewRoot().getLocale();
     }

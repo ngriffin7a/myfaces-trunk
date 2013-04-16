@@ -22,13 +22,14 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.security.AccessController;
+import java.security.PrivilegedExceptionAction;
+import java.security.PrivilegedActionException;
 
 import javax.el.ELException;
 import javax.faces.FacesException;
-import javax.faces.context.FacesContext;
 import javax.faces.view.Location;
 import javax.faces.view.facelets.FaceletException;
 import javax.faces.view.facelets.FaceletHandler;
@@ -39,9 +40,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.myfaces.config.RuntimeConfig;
 import org.apache.myfaces.config.element.FaceletsProcessing;
-import org.apache.myfaces.shared_impl.util.ClassUtils;
+import org.apache.myfaces.shared.util.ClassUtils;
 import org.apache.myfaces.view.facelets.tag.TagAttributeImpl;
 import org.apache.myfaces.view.facelets.tag.TagAttributesImpl;
 import org.apache.myfaces.view.facelets.tag.composite.CompositeLibrary;
@@ -63,12 +63,12 @@ import org.xml.sax.helpers.DefaultHandler;
  * @see org.apache.myfaces.view.facelets.compiler.Compiler
  * 
  * @author Jacob Hookom
- * @version $Id: SAXCompiler.java,v 1.14 2008/07/13 19:01:33 rlubke Exp $
+ * @version $Id$
  */
 public final class SAXCompiler extends Compiler
 {
 
-    private final static Pattern XmlDeclaration = Pattern
+    private final static Pattern XML_DECLARATION = Pattern
             .compile("^<\\?xml.+?version=['\"](.+?)['\"](.+?encoding=['\"]((.+?))['\"])?.*?\\?>");
 
     private static class CompilationHandler extends DefaultHandler implements LexicalHandler
@@ -83,6 +83,7 @@ public final class SAXCompiler extends Compiler
         private final CompilationManager unit;
         
         private boolean consumingCDATA = false;
+        private boolean swallowCDATAContent = false;
 
         public CompilationHandler(CompilationManager unit, String alias)
         {
@@ -92,7 +93,7 @@ public final class SAXCompiler extends Compiler
 
         public void characters(char[] ch, int start, int length) throws SAXException
         {
-            if (this.inDocument && !consumingCDATA)
+            if (this.inDocument && (!consumingCDATA || (consumingCDATA && !swallowCDATAContent)))
             {
                 this.unit.writeText(new String(ch, start, length));
             }
@@ -134,6 +135,7 @@ public final class SAXCompiler extends Compiler
                 else
                 {
                     this.consumingCDATA = false;
+                    this.swallowCDATAContent = false;
                 }
             }
         }
@@ -209,6 +211,7 @@ public final class SAXCompiler extends Compiler
                 else
                 {
                     this.consumingCDATA = true;
+                    this.swallowCDATAContent = this.unit.getFaceletsProcessingInstructions().isSwallowCDataContent();
                 }
             }
         }
@@ -286,6 +289,7 @@ public final class SAXCompiler extends Compiler
         private boolean inMetadata = false;
         
         private boolean consumingCDATA = false;
+        private boolean swallowCDATAContent = false;
 
         public ViewMetadataHandler(CompilationManager unit, String alias)
         {
@@ -295,7 +299,7 @@ public final class SAXCompiler extends Compiler
 
         public void characters(char[] ch, int start, int length) throws SAXException
         {
-            if (this.inDocument && inMetadata && !consumingCDATA)
+            if (this.inDocument && inMetadata && (!consumingCDATA || (consumingCDATA && !swallowCDATAContent)))
             {
                 this.unit.writeText(new String(ch, start, length));
             }
@@ -337,6 +341,7 @@ public final class SAXCompiler extends Compiler
                 else
                 {
                     this.consumingCDATA = false;
+                    this.swallowCDATAContent = false;
                 }
             }
         }
@@ -357,7 +362,7 @@ public final class SAXCompiler extends Compiler
             {
                 this.unit.popTag();
             }
-            if (CoreLibrary.Namespace.equals(uri) && "metadata".equals(localName))
+            if (CoreLibrary.NAMESPACE.equals(uri) && "metadata".equals(localName))
             {
                 this.inMetadata=false;
             }            
@@ -419,6 +424,7 @@ public final class SAXCompiler extends Compiler
                 else
                 {
                     this.consumingCDATA = true;
+                    this.swallowCDATAContent = this.unit.getFaceletsProcessingInstructions().isSwallowCDataContent();
                 }
             }
         }
@@ -436,13 +442,13 @@ public final class SAXCompiler extends Compiler
 
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
         {
-            if (CoreLibrary.Namespace.equals(uri) && "metadata".equals(localName))
+            if (CoreLibrary.NAMESPACE.equals(uri) && "metadata".equals(localName))
             {
                 this.inMetadata=true;
             }
             if (inMetadata)
             {
-                this.unit.pushTag(new Tag(this.createLocation(), uri, localName, qName, this.createAttributes(attributes)));
+                this.unit.pushTag(new Tag(createLocation(), uri, localName, qName, createAttributes(attributes)));
             }
         }
 
@@ -457,11 +463,11 @@ public final class SAXCompiler extends Compiler
 
         public void processingInstruction(String target, String data) throws SAXException
         {
-            if (this.inDocument && inMetadata && !this.unit.getFaceletsProcessingInstructions().isConsumeProcessingInstructions())
+            if (inDocument && inMetadata && !unit.getFaceletsProcessingInstructions().isConsumeProcessingInstructions())
             {
                 StringBuffer sb = new StringBuffer(64);
                 sb.append("<?").append(target).append(' ').append(data).append("?>\n");
-                this.unit.writeInstruction(sb.toString());
+                unit.writeInstruction(sb.toString());
             }
         }        
     }
@@ -490,6 +496,7 @@ public final class SAXCompiler extends Compiler
         private boolean inCompositeImplementation = false;
 
         private boolean consumingCDATA = false;
+        private boolean swallowCDATAContent = false;
 
         public CompositeComponentMetadataHandler(CompilationManager unit, String alias)
         {
@@ -499,7 +506,8 @@ public final class SAXCompiler extends Compiler
 
         public void characters(char[] ch, int start, int length) throws SAXException
         {
-            if (this.inDocument && inCompositeInterface && !consumingCDATA)
+            if (this.inDocument && inCompositeInterface && 
+                    (!consumingCDATA || (consumingCDATA && !swallowCDATAContent)))
             {
                 this.unit.writeText(new String(ch, start, length));
             }
@@ -507,7 +515,8 @@ public final class SAXCompiler extends Compiler
 
         public void comment(char[] ch, int start, int length) throws SAXException
         {
-            if (this.inDocument && inCompositeInterface && !unit.getFaceletsProcessingInstructions().isConsumeXMLComments())
+            if (inDocument && inCompositeInterface && 
+                    !unit.getFaceletsProcessingInstructions().isConsumeXMLComments())
             {
                 this.unit.writeComment(new String(ch, start, length));
             }
@@ -541,6 +550,7 @@ public final class SAXCompiler extends Compiler
                 else
                 {
                     this.consumingCDATA = false;
+                    this.swallowCDATAContent = false;
                 }
             }
         }
@@ -641,6 +651,7 @@ public final class SAXCompiler extends Compiler
                 else
                 {
                     this.consumingCDATA = true;
+                    this.swallowCDATAContent = this.unit.getFaceletsProcessingInstructions().isSwallowCDataContent();
                 }
             }
         }
@@ -672,7 +683,7 @@ public final class SAXCompiler extends Compiler
             
             if (inCompositeInterface)
             {
-                this.unit.pushTag(new Tag(this.createLocation(), uri, localName, qName, this.createAttributes(attributes)));
+                this.unit.pushTag(new Tag(createLocation(), uri, localName, qName, createAttributes(attributes)));
             }
             else if (inCompositeImplementation && CompositeLibrary.NAMESPACE.equals(uri))
             {
@@ -681,7 +692,7 @@ public final class SAXCompiler extends Compiler
                     "insertChildren".equals(localName) ||
                     ImplementationHandler.NAME.equals(localName)   )
                 {
-                    this.unit.pushTag(new Tag(this.createLocation(), uri, localName, qName, this.createAttributes(attributes)));
+                    this.unit.pushTag(new Tag(createLocation(), uri, localName, qName, createAttributes(attributes)));
                 }
             }
         }
@@ -697,7 +708,8 @@ public final class SAXCompiler extends Compiler
 
         public void processingInstruction(String target, String data) throws SAXException
         {
-            if (this.inDocument && inCompositeInterface && !this.unit.getFaceletsProcessingInstructions().isConsumeProcessingInstructions())
+            if (inDocument && inCompositeInterface
+                && !unit.getFaceletsProcessingInstructions().isConsumeProcessingInstructions())
             {
                 StringBuffer sb = new StringBuffer(64);
                 sb.append("<?").append(target).append(' ').append(data).append("?>\n");
@@ -711,8 +723,8 @@ public final class SAXCompiler extends Compiler
         super();
     }
 
-    public FaceletHandler doCompile(URL src, String alias) throws IOException, FaceletException, ELException,
-            FacesException
+    public FaceletHandler doCompile(URL src, String alias)
+            throws IOException, FaceletException, ELException, FacesException
     {
         CompilationManager mngr = null;
         InputStream is = null;
@@ -759,9 +771,40 @@ public final class SAXCompiler extends Compiler
             is = new BufferedInputStream(src.openStream(), 1024);
             mngr = new CompilationManager(alias, this, getFaceletsProcessingInstructions(src, alias));
             encoding = getXmlDecl(is, mngr);
-            ViewMetadataHandler handler = new ViewMetadataHandler(mngr, alias);
-            SAXParser parser = this.createSAXParser(handler);
-            parser.parse(is, handler);
+            final ViewMetadataHandler handler = new ViewMetadataHandler(mngr, alias);
+            final SAXParser parser = this.createSAXParser(handler);
+            
+            if (System.getSecurityManager() != null)
+            {
+                try
+                {
+                    final InputStream finalInputStream = is;
+                    AccessController.doPrivileged(new PrivilegedExceptionAction() 
+                    {
+                        public Object run() throws SAXException, IOException 
+                        {
+                            parser.parse(finalInputStream, handler);
+                            return null; 
+                        }
+                    });
+                }
+                catch (PrivilegedActionException pae)
+                {
+                    Exception e = pae.getException();
+                    if(e instanceof SAXException)
+                    {
+                        throw new FaceletException("Error Parsing " + alias + ": " + e.getMessage(), e.getCause());
+                    } 
+                    else if(e instanceof IOException)
+                    {
+                        throw (IOException)e;
+                    }
+                }
+            }
+            else
+            {
+                parser.parse(is, handler);
+            }
         }
         catch (SAXException e)
         {
@@ -821,15 +864,17 @@ public final class SAXCompiler extends Compiler
     protected FaceletsProcessingInstructions getFaceletsProcessingInstructions(URL src, String alias)
     {
         String processAs = null;
+        boolean compressSpaces = false;
         for (FaceletsProcessing entry : getFaceletsProcessingConfigurations())
         {
             if (src.getPath().endsWith(entry.getFileExtension()))
             {
                 processAs = entry.getProcessAs();
+                compressSpaces = Boolean.valueOf(entry.getOamCompressSpaces());
                 break;
             }
         }
-        return FaceletsProcessingInstructions.getProcessingInstructions(processAs);
+        return FaceletsProcessingInstructions.getProcessingInstructions(processAs, compressSpaces);
     }
 
     protected static final String writeXmlDecl(InputStream is, CompilationManager mngr) throws IOException
@@ -842,7 +887,7 @@ public final class SAXCompiler extends Compiler
             if (is.read(b) > 0)
             {
                 String r = new String(b);
-                Matcher m = XmlDeclaration.matcher(r);
+                Matcher m = XML_DECLARATION.matcher(r);
                 if (m.find())
                 {
                     if (!mngr.getFaceletsProcessingInstructions().isConsumeXmlDeclaration())
@@ -873,7 +918,7 @@ public final class SAXCompiler extends Compiler
             if (is.read(b) > 0)
             {
                 String r = new String(b);
-                Matcher m = XmlDeclaration.matcher(r);
+                Matcher m = XML_DECLARATION.matcher(r);
                 if (m.find())
                 {
                     //mngr.writeInstruction(m.group(0) + "\n");

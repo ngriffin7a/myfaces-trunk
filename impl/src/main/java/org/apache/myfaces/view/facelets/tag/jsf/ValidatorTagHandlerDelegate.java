@@ -23,10 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.el.ValueExpression;
+import javax.faces.FacesWrapper;
 import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.validator.BeanValidator;
 import javax.faces.validator.Validator;
 import javax.faces.view.EditableValueHolderAttachedObjectHandler;
 import javax.faces.view.facelets.ComponentHandler;
@@ -37,7 +37,7 @@ import javax.faces.view.facelets.TagException;
 import javax.faces.view.facelets.TagHandlerDelegate;
 import javax.faces.view.facelets.ValidatorHandler;
 
-import org.apache.myfaces.shared_impl.renderkit.JSFAttr;
+import org.apache.myfaces.shared.renderkit.JSFAttr;
 import org.apache.myfaces.view.facelets.FaceletCompositionContext;
 import org.apache.myfaces.view.facelets.compiler.FaceletsCompilerUtils;
 import org.apache.myfaces.view.facelets.tag.MetaRulesetImpl;
@@ -53,7 +53,8 @@ import org.apache.myfaces.view.facelets.tag.MetaRulesetImpl;
  *
  * @since 2.0
  */
-public class ValidatorTagHandlerDelegate extends TagHandlerDelegate implements EditableValueHolderAttachedObjectHandler
+public class ValidatorTagHandlerDelegate extends TagHandlerDelegate 
+    implements EditableValueHolderAttachedObjectHandler, FacesWrapper<ValidatorHandler>
 {
     
     /**
@@ -61,7 +62,8 @@ public class ValidatorTagHandlerDelegate extends TagHandlerDelegate implements E
      * its validatorId will be added to the exclusion list stored under
      * this key on the parent UIComponent.
      */
-    public final static String VALIDATOR_ID_EXCLUSION_LIST_KEY = "org.apache.myfaces.validator.VALIDATOR_ID_EXCLUSION_LIST";
+    public final static String VALIDATOR_ID_EXCLUSION_LIST_KEY
+            = "org.apache.myfaces.validator.VALIDATOR_ID_EXCLUSION_LIST";
     
     private ValidatorHandler _delegate;
     
@@ -87,12 +89,6 @@ public class ValidatorTagHandlerDelegate extends TagHandlerDelegate implements E
     @Override
     public void apply(FaceletContext ctx, UIComponent parent) throws IOException
     {
-        // Apply only if we are creating a new component
-        if (!ComponentHandler.isNew(parent))
-        {
-            return;
-        }
-
         // we need methods from AbstractFaceletContext
         FaceletCompositionContext mctx = FaceletCompositionContext.getCurrentInstance(ctx);
 
@@ -114,45 +110,69 @@ public class ValidatorTagHandlerDelegate extends TagHandlerDelegate implements E
             // So I use the same way as f:ajax for this problem. -=Jakob Korherr=-
             
             String validatorId = _delegate.getValidatorConfig().getValidatorId();
-            
+            /*
             boolean disabled = _delegate.isDisabled(ctx);
             if (disabled)
             {
                 // the validator is disabled --> add its id to the exclusion stack
                 boolean validatorIdAvailable = validatorId != null && !"".equals(validatorId);
-                if (validatorIdAvailable)
+                try
                 {
-                    mctx.pushExcludedValidatorIdToStack(validatorId);
+                    if (validatorIdAvailable)
+                    {
+                        mctx.pushExcludedValidatorIdToStack(validatorId);
+                    }
+                    _delegate.getValidatorConfig().getNextHandler().apply(ctx, parent);
                 }
-                _delegate.getValidatorConfig().getNextHandler().apply(ctx, parent);
-                if (validatorIdAvailable)
+                finally
                 {
-                    mctx.popExcludedValidatorIdToStack();
+                    if (validatorIdAvailable)
+                    {
+                        mctx.popExcludedValidatorIdToStack();
+                    }
                 }
             }
             else
-            {
+            {*/
                 // the validator is enabled 
                 // --> add the validation groups and the validatorId to the stack
-                String groups = getValidationGroups(ctx);
+                //String groups = getValidationGroups(ctx);
                 // spec: don't save the validation groups string if it is null or empty string
-                boolean groupsAvailable = groups != null 
-                        && !groups.matches(BeanValidator.EMPTY_VALIDATION_GROUPS_PATTERN);
-                if (groupsAvailable)
-                {
-                    mctx.pushValidationGroupsToStack(groups);
-                }
-                mctx.pushEnclosingValidatorIdToStack(validatorId);
-                _delegate.getValidatorConfig().getNextHandler().apply(ctx, parent);
-                mctx.popEnclosingValidatorIdToStack();
-                if (groupsAvailable)
-                {
-                    mctx.popValidationGroupsToStack();
-                }
-            }
+                //boolean groupsAvailable = groups != null 
+                        //&& !groups.matches(BeanValidator.EMPTY_VALIDATION_GROUPS_PATTERN);
+                //try
+                //{
+                    //if (groupsAvailable)
+                    //{
+                    //    mctx.pushValidationGroupsToStack(groups);
+                    //}
+                    try
+                    {
+                        mctx.pushEnclosingValidatorIdToStack(validatorId, this);
+                        _delegate.applyNextHandler(ctx, parent);
+                    }
+                    finally
+                    {
+                        mctx.popEnclosingValidatorIdToStack();
+                    }
+                //}
+                //finally
+                //{
+                    //if (groupsAvailable)
+                    //{
+                        //mctx.popValidationGroupsToStack();
+                    //}
+                //}
+            /*}*/
         }
         else
         {
+            // Apply only if we are creating a new component
+            if (!ComponentHandler.isNew(parent))
+            {
+                return;
+            }
+
             // the tag is a leave --> attach validator to parent
             if (parent instanceof EditableValueHolder)
             {
@@ -169,7 +189,8 @@ public class ValidatorTagHandlerDelegate extends TagHandlerDelegate implements E
             }
             else
             {
-                throw new TagException(_delegate.getTag(), "Parent not composite component or an instance of EditableValueHolder: " + parent);
+                throw new TagException(_delegate.getTag(),
+                        "Parent not composite component or an instance of EditableValueHolder: " + parent);
             }
         }
     }
@@ -286,6 +307,11 @@ public class ValidatorTagHandlerDelegate extends TagHandlerDelegate implements E
         {
             return attribute.getValue(ctx);
         }
+    }
+
+    public ValidatorHandler getWrapped()
+    {
+        return _delegate;
     }
 
 }

@@ -40,11 +40,17 @@ public class PhaseEvent extends EventObject
     {
         super(lifecycle);
         if (facesContext == null)
+        {
             throw new NullPointerException("facesContext");
+        }
         if (phaseId == null)
+        {
             throw new NullPointerException("phaseId");
+        }
         if (lifecycle == null)
+        {
             throw new NullPointerException("lifecycle");
+        }
 
         _facesContext = facesContext;
         _phaseId = phaseId;
@@ -64,11 +70,11 @@ public class PhaseEvent extends EventObject
     @Override
     public int hashCode()
     {
-        final int PRIME = 31;
+        int prime = 31;
         int result = 1;
-        result = PRIME * result + ((source == null) ? 0 : source.hashCode());
-        result = PRIME * result + ((_facesContext == null) ? 0 : _facesContext.hashCode());
-        result = PRIME * result + ((_phaseId == null) ? 0 : _phaseId.hashCode());
+        result = prime * result + ((source == null) ? 0 : source.hashCode());
+        result = prime * result + ((_facesContext == null) ? 0 : _facesContext.hashCode());
+        result = prime * result + ((_phaseId == null) ? 0 : _phaseId.hashCode());
         return result;
     }
 
@@ -76,33 +82,51 @@ public class PhaseEvent extends EventObject
     public boolean equals(Object obj)
     {
         if (this == obj)
+        {
             return true;
+        }
         if (obj == null)
+        {
             return false;
+        }
         if (getClass() != obj.getClass())
+        {
             return false;
-        final PhaseEvent other = (PhaseEvent) obj;
+        }
+        PhaseEvent other = (PhaseEvent) obj;
         if (source == null)
         {
             if (other.source != null)
+            {
                 return false;
+            }
         }
         else if (!source.equals(other.source))
+        {
             return false;
+        }
         if (_facesContext == null)
         {
             if (other._facesContext != null)
+            {
                 return false;
+            }
         }
         else if (!_facesContext.equals(other._facesContext))
+        {
             return false;
+        }
         if (_phaseId == null)
         {
             if (other._phaseId != null)
+            {
                 return false;
+            }
         }
         else if (!_phaseId.equals(other._phaseId))
+        {
             return false;
+        }
         return true;
     }
 

@@ -20,7 +20,6 @@
 package org.apache.myfaces.lifecycle;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ExceptionQueuedEvent;
@@ -61,11 +60,13 @@ class PhaseListenerManager
         return (listenerPhaseId == PhaseId.ANY_PHASE.getOrdinal() || listenerPhaseId == phaseId.getOrdinal());
     }
 
-    boolean informPhaseListenersBefore(PhaseId phaseId)
+    void informPhaseListenersBefore(PhaseId phaseId)
     {
         boolean[] beforePhaseSuccess = new boolean[phaseListeners.length];
         listenerSuccessMap.put(phaseId, beforePhaseSuccess);
-        
+
+        PhaseEvent event = new PhaseEvent(facesContext, phaseId, lifecycle);
+
         for (int i = 0; i < phaseListeners.length; i++)
         {
             PhaseListener phaseListener = phaseListeners[i];
@@ -73,7 +74,7 @@ class PhaseListenerManager
             {
                 try
                 {
-                    phaseListener.beforePhase(new PhaseEvent(facesContext, phaseId, lifecycle));
+                    phaseListener.beforePhase(event);
                     beforePhaseSuccess[i] = true;
                 }
                 catch (Throwable e)
@@ -84,31 +85,36 @@ class PhaseListenerManager
                     
                     publishException (e, phaseId, ExceptionQueuedEventContext.IN_BEFORE_PHASE_KEY);
                     
-                    return false;   //if this is the render phase, do not render so we can go to the error page
+                    return;
                 }
             }
         }
-        
-        if( facesContext.getExceptionHandler().getUnhandledExceptionQueuedEvents().iterator().hasNext())
-        {
-            return false;   //an exception was queued, do not render so we can go to the error page 
-        }
-        
-        return true; //if this is the render phase, render the response
     }
 
     void informPhaseListenersAfter(PhaseId phaseId)
     {
         boolean[] beforePhaseSuccess = listenerSuccessMap.get(phaseId);
+        
+        if (beforePhaseSuccess == null)
+        {
+            // informPhaseListenersBefore method was not called : maybe an exception in LifecycleImpl.executePhase  
+            return;
+        }
+
+        PhaseEvent event = null;
 
         for (int i = phaseListeners.length - 1; i >= 0; i--)
         {
             PhaseListener phaseListener = phaseListeners[i];
             if (isListenerForThisPhase(phaseListener, phaseId) && beforePhaseSuccess[i])
             {
+                if (event == null)
+                {
+                    event = new PhaseEvent(facesContext, phaseId, lifecycle);
+                }
                 try
                 {
-                    phaseListener.afterPhase(new PhaseEvent(facesContext, phaseId, lifecycle));
+                    phaseListener.afterPhase(event);
                 }
                 catch (Throwable e)
                 {

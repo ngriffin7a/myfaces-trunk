@@ -18,6 +18,11 @@
  */
 package org.apache.myfaces.view.facelets.el;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 import javax.el.ELContext;
 import javax.el.MethodExpression;
 import javax.el.MethodInfo;
@@ -34,12 +39,17 @@ import javax.faces.context.FacesContext;
  * @author Jakob Korherr (latest modification by $Author$)
  * @version $Revision$ $Date$
  */
-public class ValueExpressionMethodExpression extends MethodExpression implements FacesWrapper<ValueExpression>
+public class ValueExpressionMethodExpression extends MethodExpression 
+    implements FacesWrapper<ValueExpression>, Externalizable
 {
     
     private static final long serialVersionUID = -2847633717581167765L;
     
     private ValueExpression valueExpression;
+    
+    public ValueExpressionMethodExpression()
+    {
+    }
     
     public ValueExpressionMethodExpression(ValueExpression valueExpression)
     {
@@ -49,37 +59,73 @@ public class ValueExpressionMethodExpression extends MethodExpression implements
     @Override
     public MethodInfo getMethodInfo(ELContext context)
     {
-        return getMethodExpression(context).getMethodInfo(context);
+        MethodExpression me = getMethodExpression(context);
+        if (me != null)
+        {
+            return me.getMethodInfo(context);
+        }
+        return null;
     }
 
     @Override
     public Object invoke(ELContext context, Object[] params)
     {
-        return getMethodExpression(context).invoke(context, params);
+        MethodExpression me = getMethodExpression(context);
+        if (me != null)
+        {        
+            return me.invoke(context, params);
+        }
+        return null;
     }
 
     @Override
     public boolean equals(Object obj)
     {
-        return getMethodExpression().equals(obj);
+        MethodExpression me = getMethodExpression();
+        if (me != null)
+        {        
+            return me.equals(obj);
+        }
+        if (!(obj instanceof ValueExpressionMethodExpression))
+        {
+            return false;
+        }
+        ValueExpressionMethodExpression other = (ValueExpressionMethodExpression) obj;
+        if ((this.valueExpression == null && other.valueExpression != null) || 
+             (this.valueExpression != null && !this.valueExpression.equals(other.valueExpression)))
+        {
+            return false;
+        }
+        return true;
     }
 
     @Override
     public String getExpressionString()
     {
-        return getMethodExpression().getExpressionString();
+        //getMethodExpression().getExpressionString()
+        return valueExpression.getExpressionString();
     }
 
     @Override
     public int hashCode()
     {
-        return getMethodExpression().hashCode();
+        MethodExpression me = getMethodExpression();
+        if (me != null)
+        {        
+            return me.hashCode();
+        }
+        return valueExpression.hashCode();
     }
 
     @Override
     public boolean isLiteralText()
     {
-        return getMethodExpression().isLiteralText();
+        MethodExpression me = getMethodExpression();
+        if (me != null)
+        {
+            return me.isLiteralText();
+        }
+        return valueExpression.isLiteralText();
     }
     
     private MethodExpression getMethodExpression()
@@ -89,11 +135,36 @@ public class ValueExpressionMethodExpression extends MethodExpression implements
     
     private MethodExpression getMethodExpression(ELContext context)
     {
-        return (MethodExpression) valueExpression.getValue(context);
+        Object meOrVe = valueExpression.getValue(context);
+        if (meOrVe instanceof MethodExpression)
+        {
+            return (MethodExpression) meOrVe;
+        }
+        else if (meOrVe instanceof ValueExpression)
+        {
+            while (meOrVe != null && meOrVe instanceof ValueExpression)
+            {
+                meOrVe = ((ValueExpression)meOrVe).getValue(context);
+            }
+            return (MethodExpression) meOrVe;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public ValueExpression getWrapped()
     {
         return valueExpression;
+    }
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
+    {
+        this.valueExpression = (ValueExpression) in.readObject();
+    }
+
+    public void writeExternal(ObjectOutput out) throws IOException
+    {
+        out.writeObject(this.valueExpression);
     }
 }

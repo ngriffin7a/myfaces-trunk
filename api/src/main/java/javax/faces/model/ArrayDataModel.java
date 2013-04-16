@@ -39,7 +39,9 @@ public class ArrayDataModel<E> extends DataModel<E>
     public ArrayDataModel(E[] array)
     {
         if (array == null)
+        {
             throw new NullPointerException("array");
+        }
         setWrappedData(array);
     }
 
@@ -110,9 +112,17 @@ public class ArrayDataModel<E> extends DataModel<E>
     @Override
     public void setWrappedData(Object data)
     {
-        _data = (E[])data;
-        int rowIndex = _data != null ? 0 : -1;
-        setRowIndex(rowIndex);
+        if (data == null)
+        {
+            setRowIndex(-1);
+            _data = null;
+        }
+        else
+        {
+            _data = (E[])data;
+            _rowIndex = -1;
+            setRowIndex(0);
+        }
     }
 
 }

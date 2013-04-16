@@ -18,10 +18,19 @@
  */
 package javax.faces.validator;
 
-import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFJspProperty;
-import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
-import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFValidator;
-import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
+import java.beans.FeatureDescriptor;
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.el.ELContext;
 import javax.el.ELResolver;
@@ -34,25 +43,17 @@ import javax.faces.component.PartialStateHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.el.CompositeComponentExpressionHolder;
-import javax.servlet.ServletContext;
 import javax.validation.ConstraintViolation;
 import javax.validation.MessageInterpolator;
 import javax.validation.Validation;
 import javax.validation.ValidatorFactory;
 import javax.validation.groups.Default;
 import javax.validation.metadata.BeanDescriptor;
-import java.beans.FeatureDescriptor;
-import java.security.AccessController;
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFJspProperty;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFValidator;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
 
 /**
  * <p>
@@ -92,8 +93,9 @@ public class BeanValidator implements Validator, PartialStateHolder
      * If this init parameter is present, no Bean Validators should be added to an UIInput by default.
      * Explicitly adding a BeanValidator to an UIInput is possible though.
      */
-    @JSFWebConfigParam(defaultValue="true", expectedValues="true, false", since="2.0")
-    public static final String DISABLE_DEFAULT_BEAN_VALIDATOR_PARAM_NAME = "javax.faces.validator.DISABLE_DEFAULT_BEAN_VALIDATOR";
+    @JSFWebConfigParam(defaultValue="true", expectedValues="true, false", since="2.0", group="validation")
+    public static final String DISABLE_DEFAULT_BEAN_VALIDATOR_PARAM_NAME
+            = "javax.faces.validator.DISABLE_DEFAULT_BEAN_VALIDATOR";
 
     /**
      * The key in the ServletContext where the Bean Validation Factory can be found.
@@ -114,6 +116,10 @@ public class BeanValidator implements Validator, PartialStateHolder
      * Currently, a string containing only whitespace is classified as empty.
      */
     public static final String EMPTY_VALIDATION_GROUPS_PATTERN = "^[\\W,]*$";
+    
+    private static final Class<?>[] DEFAULT_VALIDATION_GROUPS_ARRAY = new Class<?>[] { Default.class };
+
+    private static final String DEFAULT_VALIDATION_GROUP_NAME = "javax.validation.groups.Default";
 
     private String validationGroups;
 
@@ -126,10 +132,17 @@ public class BeanValidator implements Validator, PartialStateHolder
     /**
      * {@inheritDoc}
      */
-    public void validate(final FacesContext context, final UIComponent component, final Object value) throws ValidatorException
+    public void validate(final FacesContext context, final UIComponent component, final Object value)
+            throws ValidatorException
     {
-        if (context == null) throw new NullPointerException("context");
-        if (component == null) throw new NullPointerException("component");
+        if (context == null)
+        {
+            throw new NullPointerException("context");
+        }
+        if (component == null)
+        {
+            throw new NullPointerException("component");
+        }
 
         ValueExpression valueExpression = component.getValueExpression("value");
         if (valueExpression == null)
@@ -140,18 +153,18 @@ public class BeanValidator implements Validator, PartialStateHolder
         }
 
         // Obtain a reference to the to-be-validated object and the property name.
-        final _ValueReferenceWrapper reference = getValueReference(valueExpression, context);
+        _ValueReferenceWrapper reference = getValueReference(valueExpression, context);
         if (reference == null)
         {
             return;
         }
-        final Object base = reference.getBase();
+        Object base = reference.getBase();
         if (base == null)
         {
             return;
         }
         
-        final Class<?> valueBaseClass = base.getClass();
+        Class<?> valueBaseClass = base.getClass();
         if (valueBaseClass == null)
         {
             return;
@@ -165,38 +178,38 @@ public class BeanValidator implements Validator, PartialStateHolder
             // can exit bean validation here
             return;
         }
-        final String valueProperty = (String) referenceProperty;
+        String valueProperty = (String) referenceProperty;
 
         // Initialize Bean Validation.
-        final ValidatorFactory validatorFactory = createValidatorFactory(context);
-        final javax.validation.Validator validator = createValidator(validatorFactory);
-        final BeanDescriptor beanDescriptor = validator.getConstraintsForClass(valueBaseClass);
+        ValidatorFactory validatorFactory = createValidatorFactory(context);
+        javax.validation.Validator validator = createValidator(validatorFactory, context);
+        BeanDescriptor beanDescriptor = validator.getConstraintsForClass(valueBaseClass);
         if (!beanDescriptor.isBeanConstrained())
         {
             return;
         }
         
         // Note that validationGroupsArray was initialized when createValidator was called
-        final Class[] validationGroupsArray = this.validationGroupsArray;
+        Class[] validationGroupsArray = this.validationGroupsArray;
 
         // Delegate to Bean Validation.
-        final Set constraintViolations = validator.validateValue(valueBaseClass, valueProperty, value, validationGroupsArray);
+        Set constraintViolations = validator.validateValue(valueBaseClass, valueProperty, value, validationGroupsArray);
         if (!constraintViolations.isEmpty())
         {
-            final Set<FacesMessage> messages = new LinkedHashSet<FacesMessage>(constraintViolations.size());
+            Set<FacesMessage> messages = new LinkedHashSet<FacesMessage>(constraintViolations.size());
             for (Object violation: constraintViolations)
             {
-                final ConstraintViolation constraintViolation = (ConstraintViolation) violation;
-                final String message = constraintViolation.getMessage();
-                final Object[] args = new Object[]{ message, _MessageUtils.getLabel(context, component) };
-                final FacesMessage msg = _MessageUtils.getErrorMessage(context, MESSAGE_ID, args);
+                ConstraintViolation constraintViolation = (ConstraintViolation) violation;
+                String message = constraintViolation.getMessage();
+                Object[] args = new Object[]{ message, _MessageUtils.getLabel(context, component) };
+                FacesMessage msg = _MessageUtils.getErrorMessage(context, MESSAGE_ID, args);
                 messages.add(msg);
             }
             throw new ValidatorException(messages);
         }
     }
 
-    private javax.validation.Validator createValidator(final ValidatorFactory validatorFactory)
+    private javax.validation.Validator createValidator(final ValidatorFactory validatorFactory, FacesContext context)
     {
         // Set default validation group when setValidationGroups has not been called.
         // The null check is there to prevent it from happening twice.
@@ -207,7 +220,8 @@ public class BeanValidator implements Validator, PartialStateHolder
 
         return validatorFactory //
                 .usingContext() //
-                .messageInterpolator(_FacesMessageInterpolatorHolder.get(validatorFactory)) //
+                .messageInterpolator(new FacesMessageInterpolator(
+                        validatorFactory.getMessageInterpolator(), context)) //
                 .getValidator();
 
     }
@@ -225,13 +239,13 @@ public class BeanValidator implements Validator, PartialStateHolder
     private _ValueReferenceWrapper getValueReference(
             final ValueExpression valueExpression, final FacesContext context)
     {
-        final ELContext elCtx = context.getELContext();
+        ELContext elCtx = context.getELContext();
         if (_ExternalSpecifications.isUnifiedELAvailable())
         {
             // unified el 2.2 is available --> we can use ValueExpression.getValueReference()
             // we can't access ValueExpression.getValueReference() directly here, because
             // Class loading would fail in applications with el-api versions prior to 2.2
-            final _ValueReferenceWrapper wrapper = _BeanValidatorUELUtils.getUELValueReferenceWrapper(valueExpression, elCtx);
+            _ValueReferenceWrapper wrapper = _BeanValidatorUELUtils.getUELValueReferenceWrapper(valueExpression, elCtx);
             if (wrapper != null)
             {
                 if (wrapper.getProperty() == null)
@@ -270,23 +284,22 @@ public class BeanValidator implements Validator, PartialStateHolder
      * @throws FacesException if no ValidatorFactory can be obtained because: a) the
      * container is not a Servlet container or b) because Bean Validation is not available.
      */
-    private synchronized ValidatorFactory createValidatorFactory(FacesContext context)
+    private ValidatorFactory createValidatorFactory(FacesContext context)
     {
-        final Object ctx = context.getExternalContext().getContext();
-        if (ctx instanceof ServletContext)
+        Map<String, Object> applicationMap = context.getExternalContext().getApplicationMap();
+        Object attr = applicationMap.get(VALIDATOR_FACTORY_KEY);
+        if (attr instanceof ValidatorFactory)
         {
-            final ServletContext servletCtx = (ServletContext) ctx;
-            final Object attr = servletCtx.getAttribute(VALIDATOR_FACTORY_KEY);
-            if (attr != null)
-            {
-                return (ValidatorFactory) attr;
-            }
-            else
+            return (ValidatorFactory) attr;
+        }
+        else
+        {
+            synchronized (this)
             {
                 if (_ExternalSpecifications.isBeanValidationAvailable())
                 {
-                    final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-                    servletCtx.setAttribute(VALIDATOR_FACTORY_KEY, attr);
+                    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+                    applicationMap.put(VALIDATOR_FACTORY_KEY, factory);
                     return factory;
                 }
                 else
@@ -294,10 +307,6 @@ public class BeanValidator implements Validator, PartialStateHolder
                     throw new FacesException("Bean Validation is not present");
                 }
             }
-        }
-        else
-        {
-            throw new FacesException("Only Servlet environments are supported for Bean Validation");
         }
     }
 
@@ -309,12 +318,12 @@ public class BeanValidator implements Validator, PartialStateHolder
     {
         if (this.validationGroups == null || this.validationGroups.matches(EMPTY_VALIDATION_GROUPS_PATTERN))
         {
-            this.validationGroupsArray = new Class<?>[] { Default.class };
+            this.validationGroupsArray = DEFAULT_VALIDATION_GROUPS_ARRAY;
         }
         else
         {
-            final String[] classes = this.validationGroups.split(VALIDATION_GROUPS_DELIMITER);
-            final List<Class<?>> validationGroupsList = new ArrayList<Class<?>>(classes.length);
+            String[] classes = this.validationGroups.split(VALIDATION_GROUPS_DELIMITER);
+            List<Class<?>> validationGroupsList = new ArrayList<Class<?>>(classes.length);
 
             for (String clazz : classes)
             {
@@ -374,14 +383,38 @@ public class BeanValidator implements Validator, PartialStateHolder
     /** {@inheritDoc} */
     public Object saveState(final FacesContext context)
     {
-        return this.validationGroups;
+        if (!initialStateMarked())
+        {
+           //Full state saving.
+           return this.validationGroups;
+        }
+        else if (DEFAULT_VALIDATION_GROUP_NAME.equals(this.validationGroups))
+        {
+            // default validation groups can be saved as null.
+            return null;
+        }
+        else
+        {
+            // Save it fully. Remember that by MYFACES-2528
+            // validationGroups needs to be stored into the state
+            // because this value is often susceptible to use in "combo"
+            return this.validationGroups;
+        }
     }
 
     /** {@inheritDoc} */
     public void restoreState(final FacesContext context, final Object state)
     {
-        this.validationGroups = (String) state;
-
+        if (state != null)
+        {
+            this.validationGroups = (String) state;
+        }
+        else
+        {
+            // When the value is being validated, postSetValidationGroups() sets
+            // validationGroups to javax.validation.groups.Default. 
+            this.validationGroups = null;
+        }
         // Only the String is saved, recalculate the Class[] on state restoration.
         //postSetValidationGroups();
     }
@@ -404,6 +437,7 @@ public class BeanValidator implements Validator, PartialStateHolder
     public void setValidationGroups(final String validationGroups)
     {
         this.validationGroups = validationGroups;
+        this.clearInitialState();
         //postSetValidationGroups();
     }
 
@@ -448,54 +482,30 @@ public class BeanValidator implements Validator, PartialStateHolder
     {
         _initialStateMarked = true;
     }
-}
-
-/**
- * Holder class to prevent NoClassDefFoundError in environments without Bean Validation.
- *
- * This is needed, because holder classes are loaded lazily. This means that when it's not
- * used, it will not be loaded, parsed and initialized. The BeanValidator class is used always,
- * so the MessageInterpolator references need to be in this separate class.
- */
-final class _FacesMessageInterpolatorHolder
-{
-    // Needs to be volatile.
-    private static volatile FacesMessageInterpolator instance;
-
+    
     /**
-     * Helper method for initializing the FacesMessageInterpolator.
-     *
-     * It uses the "Single Check Idiom" as described in Joshua Bloch's Effective Java 2nd Edition.
-     *
-     * @param validatorFactory Used to obtain the MessageInterpolator.
-     * @return The instantiated MessageInterpolator for BeanValidator.
-     */
-    static MessageInterpolator get(final ValidatorFactory validatorFactory)
-    {
-        _FacesMessageInterpolatorHolder.FacesMessageInterpolator ret = instance;
-        if (ret == null)
-        {
-            final MessageInterpolator interpolator = validatorFactory.getMessageInterpolator();
-            instance = ret = new FacesMessageInterpolator(interpolator);
-        }
-        return ret;
-    }
-
-    /**
+     * Note: Before 2.1.5/2.0.11 there was another strategy for this point to minimize
+     * the instances used, but after checking this with a profiler, it is more expensive to
+     * call FacesContext.getCurrentInstance() than create this object for bean validation.
+     * 
      * Standard MessageInterpolator, as described in the JSR-314 spec.
+     * 
+     * @author Leonardo Uribe
      */
     private static class FacesMessageInterpolator implements MessageInterpolator
     {
+        private final FacesContext facesContext;
         private final MessageInterpolator interpolator;
 
-        FacesMessageInterpolator(final MessageInterpolator interpolator)
+        public FacesMessageInterpolator(final MessageInterpolator interpolator, final FacesContext facesContext)
         {
             this.interpolator = interpolator;
+            this.facesContext = facesContext;
         }
 
         public String interpolate(final String s, final Context context)
         {
-            final Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+            Locale locale = facesContext.getViewRoot().getLocale();
             return interpolator.interpolate(s, context, locale);
         }
 
@@ -513,7 +523,8 @@ final class _FacesMessageInterpolatorHolder
  */
 final class _ValueReferenceWrapper
 {
-    private final Object base, property;
+    private final Object base;
+    private final Object property;
 
     /**
      * Full constructor.
@@ -583,8 +594,8 @@ final class _ValueReferenceResolver extends ELResolver
      */
     public static _ValueReferenceWrapper resolve(ValueExpression valueExpression, final ELContext elCtx)
     {
-        final _ValueReferenceResolver resolver = new _ValueReferenceResolver(elCtx.getELResolver());
-        final ELContext elCtxDecorator = new _ELContextDecorator(elCtx, resolver);
+        _ValueReferenceResolver resolver = new _ValueReferenceResolver(elCtx.getELResolver());
+        ELContext elCtxDecorator = new _ELContextDecorator(elCtx, resolver);
         
         valueExpression.getValue(elCtxDecorator);
         
@@ -616,11 +627,30 @@ final class _ValueReferenceResolver extends ELResolver
     }
 
     // ############################ Standard delegating implementations ############################
-    public final Class<?> getType(final ELContext ctx, final Object base, final Object property){return resolver.getType(ctx, base, property);}
-    public final void setValue(final ELContext ctx, final Object base, final Object property, final Object value){resolver.setValue(ctx, base, property, value);}
-    public final boolean isReadOnly(final ELContext ctx, final Object base, final Object property){return resolver.isReadOnly(ctx, base, property);}
-    public final Iterator<FeatureDescriptor> getFeatureDescriptors(final ELContext ctx, final Object base){return resolver.getFeatureDescriptors(ctx, base);}
-    public final Class<?> getCommonPropertyType(final ELContext ctx, final Object base){return resolver.getCommonPropertyType(ctx, base);}
+    public final Class<?> getType(final ELContext ctx, final Object base, final Object property)
+    {
+        return resolver.getType(ctx, base, property);
+    }
+
+    public final void setValue(final ELContext ctx, final Object base, final Object property, final Object value)
+    {
+        resolver.setValue(ctx, base, property, value);
+    }
+
+    public final boolean isReadOnly(final ELContext ctx, final Object base, final Object property)
+    {
+        return resolver.isReadOnly(ctx, base, property);
+    }
+
+    public final Iterator<FeatureDescriptor> getFeatureDescriptors(final ELContext ctx, final Object base)
+    {
+        return resolver.getFeatureDescriptors(ctx, base);
+    }
+
+    public final Class<?> getCommonPropertyType(final ELContext ctx, final Object base)
+    {
+        return resolver.getCommonPropertyType(ctx, base);
+    }
 }
 
 /**
@@ -655,12 +685,43 @@ final class _ELContextDecorator extends ELContext
     }
 
     // ############################ Standard delegating implementations ############################
-    public final FunctionMapper getFunctionMapper(){return ctx.getFunctionMapper();}
-    public final VariableMapper getVariableMapper(){return ctx.getVariableMapper();}
-    public final void setPropertyResolved(final boolean resolved){ctx.setPropertyResolved(resolved);}
-    public final boolean isPropertyResolved(){return ctx.isPropertyResolved();}
-    public final void putContext(final Class key, Object contextObject){ctx.putContext(key, contextObject);}
-    public final Object getContext(final Class key){return ctx.getContext(key);}
-    public final Locale getLocale(){return ctx.getLocale();}
-    public final void setLocale(final Locale locale){ctx.setLocale(locale);}
+    public final FunctionMapper getFunctionMapper()
+    {
+        return ctx.getFunctionMapper();
+    }
+
+    public final VariableMapper getVariableMapper()
+    {
+        return ctx.getVariableMapper();
+    }
+
+    public final void setPropertyResolved(final boolean resolved)
+    {
+        ctx.setPropertyResolved(resolved);
+    }
+
+    public final boolean isPropertyResolved()
+    {
+        return ctx.isPropertyResolved();
+    }
+
+    public final void putContext(final Class key, Object contextObject)
+    {
+        ctx.putContext(key, contextObject);
+    }
+
+    public final Object getContext(final Class key)
+    {
+        return ctx.getContext(key);
+    }
+
+    public final Locale getLocale()
+    {
+        return ctx.getLocale();
+    }
+
+    public final void setLocale(final Locale locale)
+    {
+        ctx.setLocale(locale);
+    }
 }

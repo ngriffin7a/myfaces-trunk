@@ -22,6 +22,7 @@ import java.beans.BeanDescriptor;
 import java.beans.BeanInfo;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -58,6 +59,7 @@ import org.apache.myfaces.view.facelets.FaceletCompositionContext;
 import org.apache.myfaces.view.facelets.TemplateClient;
 import org.apache.myfaces.view.facelets.TemplateContext;
 import org.apache.myfaces.view.facelets.el.VariableMapperWrapper;
+import org.apache.myfaces.view.facelets.tag.ComponentContainerHandler;
 import org.apache.myfaces.view.facelets.tag.TagHandlerUtils;
 import org.apache.myfaces.view.facelets.tag.jsf.ActionSourceRule;
 import org.apache.myfaces.view.facelets.tag.jsf.ComponentBuilderHandler;
@@ -65,9 +67,6 @@ import org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport;
 import org.apache.myfaces.view.facelets.tag.jsf.EditableValueHolderRule;
 import org.apache.myfaces.view.facelets.tag.jsf.ValueHolderRule;
 import org.apache.myfaces.view.facelets.tag.jsf.core.AjaxHandler;
-import org.apache.myfaces.view.facelets.tag.ui.DecorateHandler;
-import org.apache.myfaces.view.facelets.tag.ui.IncludeHandler;
-import org.apache.myfaces.view.facelets.tag.ui.InsertHandler;
 
 /**
  * This handler is responsible for apply composite components. It
@@ -96,9 +95,11 @@ public class CompositeComponentResourceTagHandler extends ComponentHandler
     {
         super(config);
         _resource = resource;
-        _facetHandlers = TagHandlerUtils.findNextByType(nextHandler, javax.faces.view.facelets.FacetHandler.class, InsertFacetHandler.class);
-        _componentHandlers = TagHandlerUtils.findNextByType(nextHandler, javax.faces.view.facelets.ComponentHandler.class, 
-                InsertChildrenHandler.class, InsertHandler.class, DecorateHandler.class, IncludeHandler.class, TextHandler.class);
+        _facetHandlers = TagHandlerUtils.findNextByType(nextHandler, javax.faces.view.facelets.FacetHandler.class,
+                                                        InsertFacetHandler.class);
+        _componentHandlers = TagHandlerUtils.findNextByType(nextHandler,
+                javax.faces.view.facelets.ComponentHandler.class,
+                ComponentContainerHandler.class, TextHandler.class);
     }
 
     public UIComponent createComponent(FaceletContext ctx)
@@ -135,7 +136,8 @@ public class CompositeComponentResourceTagHandler extends ComponentHandler
                         
                         if (attrValue == null)
                         {
-                            throw new TagException(this.tag, "Attribute '" + propertyDescriptor.getName() + "' is required");
+                            throw new TagException(this.tag, "Attribute '" + propertyDescriptor.getName()
+                                                             + "' is required");
                         }
                     }
                 }
@@ -202,18 +204,21 @@ public class CompositeComponentResourceTagHandler extends ComponentHandler
         
         if (nextHandler instanceof javax.faces.view.facelets.CompositeFaceletHandler)
         {
-            for (FaceletHandler handler : ((javax.faces.view.facelets.CompositeFaceletHandler)nextHandler).getHandlers())
+            for (FaceletHandler handler :
+                    ((javax.faces.view.facelets.CompositeFaceletHandler)nextHandler).getHandlers())
             {
                 if (handler instanceof javax.faces.view.facelets.FacetHandler)
                 {
-                    if (insertFacetList == null || !insertFacetList.contains( ((javax.faces.view.facelets.FacetHandler)handler).getFacetName(ctx)))
+                    if (insertFacetList == null ||
+                        !insertFacetList.contains(((javax.faces.view.facelets.FacetHandler)handler).getFacetName(ctx)))
                     {
                         handler.apply(ctx, c);
                     }
                 }
                 else if (handler instanceof InsertFacetHandler)
                 {
-                    if (insertFacetList == null || !insertFacetList.contains( ((InsertFacetHandler)handler).getFacetName(ctx)))
+                    if (insertFacetList == null ||
+                        !insertFacetList.contains( ((InsertFacetHandler)handler).getFacetName(ctx)))
                     {
                         handler.apply(ctx, c);
                     }
@@ -221,10 +226,7 @@ public class CompositeComponentResourceTagHandler extends ComponentHandler
                 else if (insertChildrenUsed)
                 {
                     if (!(handler instanceof javax.faces.view.facelets.ComponentHandler ||
-                            handler instanceof InsertChildrenHandler ||
-                            handler instanceof InsertHandler ||
-                            handler instanceof DecorateHandler ||
-                            handler instanceof IncludeHandler ||
+                            handler instanceof ComponentContainerHandler ||
                             handler instanceof TextHandler))
                     {
                         handler.apply(ctx, c);
@@ -240,14 +242,16 @@ public class CompositeComponentResourceTagHandler extends ComponentHandler
         {
             if (nextHandler instanceof javax.faces.view.facelets.FacetHandler)
             {
-                if (insertFacetList == null || !insertFacetList.contains( ((javax.faces.view.facelets.FacetHandler)nextHandler).getFacetName(ctx)) )
+                if (insertFacetList == null ||
+                    !insertFacetList.contains(((javax.faces.view.facelets.FacetHandler)nextHandler).getFacetName(ctx)))
                 {
                     nextHandler.apply(ctx, c);
                 }
             }
             else if (nextHandler instanceof InsertFacetHandler)
             {
-                if (insertFacetList == null || !insertFacetList.contains( ((InsertFacetHandler)nextHandler).getFacetName(ctx)) )
+                if (insertFacetList == null ||
+                    !insertFacetList.contains( ((InsertFacetHandler)nextHandler).getFacetName(ctx)) )
                 {
                     nextHandler.apply(ctx, c);
                 }
@@ -255,11 +259,8 @@ public class CompositeComponentResourceTagHandler extends ComponentHandler
             else if (insertChildrenUsed)
             {
                 if (!(nextHandler instanceof javax.faces.view.facelets.ComponentHandler ||
-                        nextHandler instanceof InsertChildrenHandler ||
-                        nextHandler instanceof InsertHandler ||
-                        nextHandler instanceof DecorateHandler ||
-                        nextHandler instanceof IncludeHandler ||
-                        nextHandler instanceof TextHandler))
+                      nextHandler instanceof ComponentContainerHandler ||
+                      nextHandler instanceof TextHandler))
                 {
                     nextHandler.apply(ctx, c);
                 }
@@ -269,6 +270,41 @@ public class CompositeComponentResourceTagHandler extends ComponentHandler
                 nextHandler.apply(ctx, c);
             }
         }
+        
+        //Check for required facets
+        Map<String, PropertyDescriptor> facetPropertyDescriptorMap = (Map<String, PropertyDescriptor>)
+            beanDescriptor.getValue(UIComponent.FACETS_KEY);
+        
+        if (facetPropertyDescriptorMap != null)
+        {
+            List<String> facetsRequiredNotFound = null;
+            for (Map.Entry<String, PropertyDescriptor> entry : facetPropertyDescriptorMap.entrySet())
+            {
+                ValueExpression requiredExpr = (ValueExpression) entry.getValue().getValue("required");
+                if (requiredExpr != null)
+                {
+                    Boolean required = (Boolean) requiredExpr.getValue(ctx.getFacesContext().getELContext());
+                    if (Boolean.TRUE.equals(required))
+                    {
+                        initFacetHandlersMap(ctx);
+                        if (!_facetHandlersMap.containsKey(entry.getKey()))
+                        {
+                            if (facetsRequiredNotFound == null)
+                            {
+                                facetsRequiredNotFound = new ArrayList(facetPropertyDescriptorMap.size());
+                            }
+                            facetsRequiredNotFound.add(entry.getKey());
+                        }
+                        
+                    }
+                }
+            }
+            if (facetsRequiredNotFound != null && !facetsRequiredNotFound.isEmpty())
+            {
+                throw new TagException(getTag(), "The following facets are required by the component: "
+                                                 + facetsRequiredNotFound);
+            }
+        }
     }
     
     protected void applyCompositeComponentFacelet(FaceletContext faceletContext, UIComponent compositeComponentBase) 
@@ -276,11 +312,15 @@ public class CompositeComponentResourceTagHandler extends ComponentHandler
     {
         FaceletCompositionContext mctx = FaceletCompositionContext.getCurrentInstance(faceletContext);
         AbstractFaceletContext actx = (AbstractFaceletContext) faceletContext;
-        UIPanel compositeFacetPanel = (UIPanel) compositeComponentBase.getFacets().get(UIComponent.COMPOSITE_FACET_NAME);
+        UIPanel compositeFacetPanel
+                = (UIPanel) compositeComponentBase.getFacets().get(UIComponent.COMPOSITE_FACET_NAME);
         if (compositeFacetPanel == null)
         {
             compositeFacetPanel = (UIPanel)
-                faceletContext.getFacesContext().getApplication().createComponent(UIPanel.COMPONENT_TYPE);
+                faceletContext.getFacesContext().getApplication().createComponent(
+                    faceletContext.getFacesContext(), UIPanel.COMPONENT_TYPE, null);
+            compositeFacetPanel.getAttributes().put(ComponentSupport.COMPONENT_ADDED_BY_HANDLER_MARKER,
+                    Boolean.TRUE);
             compositeComponentBase.getFacets().put(UIComponent.COMPOSITE_FACET_NAME, compositeFacetPanel);
             
             // Set an id to the created facet component, to prevent id generation and make
@@ -294,7 +334,11 @@ public class CompositeComponentResourceTagHandler extends ComponentHandler
             {
                 // UIViewRoot implements UniqueIdVendor, so there is no need to cast to UIViewRoot
                 // and call createUniqueId()
-                String uid = uniqueIdVendor.createUniqueId(faceletContext.getFacesContext(),null);
+                String uid = uniqueIdVendor.createUniqueId(faceletContext.getFacesContext(),
+                        mctx.getSharedStringBuilder()
+                        .append(compositeComponentBase.getId())
+                        .append("__f_")
+                        .append("cc_facet").toString());
                 compositeFacetPanel.setId(uid);
             }            
         }
@@ -319,7 +363,21 @@ public class CompositeComponentResourceTagHandler extends ComponentHandler
         {
             faceletContext.setVariableMapper(new VariableMapperWrapper(orig));
             actx.pushCompositeComponentClient(this);
-            actx.applyCompositeComponent(compositeFacetPanel, _resource);
+            Resource resourceForCurrentView = faceletContext.getFacesContext().getApplication().
+                getResourceHandler().createResource(_resource.getResourceName(), _resource.getLibraryName());
+            if (resourceForCurrentView != null)
+            {
+                //Wrap it for serialization.
+                resourceForCurrentView = new CompositeResouceWrapper(resourceForCurrentView);
+            }
+            else
+            {
+                //If a resource cannot be resolved it means a default for the current 
+                //composite component does not exists.
+                throw new TagException(getTag(), "Composite Component " + getTag().getQName() 
+                        + " requires a default instance that can be found by the installed ResourceHandler.");
+            }
+            actx.applyCompositeComponent(compositeFacetPanel, resourceForCurrentView);
         }
         finally
         {
@@ -339,7 +397,7 @@ public class CompositeComponentResourceTagHandler extends ComponentHandler
             if (_mapper == null || !_lastType.equals(type))
             {
                 _lastType = type;
-                BeanInfo beanInfo = (BeanInfo)((UIComponent) component).getAttributes().get(UIComponent.BEANINFO_KEY);    
+                BeanInfo beanInfo = (BeanInfo)component.getAttributes().get(UIComponent.BEANINFO_KEY);
                 _mapper = createMetaRuleset(type , beanInfo).finish();
             }
             
@@ -354,29 +412,50 @@ public class CompositeComponentResourceTagHandler extends ComponentHandler
         m.ignore("binding").ignore("id");
 
         // add auto wiring for attributes
-        m.addRule(CompositeComponentRule.Instance);
+        m.addRule(CompositeComponentRule.INSTANCE);
         
         // add retarget method expression rules
-        m.addRule(RetargetMethodExpressionRule.Instance);
+        m.addRule(RetargetMethodExpressionRule.INSTANCE);
         
         if (ActionSource.class.isAssignableFrom(type))
         {
-            m.addRule(ActionSourceRule.Instance);
+            m.addRule(ActionSourceRule.INSTANCE);
         }
 
         if (ValueHolder.class.isAssignableFrom(type))
         {
-            m.addRule(ValueHolderRule.Instance);
+            m.addRule(ValueHolderRule.INSTANCE);
 
             if (EditableValueHolder.class.isAssignableFrom(type))
             {
                 m.ignore("submittedValue");
                 m.ignore("valid");
-                m.addRule(EditableValueHolderRule.Instance);
+                m.addRule(EditableValueHolderRule.INSTANCE);
             }
         }
         
         return m;
+    }
+    
+    private void initFacetHandlersMap(FaceletContext ctx)
+    {
+        if (_facetHandlersMap == null)
+        {
+            Map<String, FaceletHandler> map = new HashMap<String, FaceletHandler>();
+            
+            for (FaceletHandler handler : _facetHandlers)
+            {
+                if (handler instanceof javax.faces.view.facelets.FacetHandler )
+                {
+                    map.put( ((javax.faces.view.facelets.FacetHandler)handler).getFacetName(ctx), handler);
+                }
+                else if (handler instanceof InsertFacetHandler)
+                {
+                    map.put( ((InsertFacetHandler)handler).getFacetName(ctx), handler);
+                }
+            }
+            _facetHandlersMap = map;
+        }
     }
     
     public boolean apply(FaceletContext ctx, UIComponent parent, String name)
@@ -387,32 +466,25 @@ public class CompositeComponentResourceTagHandler extends ComponentHandler
             //1. Initialize map used to retrieve facets
             if (_facetHandlers == null || _facetHandlers.isEmpty())
             {
+                checkFacetRequired(ctx, parent, name);
                 return true;
             }
-            
-            if (_facetHandlersMap == null)
-            {
-                Map<String, FaceletHandler> map = new HashMap<String, FaceletHandler>();
-                
-                for (FaceletHandler handler : _facetHandlers)
-                {
-                    if (handler instanceof javax.faces.view.facelets.FacetHandler )
-                    {
-                        map.put( ((javax.faces.view.facelets.FacetHandler)handler).getFacetName(ctx), handler);
-                    }
-                    else if (handler instanceof InsertFacetHandler)
-                    {
-                        map.put( ((InsertFacetHandler)handler).getFacetName(ctx), handler);
-                    }
-                }
-                _facetHandlersMap = map;
-            }
+
+            initFacetHandlersMap(ctx);
 
             FaceletHandler handler = _facetHandlersMap.get(name);
 
             if (handler != null)
             {
                 AbstractFaceletContext actx = (AbstractFaceletContext) ctx;
+                // Pop the current composite component on stack, so #{cc} references
+                // can be resolved correctly, because they are relative to the page 
+                // that define it.
+                FaceletCompositionContext fcc = actx.getFaceletCompositionContext(); 
+                UIComponent innerCompositeComponent = fcc.getCompositeComponentFromStack(); 
+                fcc.popCompositeComponentToStack();
+                // Pop the template context, so ui:xx tags and nested composite component
+                // cases could work correctly 
                 TemplateContext itc = actx.popTemplateContext();
                 try
                 {
@@ -421,18 +493,28 @@ public class CompositeComponentResourceTagHandler extends ComponentHandler
                 finally
                 {
                     actx.pushTemplateContext(itc);
+                    fcc.pushCompositeComponentToStack(innerCompositeComponent);
                 }
                 return true;
                 
             }
             else
             {
+                checkFacetRequired(ctx, parent, name);
                 return true;
             }
         }
         else
         {
             AbstractFaceletContext actx = (AbstractFaceletContext) ctx;
+            // Pop the current composite component on stack, so #{cc} references
+            // can be resolved correctly, because they are relative to the page 
+            // that define it.
+            FaceletCompositionContext fcc = actx.getFaceletCompositionContext(); 
+            UIComponent innerCompositeComponent = fcc.getCompositeComponentFromStack(); 
+            fcc.popCompositeComponentToStack();
+            // Pop the template context, so ui:xx tags and nested composite component
+            // cases could work correctly 
             TemplateContext itc = actx.popTemplateContext();
             try
             {
@@ -444,8 +526,38 @@ public class CompositeComponentResourceTagHandler extends ComponentHandler
             finally
             {
                 actx.pushTemplateContext(itc);
+                fcc.pushCompositeComponentToStack(innerCompositeComponent);
             }
             return true;
+        }
+    }
+    
+    private void checkFacetRequired(FaceletContext ctx, UIComponent parent, String name)
+    {
+        AbstractFaceletContext actx = (AbstractFaceletContext) ctx;
+        FaceletCompositionContext fcc = actx.getFaceletCompositionContext(); 
+        UIComponent innerCompositeComponent = fcc.getCompositeComponentFromStack();
+        
+        CompositeComponentBeanInfo beanInfo = 
+            (CompositeComponentBeanInfo) innerCompositeComponent.getAttributes()
+            .get(UIComponent.BEANINFO_KEY);
+        
+        BeanDescriptor beanDescriptor = beanInfo.getBeanDescriptor();
+        
+        Map<String, PropertyDescriptor> insertFacetPropertyDescriptorMap = (Map<String, PropertyDescriptor>)
+            beanDescriptor.getValue(InsertFacetHandler.INSERT_FACET_KEYS);
+
+        if (insertFacetPropertyDescriptorMap != null && insertFacetPropertyDescriptorMap.containsKey(name))
+        {
+            ValueExpression requiredExpr
+                    = (ValueExpression) insertFacetPropertyDescriptorMap.get(name).getValue("required");
+            
+            if (requiredExpr != null &&
+                Boolean.TRUE.equals(requiredExpr.getValue(ctx.getFacesContext().getELContext())))
+            {
+                //Insert facet associated is required, but it was not applied.
+                throw new TagException(this.tag, "Cannot find facet with name '"+name+"' in composite component");
+            }
         }
     }
 }

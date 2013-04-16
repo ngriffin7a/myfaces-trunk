@@ -21,7 +21,7 @@ package org.apache.myfaces.view.facelets.compiler;
 import java.io.File;
 import java.net.URL;
 
-import org.apache.myfaces.shared_impl.config.MyfacesConfig;
+import org.apache.myfaces.shared.config.MyfacesConfig;
 import org.apache.myfaces.view.facelets.FaceletTestCase;
 import org.apache.myfaces.view.facelets.tag.TagLibrary;
 import org.junit.Assert;
@@ -54,7 +54,7 @@ public class TagLibraryTestCase extends FaceletTestCase
     {
         servletContext.addInitParameter(MyfacesConfig.INIT_PARAM_VALIDATE_XML, "true");
 
-        TagLibrary lib = TagLibraryConfig.create(_validLibUrl);
+        TagLibrary lib = TagLibraryConfig.create(facesContext, _validLibUrl);
         Assert.assertTrue(lib.containsNamespace("http://myfaces.apache.org/testlib"));
     }
 
@@ -63,7 +63,7 @@ public class TagLibraryTestCase extends FaceletTestCase
     {
         servletContext.addInitParameter(MyfacesConfig.INIT_PARAM_VALIDATE_XML, "false");
 
-        TagLibrary lib = TagLibraryConfig.create(_validLibUrl);
+        TagLibrary lib = TagLibraryConfig.create(facesContext, _validLibUrl);
         Assert.assertTrue(lib.containsNamespace("http://myfaces.apache.org/testlib"));
     }
     /*

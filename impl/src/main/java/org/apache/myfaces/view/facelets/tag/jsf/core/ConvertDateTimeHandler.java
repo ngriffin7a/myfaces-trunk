@@ -32,7 +32,6 @@ import javax.faces.view.facelets.MetaRuleset;
 import javax.faces.view.facelets.TagAttribute;
 import javax.faces.view.facelets.TagAttributeException;
 
-import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletAttribute;
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTag;
 import org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport;
 
@@ -43,7 +42,7 @@ import org.apache.myfaces.view.facelets.tag.jsf.ComponentSupport;
  * 
  * @deprecated use 
  * @author Jacob Hookom
- * @version $Id: ConvertDateTimeHandler.java,v 1.6 2008/07/13 19:01:44 rlubke Exp $
+ * @version $Id$
  */
 @JSFFaceletTag(
         name = "f:convertDateTime",
@@ -139,8 +138,8 @@ public final class ConvertDateTimeHandler extends ConverterHandler
                 else
                 {
                     throw new TagAttributeException(this.tag, this.timeZone,
-                                                    "Illegal TimeZone, must evaluate to either a java.util.TimeZone or String, is type: "
-                                                            + t.getClass());
+                                "Illegal TimeZone, must evaluate to either a java.util.TimeZone or String, is type: "
+                                + t.getClass());
                 }
             }
         }

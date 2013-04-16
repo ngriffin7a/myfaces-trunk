@@ -42,7 +42,7 @@ import java.io.Writer;
  * </ul>
  * 
  * @author Adam Winer
- * @version $Id: StateWriter.java,v 1.2 2008/07/13 19:01:40 rlubke Exp $
+ * @version $Id$
  */
 public final class StateWriter extends Writer
 {
@@ -53,6 +53,7 @@ public final class StateWriter extends Writer
     private Writer out;
     private FastWriter fast;
     private boolean writtenState;
+    private boolean writtenStateWithoutWrapper;
 
     static public StateWriter getCurrentInstance()
     {
@@ -60,10 +61,29 @@ public final class StateWriter extends Writer
 
         return (StateWriter)facesContext.getAttributes().get(CURRENT_WRITER_KEY);
     }
+        
+    static public StateWriter getCurrentInstance(FacesContext facesContext)
+    {
+        return (StateWriter)facesContext.getAttributes().get(CURRENT_WRITER_KEY);
+    }
 
     private static void setCurrentInstance(StateWriter stateWriter)
     {
         FacesContext facesContext = FacesContext.getCurrentInstance();
+
+        if (stateWriter == null)
+        {
+            facesContext.getAttributes().remove(CURRENT_WRITER_KEY);
+        }
+        else
+        {
+            facesContext.getAttributes().put(CURRENT_WRITER_KEY, stateWriter);
+        }
+    }
+    
+    private static void setCurrentInstance(StateWriter stateWriter, FacesContext facesContext)
+    {
+        //FacesContext facesContext = FacesContext.getCurrentInstance();
 
         if (stateWriter == null)
         {
@@ -84,8 +104,19 @@ public final class StateWriter extends Writer
 
         this.initialSize = initialSize;
         this.out = initialOut;
-
         setCurrentInstance(this);
+    }
+    
+    public StateWriter(Writer initialOut, int initialSize, FacesContext facesContext)
+    {
+        if (initialSize < 0)
+        {
+            throw new IllegalArgumentException("Initial Size cannot be less than 0");
+        }
+
+        this.initialSize = initialSize;
+        this.out = initialOut;
+        setCurrentInstance(this, facesContext);
     }
 
     /**
@@ -99,13 +130,28 @@ public final class StateWriter extends Writer
         if (!this.writtenState)
         {
             this.writtenState = true;
-            this.out = this.fast = new FastWriter(this.initialSize);
+            this.writtenStateWithoutWrapper = false;
+            this.fast = new FastWriter(this.initialSize);
+            this.out = this.fast;
         }
     }
-
+    
     public boolean isStateWritten()
     {
         return this.writtenState;
+    }
+
+    public void writingStateWithoutWrapper()
+    {
+        if (!this.writtenState && !this.writtenStateWithoutWrapper)
+        {
+            this.writtenStateWithoutWrapper = true;
+        }
+    }    
+
+    public boolean isStateWrittenWithoutWrapper()
+    {
+        return this.writtenStateWithoutWrapper;
     }
 
     public void close() throws IOException
@@ -159,6 +205,12 @@ public final class StateWriter extends Writer
     {
         // remove from FacesContext attribute Map
         setCurrentInstance(null);
+    }
+    
+    public void release(FacesContext facesContext)
+    {
+        // remove from FacesContext attribute Map
+        setCurrentInstance(null, facesContext);
     }
 
 }

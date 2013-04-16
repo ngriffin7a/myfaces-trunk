@@ -18,32 +18,12 @@
  */
 package org.apache.myfaces.view.facelets.compiler;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.faces.FacesException;
-import javax.faces.application.Resource;
-import javax.faces.application.ResourceHandler;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.faces.view.facelets.ComponentConfig;
-import javax.faces.view.facelets.FaceletHandler;
-import javax.faces.view.facelets.Tag;
-import javax.faces.view.facelets.TagConfig;
-import javax.faces.view.facelets.TagHandler;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
 import org.apache.myfaces.config.ConfigFilesXmlValidationUtils;
-import org.apache.myfaces.shared_impl.config.MyfacesConfig;
-import org.apache.myfaces.shared_impl.util.ClassUtils;
+import org.apache.myfaces.shared.config.MyfacesConfig;
+import org.apache.myfaces.shared.util.ArrayUtils;
+import org.apache.myfaces.shared.util.ClassUtils;
+import org.apache.myfaces.shared.util.StringUtils;
+import org.apache.myfaces.shared.util.WebConfigParamUtils;
 import org.apache.myfaces.spi.FaceletConfigResourceProvider;
 import org.apache.myfaces.spi.FaceletConfigResourceProviderFactory;
 import org.apache.myfaces.view.facelets.tag.AbstractTagLibrary;
@@ -60,11 +40,36 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import javax.faces.FacesException;
+import javax.faces.application.Resource;
+import javax.faces.application.ResourceHandler;
+import javax.faces.application.ViewHandler;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.faces.view.facelets.ComponentConfig;
+import javax.faces.view.facelets.FaceletHandler;
+import javax.faces.view.facelets.Tag;
+import javax.faces.view.facelets.TagConfig;
+import javax.faces.view.facelets.TagHandler;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
+
 /**
- * Handles creating a {@link org.apache.myfaces.view.facelets.tag.TagLibrary TagLibrary} from a {@link java.net.URL URL} source.
+ * Handles creating a {@link org.apache.myfaces.view.facelets.tag.TagLibrary TagLibrary}
+ * from a {@link java.net.URL URL} source.
  * 
  * @author Jacob Hookom
- * @version $Id: TagLibraryConfig.java,v 1.14 2008/07/13 19:01:34 rlubke Exp $
+ * @version $Id$
  */
 public final class TagLibraryConfig
 {
@@ -78,10 +83,133 @@ public final class TagLibraryConfig
     {
         private String _compositeLibraryName;
         
-        public TagLibraryImpl(String namespace)
+        private final ResourceHandler _resourceHandler;
+        private Pattern _acceptPatterns;
+        private String _extension;
+        private String[] _defaultSuffixesArray;
+        
+        public TagLibraryImpl(FacesContext facesContext, String namespace)
         {
             super(namespace);
             _compositeLibraryName = null;
+            _resourceHandler = facesContext.getApplication().getResourceHandler();
+            ExternalContext externalContext = facesContext.getExternalContext();
+            
+            _acceptPatterns = loadAcceptPattern(externalContext);
+
+            _extension = loadFaceletExtension(externalContext);
+            
+            String defaultSuffixes = WebConfigParamUtils.getStringInitParameter(externalContext,
+                    ViewHandler.DEFAULT_SUFFIX_PARAM_NAME, ViewHandler.DEFAULT_SUFFIX );
+            
+            _defaultSuffixesArray = StringUtils.splitShortString(defaultSuffixes, ' ');
+            
+            boolean faceletsExtensionFound = false;
+            for (String ext : _defaultSuffixesArray)
+            {
+                if (_extension.equals(ext))
+                {
+                    faceletsExtensionFound = true;
+                    break;
+                }
+            }
+            if (!faceletsExtensionFound)
+            {
+                _defaultSuffixesArray = (String[]) ArrayUtils.concat(_defaultSuffixesArray, new String[]{_extension});
+            }
+        }
+        
+        /**
+         * Load and compile a regular expression pattern built from the Facelet view mapping parameters.
+         * 
+         * @param context
+         *            the application's external context
+         * 
+         * @return the compiled regular expression
+         */
+        private Pattern loadAcceptPattern(ExternalContext context)
+        {
+            assert context != null;
+
+            String mappings = context.getInitParameter(ViewHandler.FACELETS_VIEW_MAPPINGS_PARAM_NAME);
+            if (mappings == null)
+            {
+                return null;
+            }
+
+            // Make sure the mappings contain something
+            mappings = mappings.trim();
+            if (mappings.length() == 0)
+            {
+                return null;
+            }
+
+            return Pattern.compile(toRegex(mappings));
+        }
+
+        private String loadFaceletExtension(ExternalContext context)
+        {
+            assert context != null;
+
+            String suffix = context.getInitParameter(ViewHandler.FACELETS_SUFFIX_PARAM_NAME);
+            if (suffix == null)
+            {
+                suffix = ViewHandler.DEFAULT_FACELETS_SUFFIX;
+            }
+            else
+            {
+                suffix = suffix.trim();
+                if (suffix.length() == 0)
+                {
+                    suffix = ViewHandler.DEFAULT_FACELETS_SUFFIX;
+                }
+            }
+
+            return suffix;
+        }
+        
+        /**
+         * Convert the specified mapping string to an equivalent regular expression.
+         * 
+         * @param mappings
+         *            le mapping string
+         * 
+         * @return an uncompiled regular expression representing the mappings
+         */
+        private String toRegex(String mappings)
+        {
+            assert mappings != null;
+
+            // Get rid of spaces
+            mappings = mappings.replaceAll("\\s", "");
+
+            // Escape '.'
+            mappings = mappings.replaceAll("\\.", "\\\\.");
+
+            // Change '*' to '.*' to represent any match
+            mappings = mappings.replaceAll("\\*", ".*");
+
+            // Split the mappings by changing ';' to '|'
+            mappings = mappings.replaceAll(";", "|");
+
+            return mappings;
+        }
+        
+        public boolean handles(String resourceName)
+        {
+            if (resourceName == null)
+            {
+                return false;
+            }
+            // Check extension first as it's faster than mappings
+            if (resourceName.endsWith(_extension))
+            {
+                // If the extension matches, it's a Facelet viewId.
+                return true;
+            }
+
+            // Otherwise, try to match the view identifier with the facelet mappings
+            return _acceptPatterns != null && _acceptPatterns.matcher(resourceName).matches();
         }
         
         @Override
@@ -89,18 +217,22 @@ public final class TagLibraryConfig
         {
             boolean result = super.containsTagHandler(ns, localName);
             
-            if (!result && _compositeLibraryName != null)
+            if (!result && _compositeLibraryName != null && containsNamespace(ns))
             {
-                ResourceHandler resourceHandler = 
-                    FacesContext.getCurrentInstance().getApplication().getResourceHandler();
-
-                Resource compositeComponentResource = resourceHandler.createResource(
-                        localName +".xhtml", _compositeLibraryName);
-                
-                if (compositeComponentResource != null)
+                for (String defaultSuffix : _defaultSuffixesArray)
                 {
-                    URL url = compositeComponentResource.getURL();
-                    return (url != null);
+                    String resourceName = localName + defaultSuffix;
+                    if (handles(resourceName))
+                    {
+                        Resource compositeComponentResource = _resourceHandler.createResource(
+                                resourceName, _compositeLibraryName);
+                        
+                        if (compositeComponentResource != null)
+                        {
+                            URL url = compositeComponentResource.getURL();
+                            return (url != null);
+                        }
+                    }
                 }
             }
             return result;
@@ -112,21 +244,33 @@ public final class TagLibraryConfig
         {
             TagHandler tagHandler = super.createTagHandler(ns, localName, tag);
             
-            if (tagHandler == null && containsNamespace(ns) && _compositeLibraryName != null)
+            if (tagHandler == null && _compositeLibraryName != null && containsNamespace(ns))
             {
-                ResourceHandler resourceHandler = 
-                    FacesContext.getCurrentInstance().getApplication().getResourceHandler();
-
-                String resourceName = localName + ".xhtml";
-                Resource compositeComponentResource = new CompositeResouceWrapper(
-                    resourceHandler.createResource(resourceName, _compositeLibraryName));
-                
-                if (compositeComponentResource != null)
+                for (String defaultSuffix : _defaultSuffixesArray)
                 {
-                    ComponentConfig componentConfig = new ComponentConfigWrapper(tag,
-                            "javax.faces.NamingContainer", null);
-                    
-                    return new CompositeComponentResourceTagHandler(componentConfig, compositeComponentResource);
+                    String resourceName = localName + defaultSuffix;
+                    if (handles(resourceName))
+                    {
+                        // MYFACES-3308 If a composite component exists, it requires to 
+                        // be always resolved. In other words, it should always exists a default.
+                        // The call here for resourceHandler.createResource, just try to get
+                        // the Resource and if it does not exists, it just returns null.
+                        // The intention of this code is just create an instance and pass to
+                        // CompositeComponentResourceTagHandler. Then, its values 
+                        // (resourceName, libraryName) will be used to derive the real instance
+                        // to use in a view, based on the locale used.
+                        Resource compositeComponentResource = new CompositeResouceWrapper(
+                            _resourceHandler.createResource(resourceName, _compositeLibraryName));
+                        
+                        if (compositeComponentResource != null)
+                        {
+                            ComponentConfig componentConfig = new ComponentConfigWrapper(tag,
+                                    "javax.faces.NamingContainer", null);
+                            
+                            return new CompositeComponentResourceTagHandler(
+                                    componentConfig, compositeComponentResource);
+                        }
+                    }
                 }
             }
             return tagHandler;
@@ -220,7 +364,8 @@ public final class TagLibraryConfig
         }
     }
     
-    private static class ComponentConfigWrapper implements ComponentConfig {
+    private static class ComponentConfigWrapper implements ComponentConfig
+    {
 
         protected final TagConfig parent;
 
@@ -229,29 +374,35 @@ public final class TagLibraryConfig
         protected final String rendererType;
 
         public ComponentConfigWrapper(TagConfig parent, String componentType,
-                String rendererType) {
+                String rendererType)
+        {
             this.parent = parent;
             this.componentType = componentType;
             this.rendererType = rendererType;
         }
 
-        public String getComponentType() {
+        public String getComponentType()
+        {
             return this.componentType;
         }
 
-        public String getRendererType() {
+        public String getRendererType()
+        {
             return this.rendererType;
         }
 
-        public FaceletHandler getNextHandler() {
+        public FaceletHandler getNextHandler()
+        {
             return this.parent.getNextHandler();
         }
 
-        public Tag getTag() {
+        public Tag getTag()
+        {
             return this.parent.getTag();
         }
 
-        public String getTagId() {
+        public String getTagId()
+        {
             return this.parent.getTagId();
         }
     }    
@@ -259,6 +410,8 @@ public final class TagLibraryConfig
     private static class LibraryHandler extends DefaultHandler
     {
         private final URL source;
+        
+        private final FacesContext facesContext;
 
         private TagLibrary library;
 
@@ -288,10 +441,11 @@ public final class TagLibraryConfig
         
         private String compositeLibraryName;
         
-        public LibraryHandler(URL source)
+        public LibraryHandler(FacesContext facesContext, URL source)
         {
             this.source = source;
             this.buffer = new StringBuffer(64);
+            this.facesContext = facesContext;
         }
 
         public TagLibrary getLibrary()
@@ -305,7 +459,7 @@ public final class TagLibraryConfig
             {
                 if ("facelet-taglib".equals(qName))
                 {
-                    ; // Nothing to do
+                    // Nothing to do
                 }                
                 else if ("library-class".equals(qName))
                 {
@@ -313,7 +467,7 @@ public final class TagLibraryConfig
                 }
                 else if ("namespace".equals(qName))
                 {
-                    this.library = new TagLibraryImpl(this.captureBuffer());
+                    this.library = new TagLibraryImpl(facesContext, this.captureBuffer());
                     if (this.compositeLibraryName != null)
                     {
                         ((TagLibraryImpl)this.library).setCompositeLibrary(compositeLibraryName);
@@ -348,6 +502,18 @@ public final class TagLibraryConfig
                     String className = this.captureBuffer();
                     this.functionClass = createClass(Object.class, className);
                 }
+                else if ("description".equals(qName))
+                {
+                    //Not used
+                }
+                else if ("display-name".equals(qName))
+                {
+                    //Not used
+                }
+                else if ("icon".equals(qName))
+                {
+                    //Not used
+                }                
                 else
                 {
                     // Make sure there we've seen a namespace element
@@ -451,10 +617,8 @@ public final class TagLibraryConfig
             }
             catch (Exception e)
             {
-                SAXException saxe = new SAXException("Error Handling [" + this.source + "@"
-                        + this.locator.getLineNumber() + "," + this.locator.getColumnNumber() + "] <" + qName + ">");
-                saxe.initCause(e);
-                throw saxe;
+                throw new SAXParseException("Error Handling [" + this.source + "@" + this.locator.getLineNumber()
+                        + "," + this.locator.getColumnNumber() + "] <" + qName + ">", locator, e);
             }
         }
 
@@ -576,10 +740,8 @@ public final class TagLibraryConfig
 
         public void error(SAXParseException e) throws SAXException
         {
-            SAXException saxe = new SAXException("Error Handling [" + this.source + "@" + e.getLineNumber() + ","
-                    + e.getColumnNumber() + "]");
-            saxe.initCause(e);
-            throw saxe;
+            throw new SAXException(
+                    "Error Handling [" + this.source + "@" + e.getLineNumber() + "," + e.getColumnNumber() + "]", e);
         }
 
         public void setDocumentLocator(Locator locator)
@@ -603,28 +765,29 @@ public final class TagLibraryConfig
         super();
     }
 
-    public static TagLibrary create(URL url) throws IOException
+    public static TagLibrary create(FacesContext facesContext, URL url) throws IOException
     {
         InputStream is = null;
         TagLibrary t = null;
         URLConnection conn = null;
         try
         {
-            ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+            ExternalContext externalContext = facesContext.getExternalContext();
             boolean schemaValidating = false;
 
             // validate XML
             if (MyfacesConfig.getCurrentInstance(externalContext).isValidateXML())
             {
                 String version = ConfigFilesXmlValidationUtils.getFaceletTagLibVersion(url);
-                if (schemaValidating = "2.0".equals(version))
+                schemaValidating = "2.0".equals(version);
+                if (schemaValidating)
                 {
                     ConfigFilesXmlValidationUtils.validateFaceletTagLibFile(url, externalContext, version);
                 }
             }
             
             // parse file
-            LibraryHandler handler = new LibraryHandler(url);
+            LibraryHandler handler = new LibraryHandler(facesContext, url);
             SAXParser parser = createSAXParser(handler, externalContext, schemaValidating);
             conn = url.openConnection();
             conn.setUseCaches(false);
@@ -647,25 +810,28 @@ public final class TagLibraryConfig
         finally
         {
             if (is != null)
+            {
                 is.close();
+            }
         }
         return t;
     }
 
-    public void loadImplicit(Compiler compiler) throws IOException
+    public void loadImplicit(FacesContext facesContext, Compiler compiler) throws IOException
     {
         //URL[] urls = Classpath.search(cl, "META-INF/", SUFFIX);
         //for (int i = 0; i < urls.length; i++)
-        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        ExternalContext externalContext = facesContext.getExternalContext();
         FaceletConfigResourceProvider provider = FaceletConfigResourceProviderFactory.
-            getFacesConfigResourceProviderFactory(externalContext).createFaceletConfigResourceProvider(externalContext);
+            getFacesConfigResourceProviderFactory(externalContext).
+                createFaceletConfigResourceProvider(externalContext);
         Collection<URL> urls = provider.getFaceletTagLibConfigurationResources(externalContext);
         for (URL url : urls)
         {
             try
             {
                 //TagLibrary tl = create(urls[i]);
-                TagLibrary tl = create(url);
+                TagLibrary tl = create(facesContext, url);
                 if (tl != null)
                 {
                     compiler.addTagLibrary(tl);
@@ -684,8 +850,9 @@ public final class TagLibraryConfig
         }
     }
 
-    private static final SAXParser createSAXParser(LibraryHandler handler, ExternalContext externalContext, boolean schemaValidating) throws SAXException,
-            ParserConfigurationException
+    private static final SAXParser createSAXParser(LibraryHandler handler, ExternalContext externalContext,
+                                                   boolean schemaValidating)
+            throws SAXException, ParserConfigurationException
     {
         SAXParserFactory factory = SAXParserFactory.newInstance();
 
@@ -696,7 +863,8 @@ public final class TagLibraryConfig
             factory.setFeature("http://xml.org/sax/features/validation", true);
             factory.setValidating(true);
         }
-        else {
+        else
+        {
             //Just parse it and do not validate, because it is not necessary.
             factory.setNamespaceAware(true);
             factory.setFeature("http://xml.org/sax/features/validation", false);

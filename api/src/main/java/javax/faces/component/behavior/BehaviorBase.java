@@ -30,8 +30,8 @@ import javax.faces.event.BehaviorListener;
 
 /**
  * 
- * @author Simon Lessard (latest modification by $Author: slessard $)
- * @version $Revision: 696523 $ $Date: 2009-03-14 15:29:14 -0400 (mer., 17 sept. 2008) $
+ * @author Simon Lessard (latest modification by $Author$)
+ * @version $Revision$ $Date$
  *
  * @since 2.0
  */
@@ -66,8 +66,9 @@ public class BehaviorBase implements Behavior, PartialStateHolder
             // This code prevent listeners from unregistering themselves while processing the event.
             // I believe it should always be alright in this case. However, the need rise, then it 
             // should be possible to remove that limitation by using a clone for the looping
-            for (BehaviorListener listener : _behaviorListeners)
+            for (int i = 0; i < _behaviorListeners.size() ; i++)
             {
+                BehaviorListener listener = _behaviorListeners.get(i);
                 if (event.isAppropriateListener(listener))
                 {
                     event.processListener(listener);
@@ -161,7 +162,9 @@ public class BehaviorBase implements Behavior, PartialStateHolder
         }
         
         if (attachedObject == null)
+        {
             return null;
+        }
         // StateHolder interface should take precedence over
         // List children
         if (attachedObject instanceof StateHolder)
@@ -200,9 +203,13 @@ public class BehaviorBase implements Behavior, PartialStateHolder
     private static Object restoreAttachedState(FacesContext context, Object stateObj) throws IllegalStateException
     {
         if (context == null)
+        {
             throw new NullPointerException("context");
+        }
         if (stateObj == null)
+        {
             return null;
+        }
         if (stateObj instanceof _AttachedListStateWrapper)
         {
             List<Object> lst = ((_AttachedListStateWrapper) stateObj).getWrappedStateList();
@@ -260,8 +267,9 @@ public class BehaviorBase implements Behavior, PartialStateHolder
         
         if (_behaviorListeners == null)
         {
-            // Lazy instanciation
-            _behaviorListeners = new _DeltaList<BehaviorListener>(new ArrayList<BehaviorListener>());
+            // Lazy instanciation with size 1:
+            // the only posibility how to add listener is <f:ajax listener="" /> - there is no <f:ajaxListener/> tag 
+            _behaviorListeners = new _DeltaList<BehaviorListener>(new ArrayList<BehaviorListener>(1));
         }
         
         _behaviorListeners.add(listener);

@@ -84,16 +84,33 @@ public abstract class AnnotationProvider implements FacesWrapper<AnnotationProvi
     public abstract Map<Class<? extends Annotation>,Set<Class<?>>> getAnnotatedClasses(ExternalContext ctx);
 
     /**
-     * <p>The returned Set&lt;URL&gt; urls are calculated in this way ( see JSF 2.0 spec section 11.4.2 for definitions )    
+     * <p>The returned Set&lt;URL&gt; urls are calculated in this way
+     * ( see JSF 2.0 spec section 11.4.2 for definitions )
      * </p>
      * <ol>
      * <li>All resources that match either "META-INF/faces-config.xml" or end with ".facesconfig.xml" directly in 
      * the "META-INF" directory (considered <code>applicationConfigurationResources)<code></li>
      * </ol>
      * 
+     * @deprecated 
      * @return
      */
+    @Deprecated
     public abstract Set<URL> getBaseUrls() throws IOException;
+    
+    /**
+     * Same as getBaseUrls(), but with the ExternalContext reference.
+     * By default it calls to getBaseUrls()
+     * 
+     * @since 2.1.9, 2.0.15
+     * @param ctx
+     * @return
+     * @throws IOException 
+     */
+    public Set<URL> getBaseUrls(ExternalContext ctx) throws IOException
+    {
+        return getBaseUrls();
+    }
     
     public AnnotationProvider getWrapped()
     {

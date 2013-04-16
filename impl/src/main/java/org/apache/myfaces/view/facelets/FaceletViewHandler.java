@@ -43,7 +43,6 @@ import javax.faces.view.facelets.ResourceResolver;
 import javax.faces.view.facelets.TagDecorator;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.myfaces.view.facelets.compiler.Compiler;
@@ -60,7 +59,7 @@ import org.apache.myfaces.view.facelets.util.ReflectionUtil;
  * 
  * @deprecated code refactored to FaceletViewDeclarationLanguage
  * @author Jacob Hookom
- * @version $Id: FaceletViewHandler.java,v 1.49.2.6 2006/03/20 07:22:00 jhook Exp $
+ * @version $Id$
  */
 @Deprecated
 public class FaceletViewHandler extends ViewHandler
@@ -241,9 +240,13 @@ public class FaceletViewHandler extends ViewHandler
         long refreshPeriod;
         
         if(ctx.isProjectStage(ProjectStage.Production))
+        {
             refreshPeriod = DEFAULT_REFRESH_PERIOD_PRODUCTION;
+        }
         else
+        {
             refreshPeriod = DEFAULT_REFRESH_PERIOD;
+        }
         
         String userPeriod = ctx.getExternalContext().getInitParameter(PARAM_REFRESH_PERIOD);
         if (userPeriod != null && userPeriod.length() > 0)
@@ -297,7 +300,7 @@ public class FaceletViewHandler extends ViewHandler
                     {
                         throw new FileNotFoundException(libs[i]);
                     }
-                    libObj = TagLibraryConfig.create(src);
+                    libObj = TagLibraryConfig.create(ctx, src);
                     c.addTagLibrary(libObj);
                     log.fine("Successfully Loaded Library: " + libs[i]);
                 }
@@ -408,10 +411,10 @@ public class FaceletViewHandler extends ViewHandler
         }
 
         // get our content type
-        String contentType = (String) extContext.getRequestMap().get("facelets.ContentType");
+        String contentType = (String) context.getAttributes().get("facelets.ContentType");
 
         // get the encoding
-        String encoding = (String) extContext.getRequestMap().get("facelets.Encoding");
+        String encoding = (String) context.getAttributes().get("facelets.Encoding");
 
         ResponseWriter writer;
         // append */* to the contentType so createResponseWriter will succeed no matter
@@ -425,14 +428,14 @@ public class FaceletViewHandler extends ViewHandler
         // is really going to ask for
         try
         {
-            writer = renderKit.createResponseWriter(NullWriter.Instance, contentType, encoding);
+            writer = renderKit.createResponseWriter(NullWriter.INSTANCE, contentType, encoding);
         }
         catch (IllegalArgumentException e)
         {
             // Added because of an RI bug prior to 1.2_05-b3. Might as well leave it in case other
             // impls have the same problem. https://javaserverfaces.dev.java.net/issues/show_bug.cgi?id=613
             log.fine("The impl didn't correctly handled '*/*' in the content type list.  Trying '*/*' directly.");
-            writer = renderKit.createResponseWriter(NullWriter.Instance, "*/*", encoding);
+            writer = renderKit.createResponseWriter(NullWriter.INSTANCE, "*/*", encoding);
         }
 
         // Override the JSF provided content type if necessary
@@ -463,7 +466,7 @@ public class FaceletViewHandler extends ViewHandler
         String encoding = orig;
 
         // see if we need to override the encoding
-        Map<String, Object> m = context.getExternalContext().getRequestMap();
+        Map<Object, Object> m = context.getAttributes();
         Map<String, Object> sm = context.getExternalContext().getSessionMap();
 
         // 1. check the request attribute
@@ -519,7 +522,7 @@ public class FaceletViewHandler extends ViewHandler
         String contentType = orig;
 
         // see if we need to override the contentType
-        Map<String, Object> m = context.getExternalContext().getRequestMap();
+        Map<Object, Object> m = context.getAttributes();
         if (m.containsKey("facelets.ContentType"))
         {
             contentType = (String) m.get("facelets.ContentType");
@@ -712,7 +715,9 @@ public class FaceletViewHandler extends ViewHandler
         finally
         {
             if (stateWriter != null)
+            {
                 stateWriter.release();
+            }
         }
     }
 
@@ -874,7 +879,7 @@ public class FaceletViewHandler extends ViewHandler
     protected static class NullWriter extends Writer
     {
 
-        static final NullWriter Instance = new NullWriter();
+        static final NullWriter INSTANCE = new NullWriter();
 
         public void write(char[] buffer)
         {

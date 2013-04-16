@@ -19,6 +19,7 @@
 package org.apache.myfaces.view.facelets.compiler;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.el.ELException;
 import javax.faces.FacesException;
@@ -32,6 +33,8 @@ public class EncodingHandler implements FaceletHandler
 
     private final FaceletHandler next;
     private final String encoding;
+    
+    private volatile List<String> _uniqueIdList;
 
     public EncodingHandler(FaceletHandler next, String encoding)
     {
@@ -45,16 +48,32 @@ public class EncodingHandler implements FaceletHandler
         this.next.apply(ctx, parent);
         if (this.encoding == null)
         {
-            if (!ctx.getFacesContext().getExternalContext().getRequestMap().containsKey("facelets.Encoding"))
+            if (!ctx.getFacesContext().getAttributes().containsKey("facelets.Encoding"))
             {
-                ctx.getFacesContext().getExternalContext().getRequestMap().put("facelets.Encoding", "UTF-8");
+                ctx.getFacesContext().getAttributes().put("facelets.Encoding", "UTF-8");
             }
         }
         else
         {
             //Encoding of document takes precedence over f:view contentType
-            ctx.getFacesContext().getExternalContext().getRequestMap().put("facelets.Encoding", this.encoding);
+            ctx.getFacesContext().getAttributes().put("facelets.Encoding", this.encoding);
         }
+    }
+
+    /**
+     * @return the _uniqueIdList
+     */
+    public List<String> getUniqueIdList()
+    {
+        return _uniqueIdList;
+    }
+
+    /**
+     * @param uniqueIdList the _uniqueIdList to set
+     */
+    public void setUniqueIdList(List<String> uniqueIdList)
+    {
+        this._uniqueIdList = uniqueIdList;
     }
 
 }

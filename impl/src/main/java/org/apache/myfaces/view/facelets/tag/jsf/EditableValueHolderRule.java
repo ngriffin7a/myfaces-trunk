@@ -31,13 +31,12 @@ import javax.faces.view.facelets.Metadata;
 import javax.faces.view.facelets.MetadataTarget;
 import javax.faces.view.facelets.TagAttribute;
 
-import org.apache.myfaces.view.facelets.AbstractFaceletContext;
 import org.apache.myfaces.view.facelets.FaceletCompositionContext;
 
 /**
  * 
  * @author Jacob Hookom
- * @version $Id: EditableValueHolderRule.java,v 1.3 2008/07/13 19:01:46 rlubke Exp $
+ * @version $Id$
  */
 public final class EditableValueHolderRule extends MetaRule
 {
@@ -81,7 +80,7 @@ public final class EditableValueHolderRule extends MetaRule
             if (FaceletCompositionContext.getCurrentInstance(ctx).isUsingPSSOnThisView())
             {
                 ((EditableValueHolder) instance).addValueChangeListener(
-                        new PartialMethodExpressionValueChangeListener(methodExpressionOneArg, methodExpressionZeroArg));
+                      new PartialMethodExpressionValueChangeListener(methodExpressionOneArg, methodExpressionZeroArg));
             }
             else
             {
@@ -121,7 +120,7 @@ public final class EditableValueHolderRule extends MetaRule
     
     private final static Class<?>[] EMPTY_CLASS_ARRAY = new Class[0];
 
-    public final static EditableValueHolderRule Instance = new EditableValueHolderRule();
+    public final static EditableValueHolderRule INSTANCE = new EditableValueHolderRule();
 
     public Metadata applyRule(String name, TagAttribute attribute, MetadataTarget meta)
     {

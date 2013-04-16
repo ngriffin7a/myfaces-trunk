@@ -28,8 +28,8 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
 /**
- * @author Simon Lessard (latest modification by $Author: slessard $)
- * @version $Revision: 696523 $ $Date: 2009-03-14 16:42:48 -0400 (mer., 17 sept. 2008) $
+ * @author Simon Lessard (latest modification by $Author$)
+ * @version $Revision$ $Date$
  * 
  * @since 2.0
  */
@@ -39,13 +39,15 @@ public abstract class VisitContext
 
     public static VisitContext createVisitContext(FacesContext context)
     {
-        VisitContextFactory factory = (VisitContextFactory) FactoryFinder.getFactory(FactoryFinder.VISIT_CONTEXT_FACTORY);
+        VisitContextFactory factory
+                = (VisitContextFactory) FactoryFinder.getFactory(FactoryFinder.VISIT_CONTEXT_FACTORY);
         return factory.getVisitContext(context, null, null);
     }
 
     public static VisitContext createVisitContext(FacesContext context, Collection<String> ids, Set<VisitHint> hints)
     {
-        VisitContextFactory factory = (VisitContextFactory) FactoryFinder.getFactory(FactoryFinder.VISIT_CONTEXT_FACTORY);
+        VisitContextFactory factory
+                = (VisitContextFactory) FactoryFinder.getFactory(FactoryFinder.VISIT_CONTEXT_FACTORY);
         return factory.getVisitContext(context, ids, hints);
     }
 

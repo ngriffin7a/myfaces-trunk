@@ -23,10 +23,7 @@ import javax.faces.context.FacesContext;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFConverter;
 
-import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.Locale;
 
 /**
@@ -52,8 +49,14 @@ public class DoubleConverter
     // METHODS
     public Object getAsObject(FacesContext facesContext, UIComponent uiComponent, String value)
     {
-        if (facesContext == null) throw new NullPointerException("facesContext");
-        if (uiComponent == null) throw new NullPointerException("uiComponent");
+        if (facesContext == null)
+        {
+            throw new NullPointerException("facesContext");
+        }
+        if (uiComponent == null)
+        {
+            throw new NullPointerException("uiComponent");
+        }
 
         if (value != null)
         {
@@ -68,8 +71,8 @@ public class DoubleConverter
                 catch (NumberFormatException e)
                 {
                     throw new ConverterException(_MessageUtils.getErrorMessage(facesContext,
-                                                                               DOUBLE_ID,
-                                                                               new Object[]{value,"4214",_MessageUtils.getLabel(facesContext, uiComponent)}), e);
+                                   DOUBLE_ID,
+                                   new Object[]{value,"4214",_MessageUtils.getLabel(facesContext, uiComponent)}), e);
                 }
 
             }
@@ -163,8 +166,14 @@ public class DoubleConverter
 
     public String getAsString(FacesContext facesContext, UIComponent uiComponent, Object value)
     {
-        if (facesContext == null) throw new NullPointerException("facesContext");
-        if (uiComponent == null) throw new NullPointerException("uiComponent");
+        if (facesContext == null)
+        {
+            throw new NullPointerException("facesContext");
+        }
+        if (uiComponent == null)
+        {
+            throw new NullPointerException("uiComponent");
+        }
 
         if (value == null)
         {
@@ -180,7 +189,8 @@ public class DoubleConverter
         }
         catch (Exception e)
         {
-            throw new ConverterException(_MessageUtils.getErrorMessage(facesContext, STRING_ID, new Object[]{value,_MessageUtils.getLabel(facesContext, uiComponent)}),e);
+            throw new ConverterException(_MessageUtils.getErrorMessage(facesContext, STRING_ID,
+                    new Object[]{value,_MessageUtils.getLabel(facesContext, uiComponent)}),e);
         }
     }
 }

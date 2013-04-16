@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Collection;
 
-import org.apache.myfaces.config.impl.digester.elements.NavigationCase;
-
 
 /**
  * @author <a href="mailto:oliver@rossmueller.com">Oliver Rossmueller</a>
@@ -33,7 +31,8 @@ public class NavigationRule extends org.apache.myfaces.config.element.Navigation
 {
 
     private String fromViewId;
-    private List<org.apache.myfaces.config.element.NavigationCase> navigationCases = new ArrayList<org.apache.myfaces.config.element.NavigationCase>();
+    private List<org.apache.myfaces.config.element.NavigationCase> navigationCases
+            = new ArrayList<org.apache.myfaces.config.element.NavigationCase>();
 
 
     public String getFromViewId()

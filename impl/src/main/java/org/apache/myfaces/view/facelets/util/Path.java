@@ -20,7 +20,7 @@ package org.apache.myfaces.view.facelets.util;
 
 /**
  * @author Jacob Hookom
- * @version $Id: Path.java,v 1.3 2008/07/13 19:01:34 rlubke Exp $
+ * @version $Id$
  */
 public final class Path
 {
@@ -28,7 +28,9 @@ public final class Path
     public static final String normalize(String path)
     {
         if (path.length() == 0)
+        {
             return path;
+        }
         String n = path;
         boolean abs = false;
         while (n.indexOf('\\') >= 0)

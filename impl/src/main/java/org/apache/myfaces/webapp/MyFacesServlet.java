@@ -98,15 +98,22 @@ public class MyFacesServlet implements Servlet, DelegatedFacesServlet
         _facesInitializer.destroyStartupFacesContext(facesContext);
         
         delegate.init(servletConfig);
-        log.info("MyFacesServlet for context '" + servletConfig.getServletContext().getRealPath("/") + "' initialized.");
+        log.info("MyFacesServlet for context '" + servletConfig.getServletContext().getRealPath("/")
+                 + "' initialized.");
     }
     
     public void service(ServletRequest request, ServletResponse response)
             throws IOException, ServletException
     {
-        if (log.isLoggable(Level.FINEST)) log.finest("MyFacesServlet service start");
+        if (log.isLoggable(Level.FINEST))
+        {
+            log.finest("MyFacesServlet service start");
+        }
         delegate.service(request, response);
-        if (log.isLoggable(Level.FINEST)) log.finest("MyFacesServlet service finished");
+        if (log.isLoggable(Level.FINEST))
+        {
+            log.finest("MyFacesServlet service finished");
+        }
     }
 
 }

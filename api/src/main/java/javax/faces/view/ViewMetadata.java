@@ -29,8 +29,8 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
 /**
- * @author Simon Lessard (latest modification by $Author: slessard $)
- * @version $Revision: 696523 $ $Date: 2009-03-14 20:10:08 -0400 (mer., 17 sept. 2008) $
+ * @author Simon Lessard (latest modification by $Author$)
+ * @version $Revision$ $Date$
  *
  * @since 2.0
  */
@@ -42,11 +42,12 @@ public abstract class ViewMetadata
     
     public static Collection<UIViewParameter> getViewParameters(UIViewRoot root)
     {
-        LinkedList<UIViewParameter> result = new LinkedList<UIViewParameter>();
+        LinkedList<UIViewParameter> result = null;
         UIComponent metadataFacet = root.getFacet (UIViewRoot.METADATA_FACET_NAME);
         Iterator<UIComponent> children;
         
-        if (metadataFacet == null) {
+        if (metadataFacet == null)
+        {
              // No metadata, so return an empty collection.
              
              return Collections.emptyList();
@@ -54,19 +55,35 @@ public abstract class ViewMetadata
         
         // Iterate over all the children, keep only the view parameters.
         
-        children = metadataFacet.getChildren().iterator();
-        
-        while (children.hasNext()) {
-             UIComponent component = children.next();
-             
-             if (component instanceof UIViewParameter) {
-                  result.add ((UIViewParameter) component);
-             }
+        if (metadataFacet.getChildCount() > 0)
+        {
+            children = metadataFacet.getChildren().iterator();
+            
+            while (children.hasNext())
+            {
+                 UIComponent component = children.next();
+                 
+                 if (result == null)
+                 {
+                     result = new LinkedList<UIViewParameter>();
+                 }
+                 
+                 if (component instanceof UIViewParameter)
+                 {
+                      result.add ((UIViewParameter) component);
+                 }
+            }
         }
         
         // TODO: does this need to be immutable?  Spec does not indicate either
         // way.
-        
-        return Collections.unmodifiableCollection (result);
+        if (result == null)
+        {
+            return Collections.emptyList();
+        }
+        else
+        {
+            return Collections.unmodifiableCollection (result);
+        }
     }
 }

@@ -19,7 +19,6 @@
 package javax.faces.view.facelets;
 
 import javax.faces.view.EditableValueHolderAttachedObjectHandler;
-import javax.faces.view.facelets.FaceletContext;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFaceletTag;
 
@@ -30,12 +29,13 @@ import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFFacelet
  * tree.
  * 
  * @author Jacob Hookom
- * @version $Id: ValidateHandler.java,v 1.4 2008/07/13 19:01:46 rlubke Exp $
+ * @version $Id$
  */
 @JSFFaceletTag
 public class ValidatorHandler extends FaceletsAttachedObjectHandler implements EditableValueHolderAttachedObjectHandler
 {
     private ValidatorConfig config;
+    private TagHandlerDelegate helper;
     
     public ValidatorHandler(ValidatorConfig config)
     {
@@ -56,6 +56,13 @@ public class ValidatorHandler extends FaceletsAttachedObjectHandler implements E
 
     protected TagHandlerDelegate getTagHandlerDelegate()
     {
-        return delegateFactory.createValidatorHandlerDelegate (this);
+        if (helper == null)
+        {
+            // Spec seems to indicate that the helper is created here, as opposed to other Handler
+            // instances, where it's presumably a new instance for every getter call.
+            
+            this.helper = delegateFactory.createValidatorHandlerDelegate (this);
+        }
+        return helper;
     }
 }

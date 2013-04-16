@@ -20,23 +20,24 @@
     <parent>
         <groupId>org.apache.myfaces.core</groupId>
         <artifactId>myfaces-core-project</artifactId>
-        <version>2.1.0-SNAPSHOT</version>
+        <version>2.1.12-SNAPSHOT</version>
+        <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.apache.myfaces.core</groupId>
     <artifactId>myfaces-api</artifactId>
-    <name>Apache MyFaces JSF Core-2.1 API</name>
+    <name>Apache MyFaces JSF-2.1 Core API</name>
     <description>
         The public API classes of the Apache MyFaces CORE JSF-2.1 project
     </description>
     <url>http://myfaces.apache.org/core21/myfaces-api</url>
 
     <scm>
-        <connection>scm:svn:https://svn.apache.org/repos/asf/myfaces/core/branches/2.1.x/api</connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/myfaces/core/branches/2.1.x/api</developerConnection>
-        <url>https://svn.apache.org/repos/asf/myfaces/core/branches/2.1.x/api</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/myfaces/core/trunk/api</connection>
+        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/myfaces/core/trunk/api</developerConnection>
+        <url>http://svn.apache.org/repos/asf/myfaces/core/trunk/api</url>
     </scm>
     
     <build>
@@ -73,6 +74,21 @@
         
         <plugins>
 
+            <!-- license checker needs to exclude some kinds of files -->
+            <plugin>
+                <groupId>org.apache.rat</groupId>
+                <artifactId>apache-rat-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <!-- dojo has combined new bsd + AFL 2.1 license -->
+                        <exclude>src/main/resources/META-INF/licenses/dojo-LICENSE.TXT</exclude>
+                        
+                        <!-- facelets has non-standard APL license -->
+                        <exclude>src/main/resources/META-INF/licenses/facelets-LICENSE.txt</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            
             <!-- compilation and compression of our javascripts -->
             <plugin>
                 <artifactId>myfaces-javascript-plugin</artifactId>
@@ -128,6 +144,82 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>compile-minimal</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <descriptor>${basedir}/src/assembler/jsfscripts-minimal-compiler.xml</descriptor>
+                            <outputDirectory>${basedir}/target/classes/META-INF/internal-resources/javax.faces/</outputDirectory>
+                            <excludes>
+                                <exclude>**/myfaces/_impl/core/jsf-uncompressed.js</exclude>
+                                <exclude>**/myfaces/_impl/_util/_UnitTest.js</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                     <execution>
+                        <id>compile-minimal-modern</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <descriptor>${basedir}/src/assembler/jsfscripts-minimal-modern-compiler.xml</descriptor>
+                            <outputDirectory>${basedir}/target/classes/META-INF/internal-resources/javax.faces/</outputDirectory>
+                            <excludes>
+                                <exclude>**/myfaces/_impl/core/jsf-uncompressed.js</exclude>
+                                <exclude>**/myfaces/_impl/_util/_UnitTest.js</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>compile-i18n</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <descriptor>${basedir}/src/assembler/jsfscripts-i18n-compiler.xml</descriptor>
+                            <outputDirectory>${basedir}/target/classes/META-INF/resources/myfaces/</outputDirectory>
+                            <excludes>
+                                <exclude>**/myfaces/_impl/core/jsf-uncompressed.js</exclude>
+                                <exclude>**/myfaces/_impl/_util/_UnitTest.js</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                     <execution>
+                        <id>compile-experimental</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <descriptor>${basedir}/src/assembler/jsfscripts-experimental.xml</descriptor>
+                            <outputDirectory>${basedir}/target/classes/META-INF/resources/myfaces/</outputDirectory>
+                            <excludes>
+                                <exclude>**/myfaces/_impl/core/jsf-uncompressed.js</exclude>
+                                <exclude>**/myfaces/_impl/_util/_UnitTest.js</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>compile-legacy</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <descriptor>${basedir}/src/assembler/jsfscripts-legacy.xml</descriptor>
+                            <outputDirectory>${basedir}/target/classes/META-INF/resources/myfaces/</outputDirectory>
+                            <excludes>
+                                <exclude>**/myfaces/_impl/core/jsf-uncompressed.js</exclude>
+                                <exclude>**/myfaces/_impl/_util/_UnitTest.js</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+
+                    <execution>
                         <id>compress</id>
                         <goals>
                             <goal>compress</goal>
@@ -136,6 +228,41 @@
 
                         <configuration>
                             <scripts>target/classes/META-INF/resources/javax.faces/</scripts>
+                            <excludes>
+                                <exclude>jsf-uncompressed.js</exclude>
+                                <exclude>jsf-uncompressed-full.js</exclude>
+                            </excludes>
+                            <compressor>yahooUI</compressor>
+
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>compress-extended</id>
+                        <goals>
+                            <goal>compress</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+
+                        <configuration>
+                            <scripts>target/classes/META-INF/resources/myfaces/</scripts>
+                            <excludes>
+                                <exclude>jsf-uncompressed.js</exclude>
+                                <exclude>jsf-uncompressed-full.js</exclude>
+                            </excludes>
+                            <compressor>yahooUI</compressor>
+
+                        </configuration>
+                    </execution>
+
+                <execution>
+                        <id>compress-alternatives</id>
+                        <goals>
+                            <goal>compress</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+
+                        <configuration>
+                            <scripts>target/classes/META-INF/internal-resources/javax.faces/</scripts>
                             <excludes>
                                 <exclude>jsf-uncompressed.js</exclude>
                                 <exclude>jsf-uncompressed-full.js</exclude>
@@ -350,10 +477,22 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.4</version>
                         <executions>
                             <execution>
                                 <id>attach-javadoc</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.myfaces.buildtools</groupId>
+                        <artifactId>myfaces-jsdoc-plugin</artifactId>
+                        <version>1.0-beta-1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-jsdoc</id>
                                 <goals>
                                     <goal>jar</goal>
                                 </goals>
@@ -436,6 +575,35 @@
                     <url>http://download.java.net/maven/2/</url>
                 </pluginRepository>
             </pluginRepositories>
+        </profile>
+
+        <!--
+            this optional profile generates the jsdoc content from
+            the embedded javascripts
+        -->
+
+        <profile>
+            <id>generateJsDoc</id>
+            <build>
+              <plugins>
+                    <plugin>
+                        <groupId>org.apache.myfaces.buildtools</groupId>
+                        <artifactId>myfaces-jsdoc-plugin</artifactId>
+                        <version>1.0-beta-1</version>
+
+                        <executions>
+                            <execution>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>jsdoc</goal>
+                                </goals>
+                            </execution>
+
+                        </executions>
+
+                    </plugin>
+               </plugins>
+            </build>
         </profile>
 
     </profiles>
@@ -544,10 +712,15 @@
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
             </plugin>
+            
+            <plugin>
+               <groupId>org.apache.myfaces.buildtools</groupId>
+                <artifactId>myfaces-jsdoc-plugin</artifactId>
+                <version>1.0-beta-1</version>
+            </plugin>
 
             <plugin>
                 <artifactId>maven-changelog-plugin</artifactId>
-                <version>2.2</version>
                 <reportSets>
                     <reportSet>
                         <id>dual-report</id>
@@ -566,18 +739,15 @@
 
             <plugin>
                 <artifactId>maven-jxr-plugin</artifactId>
-                <version>2.2</version>
             </plugin>
 
             <plugin>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.5</version>
             </plugin>
             
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>taglist-maven-plugin</artifactId>
-                <version>2.4</version>
             </plugin>
             
             <!-- override PMD settings to set targetJdk -->

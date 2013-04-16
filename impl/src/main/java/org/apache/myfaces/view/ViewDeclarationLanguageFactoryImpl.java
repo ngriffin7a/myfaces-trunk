@@ -21,12 +21,12 @@ package org.apache.myfaces.view;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.faces.FacesException;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewDeclarationLanguage;
 import javax.faces.view.ViewDeclarationLanguageFactory;
 
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFWebConfigParam;
+import org.apache.myfaces.shared.config.MyfacesConfig;
 import org.apache.myfaces.view.facelets.FaceletViewDeclarationLanguageStrategy;
 import org.apache.myfaces.view.jsp.JspViewDeclarationLanguageStrategy;
 
@@ -34,8 +34,8 @@ import org.apache.myfaces.view.jsp.JspViewDeclarationLanguageStrategy;
  * This is the default PDL factory used as of JSF 2.0, it tries to use Facelet PDL whenever possible, 
  * but fallback on JSP if required.
  * 
- * @author Simon Lessard (latest modification by $Author: slessard $)
- * @version $Revision: 696523 $ $Date: 2009-03-21 14:55:54 -0400 (mer., 17 sept. 2008) $
+ * @author Simon Lessard (latest modification by $Author$)
+ * @version $Revision$ $Date$
  *
  * @since 2.0
  */
@@ -44,15 +44,15 @@ public class ViewDeclarationLanguageFactoryImpl extends ViewDeclarationLanguageF
     /**
      * Disable facelets VDL from the current application project. 
      */
-    @JSFWebConfigParam(since="2.0", defaultValue="false", expectedValues="true,false")
+    @JSFWebConfigParam(since="2.0", defaultValue="false", expectedValues="true,false", group="viewhandler")
     public static final String PARAM_DISABLE_JSF_FACELET = "javax.faces.DISABLE_FACELET_JSF_VIEWHANDLER";
 
     private static final String FACELETS_1_VIEW_HANDLER = "com.sun.facelets.FaceletViewHandler";
 
     private static final Logger LOGGER = Logger.getLogger(ViewDeclarationLanguageFactoryImpl.class.getName());
     
-    private boolean _initialized;
-    private ViewDeclarationLanguageStrategy[] _supportedLanguages;
+    private volatile boolean _initialized;
+    private volatile ViewDeclarationLanguageStrategy[] _supportedLanguages;
     
     /**
      * 
@@ -76,7 +76,10 @@ public class ViewDeclarationLanguageFactoryImpl extends ViewDeclarationLanguageF
         // TODO: It would be nice to be able to preinitialize the factory. However, since it requires 
         //       access to the ExternalContext it may not be possible, depending on the loading order 
         //       in the FactoryFinder. Could use ideas here. -= SL =-
-        initialize();
+        if (!_initialized)
+        {
+            initialize();
+        }
         
         for (ViewDeclarationLanguageStrategy strategy : _supportedLanguages)
         {
@@ -86,7 +89,13 @@ public class ViewDeclarationLanguageFactoryImpl extends ViewDeclarationLanguageF
             }
         }
         
-        throw new FacesException("Cannot find a valid PDL for view id " + viewId);
+        // throw new FacesException("Cannot find a valid PDL for view id " + viewId);
+        // It does not have sense to throw an exception in this point. Instead
+        // just return null, to indicate that no VDL can handle the viewId.
+        // For example, in org.apache.myfaces.shared.application.DefaultViewHandlerSupport
+        // first getViewDeclarationLanguage(String viewId) is called and if returns null
+        // try the default strategy (look for a file in web folder).
+        return null;
     }
     
     /**
@@ -102,9 +111,18 @@ public class ViewDeclarationLanguageFactoryImpl extends ViewDeclarationLanguageF
             {
                 logWarningIfLegacyFaceletViewHandlerIsPresent(context);
 
-                _supportedLanguages = new ViewDeclarationLanguageStrategy[2];
-                _supportedLanguages[0] = new FaceletViewDeclarationLanguageStrategy();
-                _supportedLanguages[1] = new JspViewDeclarationLanguageStrategy();
+                if (MyfacesConfig.getCurrentInstance(
+                        context.getExternalContext()).isSupportJSPAndFacesEL())
+                {
+                    _supportedLanguages = new ViewDeclarationLanguageStrategy[2];
+                    _supportedLanguages[0] = new FaceletViewDeclarationLanguageStrategy();
+                    _supportedLanguages[1] = new JspViewDeclarationLanguageStrategy();
+                }
+                else
+                {
+                    _supportedLanguages = new ViewDeclarationLanguageStrategy[1];
+                    _supportedLanguages[0] = new FaceletViewDeclarationLanguageStrategy();
+                }
             }
             else
             {
@@ -141,15 +159,16 @@ public class ViewDeclarationLanguageFactoryImpl extends ViewDeclarationLanguageF
      */
     private void logWarningIfLegacyFaceletViewHandlerIsPresent(FacesContext context)
     {
-        boolean facelets1ViewHandlerPresent  = context.getApplication().getViewHandler().getClass().getName().equals(FACELETS_1_VIEW_HANDLER);
+        boolean facelets1ViewHandlerPresent
+                = context.getApplication().getViewHandler().getClass().getName().equals(FACELETS_1_VIEW_HANDLER);
 
         if (facelets1ViewHandlerPresent)
         {
             if (LOGGER.isLoggable(Level.WARNING))
             {
-                LOGGER.log(Level.WARNING, "Your faces-config.xml contains the " + FACELETS_1_VIEW_HANDLER + " class." + 
-                    "\nYou need to remove it since you have not disabled the \"new\" Facelets-2 version with the " + PARAM_DISABLE_JSF_FACELET +
-                    " context parameter");
+                LOGGER.log(Level.WARNING, "Your faces-config.xml contains the " + FACELETS_1_VIEW_HANDLER + " class."
+                    + "\nYou need to remove it since you have not disabled the \"new\" Facelets-2 version with the "
+                    + PARAM_DISABLE_JSF_FACELET + " context parameter");
             }
         }
     }

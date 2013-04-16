@@ -18,6 +18,7 @@
  */
 package javax.faces.component;
 
+import javax.faces.context.FacesContext;
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
 import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
 
@@ -29,7 +30,8 @@ import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFPropert
  * Unless otherwise specified, all attributes accept static values or EL expressions.
  * </p>
  */
-@JSFComponent(clazz = "javax.faces.component.UIParameter", template = true, name = "f:param", tagClass = "org.apache.myfaces.taglib.core.ParamTag")
+@JSFComponent(clazz = "javax.faces.component.UIParameter", template = true,
+              name = "f:param", tagClass = "org.apache.myfaces.taglib.core.ParamTag")
 abstract class _UIParameter extends UIComponentBase
 {
 
@@ -50,6 +52,25 @@ abstract class _UIParameter extends UIComponentBase
         // throw new UnsupportedOperationException();
     }
 
+    @Override
+    protected FacesContext getFacesContext()
+    {
+        //In theory the parent most of the times has 
+        //the cached FacesContext instance, because this
+        //element is purely logical, and the parent is the one
+        //where encodeXXX was invoked. But only limit the
+        //search to the closest parent.
+        UIComponent parent = getParent();
+        if (parent != null && parent.isCachedFacesContext())
+        {
+            return parent.getFacesContext();
+        }
+        else
+        {
+            return super.getFacesContext();
+        }
+    }
+    
     /**
      * The value of this component.
      * 

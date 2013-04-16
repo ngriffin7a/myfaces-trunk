@@ -26,7 +26,7 @@ import javax.faces.el.EvaluationException;
 import javax.faces.el.PropertyNotFoundException;
 import javax.faces.el.ValueBinding;
 
-import org.apache.myfaces.shared_impl.util.ClassUtils;
+import org.apache.myfaces.shared.util.ClassUtils;
 
 /**
  * Converter for legacy ValueBinding objects. See JSF 1.2 section 5.8.3
@@ -34,7 +34,7 @@ import org.apache.myfaces.shared_impl.util.ClassUtils;
  * ATTENTION: If you make changes to this class, treat javax.faces.component.ValueExpressionToValueBinding accordingly.
  * 
  * @author Stan Silvert
- * @see javax.faces.component.ValueExpressionToValueBinding
+ * @see ValueExpressionToValueBinding
  */
 @SuppressWarnings("deprecation")
 public class ValueExpressionToValueBinding extends ValueBinding implements StateHolder
@@ -63,21 +63,33 @@ public class ValueExpressionToValueBinding extends ValueBinding implements State
     public boolean equals(Object obj)
     {
         if (this == obj)
+        {
             return true;
+        }
         if (obj == null)
+        {
             return false;
+        }
         if (getClass() != obj.getClass())
+        {
             return false;
+        }
         final ValueExpressionToValueBinding other = (ValueExpressionToValueBinding) obj;
         if (_valueExpression == null)
         {
             if (other._valueExpression != null)
+            {
                 return false;
+            }
         }
         else if (!_valueExpression.equals(other._valueExpression))
+        {
             return false;
+        }
         if (isTransient != other.isTransient)
+        {
             return false;
+        }
         return true;
     }
 
@@ -200,7 +212,8 @@ public class ValueExpressionToValueBinding extends ValueBinding implements State
             else
             {
                 Object[] stateArray = (Object[]) state;
-                _valueExpression = (ValueExpression) ClassUtils.newInstance((String) stateArray[0], ValueExpression.class);
+                _valueExpression
+                        = (ValueExpression) ClassUtils.newInstance((String) stateArray[0], ValueExpression.class);
                 ((StateHolder) _valueExpression).restoreState(facesContext, stateArray[1]);
             }
         }

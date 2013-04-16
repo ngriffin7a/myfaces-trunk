@@ -19,6 +19,7 @@
 package org.apache.myfaces.el.unified.resolver.implicitobject;
 
 import java.beans.FeatureDescriptor;
+import java.util.List;
 
 import javax.el.ELContext;
 import javax.faces.component.UIComponent;
@@ -35,7 +36,7 @@ import org.apache.myfaces.view.facelets.el.CompositeComponentELUtils;
 public class CompositeComponentImplicitObject extends ImplicitObject
 {
 
-    private static final String NAME = "cc".intern();
+    private static final String NAME = "cc";
 
     /** Creates a new instance of CompositeComponentImplicitObjectImplicitObject */
     public CompositeComponentImplicitObject()
@@ -49,8 +50,15 @@ public class CompositeComponentImplicitObject extends ImplicitObject
         
         // Look for the attribute set by LocationValueExpression
         // or LocationMethodExpression on the FacesContext
-        UIComponent cc = (UIComponent) facesContext.getAttributes()
+        List<UIComponent> list = (List<UIComponent>) facesContext.getAttributes()
                 .get(CompositeComponentELUtils.CURRENT_COMPOSITE_COMPONENT_KEY);
+        
+        UIComponent cc = null;
+        
+        if (list != null && !list.isEmpty())
+        {
+            cc = list.get(list.size()-1);
+        }
         if (cc == null)
         {
             // take the composite component from the stack
@@ -74,6 +82,8 @@ public class CompositeComponentImplicitObject extends ImplicitObject
     @Override
     public FeatureDescriptor getDescriptor()
     {
-        return makeDescriptor(NAME, "Represents the composite component most recently pushed using UIComponent.pushComponentToEL", UIComponent.class);
+        return makeDescriptor(NAME,
+                "Represents the composite component most recently pushed using UIComponent.pushComponentToEL",
+                UIComponent.class);
     }
 }

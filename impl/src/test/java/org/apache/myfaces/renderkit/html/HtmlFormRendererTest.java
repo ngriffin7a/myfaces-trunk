@@ -27,13 +27,12 @@ import javax.faces.component.html.HtmlForm;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.apache.myfaces.shared_impl.renderkit.html.HTML;
+import org.apache.myfaces.shared.renderkit.html.HTML;
 import org.apache.myfaces.test.base.AbstractJsfTestCase;
 import org.apache.myfaces.test.mock.MockRenderKitFactory;
 import org.apache.myfaces.test.mock.MockResponseWriter;
 import org.apache.myfaces.test.utils.HtmlCheckAttributesUtil;
 import org.apache.myfaces.test.utils.HtmlRenderedAttr;
-import org.apache.myfaces.test.utils.MockTestViewHandler;
 
 public class HtmlFormRendererTest extends AbstractJsfTestCase
 {

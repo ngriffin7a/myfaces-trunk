@@ -18,19 +18,19 @@
  */
 package javax.faces.component;
 
-import java.util.Collection;
-import java.util.Iterator;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
+import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
 
+import javax.faces.FacesException;
 import javax.faces.component.visit.VisitCallback;
 import javax.faces.component.visit.VisitContext;
 import javax.faces.component.visit.VisitResult;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PostValidateEvent;
 import javax.faces.event.PreValidateEvent;
+import javax.faces.view.Location;
 
-import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFComponent;
-import org.apache.myfaces.buildtools.maven2.plugin.builder.annotation.JSFProperty;
+import java.util.Collection;
 
 /**
  * see Javadoc of <a href="http://java.sun.com/javaee/javaserverfaces/1.2/docs/api/index.html">JSF Specification</a>
@@ -53,23 +53,62 @@ public class UIForm extends UIComponentBase implements NamingContainer, UniqueId
      */
     public String createUniqueId(FacesContext context, String seed)
     {
-        StringBuilder bld = __getSharedStringBuilder(context);
+        StringBuilder bld = null;
+        
+        // When prependId is set to false, it is necessary to append an unique
+        // prefix to ensure the generated ids are unique, but that's only necessary
+        // when no seed is provided. If a seed is provided, that one is already unique
+        // for all the view, so the following logic is not necessary.
+        if (!isPrependId() && seed==null )
+        {
+            bld = new StringBuilder();
+            UniqueIdVendor parentUniqueIdVendor = _ComponentUtils.findParentUniqueIdVendor(this);
+            if (parentUniqueIdVendor == null)
+            {
+                UIViewRoot viewRoot = context.getViewRoot();
+                if (viewRoot != null)
+                {
+                    bld.append(viewRoot.createUniqueId());
+                    bld.append('_');
+                }
+                else
+                {
+                    // The RI throws a NPE
+                    String location = getComponentLocation(this);
+                    throw new FacesException("Cannot create clientId. No id is assigned for component"
+                            + " to create an id and UIViewRoot is not defined: "
+                            + getPathToComponent(this)
+                            + (location != null ? " created from: " + location : ""));
+                }
+            }
+            else
+            {
+                bld.append(parentUniqueIdVendor.createUniqueId(context, null));
+                bld.append('_');
+            }
+        }
+        else
+        {
+            bld = _getSharedStringBuilder(context);
+        }
 
-        Long uniqueIdCounter = (Long) getStateHelper().get(PropertyKeys.uniqueIdCounter);
-        uniqueIdCounter = (uniqueIdCounter == null) ? 0 : uniqueIdCounter;
-        getStateHelper().put(PropertyKeys.uniqueIdCounter, (uniqueIdCounter+1L));
-        // Generate an identifier for a component. The identifier will be prefixed with UNIQUE_ID_PREFIX, and will be unique within this UIViewRoot. 
+        // Generate an identifier for a component. The identifier will be prefixed with
+        // UNIQUE_ID_PREFIX, and will be unique within this UIViewRoot.
         if(seed==null)
         {
+            Long uniqueIdCounter = (Long) getStateHelper().get(PropertyKeys.uniqueIdCounter);
+            uniqueIdCounter = (uniqueIdCounter == null) ? 0 : uniqueIdCounter;
+            getStateHelper().put(PropertyKeys.uniqueIdCounter, (uniqueIdCounter+1L));
             return bld.append(UIViewRoot.UNIQUE_ID_PREFIX).append(uniqueIdCounter).toString();    
         }
-        // Optionally, a unique seed value can be supplied by component creators which should be included in the generated unique id.
+        // Optionally, a unique seed value can be supplied by component creators
+        // which should be included in the generated unique id.
         else
         {
             return bld.append(UIViewRoot.UNIQUE_ID_PREFIX).append(seed).toString();
         }
     }
-
+    
     public boolean isSubmitted()
     {
         //return _submitted;
@@ -99,11 +138,25 @@ public class UIForm extends UIComponentBase implements NamingContainer, UniqueId
                 decode(context);
                 
                 if (!isSubmitted())
-                    return;
-                for (Iterator<UIComponent> it = getFacetsAndChildren(); it.hasNext();)
                 {
-                    it.next().processDecodes(context);
+                    return;
                 }
+
+                int facetCount = getFacetCount();
+                if (facetCount > 0)
+                {
+                    for (UIComponent facet : getFacets().values())
+                    {
+                        facet.processDecodes(context);
+                    }
+                }
+                
+                for (int i = 0, childCount = getChildCount(); i < childCount; i++)
+                {
+                    UIComponent child = getChildren().get(i);
+                    child.processDecodes(context);
+                }
+                
             }
             finally
             {
@@ -138,19 +191,32 @@ public class UIForm extends UIComponentBase implements NamingContainer, UniqueId
                     decode(context);
                 }
                 if (!isSubmitted())
+                {
                     return;
+                }
 
                 //Pre validation event dispatch for component
-                context.getApplication().publishEvent(context,  PreValidateEvent.class, UIComponent.class, this);
+                context.getApplication().publishEvent(context,  PreValidateEvent.class, getClass(), this);
                 
-                for (Iterator<UIComponent> it = getFacetsAndChildren(); it.hasNext();)
+                int facetCount = getFacetCount();
+                if (facetCount > 0)
                 {
-                    it.next().processValidators(context);
+                    for (UIComponent facet : getFacets().values())
+                    {
+                        facet.processValidators(context);
+                    }
                 }
+                
+                for (int i = 0, childCount = getChildCount(); i < childCount; i++)
+                {
+                    UIComponent child = getChildren().get(i);
+                    child.processValidators(context);
+                }
+                
             }
             finally
             {
-                context.getApplication().publishEvent(context,  PostValidateEvent.class, UIComponent.class, this);
+                context.getApplication().publishEvent(context,  PostValidateEvent.class, getClass(), this);
                 popComponentFromEL(context);
             }
         }
@@ -182,11 +248,25 @@ public class UIForm extends UIComponentBase implements NamingContainer, UniqueId
                     decode(context);
                 }
                 if (!isSubmitted())
-                    return;
-                for (Iterator<UIComponent> it = getFacetsAndChildren(); it.hasNext();)
                 {
-                    it.next().processUpdates(context);
+                    return;
                 }
+                
+                int facetCount = getFacetCount();
+                if (facetCount > 0)
+                {
+                    for (UIComponent facet : getFacets().values())
+                    {
+                        facet.processUpdates(context);
+                    }
+                }
+                
+                for (int i = 0, childCount = getChildCount(); i < childCount; i++)
+                {
+                    UIComponent child = getChildren().get(i);
+                    child.processUpdates(context);
+                }
+
             }
             finally
             {
@@ -236,14 +316,17 @@ public class UIForm extends UIComponentBase implements NamingContainer, UniqueId
                     setCachedFacesContext(context.getFacesContext());
                 }
                 
-                if (!isVisitable(context)) {
+                if (!isVisitable(context))
+                {
                     return false;
                 }
         
                 pushComponentToEL(context.getFacesContext(), this);
-                try {
+                try
+                {
                     VisitResult res = context.invokeVisitCallback(this, callback);
-                    switch (res) {
+                    switch (res)
+                    {
                     //we are done nothing has to be processed anymore
                     case COMPLETE:
                         return true;
@@ -259,25 +342,30 @@ public class UIForm extends UIComponentBase implements NamingContainer, UniqueId
                         
                         if (subtreeIdsToVisit != null && !subtreeIdsToVisit.isEmpty())
                         {
-                            if (getFacetCount() > 0) {
-                                for (UIComponent facet : getFacets().values()) {
-                                    if (facet.visitTree(context, callback)) {
+                            if (getFacetCount() > 0)
+                            {
+                                for (UIComponent facet : getFacets().values())
+                                {
+                                    if (facet.visitTree(context, callback))
+                                    {
                                         return true;
                                     }
                                 }
                             }
-                            if (getChildCount() > 0) {
-                                for (UIComponent child : getChildren()) {
-                                    if (child.visitTree(context, callback)) {
-                                        return true;
-                                    }
+                            for (int i = 0, childCount = getChildCount(); i < childCount; i++)
+                            {
+                                UIComponent child = getChildren().get(i);
+                                if (child.visitTree(context, callback))
+                                {
+                                    return true;
                                 }
                             }
                         }
                         return false;
                     }
                 }
-                finally {
+                finally
+                {
                     //all components must call popComponentFromEl after visiting is finished
                     popComponentFromEL(context.getFacesContext());
                 }
@@ -307,6 +395,64 @@ public class UIForm extends UIComponentBase implements NamingContainer, UniqueId
     public String getFamily()
     {
         return COMPONENT_FAMILY;
+    }
+
+    private String getComponentLocation(UIComponent component)
+    {
+        Location location = (Location) component.getAttributes()
+                .get(UIComponent.VIEW_LOCATION_KEY);
+        if (location != null)
+        {
+            return location.toString();
+        }
+        return null;
+    }
+    
+    private String getPathToComponent(UIComponent component)
+    {
+        StringBuffer buf = new StringBuffer();
+
+        if (component == null)
+        {
+            buf.append("{Component-Path : ");
+            buf.append("[null]}");
+            return buf.toString();
+        }
+
+        getPathToComponent(component, buf);
+
+        buf.insert(0, "{Component-Path : ");
+        buf.append("}");
+
+        return buf.toString();
+    }
+    
+    private void getPathToComponent(UIComponent component, StringBuffer buf)
+    {
+        if (component == null)
+        {
+            return;
+        }
+
+        StringBuffer intBuf = new StringBuffer();
+
+        intBuf.append("[Class: ");
+        intBuf.append(component.getClass().getName());
+        if (component instanceof UIViewRoot)
+        {
+            intBuf.append(",ViewId: ");
+            intBuf.append(((UIViewRoot) component).getViewId());
+        }
+        else
+        {
+            intBuf.append(",Id: ");
+            intBuf.append(component.getId());
+        }
+        intBuf.append("]");
+
+        buf.insert(0, intBuf.toString());
+
+        getPathToComponent(component.getParent(), buf);
     }
 
     // ------------------ GENERATED CODE END ---------------------------------------

@@ -184,4 +184,93 @@ public abstract class AbstractFaceletContext extends FaceletContext
      */
     public abstract boolean includeCompositeComponentDefinition(UIComponent parent, String name)
         throws IOException, FaceletException, FacesException, ELException;
+    
+    /**
+     * Return the current template context
+     * 
+     * @since 2.0.8
+     * @return
+     */
+    public TemplateContext getTemplateContext()
+    {
+        return null;
+    }
+
+    /**
+     * Push the passed page context instance onto the stack.
+     * 
+     * @since 2.0.8
+     * @param client
+     */
+    public void pushPageContext(PageContext client)
+    {
+    }
+    
+    /**
+     * Pop the passed page context instance onto the stack.
+     * 
+     * @since 2.0.8
+     * @param client
+     */
+    public PageContext popPageContext()
+    {
+        return null;
+    }
+    
+    /**
+     * Return the current page context
+     * 
+     * @since 2.0.8
+     * @return
+     */
+    public PageContext getPageContext()
+    {
+        return null;
+    }
+    
+    /**
+     * Check if a variable has been resolved by this variable mapper
+     * or any parent "facelets contextual" variable mapper.
+     * 
+     * @return
+     * @since 2.0.8
+     */
+    public boolean isAnyFaceletsVariableResolved()
+    {
+        return true;
+    }
+    
+    public boolean isAllowCacheELExpressions()
+    {
+        return false;
+    }
+    
+    /**
+     * Indicates an expression will be resolved, so preparations
+     * should be done to detect if a contextual variable has been resolved.
+     * 
+     * @since 2.0.8
+     */
+    public void beforeConstructELExpression()
+    {
+    }
+    
+    /**
+     * Cleanup all initialization done for construct an EL Expression.
+     * 
+     * @since 2.0.8
+     */
+    public void afterConstructELExpression()
+    {
+    }
+
+    /**
+     * Return the mode used to decide whether to cache or not EL expressions
+     * 
+     * @since 2.0.8
+     */
+    public ELExpressionCacheMode getELExpressionCacheMode()
+    {
+        return ELExpressionCacheMode.noCache;
+    }
 }

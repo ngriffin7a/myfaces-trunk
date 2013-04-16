@@ -25,36 +25,52 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.FacesException;
+import javax.faces.component.NamingContainer;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UINamingContainer;
 import javax.faces.component.UIPanel;
 import javax.faces.component.UIViewRoot;
+import javax.faces.component.UniqueIdVendor;
 import javax.faces.context.FacesContext;
 import javax.faces.view.facelets.FaceletContext;
 import javax.faces.view.facelets.TagAttribute;
 import javax.faces.view.facelets.TagAttributeException;
 
-import org.apache.myfaces.shared_impl.config.MyfacesConfig;
+import org.apache.myfaces.shared.config.MyfacesConfig;
 import org.apache.myfaces.view.facelets.ComponentState;
 import org.apache.myfaces.view.facelets.DefaultFaceletsStateManagementStrategy;
+import org.apache.myfaces.view.facelets.FaceletCompositionContext;
 import org.apache.myfaces.view.facelets.FaceletViewDeclarationLanguage;
 
 /**
  * 
  * @author Jacob Hookom
- * @version $Id: ComponentSupport.java,v 1.8 2008/07/13 19:01:46 rlubke Exp $
+ * @version $Id$
  */
 public final class ComponentSupport
 {
 
-    private final static String MARK_DELETED = "org.apache.myfaces.view.facelets.MARK_DELETED";
-    public final static String MARK_CREATED = "org.apache.myfaces.view.facelets.MARK_ID";
+    private final static String MARK_DELETED = "oam.vf.MARK_DELETED";
+    public final static String MARK_CREATED = "oam.vf.MARK_ID";
     
     /**
      * The UIPanel components, which are dynamically generated to serve as a container for
      * facets with multiple non panel children, are marked with this attribute.
      * This constant is duplicate in javax.faces.webapp.UIComponentClassicTagBase
      */
-    public final static String FACET_CREATED_UIPANEL_MARKER = "org.apache.myfaces.facet.createdUIPanel";
+    public final static String FACET_CREATED_UIPANEL_MARKER = "oam.vf.createdUIPanel";
+
+    /**
+     * Special myfaces core marker to indicate the component is handled by a facelet tag handler,
+     * so its creation is not handled by user programatically and PSS remove listener should
+     * not register it when a remove happens.
+     */
+    public final static String COMPONENT_ADDED_BY_HANDLER_MARKER = "oam.vf.addedByHandler";
+
+    /**
+     * The key under the facelet state map is stored
+     */
+    public final static String FACELET_STATE_INSTANCE = "oam.FACELET_STATE_INSTANCE";
 
     /**
      * Used in conjunction with markForDeletion where any UIComponent marked will be removed.
@@ -109,10 +125,12 @@ public final class ComponentSupport
      */
     public static UIComponent findChild(UIComponent parent, String id)
     {
-        if (parent.getChildCount() > 0)
+        int childCount = parent.getChildCount();
+        if (childCount > 0)
         {
-            for (UIComponent child : parent.getChildren())
+            for (int i = 0; i < childCount; i++)
             {
+                UIComponent child = parent.getChildren().get(i);
                 if (id.equals(child.getId()))
                 {
                     return child;
@@ -132,37 +150,57 @@ public final class ComponentSupport
      */
     public static UIComponent findChildByTagId(UIComponent parent, String id)
     {
-        Iterator<UIComponent> itr = parent.getChildren().iterator();
-        while (itr.hasNext())
+        Iterator<UIComponent> itr = null;
+        if (parent.getChildCount() > 0)
         {
-            UIComponent child = itr.next();
-            if (id.equals(child.getAttributes().get(MARK_CREATED)))
+            for (int i = 0, childCount = parent.getChildCount(); i < childCount; i ++)
             {
-                return child;
-            }
-        }
-        itr = parent.getFacets().values().iterator();
-        while (itr.hasNext())
-        {
-            UIComponent facet = itr.next();
-            // check if this is a dynamically generated UIPanel
-            if (Boolean.TRUE.equals(facet.getAttributes()
-                         .get(FACET_CREATED_UIPANEL_MARKER)))
-            {
-                // only check the children and facets of the panel
-                Iterator<UIComponent> itr2 = facet.getFacetsAndChildren();
-                while (itr2.hasNext())
+                UIComponent child = parent.getChildren().get(i);
+                if (id.equals(child.getAttributes().get(MARK_CREATED)))
                 {
-                    UIComponent child = itr2.next();
-                    if (id.equals(child.getAttributes().get(MARK_CREATED)))
-                    {
-                        return child;
-                    }
+                    return child;
                 }
             }
-            else if (id.equals(facet.getAttributes().get(MARK_CREATED)))
+        }
+        if (parent.getFacetCount() > 0)
+        {
+            itr = parent.getFacets().values().iterator();
+            while (itr.hasNext())
             {
-                return facet;
+                UIComponent facet = itr.next();
+                // check if this is a dynamically generated UIPanel
+                if (Boolean.TRUE.equals(facet.getAttributes()
+                             .get(FACET_CREATED_UIPANEL_MARKER)))
+                {
+                    // only check the children and facets of the panel
+                    if (facet.getChildCount() > 0)
+                    {
+                        for (int i = 0, childCount = facet.getChildCount(); i < childCount; i ++)
+                        {
+                            UIComponent child = facet.getChildren().get(i);
+                            if (id.equals(child.getAttributes().get(MARK_CREATED)))
+                            {
+                                return child;
+                            }
+                        }
+                    }
+                    if (facet.getFacetCount() > 0)
+                    {
+                        Iterator<UIComponent> itr2 = facet.getFacets().values().iterator();
+                        while (itr2.hasNext())
+                        {
+                            UIComponent child = itr2.next();
+                            if (id.equals(child.getAttributes().get(MARK_CREATED)))
+                            {
+                                return child;
+                            }
+                        }
+                    }
+                }
+                else if (id.equals(facet.getAttributes().get(MARK_CREATED)))
+                {
+                    return facet;
+                }
             }
         }
 
@@ -279,8 +317,9 @@ public final class ComponentSupport
             }
             else if (toRender.getChildCount() > 0)
             {
-                for (UIComponent child : toRender.getChildren())
+                for (int i = 0, childCount = toRender.getChildCount(); i < childCount; i++)
                 {
+                    UIComponent child = toRender.getChildren().get(i);
                     encodeRecursive(context, child);
                 }
             }
@@ -347,11 +386,46 @@ public final class ComponentSupport
      * @param facesContext
      * @return
      */
-    private static UIComponent createFacetUIPanel(FacesContext facesContext)
+    private static UIComponent createFacetUIPanel(FaceletContext ctx, UIComponent parent, String facetName)
     {
-        UIComponent panel = facesContext.getApplication().createComponent(UIPanel.COMPONENT_TYPE);
-        panel.setId(facesContext.getViewRoot().createUniqueId());
+        FacesContext facesContext = ctx.getFacesContext();
+        UIComponent panel = facesContext.getApplication().createComponent(facesContext, UIPanel.COMPONENT_TYPE, null);
+        
+        // The panel created by this method is special. To be restored properly and do not
+        // create duplicate ids or any other unwanted conflicts, it requires an unique id.
+        // This code is usually called when more than one component is added to a facet and
+        // it is necessary to create a shared container.
+        // Use FaceletCompositionContext.generateUniqueComponentId() is not possible, because
+        // <c:if> blocks inside a facet will make component ids unstable. Use UniqueIdVendor
+        // is feasible but also will be affected by <c:if> blocks inside a facet.
+        // The only solution that will generate real unique ids is use the parent id and the
+        // facet name and derive an unique id that cannot be generated by SectionUniqueIdCounter,
+        // doing the same trick as with metadata: use a double __ and add a prefix (f).
+        // Note this id will never be printed into the response, because this is just a container.
+        FaceletCompositionContext mctx = FaceletCompositionContext.getCurrentInstance(ctx);
+        UniqueIdVendor uniqueIdVendor = mctx.getUniqueIdVendorFromStack();
+        if (uniqueIdVendor == null)
+        {
+            uniqueIdVendor = ComponentSupport.getViewRoot(ctx, parent);
+        }
+        if (uniqueIdVendor != null)
+        {
+            // UIViewRoot implements UniqueIdVendor, so there is no need to cast to UIViewRoot
+            // and call createUniqueId(). See ComponentTagHandlerDelegate
+            int index = facetName.indexOf('.');
+            String cleanFacetName = facetName;
+            if (index >= 0)
+            {
+                cleanFacetName = facetName.replace('.', '_');
+            }
+            panel.setId(uniqueIdVendor.createUniqueId(facesContext, 
+                    mctx.getSharedStringBuilder()
+                      .append(parent.getId())
+                      .append("__f_")
+                      .append(cleanFacetName).toString()));
+        }
         panel.getAttributes().put(FACET_CREATED_UIPANEL_MARKER, Boolean.TRUE);
+        panel.getAttributes().put(ComponentSupport.COMPONENT_ADDED_BY_HANDLER_MARKER, Boolean.TRUE);
         return panel;
     }
     
@@ -369,7 +443,7 @@ public final class ComponentSupport
         {
             // there is a facet, but it is not an instance of UIPanel
             UIComponent child = facet;
-            facet = createFacetUIPanel(ctx.getFacesContext());
+            facet = createFacetUIPanel(ctx, parent, facetName);
             facet.getChildren().add(child);
             facet.getChildren().add(c);
             parent.getFacets().put(facetName, facet);
@@ -387,7 +461,7 @@ public final class ComponentSupport
                 // the facet is an instance of UIPanel, but it is not marked,
                 // so we have to create a new UIPanel and store this one in it
                 UIComponent oldPanel = facet;
-                facet = createFacetUIPanel(ctx.getFacesContext());
+                facet = createFacetUIPanel(ctx, parent, facetName);
                 facet.getChildren().add(oldPanel);
                 facet.getChildren().add(c);
                 parent.getFacets().put(facetName, facet);
@@ -412,7 +486,8 @@ public final class ComponentSupport
     {
         if (MyfacesConfig.getCurrentInstance(context.getExternalContext()).isRefreshTransientBuildOnPSSPreserveState())
         {
-            component.getAttributes().put(DefaultFaceletsStateManagementStrategy.COMPONENT_ADDED_AFTER_BUILD_VIEW, ComponentState.REMOVE_ADD);
+            component.getAttributes().put(DefaultFaceletsStateManagementStrategy.COMPONENT_ADDED_AFTER_BUILD_VIEW,
+                                          ComponentState.REMOVE_ADD);
         }
         //component.subscribeToEvent(PostAddToViewEvent.class, new RestoreComponentFullyListener());
         if (FaceletViewDeclarationLanguage.isRefreshTransientBuildOnPSSAuto(context))
@@ -420,4 +495,153 @@ public final class ComponentSupport
             FaceletViewDeclarationLanguage.cleanTransientBuildOnRestore(context);
         }
     }
+    
+    public static UIComponent findComponentChildOrFacetFrom(FacesContext facesContext, UIComponent parent, String expr)
+    {
+        final char separatorChar = UINamingContainer.getSeparatorChar(facesContext);
+        int separator = expr.indexOf(separatorChar);
+        if (separator == -1)
+        {
+            return ComponentSupport.findComponentChildOrFacetFrom(
+                    parent, expr, null);
+        }
+        else
+        {
+            return ComponentSupport.findComponentChildOrFacetFrom(
+                    parent, expr.substring(0,separator), expr);
+        }
+    }
+    
+    public static UIComponent findComponentChildOrFacetFrom(UIComponent parent, String id, String innerExpr)
+    {
+        if (parent.getFacetCount() > 0)
+        {
+            for (UIComponent facet : parent.getFacets().values())
+            {
+                if (id.equals(facet.getId()))
+                {
+                    if (innerExpr == null)
+                    {
+                        return facet;
+                    }
+                    else if (facet instanceof NamingContainer)
+                    {
+                        UIComponent find = facet.findComponent(innerExpr);
+                        if (find != null)
+                        {
+                            return find;
+                        }
+                    }
+                }
+                else if (!(facet instanceof NamingContainer))
+                {
+                    UIComponent find = findComponentChildOrFacetFrom(facet, id, innerExpr);
+                    if (find != null)
+                    {
+                        return find;
+                    }
+                }
+            }
+        }
+        if (parent.getChildCount() > 0)
+        {
+            for (int i = 0, childCount = parent.getChildCount(); i < childCount; i++)
+            {
+                UIComponent child = parent.getChildren().get(i);
+                if (id.equals(child.getId()))
+                {
+                    if (innerExpr == null)
+                    {
+                        return child;
+                    }
+                    else if (child instanceof NamingContainer)
+                    {
+                        UIComponent find = child.findComponent(innerExpr);
+                        if (find != null)
+                        {
+                            return find;
+                        }
+                    }
+                }
+                else if (!(child instanceof NamingContainer))
+                {
+                    UIComponent find = findComponentChildOrFacetFrom(child, id, innerExpr);
+                    if (find != null)
+                    {
+                        return find;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+    
+    public static String getFindComponentExpression(FacesContext facesContext, UIComponent component)
+    {
+        char separatorChar = UINamingContainer.getSeparatorChar(facesContext);
+        UIComponent parent = component.getParent();
+        StringBuilder sb = new StringBuilder();
+        sb.append(component.getId());
+        while (parent != null)
+        {
+            if (parent instanceof NamingContainer)
+            {
+                sb.insert(0, separatorChar);
+                sb.insert(0, parent.getId());
+            }
+            parent = parent.getParent();
+        }
+        return sb.toString();
+    }
+    
+    public static Object restoreInitialTagState(FaceletContext ctx, FaceletCompositionContext fcc,
+                                                UIComponent parent, String uniqueId)
+    {
+        Object value = null;
+        //if (fcc.isUsingPSSOnThisView() &&
+        //    PhaseId.RESTORE_VIEW.equals(ctx.getFacesContext().getCurrentPhaseId()) &&
+        //    !MyfacesConfig.getCurrentInstance(
+        //            ctx.getFacesContext().getExternalContext()).isRefreshTransientBuildOnPSSPreserveState())
+        if (fcc.isUsingPSSOnThisView() && !fcc.isRefreshTransientBuildOnPSSPreserveState())
+        {
+            UIViewRoot root = getViewRoot(ctx, parent);
+            FaceletState map = (FaceletState) root.getAttributes().get(FACELET_STATE_INSTANCE);
+            if (map == null)
+            {
+                value = null;
+            }
+            else
+            {
+                value = map.getState(uniqueId);
+            }
+        }
+        return value;
+    }
+    
+    public static void saveInitialTagState(FaceletContext ctx, FaceletCompositionContext fcc,
+                                           UIComponent parent, String uniqueId, Object value)
+    {
+        // Only save the value when the view was built the first time, to ensure PSS algorithm 
+        // work correctly. If preserve state is enabled, just ignore it, because this tag will
+        // force full restore over the parent
+        //if (fcc.isUsingPSSOnThisView()) {
+        //    if (!fcc.isRefreshingTransientBuild() && !ctx.getFacesContext().isPostback()
+        //        && !MyfacesConfig.getCurrentInstance(
+        //            ctx.getFacesContext().getExternalContext()).isRefreshTransientBuildOnPSSPreserveState())
+        
+        // If we save the value each time the view is updated, we can use PSS on the dynamic parts,
+        // just calling markInitialState() on the required components, simplifying the algorithm.
+        if (fcc.isUsingPSSOnThisView() && !fcc.isRefreshTransientBuildOnPSSPreserveState())
+        {
+            UIViewRoot root = getViewRoot(ctx, parent);
+            FaceletState map = (FaceletState) root.getAttributes().get(FACELET_STATE_INSTANCE);
+            if (map == null)
+            {
+                map = new FaceletState();
+                root.getAttributes().put(FACELET_STATE_INSTANCE, map);
+            }
+            map.putState(uniqueId, value);
+        }
+    }
+
 }

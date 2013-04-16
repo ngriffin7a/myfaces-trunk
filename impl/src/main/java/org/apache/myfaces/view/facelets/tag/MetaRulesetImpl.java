@@ -18,7 +18,7 @@
  */
 package org.apache.myfaces.view.facelets.tag;
 
-import org.apache.myfaces.shared_impl.util.ClassUtils;
+import org.apache.myfaces.shared.util.ClassUtils;
 import org.apache.myfaces.view.facelets.util.ParameterCheck;
 
 import javax.faces.view.facelets.FaceletContext;
@@ -41,7 +41,7 @@ import java.util.logging.Logger;
 /**
  * 
  * @author Jacob Hookom
- * @version $Id: MetaRulesetImpl.java,v 1.3 2008/07/13 19:01:35 rlubke Exp $
+ * @version $Id$
  */
 public final class MetaRulesetImpl extends MetaRuleset
 {
@@ -59,7 +59,7 @@ public final class MetaRulesetImpl extends MetaRuleset
      * most certainly cause a memory leak! Furthermore we can manually cleanup the Map when
      * the webapp is undeployed just by removing the Map for the current ClassLoader. 
      */
-    private final static WeakHashMap<ClassLoader, Map<String, MetadataTarget>> _metadata
+    private volatile static WeakHashMap<ClassLoader, Map<String, MetadataTarget>> metadata
             = new WeakHashMap<ClassLoader, Map<String, MetadataTarget>>();
 
     /**
@@ -67,20 +67,37 @@ public final class MetaRulesetImpl extends MetaRuleset
      */
     public static void clearMetadataTargetCache()
     {
-        _metadata.remove(ClassUtils.getContextClassLoader());
+        metadata.remove(ClassUtils.getContextClassLoader());
     }
 
     private static Map<String, MetadataTarget> getMetaData()
     {
+        ClassLoader cl = ClassUtils.getContextClassLoader();
+        
         Map<String, MetadataTarget> metadata = (Map<String, MetadataTarget>)
-                _metadata.get(ClassUtils.getContextClassLoader());
+                MetaRulesetImpl.metadata.get(cl);
 
         if (metadata == null)
         {
-            metadata = new HashMap<String, MetadataTarget>();
-            _metadata.put(ClassUtils.getContextClassLoader(), metadata);
+            // Ensure thread-safe put over _metadata, and only create one map
+            // per classloader to hold metadata.
+            synchronized (MetaRulesetImpl.metadata)
+            {
+                metadata = createMetaData(cl, metadata);
+            }
         }
 
+        return metadata;
+    }
+    
+    private static Map<String, MetadataTarget> createMetaData(ClassLoader cl, Map<String, MetadataTarget> metadata)
+    {
+        metadata = (Map<String, MetadataTarget>) MetaRulesetImpl.metadata.get(cl);
+        if (metadata == null)
+        {
+            metadata = new HashMap<String, MetadataTarget>();
+            MetaRulesetImpl.metadata.put(cl, metadata);
+        }
         return metadata;
     }
 
@@ -98,18 +115,25 @@ public final class MetaRulesetImpl extends MetaRuleset
     {
         _tag = tag;
         _type = type;
-        _attributes = new HashMap<String, TagAttribute>();
-        _mappers = new ArrayList<Metadata>();
-        _rules = new ArrayList<MetaRule>();
+        TagAttribute[] allAttributes = _tag.getAttributes().getAll();
+        // This map is proportional to the number of attributes defined, and usually
+        // the properties with alias are very few, so set an initial size close to
+        // the number of attributes is ok.
+        int initialSize = allAttributes.length > 0 ? (allAttributes.length * 4 + 3) / 3 : 4;
+        _attributes = new HashMap<String, TagAttribute>(initialSize);
+        _mappers = new ArrayList<Metadata>(initialSize);
+        // Usually ComponentTagHandlerDelegate has 5 rules at max
+        // and CompositeComponentResourceTagHandler 6, so 8 is a good number
+        _rules = new ArrayList<MetaRule>(8); 
 
         // setup attributes
-        for (TagAttribute attribute : _tag.getAttributes().getAll())
+        for (TagAttribute attribute : allAttributes)
         {
             _attributes.put(attribute.getLocalName(), attribute);
         }
 
         // add default rules
-        _rules.add(BeanPropertyTagRule.Instance);
+        _rules.add(BeanPropertyTagRule.INSTANCE);
     }
 
     public MetaRuleset add(Metadata mapper)
@@ -228,7 +252,15 @@ public final class MetaRulesetImpl extends MetaRuleset
                 throw new TagException(_tag, "Error Creating TargetMetadata", e);
             }
 
-            metadata.put(metaKey, meta);
+            synchronized(metadata)
+            {
+                // Use a synchronized block to ensure proper operation on concurrent use cases.
+                // This is a racy single check, because initialization over the same class could happen
+                // multiple times, but the same result is always calculated. The synchronized block 
+                // just ensure thread-safety, because only one thread will modify the cache map
+                // at the same time.
+                metadata.put(metaKey, meta);
+            }
         }
 
         return meta;

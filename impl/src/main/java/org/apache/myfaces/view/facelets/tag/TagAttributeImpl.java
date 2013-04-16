@@ -18,6 +18,8 @@
  */
 package org.apache.myfaces.view.facelets.tag;
 
+import java.util.Arrays;
+
 import javax.el.ELException;
 import javax.el.ExpressionFactory;
 import javax.el.MethodExpression;
@@ -28,7 +30,11 @@ import javax.faces.view.facelets.TagAttribute;
 import javax.faces.view.facelets.TagAttributeException;
 
 import org.apache.myfaces.util.ExternalSpecifications;
+import org.apache.myfaces.view.facelets.AbstractFaceletContext;
 import org.apache.myfaces.view.facelets.el.CompositeComponentELUtils;
+import org.apache.myfaces.view.facelets.el.ContextAwareTagMethodExpression;
+import org.apache.myfaces.view.facelets.el.ContextAwareTagValueExpression;
+import org.apache.myfaces.view.facelets.el.ContextAwareTagValueExpressionUEL;
 import org.apache.myfaces.view.facelets.el.ELText;
 import org.apache.myfaces.view.facelets.el.LocationMethodExpression;
 import org.apache.myfaces.view.facelets.el.LocationValueExpression;
@@ -45,7 +51,7 @@ import org.apache.myfaces.view.facelets.el.ValueExpressionMethodExpression;
  * Representation of a Tag's attribute in a Facelet File
  * 
  * @author Jacob Hookom
- * @version $Id: TagAttribute.java,v 1.9 2008/07/13 19:01:35 rlubke Exp $
+ * @version $Id$
  */
 public final class TagAttributeImpl extends TagAttribute
 {
@@ -72,6 +78,14 @@ public final class TagAttributeImpl extends TagAttribute
 
     private String string;
 
+    /**
+     * This variable is used to cache created expressions using
+     * getValueExpression or getMethodExpression methods. It uses
+     * a racy single check strategy, because if the expression can be
+     * cached the same instance will be built.
+     */
+    private volatile Object[] cachedExpression;
+
     public TagAttributeImpl(Location location, String ns, String localName, String qName, String value)
     {
         boolean literal;
@@ -80,7 +94,10 @@ public final class TagAttributeImpl extends TagAttribute
         boolean resourceExpression;
         this.location = location;
         this.namespace = ns;
-        this.localName = localName;
+        // "xmlns" attribute name can be swallowed by SAX compiler, so we should check if
+        // localName is null or empty and if that so, assign it from the qName 
+        // (if localName is empty it is not prefixed, so it is save to set it directly). 
+        this.localName = (localName == null) ? qName : ((localName.length() > 0) ? localName : qName);
         this.qName = qName;
         this.value = value;
 
@@ -185,6 +202,33 @@ public final class TagAttributeImpl extends TagAttribute
      */
     public MethodExpression getMethodExpression(FaceletContext ctx, Class type, Class[] paramTypes)
     {
+        AbstractFaceletContext actx = (AbstractFaceletContext) ctx;
+        
+        //volatile reads are atomic, so take the tuple to later comparison.
+        Object[] localCachedExpression = cachedExpression; 
+        
+        if (actx.isAllowCacheELExpressions() && localCachedExpression != null &&
+            (localCachedExpression.length % 3 == 0))
+        {
+            //If the expected type and paramTypes are the same return the cached one
+            for (int i = 0; i < (localCachedExpression.length/3); i++)
+            {
+                if ( ((type == null && localCachedExpression[(i*3)] == null ) ||
+                     (type != null && type.equals(localCachedExpression[(i*3)])) ) &&
+                     (Arrays.equals(paramTypes, (Class[]) localCachedExpression[(i*3)+1])) )
+                {
+                    if ((this.capabilities & EL_CC) != 0 &&
+                        localCachedExpression[(i*3)+2] instanceof LocationMethodExpression)
+                    {
+                        return ((LocationMethodExpression)localCachedExpression[(i*3)+2]).apply(
+                                actx.getFaceletCompositionContext().getCompositeComponentLevel());
+                    }
+                    return (MethodExpression) localCachedExpression[(i*3)+2];
+                }
+            }
+        }
+        
+        actx.beforeConstructELExpression();
         try
         {
             MethodExpression methodExpression = null;
@@ -210,14 +254,32 @@ public final class TagAttributeImpl extends TagAttribute
                             + "pointing to cc.attrs");
                 }
                 
-                ValueExpression valueExpr = this.getValueExpression(ctx, MethodExpression.class);
+                ValueExpression valueExpr = this.getValueExpression(ctx, Object.class);
                 methodExpression = new ValueExpressionMethodExpression(valueExpr);
+                
+                if (actx.getFaceletCompositionContext().isWrapTagExceptionsAsContextAware())
+                {
+                    methodExpression = new ContextAwareTagMethodExpression(this, methodExpression);
+                }
+                else
+                {
+                    methodExpression = new TagMethodExpression(this, methodExpression);
+                }
             }
             else
             {
                 ExpressionFactory f = ctx.getExpressionFactory();
                 methodExpression = f.createMethodExpression(ctx, this.value, type, paramTypes);
-                    
+
+                if (actx.getFaceletCompositionContext().isWrapTagExceptionsAsContextAware())
+                {
+                    methodExpression = new ContextAwareTagMethodExpression(this, methodExpression);
+                }
+                else
+                {
+                    methodExpression = new TagMethodExpression(this, methodExpression);
+                }
+
                 // if the MethodExpression contains a reference to the current composite
                 // component, the Location also has to be stored in the MethodExpression 
                 // to be able to resolve the right composite component (the one that was
@@ -225,15 +287,43 @@ public final class TagAttributeImpl extends TagAttribute
                 // (see MYFACES-2561 for details)
                 if ((this.capabilities & EL_CC) != 0)
                 {
-                    methodExpression = new LocationMethodExpression(getLocation(), methodExpression);
+                    methodExpression = new LocationMethodExpression(getLocation(), methodExpression, 
+                            actx.getFaceletCompositionContext().getCompositeComponentLevel());
                 }
             }
             
-            return new TagMethodExpression(this, methodExpression);
+                
+            if (actx.isAllowCacheELExpressions() && !actx.isAnyFaceletsVariableResolved())
+            {
+                if (localCachedExpression != null && (localCachedExpression.length % 3 == 0))
+                {
+                    // If you use a racy single check, assign
+                    // the volatile variable at the end.
+                    Object[] array = new Object[localCachedExpression.length+3];
+                    array[0] = type;
+                    array[1] = paramTypes;
+                    array[2] = methodExpression;
+                    for (int i = 0; i < localCachedExpression.length; i++)
+                    {
+                        array[i+3] = localCachedExpression[i];
+                    }
+                    cachedExpression = array;
+                }
+                else
+                {
+                    cachedExpression = new Object[]{type, paramTypes, methodExpression};
+                }
+            }
+
+            return methodExpression; 
         }
         catch (Exception e)
         {
             throw new TagAttributeException(this, e);
+        }
+        finally
+        {
+            actx.afterConstructELExpression();
         }
     }
     
@@ -360,6 +450,36 @@ public final class TagAttributeImpl extends TagAttribute
      */
     public ValueExpression getValueExpression(FaceletContext ctx, Class type)
     {
+        AbstractFaceletContext actx = (AbstractFaceletContext) ctx;
+        
+        //volatile reads are atomic, so take the tuple to later comparison.
+        Object[] localCachedExpression = cachedExpression;
+        if (actx.isAllowCacheELExpressions() && localCachedExpression != null && localCachedExpression.length == 2)
+        {
+            //If the expected type is the same return the cached one
+            if (localCachedExpression[0] == null && type == null)
+            {
+                // If #{cc} recalculate the composite component level
+                if ((this.capabilities & EL_CC) != 0)
+                {
+                    return ((LocationValueExpression)localCachedExpression[1]).apply(
+                            actx.getFaceletCompositionContext().getCompositeComponentLevel());
+                }
+                return (ValueExpression) localCachedExpression[1];
+            }
+            else if (localCachedExpression[0] != null && localCachedExpression[0].equals(type))
+            {
+                // If #{cc} recalculate the composite component level
+                if ((this.capabilities & EL_CC) != 0)
+                {
+                    return ((LocationValueExpression)localCachedExpression[1]).apply(
+                            actx.getFaceletCompositionContext().getCompositeComponentLevel());
+                }
+                return (ValueExpression) localCachedExpression[1];
+            }
+        }
+
+        actx.beforeConstructELExpression();
         try
         {
             ExpressionFactory f = ctx.getExpressionFactory();
@@ -367,11 +487,25 @@ public final class TagAttributeImpl extends TagAttribute
             
             if (ExternalSpecifications.isUnifiedELAvailable())
             {
-                valueExpression = new TagValueExpressionUEL(this, valueExpression);
+                if (actx.getFaceletCompositionContext().isWrapTagExceptionsAsContextAware())
+                {
+                    valueExpression = new ContextAwareTagValueExpressionUEL(this, valueExpression);
+                }
+                else
+                {
+                    valueExpression = new TagValueExpressionUEL(this, valueExpression);
+                }
             }
             else
             {
-                valueExpression = new TagValueExpression(this, valueExpression);
+                if (actx.getFaceletCompositionContext().isWrapTagExceptionsAsContextAware())
+                {
+                    valueExpression = new ContextAwareTagValueExpression(this, valueExpression);
+                }
+                else
+                {
+                    valueExpression = new TagValueExpression(this, valueExpression);
+                }
             }
 
             // if the ValueExpression contains a reference to the current composite
@@ -383,11 +517,13 @@ public final class TagAttributeImpl extends TagAttribute
             {
                 if (ExternalSpecifications.isUnifiedELAvailable())
                 {
-                    valueExpression = new LocationValueExpressionUEL(getLocation(), valueExpression);
+                    valueExpression = new LocationValueExpressionUEL(getLocation(), valueExpression, 
+                            actx.getFaceletCompositionContext().getCompositeComponentLevel());
                 }
                 else
                 {
-                    valueExpression = new LocationValueExpression(getLocation(), valueExpression);
+                    valueExpression = new LocationValueExpression(getLocation(), valueExpression, 
+                            actx.getFaceletCompositionContext().getCompositeComponentLevel());
                 }
             }
             else if ((this.capabilities & EL_RESOURCE) != 0)
@@ -402,11 +538,20 @@ public final class TagAttributeImpl extends TagAttribute
                 }
             }
             
+            
+            if (actx.isAllowCacheELExpressions() && !actx.isAnyFaceletsVariableResolved())
+            {
+                cachedExpression = new Object[]{type, valueExpression};
+            }
             return valueExpression;
         }
         catch (Exception e)
         {
             throw new TagAttributeException(this, e);
+        }
+        finally
+        {
+            actx.afterConstructELExpression();
         }
     }
 
